@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "288740335268",
+    "project_id": "rm-emp",
+    "storage_bucket": "rm-emp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288740335268:android:843fe7d69492bafff8d031",
+        "android_client_info": {
+          "package_name": "com.rightminddev.rmemp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDESBKGkTir6PlfewBQfZT6EDiD-vFKNYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
