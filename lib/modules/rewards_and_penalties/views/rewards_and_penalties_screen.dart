@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -69,48 +70,55 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
           onRefresh: () async =>
               await viewModel.initializeRewardsAndPenaltiesListScreen(
                   context: context, empId: widget.empId),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
-            child: SingleChildScrollView(
-              child: Consumer<RewardsAndPenaltiesViewModel>(
-                  builder: (context, viewModel, child) => viewModel.isLoading
-                      ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                      : (viewModel.rewardsAndPenalties?.isEmpty == true ||
-                              viewModel.rewardsAndPenalties == null)&&(viewModel.rewardsAndPenaltiesTeam?.isEmpty == true ||
-                              viewModel.rewardsAndPenaltiesTeam == null)
-                          ? NoExistingPlaceholderScreen(
-                              height: LayoutService.getHeight(context) * 0.6,
-                              title: AppStrings.noExistingPenaltiesAndRewards.tr())
-                          : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)
-                          Text(AppStrings.myRewardsAndPenalties.tr(),style: const TextStyle(
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s12),
+                child: SingleChildScrollView(
+                  child: Consumer<RewardsAndPenaltiesViewModel>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                          : (viewModel.rewardsAndPenalties?.isEmpty == true ||
+                                  viewModel.rewardsAndPenalties == null)&&(viewModel.rewardsAndPenaltiesTeam?.isEmpty == true ||
+                                  viewModel.rewardsAndPenaltiesTeam == null)
+                              ? NoExistingPlaceholderScreen(
+                                  height: LayoutService.getHeight(context) * 0.6,
+                                  title: AppStrings.noExistingPenaltiesAndRewards.tr())
+                              : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)
+                              Text(AppStrings.myRewardsAndPenalties.tr(),style: const TextStyle(
+                                    color: Color(AppColors.dark),fontWeight: FontWeight.w600,fontSize: 16
+                                  ),),
+                            const SizedBox(height: 15,),
+                            // if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)     const SizedBox(height: 15,),
+                            //       GeneralScreenMessageWidget(
+                            //           screenId: '/penalties-and-rewards'),
+                                  ...viewModel.rewardsAndPenalties!.map(
+                                      (rewardAndPenalty) =>
+                                          RewardAndPenaltyCardWidget(
+                                            rewardAndPenalty: rewardAndPenalty,
+                                          )),
+                            if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)     const SizedBox(height: 25,),
+                            if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))
+                              Text(AppStrings.teamRewardsAndPenalties.tr(),style: const TextStyle(
                                 color: Color(AppColors.dark),fontWeight: FontWeight.w600,fontSize: 16
-                              ),),
-                        const SizedBox(height: 15,),
-                        // if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)     const SizedBox(height: 15,),
-                        //       GeneralScreenMessageWidget(
-                        //           screenId: '/penalties-and-rewards'),
-                              ...viewModel.rewardsAndPenalties!.map(
-                                  (rewardAndPenalty) =>
-                                      RewardAndPenaltyCardWidget(
-                                        rewardAndPenalty: rewardAndPenalty,
-                                      )),
-                        if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)     const SizedBox(height: 25,),
-                        if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))
-                          Text(AppStrings.teamRewardsAndPenalties.tr(),style: const TextStyle(
-                            color: Color(AppColors.dark),fontWeight: FontWeight.w600,fontSize: 16
-                        ),),
-                        if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))   const SizedBox(height: 15,),
-                        // if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && gCache['is_teamleader_in'].isNotEmpty)  const SizedBox(height: 15,),
-                        // if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && gCache['is_teamleader_in'].isNotEmpty)  GeneralScreenMessageWidget(
-                        //     screenId: '/penalties-and-rewards'),
-                        if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))   ...viewModel.rewardsAndPenaltiesTeam!.map(
-                                (rewardAndPenalty) => RewardAndPenaltyCardWidget(
-                                  rewardAndPenalty: rewardAndPenalty,
-                                )),
-                            ])),
+                            ),),
+                            if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))   const SizedBox(height: 15,),
+                            // if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && gCache['is_teamleader_in'].isNotEmpty)  const SizedBox(height: 15,),
+                            // if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && gCache['is_teamleader_in'].isNotEmpty)  GeneralScreenMessageWidget(
+                            //     screenId: '/penalties-and-rewards'),
+                            if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))   ...viewModel.rewardsAndPenaltiesTeam!.map(
+                                    (rewardAndPenalty) => RewardAndPenaltyCardWidget(
+                                      rewardAndPenalty: rewardAndPenalty,
+                                    )),
+                                ])),
+                ),
+              ),
             ),
           )),
     );

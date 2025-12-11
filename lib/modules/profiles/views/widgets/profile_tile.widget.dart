@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rmemp/common_modules_widgets/custom_elevated_button.widget.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -247,7 +248,7 @@ class ProfileTileNotTap extends StatelessWidget {
                     icon ?? const SizedBox.shrink(),
                     gapW4,
                     SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.7,
+                        width: !kIsWeb? MediaQuery.sizeOf(context).width * 0.7 : MediaQuery.sizeOf(context).width * 0.3,
                         child: Text(title,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.black)))),
                     gapW12,
                     if(isViewArrow == true) const Spacer(),

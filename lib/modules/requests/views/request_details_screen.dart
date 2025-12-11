@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -45,10 +46,21 @@ class RequestDetailsScreen extends StatelessWidget {
               RequestDetailsHeaderWidget(
                 uId: viewModel.userSettings?.empId,
                 rId:viewModel.requestModel!.employeeId,
-                height: AppSizes.s300,
+                height: kIsWeb? AppSizes.s240:AppSizes.s300,
                 request: viewModel.requestModel!,
               ),
-              Expanded(child: CustomTabbarViewRequestDetails(request: viewModel.requestModel!)),
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxWidth: kIsWeb ? 1100 : double.infinity
+                    ),
+                    child: CustomTabbarViewRequestDetails(request: viewModel.requestModel!),
+                  ),
+                ),
+              ),
+              // Add extra spacing between tabs and buttons on web only
+              if (kIsWeb) SizedBox(height: AppSizes.s40),
               if ((viewModel.userSettings?.empId == viewModel.requestModel!.employeeId &&
               viewModel.requestModel!.employeeId != null &&
                   viewModel.userSettings?.empId != null))
@@ -58,85 +70,104 @@ class RequestDetailsScreen extends StatelessWidget {
                     viewModel.requestModel!.status == 'waiting_cancel' ||
                     viewModel.requestModel!.status == 'approved' ||viewModel.requestModel!.status == 'refused' ||
                     viewModel.requestModel!.status == 'canceled')
-                    ? Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: AppSizes.s6, horizontal: AppSizes.s8),
-                  margin: const EdgeInsets.all(AppSizes.s8),
-                  width: LayoutService.getWidth(context),
-                  decoration: BoxDecoration(
-                      color: const Color(AppColors.dark),
-                      borderRadius: BorderRadius.circular(AppSizes.s50)),
-                  child: Row(children: [
-                    if (viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
-                        viewModel.requestModel!.status == 'waiting') ...[
-                      CustomRequestDetailsButton(
-                        title: AppStrings.askRemember.tr(),
-                        onPressed: () async =>
-                        await viewModel.askToRemember(
-                            context: context,
-                            requestId: viewModel.requestModel!.id?.toString()),
-                      ),
-                      gapW8,
-                      CustomRequestDetailsButton(
-                        title: AppStrings.askIgnore.tr(),
-                        onPressed: () async => await viewModel.askToIgnore(
-                            context: context,
-                            requestId: viewModel.requestModel!.id?.toString()),
-                      ),
-                    ],
-                    if ((viewModel.requestModel!.status == 'approved' || viewModel.requestModel!.status == 'canceled'|| viewModel.requestModel!.status == 'refused')) ...[
-                      gapW8,
-                      CustomRequestDetailsButton(
-                          title: AppStrings.complaint.tr(),
-                          onPressed: () async => context.pushNamed(
-                              AppRoutes.newComplainScreen.name,
-                           pathParameters: {'lang': context.locale.languageCode,}
+                    ? Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: kIsWeb ? 1100 : double.infinity
+                        ),
+                        child: Container(
+                          height: kIsWeb? 40 : null,
+                          alignment: Alignment.topCenter,
+                                          padding: EdgeInsets.symmetric(
+                          vertical: kIsWeb ? AppSizes.s1 : AppSizes.s6,
+                          horizontal: AppSizes.s8),
+                                          margin: EdgeInsets.all(kIsWeb ? AppSizes.s6 : AppSizes.s8),
+                                          width: LayoutService.getWidth(context),
+                                          decoration: BoxDecoration(
+                          color: const Color(AppColors.dark),
+                          borderRadius: BorderRadius.circular(AppSizes.s50)),
+                                          child: Row(children: [
+                        if (viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
+                            viewModel.requestModel!.status == 'waiting') ...[
+                          CustomRequestDetailsButton(
+                            title: AppStrings.askRemember.tr(),
+                            onPressed: () async =>
+                            await viewModel.askToRemember(
+                                context: context,
+                                requestId: viewModel.requestModel!.id?.toString()),
+                          ),
+                          gapW8,
+                          CustomRequestDetailsButton(
+                            title: AppStrings.askIgnore.tr(),
+                            onPressed: () async => await viewModel.askToIgnore(
+                                context: context,
+                                requestId: viewModel.requestModel!.id?.toString()),
+                          ),
+                        ],
+                        if ((viewModel.requestModel!.status == 'approved' || viewModel.requestModel!.status == 'canceled'|| viewModel.requestModel!.status == 'refused')) ...[
+                          gapW8,
+                          CustomRequestDetailsButton(
+                              title: AppStrings.complaint.tr(),
+                              onPressed: () async => context.pushNamed(
+                                  AppRoutes.newComplainScreen.name,
+                               pathParameters: {'lang': context.locale.languageCode,}
+                              )
+                              // await viewModel.askToComplain(
+                              //     context: context,
+                              //     requestId: request?.toString())
                           )
-                          // await viewModel.askToComplain(
-                          //     context: context,
-                          //     requestId: request?.toString())
-                      )
-                    ]
-                  ]),
-                )
+                        ]
+                                          ]),
+                                        ),
+                      ),
+                    )
                     : const SizedBox.shrink()
               else
               // Case: the current request not my request [Manager || Team leader case]
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: AppSizes.s6, horizontal: AppSizes.s8),
-                  margin: const EdgeInsets.all(AppSizes.s8),
-                  width: LayoutService.getWidth(context),
-                  decoration: BoxDecoration(
-                      color: const Color(AppColors.dark),
-                      borderRadius: BorderRadius.circular(AppSizes.s50)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                    if (viewModel.requestModel!.employeeId != null) ...[
-                      // case: the current user is Manager
-                      CustomRequestDetailsButton(
-                          title: AppStrings.statistics.tr(),
-                          onPressed: () async =>
-                          await viewModel.showAndGetEmployeeStatistics(
-                              context, viewModel.requestModel!.employeeId.toString(), type: requestType)),
-                      gapW8,
-                    ],
-                    if ((viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
-                        viewModel.requestModel!.status == 'waiting') &&
-                        viewModel.requestModel!.id != null)
-                      CustomRequestDetailsButton(
-                        title: AppStrings.managementResponse.tr(),
-                        onPressed: () async =>
-                        await ModalSheetHelper.showModalSheet(
-                            context: context,viewProfile: false,
-                            modalContent: ManagementResponseModal(
-                              requestId: request.toString(),
-                            ),
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxWidth: kIsWeb ? 1100 : double.infinity
+                    ),
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      padding: EdgeInsets.symmetric(
+                          vertical: kIsWeb ? AppSizes.s4 : AppSizes.s6, 
+                          horizontal: AppSizes.s8),
+                      margin: EdgeInsets.all(kIsWeb ? AppSizes.s6 : AppSizes.s8),
+                      width: LayoutService.getWidth(context),
+                      decoration: BoxDecoration(
+                          color: const Color(AppColors.dark),
+                          borderRadius: BorderRadius.circular(AppSizes.s50)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                        if (viewModel.requestModel!.employeeId != null) ...[
+                          // case: the current user is Manager
+                          CustomRequestDetailsButton(
+                              title: AppStrings.statistics.tr(),
+                              onPressed: () async =>
+                              await viewModel.showAndGetEmployeeStatistics(
+                                  context, viewModel.requestModel!.employeeId.toString(), type: requestType)),
+                          gapW8,
+                        ],
+                        if ((viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
+                            viewModel.requestModel!.status == 'waiting') &&
+                            viewModel.requestModel!.id != null)
+                          CustomRequestDetailsButton(
                             title: AppStrings.managementResponse.tr(),
-                            height: (LayoutService.getHeight(context) * 0.5)),
-                      )
-                  ]),
+                            onPressed: () async =>
+                            await ModalSheetHelper.showModalSheet(
+                                context: context,viewProfile: false,
+                                modalContent: ManagementResponseModal(
+                                  requestId: request.toString(),
+                                ),
+                                title: AppStrings.managementResponse.tr(),
+                                height: (LayoutService.getHeight(context) * 0.5)),
+                          )
+                      ]),
+                    ),
+                  ),
                 )
             ],
                       );

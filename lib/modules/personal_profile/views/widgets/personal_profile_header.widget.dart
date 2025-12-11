@@ -47,6 +47,43 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String getVerificationStatus(us1Cache) {
+      final email = us1Cache['email'];
+      final phone = us1Cache['phone'];
+      final emailVerified = us1Cache['email_verified_at'] != null;
+      final phoneVerified = us1Cache['phone_verified_at'] != null;
+
+      // لا يوجد ايميل ولا تليفون
+      if (email == null && phone == null) {
+        return "";
+      }
+
+      // عنده ايميل فقط
+      if (email != null && phone == null) {
+        return emailVerified ? "" : AppStrings.email_not_verified.tr();
+      }
+
+      // عنده تليفون فقط
+      if (phone != null && email == null) {
+        return phoneVerified ? "" : AppStrings.phone_not_verified.tr();
+      }
+
+      // عنده الاتنين Email + Phone
+      if (!emailVerified && !phoneVerified) {
+        return AppStrings.email_phone_not_verified.tr();
+      }
+
+      if (!emailVerified && phoneVerified) {
+        return AppStrings.email_not_verified.tr();
+      }
+
+      if (emailVerified && !phoneVerified) {
+        return AppStrings.phone_not_verified.tr();
+      }
+
+      // الاتنين متحققين ✅
+      return "";
+    }
     var jsonString;
     var us1Cache;
     jsonString = CacheHelper.getString("US1");
@@ -85,9 +122,9 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
               width: LayoutService.getWidth(context),
               child: Column(
                 children: [
-                  if(us1Cache['email_verified_at'] == null || us1Cache['phone_verified_at'] == null) Container(
+                  if ( us1Cache != null &&  ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) )  Container(
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                     color: Colors.yellow,
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                     child: Row(
                       children: [
                         Icon(Icons.warning, color: Colors.red),
@@ -95,10 +132,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.6,
                           child: Text(
-                            (us1Cache['email_verified_at'] == null && us1Cache['phone_verified_at'] != null)? AppStrings.email_not_verified.tr():
-                            (us1Cache['email_verified_at'] != null && us1Cache['phone_verified_at'] == null)? AppStrings.phone_not_verified.tr():
-                            (us1Cache['email_verified_at'] == null && us1Cache['phone_verified_at'] == null)? AppStrings.email_phone_not_verified.tr(): "",
-                            style: const TextStyle(color: Colors.red),
+                            getVerificationStatus(us1Cache),style: const TextStyle(color: Colors.red),
                           ),
                         ),
                         const Spacer(),
@@ -106,7 +140,8 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if(us1Cache['email_verified_at'] == null || us1Cache['phone_verified_at'] == null)const SizedBox(height: 15,),
+                  if ( us1Cache != null &&  ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) ) const SizedBox(height: 15,),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

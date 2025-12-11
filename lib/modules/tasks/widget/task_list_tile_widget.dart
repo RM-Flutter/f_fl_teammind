@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -74,7 +75,7 @@ class TaskListTileWidget extends StatelessWidget {
                 SvgPicture.asset(assetName),
                 const SizedBox(width: 12,),
                 SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.6,
+                  width: !kIsWeb ? MediaQuery.sizeOf(context).width * 0.6 : MediaQuery.sizeOf(context).width * 0.3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

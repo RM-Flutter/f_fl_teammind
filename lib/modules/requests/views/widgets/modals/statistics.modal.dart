@@ -31,35 +31,32 @@ class StatisticsModal extends StatelessWidget {
       create: (_) => StatisticsViewModel(),
       child: Consumer<StatisticsViewModel>(
         builder: (context, viewModel, child) {
-          return Container(
-            height: MediaQuery.sizeOf(context).height * 0.4,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  StatisticsBalanceList(
-                    vacationBalance: empVocationBalance,
-                    type: type,
-                    employeeId: employeeId,
-                  ),
-                  gapH14,
-                  ...requests!
-                      .take(requests!.length > 6 ? 6 : requests!.length)
-                      .map(
-                        (req) => RequestCard(
-                          reqType: type == "mine"
-                              ? GetRequestsTypes.mine
-                              : type == "myTeam"
-                                  ? GetRequestsTypes.myTeam
-                                  : type == "otherDepartment"
-                                      ? GetRequestsTypes.otherDepartment
-                                      : type == "allCompany"
-                                          ? GetRequestsTypes.allCompany
-                                          : GetRequestsTypes.myTeam,
-                          request: req,
-                        ),
-                      )
-                ],
-              ),
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                StatisticsBalanceList(
+                  vacationBalance: empVocationBalance,
+                  type: type,
+                  employeeId: employeeId,
+                ),
+                gapH14,
+                ...requests!
+                    .map(
+                      (req) => RequestCard(
+                        reqType: type == "mine"
+                            ? GetRequestsTypes.mine
+                            : type == "myTeam"
+                                ? GetRequestsTypes.myTeam
+                                : type == "otherDepartment"
+                                    ? GetRequestsTypes.otherDepartment
+                                    : type == "allCompany"
+                                        ? GetRequestsTypes.allCompany
+                                        : GetRequestsTypes.myTeam,
+                        request: req,
+                      ),
+                    )
+              ],
             ),
           );
         },

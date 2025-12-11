@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
@@ -31,72 +32,78 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
           return (value.isLoading)?
           const SizedBox.shrink() :
           Dialog(
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Color(AppColors.dark)
-                  ),),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SwitchRow(
-                        isLoginPageStyle: true,
-                        value: value.notificationStatus,
-                        onChanged: (newValue)  {
-                          setState(() {
-                            value.notificationStatus = newValue;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  if(value.isLoading2)const Center(child: CircularProgressIndicator(),),
-                  if(!value.isLoading2)SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.6,
-                    child: GestureDetector(
-                      onTap: (){
-                        value.getDeviceSysSet(
-                          context: context,
-                          state: value.notificationStatus,
-                        );
-                      },
-                      child: Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: const Color(AppColors.dark),
-                          borderRadius: BorderRadius.circular(50),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: kIsWeb ? 400 : double.infinity,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff0D3B6F)
+                    ),),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SwitchRow(
+                          isLoginPageStyle: true,
+                          value: value.notificationStatus,
+                          onChanged: (newValue)  {
+                            setState(() {
+                              value.notificationStatus = newValue;
+                            });
+                          },
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset("assets/images/svg/apply_filter.svg"),
-                            const SizedBox(width: 15,),
-                            Text(
-                              AppStrings.saveChanges.tr().toUpperCase(),
-                              style:const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xffFFFFFF)
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if(value.isLoading2)const Center(child: CircularProgressIndicator(),),
+                    if(!value.isLoading2)SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.6,
+                      child: GestureDetector(
+                        onTap: (){
+                          value.getDeviceSysSet(
+                            context: context,
+                            state: value.notificationStatus,
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: const Color(0xff0D3B6F),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset("assets/images/svg/apply_filter.svg"),
+                              const SizedBox(width: 15,),
+                              Text(
+                                AppStrings.saveChanges.tr().toUpperCase(),
+                                style:const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xffFFFFFF)
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

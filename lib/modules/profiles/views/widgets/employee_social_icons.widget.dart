@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rmemp/constants/app_colors.dart';
+import 'package:rmemp/platform/platform_is.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../constants/app_sizes.dart';
 import '../../../../general_services/url_launcher.service.dart';
@@ -45,19 +47,30 @@ class EmployeeSocialContacts extends StatelessWidget {
       'snapchat': socialData?.snapchat,
     };
 
-    return Wrap(
-      spacing: AppSizes.s8,
-      children: [
-        for (var entry in socialLinks.entries)
-          if (entry.value?.isNotEmpty ?? false)
-            SocailIconButton(
-                icon: socialIcons[entry.key] ?? FontAwesomeIcons.circleQuestion,
-                label: entry.key,
-                url: _getUrl(entry: entry),
-                mode: entry.key == 'location'
-                    ? LaunchMode.externalApplication
-                    : null),
-      ],
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
+        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8 : 0,
+      ),
+      margin: EdgeInsets.only(
+        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
+      ),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
+        runSpacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
+        children: [
+          for (var entry in socialLinks.entries)
+            if (entry.value?.isNotEmpty ?? false)
+              SocailIconButton(
+                  icon: socialIcons[entry.key] ?? FontAwesomeIcons.circleQuestion,
+                  label: entry.key,
+                  url: _getUrl(entry: entry),
+                  mode: entry.key == 'location'
+                      ? LaunchMode.externalApplication
+                      : null),
+        ],
+      ),
     );
   }
 }

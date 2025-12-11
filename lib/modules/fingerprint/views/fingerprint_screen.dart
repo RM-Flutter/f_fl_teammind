@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -89,59 +90,66 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
           title: AppStrings.fingerprintsTitle.tr(),
           onRefresh: () async => await viewModel.initializeFingerprintScreen(
               context: context, empId: widget.empId),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
-            child: SingleChildScrollView(
-              child: Consumer<FingerprintViewModel>(
-                  builder: (context, viewModel, child) => viewModel.isLoading
-                      ? const FingerprintLoadingScreenWidget()
-                      : (viewModel.fingerprints?.isEmpty == true ||
-                      viewModel.fingerprints == null) && (AppConstants.fingerPrints == null && AppConstants.fingerPrints!.isEmpty)
-                          ? NoExistingPlaceholderScreen(
-                              height: LayoutService.getHeight(context) * 0.6,
-                              title: AppStrings.noFingerprintsYet.tr())
-                          : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //    if(widget.empName != null && widget.empName!.isNotEmpty && widget.empName != "noName") Center(
-                        //       child: Text(widget.empName!, style:
-                        //         const TextStyle(
-                        //           fontWeight: FontWeight.w400,fontSize: 22,
-                        //           color: Color(AppColors.dark)
-                        //         )
-                        //         ,),
-                        //     ),
-                        // if(widget.empName != null && widget.empName!.isNotEmpty && widget.empName != "noName")  const SizedBox(height: 20,),
-                        //       /// general screen message widget for other requests types
-                        //       // GeneralScreenMessageWidget(
-                        //       //     screenId: '/fingerprints'),
-                      if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
-                            child: CustomElevatedButton(
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                titleSize: AppSizes.s12,
-                                title: AppStrings.showOfflineFingerprints.tr().toUpperCase(),
-                                onPressed: () async{
-                                  await context.pushNamed(
-                                      AppRoutes.fingerPrintOffline.name,
-                                      pathParameters: {
-                                        'lang': context.locale.languageCode
-                                      });
-                                  await viewModel.initializeFingerprintScreen(
-                                      context: context, empId: widget.empId);
-                                }
-                            )),
-                        if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)   const SizedBox(height: 15,),
-                              ...viewModel.fingerprints!.map(
-                                (fingerprint) => Column(
-                                  children: [
-                                    FingerprintCard(
-                                      fingerprint: fingerprint,
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s12),
+                child: SingleChildScrollView(
+                  child: Consumer<FingerprintViewModel>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const FingerprintLoadingScreenWidget()
+                          : (viewModel.fingerprints?.isEmpty == true ||
+                          viewModel.fingerprints == null) && (AppConstants.fingerPrints == null && AppConstants.fingerPrints!.isEmpty)
+                              ? NoExistingPlaceholderScreen(
+                                  height: LayoutService.getHeight(context) * 0.6,
+                                  title: AppStrings.noFingerprintsYet.tr())
+                              : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //    if(widget.empName != null && widget.empName!.isNotEmpty && widget.empName != "noName") Center(
+                            //       child: Text(widget.empName!, style:
+                            //         const TextStyle(
+                            //           fontWeight: FontWeight.w400,fontSize: 22,
+                            //           color: Color(AppColors.dark)
+                            //         )
+                            //         ,),
+                            //     ),
+                            // if(widget.empName != null && widget.empName!.isNotEmpty && widget.empName != "noName")  const SizedBox(height: 20,),
+                            //       /// general screen message widget for other requests types
+                            //       // GeneralScreenMessageWidget(
+                            //       //     screenId: '/fingerprints'),
+                          if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
+                                child: CustomElevatedButton(
+                                    backgroundColor: Theme.of(context).colorScheme.primary,
+                                    titleSize: AppSizes.s12,
+                                    title: AppStrings.showOfflineFingerprints.tr().toUpperCase(),
+                                    onPressed: () async{
+                                      await context.pushNamed(
+                                          AppRoutes.fingerPrintOffline.name,
+                                          pathParameters: {
+                                            'lang': context.locale.languageCode
+                                          });
+                                      await viewModel.initializeFingerprintScreen(
+                                          context: context, empId: widget.empId);
+                                    }
+                                )),
+                            if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)   const SizedBox(height: 15,),
+                                if(viewModel.fingerprints != null)  ...viewModel.fingerprints!.map(
+                                    (fingerprint) => Column(
+                                      children: [
+                                        FingerprintCard(
+                                          fingerprint: fingerprint,
+                                        ),
+                                        gapH12
+                                      ],
                                     ),
-                                    gapH12
-                                  ],
-                                ),
-                              ),
-                            ])),
+                                  ),
+                                ])),
+                ),
+              ),
             ),
           )),
     );

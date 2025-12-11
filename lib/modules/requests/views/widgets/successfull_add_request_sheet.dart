@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -15,13 +16,22 @@ var onTap;
 SuccessfullAddRequestSheet({this.title, this.onTap});
   @override
   Widget build(BuildContext context) {
+    final isWeb = kIsWeb;
     return Consumer<HomeViewModel>(builder: (context, value, child) {
       return Container(
-        height: MediaQuery.of(context).size.height * 0.5,
-        width: MediaQuery.sizeOf(context).width * 0.99,
+        height: isWeb ? MediaQuery.of(context).size.height * 0.4 : MediaQuery.of(context).size.height * 0.5,
+        width: isWeb ? null : MediaQuery.sizeOf(context).width * 0.99,
+        constraints: isWeb 
+            ? BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+                maxWidth: 500,
+              )
+            : null,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          borderRadius: isWeb 
+              ? BorderRadius.circular(30)
+              : BorderRadius.vertical(top: Radius.circular(30)),
         ),
         child: Column(
           children: [
@@ -46,38 +56,48 @@ SuccessfullAddRequestSheet({this.title, this.onTap});
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomElevatedButton(
-                      onPressed: () async {
-                       context.goNamed(AppRoutes.home.name,
-                          pathParameters: {'lang': context.locale.languageCode,});
-                      },
-                      backgroundColor: const Color(AppColors.dark),
-                      title: AppStrings.goToHome.tr().toUpperCase(),
-                      isPrimaryBackground: true,
-                      width: MediaQuery.sizeOf(context).width * 0.45,
-                      isFuture: false),
-                  const SizedBox(width: 5,),
-                  CustomElevatedButton(
-                      onPressed: onTap ?? () async {
-                        // context.goNamed(AppRoutes.requests2.name, pathParameters: {
-                        //   'type': 'mine',
-                        //   'lang': context.locale.languageCode
-                        // });
-                        // Navigator.pop(context);
-                        // Navigator.pop(context);
-                        await context.pushNamed(AppRoutes.requests2.name,
-                            pathParameters: {
-                                 'type': 'mine',
-                                 'lang': context.locale.languageCode
-                            });
-                      },
-                      width: MediaQuery.sizeOf(context).width * 0.45,
-                      backgroundColor: const Color(AppColors.dark),
-                      title: title ?? AppStrings.goToRequest.tr().toUpperCase(),
-                      isPrimaryBackground: true,
-                      isFuture: false),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: CustomElevatedButton(
+                          onPressed: () async {
+                           context.goNamed(AppRoutes.home.name,
+                              pathParameters: {'lang': context.locale.languageCode,});
+                          },
+                          backgroundColor: const Color(AppColors.dark),
+                          title: AppStrings.goToHome.tr().toUpperCase(),
+                          isPrimaryBackground: true,
+                          width:!kIsWeb? MediaQuery.sizeOf(context).width * 0.45:null,
+                          isFuture: false),
+                    ),
+                  ),
+                  SizedBox(width: kIsWeb ? 10 : 5,),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: CustomElevatedButton(
+                          onPressed: onTap ?? () async {
+                            // context.goNamed(AppRoutes.requests2.name, pathParameters: {
+                            //   'type': 'mine',
+                            //   'lang': context.locale.languageCode
+                            // });
+                            // Navigator.pop(context);
+                            // Navigator.pop(context);
+                            await context.pushNamed(AppRoutes.requests2.name,
+                                pathParameters: {
+                                     'type': 'mine',
+                                     'lang': context.locale.languageCode
+                                });
+                          },
+                          width: !kIsWeb? MediaQuery.sizeOf(context).width * 0.45:null,
+                          backgroundColor: const Color(AppColors.dark),
+                          title: title ?? AppStrings.goToRequest.tr().toUpperCase(),
+                          isPrimaryBackground: true,
+                          isFuture: false),
+                    ),
+                  ),
                 ],
               ),
             ),

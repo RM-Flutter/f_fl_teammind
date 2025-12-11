@@ -5,21 +5,62 @@ import 'package:provider/provider.dart';
 import 'package:rmemp/common_modules_widgets/custom_elevated_button.widget.dart';
 import 'package:rmemp/common_modules_widgets/main_app_fab_widget/main_app_fab.service.dart';
 import 'package:rmemp/constants/app_colors.dart';
+import 'package:rmemp/constants/app_constants.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/constants/restart_app.dart';
+import 'package:rmemp/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
 import '../../../constants/app_sizes.dart';
 import '../view_models/offline_viewmodel.dart';
 
-class OfflineScreen extends StatelessWidget {
+class OfflineScreen extends StatefulWidget {
   const OfflineScreen({super.key});
 
+  @override
+  State<OfflineScreen> createState() => _OfflineScreenState();
+}
+
+class _OfflineScreenState extends State<OfflineScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => OfflineViewModel()..initialize(ctx: context)),
+          ChangeNotifierProvider(create: (context) {
+            final viewModel = OfflineViewModel()..initialize(ctx: context);
+            // Reload fingerprints after provider is created
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                viewModel.loadFingerprintsFromPreferences();
+              }
+            });
+            return viewModel;
+          }),
         ],
-      child: Scaffold(
+      child: _OfflineScreenContent(),
+    );
+  }
+}
+
+class _OfflineScreenContent extends StatefulWidget {
+  @override
+  State<_OfflineScreenContent> createState() => _OfflineScreenContentState();
+}
+
+class _OfflineScreenContentState extends State<_OfflineScreenContent> {
+  @override
+  void initState() {
+    super.initState();
+    // Reload fingerprints when screen becomes visible
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final viewModel = Provider.of<OfflineViewModel>(context, listen: false);
+        viewModel.loadFingerprintsFromPreferences();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
         body: Consumer<OfflineViewModel>(
           builder: (context, viewModel, _) {
             return Stack(
@@ -151,6 +192,41 @@ class OfflineScreen extends StatelessWidget {
                               },
                             ),
                           ),
+                        const SizedBox(height: 30,),
+                        // Show saved fingerprints
+                        if (viewModel.savedFingerprints != null && 
+                            viewModel.savedFingerprints!.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppStrings.fingerprintsTitle.tr(),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(AppColors.dark),
+                                  ),
+                                ),
+                                const SizedBox(height: 15,),
+                                if (viewModel.isLoadingFingerprints)
+                                  const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                else
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                    child: FingerprintCardOffiline(
+                                      fingerprint: viewModel.savedFingerprints,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -159,7 +235,7 @@ class OfflineScreen extends StatelessWidget {
             );
           },
         ),
-      ),
+      
     );
   }
 

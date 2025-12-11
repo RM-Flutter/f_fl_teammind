@@ -1,13 +1,14 @@
 {
-    "name": "employees",
-    "short_name": "employees",
+    "name": "Team Mind",
+    "short_name": "Team Mind",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#hexcode",
-    "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "description": "Attendance System for Companies.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "version": "1.0.1",
     "icons": [
         {
             "src": "icons/Icon-192.png",

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -67,60 +68,78 @@ class EmployeeDetailsHeader extends StatelessWidget {
             ),
           ),
           gapH12,
-          employee?.avatar != null
-              ? GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FullScreenImageViewer(
-                          initialIndex: 0,
-                          imageUrls: [""],
-                          one: true,
-                          url: false,
-                          image: employee!.avatar!,
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Column(
+                children: [
+                  employee?.avatar != null
+                      ? GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FullScreenImageViewer(
+                            initialIndex: 0,
+                            imageUrls: [""],
+                            one: true,
+                            url: false,
+                            image: employee!.avatar!,
+                          ),
+                        ),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(85),
+                      child: CachedNetworkImage(
+                        width: 85,
+                        height: 85,
+                        fit: BoxFit.cover,
+                        imageUrl: employee!.avatar!,
+                        placeholder: (context, url) =>
+                        const ShimmerAnimatedLoading(),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.image_not_supported_outlined,
+                          size: AppSizes.s32,
+                          color: Colors.white,
                         ),
                       ),
-                    );
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(85),
-                    child: CachedNetworkImage(
-                      width: 85,
-                      height: 85,
+                    ),
+                  )
+                      : CircleAvatar(
+                    radius: AppSizes.s36,
+                    child: Image.asset(
+                      AppImages.profilePlaceHolder,
                       fit: BoxFit.cover,
-                      imageUrl: employee!.avatar!,
-                      placeholder: (context, url) =>
-                          const ShimmerAnimatedLoading(),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.image_not_supported_outlined,
-                        size: AppSizes.s32,
-                        color: Colors.white,
-                      ),
                     ),
                   ),
-                )
-              : CircleAvatar(
-                  radius: AppSizes.s36,
-                  child: Image.asset(
-                    AppImages.profilePlaceHolder,
-                    fit: BoxFit.cover,
+                  gapH12,
+                  Text(
+                    employee?.name ?? '',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: AppSizes.s20,
+                        fontWeight: FontWeight.w500),
                   ),
-                ),
-          gapH12,
-          Text(
-            employee?.name ?? '',
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: AppSizes.s20,
-                fontWeight: FontWeight.w500),
-          ),
-          Text(
-            employee?.jobTitle ?? '',
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: AppSizes.s14,
-                fontWeight: FontWeight.w400),
+                  Text(
+                    employee?.jobTitle ?? '',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: AppSizes.s14,
+                        fontWeight: FontWeight.w400),
+                  ) ,
+                 if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
+                     "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase() ?? ''}",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: AppSizes.s14,
+                        fontWeight: FontWeight.w400),
+                  )
+                ],
+              ),
+            ),
           )
         ],
       ),

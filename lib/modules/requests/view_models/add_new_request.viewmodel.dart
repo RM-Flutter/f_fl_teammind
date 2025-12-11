@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -61,57 +62,8 @@ class AddNewRequestViewModel extends ChangeNotifier {
   String? selectedRequestTypes;
   final picker = ImagePicker();
   List status = [
-    "canceled", "approved", "seen", "waiting_seen", "waiting_cancel"
+    "canceled", "approved", "seen", "waiting_seen"
   ];
-  Future<File?> _compressImage(File file) async {
-    final targetPath =
-        "${file.parent.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg";
-
-    final XFile? result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: 75,
-      minWidth: 1600,
-      minHeight: 1600,
-    );
-    return result != null ? File(result.path) : null;
-  }
-
-  Future<void> getProfileImageByCam() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
-    if (imageFileProfile == null) return;
-
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
-
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
-    }
-  }
-
-  Future<void> getProfileImageByGallery() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
-    if (imageFileProfile == null) return;
-
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
-
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
-    }
-  }
   Future<void> getImage( context, {image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
           shape: RoundedRectangleBorder(
@@ -569,6 +521,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
   void _calcDuration({required BuildContext context}) {
     if (selectedDateOrDatetimeRange == null) {
       duration = 0;
+      formattedDuration = null; // Clear formatted duration
       return;
     }
     final String? type = reqType;
@@ -583,15 +536,26 @@ class AddNewRequestViewModel extends ChangeNotifier {
     final selectedDates = selectedDateOrDatetimeRange!.end;
     final now = DateTime.now();
 
-    final isToday = isSameDate(selectedDate, now);
-    final isToday2 = isSameDate(selectedDates, now);
-    if(type?.toLowerCase().trim() == 'days' && halfDay == true && isToday == true && isToday2 ==true){
+    // Check if start date equals end date AND both equal today
+    final isStartEndSame = isSameDate(selectedDate, selectedDates);
+    final isStartToday = isSameDate(selectedDate, now);
+    final isEndToday = isSameDate(selectedDates, now);
+    final isSameDay = isStartEndSame && isStartToday && isEndToday;
+    
+    // If it's a days type request with halfDay enabled and start/end are the same day and it's today, calculate as half day
+    print("isSameDay --> ${isSameDay}");
+    print("halfDay --> ${halfDay}");
+    print("type --> ${type?.toLowerCase().trim()}");
+    if(type?.toLowerCase().trim() == 'days' && halfDay == true && isSameDay){
       checkHalfDate(context, selectedDate.toString());
     }
-    else if(type?.toLowerCase().trim() == 'days' && halfDay == true && (isToday == false || isToday2 == false)){
+    else if(type?.toLowerCase().trim() == 'days' && halfDay == true && !isSameDay){
+      print("I AM HERE");
+      formattedDuration = null; // Clear formatted duration before calculating days
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
     }
    else if (type?.toLowerCase().trim() == 'days' && halfDay == false) {
+      formattedDuration = null; // Clear formatted duration before calculating days
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
       return;
     }
@@ -601,6 +565,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
       _getHoursDifference(context: context);
       return;
     }else{
+      formattedDuration = null; // Clear formatted duration before calculating days
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
     }
   }
@@ -619,6 +584,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
     }
 
     // Load user settings from cache (similar to your other method)
+    final user2Settings = UserSettingConst.userSettings2;
     var jsonString = CacheHelper.getString("US2");
     if (jsonString != null && jsonString.isNotEmpty) {
       final gCache = json.decode(jsonString) as Map<String, dynamic>;
@@ -626,11 +592,13 @@ class AddNewRequestViewModel extends ChangeNotifier {
     }
     GeneralSettingsModel? generalSettingsModel;
     var gCache2;
-    final user2Settings = UserSettingConst.userSettings2;
-    var jsonString2 = CacheHelper.getString("US2");
+
+    var jsonString2 = CacheHelper.getString("USG");
     if (jsonString2 != null && jsonString2.isNotEmpty) {
       gCache2 = json.decode(jsonString2) as Map<String, dynamic>;
       UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache2);
+      generalSettingsModel = GeneralSettingsModel.fromJson(gCache2);
+
     }
     // Get general settings with holidays list
     final generalSettings = generalSettingsModel;
@@ -658,9 +626,19 @@ class AddNewRequestViewModel extends ChangeNotifier {
         return true; // It's a weekend
       }
     }
-
+      print("holidays is --> $holidays");
+      print("canUseHolidays is --> ${user2Settings?.canUseHolidays}");
     // Check holidays if user can use holidays
-    if (user2Settings?.canUseHolidays == true && holidays != null) {
+    if (user2Settings?.canUseHolidays == true && holidays != null && holidays.isNotEmpty) {
+      print("holidays is --> $holidays");
+      print("canUseHolidays is --> ${user2Settings?.canUseHolidays}");
+      print("weekendDays is --> $weekendDays");
+      print("date is --> $date");
+      print("date.weekday is --> ${date.weekday}");
+      print("weekdaysMap is --> $weekdaysMap");
+      print("weekdaysMap[date.weekday] is --> ${weekdaysMap[date.weekday]}");
+      print("weekendDays.contains(weekdaysMap[date.weekday]) is --> ${weekendDays.contains(weekdaysMap[date.weekday])}");
+      print("weekendDays.contains(weekdaysMap[date.weekday]) is --> ${weekendDays.contains(weekdaysMap[date.weekday])}");
       for (var holidayOrString in holidays) {
         if (holidayOrString.holiday != null) {
           final holidayStart = DateTime.parse(holidayOrString.holiday!.from!);
@@ -684,30 +662,38 @@ class AddNewRequestViewModel extends ChangeNotifier {
     String dateString = date;
     bool isWeekend = isWeekendOrHolidayDateFromString(context, dateString);
     duration = isWeekend ? 0 : 0.5;
+    // Set formattedDuration to show "0.5" or "نصف يوم" for half day
+    if (duration == 0.5) {
+      formattedDuration = '0.5 ${AppStrings.days.tr()}';
+      notifyListeners();
+    } else {
+      formattedDuration = '0 ${AppStrings.days.tr()}';
+      notifyListeners();
+    }
+    notifyListeners();
     print('$dateString is weekend? $isWeekend');
   }
-  void _getDateDifferenceWithoutWeekendsAndOfficailHolidays(
-      {required BuildContext context}) {
+  void _getDateDifferenceWithoutWeekendsAndOfficailHolidays({required BuildContext context}) {
     var jsonString2;
-    var gCache2;
+    var gCache;
     GeneralSettingsModel? generalSettingsModel;
     jsonString2 = CacheHelper.getString("USG");
     if (jsonString2 != null && jsonString2.isNotEmpty && jsonString2 != "") {
-      gCache2 = json.decode(jsonString2) as Map<String, dynamic>; // Convert String back to JSON
-      UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache2);
+      gCache = json.decode(jsonString2) as Map<String, dynamic>; // Convert String back to JSON
+      UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
+      generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
     }
-    generalSettingsModel = GeneralSettingsModel.fromJson(gCache2);
     var jsonString;
-    var gCache;
+    var gCache2;
     jsonString = CacheHelper.getString("US2");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-      UserSettingConst.userSettings2 = UserSettings2Model.fromJson(gCache);
+      gCache2 = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      UserSettingConst.userSettings2 = UserSettings2Model.fromJson(gCache2);
     }
     final user2Settigns = UserSettingConst.userSettings2;
 
     int nbDays = 0;
-    final List<HolidayOrString>? holidays = generalSettingsModel.holidays;
+    final List<HolidayOrString>? holidays = generalSettingsModel!.holidays;
     List<int> weekendDays = [];
     List<String> weekendDaysNames = [];
     Map<int, String> weekdaysMap = {
@@ -758,6 +744,8 @@ class AddNewRequestViewModel extends ChangeNotifier {
         '1- duration after subtracting weekends |||||||||||||||||| $duration');
 
     // Second: Subtracting Holidays if the Current user can use holidays
+      print("holidays is --> $holidays");
+      print("canUseHolidays is --> ${user2Settigns.canUseHolidays}");
     if (user2Settigns.canUseHolidays == true && holidays != null) {
       int holidayDays = 0;
 
@@ -859,15 +847,14 @@ class AddNewRequestViewModel extends ChangeNotifier {
       print("isAttachingFile $attachingFile");
 
       final dateTimeFormat = DateFormat('yyyy-MM-dd HH:mm:ss'); // include time
+      final selectedDate = selectedDateOrDatetimeRange!.start;
+      final now = DateTime.now();
+
       bool isSameDate(DateTime date1, DateTime date2) {
         return date1.year == date2.year &&
             date1.month == date2.month &&
             date1.day == date2.day;
       }
-
-      final selectedDate = selectedDateOrDatetimeRange!.start;
-      final now = DateTime.now();
-
       final isToday = isSameDate(selectedDate, now);
       print("ISTODAY --> $isToday");
       final requestMainData = {
@@ -898,14 +885,45 @@ class AddNewRequestViewModel extends ChangeNotifier {
       if (result.success) {
         _resetValues();
         notifyListeners();
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true, // This makes the BottomSheet full-screen
-          backgroundColor: Colors.white, // Optional, for styling
-          builder: (context) {
-            return SuccessfullAddRequestSheet();
-          },
-        );
+        if (kIsWeb) {
+          // Use showDialog for web to ensure it's fully visible
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext dialogContext) {
+              final screenHeight = MediaQuery.of(dialogContext).size.height;
+              final screenWidth = MediaQuery.of(dialogContext).size.width;
+              return Dialog(
+                alignment: Alignment.center,
+                insetPadding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.2,
+                  vertical: screenHeight * 0.15,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: screenHeight * 0.6,
+                    maxWidth: 500,
+                  ),
+                  child: SuccessfullAddRequestSheet(),
+                ),
+              );
+            },
+          );
+        }
+        else {
+          // Use showModalBottomSheet for mobile
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true, // This makes the BottomSheet full-screen
+            backgroundColor: Colors.white, // Optional, for styling
+            builder: (context) {
+              return SuccessfullAddRequestSheet();
+            },
+          );
+        }
         return;
       } else {
 
@@ -925,18 +943,47 @@ class AddNewRequestViewModel extends ChangeNotifier {
                         ? [attachedFile!]
                         : []);
             if (resendRequestResult.success) {
-              await AlertsService.success(
-                  context: context,
-                  title: AppStrings.success.tr(),
-                  message: resendRequestResult.message ??
-                      'New Request Created Successfully');
               _resetValues();
               notifyListeners();
-              context.goNamed(AppRoutes.requests2.name, pathParameters: {
-                'type': 'mine',
-                'lang': context.locale.languageCode
-              });
-              return;
+              if (kIsWeb) {
+                // Use showDialog for web to ensure it's fully visible
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext dialogContext) {
+                    final screenHeight = MediaQuery.of(dialogContext).size.height;
+                    final screenWidth = MediaQuery.of(dialogContext).size.width;
+                    return Dialog(
+                      alignment: Alignment.center,
+                      insetPadding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.2,
+                        vertical: screenHeight * 0.15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: screenHeight * 0.6,
+                          maxWidth: 500,
+                        ),
+                        child: SuccessfullAddRequestSheet(),
+                      ),
+                    );
+                  },
+                );
+              }
+              else {
+                // Use showModalBottomSheet for mobile
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true, // This makes the BottomSheet full-screen
+                  backgroundColor: Colors.white, // Optional, for styling
+                  builder: (context) {
+                    return SuccessfullAddRequestSheet();
+                  },
+                );
+              }
             } else {
               await AlertsService.error(
                   context: context,
@@ -966,6 +1013,9 @@ class AddNewRequestViewModel extends ChangeNotifier {
     }
   }
   Future<void> createNewComplaint(BuildContext context, {List<XFile>? images}) async {
+    // images = listAttachmentPersonalImage
+    //      .map((e) => XFile(e["upload"].path)) // تحويل File → XFile
+    //      .toList();
     isAddRequestLoading = true;
     notifyListeners();
     var response;
@@ -974,8 +1024,16 @@ class AddNewRequestViewModel extends ChangeNotifier {
       if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
       "department_id" : selectedRequestTypes.toString(),
       "main_thumbnail[]": images != null
-          ? await Future.wait(
-          images.map((file) async => await MultipartFile.fromFile(file.path, filename: file.name))
+          ? !kIsWeb? await Future.wait(
+          images.map((file) async =>await MultipartFile.fromFile(file.path, filename: file.name))
+      ):await Future.wait(
+        images.map((file) async {
+          final bytes = await file.readAsBytes();
+          return MultipartFile.fromBytes(
+            bytes,
+            filename: file.name,
+          );
+        }),
       )
           : [],
     });
@@ -1043,6 +1101,71 @@ class AddNewRequestViewModel extends ChangeNotifier {
       notifyListeners();
 
     }
+  }
+  Future<File?> _compressImage(File file) async {
+    final targetPath =
+        "${file.parent.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+    final XFile? result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 75,
+      minWidth: 1600,
+      minHeight: 1600,
+    );
+    return result != null ? File(result.path) : null;
+  }
+  Future<void> getProfileImageByGallery() async {
+    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
+    if (imageFileProfile == null) return;
+
+    if (kIsWeb) {
+      Uint8List bytes = await imageFileProfile.readAsBytes();
+      listXAttachmentPersonalImage.add(imageFileProfile);
+      listAttachmentPersonalImage.add({
+        "preview": bytes,     // 🖥️ للعرض
+        "upload": bytes,      // 🖥️ للرفع برضه
+      });
+    } else {
+      File originalFile = File(imageFileProfile.path);
+      File? compressedFile = await _compressImage(originalFile);
+
+      if (compressedFile != null) {
+        listAttachmentPersonalImage.add({
+          "preview": compressedFile,   // 📱 للعرض
+          "upload": compressedFile,    // 📱 للرفع
+        });
+      }
+    }
+
+
+    notifyListeners();
+  }
+  Future<void> getProfileImageByCam() async {
+    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
+    if (imageFileProfile == null) return;
+
+    if (kIsWeb) {
+      Uint8List bytes = await imageFileProfile.readAsBytes();
+      listXAttachmentPersonalImage.add(imageFileProfile);
+      listAttachmentPersonalImage.add({
+        "preview": bytes,     // 🖥️ للعرض
+        "upload": bytes,      // 🖥️ للرفع برضه
+      });
+    } else {
+      File originalFile = File(imageFileProfile.path);
+      File? compressedFile = await _compressImage(originalFile);
+
+      if (compressedFile != null) {
+        listAttachmentPersonalImage.add({
+          "preview": compressedFile,   // 📱 للعرض
+          "upload": compressedFile,    // 📱 للرفع
+        });
+      }
+    }
+
+
+    notifyListeners();
   }
 
 }

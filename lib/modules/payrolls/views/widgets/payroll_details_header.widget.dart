@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rmemp/constants/app_strings.dart';
@@ -62,35 +63,42 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
             ),
           ),
           gapH12,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                   '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: AppSizes.s22,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  textAlign: TextAlign.start,
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 1100 : double.infinity,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                       '',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: AppSizes.s22,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    gapH12,
+                    if (payroll?.netPayable != null)
+                      PayrollHeaderTileWidget(
+                          title: AppStrings.netSalary.tr(),
+                          subTitle:
+                              '${payroll!.netPayable!.toString()} ${payroll?.currency ?? ''}',
+                          icon: Icons.attach_money_outlined),
+                    gapH12,
+                    if (payroll?.dateTo != null)
+                      PayrollHeaderTileWidget(
+                          title: AppStrings.date.tr(),
+                          subTitle:
+                              PayrollService.formatDate(payroll?.dateTo, context) ?? '',
+                          icon: Icons.calendar_month_outlined)
+                  ],
                 ),
-                gapH12,
-                if (payroll?.netPayable != null)
-                  PayrollHeaderTileWidget(
-                      title: AppStrings.netSalary.tr(),
-                      subTitle:
-                          '${payroll!.netPayable!.toString()} ${payroll?.currency ?? ''}',
-                      icon: Icons.attach_money_outlined),
-                gapH12,
-                if (payroll?.dateTo != null)
-                  PayrollHeaderTileWidget(
-                      title: AppStrings.date.tr(),
-                      subTitle:
-                          PayrollService.formatDate(payroll?.dateTo, context) ?? '',
-                      icon: Icons.calendar_month_outlined)
-              ],
+              ),
             ),
           )
         ],
@@ -113,7 +121,7 @@ class PayrollHeaderTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: LayoutService.getWidth(context) * 0.8,
+      width: !kIsWeb ?LayoutService.getWidth(context) * 0.8 : LayoutService.getWidth(context) * 0.4,
       decoration: BoxDecoration(
           color: const Color(0xff2C376C),
           borderRadius: BorderRadius.circular(AppSizes.s6)),

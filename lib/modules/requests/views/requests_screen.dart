@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,8 @@ import 'package:rmemp/general_services/app_theme.service.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:rmemp/general_services/localization.service.dart';
 import 'package:rmemp/modules/requests/views/widgets/search_filter_widget.dart';
+import 'package:rmemp/modules/requests/views/widgets/active_filters_widget.dart';
+import 'package:rmemp/controller/filter_controller/filter_controller.dart';
 import '../../../common_modules_widgets/main_app_fab_widget/main_app_fab.widget.dart';
 import '../../../common_modules_widgets/loading_page.widget.dart';
 import '../../../common_modules_widgets/request_card.widget.dart';
@@ -41,6 +44,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
   @override
   void initState() {
     super.initState();
+    // Clear filters when entering the screen
+    CacheHelper.deleteData(key: "reqId");
+    CacheHelper.deleteData(key: "empId");
+    CacheHelper.deleteData(key: "from");
+    CacheHelper.deleteData(key: "to");
+    CacheHelper.deleteData(key: "depId");
+    CacheHelper.deleteData(key: "selectStatus");
+    
     viewModel = RequestsViewModel();
     viewModel.initializeRequestsScreen(
         context: context,
@@ -53,15 +64,25 @@ class _RequestsScreenState extends State<RequestsScreen> {
           viewModel.hasMore) {
         viewModel.initializeRequestsScreen(
             context: context,
-            requestsType:widget.requestsType??  GetRequestsTypes.mine, loadMore: true);
+            requestsType:widget.requestsType??  GetRequestsTypes.mine, 
+            loadMore: true,
+            requestTypeId: CacheHelper.getString("reqId"),
+            empIds: CacheHelper.getString("empId"),
+            from: CacheHelper.getString("from"),
+            to: CacheHelper.getString("to"),
+            depId: CacheHelper.getString("depId"),
+            status: CacheHelper.getString("selectStatus"));
       }
     });
   }
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<RequestsViewModel>(
-        create: (_) => viewModel,
-        child: TemplatePage(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<RequestsViewModel>.value(value: viewModel),
+        ChangeNotifierProvider(create: (context) => FilterController()..getDepartment(context: context)..getRequestTypes(context: context)..getEmployees(context: context)),
+      ],
+      child: TemplatePage(
             pageContext: context,
             floatingActionButton: Container(
               padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
@@ -92,24 +113,59 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   const SizedBox(height: 10,),
                   FloatingActionButton(
                     onPressed: ()async {
-                      await showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      enableDrag: false,
-                      isDismissible: false,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.vertical(
-                            top: Radius.circular(
-                                35.0)),
-                      ),
-                      builder: (BuildContext context) {
-                        return SearchFilterWidget(
-                          contexts: context,
-                          requestsType: widget.requestsType
+                      if (kIsWeb) {
+                        // Use showDialog for web to ensure it's fully visible
+                        await showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext dialogContext) {
+                            final screenHeight = MediaQuery.of(dialogContext).size.height;
+                            final screenWidth = MediaQuery.of(dialogContext).size.width;
+                            return Dialog(
+                              alignment: Alignment.center,
+                              insetPadding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.15,
+                                vertical: screenHeight * 0.1,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight: screenHeight * 0.8,
+                                  maxWidth: 600,
+                                ),
+                                child: SearchFilterWidget(
+                                  contexts: dialogContext,
+                                  requestsType: widget.requestsType,
+                                  isWeb: true,
+                                ),
+                              ),
+                            );
+                          },
                         );
-                      },
-                      );
+                      } else {
+                        // Use showModalBottomSheet for mobile
+                        await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          enableDrag: false,
+                          isDismissible: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.vertical(
+                                top: Radius.circular(
+                                    35.0)),
+                          ),
+                          builder: (BuildContext context) {
+                            return SearchFilterWidget(
+                              contexts: context,
+                              requestsType: widget.requestsType,
+                              isWeb: false,
+                            );
+                          },
+                        );
+                      }
                       viewModel.initializeRequestsScreen(
                           context: context,
                           requestsType: widget.requestsType!,
@@ -159,135 +215,181 @@ class _RequestsScreenState extends State<RequestsScreen> {
             onRefresh: () async {
               viewModel.currentPage = 1;
               viewModel.initializeRequestsScreen(
-                  context: context, requestsType: widget.requestsType!);
+                  context: context, 
+                  requestsType: widget.requestsType!,
+                  requestTypeId: CacheHelper.getString("reqId"),
+                  empIds: CacheHelper.getString("empId"),
+                  from: CacheHelper.getString("from"),
+                  to: CacheHelper.getString("to"),
+                  depId: CacheHelper.getString("depId"),
+                  status: CacheHelper.getString("selectStatus"));
             },
-            body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-      child: Consumer<RequestsViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isLoading) return const LoadingPageWidget();
-
-          final hasRequests =
-              (viewModel.requests?.isNotEmpty == true) ||
-                  (viewModel.myTeamRequests?.isNotEmpty == true) ||
-                  (viewModel.otherDepartmentRequestModel?.isNotEmpty == true);
-
-          if (!hasRequests) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (viewModel.rulesMessage != null)
-                  AutoSizeText(
-                    viewModel.rulesMessage ?? "",
-                    style: const TextStyle(
-                        color: Color(0xff404040),
-                        fontSize: AppSizes.s12,
-                        fontWeight: FontWeight.w400),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 10,
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                NoExistingPlaceholderScreen(
-                  height: LayoutService.getHeight(context) * 0.6,
-                  title: AppStrings.thereIsNoRequests.tr(),
+            body: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxWidth: kIsWeb ? 1100 : double.infinity
                 ),
-              ],
-            );
-          }
-
-          return RefreshIndicator.adaptive(
-            onRefresh: () async {
-              viewModel.currentPage = 1;
-              viewModel.initializeRequestsScreen(
-                  context: context, requestsType: widget.requestsType!);
-            },
-            child: SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.85,
-              child: ListView(
-                controller: _scrollController,
-                shrinkWrap: true,
-                children: [
-                  /// calendar button
-                  if (widget.requestsType == GetRequestsTypes.myTeam ||
-                      widget.requestsType == GetRequestsTypes.otherDepartment)
-                    CustomRequestsPageButton(
-                      onPressed: () async => await context.pushNamed(
-                        AppRoutes.requestsCalendar.name,
-                        pathParameters: {
-                          'type': 'mine',
-                          'lang': context.locale.languageCode,
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  height: MediaQuery.sizeOf(context).height * 1,
+                  child: Column(
+                    children: [
+                      // Active Filters Widget at the top - only show if there are active filters
+                      Consumer<RequestsViewModel>(
+                        builder: (context, viewModel, child) {
+                          if (ActiveFiltersWidget.hasActiveFilters()) {
+                            return ActiveFiltersWidget(
+                              requestsType: widget.requestsType,
+                              viewModel: viewModel,
+                            );
+                          }
+                          return const SizedBox.shrink();
                         },
-                        extra: widget.requestsType == GetRequestsTypes.mine
-                            ? viewModel.requests
-                            : (widget.requestsType == GetRequestsTypes.myTeam)
-                            ? viewModel.myTeamRequests
-                            : viewModel.otherDepartmentRequestModel,
                       ),
-                      title: AppStrings.viewTeamRequestsOnCalendar.tr(),
-                      icon: Icons.calendar_month_outlined,
-                    ),
+                      // Main content
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                          child: Consumer<RequestsViewModel>(
+                            builder: (context, viewModel, child) {
+                              if (viewModel.isLoading) return const LoadingPageWidget();
 
-                  const SizedBox(height: 10),
+                              final hasRequests =
+                                  (viewModel.requests?.isNotEmpty == true) ||
+                                      (viewModel.myTeamRequests?.isNotEmpty == true) ||
+                                      (viewModel.otherDepartmentRequestModel?.isNotEmpty == true);
 
-                  if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
-                    AutoSizeText(
-                      viewModel.rulesMessage ?? "",
-                      maxLines: 10,
-                      style: const TextStyle(
-                          color: Color(0xff404040),
-                          fontSize: AppSizes.s12,
-                          fontWeight: FontWeight.w400),
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                    ),
+                              if (!hasRequests) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (viewModel.rulesMessage != null)
+                                      AutoSizeText(
+                                        viewModel.rulesMessage ?? "",
+                                        style: const TextStyle(
+                                            color: Color(0xff404040),
+                                            fontSize: AppSizes.s12,
+                                            fontWeight: FontWeight.w400),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 10,
+                                        textAlign: TextAlign.center,
+                                        softWrap: true,
+                                      ),
+                                    NoExistingPlaceholderScreen(
+                                      height: LayoutService.getHeight(context) * 0.6,
+                                      title: AppStrings.thereIsNoRequests.tr(),
+                                    ),
+                                  ],
+                                );
+                              }
 
-                  if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
-                    const SizedBox(height: 15),
+                              return RefreshIndicator.adaptive(
+                                onRefresh: () async {
+                                  viewModel.currentPage = 1;
+                                  viewModel.initializeRequestsScreen(
+                                      context: context,
+                                      requestsType: widget.requestsType!,
+                                      requestTypeId: CacheHelper.getString("reqId"),
+                                      empIds: CacheHelper.getString("empId"),
+                                      from: CacheHelper.getString("from"),
+                                      to: CacheHelper.getString("to"),
+                                      depId: CacheHelper.getString("depId"),
+                                      status: CacheHelper.getString("selectStatus"));
+                                },
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  height: MediaQuery.sizeOf(context).height * 0.9,
+                                  child: ListView(
+                                    controller: _scrollController,
+                                    shrinkWrap: true,
+                                    children: [
+                                      /// calendar button
+                                      if (widget.requestsType == GetRequestsTypes.myTeam ||
+                                          widget.requestsType == GetRequestsTypes.otherDepartment)
+                                        CustomRequestsPageButton(
+                                          onPressed: () async => await context.pushNamed(
+                                            AppRoutes.requestsCalendar.name,
+                                            pathParameters: {
+                                              'type': 'mine',
+                                              'lang': context.locale.languageCode,
+                                            },
+                                            extra: widget.requestsType == GetRequestsTypes.mine
+                                                ? viewModel.requests
+                                                : (widget.requestsType == GetRequestsTypes.myTeam)
+                                                ? viewModel.myTeamRequests
+                                                : viewModel.otherDepartmentRequestModel,
+                                          ),
+                                          title: AppStrings.viewTeamRequestsOnCalendar.tr(),
+                                          icon: Icons.calendar_month_outlined,
+                                        ),
 
-                  /// requests cards
-                  if (viewModel.requests != null &&
-                      viewModel.requests!.isNotEmpty &&
-                      widget.requestsType == GetRequestsTypes.mine)
-                    ...viewModel.requests!.map(
-                          (req) => RequestCard(
-                        reqType: widget.requestsType ?? GetRequestsTypes.mine,
-                        request: req,
+                                      const SizedBox(height: 10),
+
+                                                          if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
+                                                            AutoSizeText(
+                                                              viewModel.rulesMessage ?? "",
+                                                              maxLines: 10,
+                                                              style: const TextStyle(
+                                  color: Color(0xff404040),
+                                  fontSize: AppSizes.s12,
+                                  fontWeight: FontWeight.w400),
+                                                              overflow: TextOverflow.ellipsis,
+                                                              textAlign: TextAlign.center,
+                                                              softWrap: true,
+                                                            ),
+
+                                                          if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
+                                                            const SizedBox(height: 15),
+
+                                      /// requests cards
+                                      if (viewModel.requests != null &&
+                                          viewModel.requests!.isNotEmpty &&
+                                          widget.requestsType == GetRequestsTypes.mine)
+                                        ...viewModel.requests!.map(
+                                              (req) => RequestCard(
+                                            reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                            request: req,
+                                          ),
+                                        ),
+
+                                      if (viewModel.otherDepartmentRequestModel != null &&
+                                          viewModel.otherDepartmentRequestModel!.isNotEmpty &&
+                                          widget.requestsType == GetRequestsTypes.otherDepartment)
+                                        ...viewModel.otherDepartmentRequestModel!.map(
+                                              (req) => RequestCard(
+                                            reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                            request: req,
+                                          ),
+                                        ),
+
+                                      if (viewModel.myTeamRequests != null &&
+                                          viewModel.myTeamRequests!.isNotEmpty &&
+                                          widget.requestsType == GetRequestsTypes.myTeam)
+                                        ...viewModel.myTeamRequests!.map(
+                                              (req) => RequestCard(
+                                            reqType: widget.requestsType ?? GetRequestsTypes.myTeam,
+                                            request: req,
+                                          ),
+                                        ),
+                                      if (viewModel.isLoadingMore)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 16),
+                                          child: Center(child: CircularProgressIndicator()),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-
-                  if (viewModel.otherDepartmentRequestModel != null &&
-                      viewModel.otherDepartmentRequestModel!.isNotEmpty &&
-                      widget.requestsType == GetRequestsTypes.otherDepartment)
-                    ...viewModel.otherDepartmentRequestModel!.map(
-                          (req) => RequestCard(
-                        reqType: widget.requestsType ?? GetRequestsTypes.mine,
-                        request: req,
-                      ),
-                    ),
-
-                  if (viewModel.myTeamRequests != null &&
-                      viewModel.myTeamRequests!.isNotEmpty &&
-                      widget.requestsType == GetRequestsTypes.myTeam)
-                    ...viewModel.myTeamRequests!.map(
-                          (req) => RequestCard(
-                        reqType: widget.requestsType ?? GetRequestsTypes.myTeam,
-                        request: req,
-                      ),
-                    ),
-                  if (viewModel.isLoadingMore)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                ],
+                    ],
+                  ),
+                ),
               ),
+            )
             ),
-          );
-        },
-      ),
-    ),
-    ));
+    );
   }
 }

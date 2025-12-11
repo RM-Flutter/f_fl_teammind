@@ -65,6 +65,9 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
     DioHelper.getData(
       url: "/emp_requests/v1/employees",
       context: context,
+      query: {
+        "under_my_management": true
+      },
     ).then((value){
       isLoading = false;
       employees = List<Map<String, dynamic>>.from(value.data['employees']);

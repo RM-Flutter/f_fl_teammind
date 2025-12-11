@@ -55,7 +55,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     RewardsAndPenaltiesService.formatDate(context,
-                            rewardAndPenalty.createdAt) ??
+                            rewardAndPenalty.dueDate) ??
                         '',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,

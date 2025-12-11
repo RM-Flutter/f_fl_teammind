@@ -44,6 +44,7 @@ class RewardAndPenaltyModel {
       action: json['action'] != null ? ActionLinks.fromJson(json['action']) : null,
       employeeId: json['profile_id'] as int?,
       payrollId: json['payroll_id'] as int?,
+      payroll: json['payroll'] != null ? Payroll.fromJson(json['payroll']) : null,
       createdAt: json['created_at'] as String?,
       dueDate: json['due_date'] as String?,
     );
@@ -97,7 +98,19 @@ class RewardAndPenaltyModel {
         payrollId.hashCode;
   }
 }
+class Payroll {
+  final int? id;
+  final String? dateFrom;
 
+  Payroll({this.id, this.dateFrom});
+
+  factory Payroll.fromJson(Map<String, dynamic> json) {
+    return Payroll(
+      id: json['id'] as int?,
+      dateFrom: json['date_from'] as String?,
+    );
+  }
+}
 class Type {
   final String? key;
   final String? value;
@@ -151,19 +164,7 @@ class Profile {
     };
   }
 }
-class Payroll {
-  final int? id;
-  final String? dateFrom;
 
-  Payroll({this.id, this.dateFrom});
-
-  factory Payroll.fromJson(Map<String, dynamic> json) {
-    return Payroll(
-      id: json['id'] as int?,
-      dateFrom: json['date_from'] as String?,
-    );
-  }
-}
 class Manager {
   final int? id;
   final String? name;

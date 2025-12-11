@@ -33,6 +33,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
           builder: (context, viewModel, child) {
             return Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (!viewModel.goToChooseForgotMethod && !viewModel.codeSent) ...[
                   SwitchRow(

@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:rmemp/platform/platform_is.dart';
 import 'package:rmemp/modules/complain_screen/complain_details_screen.dart';
 import 'package:rmemp/modules/complain_screen/complains_screen.dart';
 import 'package:rmemp/modules/evaluation/evaluation_screen.dart';
@@ -39,6 +40,7 @@ import '../modules/general/views/company_structure_tree_screen.dart';
 import '../modules/home/views/home_screen.dart';
 import '../modules/home/views/widgets/webview_offers.dart';
 import '../modules/main_screen/views/main_screen.dart';
+import '../modules/more/views/general_data/general_data_screen.dart';
 import '../modules/more/views/more_screen.dart';
 import '../modules/more/views/user_devices/user_devices_screen.dart';
 import '../modules/offline/views/offline_screen.dart';
@@ -77,6 +79,7 @@ enum AppRoutes {
   defaultListPage,
   defaultPage,
   defaultPage2,
+  generalDataScreen,
   login,
   webViewMainDataScreen,
   webViewScreen,
@@ -152,14 +155,18 @@ NavbarPages getNavbarPage({required String currentLocationRoute}) {
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-GoRouter goRouter(BuildContext context) => GoRouter(
-      navigatorKey: rootNavigatorKey,
-      initialLocation: '/${context.locale.languageCode}/splash-screen',
-      refreshListenable: Listenable.merge([
-        Provider.of<AppConfigService>(context),
-        Provider.of<ConnectionService>(context), // 🆕 نسمع للاتصال
-      ]),
-  redirect: (context, state) {
+GoRouter goRouter(BuildContext context) {
+  // في الويب، لا نستخدم refreshListenable لتجنب refresh مستمر
+  // في الموبايل، نستخدم ConnectionService فقط
+  final refreshListenable = kIsWeb 
+      ? Listenable.merge([]) // Listenable فارغ في الويب
+      : Provider.of<ConnectionService>(context);
+  
+  return GoRouter(
+    navigatorKey: rootNavigatorKey,
+    initialLocation: '/${context.locale.languageCode}/splash-screen',
+    refreshListenable: refreshListenable,
+    redirect: (context, state) {
     final connectionService = Provider.of<ConnectionService>(context, listen: false);
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     final isLoggedIn = appConfigServiceProvider.isLogin && appConfigServiceProvider.token.isNotEmpty;
@@ -177,7 +184,8 @@ GoRouter goRouter(BuildContext context) => GoRouter(
       if (update != null && update.isNotEmpty && update != "") {
         return '/$lang/webviewMainData';
       }
-      return '/$lang';
+      // Redirect to splash screen first, then splash will navigate to home
+      return '/$lang/splash-screen';
     }
 
     if (!isLoggedIn &&
@@ -191,1055 +199,20 @@ GoRouter goRouter(BuildContext context) => GoRouter(
   },
 
   routes: [
-        ShellRoute(
-          navigatorKey: _shellNavigatorKey,
-          builder: (context, state, child) => MainScreen(
-            key: UniqueKey(),
-            currentNavPage: state.fullPath == null
-                ? NavbarPages.home
-                : getNavbarPage(currentLocationRoute: state.fullPath!),
-            child: child,
-          ),
-          routes: [
-            GoRoute(
-              path: '/:lang',
-              parentNavigatorKey: _shellNavigatorKey,
-              name: AppRoutes.home.name,
-              pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
-                final lang = state.uri.queryParameters['lang'];
-                if (lang != null) {
-                  final locale = Locale(lang);
-                  context.setLocale(locale);
-                }
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: const HomeScreen(),
-                  animation: animationController,
-                  begin: begin ?? const Offset(1.0, 0.0),
-                );
-              },
-              routes: [
-                GoRoute(
-                  path: 'personal-profile',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.personalProfile.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const PersonalProfileScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                )
-              ],
-            ),
-            GoRoute(
-              path: '/:lang/default-page2/:type',
-              parentNavigatorKey: _shellNavigatorKey,
-              name: AppRoutes.defaultPage2.name,
-              pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
-                final lang = state.uri.queryParameters['lang'];
-                final type = state.pathParameters['type'] ?? '';
-
-                if (lang != null) {
-                  final locale = Locale(lang);
-                  context.setLocale(locale);
-                }
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: DefaultPage(type),
-                  animation: animationController,
-                  begin: begin ?? const Offset(1.0, 0.0),
-                );
-              },
-            ),
-            GoRoute(
-              path: '/:lang/requests/:type',
-              parentNavigatorKey: _shellNavigatorKey,
-              name: AppRoutes.requests.name,
-              pageBuilder: (context, state) {
-                GetRequestsTypes? requestType =
-                    RequestsServices.getRequestTypeFromString(
-                        reqTypeString: state.pathParameters['type']);
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: RequestsScreen(
-                    requestsType: requestType,
-                  ),
-                  animation: animationController,
-                  begin: const Offset(1.0, 0.0),
-                );
-              },
-              routes: [
-                GoRoute(
-                  path: 'requests2',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.requests2.name,
-                  pageBuilder: (context, state) {
-                    GetRequestsTypes? requestType =
-                    RequestsServices.getRequestTypeFromString(
-                        reqTypeString: state.pathParameters['type']);
-                    List requests = state.extra != null ? state.extra as List : [];
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: RequestsScreen(
-                        requestsType: requestType,
-                      ),
-                      animation: animationController,
-                      begin: const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'requests-calendar',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.requestsCalendar.name,
-                  pageBuilder: (context, state) {
-                    GetRequestsTypes? requestType =
-                        RequestsServices.getRequestTypeFromString(
-                            reqTypeString: state.pathParameters['type']);
-                    List requests = state.extra != null ? state.extra as List : [];
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: RequestsCalendarScreen(
-                        requestType: requestType,
-                        requests: requests,
-                      ),
-                      animation: animationController,
-                      begin: const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'add-new-request',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.addRequest.name,
-                  pageBuilder: (context, state) {
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const AddRequestScreen(),
-                      animation: animationController,
-                      begin: const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'requests-by-id/:id',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.requestsById.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = (state.extra as Map<String, dynamic>)['offset'] as Offset?;
-                    String? userId = (state.extra
-                        as Map<String, dynamic>)['userId'] as String?;
-                    String? id = state.pathParameters['id'];
-                    final type = state.pathParameters['type'] ?? '';
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: RequestsByTypeIdScreen(
-                        requestTypeId: id!,
-                        employeeId: userId,
-                        type: type,
-                      ),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'request-details/:id',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.requestDetails.name,
-                  pageBuilder: (context, state) {
-                    final type = state.pathParameters['type'] ?? '';
-                    final id = state.pathParameters['id'] ?? '';
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: RequestDetailsScreen(
-                        request: id,
-                        requestType: type,
-                      ),
-                      animation: animationController,
-                      begin: const Offset(1.0, 0.0),
-                    );
-                  },
-
-                ),
-              ],
-            ),
-            GoRoute(
-              path: '/:lang/fingerprint',
-              parentNavigatorKey: _shellNavigatorKey,
-              name: AppRoutes.fingerprint.name,
-              pageBuilder: (context, state) {
-                // Offset? begin =
-                //     (state.extra as Map<String, dynamic>)['offset'] as Offset?;
-                // String? employeeName = (state.extra
-                //     as Map<String, dynamic>)['employeeName'] as String?;
-                // String? employeeId = (state.extra
-                //     as Map<String, dynamic>)['employeeId'] as String?;
-                final lang = state.uri.queryParameters['lang'];
-                if (lang != null) {
-                  final locale = Locale(lang);
-                  context.setLocale(locale);
-                }
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: FingerprintScreen(),
-                  animation: animationController,
-                  begin: const Offset(1.0, 0.0),
-                );
-              },
-              routes: [
-                GoRoute(
-                  path: 'fingerprint-offline',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.fingerPrintOffline.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: FingerprintOfflineScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-              ]
-            ),
-            GoRoute(
-              path: '/:lang/notifications',
-              parentNavigatorKey: _shellNavigatorKey,
-              name: AppRoutes.notifications.name,
-              pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                CacheHelper.deleteData(key: "value");
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: NotificationScreen(false),
-                  animation: animationController,
-                  begin: begin ?? const Offset(1.0, 0.0),
-                );
-              },
-            ),
-            GoRoute(
-              path: '/:lang/more',
-              parentNavigatorKey: _shellNavigatorKey,
-              name: AppRoutes.more.name,
-              pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: const MoreScreen(),
-                  animation: animationController,
-                  begin: begin ?? const Offset(1.0, 0.0),
-                );
-              },
-              routes: [
-                GoRoute(
-                    path: 'fingerprintView/:id/:name',
-                    parentNavigatorKey: rootNavigatorKey,
-                    name: AppRoutes.fingerprintView.name,
-                    pageBuilder: (context, state) {
-                      // Offset? begin =
-                      //     (state.extra as Map<String, dynamic>)['offset'] as Offset?;
-                      // String? employeeName = (state.extra
-                      //     as Map<String, dynamic>)['employeeName'] as String?;
-                      // String? employeeId = (state.extra
-                      //     as Map<String, dynamic>)['employeeId'] as String?;
-                      final lang = state.uri.queryParameters['lang'];
-                      if (lang != null) {
-                        final locale = Locale(lang);
-                        context.setLocale(locale);
-                      }
-                      final id = state.pathParameters['id'] ?? "";
-                      final name = state.pathParameters['name'] ?? "";
-                      final animationController = AnimationController(
-                        vsync: ticker,
-                      );
-                      // Make sure to dispose the controller after the transition is complete
-                      animationController.addStatusListener((status) {
-                        if (status == AnimationStatus.completed ||
-                            status == AnimationStatus.dismissed) {
-                          animationController.dispose();
-                        }
-                      });
-                      return AppRouterTransitions.slideTransition(
-                        key: state.pageKey,
-                        child: FingerPrintViewScreen(empId: id,empName: name,),
-                        animation: animationController,
-                        begin: const Offset(1.0, 0.0),
-                      );
-                    },
-                ),
-                GoRoute(
-                  path: 'webview',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.webViewScreen.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-// Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: WebViewStack(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'teamFingerprint',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.teamFingerprint.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-// Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const TeamFingerprintScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'update-password',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.updatePassword.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: UpdatePasswordScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'about-us-screen',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.aboutUsScreen.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: AboutUsScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'faq-screen',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.faqScreen.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: FaqScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'contact-us',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.contactUs.name,
-                  pageBuilder: (context, state) {
-                    // Offset? begin = state.extra as Offset?;
-                    final lang = state.uri.queryParameters['lang'];
-                    if (lang != null) {
-                      final locale = Locale(lang);
-                      context.setLocale(locale);
-                    }
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child:  ContactScreen(),
-                      animation: animationController,
-                      begin: const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'company-tree',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.companyTree.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const CompanyStructureTreeScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'evaluation-Screen',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.evaluationScreen.name,
-                  pageBuilder: (context, state) {
-                    var jsonString;
-                    var gCache;
-                    jsonString = CacheHelper.getString("US1");
-                    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-                      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-                    }
-                    print("ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
-                    final extra = state.extra as Map<String, dynamic>?;
-                    final empId = extra?["empId"] ?? gCache['employee_profile_id'].toString();
-                    final begin = extra?["begin"] as Offset? ?? const Offset(1.0, 0.0);
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: EvaluationScreen( empId: empId,),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'evaluation-require-Screen',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.evaluationRequireScreen.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const EvaluationRequireScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'task-screen',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.taskScreen.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const TaskScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      path: 'add-new-task',
-                      parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.addTaskScreen.name,
-                      pageBuilder: (context, state) {
-                        final animationController = AnimationController(
-                          vsync: ticker,
-                        );
-                        // Make sure to dispose the controller after the transition is complete
-                        animationController.addStatusListener((status) {
-                          if (status == AnimationStatus.completed ||
-                              status == AnimationStatus.dismissed) {
-                            animationController.dispose();
-                          }
-                        });
-                        return AppRouterTransitions.slideTransition(
-                          key: state.pageKey,
-                          child: const AddTaskScreen(),
-                          animation: animationController,
-                          begin: const Offset(1.0, 0.0),
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      path: 'edit-new-tas/:id',
-                      parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.editTaskScreen.name,
-                      pageBuilder: (context, state) {
-                        final id = state.pathParameters['id'] ?? '';
-                        final animationController = AnimationController(
-                          vsync: ticker,
-                        );
-                        // Make sure to dispose the controller after the transition is complete
-                        animationController.addStatusListener((status) {
-                          if (status == AnimationStatus.completed ||
-                              status == AnimationStatus.dismissed) {
-                            animationController.dispose();
-                          }
-                        });
-                        return AppRouterTransitions.slideTransition(
-                          key: state.pageKey,
-                          child: EditTaskScreen(id: id,),
-                          animation: animationController,
-                          begin: const Offset(1.0, 0.0),
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      path: 'task-details/:id',
-                      parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.taskDetails.name,
-                      pageBuilder: (context, state) {
-                        final id = state.pathParameters['id'] ?? '';
-                        final animationController = AnimationController(
-                          vsync: ticker,
-                        );
-                        // Make sure to dispose the controller after the transition is complete
-                        animationController.addStatusListener((status) {
-                          if (status == AnimationStatus.completed ||
-                              status == AnimationStatus.dismissed) {
-                            animationController.dispose();
-                          }
-                        });
-                        return AppRouterTransitions.slideTransition(
-                          key: state.pageKey,
-                          child: TaskDetailsScreen(id: id,),
-                          animation: animationController,
-                          begin: const Offset(1.0, 0.0),
-                        );
-                      },
-                    ),
-                  ]
-                ),
-                GoRoute(
-                  path: 'rewards-and-penalties-screen',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.rewardsAndPenalties.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = (state.extra
-                        as Map<String, dynamic>)['offset'] as Offset?;
-                    String? employeeName = (state.extra
-                        as Map<String, dynamic>)['employeeName'] as String?;
-                    String? employeeId = (state.extra
-                        as Map<String, dynamic>)['employeeId'] as String?;
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: RewardsAndPenaltiesScreen(
-                        empId: employeeId,
-                        empName: employeeName,
-                      ),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      path: 'add-rewards-and-penalties-screen',
-                      parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.addRewardsAndPenalties.name,
-                      pageBuilder: (context, state) {
-                        final animationController = AnimationController(
-                          vsync: ticker,
-                        );
-                        // Make sure to dispose the controller after the transition is complete
-                        animationController.addStatusListener((status) {
-                          if (status == AnimationStatus.completed ||
-                              status == AnimationStatus.dismissed) {
-                            animationController.dispose();
-                          }
-                        });
-                        return AppRouterTransitions.slideTransition(
-                          key: state.pageKey,
-                          child: const AddRewardAndPenaltyScreen(),
-                          animation: animationController,
-                          begin: const Offset(1.0, 0.0),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                GoRoute(
-                    path: 'complainScreen',
-                    parentNavigatorKey: rootNavigatorKey,
-                    name: AppRoutes.complainScreen.name,
-                    pageBuilder: (context, state) {
-                      Offset? begin = state.extra as Offset?;
-                      final lang = state.uri.queryParameters['lang'];
-                      if (lang != null) {
-                        final locale = Locale(lang);
-                        context.setLocale(locale);
-                      }
-                      final animationController = AnimationController(
-                        vsync: ticker,
-                      );
-                      // Make sure to dispose the controller after the transition is complete
-                      animationController.addStatusListener((status) {
-                        if (status == AnimationStatus.completed ||
-                            status == AnimationStatus.dismissed) {
-                          animationController.dispose();
-                        }
-                      });
-                      return AppRouterTransitions.slideTransition(
-                        key: state.pageKey,
-                        child: ComplainScreen(),
-                        animation: animationController,
-                        begin: begin ?? const Offset(1.0, 0.0),
-                      );
-                    },
-                    routes: [
-                      GoRoute(
-                        path: 'complainDetailsScreen/:id/:type',
-                        parentNavigatorKey: rootNavigatorKey,
-                        name: AppRoutes.complainDetails.name,
-                        pageBuilder: (context, state) {
-                          Offset? begin = state.extra as Offset?;
-                          final lang = state.uri.queryParameters['lang'];
-                          final id = state.pathParameters['id'] ?? '';
-                          final type = state.pathParameters['type'] ?? '';
-                          if (lang != null) {
-                            final locale = Locale(lang);
-                            context.setLocale(locale);
-                          }
-                          final animationController = AnimationController(
-                            vsync: ticker,
-                          );
-                          // Make sure to dispose the controller after the transition is complete
-                          animationController.addStatusListener((status) {
-                            if (status == AnimationStatus.completed ||
-                                status == AnimationStatus.dismissed) {
-                              animationController.dispose();
-                            }
-                          });
-                          return AppRouterTransitions.slideTransition(
-                            key: state.pageKey,
-                            child: ComplainDetailsScreen(id : id, type: type,),
-                            animation: animationController,
-                            begin: begin ?? const Offset(1.0, 0.0),
-                          );
-                        },
-                      ),
-                    ]
-                ),
-              ],
-            ),
-          ],
-        ),
-    GoRoute(
-      path: '/:lang/webview',
-      name: 'webview',
-      builder: (context, state) {
-        final link = state.extra as String;
-        return WebViewStackOffers(link);
-      },
-    ),
-
-    GoRoute(
-          path: '/:lang/payrolls-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.payrollsList.name,
-          pageBuilder: (context, state) {
-            Offset? begin =
-                (state.extra as Map<String, dynamic>)['offset'] as Offset?;
-            String? employeeName = (state.extra
-                as Map<String, dynamic>)['employeeName'] as String?;
-            String? employeeId =
-                (state.extra as Map<String, dynamic>)['employeeId'] as String?;
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: PayrollsListScreen(
-                empId: employeeId,
-                empName: employeeName,
-              ),
-              animation: animationController,
-              begin: begin ?? const Offset(1.0, 0.0),
-            );
-          },
-          routes: [
-            GoRoute(
-              path: 'payroll-details',
-              parentNavigatorKey: rootNavigatorKey,
-              name: AppRoutes.payrollDetails.name,
-              pageBuilder: (context, state) {
-                PayrollModel? payroll = state.extra as PayrollModel;
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: PayrollDetailsScreen(payroll: payroll),
-                  animation: animationController,
-                  begin: const Offset(1.0, 0.0),
-                );
-              },
-            ),
-          ],
-        ),
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      builder: (context, state, child) => MainScreen(
+        key: UniqueKey(),
+        currentNavPage: state.fullPath == null
+            ? NavbarPages.home
+            : getNavbarPage(currentLocationRoute: state.fullPath!),
+        child: child,
+      ),
+      routes: [
         GoRoute(
-          path: '/:lang/employee-fingerprint/:employeeId',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.employeeFingerprint.name,
-          pageBuilder: (context, state) {
-            String? employeeId = state.pathParameters["employeeId"];
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: FingerprintScreen(
-                empId: employeeId,
-              ),
-              animation: animationController,
-              begin: const Offset(1.0, 0.0),
-            );
-          },
-        ),
-        GoRoute(
-            path: '/:lang/employees-list',
-            parentNavigatorKey: rootNavigatorKey,
-            name: AppRoutes.employeesList.name,
-            pageBuilder: (context, state) {
-              Offset? begin = state.extra as Offset?;
-              final animationController = AnimationController(
-                vsync: ticker,
-              );
-              // Make sure to dispose the controller after the transition is complete
-              animationController.addStatusListener((status) {
-                if (status == AnimationStatus.completed ||
-                    status == AnimationStatus.dismissed) {
-                  animationController.dispose();
-                }
-              });
-              return AppRouterTransitions.slideTransition(
-                key: state.pageKey,
-                child: const EmployeesListScreen(),
-                animation: animationController,
-                begin: begin ?? const Offset(1.0, 0.0),
-              );
-            },
-            routes: [
-              GoRoute(
-                path: 'employee-details/:id',
-                parentNavigatorKey: rootNavigatorKey,
-                name: AppRoutes.employeeDetails.name,
-                pageBuilder: (context, state) {
-                  final id = state.pathParameters['id'] ?? '';
-                  final animationController = AnimationController(
-                    vsync: ticker,
-                  );
-                  // Make sure to dispose the controller after the transition is complete
-                  animationController.addStatusListener((status) {
-                    if (status == AnimationStatus.completed ||
-                        status == AnimationStatus.dismissed) {
-                      animationController.dispose();
-                    }
-                  });
-                  return AppRouterTransitions.slideTransition(
-                    key: state.pageKey,
-                    child: EmployeeDetailsScreen(
-                      id: id,
-                    ),
-                    animation: animationController,
-                    begin: const Offset(1.0, 0.0),
-                  );
-                },
-              ),
-            ]),
-        GoRoute(
-          path: '/:lang/splash-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.splash.name,
-          builder: (context, state) => const SplashScreen(),
-        ),
-        GoRoute(
-          path: '/:lang/lang-setting-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.langSettingScreen.name,
+          path: '/:lang',
+          parentNavigatorKey: _shellNavigatorKey,
+          name: AppRoutes.home.name,
           pageBuilder: (context, state) {
             Offset? begin = state.extra as Offset?;
             final lang = state.uri.queryParameters['lang'];
@@ -1250,6 +223,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             final animationController = AnimationController(
               vsync: ticker,
             );
+            // Make sure to dispose the controller after the transition is complete
             animationController.addStatusListener((status) {
               if (status == AnimationStatus.completed ||
                   status == AnimationStatus.dismissed) {
@@ -1258,22 +232,16 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             });
             return AppRouterTransitions.slideTransition(
               key: state.pageKey,
-              child: LangSettingScreens(),
+              child: const HomeScreen(),
               animation: animationController,
               begin: begin ?? const Offset(1.0, 0.0),
             );
           },
-        ),
-        GoRoute(
-          path: '/:lang/notification-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.notification.name,
-          builder: (context, state) => NotificationScreen(true),
           routes: [
             GoRoute(
-              path: 'add-notification',
+              path: 'personal-profile',
               parentNavigatorKey: rootNavigatorKey,
-              name: AppRoutes.addNotification.name,
+              name: AppRoutes.personalProfile.name,
               pageBuilder: (context, state) {
                 Offset? begin = state.extra as Offset?;
                 final lang = state.uri.queryParameters['lang'];
@@ -1284,6 +252,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                 final animationController = AnimationController(
                   vsync: ticker,
                 );
+                // Make sure to dispose the controller after the transition is complete
                 animationController.addStatusListener((status) {
                   if (status == AnimationStatus.completed ||
                       status == AnimationStatus.dismissed) {
@@ -1292,51 +261,18 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                 });
                 return AppRouterTransitions.slideTransition(
                   key: state.pageKey,
-                  child: const AddNotificationScreen(),
+                  child: const PersonalProfileScreen(),
                   animation: animationController,
                   begin: begin ?? const Offset(1.0, 0.0),
                 );
               },
-            ),
-          ]
+            )
+          ],
         ),
         GoRoute(
-          path: '/:lang/notification-details-screen/:id',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.notificationDetails.name,
-          pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            final id = state.pathParameters['id'] ?? '';
-
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: NotificationDetailsScreen(
-                id: id,
-              ),
-              animation: animationController,
-              begin: begin ?? const Offset(1.0, 0.0),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/:lang/default-page/:type',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.defaultPage.name,
+          path: '/:lang/default-page2/:type',
+          parentNavigatorKey: _shellNavigatorKey,
+          name: AppRoutes.defaultPage2.name,
           pageBuilder: (context, state) {
             Offset? begin = state.extra as Offset?;
             final lang = state.uri.queryParameters['lang'];
@@ -1365,17 +301,13 @@ GoRouter goRouter(BuildContext context) => GoRouter(
           },
         ),
         GoRoute(
-          path: '/:lang/default-list-page/:type',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.defaultListPage.name,
+          path: '/:lang/requests/:type',
+          parentNavigatorKey: _shellNavigatorKey,
+          name: AppRoutes.requests.name,
           pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            final type = state.pathParameters['type'] ?? '';
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
+            GetRequestsTypes? requestType =
+            RequestsServices.getRequestTypeFromString(
+                reqTypeString: state.pathParameters['type']);
             final animationController = AnimationController(
               vsync: ticker,
             );
@@ -1388,94 +320,255 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             });
             return AppRouterTransitions.slideTransition(
               key: state.pageKey,
-              child: DefaultListPage(type: type,),
-              animation: animationController,
-              begin: begin ?? const Offset(1.0, 0.0),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/:lang/default-single-page/:type/:id',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.defaultSinglePage.name,
-          pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            final type = state.pathParameters['type'] ?? '';
-            final id = state.pathParameters['id'] ?? '';
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: DefaultDetails(type: type, id: id,),
-              animation: animationController,
-              begin: begin ?? const Offset(1.0, 0.0),
-            );
-          },
-        ),
-    GoRoute(
-          path: '/:lang/userDevices-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.userDevices.name,
-          builder: (context, state) => UserDeviceScreen(),
-        ),
-        GoRoute(
-          path: '/:lang/blog_details/:title/:type/:id',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.blogDetails.name,
-          pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            final id = Uri.decodeComponent(state.pathParameters['id'] ?? '');
-            final type = state.pathParameters['type'] ?? '';
-            final title = state.pathParameters['title'] ?? '';
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: DefaultDetails(
-                id: id,
-                  type: type,
+              child: RequestsScreen(
+                requestsType: requestType,
               ),
               animation: animationController,
+              begin: const Offset(1.0, 0.0),
+            );
+          },
+          routes: [
+            GoRoute(
+              path: 'requests2',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.requests2.name,
+              pageBuilder: (context, state) {
+                GetRequestsTypes? requestType =
+                RequestsServices.getRequestTypeFromString(
+                    reqTypeString: state.pathParameters['type']);
+                List requests = state.extra != null ? state.extra as List : [];
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: RequestsScreen(
+                    requestsType: requestType,
+                  ),
+                  animation: animationController,
+                  begin: const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'requests-calendar',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.requestsCalendar.name,
+              pageBuilder: (context, state) {
+                GetRequestsTypes? requestType =
+                RequestsServices.getRequestTypeFromString(
+                    reqTypeString: state.pathParameters['type']);
+                List requests = state.extra != null ? state.extra as List : [];
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: RequestsCalendarScreen(
+                    requestType: requestType,
+                    requests: requests,
+                  ),
+                  animation: animationController,
+                  begin: const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'add-new-request',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.addRequest.name,
+              pageBuilder: (context, state) {
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: const AddRequestScreen(),
+                  animation: animationController,
+                  begin: const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'requests-by-id/:id',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.requestsById.name,
+              pageBuilder: (context, state) {
+                Offset? begin = (state.extra as Map<String, dynamic>)['offset'] as Offset?;
+                String? userId = (state.extra
+                as Map<String, dynamic>)['userId'] as String?;
+                String? id = state.pathParameters['id'];
+                final type = state.pathParameters['type'] ?? '';
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: RequestsByTypeIdScreen(
+                    requestTypeId: id!,
+                    employeeId: userId,
+                    type: type,
+                  ),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'request-details/:id',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.requestDetails.name,
+              pageBuilder: (context, state) {
+                final type = state.pathParameters['type'] ?? '';
+                final id = state.pathParameters['id'] ?? '';
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: RequestDetailsScreen(
+                    request: id,
+                    requestType: type,
+                  ),
+                  animation: animationController,
+                  begin: const Offset(1.0, 0.0),
+                );
+              },
+
+            ),
+          ],
+        ),
+        GoRoute(
+            path: '/:lang/fingerprint',
+            parentNavigatorKey: _shellNavigatorKey,
+            name: AppRoutes.fingerprint.name,
+            pageBuilder: (context, state) {
+              // Offset? begin =
+              //     (state.extra as Map<String, dynamic>)['offset'] as Offset?;
+              // String? employeeName = (state.extra
+              //     as Map<String, dynamic>)['employeeName'] as String?;
+              // String? employeeId = (state.extra
+              //     as Map<String, dynamic>)['employeeId'] as String?;
+              final lang = state.uri.queryParameters['lang'];
+              if (lang != null) {
+                final locale = Locale(lang);
+                context.setLocale(locale);
+              }
+              final animationController = AnimationController(
+                vsync: ticker,
+              );
+              // Make sure to dispose the controller after the transition is complete
+              animationController.addStatusListener((status) {
+                if (status == AnimationStatus.completed ||
+                    status == AnimationStatus.dismissed) {
+                  animationController.dispose();
+                }
+              });
+              return AppRouterTransitions.slideTransition(
+                key: state.pageKey,
+                child: FingerprintScreen(),
+                animation: animationController,
+                begin: const Offset(1.0, 0.0),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: 'fingerprint-offline',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.fingerPrintOffline.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra as Offset?;
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  // Make sure to dispose the controller after the transition is complete
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: FingerprintOfflineScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+            ]
+        ),
+        GoRoute(
+          path: '/:lang/notifications',
+          parentNavigatorKey: _shellNavigatorKey,
+          name: AppRoutes.notifications.name,
+          pageBuilder: (context, state) {
+            Offset? begin = state.extra as Offset?;
+            final animationController = AnimationController(
+              vsync: ticker,
+            );
+            // Make sure to dispose the controller after the transition is complete
+            animationController.addStatusListener((status) {
+              if (status == AnimationStatus.completed ||
+                  status == AnimationStatus.dismissed) {
+                animationController.dispose();
+              }
+            });
+            CacheHelper.deleteData(key: "value");
+            return AppRouterTransitions.slideTransition(
+              key: state.pageKey,
+              child: NotificationScreen(false),
+              animation: animationController,
               begin: begin ?? const Offset(1.0, 0.0),
             );
           },
         ),
         GoRoute(
-          path: '/:lang/newComplainsScreen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.newComplainScreen.name,
+          path: '/:lang/more',
+          parentNavigatorKey: _shellNavigatorKey,
+          name: AppRoutes.more.name,
           pageBuilder: (context, state) {
             Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
             final animationController = AnimationController(
               vsync: ticker,
             );
@@ -1488,79 +581,601 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             });
             return AppRouterTransitions.slideTransition(
               key: state.pageKey,
-              child: NewComplainScreen(),
+              child: const MoreScreen(),
               animation: animationController,
               begin: begin ?? const Offset(1.0, 0.0),
             );
           },
-        ),
-        GoRoute(
-          path: '/:lang/onboarding-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.onboarding.name,
-          pageBuilder: (context, state) {
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: const OnBoardingScreen(),
-              animation: animationController,
-              begin: const Offset(1.0, 0.0),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/:lang/login-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.login.name,
-          pageBuilder: (context, state) {
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: const LoginScreen(),
-              animation: animationController,
-              begin: const Offset(1.0, 0.0),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/:lang/offline-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.offlineScreen.name,
-          builder: (context, state) => const OfflineScreen(),
-        ),
-        GoRoute(
-          path: '/:lang/webviewMainData',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.webViewMainDataScreen.name,
-          pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
+          routes: [
+            GoRoute(
+              path: 'general-data-screen',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.generalDataScreen.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                final slug = state.pathParameters['slug'] ?? '';
+
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: GeneralDataScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'fingerprintView/:id/:name',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.fingerprintView.name,
+              pageBuilder: (context, state) {
+                // Offset? begin =
+                //     (state.extra as Map<String, dynamic>)['offset'] as Offset?;
+                // String? employeeName = (state.extra
+                //     as Map<String, dynamic>)['employeeName'] as String?;
+                // String? employeeId = (state.extra
+                //     as Map<String, dynamic>)['employeeId'] as String?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final id = state.pathParameters['id'] ?? "";
+                final name = state.pathParameters['name'] ?? "";
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: FingerPrintViewScreen(empId: id,empName: name,),
+                  animation: animationController,
+                  begin: const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'webview',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.webViewScreen.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
 // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: WebViewStack(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'teamFingerprint',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.teamFingerprint.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+// Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: const TeamFingerprintScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'update-password',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.updatePassword.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: UpdatePasswordScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'about-us-screen',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.aboutUsScreen.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: AboutUsScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'faq-screen',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.faqScreen.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: FaqScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'contact-us',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.contactUs.name,
+              pageBuilder: (context, state) {
+                // Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child:  ContactScreen(),
+                  animation: animationController,
+                  begin: const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'company-tree',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.companyTree.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: const CompanyStructureTreeScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'evaluation-Screen',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.evaluationScreen.name,
+              pageBuilder: (context, state) {
+                var jsonString;
+                var gCache;
+                jsonString = CacheHelper.getString("US1");
+                if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+                  gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+                }
+                print("ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
+                final extra = state.extra as Map<String, dynamic>?;
+                final empId = extra?["empId"] ?? gCache['employee_profile_id'].toString();
+                final begin = extra?["begin"] as Offset? ?? const Offset(1.0, 0.0);
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: EvaluationScreen( empId: empId,),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+              path: 'evaluation-require-Screen',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.evaluationRequireScreen.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: const EvaluationRequireScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+            GoRoute(
+                path: 'task-screen',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.taskScreen.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra as Offset?;
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  // Make sure to dispose the controller after the transition is complete
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const TaskScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    path: 'add-new-task',
+                    parentNavigatorKey: rootNavigatorKey,
+                    name: AppRoutes.addTaskScreen.name,
+                    pageBuilder: (context, state) {
+                      final animationController = AnimationController(
+                        vsync: ticker,
+                      );
+                      // Make sure to dispose the controller after the transition is complete
+                      animationController.addStatusListener((status) {
+                        if (status == AnimationStatus.completed ||
+                            status == AnimationStatus.dismissed) {
+                          animationController.dispose();
+                        }
+                      });
+                      return AppRouterTransitions.slideTransition(
+                        key: state.pageKey,
+                        child: const AddTaskScreen(),
+                        animation: animationController,
+                        begin: const Offset(1.0, 0.0),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'edit-new-tas/:id',
+                    parentNavigatorKey: rootNavigatorKey,
+                    name: AppRoutes.editTaskScreen.name,
+                    pageBuilder: (context, state) {
+                      final id = state.pathParameters['id'] ?? '';
+                      final animationController = AnimationController(
+                        vsync: ticker,
+                      );
+                      // Make sure to dispose the controller after the transition is complete
+                      animationController.addStatusListener((status) {
+                        if (status == AnimationStatus.completed ||
+                            status == AnimationStatus.dismissed) {
+                          animationController.dispose();
+                        }
+                      });
+                      return AppRouterTransitions.slideTransition(
+                        key: state.pageKey,
+                        child: EditTaskScreen(id: id,),
+                        animation: animationController,
+                        begin: const Offset(1.0, 0.0),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'task-details/:id',
+                    parentNavigatorKey: rootNavigatorKey,
+                    name: AppRoutes.taskDetails.name,
+                    pageBuilder: (context, state) {
+                      final id = state.pathParameters['id'] ?? '';
+                      final animationController = AnimationController(
+                        vsync: ticker,
+                      );
+                      // Make sure to dispose the controller after the transition is complete
+                      animationController.addStatusListener((status) {
+                        if (status == AnimationStatus.completed ||
+                            status == AnimationStatus.dismissed) {
+                          animationController.dispose();
+                        }
+                      });
+                      return AppRouterTransitions.slideTransition(
+                        key: state.pageKey,
+                        child: TaskDetailsScreen(id: id,),
+                        animation: animationController,
+                        begin: const Offset(1.0, 0.0),
+                      );
+                    },
+                  ),
+                ]
+            ),
+            GoRoute(
+              path: 'rewards-and-penalties-screen',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.rewardsAndPenalties.name,
+              pageBuilder: (context, state) {
+                Offset? begin = (state.extra
+                as Map<String, dynamic>)['offset'] as Offset?;
+                String? employeeName = (state.extra
+                as Map<String, dynamic>)['employeeName'] as String?;
+                String? employeeId = (state.extra
+                as Map<String, dynamic>)['employeeId'] as String?;
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: RewardsAndPenaltiesScreen(
+                    empId: employeeId,
+                    empName: employeeName,
+                  ),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: 'add-rewards-and-penalties-screen',
+                  parentNavigatorKey: rootNavigatorKey,
+                  name: AppRoutes.addRewardsAndPenalties.name,
+                  pageBuilder: (context, state) {
+                    final animationController = AnimationController(
+                      vsync: ticker,
+                    );
+                    // Make sure to dispose the controller after the transition is complete
+                    animationController.addStatusListener((status) {
+                      if (status == AnimationStatus.completed ||
+                          status == AnimationStatus.dismissed) {
+                        animationController.dispose();
+                      }
+                    });
+                    return AppRouterTransitions.slideTransition(
+                      key: state.pageKey,
+                      child: const AddRewardAndPenaltyScreen(),
+                      animation: animationController,
+                      begin: const Offset(1.0, 0.0),
+                    );
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+                path: 'complainScreen',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.complainScreen.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra as Offset?;
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  // Make sure to dispose the controller after the transition is complete
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: ComplainScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    path: 'complainDetailsScreen/:id/:type',
+                    parentNavigatorKey: rootNavigatorKey,
+                    name: AppRoutes.complainDetails.name,
+                    pageBuilder: (context, state) {
+                      Offset? begin = state.extra as Offset?;
+                      final lang = state.uri.queryParameters['lang'];
+                      final id = state.pathParameters['id'] ?? '';
+                      final type = state.pathParameters['type'] ?? '';
+                      if (lang != null) {
+                        final locale = Locale(lang);
+                        context.setLocale(locale);
+                      }
+                      final animationController = AnimationController(
+                        vsync: ticker,
+                      );
+                      // Make sure to dispose the controller after the transition is complete
+                      animationController.addStatusListener((status) {
+                        if (status == AnimationStatus.completed ||
+                            status == AnimationStatus.dismissed) {
+                          animationController.dispose();
+                        }
+                      });
+                      return AppRouterTransitions.slideTransition(
+                        key: state.pageKey,
+                        child: ComplainDetailsScreen(id : id, type: type,),
+                        animation: animationController,
+                        begin: begin ?? const Offset(1.0, 0.0),
+                      );
+                    },
+                  ),
+                ]
+            ),
+          ],
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/:lang/webview',
+      name: 'webview',
+      builder: (context, state) {
+        final link = state.extra as String;
+        return WebViewStackOffers(link);
+      },
+    ),
+
+    GoRoute(
+      path: '/:lang/payrolls-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.payrollsList.name,
+      pageBuilder: (context, state) {
+        Offset? begin =
+        (state.extra as Map<String, dynamic>)['offset'] as Offset?;
+        String? employeeName = (state.extra
+        as Map<String, dynamic>)['employeeName'] as String?;
+        String? employeeId =
+        (state.extra as Map<String, dynamic>)['employeeId'] as String?;
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: PayrollsListScreen(
+            empId: employeeId,
+            empName: employeeName,
+          ),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+      routes: [
+        GoRoute(
+          path: 'payroll-details',
+          parentNavigatorKey: rootNavigatorKey,
+          name: AppRoutes.payrollDetails.name,
+          pageBuilder: (context, state) {
+            PayrollModel? payroll = state.extra as PayrollModel;
+            final animationController = AnimationController(
+              vsync: ticker,
+            );
+            // Make sure to dispose the controller after the transition is complete
             animationController.addStatusListener((status) {
               if (status == AnimationStatus.completed ||
                   status == AnimationStatus.dismissed) {
@@ -1569,13 +1184,464 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             });
             return AppRouterTransitions.slideTransition(
               key: state.pageKey,
-              child: WebViewStackMainData(),
+              child: PayrollDetailsScreen(payroll: payroll),
               animation: animationController,
-              begin: begin ?? const Offset(1.0, 0.0),
+              begin: const Offset(1.0, 0.0),
             );
           },
         ),
       ],
-      debugLogDiagnostics: true,
-      errorBuilder: (context, state) => const NotFoundScreen(),
-    );
+    ),
+    GoRoute(
+      path: '/:lang/employee-fingerprint/:employeeId',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.employeeFingerprint.name,
+      pageBuilder: (context, state) {
+        String? employeeId = state.pathParameters["employeeId"];
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: FingerprintScreen(
+            empId: employeeId,
+          ),
+          animation: animationController,
+          begin: const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+        path: '/:lang/employees-list',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.employeesList.name,
+        pageBuilder: (context, state) {
+          Offset? begin = state.extra as Offset?;
+          final animationController = AnimationController(
+            vsync: ticker,
+          );
+          // Make sure to dispose the controller after the transition is complete
+          animationController.addStatusListener((status) {
+            if (status == AnimationStatus.completed ||
+                status == AnimationStatus.dismissed) {
+              animationController.dispose();
+            }
+          });
+          return AppRouterTransitions.slideTransition(
+            key: state.pageKey,
+            child: const EmployeesListScreen(),
+            animation: animationController,
+            begin: begin ?? const Offset(1.0, 0.0),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'employee-details/:id',
+            parentNavigatorKey: rootNavigatorKey,
+            name: AppRoutes.employeeDetails.name,
+            pageBuilder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              final animationController = AnimationController(
+                vsync: ticker,
+              );
+              // Make sure to dispose the controller after the transition is complete
+              animationController.addStatusListener((status) {
+                if (status == AnimationStatus.completed ||
+                    status == AnimationStatus.dismissed) {
+                  animationController.dispose();
+                }
+              });
+              return AppRouterTransitions.slideTransition(
+                key: state.pageKey,
+                child: EmployeeDetailsScreen(
+                  id: id,
+                ),
+                animation: animationController,
+                begin: const Offset(1.0, 0.0),
+              );
+            },
+          ),
+        ]),
+    GoRoute(
+      path: '/:lang/splash-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.splash.name,
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/:lang/lang-setting-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.langSettingScreen.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: LangSettingScreens(),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+        path: '/:lang/notification-screen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.notification.name,
+        builder: (context, state) => NotificationScreen(true),
+        routes: [
+          GoRoute(
+            path: 'add-notification',
+            parentNavigatorKey: rootNavigatorKey,
+            name: AppRoutes.addNotification.name,
+            pageBuilder: (context, state) {
+              Offset? begin = state.extra as Offset?;
+              final lang = state.uri.queryParameters['lang'];
+              if (lang != null) {
+                final locale = Locale(lang);
+                context.setLocale(locale);
+              }
+              final animationController = AnimationController(
+                vsync: ticker,
+              );
+              animationController.addStatusListener((status) {
+                if (status == AnimationStatus.completed ||
+                    status == AnimationStatus.dismissed) {
+                  animationController.dispose();
+                }
+              });
+              return AppRouterTransitions.slideTransition(
+                key: state.pageKey,
+                child: const AddNotificationScreen(),
+                animation: animationController,
+                begin: begin ?? const Offset(1.0, 0.0),
+              );
+            },
+          ),
+        ]
+    ),
+    GoRoute(
+      path: '/:lang/notification-details-screen/:id',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.notificationDetails.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        final id = state.pathParameters['id'] ?? '';
+
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: NotificationDetailsScreen(
+            id: id,
+          ),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/default-page/:type',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.defaultPage.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        final type = state.pathParameters['type'] ?? '';
+
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: DefaultPage(type),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/default-list-page/:type',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.defaultListPage.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        final type = state.pathParameters['type'] ?? '';
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: DefaultListPage(type: type,),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/default-single-page/:type/:id',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.defaultSinglePage.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        final type = state.pathParameters['type'] ?? '';
+        final id = state.pathParameters['id'] ?? '';
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: DefaultDetails(type: type, id: id,),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/userDevices-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.userDevices.name,
+      builder: (context, state) => UserDeviceScreen(),
+    ),
+    GoRoute(
+      path: '/:lang/blog_details/:title/:type/:id',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.blogDetails.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        final id = Uri.decodeComponent(state.pathParameters['id'] ?? '');
+        final type = state.pathParameters['type'] ?? '';
+        final title = state.pathParameters['title'] ?? '';
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: DefaultDetails(
+            id: id,
+            type: type,
+          ),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/newComplainsScreen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.newComplainScreen.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: NewComplainScreen(),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/onboarding-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.onboarding.name,
+      pageBuilder: (context, state) {
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: const OnBoardingScreen(),
+          animation: animationController,
+          begin: const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/login-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.login.name,
+      pageBuilder: (context, state) {
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        // Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: const LoginScreen(),
+          animation: animationController,
+          begin: const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/offline-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.offlineScreen.name,
+      builder: (context, state) => const OfflineScreen(),
+    ),
+    GoRoute(
+      path: '/:lang/webviewMainData',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.webViewMainDataScreen.name,
+      pageBuilder: (context, state) {
+        Offset? begin = state.extra as Offset?;
+        final lang = state.uri.queryParameters['lang'];
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+// Make sure to dispose the controller after the transition is complete
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: WebViewStackMainData(),
+          animation: animationController,
+          begin: begin ?? const Offset(1.0, 0.0),
+        );
+      },
+    ),
+  ],
+  debugLogDiagnostics: true,
+  errorBuilder: (context, state) {
+    // على الويب، عند حدوث خطأ 404، إعادة توجيه إلى splash screen
+    if (kIsWeb || PlatformIs.web) {
+      try {
+        final lang = state.pathParameters['lang'] ?? 
+                     ((state.uri.pathSegments.isNotEmpty && 
+                       (state.uri.pathSegments.first == 'ar' || state.uri.pathSegments.first == 'en'))
+                      ? state.uri.pathSegments.first 
+                      : context.locale.languageCode);
+        // إعادة التوجيه إلى splash screen
+        Future.microtask(() {
+          if (context.mounted) {
+            try {
+              context.go('/$lang/splash-screen');
+            } catch (e) {
+              debugPrint('Error redirecting to splash: $e');
+            }
+          }
+        });
+        return const SplashScreen();
+      } catch (e) {
+        debugPrint('Error in errorBuilder: $e');
+        return const SplashScreen();
+      }
+    }
+    return const NotFoundScreen();
+  },
+  );
+}

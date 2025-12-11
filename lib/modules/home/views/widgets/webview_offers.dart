@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:rmemp/platform/platform_is.dart';
 
 class WebViewStackOffers extends StatefulWidget {
   var link;
@@ -13,6 +15,11 @@ class _WebViewStackOffersState extends State<WebViewStackOffers> {
   @override
   void initState() {
     super.initState();
+    if (PlatformIs.web) {
+      // On web, open URL in browser
+      _openUrlInBrowser();
+      return;
+    }
     controller = WebViewController()
       ..loadRequest(Uri.parse('${widget.link}'))
       ..setNavigationDelegate(
@@ -98,8 +105,33 @@ class _WebViewStackOffersState extends State<WebViewStackOffers> {
       );
   }
 
+  Future<void> _openUrlInBrowser() async {
+    final uri = Uri.parse('${widget.link}');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      // Close the screen after opening browser
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open ${widget.link}')),
+        );
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (PlatformIs.web) {
+      // On web, show loading while opening browser
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    
     return Stack(
       children: [
         SizedBox(height: 30,),

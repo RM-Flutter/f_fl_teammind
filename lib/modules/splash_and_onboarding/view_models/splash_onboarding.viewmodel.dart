@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_codes/country_codes.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
@@ -269,6 +270,10 @@ class OnboardingViewModel extends ChangeNotifier {
       late final HomeViewModel homeViewModel;
       homeViewModel = HomeViewModel();
       try {
+        // Ensure AppConfigService is initialized before checking login status
+        if (!appConfigService.isInitialized) {
+          await appConfigService.init();
+        }
         await _initializeAppServices(context, appConfigService);
         String? payload = CacheHelper.getString('initialNotification');
         print("payload is --> ${payload}");
@@ -279,7 +284,11 @@ class OnboardingViewModel extends ChangeNotifier {
           await CacheHelper.setString(key: 'initialNotification',value: '');
         }
         else{
-          if (appConfigService.isLogin && appConfigService.token.isNotEmpty) {
+          // Double-check login status after initialization
+          final isLoggedIn = appConfigService.isInitialized && 
+                            appConfigService.isLogin && 
+                            appConfigService.token.isNotEmpty;
+          if (isLoggedIn) {
             try {
               await PushNotificationService.init(
                 context: context,
@@ -299,103 +308,164 @@ class OnboardingViewModel extends ChangeNotifier {
               gCache = json.decode(jsonString) as Map<String, dynamic>;
             }
             var dateToCheck = safeParseDateTime(CacheHelper.getString("dateWatchScreen"));
-            final referenceDate = safeParseDateTime(gCache['features']['date']);
+            final referenceDate = safeParseDateTime(gCache?['features']?['date']);
             print("dateWatchScreen is ${CacheHelper.getString("dateWatchScreen") ?? ""}");
-            if (CacheHelper.getString("dateWatchScreen") == null ||
-                CacheHelper.getString("dateWatchScreen") == "" ||
-                gCache['features']['date'] == null ||
-                referenceDate!.isAfter(dateToCheck!)) {
+            print("referenceDate is ${gCache?['features']?['date'] ?? "null"}");
+            
+            // Small delay to ensure everything is ready
+            await Future.delayed(const Duration(milliseconds: 100));
+            if (!context.mounted) return;
+            
+            // Check if dateWatchScreen exists and is valid
+            final dateWatchScreenValue = CacheHelper.getString("dateWatchScreen");
+            bool shouldShowOnboarding = false;
+            
+            // If dateWatchScreen is not set, check if we should show onboarding
+            if (dateWatchScreenValue == null || dateWatchScreenValue.isEmpty) {
+              shouldShowOnboarding = true;
+              print("dateWatchScreen is empty, will check features");
+            } 
+            // If dateWatchScreen exists, only show onboarding if referenceDate is newer
+            else if (dateToCheck != null) {
+              if (referenceDate != null && referenceDate.isAfter(dateToCheck)) {
+                shouldShowOnboarding = true;
+                print("referenceDate is newer than dateWatchScreen, will show onboarding");
+              } else {
+                print("dateWatchScreen is valid and up-to-date, going to home");
+              }
+            }
+            // If we can't parse dateWatchScreen, treat it as if it doesn't exist
+            else {
+              shouldShowOnboarding = true;
+              print("Cannot parse dateWatchScreen, will check features");
+            }
+            
+            if (shouldShowOnboarding) {
               await _precacheImages(context);
-              if (gCache['features'] != null ||
-                  gCache['features']['items'].isNotEmpty) {
+              if (context.mounted && gCache?['features'] != null &&
+                  gCache['features']['items'] != null &&
+                  (gCache['features']['items'] as List).isNotEmpty) {
+                print("Navigating to onboarding (logged in)");
                 context.goNamed(AppRoutes.onboarding.name,
                     pathParameters: {'lang': context.locale.languageCode});
               } else {
+                print("Navigating to home (logged in, no features)");
+                if (context.mounted) {
+                  context.goNamed(
+                    AppRoutes.home.name,
+                    pathParameters: {'lang': context.locale.languageCode},
+                  );
+                }
+              }
+            } else {
+              print("Navigating to home (logged in, dateWatchScreen is newer)");
+              if (context.mounted) {
                 context.goNamed(
                   AppRoutes.home.name,
                   pathParameters: {'lang': context.locale.languageCode},
                 );
               }
-            } else {
-              context.goNamed(
-                AppRoutes.home.name,
-                pathParameters: {'lang': context.locale.languageCode},
-              );
             }
             return;
           }
           else {
-            print("WATCH 0");
+            // User is not logged in - navigate to login or onboarding
+            print("WATCH 0 - User not logged in");
             final jsonString2 = CacheHelper.getString("USG");
             var cache;
             if (jsonString2 != null && jsonString2.isNotEmpty) {
-              cache = json.decode(jsonString2) as Map<String, dynamic>;
+              try {
+                cache = json.decode(jsonString2) as Map<String, dynamic>;
+              } catch (e) {
+                debugPrint('Error decoding USG cache: $e');
+                cache = null;
+              }
             }
-            final features = cache['features']['items'];
-            print("WATCH 1");
+            
+            final features = cache?['features']?['items'];
+            print("WATCH 1 - Features: ${features != null ? features.length : 'null'}");
+            
             final jsonString = CacheHelper.getString("USG");
             var gCache;
-            var dateToCheck;
-            var referenceDate;
+            DateTime? dateToCheck;
+            DateTime? referenceDate;
             print("WATCH 2");
+            
             if (jsonString != null && jsonString != "") {
-              gCache = json.decode(jsonString) as Map<String,
-                  dynamic>; // Convert String back to JSON
-              referenceDate = safeParseDateTime(gCache['features']['date']);
+              try {
+                gCache = json.decode(jsonString) as Map<String, dynamic>;
+                if (gCache['features']?['date'] != null) {
+                  referenceDate = safeParseDateTime(gCache['features']['date']);
+                }
+              } catch (e) {
+                debugPrint('Error decoding USG jsonString: $e');
+                gCache = null;
+              }
             }
+            
             print("WATCH IN1 ${CacheHelper.getString("dateWatchScreen")}");
+            
             if (CacheHelper.getString("dateWatchScreen") != null &&
                 CacheHelper.getString("dateWatchScreen") != "") {
-              dateToCheck =
-                  safeParseDateTime(CacheHelper.getString("dateWatchScreen"));
+              dateToCheck = safeParseDateTime(CacheHelper.getString("dateWatchScreen"));
+            }
+            
+            // Check if we should show onboarding or login
+            bool shouldShowOnboarding = false;
+            
+            // Check if features exist and are not empty
+            if (features != null && features is List && features.isNotEmpty) {
+              final dateWatchScreen = CacheHelper.getString("dateWatchScreen");
+              
+              // If dateWatchScreen is not set, show onboarding
+              if (dateWatchScreen == null || dateWatchScreen.isEmpty) {
+                shouldShowOnboarding = true;
+                print("WATCH: dateWatchScreen is empty, showing onboarding");
+              } 
+              // If dateWatchScreen exists, check if it's older than reference date
+              else if (dateToCheck != null && referenceDate != null) {
+                if (dateToCheck.isBefore(referenceDate)) {
+                  shouldShowOnboarding = true;
+                  print("WATCH: dateWatchScreen is older, showing onboarding");
+                } else {
+                  print("WATCH: dateWatchScreen is newer, going to login");
+                }
+              } 
+              // If we can't parse dates, default to onboarding
+              else {
+                shouldShowOnboarding = true;
+                print("WATCH: Cannot parse dates, defaulting to onboarding");
+              }
             } else {
-              if (CacheHelper.getString("dateWatchScreen") == null ||
-                  CacheHelper.getString("dateWatchScreen") == "" ||
-                  gCache == null || gCache['features']['date'] == "" ||
-                  dateToCheck.isAfter(referenceDate) == false){
-                print("WATCH IN IN");
-                await _precacheImages(context);
-                print("WATCH IN 2");
+              print("WATCH: No features found, going to login");
+            }
+            
+            print("WATCH: shouldShowOnboarding = $shouldShowOnboarding");
+            
+            // Navigate - ensure context is ready
+            if (!context.mounted) return;
+            
+            // Small delay to ensure everything is initialized
+            await Future.delayed(const Duration(milliseconds: 100));
+            
+            if (!context.mounted) return;
+            
+            if (shouldShowOnboarding) {
+              print("Navigating to onboarding");
+              await _precacheImages(context);
+              if (context.mounted) {
                 context.goNamed(AppRoutes.onboarding.name,
                     pathParameters: {'lang': context.locale.languageCode});
-              }else{
-                print("login-1");
+              }
+            } else {
+              print("Navigating to login");
+              if (context.mounted) {
                 context.goNamed(
                   AppRoutes.login.name,
                   pathParameters: {'lang': context.locale.languageCode},
                 );
               }
             }
-            if (features == null || features.isEmpty) {
-              print("login-2");
-              context.goNamed(
-                AppRoutes.login.name,
-                pathParameters: {'lang': context.locale.languageCode,
-                },
-              );
-              return;
-            } else {
-              if (CacheHelper.getString("dateWatchScreen") == null ||
-                  CacheHelper.getString("dateWatchScreen") == "" ||
-                  gCache == null || gCache['features']['date'] == "" ||
-                  dateToCheck.isAfter(referenceDate) == false) {
-                await _precacheImages(context);
-                print("WATCH IN 4");
-                context.goNamed(AppRoutes.onboarding.name,
-                    pathParameters: {'lang': context.locale.languageCode});
-              } else {
-                print("login-3");
-                context.goNamed(
-                  AppRoutes.login.name,
-                  pathParameters: {'lang': context.locale.languageCode},
-                );
-              }
-            }
-            // print("login-4");
-            // return context.goNamed(
-            //   AppRoutes.login.name,
-            //   pathParameters: {'lang': context.locale.languageCode},
-            // );
           }
         }
       } catch (err, t) {

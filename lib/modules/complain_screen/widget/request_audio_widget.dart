@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -15,32 +17,73 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
   bool _isPlaying = false;
+  StreamSubscription<Duration?>? _durationSubscription;
+  StreamSubscription<Duration>? _positionSubscription;
+  StreamSubscription<PlayerState>? _playerStateSubscription;
 
   @override
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
-
-    _audioPlayer.setUrl(widget.audioUrl);
-    _audioPlayer.durationStream.listen((d) {
-      if (d != null) {
+    _loadAudio();
+    
+    _durationSubscription = _audioPlayer.durationStream.listen((d) {
+      if (!mounted || d == null) return;
         setState(() {
           _duration = d;
         });
-      }
     });
 
-    _audioPlayer.positionStream.listen((p) {
+    _positionSubscription = _audioPlayer.positionStream.listen((p) {
+      if (!mounted) return;
       setState(() {
         _position = p;
       });
     });
 
-    _audioPlayer.playerStateStream.listen((state) {
+    _playerStateSubscription = _audioPlayer.playerStateStream.listen((state) {
+      if (!mounted) return;
       setState(() {
         _isPlaying = state.playing;
       });
     });
+  }
+  
+  Future<void> _loadAudio() async {
+    try {
+      await _audioPlayer.setUrl(widget.audioUrl);
+    } catch (e) {
+      print("Error loading audio: $e");
+      // محاولة إعادة التحميل بعد فترة قصيرة
+      Future.delayed(Duration(seconds: 1), () {
+        if (mounted) {
+          _loadAudio();
+        }
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant VoiceMessageWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.audioUrl != widget.audioUrl) {
+      _resetAndLoadNewSource();
+    }
+  }
+
+  Future<void> _resetAndLoadNewSource() async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.setUrl(widget.audioUrl);
+      if (!mounted) return;
+      setState(() {
+        _duration = Duration.zero;
+        _position = Duration.zero;
+        _isPlaying = false;
+      });
+    } catch (_) {
+      // ignore errors when updating the source
+    }
   }
 
   void _togglePlayPause() async {
@@ -55,6 +98,9 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   @override
   void dispose() {
     AudioPlaybackManager().unregisterPlayer(_audioPlayer);
+    _durationSubscription?.cancel();
+    _positionSubscription?.cancel();
+    _playerStateSubscription?.cancel();
     _audioPlayer.dispose();
     super.dispose();
   }

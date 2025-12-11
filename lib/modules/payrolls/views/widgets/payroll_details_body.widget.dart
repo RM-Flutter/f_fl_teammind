@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -58,14 +56,16 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
             if (payroll?.salaryAdvance != null)
               PayrollDetailsBodyTileWidget(
                   title: AppStrings.salaryAdvance.tr(),
-                  subtitle:double.parse(payroll!.salaryAdvance.toString()).toStringAsFixed(2) ?? ''),
+                  subtitle:double.parse(payroll!.salaryAdvance.toString()).toStringAsFixed(2) ?? '',
+                  subtitleColor: Colors.red),
             // display all deductions
             if (payroll?.payrollDeductions?.isNotEmpty ?? false)
               ...payroll!.payrollDeductions!.map(
                 (deduction) => PayrollDetailsBodyTileWidget(
                     title: LocalizationService.isArabic(context: context)? deduction.title!.ar :
                     deduction.title!.en,
-                    subtitle: double.parse(deduction.value.toString()).toStringAsFixed(2) ?? ''),
+                    subtitle: double.parse(deduction.value.toString()).toStringAsFixed(2) ?? '',
+                    subtitleColor: Colors.red),
               ),
 
             // display all bounuses
@@ -74,19 +74,22 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
                 (bonuse) => PayrollDetailsBodyTileWidget(
                     title: LocalizationService.isArabic(context: context) ?
                     bonuse.title!.ar : bonuse.title!.en,
-                    subtitle: double.parse(bonuse.value.toString()).toStringAsFixed(2) ?? ''),
+                    subtitle: double.parse(bonuse.value.toString()).toStringAsFixed(2) ?? '',
+                    subtitleColor: Colors.green),
               ),
 
             if (payroll?.payrollTotalDeductions != null)
               PayrollDetailsBodyTileWidget(
                   title: AppStrings.totalSpecialAndBonuses.tr(),
                   subtitle:
-                      double.parse(payroll!.payrollTotalSpecialBonus.toString()).toStringAsFixed(2) ?? ''),
+                      double.parse(payroll!.payrollTotalSpecialBonus.toString()).toStringAsFixed(2) ?? '',
+                  subtitleColor: Colors.green),
 
             if (payroll?.payrollTotalDeductions != null)
               PayrollDetailsBodyTileWidget(
                   title: AppStrings.totalDeductions.tr(),
-                  subtitle: double.parse(payroll!.payrollTotalDeductions.toString()).toStringAsFixed(2) ?? ''),
+                  subtitle: double.parse(payroll!.payrollTotalDeductions.toString()).toStringAsFixed(2) ?? '',
+                  subtitleColor: Colors.red),
 
             if (payroll?.netPayable != null)
               PayrollDetailsBodyTileWidget(
@@ -102,8 +105,9 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 class PayrollDetailsBodyTileWidget extends StatelessWidget {
   final String? title;
   final String? subtitle;
+  final Color? subtitleColor;
   const PayrollDetailsBodyTileWidget(
-      {super.key, required this.title, required this.subtitle});
+      {super.key, required this.title, required this.subtitle, this.subtitleColor});
 
   @override
   Widget build(BuildContext context) {
@@ -135,10 +139,10 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               gapW16,
               AutoSizeText(
                 subtitle ?? '',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: AppSizes.s12,
-                  color: Color(AppColors.primary),
+                  color: subtitleColor ?? const Color(AppColors.primary),
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

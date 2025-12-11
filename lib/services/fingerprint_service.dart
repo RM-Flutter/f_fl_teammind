@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/app_constants.dart';
 import '../general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
 import '../general_services/backend_services/get_endpoint.service.dart';
 import '../general_services/connections.service.dart';
@@ -84,6 +86,30 @@ abstract class FingerprintService {
     return response;
   }
 
+  // Save fingerprint to SharedPreferences for display
+  static Future<void> _saveFingerprintToSharedPreferences(
+      Map<String, dynamic> fingerprintData) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      
+      // Initialize AppConstants.fingerPrints if null
+      if (AppConstants.fingerPrints == null) {
+        AppConstants.fingerPrints = [];
+      }
+      
+      // Add the fingerprint to the list
+      AppConstants.fingerPrints!.add(fingerprintData);
+      
+      // Save to SharedPreferences
+      final String jsonString = jsonEncode(AppConstants.fingerPrints);
+      await prefs.setString('fingerPrints', jsonString);
+      
+      debugPrint('Fingerprint saved to SharedPreferences');
+    } catch (e) {
+      debugPrint('Error saving fingerprint to SharedPreferences: $e');
+    }
+  }
+
   // Upload Stored Fingerprints to Server in online mood
   static Future<void> uploadFingerprintsInOnlineMood(
       {required BuildContext context}) async {
@@ -127,6 +153,7 @@ abstract class FingerprintService {
     required String data,
     DateTime? fingerDay,
     required List<FilePickerResult> files,
+    Map<String, dynamic>? noteReport,
   }) async {
 
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
@@ -137,6 +164,9 @@ abstract class FingerprintService {
       'data': encoded,
       'finger_day': DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now()),
     };
+    if (noteReport != null) {
+      formData['note'] = jsonEncode(noteReport);
+    }
     print("formData is --> $formData");
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -150,9 +180,13 @@ abstract class FingerprintService {
     } else {
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(formData)
-          .then((_) => OperationResult<Map<String, dynamic>>(
-          success: true,
-          message: 'Fingerprint Saved successfully in Locale Storage'))
+          .then((_) async {
+            // Also save to SharedPreferences for display
+            await _saveFingerprintToSharedPreferences(formData);
+            return OperationResult<Map<String, dynamic>>(
+                success: true,
+                message: 'Fingerprint Saved successfully in Locale Storage');
+          })
           .catchError((err, t) => OperationResult<Map<String, dynamic>>(
           success: false,
           message: 'Failed to save fingerprint in Locale Storage'));
@@ -167,6 +201,7 @@ abstract class FingerprintService {
     required double lat,
     required double long,
     required List<FilePickerResult> files,
+    Map<String, dynamic>? noteReport,
   }) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
     final requestBody = {
@@ -175,6 +210,9 @@ abstract class FingerprintService {
       'finger_day':
       DateFormat('yyyy-MM-dd', "en").format(fingerDay ?? DateTime.now()),
     };
+    if (noteReport != null) {
+      requestBody['note'] = jsonEncode(noteReport);
+    }
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
@@ -182,9 +220,13 @@ abstract class FingerprintService {
     } else {
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
-          .then((_) => OperationResult<Map<String, dynamic>>(
-          success: true,
-          message: 'Fingerprint Saved successfully in Locale Storage'))
+          .then((_) async {
+            // Also save to SharedPreferences for display
+            await _saveFingerprintToSharedPreferences(requestBody);
+            return OperationResult<Map<String, dynamic>>(
+                success: true,
+                message: 'Fingerprint Saved successfully in Locale Storage');
+          })
           .catchError((err, t) => OperationResult<Map<String, dynamic>>(
           success: false,
           message: 'Failed to save fingerprint in Locale Storage'));
@@ -220,9 +262,13 @@ abstract class FingerprintService {
     } else {
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(formData)
-          .then((_) => OperationResult<Map<String, dynamic>>(
-          success: true,
-          message: 'Fingerprint Saved successfully in Locale Storage'))
+          .then((_) async {
+            // Also save to SharedPreferences for display
+            await _saveFingerprintToSharedPreferences(formData);
+            return OperationResult<Map<String, dynamic>>(
+                success: true,
+                message: 'Fingerprint Saved successfully in Locale Storage');
+          })
           .catchError((err, t) => OperationResult<Map<String, dynamic>>(
           success: false,
           message: 'Failed to save fingerprint in Locale Storage'));
@@ -234,7 +280,8 @@ abstract class FingerprintService {
       {required BuildContext context,
         required String data,
         DateTime? fingerDay,
-        required List<FilePickerResult> files}) async {
+        required List<FilePickerResult> files,
+        Map<String, dynamic>? noteReport}) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
     var date = DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now());
     String encoded = base64Encode(utf8.encode("${data}_$date"));
@@ -244,6 +291,9 @@ abstract class FingerprintService {
       'finger_day':
       DateFormat('yyyy-MM-dd', "en").format(fingerDay ?? DateTime.now()),
     };
+    if (noteReport != null) {
+      requestBody['note'] = jsonEncode(noteReport);
+    }
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
@@ -251,9 +301,13 @@ abstract class FingerprintService {
     } else {
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
-          .then((_) => OperationResult<Map<String, dynamic>>(
-          success: true,
-          message: 'Fingerprint Saved successfully in Locale Storage'))
+          .then((_) async {
+            // Also save to SharedPreferences for display
+            await _saveFingerprintToSharedPreferences(requestBody);
+            return OperationResult<Map<String, dynamic>>(
+                success: true,
+                message: 'Fingerprint Saved successfully in Locale Storage');
+          })
           .catchError((err, t) => OperationResult<Map<String, dynamic>>(
           success: false,
           message: 'Failed to save fingerprint in Locale Storage'));
@@ -265,7 +319,8 @@ abstract class FingerprintService {
       {required BuildContext context,
         required String data,
         DateTime? fingerDay,
-        required List<FilePickerResult> files}) async {
+        required List<FilePickerResult> files,
+        Map<String, dynamic>? noteReport}) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
     var date = DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now());
     String encoded = base64Encode(utf8.encode("${data}_$date"));
@@ -274,6 +329,9 @@ abstract class FingerprintService {
       'data': encoded,
       'finger_day': DateFormat('yyyy-MM-dd', "en").format(fingerDay ?? DateTime.now()),
     };
+    if (noteReport != null) {
+      requestBody['note'] = jsonEncode(noteReport);
+    }
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
@@ -281,9 +339,13 @@ abstract class FingerprintService {
     } else {
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
-          .then((_) => OperationResult<Map<String, dynamic>>(
-          success: true,
-          message: 'Fingerprint Saved successfully in Locale Storage'))
+          .then((_) async {
+            // Also save to SharedPreferences for display
+            await _saveFingerprintToSharedPreferences(requestBody);
+            return OperationResult<Map<String, dynamic>>(
+                success: true,
+                message: 'Fingerprint Saved successfully in Locale Storage');
+          })
           .catchError((err, t) => OperationResult<Map<String, dynamic>>(
           success: false,
           message: 'Failed to save fingerprint in Locale Storage'));
@@ -295,7 +357,8 @@ abstract class FingerprintService {
       {required BuildContext context,
         required String data,
         DateTime? fingerDay,
-        required List<FilePickerResult> files}) async {
+        required List<FilePickerResult> files,
+        Map<String, dynamic>? noteReport}) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
     final requestBody = {
       'type': 'fp_nfc',
@@ -303,6 +366,9 @@ abstract class FingerprintService {
       'finger_day':
       DateFormat('yyyy-MM-dd HH:mm').format(fingerDay ?? DateTime.now()),
     };
+    if (noteReport != null) {
+      requestBody['note'] = jsonEncode(noteReport);
+    }
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
@@ -310,9 +376,13 @@ abstract class FingerprintService {
     } else {
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
-          .then((_) => OperationResult<Map<String, dynamic>>(
-          success: true,
-          message: 'Fingerprint Saved successfully in Locale Storage'))
+          .then((_) async {
+            // Also save to SharedPreferences for display
+            await _saveFingerprintToSharedPreferences(requestBody);
+            return OperationResult<Map<String, dynamic>>(
+                success: true,
+                message: 'Fingerprint Saved successfully in Locale Storage');
+          })
           .catchError((err, t) => OperationResult<Map<String, dynamic>>(
           success: false,
           message: 'Failed to save fingerprint in Locale Storage'));

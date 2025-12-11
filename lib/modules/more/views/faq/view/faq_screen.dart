@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -8,60 +9,70 @@ import 'package:rmemp/modules/more/views/faq/logic/faq_model.dart';
 import 'package:rmemp/modules/more/views/faq/logic/get_faq_model.dart';
 import 'package:rmemp/modules/more/views/faq/view/faq_loading_widget.dart';
 
+import '../../../../../utils/gradient_bg_image.dart';
+
 class FaqScreen extends StatefulWidget {
   @override
   _FaqScreenState createState() => _FaqScreenState();
 }
+
 
 class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(create: (context) => FaqModelProvider()..getFaq(context),
-    child: Consumer<FaqModelProvider>(
-      builder: (context, value, child) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            title:  Text(AppStrings.faqs.tr().toUpperCase(), style: const TextStyle(fontSize: 16,
-                color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
-            leading: Padding(
-              padding: const EdgeInsets.all(AppSizes.s10),
-              child: InkWell(
-                onTap: () =>  Navigator.pop(context),
-                child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(AppColors.dark)),
-                  child: const Icon(
-                    Icons.arrow_back_sharp,
-                    color: Colors.white,
-                    size: AppSizes.s18,
+      child: Consumer<FaqModelProvider>(
+        builder: (context, value, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              surfaceTintColor: Colors.transparent,
+              title:  Text(AppStrings.faqs.tr().toUpperCase(), style: const TextStyle(fontSize: 16,
+                  color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
+              leading: Padding(
+                padding: const EdgeInsets.all(AppSizes.s10),
+                child: InkWell(
+                  onTap: () =>  Navigator.pop(context),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(AppColors.dark)),
+                    child: const Icon(
+                      Icons.arrow_back_sharp,
+                      color: Colors.white,
+                      size: AppSizes.s18,
+                    ),
                   ),
                 ),
               ),
+              backgroundColor: Colors.transparent,
             ),
-            backgroundColor: Colors.transparent,
-          ),
-          body: (value.faqModel != null)?ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: value.faqModel!.page!.questions!.length,
-            itemBuilder: (context, index) {
-              return FaqTile(
-                item: value.faqModel!.page!.questions![index],
-              );
-            },
-          ):ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const FaqLoadingWidget();
-            },
-          ),
-        );
-      },
-    ),
+            body: (value.faqModel != null)?Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity,
+                ),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: value.faqModel!.page!.questions!.length,
+                  itemBuilder: (context, index) {
+                    return FaqTile(
+                      item: value.faqModel!.page!.questions![index],
+                    );
+                  },
+                ),
+              ),
+            ):ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return const FaqLoadingWidget();
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -144,3 +155,4 @@ class _FaqTileState extends State<FaqTile> {
     );
   }
 }
+

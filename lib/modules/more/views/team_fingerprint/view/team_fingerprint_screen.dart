@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -51,57 +52,64 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
           pageContext: context,
           title: AppStrings.teamFingerprint.tr().toUpperCase(),
           onRefresh: () async => await viewModel.getEmployees(context: context),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
-            child: SingleChildScrollView(
-              child: Consumer<TeamFingerPrintViewModel>(
-                  builder: (context, viewModel, child) => viewModel.isLoading
-                      ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                      : viewModel.employees?.isEmpty == true ||
-                      viewModel.employees == null
-                      ? NoExistingPlaceholderScreen(
-                      height: LayoutService.getHeight(context) * 0.6,
-                      title: AppStrings.noEmployeesFounded.tr())
-                      : Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ListView.separated(
-                            reverse: false,
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            itemBuilder: (context, index) {
-                              final totalPoints = viewModel.employees![index]['totalPoints'];
-                              final gainedPoints = viewModel.employees![index]['gainedPoints'];
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s12),
+                child: SingleChildScrollView(
+                  child: Consumer<TeamFingerPrintViewModel>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                          : viewModel.employees?.isEmpty == true ||
+                          viewModel.employees == null
+                          ? NoExistingPlaceholderScreen(
+                          height: LayoutService.getHeight(context) * 0.6,
+                          title: AppStrings.noEmployeesFounded.tr())
+                          : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ListView.separated(
+                                reverse: false,
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  final totalPoints = viewModel.employees![index]['totalPoints'];
+                                  final gainedPoints = viewModel.employees![index]['gainedPoints'];
 
-                              String percentage;
-                              if (totalPoints != null && gainedPoints != null && gainedPoints != 0) {
-                                percentage = "${((gainedPoints / totalPoints) * 100).toStringAsFixed(1)}%";
-                              } else {
-                                percentage = "0%"; // or any fallback value like "0", "Error", etc.
-                              }
-                              return defaultTeamEmp(
-                                context,
-                                onTap: ()async{
-                                  await context.pushNamed(AppRoutes.fingerprintView.name,
-                                      pathParameters: {
-                                        'id' : viewModel.employees[index]['id'].toString(),
-                                        'name' : viewModel.employees[index]['name'],
-                                        'lang': context.locale.languageCode
-                                      });
+                                  String percentage;
+                                  if (totalPoints != null && gainedPoints != null && gainedPoints != 0) {
+                                    percentage = "${((gainedPoints / totalPoints) * 100).toStringAsFixed(1)}%";
+                                  } else {
+                                    percentage = "0%"; // or any fallback value like "0", "Error", etc.
+                                  }
+                                  return defaultTeamEmp(
+                                    context,
+                                    onTap: ()async{
+                                      await context.pushNamed(AppRoutes.fingerprintView.name,
+                                          pathParameters: {
+                                            'id' : viewModel.employees[index]['id'].toString(),
+                                            'name' : viewModel.employees[index]['name'],
+                                            'lang': context.locale.languageCode
+                                          });
+                                    },
+                                    viewModel.employees[index]['name'],
+                                    viewModel.employees[index]['department'],
+                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")?
+                                    "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
+                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
+                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
+
+                                  );
                                 },
-                                viewModel.employees[index]['name'],
-                                viewModel.employees[index]['department'],
-                                (viewModel.employees[index]['working_hours_type'] == "according_hours_count")?
-                                "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
-                                (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
-                                "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
-
-                              );
-                            },
-                            separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                            itemCount: viewModel.employees!.length)
-                      ])),
+                                separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                itemCount: viewModel.employees!.length)
+                          ])),
+                ),
+              ),
             ),
           )),
     );

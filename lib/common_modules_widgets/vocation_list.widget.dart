@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,29 @@ class VacationListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double getResponsiveItemWidth(BuildContext context, {double? paddingBetweenVocations}) {
+      final screenWidth = LayoutService.getWidth(context);
+      int crossAxisCount;
+
+      if (kIsWeb) {
+        if (screenWidth > 1400) {
+          crossAxisCount = 6; // شاشات كبيرة جدًا
+        } else if (screenWidth > 1000) {
+          crossAxisCount = 5; // لابتوب
+        } else {
+          crossAxisCount = 4; // تابلت أو شاشة صغيرة
+        }
+      } else {
+        if (screenWidth > 600) {
+          crossAxisCount = 4; // تابلت
+        } else {
+          crossAxisCount = 3; // موبايل
+        }
+      }
+
+      final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0) * 2);
+      return (screenWidth - totalPadding) / crossAxisCount;
+    }
     var jsonString;
     var gCache;
     List<MapEntry<String, Balance>>? vacationBalance;
@@ -77,10 +101,7 @@ class VacationListWidget extends StatelessWidget {
                 },
                 extra: requests),
             child: Container(
-              width: (LayoutService.getWidth(context) -
-                  (AppSizes.s32 +
-                      ((paddingBetweenVocations ?? AppSizes.s0) * 2))) /
-                  3,
+              width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
               height: AppSizes.s120,
               padding: const EdgeInsets.symmetric(
                   vertical: AppSizes.s14, horizontal: AppSizes.s6),
@@ -94,11 +115,12 @@ class VacationListWidget extends StatelessWidget {
                 children: [
                   SvgPicture.asset("assets/images/svg/calendar.svg"),
                   gapH18,
-                  Expanded(
-                    child: Text(AppStrings.viewOnCalendar.tr().toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge),
-                  )
+                  Text(AppStrings.viewOnCalendar.tr().toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        // تحسين الخطوط في الويب
+                        letterSpacing: kIsWeb ? 0.5 : null,
+                      ))
                 ],
               ),
             ),
@@ -154,6 +176,29 @@ class VacationCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     bool isTaken = vocation.value.max == -1 && vocation.value.available == -1;
+    double getResponsiveItemWidth(BuildContext context, {double? paddingBetweenVocations}) {
+      final screenWidth = LayoutService.getWidth(context);
+      int crossAxisCount;
+
+      if (kIsWeb) {
+        if (screenWidth > 1400) {
+          crossAxisCount = 6; // شاشات كبيرة جدًا
+        } else if (screenWidth > 1000) {
+          crossAxisCount = 5; // لابتوب
+        } else {
+          crossAxisCount = 4; // تابلت أو شاشة صغيرة
+        }
+      } else {
+        if (screenWidth > 600) {
+          crossAxisCount = 4; // تابلت
+        } else {
+          crossAxisCount = 3; // موبايل
+        }
+      }
+
+      final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0) * 2);
+      return (screenWidth - totalPadding) / crossAxisCount;
+    }
     return InkWell(
       onTap: tap == false ?()async {} : () async => isInRequestsPage == false
           ? await context.pushNamed(AppRoutes.requestsById.name,
@@ -177,10 +222,7 @@ class VacationCard extends StatelessWidget {
                   'userId': userId
                 }),
       child: Container(
-        width: (LayoutService.getWidth(context) -
-                (AppSizes.s32 +
-                    ((paddingBetweenVocations ?? AppSizes.s0) * 2))) /
-            3,
+        width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         height: AppSizes.s120,
         padding: const EdgeInsets.symmetric(
             vertical: AppSizes.s14, horizontal: AppSizes.s6),
@@ -200,52 +242,50 @@ class VacationCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             if(vocation.value.max != -1) gapH18,
-             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                 if(vocation.value.max != -1) AutoSizeText(
-                     AppStrings.remaining.tr(),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
+             Column(
+               mainAxisAlignment: MainAxisAlignment.center,
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                if(vocation.value.max != -1) AutoSizeText(
+                    AppStrings.remaining.tr(),
+                   textAlign: TextAlign.center,
+                   style: Theme.of(context).textTheme.titleSmall,
+                 ),
+                if(isTaken) AutoSizeText(
+                  AppStrings.taken.tr(),
+                   textAlign: TextAlign.center,
+                   style: Theme.of(context).textTheme.titleSmall,
+                 ),
+                 gapH4,
                  if(isTaken) AutoSizeText(
-                   AppStrings.taken.tr(),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  gapH4,
-                  if(isTaken) AutoSizeText(
-                      '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: AppSizes.s20,
-                          )),
-                  if(!isTaken && vocation.value.max != -1)AutoSizeText(
-                      '${(vocation.value.available?.toString() ?? '0') } ${(vocation.value.type?.toString().tr() ?? '')}',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: AppSizes.s20,
-                          )),
-                  gapH4,
-                  if (vocation.value.max != -1 &&
-                      vocation.value.available != -1)
-                    AutoSizeText(
-                      '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        height: 1.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                ],
-              ),
-            )
+                     '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
+                     textAlign: TextAlign.center,
+                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                           fontWeight: FontWeight.bold,
+                           fontSize: AppSizes.s20,
+                         )),
+                 if(!isTaken && vocation.value.max != -1)AutoSizeText(
+                     '${(vocation.value.available?.toString() ?? '0') } ${(vocation.value.type?.toString().tr() ?? '')}',
+                     textAlign: TextAlign.center,
+                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                           fontWeight: FontWeight.bold,
+                           fontSize: AppSizes.s20,
+                         )),
+                 gapH4,
+                 if (vocation.value.max != -1 &&
+                     vocation.value.available != -1)
+                   AutoSizeText(
+                     '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
+                     textAlign: TextAlign.center,
+                     style: const TextStyle(
+                       fontWeight: FontWeight.bold,
+                       fontSize: 12,
+                       height: 1.0,
+                       color: Colors.white,
+                     ),
+                   ),
+               ],
+             )
           ],
         ),
       ),

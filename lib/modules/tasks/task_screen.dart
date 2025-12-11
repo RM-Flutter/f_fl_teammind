@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -126,90 +127,97 @@ class _TaskScreenState extends State<TaskScreen> {
             viewModel.currentPage = 1;
             viewModel.getTask(context);
           },
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                child: Consumer<TaskViewModel>(
-                    builder: (context, viewModel, child) => viewModel.isLoading
-                        ? const LoadingPageWidget(
-                            reverse: true,
-                            height: AppSizes.s75,
-                          )
-                        : SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                HorizontalCalendar(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                if (viewModel.tasks == null ||
-                                    viewModel.tasks?.isEmpty == true)
-                                  NoExistingPlaceholderScreen(
-                                      height: LayoutService.getHeight(context) *
-                                          0.6,
-                                      title: AppStrings.thereIsNoTasks.tr()),
-                                if (viewModel.tasks != null &&
-                                    viewModel.tasks?.isEmpty == false)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
-                                    child: SizedBox(
-                                      height: MediaQuery.sizeOf(context).height * 0.7,
-                                      child: ListView.separated(
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        reverse: false,
-                                        controller: _scrollController,
-                                        physics:
-                                            const ClampingScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          final iconName =
-                                              viewModel.tasks[index]["icon"];
-                                          final icon = viewModel.iconsName.firstWhere(
-                                            (item) => item["name"] == iconName,
-                                            orElse: () => {
-                                              "value": "assets/images/svg/t3.svg"
-                                            }, // مسار افتراضي لو لم يوجد
-                                          );
-                                          return TaskListTileWidget(
-                                            onTap: ()async{
-                                              await context
-                                                  .pushNamed(AppRoutes.taskDetails.name, pathParameters: {
-                                                'lang': context.locale.languageCode,
-                                                'id' : viewModel.tasks[index]['id'].toString(),
-                                              });
-                                              viewModel.currentPage = 1;
-                                             await viewModel.getTask(context, date: null);
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 1100 : double.infinity,
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                    child: Consumer<TaskViewModel>(
+                        builder: (context, viewModel, child) => viewModel.isLoading
+                            ? const LoadingPageWidget(
+                                reverse: true,
+                                height: AppSizes.s75,
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    HorizontalCalendar(),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    if (viewModel.tasks == null ||
+                                        viewModel.tasks?.isEmpty == true)
+                                      NoExistingPlaceholderScreen(
+                                          height: LayoutService.getHeight(context) *
+                                              0.6,
+                                          title: AppStrings.thereIsNoTasks.tr()),
+                                    if (viewModel.tasks != null &&
+                                        viewModel.tasks?.isEmpty == false)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: SizedBox(
+                                          height: MediaQuery.sizeOf(context).height * 0.7,
+                                          child: ListView.separated(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            reverse: false,
+                                            controller: _scrollController,
+                                            physics:
+                                                const ClampingScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              final iconName =
+                                                  viewModel.tasks[index]["icon"];
+                                              final icon = viewModel.iconsName.firstWhere(
+                                                (item) => item["name"] == iconName,
+                                                orElse: () => {
+                                                  "value": "assets/images/svg/t3.svg"
+                                                }, // مسار افتراضي لو لم يوجد
+                                              );
+                                              return TaskListTileWidget(
+                                                onTap: ()async{
+                                                  await context
+                                                      .pushNamed(AppRoutes.taskDetails.name, pathParameters: {
+                                                    'lang': context.locale.languageCode,
+                                                    'id' : viewModel.tasks[index]['id'].toString(),
+                                                  });
+                                                  viewModel.currentPage = 1;
+                                                 await viewModel.getTask(context, date: null);
+                                                },
+                                                complete: viewModel.tasks[index]
+                                                            ['status'].toString(),
+                                                assetName: icon['value']!,
+                                                title: viewModel.tasks[index]
+                                                    ['title'],
+                                                id: viewModel.tasks[index]['id']
+                                                    .toString(),
+                                                date:
+                                                viewModel.tasks[index]
+                                                    ['dueDate'] ?? "",
+                                                createdAt:viewModel.tasks[index]
+                                                ['createdAt'] ?? ""
+                                              );
                                             },
-                                            complete: viewModel.tasks[index]
-                                                        ['status'].toString(),
-                                            assetName: icon['value']!,
-                                            title: viewModel.tasks[index]
-                                                ['title'],
-                                            id: viewModel.tasks[index]['id']
-                                                .toString(),
-                                            date:
-                                            viewModel.tasks[index]
-                                                ['dueDate'] ?? "",
-                                            createdAt:viewModel.tasks[index]
-                                            ['createdAt'] ?? ""
-                                          );
-                                        },
-                                        itemCount: viewModel.tasks.length,
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(
-                                          height: 15,
+                                            itemCount: viewModel.tasks.length,
+                                            separatorBuilder: (context, index) =>
+                                                const SizedBox(
+                                              height: 15,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                if(viewModel.isLoadingMore == true) CircularProgressIndicator()
-                              ],
-                            ),
-                          )),
+                                    if(viewModel.isLoadingMore == true) CircularProgressIndicator()
+                                  ],
+                                ),
+                              )),
+                  ),
+                ],
               ),
-            ],
+            ),
           )),
     );
   }

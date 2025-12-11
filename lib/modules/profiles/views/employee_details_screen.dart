@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -7,6 +10,7 @@ import 'package:rmemp/modules/profiles/views/widgets/assets_section_widget.dart'
 import 'package:rmemp/modules/profiles/views/widgets/evalutaion_section_widget.dart';
 import 'package:rmemp/utils/tab_bar_widget.dart';
 import '../../../constants/app_sizes.dart';
+import '../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../models/employee_profile.model.dart';
 import '../viewmodels/employee_details.viewmodel.dart';
@@ -28,6 +32,7 @@ class EmployeeDetailsScreen extends StatefulWidget {
 
 class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   late final EmployeeDetailsViewModel viewModel;
+  bool ? getTeam;
   List<String> taps = [
     AppStrings.contact.tr(),
     AppStrings.general.tr(),
@@ -42,8 +47,23 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     super.initState();
     viewModel = EmployeeDetailsViewModel();
     if (widget.id != null) {
+      var jsonString;
+      var gCache;
+      jsonString = CacheHelper.getString("US1");
+      if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+        gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      }
+      if(widget.id.toString() == gCache['employee_profile_id'].toString()){
+        print("THIS PROFILE IS MINE");
+        getTeam = false;
+      }else{
+        print("THIS PROFILE IS NOT MINE");
+        getTeam = true;
+      }
       viewModel.initializeEmployeesListScreen(
-          context: context, employeeId: widget.id.toString());
+          context: context, employeeId: widget.id.toString(),
+        getTeam: getTeam!
+      );
     }
   }
 
@@ -86,131 +106,111 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         height: AppSizes.s300,
                         title: AppStrings.thereIsNoEmployeeDataFound.tr() )
                         : Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSizes.s8,
-                            vertical: AppSizes.s12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start, // 👈 Align start in column
-                          children: [
-                            Container(
-                              margin: EdgeInsets.zero, // ← key part
-                              decoration: BoxDecoration(
-                                color: const Color(AppColors.dark),
-                                borderRadius:
-                                BorderRadius.circular(
-                                    AppSizes.s30),
-                              ),
-                              height: AppSizes.s55,
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSizes.s6,
-                                  vertical: AppSizes.s6),
-                              child: Align(
-                                alignment: Alignment.centerLeft, // FORCE alignment to start
-                                child: defaultTapBarItem(
-                                  items: taps,
-                                  tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
-                                  selectIndex: selectIndex,
-                                  onTapItem: (index) {
-                                    setState(() {
-                                      selectIndex = index;
-                                    });
-                                  },
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxWidth: kIsWeb ? 1100 : double.infinity
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSizes.s8,
+                                vertical: AppSizes.s12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start, // 👈 Align start in column
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.zero, // ← key part
+                                  decoration: BoxDecoration(
+                                    color: const Color(AppColors.dark),
+                                    borderRadius:
+                                    BorderRadius.circular(
+                                        AppSizes.s30),
+                                  ),
+                                  height: AppSizes.s55,
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSizes.s6,
+                                      vertical: AppSizes.s6),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft, // FORCE alignment to start
+                                    child: defaultTapBarItem(
+                                      isVertical: false,
+                                      items: taps,
+                                      tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
+                                      selectIndex: selectIndex,
+                                      enableScroll: kIsWeb ? false : true,
+                                      onTapItem: (index) {
+                                        setState(() {
+                                          selectIndex = index;
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ),
-                                // TabBar(
-                                //   isScrollable: true,
-                                //   indicator: BoxDecoration(
-                                //     color: const Color(AppColors.primary),
-                                //     borderRadius:
-                                //     BorderRadius.circular(30.0),
-                                //   ),
-                                //   labelColor: Colors.white,
-                                //   labelStyle: mainTextStyle,
-                                //   unselectedLabelStyle:
-                                //   mainTextStyle,padding: EdgeInsets.zero,
-                                //   unselectedLabelColor:
-                                //   Colors.white,
-                                //   indicatorSize:
-                                //   TabBarIndicatorSize.tab,
-                                //   tabs:  [
-                                //     CustomProfileTabWidget(
-                                //       tabTitle: AppStrings.contact.tr().toUpperCase(),
-                                //     ),
-                                //     CustomProfileTabWidget(
-                                //       tabTitle: AppStrings.general.tr().toUpperCase(),
-                                //     ),
-                                //     CustomProfileTabWidget(
-                                //       tabTitle: AppStrings.accounts.tr().toUpperCase(),
-                                //     ),
-                                //     CustomProfileTabWidget(
-                                //       tabTitle: AppStrings.requests.tr().toUpperCase(),
-                                //     ),
-                                //     CustomProfileTabWidget(
-                                //       tabTitle: AppStrings.evaluation.tr().toUpperCase(),
-                                //     ),
-                                //     CustomProfileTabWidget(
-                                //       tabTitle: AppStrings.more.tr().toUpperCase(),
-                                //     ),
-                                //   ],
-                                // ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                const EdgeInsets.symmetric(
-                                    horizontal: AppSizes.s8,
-                                    vertical: AppSizes.s8),
-                                child: Column(
-                                  children: [
-                                    if(selectIndex == 0)  ContactsSectionWidget(
-                                        employee:
-                                        viewModel.employee),
-
-                                    //GENERAL SECTION
-                                    if(selectIndex == 1)   SingleChildScrollView(
-                                      child: SizedBox(
-                                        height: MediaQuery.sizeOf(context).height * 0.5,
-                                        child: GeneralSectionWidget(
+                                Expanded(
+                                  child: Padding(
+                                    padding:
+                                    const EdgeInsets.symmetric(
+                                        horizontal: AppSizes.s8,
+                                        vertical: AppSizes.s8),
+                                    child: Column(
+                                      children: [
+                                        if(selectIndex == 0)  ContactsSectionWidget(
                                             employee:
                                             viewModel.employee),
-                                      ),
-                                    ),
-                                    //ACCOUNTS
-                                    if(selectIndex == 2)   AccountsSectionWidget(
-                                      employee:
-                                      viewModel.employee,
-                                    ),
-                                    //REQUESTS SECTION
-                                    if(selectIndex == 3)   RequestsSectionWidget(
-                                        employee:
-                                        viewModel.employee),
-                                    if(selectIndex == 4) EvalutaionSectionWidget( employee:
-                                    viewModel.employee,
-                                      evaluations: viewModel.evaluations,
-                                      id : viewModel.employee!.id.toString(),
-                                      empName : viewModel.employee!.name.toString(),
-                                    ),
-                                    if(selectIndex == 5) SizedBox(
-                                      child: SizedBox(
-                                        height: MediaQuery.sizeOf(context).height * 0.5,
-                                        child: AssetsSectionWidget( employee:
-                                        viewModel.employee,
+
+                                        //GENERAL SECTION
+                                        if(selectIndex == 1)   SingleChildScrollView(
+                                          child: SizedBox(
+                                            height: MediaQuery.sizeOf(context).height * 0.5,
+                                            child: GeneralSectionWidget(
+                                                employee:
+                                                viewModel.employee),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ),
+                                        //ACCOUNTS
+                                        if(selectIndex == 2) AccountsSectionWidget(
+                                          employee: viewModel.employee,
+                                          salaryAdvance: viewModel.salaryAdvances ?? [],
+                                        ),
+                                        //REQUESTS SECTION
+                                        if(selectIndex == 3)   RequestsSectionWidget(
+                                            employee:
+                                            viewModel.employee),
+                                        if(selectIndex == 4) EvalutaionSectionWidget( employee:
+                                        viewModel.employee,
+                                          evaluations: viewModel.evaluations,
+                                          id : viewModel.employee!.id.toString(),
+                                          empName : viewModel.employee!.name.toString(),
+                                        ),
+                                        if(selectIndex == 5) SizedBox(
+                                          child: SizedBox(
+                                            height: MediaQuery.sizeOf(context).height * 0.5,
+                                            child: AssetsSectionWidget( employee:
+                                            viewModel.employee,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     )
-                  else ContactsSectionWidget(
-                      employee:
-                      viewModel.employee),
+                  else Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxWidth: kIsWeb ? 1100 : double.infinity
+                      ),
+                      child: ContactsSectionWidget(
+                          employee:
+                          viewModel.employee),
+                    ),
+                  ),
                 ],
               );
             }

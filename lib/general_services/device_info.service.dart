@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_html/html.dart' as html;
+import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 import '../models/device_information.model.dart';
 import '../platform/platform_is.dart';
 import 'app_config.service.dart';
@@ -30,7 +30,22 @@ abstract class DeviceInformationService {
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";
       } else if (PlatformIs.web) {
         WebBrowserInfo webInfo = await _deviceInfo.webBrowserInfo;
-        deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}";
+        // Generate a more stable unique ID for web using localStorage
+        try {
+          // Try to get or create a persistent device ID from localStorage
+          final existingId = html.window.localStorage['web_device_unique_id'];
+          if (existingId != null && existingId.isNotEmpty) {
+            deviceIdentifier = existingId;
+          } else {
+            // Generate a new ID based on browser fingerprint
+            deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}_${DateTime.now().millisecondsSinceEpoch}";
+            // Store it in localStorage for persistence
+            html.window.localStorage['web_device_unique_id'] = deviceIdentifier;
+          }
+        } catch (e) {
+          // Fallback if localStorage is not available
+          deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}";
+        }
       } else if (PlatformIs.linux) {
         LinuxDeviceInfo linuxInfo = await _deviceInfo.linuxInfo;
         deviceIdentifier = linuxInfo.machineId;

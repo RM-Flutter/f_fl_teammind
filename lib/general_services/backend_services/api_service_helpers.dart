@@ -5,24 +5,26 @@ import 'package:rmemp/general_services/backend_services/api_service/dio_api_serv
 import 'package:provider/provider.dart';
 import '../../models/operation_result.model.dart';
 import '../app_config.service.dart';
+import '../device_info.service.dart';
 import 'api_service/dio_api_service/dio_api.service.dart';
 import 'backend_services_interface.dart';
 
 abstract class ApiServiceHelpers {
 
-  static Map<String, String> buildHeaders(
+  static Future<Map<String, String>> buildHeaders(
       {Map<String, dynamic>? additionalHeaders,
-      bool? addToken = true,
-      required BuildContext context}) {
+        bool? addToken = true,
+        required BuildContext context}) async {
     print("LANGSSS IS --> ${CacheHelper.getString("lang")}");
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     var headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
-      'device-unique-id':
-          appConfigServiceProvider.deviceInformation.deviceUniqueId
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id': deviceUniqueId,
     };
     if (additionalHeaders != null && additionalHeaders.isNotEmpty) {
       for (var h in additionalHeaders.keys) {
@@ -33,6 +35,31 @@ abstract class ApiServiceHelpers {
       headers['authorization'] = 'Bearer ${appConfigServiceProvider.token}';
     }
     return headers;
+  }
+  
+  static Future<String?> _getDeviceUniqueId(BuildContext context, AppConfigService appConfigServiceProvider) async {
+    try {
+      final deviceInfo = appConfigServiceProvider.deviceInformation;
+      var deviceUniqueId = deviceInfo.deviceUniqueId;
+      
+      // If deviceUniqueId is valid, return it
+      if (deviceUniqueId.isNotEmpty && deviceUniqueId != 'Unknown Device') {
+        return deviceUniqueId;
+      }
+      
+      // If not valid, try to initialize device info
+      await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
+      final updatedDeviceInfo = appConfigServiceProvider.deviceInformation;
+      deviceUniqueId = updatedDeviceInfo.deviceUniqueId;
+      if (deviceUniqueId.isNotEmpty && deviceUniqueId != 'Unknown Device') {
+        return deviceUniqueId;
+      }
+      
+      return null;
+    } catch (e) {
+      debugPrint('Error getting device unique ID: $e');
+      return null;
+    }
   }
 
   /// custom Encoder for DateTime issue
@@ -45,19 +72,19 @@ abstract class ApiServiceHelpers {
 
   static OperationResult<T> parseResponse<T>(
       {required Map responseJsonData,
-      required String dataKey,
-      bool? allData = false}) {
+        required String dataKey,
+        bool? allData = false}) {
     return OperationResult(
       success: responseJsonData['status'] is bool
           ? responseJsonData['status']
           : responseJsonData['status']?.toString() == "true",
       message: responseJsonData['message'] is Map ||
-              responseJsonData['message'] == null
+          responseJsonData['message'] == null
           ? (responseJsonData['messageAr'] ??
-              responseJsonData['errorString'] ??
-              responseJsonData['fullMessagesString'] ??
-              responseJsonData['errorCodeString'] ??
-              'No Server Error!')
+          responseJsonData['errorString'] ??
+          responseJsonData['fullMessagesString'] ??
+          responseJsonData['errorCodeString'] ??
+          'No Server Error!')
           : responseJsonData['message'],
       data: allData == true ? responseJsonData : responseJsonData[dataKey],
       checkAuth: responseJsonData['check_auth'],
@@ -68,7 +95,7 @@ abstract class ApiServiceHelpers {
   static Future<OperationResult> getRefreshTokens(
       {required String dataKey, required BuildContext context}) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     if (appConfigServiceProvider.refreshTokenApiUrl == null ||
         (appConfigServiceProvider.refreshTokenApiUrl?.isEmpty ?? true)) {
       return OperationResult(
@@ -86,10 +113,10 @@ abstract class ApiServiceHelpers {
 
   static bool isTokenExpired({required BuildContext context}) {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     if (appConfigServiceProvider.checkValueExist("accessTokenExpDate")) {
       if (DateTime.fromMillisecondsSinceEpoch(
-              appConfigServiceProvider.accessTokenExpDate * 1000)
+          appConfigServiceProvider.accessTokenExpDate * 1000)
           .isAfter(DateTime.now().subtract(const Duration(hours: 3)))) {
         return true;
       }
@@ -100,7 +127,7 @@ abstract class ApiServiceHelpers {
 
   static Future<bool> assignNewTokens({required BuildContext context}) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     try {
       if (!isTokenExpired(context: context)) return true;
       if (appConfigServiceProvider.checkValueExist("refreshTokenExpDate")) {
@@ -123,15 +150,15 @@ abstract class ApiServiceHelpers {
           await appConfigServiceProvider
               .setToken(appConfigServiceProvider.refreshToken);
           OperationResult response =
-              await getRefreshTokens(dataKey: 'refreshToken', context: context);
+          await getRefreshTokens(dataKey: 'refreshToken', context: context);
           if (response.success) {
             await appConfigServiceProvider.setToken(response.data['token']);
             appConfigServiceProvider.refreshToken =
-                response.data['refreshToken'];
+            response.data['refreshToken'];
             appConfigServiceProvider.accessTokenExpDate =
-                response.data['tokenExp'];
+            response.data['tokenExp'];
             appConfigServiceProvider.refreshTokenExpDate =
-                response.data['refreshTokenExp'];
+            response.data['refreshTokenExp'];
             return true;
           } else {
             return false;
@@ -146,16 +173,16 @@ abstract class ApiServiceHelpers {
 
   static Future<OperationResult<T>> checkExpirationOfTokens<T>(
       {required bool checkOnTokenExpiration,
-      required BuildContext context}) async {
+        required BuildContext context}) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     // checks if token is expired
     if (appConfigServiceProvider.checkOnTokenExpiration == true) {
       if (checkOnTokenExpiration == true) {
         if (appConfigServiceProvider.token.isNotEmpty &&
             appConfigServiceProvider.refreshToken.isNotEmpty) {
           bool isRefreshedSuccessfully =
-              await ApiServiceHelpers.assignNewTokens(context: context);
+          await ApiServiceHelpers.assignNewTokens(context: context);
 
           if (isRefreshedSuccessfully != true) {
             //call unauthorized callback and return OperationResult with false result

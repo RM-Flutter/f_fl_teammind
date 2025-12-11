@@ -11,22 +11,22 @@ class CustomElevatedButton extends StatefulWidget {
   final double? titleSize;
   final double? radius;
   final Color? backgroundColor;
+  final Color? outlineColor;
   final bool? isFuture;
   final bool? isPrimaryBackground;
   final bool? isOutlined; // 👈 الجديد
   final Color? titleColor;
-  final Color? outlinedColor;
 
   const CustomElevatedButton({
     super.key,
     required this.onPressed,
     this.titleColor,
-    this.outlinedColor,
     required this.title,
     this.buttonStyle,
     this.titleWidget,
     this.titleSize,
     this.backgroundColor,
+    this.outlineColor,
     this.radius,
     this.width,
     this.isFuture = true,
@@ -83,7 +83,7 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
             style: widget.buttonStyle ??
                 ElevatedButton.styleFrom(
                   backgroundColor: widget.isOutlined == true
-                      ?  Colors.transparent // 👈 Transparent
+                      ? Colors.transparent // 👈 Transparent
                       : widget.backgroundColor ?? Color(AppColors.primary),
                   foregroundColor: widget.isOutlined == true
                       ? Color(AppColors.primary) // 👈 Text بلون الـ primary
@@ -91,7 +91,7 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
                   disabledForegroundColor: Colors.white,
                   elevation: widget.isOutlined == true ? 0 : 2,
                   side: widget.isOutlined == true
-                      ? BorderSide(color: widget.outlinedColor??Color(AppColors.primary), width: 2)
+                      ? BorderSide(color: widget.outlineColor ??Color( AppColors.primary), width: 2)
                       : null,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
@@ -112,12 +112,18 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
             )
                 : Center(
               child: widget.titleWidget ??
-                  Text(
-                    widget.title,
-                    style: widget.titleSize == null
-                        ? widget.titleColor == null ? Theme.of(context).textTheme.headlineSmall:Theme.of(context).textTheme.headlineSmall!.copyWith(color:widget.titleColor  )
-                        : widget.titleColor == null ? Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: widget.titleSize):Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: widget.titleSize, color: widget.titleColor ),
-                    textAlign: TextAlign.center,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      widget.title,
+                      style: widget.titleSize == null ?
+                      widget.titleColor != null ? Theme.of(context).textTheme.headlineSmall!.copyWith(color:widget.titleColor):
+                      Theme.of(context).textTheme.headlineSmall!
+                          : Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: widget.titleSize, color: widget.titleColor ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
             ),
           ),

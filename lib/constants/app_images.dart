@@ -38,6 +38,8 @@ abstract class AppImages {
   // splash screen images
   static const String splashScreenBackground =
       '$_splashImagesDirectory/splash_screen_background.png';
+  static const String splashScreenBackgroundWeb =
+      '$_splashImagesDirectory/splash-bg.jpg';
   // onboarding screen images
   static const String onboardingBackground1 =
       '$_onboardingImagesDirectory/onboarding_1.png';
@@ -48,6 +50,8 @@ abstract class AppImages {
   // login images
   static const String loginBackground =
       '$_loginImagesDirectory/login_background.png';
+  static const String loginBackgroundWeb =
+      '$_loginImagesDirectory/login-bg.jpg';
   // home images
   // --> App bar images
   static const String appbarBackground =

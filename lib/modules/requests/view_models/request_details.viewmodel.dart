@@ -183,7 +183,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
         message: 'This Feature Under Development',
         title: AppStrings.information.tr());
   }
-  getOneRequest(context,id){
+  Future<void> getOneRequest(BuildContext context, id) async {
     isLoading = true;
     notifyListeners();
     var jsonString;
@@ -193,22 +193,37 @@ class RequestDetailsViewModel extends ChangeNotifier {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    DioHelper.getData(
-        url: "/emp_requests/v1/my_request/",
+    
+    try {
+      // Remove trailing slash for better web compatibility
+      final response = await DioHelper.getData(
+        url: "/emp_requests/v1/my_request",
         context: context,
         query: {
-         'id' : id,
+          'id': id.toString(),
           // if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && (gCache['id'].toString() != userId))'seen' : 1
-        }).then((v){
-          print(v.data);
-          isLoading = false;
-          requestModel  = RequestModel.fromJson(v.data['request']);
-          notifyListeners();
-    }).catchError((e){
+        },
+      );
+      
+      print("Response data: ${response.data}");
       isLoading = false;
-      print("ERROR IS ---> ${e.toString()}");
+      if (response.data != null && response.data['request'] != null) {
+        requestModel = RequestModel.fromJson(response.data['request']);
+      }
       notifyListeners();
-    });
+    } catch (e) {
+      isLoading = false;
+      errorMessage = e.toString();
+      print("ERROR IS ---> ${e.toString()}");
+      if (context.mounted) {
+        AlertsService.error(
+          context: context,
+          message: errorMessage ?? 'Failed to load request details',
+          title: AppStrings.failed.tr(),
+        );
+      }
+      notifyListeners();
+    }
   }
   Future<void> requestPermissions() async {
     await Permission.storage.request();

@@ -205,15 +205,27 @@ abstract class PushNotificationService {
       }
 
       //showing the notification on the app screen (foreground)
+      // Filter out notifications with no title or body
       if (notification != null) {
-        TimeoutMessage.show(
-            title: notification.title ?? '',
-            logoWithWihteText: AppImages.logoWithWihteText,
-            message: notification.body,
-            onClick: () => handleOnNotificationClicked(
-                payload: payload,
-                callbackWhenHandelOnNotificationCliked:
-                    callbackWhenHandelOnNotificationCliked));
+        final title = notification.title ?? '';
+        final body = notification.body ?? '';
+        
+        // Don't show if title or body is empty, null, or equals "No Title"/"No Body"
+        if (title.isNotEmpty && 
+            title != 'No Title' && 
+            body.isNotEmpty && 
+            body != 'No Body') {
+          TimeoutMessage.show(
+              title: title,
+              logoWithWihteText: AppImages.logoWithWihteText,
+              message: body,
+              onClick: () => handleOnNotificationClicked(
+                  payload: payload,
+                  callbackWhenHandelOnNotificationCliked:
+                      callbackWhenHandelOnNotificationCliked));
+        } else {
+          debugPrint("⚠️ Skipping notification: No valid title or body");
+        }
       }
     }
   }

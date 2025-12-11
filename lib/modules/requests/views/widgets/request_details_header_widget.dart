@@ -1,9 +1,11 @@
-import 'dart:io';
+import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
+import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/general_services/localization.service.dart';
+import 'package:rmemp/platform/platform_is.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/app_sizes.dart';
@@ -48,7 +51,12 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
   /// Request storage permission based on Android version
   Future<bool> requestStoragePermission() async {
-    if (Platform.isAndroid) {
+    // Web doesn't need storage permissions
+    if (PlatformIs.web) {
+      return true;
+    }
+    
+    if (PlatformIs.android) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       final sdkInt = androidInfo.version.sdkInt;
 
@@ -81,26 +89,108 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
 
   /// Get appropriate download directory (Android / iOS)
-  Future<Directory> _getDownloadDirectory() async {
-    if (Platform.isAndroid) {
-      // getExternalStoragePublicDirectory is deprecated in Android 29+,
-      // but still works for now, or you can manually build path:
-      final Directory? directory = Directory('/storage/emulated/0/Download');
-      if (await directory!.exists()) {
-        return directory;
-      } else {
-        throw Exception("Download directory not found");
-      }
-    } else if (Platform.isIOS) {
-      // iOS has no downloads folder, use Documents instead
-      return await getApplicationDocumentsDirectory();
-    } else {
-      throw UnsupportedError("Unsupported platform");
+  Future<dynamic> _getDownloadDirectory() async {
+    if (kIsWeb || PlatformIs.web) {
+      throw UnsupportedError("Download directory not available on web");
     }
+    
+    // Only use Directory on non-web platforms
+    if (!kIsWeb) {
+      if (PlatformIs.android) {
+        // getExternalStoragePublicDirectory is deprecated in Android 29+,
+        // but still works for now, or you can manually build path:
+        final io.Directory directory = io.Directory('/storage/emulated/0/Download');
+        if (await directory.exists()) {
+          return directory;
+        } else {
+          throw Exception("Download directory not found");
+        }
+      } else if (PlatformIs.iOS) {
+        // iOS has no downloads folder, use Documents instead
+        return await getApplicationDocumentsDirectory();
+      } else {
+        throw UnsupportedError("Unsupported platform");
+      }
+    }
+    throw UnsupportedError("Download directory not available on web");
   }
 
   /// Download a single file and update progress
   Future<void> _downloadFile(String url, String fileName) async {
+    // On web, download the file and open it in a new tab
+    if (PlatformIs.web) {
+      try {
+        if (kIsWeb) {
+          // Use dart:html for web download and open in new tab
+          try {
+            // 1. First, trigger download using fetch API to avoid navigation
+            if (kIsWeb) {
+              // Use dynamic typing to work with dart:html types
+              final fetchResult = html.window.fetch(url);
+              fetchResult.then((response) {
+                // response is html.Response on web
+                return (response as dynamic).blob();
+              }).then((blob) {
+                // blob is html.Blob on web
+                final blobUrl = html.Url.createObjectUrlFromBlob(blob as dynamic);
+                final html.AnchorElement downloadAnchor = html.AnchorElement(href: blobUrl);
+                downloadAnchor.download = fileName;
+                downloadAnchor.style.display = 'none';
+                html.document.body?.append(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+                html.Url.revokeObjectUrl(blobUrl);
+              }).catchError((e) {
+                debugPrint('Error downloading file with fetch: $e');
+              });
+            }
+            
+            // 2. Open file in new tab using url_launcher (this won't close the app)
+            await Future.delayed(const Duration(milliseconds: 200));
+            final uri = Uri.parse(url);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+            
+            Fluttertoast.showToast(
+              msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              toastLength: Toast.LENGTH_LONG,
+              timeInSecForIosWeb: 3,
+            );
+          } catch (e) {
+            debugPrint('Error downloading/opening file: $e');
+            // Fallback: just open in new tab
+            try {
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            } catch (e2) {
+              Fluttertoast.showToast(
+                msg: 'Error opening file: $e2',
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                toastLength: Toast.LENGTH_LONG,
+                timeInSecForIosWeb: 3,
+              );
+            }
+          }
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: 'Error downloading file: $e',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 3,
+        );
+      }
+      return;
+    }
+
+    // Mobile platforms: download to device storage
     final dio = Dio();
 
     try {
@@ -190,198 +280,205 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               opacity: 0.4,
             ),
           ),
-          child: Column(
-            children: [
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                centerTitle: true,
-                title: Text(
-                  AppSettingsService.getRequestTitleFromGenenralSettings(
-                      context: context, requestId: request.typeId.toString()) ??
-                      '',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge
-                      ?.copyWith(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                leading: Padding(
-                  padding: const EdgeInsets.all(AppSizes.s10),
-                  child: InkWell(
-                    onTap: () {
-                      if (context.canPop()) {
-                        context.pop(); // هيرجع لورا
-                      } else {
-                        context.goNamed(AppRoutes.home.name,
-                            pathParameters: {'lang': context.locale.languageCode,});
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_sharp,
-                        color: Colors.white,
-                        size: AppSizes.s18,
-                      ),
-                    ),
-                  ),
-                ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
               ),
-              const SizedBox(height: 15),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Status box
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Fluttertoast.showToast(
-                                msg: request.status.toString().tr(),
-                                backgroundColor: request.status == "canceled" || request.status == "refused"
-                                    ? Colors.red
-                                    : request.status == "approved"
-                                    ? Colors.green
-                                    : const Color(0xff606060),
-                                textColor: Colors.white,
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.TOP,
-                                timeInSecForIosWeb: 5,
-                              );
-                            },
-                            child: Container(
-                              width: AppSizes.s50,
-                              height: AppSizes.s80,
-                              decoration: BoxDecoration(
-                                color: mainColor,
-                                borderRadius: BorderRadius.circular(AppSizes.s10),
-                              ),
-                              child: Center(
-                                child: RequestsServices.getRequestsStatusIcon(
-                                  context: context,
-                                  status: request.status,
-                                  iconSize: AppSizes.s30,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-
-                      // Info tiles
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Wrap(
-                            spacing: AppSizes.s5,
-                            runSpacing: AppSizes.s5,
-                            children: [
-                              // Date tile with formatting
-                              InfoTileWidget(
-                                imgPath: Icons.calendar_month,
-                                title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
-                                    DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
-                                DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a') !=
-                                    DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')?
-                                "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
-                                    : "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
-                                    : DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'yyyy') ==
-                                    DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')?
-                                "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')}":
-                                "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
-                                isFullRow: true,
-                                trailing: InfoTileWidget(
-                                    width: MediaQuery.sizeOf(context).width * 0.25,
-                                    background: const Color(0xff000000).withOpacity(0.08),
-                                    imgPath: Icons.access_time,
-                                    title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
-                              ),
-
-                              // Employee info if different user
-                              if (widget.uId != widget.rId) ...[
-                                InfoTileWidget(
-                                  onTap: () {
-                                    context.pushNamed(
-                                      'employeeDetails',
-                                      pathParameters: {
-                                        'id': request.employeeId.toString(),
-                                        'lang': context.locale.languageCode,
-                                      },
-                                    );
-                                  },
-                                  imgPath: Icons.person_2_outlined,
-                                  title: request.employeeName ?? '-',
-                                  isHighLight: true,
-                                ),
-                                InfoTileWidget(
-                                  imgPath: Icons.category_outlined,
-                                  title: request.departmentName.toString(),
-                                ),
-                              ],
-
-                              // Request type
-                              InfoTileWidget(
-                                imgPath: Icons.category_outlined,
-                                title: request.typeName.toString(),
-                              ),
-
-                              // Money value if present
-                              if (request.moneyValue != null && request.moneyValue > 0)
-                                InfoTileWidget(
-                                  imgPath: Icons.attach_money_outlined,
-                                  title:
-                                  '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr().toUpperCase()}',
-                                ),
-
-                              // Download files button
-                              if (request.files != null && request.files.isNotEmpty)
-                                InfoTileWidget(
-                                  onTap: () => _downloadAllFiles(request.files),
-                                  imgPath: Icons.file_download_outlined,
-                                  title: AppStrings.downloadFile.tr(),
-                                ),
-
-                              // Requested to ignore (cancel request) button
-                              if ((request.status == "waiting_seen" ||
-                                  request.status == "waiting") &&
-                                  request.waitingCancel == true)
-                                InfoTileWidget(
-                                  onTap: () async {
-                                    if (widget.uId == widget.rId) {
-                                      debugPrint("TAPPED!");
-                                    } else {
-                                      await ModalSheetHelper.showModalSheet(
-                                        context: context,viewProfile: false,
-                                        modalContent: ManagementResponseModal(
-                                            requestId: request.id.toString()),
-                                        title: AppStrings.managementResponse.tr(),
-                                        height: LayoutService.getHeight(context) * 0.5,
-                                      );
-                                    }
-                                  },
-                                  imgPath: Icons.clear,
-                                  background: const Color(0xff851919),
-                                  imgColor: Colors.white,
-                                  title: AppStrings.requestedToIgnore.tr().toUpperCase(),
-                                ),
-                            ],
+              child: Column(
+                children: [
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    centerTitle: true,
+                    title: Text(
+                      AppSettingsService.getRequestTitleFromGenenralSettings(
+                          context: context, requestId: request.typeId.toString()) ??
+                          '',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayLarge
+                          ?.copyWith(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(AppSizes.s10),
+                      child: InkWell(
+                        onTap: () {
+                          if (context.canPop()) {
+                            context.pop(); // هيرجع لورا
+                          } else {
+                            context.goNamed(AppRoutes.home.name,
+                                pathParameters: {'lang': context.locale.languageCode,});
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_sharp,
+                            color: Colors.white,
+                            size: AppSizes.s18,
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                  const SizedBox(height: 15),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Status box
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Fluttertoast.showToast(
+                                    msg: request.status.toString().tr(),
+                                    backgroundColor: request.status == "canceled" || request.status == "refused"
+                                        ? Colors.red
+                                        : request.status == "approved"
+                                        ? Colors.green
+                                        : const Color(0xff606060),
+                                    textColor: Colors.white,
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.TOP,
+                                    timeInSecForIosWeb: 5,
+                                  );
+                                },
+                                child: Container(
+                                  width: AppSizes.s50,
+                                  height: AppSizes.s80,
+                                  decoration: BoxDecoration(
+                                    color: mainColor,
+                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                  ),
+                                  child: Center(
+                                    child: RequestsServices.getRequestsStatusIcon(
+                                      context: context,
+                                      status: request.status,
+                                      iconSize: AppSizes.s30,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+
+                          // Info tiles
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Wrap(
+                                spacing: AppSizes.s5,
+                                runSpacing: AppSizes.s5,
+                                children: [
+                                  // Date tile with formatting
+                                  InfoTileWidget(
+                                    imgPath: Icons.calendar_month,
+                                    title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
+                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
+                                    DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a') !=
+                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')?
+                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
+                                        : "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
+                                        : DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'yyyy') ==
+                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')?
+                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')}":
+                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
+                                    isFullRow: true,
+                                    trailing: InfoTileWidget(
+                                        width: AppSizes.s100,
+                                        background: const Color(0xff000000).withOpacity(0.08),
+                                        imgPath: Icons.access_time,
+                                        title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
+                                  ),
+
+                                  // Employee info if different user
+                                  if (widget.uId != widget.rId) ...[
+                                    InfoTileWidget(
+                                      onTap: () {
+                                        context.pushNamed(
+                                          'employeeDetails',
+                                          pathParameters: {
+                                            'id': request.employeeId.toString(),
+                                            'lang': context.locale.languageCode,
+                                          },
+                                        );
+                                      },
+                                      imgPath: Icons.person_2_outlined,
+                                      title: request.employeeName ?? '-',
+                                      isHighLight: true,
+                                    ),
+                                    InfoTileWidget(
+                                      imgPath: Icons.category_outlined,
+                                      title: request.departmentName.toString(),
+                                    ),
+                                  ],
+
+                                  // Request type
+                                  InfoTileWidget(
+                                    imgPath: Icons.category_outlined,
+                                    title: request.typeName.toString(),
+                                  ),
+
+                                  // Money value if present
+                                  if (request.moneyValue != null && (double.tryParse(request.moneyValue.toString()) ?? 0) > 0)
+                                    InfoTileWidget(
+                                      imgPath: Icons.attach_money_outlined,
+                                      title:
+                                      '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr().toUpperCase()}',
+                                    ),
+
+                                  // Download files button
+                                  if (request.files != null && request.files.isNotEmpty)
+                                    InfoTileWidget(
+                                      onTap: () => _downloadAllFiles(request.files),
+                                      imgPath: Icons.file_download_outlined,
+                                      title: AppStrings.downloadFile.tr(),
+                                    ),
+
+                                  // Requested to ignore (cancel request) button
+                                  if ((request.status == "waiting_seen" ||
+                                      request.status == "waiting") &&
+                                      request.waitingCancel == true)
+                                    InfoTileWidget(
+                                      onTap: () async {
+                                        if (widget.uId == widget.rId) {
+                                          debugPrint("TAPPED!");
+                                        } else {
+                                          await ModalSheetHelper.showModalSheet(
+                                            context: context,viewProfile: false,
+                                            modalContent: ManagementResponseModal(
+                                                requestId: request.id.toString()),
+                                            title: AppStrings.managementResponse.tr(),
+                                            height: LayoutService.getHeight(context) * 0.5,
+                                          );
+                                        }
+                                      },
+                                      imgPath: Icons.clear,
+                                      background: const Color(0xff851919),
+                                      imgColor: Colors.white,
+                                      title: AppStrings.requestedToIgnore.tr().toUpperCase(),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
 

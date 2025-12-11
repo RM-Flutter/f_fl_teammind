@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/app_strings.dart';
@@ -42,14 +43,14 @@ class ForgotPasswordViewModel extends ChangeNotifier {
   // First : prepare forgot password operation
   Future<void> prepeareForgotPassword(BuildContext context) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     if ((isPhoneLogin && phoneController.text.isNotEmpty) ||
         (!isPhoneLogin && emailController.text.isNotEmpty)) {
       final result = await ForgotPasswordService.prepareForgetPassword(
           context: context,
           username: isPhoneLogin ? phoneController.text : emailController.text,
           deviceUniqueId:
-              appConfigServiceProvider.deviceInformation.deviceUniqueId);
+          appConfigServiceProvider.deviceInformation.deviceUniqueId);
       if (result.success &&
           result.data != null &&
           result.data?['forgot_password_prepare'] == true &&
@@ -75,10 +76,13 @@ class ForgotPasswordViewModel extends ChangeNotifier {
         return;
       }
     } else {
-      AlertsService.warning(
+      showToast(
+        AppStrings.formIsInvalid.tr(),
         context: context,
-        message: AppStrings.formIsInvalid.tr(),
-        title: AppStrings.formValidation.tr(),
+        backgroundColor: Colors.red,
+        textStyle: const TextStyle(color: Colors.white),
+        duration: const Duration(seconds: 5),
+        position: StyledToastPosition.bottom,
       );
       return;
     }
@@ -88,7 +92,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
   Future<void> chooseForgotPasswordMethod(
       {required BuildContext context}) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     if (uuid == null ||
         (uuid?.isEmpty ?? true) ||
         sendType == null ||
@@ -102,8 +106,8 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     }
     AlertsService.showLoading(context);
     final completePhoneNumber = (countryCodeController.text.isEmpty
-            ? '+02'
-            : countryCodeController.text + phoneController.text)
+        ? '+20${phoneController.text}'
+        : countryCodeController.text + phoneController.text)
         .trim();
     final result = await ForgotPasswordService.forgetPassword(
         context: context,
@@ -111,7 +115,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
         sendType: sendType!,
         uuid: uuid!,
         deviceUniqueId:
-            appConfigServiceProvider.deviceInformation.deviceUniqueId);
+        appConfigServiceProvider.deviceInformation.deviceUniqueId);
     Navigator.pop(context);
 
     if (result.success && result.data != null) {
@@ -137,11 +141,11 @@ class ForgotPasswordViewModel extends ChangeNotifier {
   Future<void> resetNewPasswordWithCodeAndNewPassword(
       {required BuildContext context, mak}) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     if (codeFormKey.currentState?.validate() == true) {
       final completePhoneNumber = (countryCodeController.text.isEmpty
-              ? '+02'
-              : countryCodeController.text + phoneController.text)
+          ? '+20${phoneController.text}'
+          : countryCodeController.text + phoneController.text)
           .trim();
       final result = await ForgotPasswordService.codeNewPassword(
           context: context,
@@ -151,7 +155,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
           sendType: sendType!,
           uuid: uuid!,
           deviceUniqueId:
-              appConfigServiceProvider.deviceInformation.deviceUniqueId);
+          appConfigServiceProvider.deviceInformation.deviceUniqueId);
       if (result.success && result.data != null) {
         if(mak == null) Navigator.pop(context, result);
         if(mak != null){ mak();}

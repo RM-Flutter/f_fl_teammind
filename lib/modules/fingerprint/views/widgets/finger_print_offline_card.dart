@@ -78,8 +78,7 @@ class FingerprintCardOffiline extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
                   child: AutoSizeText(
-                    DateFormat('d-M-yyyy ||'
-                        ' hh:mm:ss', LocalizationService.isArabic(context: context) ? "ar" :"en").format(DateTime.parse(fingerprint![index]['finger_day'].toString())).toString(),
+                    _formatFingerprintDate(fingerprint![index]['finger_day'].toString(), context),
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: AppSizes.s14,
@@ -93,5 +92,49 @@ class FingerprintCardOffiline extends StatelessWidget {
         ),
         separatorBuilder: (context, index) => const SizedBox(height: 15,),
         itemCount: fingerprint!.length);
+  }
+
+  String _formatFingerprintDate(String dateString, BuildContext context) {
+    try {
+      if (dateString.isEmpty) return '';
+      
+      DateTime? date;
+      
+      // Try different date formats
+      List<String> formats = [
+        'yyyy-MM-dd HH:mm:ss',
+        'yyyy-MM-dd',
+        'dd-MM-yyyy HH:mm:ss',
+        'dd-MM-yyyy',
+        'dd/MM/yyyy HH:mm:ss',
+        'dd/MM/yyyy',
+      ];
+      
+      for (String format in formats) {
+        try {
+          date = DateFormat(format).parse(dateString);
+          break;
+        } catch (e) {
+          continue;
+        }
+      }
+      
+      if (date == null) {
+        // If all formats fail, try DateTime.parse as last resort
+        try {
+          date = DateTime.parse(dateString);
+        } catch (e) {
+          return dateString; // Return original string if parsing fails
+        }
+      }
+      
+      // Format the date for display
+      return DateFormat(
+        'd-M-yyyy || hh:mm:ss',
+        LocalizationService.isArabic(context: context) ? "ar" : "en"
+      ).format(date);
+    } catch (e) {
+      return dateString; // Return original string if formatting fails
+    }
   }
 }

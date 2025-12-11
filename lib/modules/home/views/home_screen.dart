@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen>  {
   void initState() {
     super.initState();
     viewModel = HomeViewModel();
+    viewModel.getHome(context);
     CacheConsts.initUSG();
     var jsonString;
     var gCache;
@@ -57,10 +58,23 @@ class _HomeScreenState extends State<HomeScreen>  {
   }
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => HomeViewModel()..getHome(context),
-      child: CoreMobileScaffold(
+    return ChangeNotifierProvider<HomeViewModel>.value(
+      value: viewModel,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          try {
+            await viewModel.getHome(context);
+          } catch (_) {}
+          await Future.delayed(const Duration(milliseconds: 200));
+        },
+        child: CoreMobileScaffold(
         backgroundColor: Colors.white,
         controller: viewModel.homeScrollController,
         headers: [
@@ -75,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen>  {
                       isExpanded: false,
                     )),
             child: SingleChildScrollView(
-                controller: viewModel.homeScrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Consumer<HomeViewModel>(
                     builder: (context, viewModel, child) => viewModel.isLoading
                         ? const HomeAppbarLoading()
@@ -137,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen>  {
               ),
             )
           ],
+      ),
       ),
     );
   }

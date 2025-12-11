@@ -55,8 +55,9 @@ abstract class DateService {
   static String? getWeekdayName(String? dateString, context) {
     try {
       if (dateString == null || dateString.isEmpty) return null;
-      // Parse the string date to a DateTime object
-      DateTime date = DateTime.parse(dateString);
+      
+      DateTime? date = _parseDateWithMultipleFormats(dateString);
+      if (date == null) return null;
 
       // Format the date to get the weekday name (e.g., Mon, Tue)
       String weekday = DateFormat('EEE', LocalizationService.isArabic(context: context) ?"ar" :"en").format(date);
@@ -70,10 +71,40 @@ abstract class DateService {
   static int? getDaysInMonth(String? dateString) {
     try {
       if (dateString == null || dateString.isEmpty) return null;
-      // Parse the string date to a DateTime object
-      DateTime date = DateTime.parse(dateString);
+      
+      DateTime? date = _parseDateWithMultipleFormats(dateString);
+      if (date == null) return null;
+      
       return date.day;
     } catch (ex) {
+      return null;
+    }
+  }
+
+  /// Helper method to parse date string with multiple formats
+  static DateTime? _parseDateWithMultipleFormats(String dateString) {
+    // Try different date formats
+    List<String> formats = [
+      'yyyy-MM-dd HH:mm:ss',
+      'yyyy-MM-dd',
+      'dd-MM-yyyy HH:mm:ss',
+      'dd-MM-yyyy',
+      'dd/MM/yyyy HH:mm:ss',
+      'dd/MM/yyyy',
+    ];
+    
+    for (String format in formats) {
+      try {
+        return DateFormat(format).parse(dateString);
+      } catch (e) {
+        continue;
+      }
+    }
+    
+    // If all formats fail, try DateTime.parse as last resort
+    try {
+      return DateTime.parse(dateString);
+    } catch (e) {
       return null;
     }
   }

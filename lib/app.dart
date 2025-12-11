@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
     //   scrollBehavior: PlatformIs.web ? AppScrollBehavior() : null,
     // );
     return MaterialApp.router(
-      title: 'rmemp',
+      title: 'Team Mind',
       restorationScopeId: 'app',
       routerConfig: appGoRouter,
       localizationsDelegates: context.localizationDelegates,

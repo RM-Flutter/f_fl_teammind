@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -40,6 +41,43 @@ class HomeAppbarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String getVerificationStatus(us1Cache) {
+      final email = us1Cache['email'];
+      final phone = us1Cache['phone'];
+      final emailVerified = us1Cache['email_verified_at'] != null;
+      final phoneVerified = us1Cache['phone_verified_at'] != null;
+
+      // لا يوجد ايميل ولا تليفون
+      if (email == null && phone == null) {
+        return "";
+      }
+
+      // عنده ايميل فقط
+      if (email != null && phone == null) {
+        return emailVerified ? "" : AppStrings.email_not_verified.tr();
+      }
+
+      // عنده تليفون فقط
+      if (phone != null && email == null) {
+        return phoneVerified ? "" : AppStrings.phone_not_verified.tr();
+      }
+
+      // عنده الاتنين Email + Phone
+      if (!emailVerified && !phoneVerified) {
+        return AppStrings.email_phone_not_verified.tr();
+      }
+
+      if (!emailVerified && phoneVerified) {
+        return AppStrings.email_not_verified.tr();
+      }
+
+      if (emailVerified && !phoneVerified) {
+        return AppStrings.phone_not_verified.tr();
+      }
+
+      // الاتنين متحققين ✅
+      return "";
+    }
     var jsonString;
     var us1Cache;
     jsonString = CacheHelper.getString("US1");
@@ -87,7 +125,7 @@ class HomeAppbarWidget extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                if(us1Cache != null && (us1Cache['email_verified_at'] == null || us1Cache['phone_verified_at'] == null)) GestureDetector(
+                if ( us1Cache != null &&  ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) )  GestureDetector(
                   onTap: ()async{
                     await context.pushNamed(
                         AppRoutes.personalProfile.name,
@@ -95,7 +133,7 @@ class HomeAppbarWidget extends StatelessWidget {
                   },
                   child: Container(
                     color: Colors.yellow,
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                     child: Row(
                       children: [
                         Icon(Icons.warning, color: Colors.red),
@@ -103,10 +141,7 @@ class HomeAppbarWidget extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.6,
                           child: Text(
-                            (us1Cache['email_verified_at'] == null && us1Cache['phone_verified_at'] != null)? AppStrings.email_not_verified.tr():
-                            (us1Cache['email_verified_at'] != null && us1Cache['phone_verified_at'] == null)? AppStrings.phone_not_verified.tr():
-                            (us1Cache['email_verified_at'] == null && us1Cache['phone_verified_at'] == null)? AppStrings.email_phone_not_verified.tr(): "",
-                            style: TextStyle(color: Colors.red),
+                            getVerificationStatus(us1Cache),   style: TextStyle(color: Colors.red),
                           ),
                         ),
                         Spacer(),
@@ -224,9 +259,16 @@ class HomeAppbarWidget extends StatelessWidget {
                       ),
                       gapH32,
                       if (isExpanded == true)
-                        VacationListWidget(
-                          requests: requests,
-                          tap: true,
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth: kIsWeb ? 1100 : double.infinity
+                            ),
+                            child: VacationListWidget(
+                              requests: requests,
+                              tap: true,
+                            ),
+                          ),
                         ),
                     ],
                   ),

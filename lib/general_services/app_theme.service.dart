@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
@@ -96,11 +97,13 @@ abstract class AppThemeService {
           fontWeight: FontWeight.w400,
           color: colorPalette.quaternaryTextColor.get(isDark),
         ),
-        labelLarge: const TextStyle(
+        labelLarge: TextStyle(
             // --> used
             fontWeight: FontWeight.w700,
             fontSize: AppSizes.s24,
-            color: Colors.white),
+            color: Colors.white,
+            // تحسين الخطوط في الويب
+            letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.3 : null),
         headlineMedium: TextStyle(
             // --> used
             letterSpacing:
@@ -119,7 +122,9 @@ abstract class AppThemeService {
             // --> used for the title of modal sheet
             fontWeight: FontWeight.bold,
             fontSize: AppSizes.s20,
-            color: colorPalette.secondaryTextColor.color),
+            color: colorPalette.secondaryTextColor.color,
+            // تحسين الخطوط في الويب
+            letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.5 : null),
         bodySmall: TextStyle(
           // --> used
           fontWeight: FontWeight.w400,

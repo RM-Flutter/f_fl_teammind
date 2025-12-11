@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:rmemp/common_modules_widgets/main_app_fab_widget/main_app_fab.service.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/general_services/alert_service/alerts.service.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/dio.dart';
@@ -37,11 +41,22 @@ class HomeViewModel extends ChangeNotifier {
   List<NotificationModel>? notifications;
   final ScrollController homeScrollController = ScrollController();
   bool isLoading = false;
+  bool isSuccess = false;
   var errorMessage;
+  bool _disposed = false;
+
   @override
   void dispose() {
+    _disposed = true;
     homeScrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
   }
 
   void updateLoadingStatus({required bool laodingValue}) {
@@ -50,6 +65,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> initializeHomeScreen(BuildContext context,List? need) async {
+    if (_disposed) return;
     updateLoadingStatus(laodingValue: true);
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     // if (appConfigServiceProvider.isLogin != true ||
@@ -59,7 +75,7 @@ class HomeViewModel extends ChangeNotifier {
     // initialize [userSettings] and [userSettings2] after chackings about token
     await AppSettingsService.getUserSettingsAndUpdateTheStoredSettings(
         allData: true, context: context, need: need);
-    if (!context.mounted) return;
+    if (_disposed || !context.mounted) return;
     var jsonString;
     UserSettingsModel? userSettingsModel;
     var gCache;
@@ -80,6 +96,7 @@ class HomeViewModel extends ChangeNotifier {
     userSettings2Model = gCache2 != null ?UserSettings2Model.fromJson(gCache2) : userSettings2Model;
     userSettings = userSettingsModel;
     userSettings2 = userSettings2Model;
+
     // get user requests
   //  await _getUserNotification(context);
   //  await getHome(context);
@@ -101,10 +118,16 @@ class HomeViewModel extends ChangeNotifier {
         //     context: context,
         //     birthDate: userSettingsModel.birthDate);
       }
+      if (!_disposed) {
+        isSuccess = true;
+        notifyListeners();
+      }
     } catch (err, t) {
       debugPrint("error while checking on user birthday $err at :- $t");
     }
-    updateLoadingStatus(laodingValue: false);
+    if (!_disposed) {
+      updateLoadingStatus(laodingValue: false);
+    }
   }
 
   Future<void> _getAllUserRequests(BuildContext context) async {
@@ -207,9 +230,60 @@ class HomeViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+  Future<void> _preloadProfileImage(BuildContext context) async {
+    try {
+      // Check if online
+      final isConnected = await InternetConnectionChecker.createInstance().hasConnection.timeout(
+        const Duration(seconds: 2),
+        onTimeout: () => false,
+      );
+      
+      if (!isConnected) {
+        debugPrint('⚠️ Offline: Skipping profile image preload');
+        return;
+      }
+
+      // Get profile photo URL from cache
+      final jsonString = CacheHelper.getString("US1");
+      if (jsonString == null || jsonString.isEmpty) {
+        return;
+      }
+
+      final Map<String, dynamic> cache = json.decode(jsonString) as Map<String, dynamic>;
+      final String? photoUrl = cache['photo'] as String?;
+
+      if (photoUrl == null || photoUrl.isEmpty) {
+        return;
+      }
+
+      // Check if image is already cached
+      final documentDirectory = await getTemporaryDirectory();
+      final fileName = Uri.parse(photoUrl).pathSegments.last;
+      final cachedFile = File('${documentDirectory.path}/profile_image_$fileName');
+      
+      if (await cachedFile.exists()) {
+        debugPrint('✅ Profile image already cached');
+        return;
+      }
+
+      // Download and cache the image
+      debugPrint('📥 Preloading profile image...');
+      await MainFabServices.downloadImage(photoUrl, useCache: true);
+      debugPrint('✅ Profile image preloaded and cached');
+    } catch (e) {
+      debugPrint('⚠️ Error preloading profile image: $e');
+      // Don't show error to user, just log it
+    }
+  }
+
   getHome(context)async{
+    if (_disposed) return;
     notifyListeners();
     isLoading = true;
+    
+    // Preload profile image in background (non-blocking)
+    _preloadProfileImage(context);
+    
     DioHelper.getData(
         url: "/emp_requests/v1/home",
       context: context,
@@ -242,11 +316,15 @@ class HomeViewModel extends ChangeNotifier {
             message: value.data['message'],
             title: AppStrings.failed.tr());
       }
-      isLoading = false;
-      notifyListeners();
+      if (!_disposed) {
+        isLoading = false;
+        notifyListeners();
+      }
     }).catchError((error){
-      isLoading = false;
-      notifyListeners();
+      if (!_disposed) {
+        isLoading = false;
+        notifyListeners();
+      }
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {

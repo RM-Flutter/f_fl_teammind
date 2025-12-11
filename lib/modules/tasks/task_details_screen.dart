@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -109,206 +110,213 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           assets: icon['value'],
 
                         ),
-                        Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth: kIsWeb ? 800 : double.infinity
+                            ),
+                            child: Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 20,),
+                                      Text(
+                                        "${(value.getOneTaskModel!.task!.progress! % 1 == 0 ? value.getOneTaskModel!.task!.progress!.toInt().toString() : value.getOneTaskModel!.task!.progress!.toStringAsFixed(1))}% ${AppStrings.ofTaskHasBeenCompleted.tr()}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: Color(0xff31394D),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10,),
+                                      LinearProgressIndicator(
+                                        color: const Color(AppColors.primary),
+                                        value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
+                                        borderRadius: BorderRadius.circular(5),
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                    ],
+                                  ),
                                   const SizedBox(height: 20,),
-                                  Text(
-                                    "${(value.getOneTaskModel!.task!.progress! % 1 == 0 ? value.getOneTaskModel!.task!.progress!.toInt().toString() : value.getOneTaskModel!.task!.progress!.toStringAsFixed(1))}% ${AppStrings.ofTaskHasBeenCompleted.tr()}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Color(0xff31394D),
-                                    ),
+                                  Text(AppStrings.description.tr(),
+                                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(AppColors.primary)),
                                   ),
                                   const SizedBox(height: 10,),
-                                  LinearProgressIndicator(
-                                    color: const Color(AppColors.primary),
-                                    value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
-                                    borderRadius: BorderRadius.circular(5),
-                                    backgroundColor: Colors.transparent,
+                                  Text(
+                                    value.getOneTaskModel!.task!.content!,
+                                    style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.textC4)),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 20,),
-                              Text(AppStrings.description.tr(),
-                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(AppColors.primary)),
-                              ),
-                              const SizedBox(height: 10,),
-                              Text(
-                                value.getOneTaskModel!.task!.content!,
-                                style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.textC4)),
-                              ),
-                              const SizedBox(height: 20,),
-                              ListView.separated(
-                                  padding: EdgeInsets.zero,
-                                  reverse: false,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final iconName = value.getOneTaskModel!.task!.icon;
-                                    final icon = value.iconsName.firstWhere(
-                                          (item) => item["name"] == iconName,
-                                      orElse: () => {"value": "assets/images/svg/t3.svg"}, // مسار افتراضي لو لم يوجد
-                                    );
-                                    return Container(
+                                  const SizedBox(height: 20,),
+                                  ListView.separated(
+                                      padding: EdgeInsets.zero,
+                                      reverse: false,
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final iconName = value.getOneTaskModel!.task!.icon;
+                                        final icon = value.iconsName.firstWhere(
+                                              (item) => item["name"] == iconName,
+                                          orElse: () => {"value": "assets/images/svg/t3.svg"}, // مسار افتراضي لو لم يوجد
+                                        );
+                                        return Container(
+                                          padding: EdgeInsets.only(
+                                              left: LocalizationService.isArabic(context: context) ?0 :15,
+                                              right: LocalizationService.isArabic(context: context) ?15 :0
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius: BorderRadius.circular(5),
+                                              border: Border.all(
+                                                color: const Color(AppColors.primary),
+                                              )
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(icon['value']!),
+                                                    const SizedBox(width: 12,),
+                                                    SizedBox(
+                                                        width: !kIsWeb?MediaQuery.sizeOf(context).width * 0.6:MediaQuery.sizeOf(context).width * 0.2,
+                                                        child: Text(value.getOneTaskModel!.task!.subTasks![index].name ?? "",
+                                                          style: const TextStyle(color: Color(AppColors.dark),fontSize: 12,fontWeight: FontWeight.w600),)),
+                                                  ],
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      indexSelect = index;
+                                                      value.getOneTaskModel!.task!.subTasks![index].status = !value.getOneTaskModel!.task!.subTasks![index].status!;
+                                                    });
+                                                    value.updateSubTask(context,
+                                                      content: value.getOneTaskModel!.task!.content.toString(),
+                                                      assign: value.getOneTaskModel!.task!.assignTo,
+                                                      due: value.getOneTaskModel!.task!.dueDate,
+                                                      icon: value.getOneTaskModel!.task!.icon.toString(),
+                                                      id: value.getOneTaskModel!.task!.id,
+                                                      status: value.getOneTaskModel!.task!.status.toString(),
+                                                      subTask: value.getOneTaskModel!.task!.subTasks,
+                                                      title: value.getOneTaskModel!.task!.title.toString(),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 20,
+                                                    height: 20,
+                                                    padding: const EdgeInsets.all(4),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(color: const Color(AppColors.primary)),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: indexSelect == index && value.isUpdateLoading == true?
+                                                    const CircularProgressIndicator()
+                                                        :Container(
+                                                      decoration: BoxDecoration(
+                                                        color: value.getOneTaskModel!.task!.subTasks![index].status == true ?const Color(AppColors.primary) : Colors.transparent,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                      itemCount: value.getOneTaskModel!.task!.subTasks!.length),
+                                  const SizedBox(height: 15,),
+                                  if(value.getOneTaskModel!.task!.status == "open")GestureDetector(
+                                    onTap: (){
+                                      value.updateStatusTask(context, value.getOneTaskModel!.task!.id);
+                                    },
+                                    child: Container(
                                       padding: EdgeInsets.only(
                                           left: LocalizationService.isArabic(context: context) ?0 :15,
                                           right: LocalizationService.isArabic(context: context) ?15 :0
                                       ),
                                       decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          borderRadius: BorderRadius.circular(5),
-                                          border: Border.all(
-                                            color: const Color(AppColors.primary),
-                                          )
+                                        color: const Color(0xff09814D),
+                                        borderRadius: BorderRadius.circular(5),
+
                                       ),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(icon['value']!),
-                                                const SizedBox(width: 12,),
-                                                SizedBox(
-                                                    width: MediaQuery.sizeOf(context).width * 0.6,
-                                                    child: Text(value.getOneTaskModel!.task!.subTasks![index].name ?? "",
-                                                      style: const TextStyle(color: Color(AppColors.dark),fontSize: 12,fontWeight: FontWeight.w600),)),
-                                              ],
-                                            ),
+                                            child: Text(AppStrings.closeMainTask.tr(),
+                                              style: const TextStyle(color: Color(0xffFFFFFF),fontSize: 12,fontWeight: FontWeight.w600),),
                                           ),
                                           const Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTap: (){
-                                                setState(() {
-                                                  indexSelect = index;
-                                                  value.getOneTaskModel!.task!.subTasks![index].status = !value.getOneTaskModel!.task!.subTasks![index].status!;
-                                                });
-                                                value.updateSubTask(context,
-                                                  content: value.getOneTaskModel!.task!.content.toString(),
-                                                  assign: value.getOneTaskModel!.task!.assignTo,
-                                                  due: value.getOneTaskModel!.task!.dueDate,
-                                                  icon: value.getOneTaskModel!.task!.icon.toString(),
-                                                  id: value.getOneTaskModel!.task!.id,
-                                                  status: value.getOneTaskModel!.task!.status.toString(),
-                                                  subTask: value.getOneTaskModel!.task!.subTasks,
-                                                  title: value.getOneTaskModel!.task!.title.toString(),
-                                                );
-                                              },
-                                              child: Container(
-                                                width: 20,
-                                                height: 20,
-                                                padding: const EdgeInsets.all(4),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(color: const Color(AppColors.primary)),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: indexSelect == index && value.isUpdateLoading == true?
-                                                const CircularProgressIndicator()
-                                                    :Container(
-                                                  decoration: BoxDecoration(
-                                                    color: value.getOneTaskModel!.task!.subTasks![index].status == true ?const Color(AppColors.primary) : Colors.transparent,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.symmetric(horizontal: 5 ,vertical: 15),
+                                            decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                borderRadius: BorderRadius.only(
+                                                  topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
+                                                  bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
+                                                  topLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
+                                                  bottomLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
+                                                )
                                             ),
+                                            child: (value.isLoading == true)? const CircularProgressIndicator(color: Colors.white,):Icon(Icons.check, color: Colors.white,),
                                           )
                                         ],
                                       ),
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                                  itemCount: value.getOneTaskModel!.task!.subTasks!.length),
-                              const SizedBox(height: 15,),
-                              if(value.getOneTaskModel!.task!.status == "open")GestureDetector(
-                                onTap: (){
-                                  value.updateStatusTask(context, value.getOneTaskModel!.task!.id);
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      left: LocalizationService.isArabic(context: context) ?0 :15,
-                                      right: LocalizationService.isArabic(context: context) ?15 :0
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff09814D),
-                                    borderRadius: BorderRadius.circular(5),
-
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                  const SizedBox(height: 20,),
+                                  Row(
                                     children: [
-                                      Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                        child: Text(AppStrings.closeMainTask.tr(),
-                                          style: const TextStyle(color: Color(0xffFFFFFF),fontSize: 12,fontWeight: FontWeight.w600),),
-                                      ),
-                                      const Spacer(),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        padding: const EdgeInsets.symmetric(horizontal: 5 ,vertical: 15),
-                                        decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
-                                              bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
-                                              topLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
-                                              bottomLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
-                                            )
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all(strokeAlign: 1, color: Color(0xffDFDFDF))
+                                            ),
+                                          ),
                                         ),
-                                        child: (value.isLoading == true)? const CircularProgressIndicator(color: Colors.white,):Icon(Icons.check, color: Colors.white,),
-                                      )
+                                      ),
+                                      Text(AppStrings.lastedComments.tr().toUpperCase(), style: const TextStyle(fontSize: 14,
+                                          fontWeight: FontWeight.w500, color: Color(AppColors.dark))),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all(strokeAlign: 1, color: Color(0xffDFDFDF))
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
-                              const SizedBox(height: 20,),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(strokeAlign: 1, color: Color(0xffDFDFDF))
-                                        ),
-                                      ),
-                                    ),
+                                  SizedBox(height: 10,),
+                                  CommentsWidget(
+                                      "tasks",
+                                      enable: "enable",
+                                      comments: values.comments,
+                                      pageNumber:  values.pageNumber,
+                                      loading: values.isGetCommentLoading,
+                                      scrollController: _scrollController,
+                                      id : widget.id
                                   ),
-                                  Text(AppStrings.lastedComments.tr().toUpperCase(), style: const TextStyle(fontSize: 14,
-                                      fontWeight: FontWeight.w500, color: Color(AppColors.dark))),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(strokeAlign: 1, color: Color(0xffDFDFDF))
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  const SizedBox(height: 15,),
+
                                 ],
                               ),
-                              SizedBox(height: 10,),
-                              CommentsWidget(
-                                  "tasks",
-                                  enable: "enable",
-                                  comments: values.comments,
-                                  pageNumber:  values.pageNumber,
-                                  loading: values.isGetCommentLoading,
-                                  scrollController: _scrollController,
-                                  id : widget.id
-                              ),
-                              const SizedBox(height: 15,),
-
-                            ],
+                            ),
                           ),
                         )
                       ],

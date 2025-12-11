@@ -8,6 +8,7 @@ class FaqModelProvider extends ChangeNotifier{
   String? errorMessage;
   FaqModel? faqModel;
   getFaq(context){
+    faqModel= null;
     isLoading = true;
     notifyListeners();
     DioHelper.getData(

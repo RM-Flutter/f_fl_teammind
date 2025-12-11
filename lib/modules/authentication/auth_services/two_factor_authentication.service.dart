@@ -6,8 +6,8 @@ import '../../../models/operation_result.model.dart';
 abstract class TwoFactorAuthenticationService {
   static Future<OperationResult<Map<String, dynamic>>> send2FAVerificationCode(
       {required String uuid,
-      required String sendType,
-      required BuildContext context}) async {
+        required String sendType,
+        required BuildContext context}) async {
     final url = '${AppConstants.baseUrl}/rm_users/v1/tfa/$uuid/send';
     return await DioApiService().post<Map<String, dynamic>>(
         context: context,
@@ -18,12 +18,12 @@ abstract class TwoFactorAuthenticationService {
   }
 
   static Future<OperationResult<Map<String, dynamic>>>
-      validate2FAVerificationCode(
-          {required String uuid,
-          required String code,
-          required String sendType,
-          required BuildContext context,
-          required Map<String, dynamic> deviceInformation}) async {
+  validate2FAVerificationCode(
+      {required String uuid,
+        required String code,
+        required String sendType,
+        required BuildContext context,
+        required Map<String, dynamic> deviceInformation}) async {
     final url = '${AppConstants.baseUrl}/rm_users/v1/tfa/$uuid/validate';
     return await DioApiService().post<Map<String, dynamic>>(
         url,

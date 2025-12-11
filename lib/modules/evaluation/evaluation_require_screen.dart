@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -57,67 +58,74 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
           pageContext: context,
           title: AppStrings.evaluationRequest.tr(),
           onRefresh: () async => await viewModel.getEvaluationRequired(context),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  if(viewModel.evaluations?.isEmpty == true ||
-                      viewModel.evaluations == null)    CustomElevatedButton(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      titleSize: AppSizes.s12,
-                      title: AppStrings.myEvaluations.tr().toUpperCase(),
-                      onPressed: () async => await context.pushNamed(
-                          AppRoutes.evaluationScreen.name,
-                          extra: {
-                            "empId": gCache['employee_profile_id'].toString(),
-                            "begin": const Offset(1.0, 0.0),
-                          },
-                          pathParameters: {
-                            'lang': context.locale.languageCode,
-                            // "empName" : "unKnown"
-                          })),
-                  if(viewModel.evaluations?.isEmpty == true ||
-                      viewModel.evaluations == null)   const SizedBox(height: 20,),
-                  Consumer<EvaluationViewModel>(
-                      builder: (context, viewModel, child) => viewModel.isLoading
-                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                          : viewModel.evaluations?.isEmpty == true ||
-                          viewModel.evaluations == null
-                          ? NoExistingPlaceholderScreen(
-                          height: LayoutService.getHeight(context) * 0.6,
-                          title: AppStrings.noExistingEvaluation.tr())
-                          : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 20,),
-                            /// general screen message widget for other requests types
-                            // GeneralScreenMessageWidget(
-                            //     screenId: '/payrolls'),
-                            ListView.separated(
-                                reverse: false,
-                                shrinkWrap: true,
-                                physics: const ClampingScrollPhysics(),
-                                padding: EdgeInsets.zero,
-                                itemBuilder: (context, index) {
-                                  return ProfileTileEvaReq(
-                                    createAt: viewModel.evaluations[index]['created_at'],
-                                    empName: viewModel.evaluations[index]['employee_name'],
-                                    name: gCache['name'],
-                                    icon : viewModel.evaluations[index]['done']  == true?const Icon(Icons.check_circle_outline_rounded,
-                                        color: Colors.green, size: AppSizes.s24) : const Icon(Icons.access_time,
-                                        color:  Color(0xff606060), size: AppSizes.s24),
-                                    department: viewModel.evaluations[index]['department_name'],
-                                    title: "${viewModel.evaluations[index]['title']}",
-                                    url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
-                                  );
-                                },
-                                separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                                itemCount: viewModel.evaluations!.length),
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s12),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      if(viewModel.evaluations?.isEmpty == true ||
+                          viewModel.evaluations == null)    CustomElevatedButton(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          titleSize: AppSizes.s12,
+                          title: AppStrings.myEvaluations.tr().toUpperCase(),
+                          onPressed: () async => await context.pushNamed(
+                              AppRoutes.evaluationScreen.name,
+                              extra: {
+                                "empId": gCache['employee_profile_id'].toString(),
+                                "begin": const Offset(1.0, 0.0),
+                              },
+                              pathParameters: {
+                                'lang': context.locale.languageCode,
+                                // "empName" : "unKnown"
+                              })),
+                      if(viewModel.evaluations?.isEmpty == true ||
+                          viewModel.evaluations == null)   const SizedBox(height: 20,),
+                      Consumer<EvaluationViewModel>(
+                          builder: (context, viewModel, child) => viewModel.isLoading
+                              ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                              : viewModel.evaluations?.isEmpty == true ||
+                              viewModel.evaluations == null
+                              ? NoExistingPlaceholderScreen(
+                              height: LayoutService.getHeight(context) * 0.6,
+                              title: AppStrings.noExistingEvaluation.tr())
+                              : Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 20,),
+                                /// general screen message widget for other requests types
+                                // GeneralScreenMessageWidget(
+                                //     screenId: '/payrolls'),
+                                ListView.separated(
+                                    reverse: false,
+                                    shrinkWrap: true,
+                                    physics: const ClampingScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context, index) {
+                                      return ProfileTileEvaReq(
+                                        createAt: viewModel.evaluations[index]['created_at'],
+                                        empName: viewModel.evaluations[index]['employee_name'],
+                                        name: gCache['name'],
+                                        icon : viewModel.evaluations[index]['done']  == true?const Icon(Icons.check_circle_outline_rounded,
+                                            color: Colors.green, size: AppSizes.s24) : const Icon(Icons.access_time,
+                                            color:  Color(0xff606060), size: AppSizes.s24),
+                                        department: viewModel.evaluations[index]['department_name'],
+                                        title: "${viewModel.evaluations[index]['title']}",
+                                        url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                    itemCount: viewModel.evaluations!.length),
 
-                          ])),
+                              ])),
 
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           )),

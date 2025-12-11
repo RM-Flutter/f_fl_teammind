@@ -171,6 +171,16 @@ class FingerprintViewModel extends ChangeNotifier {
         MapEntry('fingerprints[$i][finger_day]', fingerprint['finger_day']),
       ]);
 
+      // Add note if provided
+      if (fingerprint['note'] != null || fingerprint['noteReport'] != null) {
+        final noteValue = fingerprint['note'] ?? fingerprint['noteReport'];
+        if (noteValue is String) {
+          formData.fields.add(MapEntry('fingerprints[$i][note]', noteValue));
+        } else {
+          formData.fields.add(MapEntry('fingerprints[$i][note]', jsonEncode(noteValue)));
+        }
+      }
+
       // Files
       if (fingerprint['files'] != null) {
         // Decode if it's a JSON string

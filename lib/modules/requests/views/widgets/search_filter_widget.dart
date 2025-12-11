@@ -23,7 +23,8 @@ import 'package:rmemp/utils/widgets/text_form_widget.dart';
 class SearchFilterWidget extends StatefulWidget {
   BuildContext? contexts;
   final GetRequestsTypes? requestsType;
-  SearchFilterWidget({super.key, this.contexts, this.requestsType});
+  final bool? isWeb;
+  SearchFilterWidget({super.key, this.contexts, this.requestsType, this.isWeb});
 
   @override
   State<SearchFilterWidget> createState() => _SearchFilterWidgetState();
@@ -32,6 +33,90 @@ class SearchFilterWidget extends StatefulWidget {
 class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   var selectIndex;
   int? selectId;
+  bool _filtersLoaded = false;
+  
+  void _loadSavedFilters(BuildContext context, AddNewRequestViewModel viewModels, FilterController viewModel) {
+    if (_filtersLoaded) return;
+    _filtersLoaded = true;
+    
+    // Load saved request type
+    final savedReqId = CacheHelper.getString("reqId");
+    if (savedReqId != null && savedReqId.isNotEmpty && viewModel.requestsTypes != null) {
+      try {
+        final requestType = viewModel.requestsTypes!.firstWhere(
+          (type) => type['id'].toString() == savedReqId,
+          orElse: () => {},
+        );
+        if (requestType.isNotEmpty) {
+          viewModels.selectedRequestType = requestType;
+          viewModels.selectReqId = savedReqId;
+          viewModels.reqType = requestType['type']?.toString();
+        }
+      } catch (e) {
+        debugPrint('Error loading saved request type: $e');
+      }
+    }
+    
+    // Load saved status
+    final savedStatus = CacheHelper.getString("selectStatus");
+    if (savedStatus != null && savedStatus.isNotEmpty) {
+      viewModels.selectStatus = savedStatus;
+    }
+    
+    // Load saved department
+    final savedDepId = CacheHelper.getString("depId");
+    if (savedDepId != null && savedDepId.isNotEmpty && viewModel.departments.isNotEmpty) {
+      try {
+        final department = viewModel.departments.firstWhere(
+          (dept) => dept['id'].toString() == savedDepId,
+          orElse: () => {},
+        );
+        if (department.isNotEmpty) {
+          viewModel.selectedDepartment = department;
+          viewModel.selectDepId = savedDepId;
+        }
+      } catch (e) {
+        debugPrint('Error loading saved department: $e');
+      }
+    }
+    
+    // Load saved employee
+    final savedEmpId = CacheHelper.getString("empId");
+    if (savedEmpId != null && savedEmpId.isNotEmpty && viewModel.employees.isNotEmpty) {
+      try {
+        final employee = viewModel.employees.firstWhere(
+          (emp) => emp['id'].toString() == savedEmpId,
+          orElse: () => {},
+        );
+        if (employee.isNotEmpty) {
+          viewModel.selectedEmployee = employee;
+          viewModel.selectEmpId = savedEmpId;
+        }
+      } catch (e) {
+        debugPrint('Error loading saved employee: $e');
+      }
+    }
+    
+    // Load saved date range
+    final savedFrom = CacheHelper.getString("from");
+    final savedTo = CacheHelper.getString("to");
+    if (savedFrom != null && savedFrom.isNotEmpty && savedTo != null && savedTo.isNotEmpty) {
+      try {
+        final fromDate = DateTime.parse(savedFrom);
+        final toDate = DateTime.parse(savedTo);
+        viewModels.selectedDateOrDatetimeRange = DateTimeRange(start: fromDate, end: toDate);
+        viewModels.controller.text = viewModels.formatDateTimeRange(context, viewModels.selectedDateOrDatetimeRange!);
+      } catch (e) {
+        debugPrint('Error loading saved date range: $e');
+      }
+    }
+    
+    // Update UI
+    if (mounted) {
+      setState(() {});
+    }
+  }
+  
   @override
   void initState() {
     super.initState();
@@ -56,34 +141,56 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                   gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
                   UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
                 }
+                
+                // Load saved filters when data is ready
+                if (viewModel.requestsTypes != null && viewModel.departments.isNotEmpty && viewModel.employees.isNotEmpty) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _loadSavedFilters(context, viewModels, viewModel);
+                  });
+                }
+                
+                final isWeb = widget.isWeb ?? false;
                 return SingleChildScrollView(
                   child: Padding(
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
                     child: Container(
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(35.0)),
-                          color: Color(0xffFFFFFF)
+                      decoration: BoxDecoration(
+                          borderRadius: isWeb 
+                              ? BorderRadius.circular(35.0)
+                              : const BorderRadius.vertical(top: Radius.circular(35.0)),
+                          color: const Color(0xffFFFFFF)
                       ),
                       width: double.infinity,
-                      height: MediaQuery.sizeOf(context).height * 0.6,
+                      height: isWeb 
+                          ? null 
+                          : MediaQuery.sizeOf(context).height * 0.6,
+                      constraints: isWeb 
+                          ? BoxConstraints(
+                              maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+                            )
+                          : null,
                       alignment: Alignment.topCenter,
                       child: SingleChildScrollView(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const SizedBox(height: 10,),
-                            Center(
-                              child:Container(
-                                width: 63,
-                                height: 5,
-                                decoration: BoxDecoration(
-                                    color:const Color(0xffB9C0C9),
-                                    borderRadius: BorderRadius.circular(100)
-                                ),
-                              ) ,
-                            ),
-                            const SizedBox(height: 10,),
+                            if (!isWeb) ...[
+                              const SizedBox(height: 10,),
+                              Center(
+                                child:Container(
+                                  width: 63,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                      color:const Color(0xffB9C0C9),
+                                      borderRadius: BorderRadius.circular(100)
+                                  ),
+                                ) ,
+                              ),
+                              const SizedBox(height: 10,),
+                            ] else
+                              const SizedBox(height: 20,),
                             Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
@@ -156,8 +263,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                       );
                                     }
                                   ),
-                                  if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
-                                  if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty&& widget.requestsType != GetRequestsTypes.mine)CustomDropdown.search(
+                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
+                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)CustomDropdown.search(
                                       selectedValue: viewModel.selectedDepartment,
                                       borderRadius: BorderRadius.circular(AppSizes.s15),
                                       borderSide: Theme.of(context)
@@ -182,8 +289,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           context: context)
                                           ? TextDirection.rtl
                                           : TextDirection.ltr)),
-                                  if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty && widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
-                                  if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty&& widget.requestsType != GetRequestsTypes.mine)  CustomDropdown.search(
+                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
+                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)  CustomDropdown.search(
                                       selectedValue: viewModel.selectedEmployee,
                                       borderRadius: BorderRadius.circular(AppSizes.s15),
                                       borderSide: Theme.of(context)
@@ -287,35 +394,29 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 "${date.month.toString().padLeft(2, '0')}-"
                                                 "${date.day.toString().padLeft(2, '0')}";
                                           }
-                                          CacheHelper.deleteData(key: "empId");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          CacheHelper.deleteData(key: "from");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          CacheHelper.deleteData(key: "to");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          CacheHelper.deleteData(key: "selectStatus");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          CacheHelper.deleteData(key: "depId");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          CacheHelper.deleteData(key: "reqId");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          CacheHelper.setString(key: "empId", value: viewModel.selectEmpId ?? "");
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          if(viewModel.selectDepId != null){
+                                          
+                                          // Don't delete old filters, just update/add new ones
+                                          // Only update if new value is provided
+                                          if(viewModel.selectEmpId != null && viewModel.selectEmpId!.isNotEmpty){
+                                            CacheHelper.setString(key: "empId", value: viewModel.selectEmpId ?? "");
+                                          }
+                                          if(viewModel.selectDepId != null && viewModel.selectDepId!.isNotEmpty){
                                             CacheHelper.setString(key: "depId", value: viewModel.selectDepId ?? "");
                                           }
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          if(viewModels.selectStatus != null){
+                                          if(viewModels.selectStatus != null && viewModels.selectStatus!.isNotEmpty){
                                             CacheHelper.setString(key: "selectStatus", value: viewModels.selectStatus ?? "");
                                           }
-                                          print("IDS IS FINAL--> ${viewModels.selectReqId}");
-                                          if(viewModels.selectReqId != null){
+                                          if(viewModels.selectReqId != null && viewModels.selectReqId!.isNotEmpty){
                                             CacheHelper.setString(key: "reqId", value: viewModels.selectReqId ?? "");
                                           }
-                                            if(viewModels.selectedDateOrDatetimeRange != null && viewModels.selectedDateOrDatetimeRange?.start != null){CacheHelper.setString(key: "from", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
-                                                dateTime: viewModels.selectedDateOrDatetimeRange!.start)).toString() ?? "", );}
-                                          if(viewModels.selectedDateOrDatetimeRange != null &&viewModels.selectedDateOrDatetimeRange?.end != null) {  CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
-                                                dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "",);}
+                                          if(viewModels.selectedDateOrDatetimeRange != null && viewModels.selectedDateOrDatetimeRange?.start != null){
+                                            CacheHelper.setString(key: "from", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
+                                                dateTime: viewModels.selectedDateOrDatetimeRange!.start)).toString() ?? "", );
+                                          }
+                                          if(viewModels.selectedDateOrDatetimeRange != null &&viewModels.selectedDateOrDatetimeRange?.end != null) {  
+                                            CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
+                                                dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "",);
+                                          }
                                             Navigator.pop(context);
                                         },
                                         child: Container(

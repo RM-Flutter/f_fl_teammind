@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -71,8 +72,11 @@ class _SplashScreenState extends State<SplashScreen> {
    // else{
    //
    //  }
+    if (!mounted) return;
     await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
+    if (!mounted) return;
     await homeViewModel.initializeHomeScreen(context, null);
+    if (!mounted) return;
     await UpdateApp.checkForForceUpdate(context);
 
     // await UpdateApp.checkForForceUpdate(context);
@@ -128,10 +132,17 @@ class _SplashScreenState extends State<SplashScreen> {
     else {
       print("us2Cache is null or empty.");
     }
+    if (!mounted) return;
     viewModel.initializeSplashScreen(
         context: context,
         role: (UserSettingConst.userSettings != null)? UserSettingConst.userSettings!.role : CacheHelper.getString("roles")
     );
+  }
+
+  @override
+  void dispose() {
+    homeViewModel.dispose();
+    super.dispose();
   }
 
   @override
@@ -142,9 +153,8 @@ class _SplashScreenState extends State<SplashScreen> {
             body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(AppImages.splashScreenBackground,
-                fit: BoxFit.cover,
-                key: const ValueKey<String>(AppImages.splashScreenBackground)),
+            Image.asset(!kIsWeb?AppImages.splashScreenBackground:AppImages.splashScreenBackgroundWeb,
+                fit: BoxFit.cover),
             const OverlayGradientWidget(),
             Positioned(
               bottom: AppSizes.s48,
@@ -157,7 +167,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     AppImages.logo,
                     height: AppSizes.s75,
                     width: AppSizes.s75,
-                    key: const ValueKey<String>(AppImages.logo),
                   ),
                   Text(
                     AppStrings.loading.tr(),

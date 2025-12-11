@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../constants/app_strings.dart';
@@ -45,16 +46,16 @@ class CreateAccountViewModel extends ChangeNotifier {
       if (formKey.currentState?.validate() == true) {
         if(CacheHelper.getString("role") != "merchant"){
           await _createNewAccount(
-            phone: phoneController.text,
-            email: emailController.text,
-            password: passwordController.text,
-            name: nameController.text,
-            mak: making,
-            countryKey: countryCodeController.text.isEmpty
-                ? '+20'
-                : countryCodeController.text,
-            context: context,
-            departmentId: 1);}
+              phone: phoneController.text,
+              email: emailController.text,
+              password: passwordController.text,
+              name: nameController.text,
+              mak: making,
+              countryKey: countryCodeController.text.isEmpty
+                  ? '+20'
+                  : countryCodeController.text,
+              context: context,
+              departmentId: 1);}
         else{
           await _createNewAccount(
               phone: phoneController.text,
@@ -69,10 +70,14 @@ class CreateAccountViewModel extends ChangeNotifier {
 
         }
       } else {
-        AlertsService.warning(
-            context: context,
-            message: AppStrings.formIsInvalid.tr(),
-            title: AppStrings.formValidation.tr());
+        showToast(
+            AppStrings.formIsInvalid.tr(),
+          context: context,
+          backgroundColor: Colors.red,
+          textStyle: const TextStyle(color: Colors.white),
+          duration: const Duration(seconds: 5),
+          position: StyledToastPosition.bottom,
+        );
       }
       return;
     } catch (err, t) {

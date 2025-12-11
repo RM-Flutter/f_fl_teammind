@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:rmemp/platform/platform_is.dart';
 class WebViewStack extends StatefulWidget {
 
   @override
@@ -14,6 +16,12 @@ class _WebViewStackState extends State<WebViewStack> {
   @override
   void initState() {
     super.initState();
+    if (PlatformIs.web) {
+      // On web, open URL in browser instead of WebView
+      _openUrlInBrowser();
+      return;
+    }
+    
     final jsonString = CacheHelper.getString("USG");
     var gCache;
     if (jsonString != null && jsonString != "") {
@@ -82,8 +90,47 @@ class _WebViewStackState extends State<WebViewStack> {
       );
   }
 
+  Future<void> _openUrlInBrowser() async {
+    final jsonString = CacheHelper.getString("USG");
+    var gCache;
+    if (jsonString != null && jsonString != "") {
+      gCache = json.decode(jsonString) as Map<String, dynamic>;
+    }
+    final url = gCache['company_structure_url'] != null
+        ? '${gCache['company_structure_url']}'
+        : "https://www.google.com/";
+    
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      // Close the screen after opening browser
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open $url')),
+        );
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (PlatformIs.web) {
+      // On web, show loading while opening browser
+      return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0.0,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0.0,

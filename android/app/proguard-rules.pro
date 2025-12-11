@@ -17,3 +17,10 @@
 # Keep OkHttp internal classes
 -keep class okhttp3.internal.** { *; }
 -dontwarn okhttp3.internal.**
+
+# Keep TensorFlow Lite (and GPU delegate) classes
+-keep class org.tensorflow.** { *; }
+-dontwarn org.tensorflow.**
+-keep class org.tensorflow.lite.** { *; }
+-keep class org.tensorflow.lite.gpu.** { *; }
+-keep class com.google.android.filament.** { *; }

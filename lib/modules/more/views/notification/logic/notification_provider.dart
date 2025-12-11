@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,6 +17,7 @@ import 'package:rmemp/general_services/backend_services/api_service/dio_api_serv
 import 'package:rmemp/models/get_one_notification_model.dart';
 import 'package:rmemp/models/get_request_comment_model.dart';
 import 'package:rmemp/models/settings/user_settings.model.dart';
+import 'package:rmemp/platform/platform_is.dart';
 
 class NotificationProviderModel extends ChangeNotifier {
   bool isLoading = false;
@@ -199,7 +201,8 @@ class NotificationProviderModel extends ChangeNotifier {
     try {
       final response = await DioHelper.getData(
         url: "/rmnotifications/entities-operations/$id",
-        context: context, // Pass this explicitly only if necessary
+        context: context,
+        query: null,
       );
       if(response.data["status"] == true){
         notificationModel = NotificationSingleModel.fromJson(response.data['item']);
@@ -228,19 +231,32 @@ class NotificationProviderModel extends ChangeNotifier {
     notifyListeners();
     print("empIds is --> ${empIds}");
     print("empIds is --> ${listXAttachmentPersonalImage.length}");
-    final image = listAttachmentPersonalImage
-        .map((e) => XFile(e["compressed"].path)) // تحويل File → XFile
-        .toList();
-    final images = image != null
+    
+    final images = listXAttachmentPersonalImage.isNotEmpty
         ? await Future.wait(
       listXAttachmentPersonalImage.map(
-            (file) async => await MultipartFile.fromFile(
-          file.path,
-          filename: file.name,
-        ),
+            (file) async {
+              // على الويب، استخدام readAsBytes بدلاً من path
+              if (kIsWeb || PlatformIs.web) {
+                try {
+                  final bytes = await file.readAsBytes();
+                  return MultipartFile.fromBytes(
+                    bytes,
+                    filename: file.name,
+                  );
+                } catch (e) {
+                  print("Error reading image bytes on web: $e");
+                  // محاولة استخدام path كبديل
+                  return await MultipartFile.fromFile(file.path, filename: file.name);
+                }
+              } else {
+                return await MultipartFile.fromFile(file.path, filename: file.name);
+              }
+            },
       ),
     )
         : [];
+    
     FormData formData = FormData.fromMap({
       "titles[en]" : titleEnController.text,
       "titles[ar]" : titleArController.text,
@@ -254,24 +270,24 @@ class NotificationProviderModel extends ChangeNotifier {
     });
     var response;
     try{
-      if(listXAttachmentPersonalImage == null || listXAttachmentPersonalImage.isEmpty){
-        response = await DioHelper.postFormData(
-            url: "/emp_requests/v1/notifications/create",
-            context: context,
-            formdata: formData
-        );
-      }else{
-        response = await DioHelper.postFormData(
-            url: "/emp_requests/v1/notifications/create",
-            context: context,
-            formdata: formData
-        );
-      }
+      response = await DioHelper.postFormData(
+          url: "/emp_requests/v1/notifications/create",
+          context: context,
+          formdata: formData,
+          query: null,
+          data: {},
+      );
       if(response.data['status'] == true){
         titleEnController.clear();
         titleArController.clear();
         contentEnController.clear();
         contentArController.clear();
+        // Clear attached images after successful send
+        listXAttachmentPersonalImage.clear();
+        listAttachmentPersonalImage.clear();
+        attachedFile = null;
+        notifyListeners();
+        print("NOTI IS DONE");
         AlertsService.success(
             context: context,
             message: response.data['message'],
@@ -301,6 +317,11 @@ class NotificationProviderModel extends ChangeNotifier {
     }
   }
   Future<File?> _compressImage(File file) async {
+    // على الويب، لا نحتاج إلى ضغط الصورة
+    if (kIsWeb || PlatformIs.web) {
+      return null; // على الويب، نستخدم XFile مباشرة
+    }
+    
     final targetPath =
         "${file.parent.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg";
 
@@ -314,38 +335,82 @@ class NotificationProviderModel extends ChangeNotifier {
     return result != null ? File(result.path) : null;
   }
   Future<void> getProfileImageByCam() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
-    if (imageFileProfile == null) return;
+    try {
+      final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
+      if (imageFileProfile == null) return;
 
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
+      // على الويب، لا نحتاج إلى ضغط الصورة
+      if (kIsWeb || PlatformIs.web) {
+        listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+        listAttachmentPersonalImage.add({
+          "original": imageFileProfile,  // XFile
+          "compressed": imageFileProfile   // على الويب، استخدم نفس الملف
+        });
+        notifyListeners();
+        print("Image added successfully on web. Total images: ${listXAttachmentPersonalImage.length}");
+      } else {
+        File originalFile = File(imageFileProfile.path);
+        File? compressedFile = await _compressImage(originalFile);
 
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
+        if (compressedFile != null) {
+          // احفظ اللي اتنين
+          listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+          listAttachmentPersonalImage.add({
+            "original": imageFileProfile,  // XFile
+            "compressed": compressedFile   // File
+          });
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print("Error getting image from camera: $e");
+      if (kIsWeb || PlatformIs.web) {
+        Fluttertoast.showToast(
+          msg: "Error selecting image. Please try again.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
   Future<void> getProfileImageByGallery() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
-    if (imageFileProfile == null) return;
+    try {
+      final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
+      if (imageFileProfile == null) return;
 
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
+      // على الويب، لا نحتاج إلى ضغط الصورة
+      if (kIsWeb || PlatformIs.web) {
+        listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+        listAttachmentPersonalImage.add({
+          "original": imageFileProfile,  // XFile
+          "compressed": imageFileProfile   // على الويب، استخدم نفس الملف
+        });
+        notifyListeners();
+        print("Image added successfully on web. Total images: ${listXAttachmentPersonalImage.length}");
+      } else {
+        File originalFile = File(imageFileProfile.path);
+        File? compressedFile = await _compressImage(originalFile);
 
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
+        if (compressedFile != null) {
+          // احفظ اللي اتنين
+          listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+          listAttachmentPersonalImage.add({
+            "original": imageFileProfile,  // XFile
+            "compressed": compressedFile   // File
+          });
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print("Error getting image from gallery: $e");
+      if (kIsWeb || PlatformIs.web) {
+        Fluttertoast.showToast(
+          msg: "Error selecting image. Please try again.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 

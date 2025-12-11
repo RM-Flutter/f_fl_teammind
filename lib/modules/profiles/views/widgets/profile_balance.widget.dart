@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rmemp/constants/app_colors.dart';
 import 'package:rmemp/constants/app_strings.dart';
@@ -96,6 +97,30 @@ class BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double getResponsiveItemWidth(BuildContext context, {double? paddingBetweenVocations}) {
+      final screenWidth = LayoutService.getWidth(context);
+      int crossAxisCount;
+
+      if (kIsWeb) {
+        if (screenWidth > 1400) {
+          crossAxisCount = 6; // شاشات كبيرة جدًا
+        } else if (screenWidth > 1000) {
+          crossAxisCount = 5; // لابتوب
+        } else {
+          crossAxisCount = 4; // تابلت أو شاشة صغيرة
+        }
+      } else {
+        if (screenWidth > 600) {
+          crossAxisCount = 4; // تابلت
+        } else {
+          crossAxisCount = 3; // موبايل
+        }
+      }
+
+      final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0) * 2);
+      return (screenWidth - totalPadding) / crossAxisCount;
+    }
+
     bool isTaken = balance.max == -1 && balance.available == -1;
     const mainTextStyle = TextStyle(
       fontWeight: FontWeight.normal,
@@ -115,10 +140,7 @@ class BalanceCard extends StatelessWidget {
               height: LayoutService.getHeight(context) * 0.7)
           : null,
       child: Container(
-        width: (LayoutService.getWidth(context) -
-                (AppSizes.s32 +
-                    ((paddingBetweenVocations ?? AppSizes.s0) * 2))) /
-            3,
+        width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         height: AppSizes.s120,
         padding: const EdgeInsets.symmetric(
             vertical: AppSizes.s14, horizontal: AppSizes.s6),

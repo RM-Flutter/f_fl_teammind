@@ -22,6 +22,62 @@ class BlogListViewItem extends StatefulWidget {
 }
 
 class _BlogListViewItemState extends State<BlogListViewItem> {
+  String _getImageUrl() {
+    try {
+      final blogItem = widget.blog[widget.index];
+      if (blogItem['main_thumbnail'] != null && 
+          blogItem['main_thumbnail'] is List && 
+          blogItem['main_thumbnail'].isNotEmpty) {
+        final thumbnail = blogItem['main_thumbnail'][0];
+        if (thumbnail is Map && thumbnail['file'] != null && thumbnail['file'].toString().isNotEmpty) {
+          final imageUrl = thumbnail['file'].toString();
+          // التحقق من أن الرابط صحيح
+          if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+            return imageUrl;
+          }
+        }
+      }
+    } catch (e) {
+      print("Error getting image URL: $e");
+    }
+    return "";
+  }
+  
+  Widget _buildBlogImage() {
+    final imageUrl = _getImageUrl();
+    if (imageUrl.isEmpty) {
+      return Container(
+        width: 63,
+        height: 63,
+        color: const Color(0xFF3389EE),
+        child: const Icon(
+          Icons.image_not_supported_outlined,
+          color: Colors.white,
+        ),
+      );
+    }
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+      height: 63,
+      width: 63,
+      placeholder: (context, url) => const ShimmerAnimatedLoading(
+        width: 63.0,
+        height: 63,
+        circularRaduis: 63,
+      ),
+      errorWidget: (context, url, error) => Container(
+        width: 63,
+        height: 63,
+        color: const Color(0xFF3389EE),
+        child: const Icon(
+          Icons.image_not_supported_outlined,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -68,22 +124,9 @@ class _BlogListViewItemState extends State<BlogListViewItem> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(2),
-                child: ClipRRect(
+                  child: ClipRRect(
                   borderRadius: BorderRadius.circular(63),
-                  child: CachedNetworkImage(
-                      imageUrl: (widget.blog[widget.index]['main_thumbnail'].isNotEmpty)?
-                      widget.blog[widget.index]['main_thumbnail'][0]['file'] : "",
-                      fit: BoxFit.cover,
-                      height: 40,
-                      width: 40,
-                      placeholder: (context, url) => const ShimmerAnimatedLoading(
-                        width: 63.0,
-                        height: 63,
-                        circularRaduis: 63,
-                      ),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.image_not_supported_outlined,
-                      )),
+                  child: _buildBlogImage(),
                 ),
               ),
             ),

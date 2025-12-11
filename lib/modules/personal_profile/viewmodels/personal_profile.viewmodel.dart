@@ -4,12 +4,16 @@ import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:rmemp/common_modules_widgets/main_app_fab_widget/main_app_fab.service.dart';
 import 'package:rmemp/constants/user_consts.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
@@ -26,6 +30,7 @@ import '../../../general_services/settings.service.dart';
 import '../../../general_services/validation_service.dart';
 import '../../../models/settings/user_settings.model.dart';
 import '../services/personal_profile.service.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class PersonalProfileViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -94,19 +99,19 @@ class PersonalProfileViewModel extends ChangeNotifier {
             title: AppStrings.success.tr());}
     }).catchError((error){
       isLoading = false;
-    AlertsService.error(
-        context: context,
-        message: AppStrings.errorPleaseTryAgain.tr(),
-        title: AppStrings.failed.tr().toUpperCase());
-    if (error is DioError) {
-      errorMessage = error.response?.data['message'] ?? AppStrings.failed.tr();
-    } else {
-      errorMessage = error.toString();
-    }
-    AlertsService.error(
-        context: context,
-        message: errorMessage!,
-        title: AppStrings.failed.tr().toUpperCase());
+      AlertsService.error(
+          context: context,
+          message: AppStrings.errorPleaseTryAgain.tr(),
+          title: AppStrings.failed.tr().toUpperCase());
+      if (error is DioError) {
+        errorMessage = error.response?.data['message'] ?? AppStrings.failed.tr();
+      } else {
+        errorMessage = error.toString();
+      }
+      AlertsService.error(
+          context: context,
+          message: errorMessage!,
+          title: AppStrings.failed.tr().toUpperCase());
     });
   }
   Future<void> initializePersonalProfileScreen(
@@ -136,6 +141,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+      print("gCache is --> ${gCache}");
     }
     if (UserSettingConst.userSettings == null) return;
     emailController.text = UserSettingConst.userSettings?.email ?? '';
@@ -300,6 +306,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
   Future<void> selectBirthDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
+      barrierColor: Colors.white,
       initialDate: UserSettingConst.userSettings?.birthDate,
       switchToInputEntryModeIcon: const Icon(Icons.add, color: Colors.transparent,),
       firstDate: DateTime(1900),
@@ -380,6 +387,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           title: Text(
             AppStrings.fa_activated.tr(),
@@ -605,6 +613,12 @@ class PersonalProfileViewModel extends ChangeNotifier {
         );
         isSuccessUpdateImage = true;
         notifyListeners();
+        
+        // If update was successful, reload profile image to cache
+        if (value.data['status'] == true) {
+          await _reloadProfileImageAfterUpdate(context);
+        }
+        
         return;
       });
     } catch (ex, t) {
@@ -623,6 +637,63 @@ class PersonalProfileViewModel extends ChangeNotifier {
     }
   }
 
+  /// Reload profile image after successful update
+  Future<void> _reloadProfileImageAfterUpdate(BuildContext context) async {
+    try {
+      // Check if online
+      final isConnected = await InternetConnectionChecker.createInstance().hasConnection.timeout(
+        const Duration(seconds: 2),
+        onTimeout: () => false,
+      );
+      
+      if (!isConnected) {
+        debugPrint('⚠️ Offline: Skipping profile image reload after update');
+        return;
+      }
+
+      // Wait a bit for the server to process the update
+      await Future.delayed(const Duration(seconds: 1));
+
+      // Reload user settings to get updated photo URL
+      await AppSettingsService.getUserSettingsAndUpdateTheStoredSettings(
+        allData: true,
+        context: context,
+        need: ['user_settings'],
+      );
+
+      // Get updated profile photo URL from cache
+      final jsonString = CacheHelper.getString("US1");
+      if (jsonString == null || jsonString.isEmpty) {
+        return;
+      }
+
+      final Map<String, dynamic> cache = json.decode(jsonString) as Map<String, dynamic>;
+      final String? photoUrl = cache['photo'] as String?;
+
+      if (photoUrl == null || photoUrl.isEmpty) {
+        return;
+      }
+
+      // Delete old cached image if exists
+      final documentDirectory = await getTemporaryDirectory();
+      final fileName = Uri.parse(photoUrl).pathSegments.last;
+      final cachedFile = File('${documentDirectory.path}/profile_image_$fileName');
+      
+      if (await cachedFile.exists()) {
+        await cachedFile.delete();
+        debugPrint('🗑️ Deleted old cached profile image');
+      }
+
+      // Download and cache the new image
+      debugPrint('📥 Reloading profile image after update...');
+      await MainFabServices.downloadImage(photoUrl, useCache: false); // Force download new image
+      debugPrint('✅ Profile image reloaded and cached after update');
+    } catch (e) {
+      debugPrint('⚠️ Error reloading profile image after update: $e');
+      // Don't show error to user, just log it
+    }
+  }
+
   /// update profile email
   Future<void> updateProfileEmail({required BuildContext context}) async {
     try {
@@ -637,7 +708,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       // Vaidation
       if (form2Key.currentState?.validate() == true) {
         bool isUpdate = await AlertsService.confirmMessage(
-          form3Key: form3Key,
+            form3Key: form3Key,
             context, AppStrings.updateEmail.tr(),
             message: AppStrings.areYouSureYouWantToUpdateYourEmail.tr());
 
@@ -723,28 +794,28 @@ class PersonalProfileViewModel extends ChangeNotifier {
               ? '+20'
               : countryCodeController.text.trim());
       if(result != null){
-          if(result.data['status'] == true){
-            if (
-            result.data?['phone_code'] == true &&
-                result.data?['phone_code_uuid'] != null &&
-                result.data?['phone_code_uuid'] != '') {
-              return await showPhoneVerificationPopup(
-                  context: context,
-                  newPhoneNumber: phoneNumberController.text,
-                  phoneUuid: result.data?['phone_code_uuid']);
-            }
-          }else{
-            Fluttertoast.showToast(
-                msg: result.data['message'] ,
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 5,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            return;
+        if(result.data['status'] == true){
+          if (
+          result.data?['phone_code'] == true &&
+              result.data?['phone_code_uuid'] != null &&
+              result.data?['phone_code_uuid'] != '') {
+            return await showPhoneVerificationPopup(
+                context: context,
+                newPhoneNumber: phoneNumberController.text,
+                phoneUuid: result.data?['phone_code_uuid']);
           }
+        }else{
+          Fluttertoast.showToast(
+              msg: result.data['message'] ,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 5,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          return;
+        }
       }
     } catch (ex, t) {
       debugPrint(
@@ -765,44 +836,11 @@ class PersonalProfileViewModel extends ChangeNotifier {
   ///LOGOUT
   Future<void> logout({required BuildContext context}) async {
     try {
-      bool isLogout = await AlertsService.confirmMessage(context, AppStrings.logout.tr(),
-          message: AppStrings.areYouSureYouWantToLog.tr());
       final appConfigService =
       Provider.of<AppConfigService>(context, listen: false);
-      await appConfigService.logout();
-      if (isLogout == false) return;
-      final result = await PersonalProfileService.logout(context: context);
-      if (result.success) {
-        // Clear user data and navigate to login screen
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        await appConfigService.resetConfig();
-        await appConfigService.setAuthenticationStatusWithToken(
-            isLogin: false, token: null);
-        return;
-      } else {
-        // Fluttertoast.showToast(
-        //     msg: result.message!,
-        //     toastLength: Toast.LENGTH_LONG,
-        //     gravity: ToastGravity.BOTTOM,
-        //     timeInSecForIosWeb: 5,
-        //     backgroundColor: Colors.red,
-        //     textColor: Colors.white,
-        //     fontSize: 16.0
-        // );
-        return;
-      }
+      await appConfigService.logout(context, viewAlert: true);
     } catch (ex, t) {
       debugPrint('${AppStrings.failedToLogoutPleaseTryLater.tr()} ,${ex.toString()} at $t');
-      Fluttertoast.showToast(
-          msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
     }
   }
 
@@ -810,11 +848,11 @@ class PersonalProfileViewModel extends ChangeNotifier {
   Future<void> removeAccount({required BuildContext context}) async {
     try {
       await AlertsService.confirmMessage(
-          context, AppStrings.deleteAccount.tr(),
-          form3Key: form3Key,
-          viewPassword: true,
-          passwordForRemoveAccountController: passwordForRemoveAccountController,
-          message: AppStrings.areYouSureYouWantToDeleteAccount.tr(),
+        context, AppStrings.deleteAccount.tr(),
+        form3Key: form3Key,
+        viewPassword: true,
+        passwordForRemoveAccountController: passwordForRemoveAccountController,
+        message: AppStrings.areYouSureYouWantToDeleteAccount.tr(),
         onTap: () async {
           if(form3Key.currentState!.validate()){
             final result = await PersonalProfileService.removeAccount(
@@ -905,103 +943,120 @@ class PersonalProfileViewModel extends ChangeNotifier {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s12),
-          ),
-          backgroundColor: Colors.white,
-          insetPadding: const EdgeInsets.all(AppSizes.s16),
-          titlePadding: const EdgeInsets.all(AppSizes.s16),
-          contentPadding: const EdgeInsets.all(AppSizes.s12),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppStrings.otpVerification.tr(),
-                style: Theme.of(context).textTheme.displayLarge,
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: kIsWeb ? 800 : double.infinity,
+            ),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSizes.s12),
               ),
-              IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
-                    Icons.cancel_outlined,
-                    size: AppSizes.s32,
-                    color: Colors.red,
-                  ))
-            ],
-          ),
-          content: SizedBox(
-            width: LayoutService.getWidth(context),
-            height: AppSizes.s300,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
+              backgroundColor: Colors.white,
+              insetPadding: const EdgeInsets.all(AppSizes.s16),
+              titlePadding: const EdgeInsets.all(AppSizes.s16),
+              contentPadding: const EdgeInsets.all(AppSizes.s12),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppStrings.otpVerification.tr(),
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.cancel_outlined,
+                        size: AppSizes.s32,
+                        color: Colors.red,
+                      ))
+                ],
+              ),
+              content: SizedBox(
+                width: LayoutService.getWidth(context),
+                height: AppSizes.s300,
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      AppStrings.verificationCodeSent.tr(),
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.bold, fontSize: AppSizes.s16),
-                      textAlign: TextAlign.center,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppStrings.verificationCodeSent.tr(),
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: AppSizes.s16),
+                          textAlign: TextAlign.center,
+                        ),
+                        gapH12,
+                        Text(
+                          AppStrings.aVerificationCodeHasBeenSentToYourPhoneNumber.tr(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall
+                              ?.copyWith(color: Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    gapH12,
-                    Text(
-                      AppStrings.aVerificationCodeHasBeenSentToYourPhoneNumber.tr(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(color: Colors.black),
-                      textAlign: TextAlign.center,
+                    Form(
+                      key: codeFormKey,
+                      child: TextFormField(
+                        controller: codeController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.enterVerificationCode.tr(),
+                        ),
+                        validator: (value) =>
+                            ValidationService.validateNumeric(value),
+                      ),
                     ),
-                  ],
-                ),
-                Form(
-                  key: codeFormKey,
-                  child: TextFormField(
-                    controller: codeController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: AppStrings.enterVerificationCode.tr(),
-                    ),
-                    validator: (value) =>
-                        ValidationService.validateNumeric(value),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomElevatedButton(
-                      title: AppStrings.verify.tr(),
-                      onPressed: () async {
-                        if (codeController.text.isNotEmpty) {
-                          final result = validate == false ?  await PersonalProfileService.updateProfile(
-                              context: context,
-                              phone: newPhoneNumber,
-                              phoneCode: codeController.text,
-                              phoneUuid: phoneUuid,
-                              countryKey: countryCodeController.text.trim().isEmpty
-                                  ? '+20'
-                                  : countryCodeController.text.trim()) : verfiy(context, code:codeController.text, sendBy:  sendBy);
-                          if(result != null){
-                            if (result.data['status'] == true) {
-                              await updateUserSettingsData(context: context);
-                              Navigator.of(context).pop(context);
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomElevatedButton(
+                          title: AppStrings.verify.tr(),
+                          onPressed: () async {
+                            if (codeController.text.isNotEmpty) {
+                              final result = validate == false ?  await PersonalProfileService.updateProfile(
+                                  context: context,
+                                  phone: newPhoneNumber,
+                                  phoneCode: codeController.text,
+                                  phoneUuid: phoneUuid,
+                                  countryKey: countryCodeController.text.trim().isEmpty
+                                      ? '+20'
+                                      : countryCodeController.text.trim()) : verfiy(context, code:codeController.text, sendBy:  sendBy);
+                              if(result != null){
+                                if (result.data['status'] == true) {
+                                  await updateUserSettingsData(context: context);
+                                  Navigator.of(context).pop(context);
+                                  Fluttertoast.showToast(
+                                      msg: AppStrings.updatePhoneNumber.tr(),
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 5,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0
+                                  );
+                                } else {
+                                  showToast(
+                                    result.data?['message'] ??
+                                        AppStrings.failedVerificationCodePleaseTryLater.tr(),
+                                    context: context,
+                                    backgroundColor: Colors.red,
+                                    textStyle: const TextStyle(color: Colors.white),
+                                    duration: const Duration(seconds: 5),
+                                    position: StyledToastPosition.bottom,
+                                  );
+                                  return;
+                                }
+                              }
+                            }else{
                               Fluttertoast.showToast(
-                                  msg: AppStrings.updatePhoneNumber.tr(),
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 5,
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: result.data?['message'] ??
-                                      AppStrings.failedVerificationCodePleaseTryLater.tr(),
+                                  msg: AppStrings.enterVerificationCode.tr(),
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 5,
@@ -1009,28 +1064,16 @@ class PersonalProfileViewModel extends ChangeNotifier {
                                   textColor: Colors.white,
                                   fontSize: 16.0
                               );
-
                               return;
                             }
-                          }
-                        }else{
-                          Fluttertoast.showToast(
-                              msg: AppStrings.enterVerificationCode.tr(),
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 5,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0
-                          );
-                          return;
-                        }
 
-                      },
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );
@@ -1050,100 +1093,119 @@ class PersonalProfileViewModel extends ChangeNotifier {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s12),
-          ),
-          backgroundColor: Colors.white,
-          insetPadding: const EdgeInsets.all(AppSizes.s16),
-          titlePadding: const EdgeInsets.all(AppSizes.s16),
-          contentPadding: const EdgeInsets.all(AppSizes.s12),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppStrings.emailVerification.tr(),
-                style: Theme.of(context).textTheme.displayLarge,
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: kIsWeb ? 800 : double.infinity,
+            ),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSizes.s12),
               ),
-              IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
-                    Icons.cancel_outlined,
-                    size: AppSizes.s32,
-                    color: Colors.red,
-                  ))
-            ],
-          ),
-          content: SizedBox(
-            width: LayoutService.getWidth(context),
-            height: AppSizes.s300,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
+              backgroundColor: Colors.white,
+              insetPadding: const EdgeInsets.all(AppSizes.s16),
+              titlePadding: const EdgeInsets.all(AppSizes.s16),
+              contentPadding: const EdgeInsets.all(AppSizes.s12),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppStrings.emailVerification.tr(),
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(
+                        Icons.cancel_outlined,
+                        size: AppSizes.s32,
+                        color: Colors.red,
+                      ))
+                ],
+              ),
+              content: SizedBox(
+                width: LayoutService.getWidth(context),
+                height: AppSizes.s300,
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      AppStrings.verificationCodeSent.tr(),
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.bold, fontSize: AppSizes.s16),
-                      textAlign: TextAlign.center,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppStrings.verificationCodeSent.tr(),
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: AppSizes.s16),
+                          textAlign: TextAlign.center,
+                        ),
+                        gapH12,
+                        Text(
+                          AppStrings.aVerificationCodeHasBeenSentToYourEmail.tr(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall
+                              ?.copyWith(color: Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    gapH12,
-                    Text(
-                      AppStrings.aVerificationCodeHasBeenSentToYourEmail.tr(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall
-                          ?.copyWith(color: Colors.black),
-                      textAlign: TextAlign.center,
+                    Form(
+                      key: codeFormKey,
+                      child: TextFormField(
+                        controller: codeController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.enterVerificationCode.tr(),
+                        ),
+                        validator: (value) =>
+                            ValidationService.validateNumeric(value),
+                      ),
                     ),
-                  ],
-                ),
-                Form(
-                  key: codeFormKey,
-                  child: TextFormField(
-                    controller: codeController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: AppStrings.enterVerificationCode.tr(),
-                    ),
-                    validator: (value) =>
-                        ValidationService.validateNumeric(value),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomElevatedButton(
-                      title: AppStrings.verify.tr(),
-                      onPressed: () async {
-                        if (codeController.text.isNotEmpty) {
-                          final result = validate== false?  await PersonalProfileService.updateProfile(
-                              context: context,
-                              email: emailController.text,
-                              emailCode: codeController.text,
-                              emailUuid: emailUuid) : await verfiy(context, code: codeController.text, sendBy:sendBy );
-                          if(result != null){
-                            if (result.data?['status'] == true ) {
-                              await updateUserSettingsData(context: context);
-                              Navigator.of(context).pop(context);
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomElevatedButton(
+                          title: AppStrings.verify.tr(),
+                          onPressed: () async {
+                            if (codeController.text.isNotEmpty) {
+                              final result = validate== false?  await PersonalProfileService.updateProfile(
+                                  context: context,
+                                  email: emailController.text,
+                                  emailCode: codeController.text,
+                                  emailUuid: emailUuid) : await verfiy(context, code: codeController.text, sendBy:sendBy );
+                              if(result != null){
+                                if (result.data?['status'] == true ) {
+                                  await updateUserSettingsData(context: context);
+                                  Navigator.of(context).pop(context);
+                                  Fluttertoast.showToast(
+                                      msg: AppStrings.emailUpdatedSuccessfully.tr(),
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 5,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0
+                                  );
+                                } else {
+                                  showToast(
+                                    result.data?['message'] ??
+                                        AppStrings.failedVerificationCodePleaseTryLater.tr(),
+                                    context: context,
+                                    backgroundColor: Colors.red,
+                                    textStyle: const TextStyle(color: Colors.white),
+                                    duration: const Duration(seconds: 5),
+                                    position: StyledToastPosition.bottom,
+                                  );
+
+                                  return;
+                                }
+                              }
+
+                            }else{
                               Fluttertoast.showToast(
-                                  msg: AppStrings.emailUpdatedSuccessfully.tr(),
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 5,
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: result.data?['message'] ??
-                                      AppStrings.failedVerificationCodePleaseTryLater.tr(),
+                                  msg: AppStrings.enterVerificationCode.tr(),
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 5,
@@ -1151,28 +1213,15 @@ class PersonalProfileViewModel extends ChangeNotifier {
                                   textColor: Colors.white,
                                   fontSize: 16.0
                               );
-
                               return;
                             }
-                        }
-
-                        }else{
-                          Fluttertoast.showToast(
-                              msg: AppStrings.enterVerificationCode.tr(),
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 5,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0
-                          );
-                          return;
-                        }
-                      },
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );

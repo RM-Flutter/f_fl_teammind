@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rmemp/general_services/localization.service.dart';
 import 'package:rmemp/general_services/url_launcher.service.dart';
+import 'package:rmemp/platform/platform_is.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../constants/app_sizes.dart';
 import '../../../models/employee_profile.model.dart';
@@ -26,11 +28,15 @@ class ContactsSectionWidget extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        gapH16,
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          gapH16,
         if (employee?.phone != null)
           GestureDetector(
             onTap: () async {
@@ -77,8 +83,10 @@ class ContactsSectionWidget extends StatelessWidget {
             ),
           ),
         if (employee?.social != null)
-          EmployeeSocialContacts(socialData: employee?.social)
+          EmployeeSocialContacts(socialData: employee?.social),
+        SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s24 : 0),
       ],
+      ),
     );
   }
 }

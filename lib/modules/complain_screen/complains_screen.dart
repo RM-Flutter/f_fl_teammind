@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -102,99 +103,114 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 ),
               ), ):
                SafeArea(
-            child: (value.requests.isNotEmpty || value.requestsTeam.isNotEmpty)? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: RefreshIndicator.adaptive(
-                onRefresh: ()async{
-                  await value.getRequest(context, page: 1);
-                  await value.getRequestMine(context, page: 1);
-                },
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 15,),
-                      ListView.builder(
-                        itemCount: value.requests.length,
-                        reverse: false,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (context, index) {
-                          var request = value.requests[index];
-                          var statusKey = request['pstatus'];
-                          if (statusKey == "hold") {
-                            return defaultRequestContainer(
-                                "mine",
-                                id: request['id'],
-                                title: request['subject'],
-                                containerColor: Color(AppColors.primary),
-                                date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                                    .format(DateTime.parse(request['created_at'].toString()))
-                                    .toString(),
-                                status: request['pstatus'].toString().tr(),
-                                statusColor: Color(0xffFFFFFF)
-                            );
-                          }else{
-                           return defaultRequestContainer(
-                               "mine",
-                                id: request['id'],
-                                containerColor: Color(0xffFFFFFF),
-                                title: request['subject'],
-                                date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                                    .format(DateTime.parse(request['created_at'].toString()))
-                                    .toString(),
-                                status: request['pstatus'].toString().tr(),
-                                titleColor: Color(AppColors.primary),
-                                dateColor: Color(0xff5E5E5E),
-                                statusColor: statusKey == "closed"
-                                    ? Color(AppColors.red)
-                                    : Color(AppColors.primary)
-                            );
-                          }
-                          return SizedBox.shrink();  // Return nothing for non-hold items in this section
-                        },
-                      ),
-                      // "Other Requests" Text
-                    if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true))  Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          AppStrings.otherRequests.tr().toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Color(AppColors.dark),
+            child: (value.requests.isNotEmpty || value.requestsTeam.isNotEmpty)? Container(
+              height: MediaQuery.sizeOf(context).height * 1,
+              alignment: Alignment.topCenter,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: RefreshIndicator.adaptive(
+                      onRefresh: ()async{
+                        await value.getRequest(context, page: 1);
+                        await value.getRequestMine(context, page: 1);
+                      },
+                      child: Container(
+                        height: MediaQuery.sizeOf(context).height * 1,
+                        alignment: Alignment.topCenter,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15,),
+                              ListView.builder(
+                                itemCount: value.requests.length,
+                                reverse: false,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  var request = value.requests[index];
+                                  var statusKey = request['pstatus'];
+                                  if (statusKey == "hold") {
+                                    return defaultRequestContainer(
+                                        "mine",
+                                        id: request['id'],
+                                        title: request['subject'],
+                                        containerColor: Color(AppColors.primary),
+                                        date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                            .format(DateTime.parse(request['created_at'].toString()))
+                                            .toString(),
+                                        status: request['pstatus'].toString().tr(),
+                                        statusColor: Color(0xffFFFFFF)
+                                    );
+                                  }else{
+                                   return defaultRequestContainer(
+                                       "mine",
+                                        id: request['id'],
+                                        containerColor: Color(0xffFFFFFF),
+                                        title: request['subject'],
+                                        date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                            .format(DateTime.parse(request['created_at'].toString()))
+                                            .toString(),
+                                        status: request['pstatus'].toString().tr(),
+                                        titleColor: Color(AppColors.primary),
+                                        dateColor: Color(0xff5E5E5E),
+                                        statusColor: statusKey == "closed"
+                                            ? Color(AppColors.red)
+                                            : Color(AppColors.primary)
+                                    );
+                                  }
+                                  return SizedBox.shrink();  // Return nothing for non-hold items in this section
+                                },
+                              ),
+                              // "Other Requests" Text
+                            if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true))  Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  AppStrings.otherRequests.tr().toUpperCase(),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(AppColors.dark),
+                                  ),
+                                ),
+                              ),
+                              if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true))  ListView.builder(
+                                itemCount: value.requestsTeam.length,
+                                reverse: false,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  var request = value.requestsTeam[index];
+                                  var statusKey = request['pstatus'];
+                                    return defaultRequestContainer(
+                                        "myTeam",
+                                        id: request['id'],
+                                        containerColor: Color(0xffFFFFFF),
+                                        title: request['subject'],
+                                        date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                            .format(DateTime.parse(request['created_at'].toString()))
+                                            .toString(),
+                                        status: request['pstatus'].toString().tr(),
+                                        titleColor: Color(AppColors.primary),
+                                        dateColor: Color(0xff5E5E5E),
+                                        statusColor: statusKey == "closed"
+                                            ? Color(AppColors.red)
+                                            : Color(AppColors.primary)
+                                    );
+                                },
+                              ),
+
+                            ],
                           ),
                         ),
                       ),
-                      if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true))  ListView.builder(
-                        itemCount: value.requestsTeam.length,
-                        reverse: false,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (context, index) {
-                          var request = value.requestsTeam[index];
-                          var statusKey = request['pstatus'];
-                            return defaultRequestContainer(
-                                "myTeam",
-                                id: request['id'],
-                                containerColor: Color(0xffFFFFFF),
-                                title: request['subject'],
-                                date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                                    .format(DateTime.parse(request['created_at'].toString()))
-                                    .toString(),
-                                status: request['pstatus'].toString().tr(),
-                                titleColor: Color(AppColors.primary),
-                                dateColor: Color(0xff5E5E5E),
-                                statusColor: statusKey == "closed"
-                                    ? Color(AppColors.red)
-                                    : Color(AppColors.primary)
-                            );
-                        },
-                      ),
-
-                    ],
+                    ),
                   ),
                 ),
               ),

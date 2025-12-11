@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -87,33 +88,40 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
           title: AppStrings.payrolls.tr(),
           onRefresh: () async => await viewModel.initializePayrollsListScreen(
               context: context, empId: widget.empId),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
-            child: SingleChildScrollView(
-              child: Consumer<PayrollsListViewModel>(
-                  builder: (context, viewModel, child) => viewModel.isLoading
-                      ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                      : viewModel.payrolls?.isEmpty == true ||
-                              viewModel.payrolls == null
-                          ? NoExistingPlaceholderScreen(
-                              height: LayoutService.getHeight(context) * 0.6,
-                              title: AppStrings.noExistingPayrolls.tr())
-                          : Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                   if(widget.empName == null) Text(gCache['name'], style:
-                    const TextStyle(
-                        fontWeight: FontWeight.w600,fontSize: 20,
-                        color: Color(AppColors.dark)
-                    )
-                      ,),
-                    const SizedBox(height: 20,),
-                              /// general screen message widget for other requests types
-                              // GeneralScreenMessageWidget(
-                              //     screenId: '/payrolls'),
-                              ...viewModel.payrolls!.map((payroll) =>
-                                  PayrollListItemWidget(payroll: payroll))
-                            ])),
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 1100 : double.infinity,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s12),
+                child: SingleChildScrollView(
+                  child: Consumer<PayrollsListViewModel>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                          : viewModel.payrolls?.isEmpty == true ||
+                                  viewModel.payrolls == null
+                              ? NoExistingPlaceholderScreen(
+                                  height: LayoutService.getHeight(context) * 0.6,
+                                  title: AppStrings.noExistingPayrolls.tr())
+                              : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                       if(widget.empName == null) Text(gCache['name'], style:
+                        const TextStyle(
+                            fontWeight: FontWeight.w600,fontSize: 20,
+                            color: Color(AppColors.dark)
+                        )
+                          ,),
+                        const SizedBox(height: 20,),
+                                  /// general screen message widget for other requests types
+                                  // GeneralScreenMessageWidget(
+                                  //     screenId: '/payrolls'),
+                                  ...viewModel.payrolls!.map((payroll) =>
+                                      PayrollListItemWidget(payroll: payroll))
+                                ])),
+                ),
+              ),
             ),
           )),
     );

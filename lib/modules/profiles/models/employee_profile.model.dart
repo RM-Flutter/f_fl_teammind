@@ -15,6 +15,7 @@ class EmployeeProfileModel {
   final EmpKeyValue? defaultLanguage;
   final EmpKeyValue? status;
   final String? tags;
+  final String? department;
   final int? departmentId;
   final Map<String, String>? action;
   final List<AdditionalPhoneNumbers>? additionalPhoneNumbers;
@@ -52,6 +53,7 @@ class EmployeeProfileModel {
     this.status,
     this.tags,
     this.departmentId,
+    this.department,
     this.action,
     this.additionalPhoneNumbers,
     this.social,
@@ -130,6 +132,7 @@ class EmployeeProfileModel {
             : null,
         tags: json['tags'],
         departmentId: json['department_id'],
+        department: json['department'],
         action: json['action'] != null
             ? Map<String, String>.from(json['action'])
             : null,

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -70,66 +71,77 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
           onRefresh: () async =>
               viewModel.initializeRequestScreenByTypeIdgetRequestsByTypeId(
                   context: context,
-                  requestTypeId: widget.requestTypeId,
+                  type: widget.type == "me"||widget.type == "mine"
+                      ? GetRequestsTypes.mine
+                      :widget.type == "team"? GetRequestsTypes.myTeam : GetRequestsTypes.allCompany,
+                  requestTypeId:
+                      (widget.requestTypeId != "no") ? widget.requestTypeId : "",
                   employeeId: widget.employeeId),
-          body: Padding(
-              padding: const EdgeInsets.all(AppSizes.s12),
-              child: Consumer<RequestsWithTypeIdViewModel>(
-                  builder: (context, viewModel, child) => viewModel.isLoading
-                      ? const LoadingPageWidget()
-                      : viewModel.requestsById == null ||
-                              viewModel.requestsById?.isEmpty == true
-                          ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                             if(viewModel.rulesMessage != null) AutoSizeText(
-                                viewModel.rulesMessage ?? "",
-                                style: const TextStyle(
-                                    color: Color(0xff404040),
-                                    fontSize: AppSizes.s12,
-                                    fontWeight: FontWeight.w400),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 10,
-                                textAlign: TextAlign.center,
-                                softWrap: true,
-                              ),
-                              NoExistingPlaceholderScreen(
-                                  height: LayoutService.getHeight(context) * 0.6,
-                                  title: AppStrings.thereIsNoRequests.tr()),
-                            ],
-                          )
-                          : Column(children: [
-                              /// general screen message widget for other requests types
-                              // GeneralScreenMessageWidget(
-                              //     screenId:
-                              //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
-                              if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
-                                  onPressed: () async => viewModel
-                                      .showSummaryReports(context: context),
-                                  title: AppStrings.summaryReports.tr(),
-                                  icon: Icons.folder_copy_outlined,
-                                ),
-                    if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH12,
-                              if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
-                                viewModel.rulesMessage ?? "",
-                                maxLines: 10,
-                                style: const TextStyle(
-                                    color: Color(0xff404040),
-                                    fontSize: AppSizes.s12,
-                                    fontWeight: FontWeight.w400),
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                softWrap: true,
-                              ),
-                    if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  gapH16,
-                              if (viewModel.requestsById != null &&
-                                  viewModel.requestsById!.isNotEmpty)
-                                ...viewModel.requestsById!.map(
-                                  (req) => RequestCard(
-                                    request: req,
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Padding(
+                  padding: const EdgeInsets.all(!kIsWeb? AppSizes.s12 : 0),
+                  child: Consumer<RequestsWithTypeIdViewModel>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const LoadingPageWidget()
+                          : viewModel.requestsById == null ||
+                                  viewModel.requestsById?.isEmpty == true
+                              ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                 if(viewModel.rulesMessage != null) AutoSizeText(
+                                    viewModel.rulesMessage ?? "",
+                                    style: const TextStyle(
+                                        color: Color(0xff404040),
+                                        fontSize: AppSizes.s12,
+                                        fontWeight: FontWeight.w400),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 10,
+                                    textAlign: TextAlign.center,
+                                    softWrap: true,
                                   ),
-                                )
-                            ])))),
+                                  NoExistingPlaceholderScreen(
+                                      height: LayoutService.getHeight(context) * 0.6,
+                                      title: AppStrings.thereIsNoRequests.tr()),
+                                ],
+                              )
+                              : Column(children: [
+                                  /// general screen message widget for other requests types
+                                  // GeneralScreenMessageWidget(
+                                  //     screenId:
+                                  //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
+                                  if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
+                                      onPressed: () async => viewModel
+                                          .showSummaryReports(context: context),
+                                      title: AppStrings.summaryReports.tr(),
+                                      icon: Icons.folder_copy_outlined,
+                                    ),
+                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH12,
+                                  if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
+                                    viewModel.rulesMessage ?? "",
+                                    maxLines: 10,
+                                    style: const TextStyle(
+                                        color: Color(0xff404040),
+                                        fontSize: AppSizes.s12,
+                                        fontWeight: FontWeight.w400),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    softWrap: true,
+                                  ),
+                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  gapH16,
+                                  if (viewModel.requestsById != null &&
+                                      viewModel.requestsById!.isNotEmpty)
+                                    ...viewModel.requestsById!.map(
+                                      (req) => RequestCard(
+                                        request: req,
+                                      ),
+                                    )
+                                ]))),
+            ),
+          )),
     );
   }
 }

@@ -1,22 +1,27 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rmemp/constants/user_consts.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:rmemp/modules/more/widgets/customize_notification_screen.dart';
+import 'package:rmemp/modules/more/views/company_structure/company_structure_screen.dart';
 import 'package:rmemp/services/requests.services.dart';
 import 'package:rmemp/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:rmemp/platform/platform_is.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_icons.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
+import '../../../general_services/localization.service.dart';
 import '../../../general_services/settings.service.dart';
 import '../../../models/settings/user_settings.model.dart';
 
@@ -109,8 +114,20 @@ class _MoreScreenState extends State<MoreScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: ListView(
                           children: [
-                            Text(AppStrings.functionality.tr().toUpperCase(),
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: kIsWeb ? 1070 : double.infinity,
+                                ),
+                                child: Container(
+                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                  child: Text(AppStrings.functionality.tr().toUpperCase(),
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(AppColors.primary))),
+                                ),
+                              ),
                             ),
                             const SizedBox(height : 15),
                             DefaultListTile(
@@ -151,9 +168,21 @@ class _MoreScreenState extends State<MoreScreen> {
                                     pathParameters: {'lang': context.locale.languageCode})
                             ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
-                           if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Text(AppStrings.management.tr().toUpperCase(),
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
-                            ),
+                           if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Center(
+                             child: ConstrainedBox(
+                               constraints: BoxConstraints(
+                                 maxWidth: kIsWeb ? 1070 : double.infinity,
+                               ),
+                               child: Container(
+                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                 child: Text(AppStrings.management.tr().toUpperCase(),
+                                     style: const TextStyle(
+                                         fontSize: 13,
+                                         fontWeight: FontWeight.w600,
+                                         color: Color(AppColors.primary))),
+                               ),
+                             ),
+                           ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
                               title: AppStrings.teamRequests.tr(),
                               src: AppIcons.teamRequests,
@@ -189,8 +218,20 @@ class _MoreScreenState extends State<MoreScreen> {
                               },
                             ),
                             const SizedBox(height : 15),
-                            Text(AppStrings.more.tr().toUpperCase(),
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: kIsWeb ? 1070 : double.infinity,
+                                ),
+                                child: Container(
+                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                  child: Text(AppStrings.more.tr().toUpperCase(),
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(AppColors.primary))),
+                                ),
+                              ),
                             ),
                             const SizedBox(height : 15),
                             DefaultListTile(
@@ -214,21 +255,59 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             DefaultListTile(
                               title: AppStrings.companyStructure.tr(),
-                              src:  "assets/images/svg/mcs.svg",
-                              onTap: () {
-                                context.pushNamed(AppRoutes.webViewScreen.name,
-                                    pathParameters: {'lang': context.locale.languageCode,
-                                    });
+                              src: "assets/images/svg/mcs.svg",
+                              onTap: () async{
+                                final jsonString = CacheHelper.getString("USG");
+                                Map<String, dynamic>? gCache;
+                                if (jsonString != null && jsonString.isNotEmpty) {
+                                  gCache = json.decode(jsonString) as Map<String, dynamic>;
+                                }
+                                final url = gCache?['company_structure_url'] ?? "https://www.google.com/";
+
+                                // On web, open in browser. On mobile, use WebView
+                                if (PlatformIs.web) {
+                                  final uri = Uri.parse(url);
+                                  if (await canLaunchUrl(uri)) {
+                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                  } else {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Could not open $url')),
+                                      );
+                                    }
+                                  }
+                                } else {
+                                  // On mobile, navigate to WebView screen
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WebViewStack(),
+                                    ),
+                                  );
+                                }
                               },
                             ),
                             DefaultListTile(
                               title: AppStrings.articlesNew.tr(),
-                              src:  "assets/images/svg/man.svg",
+                              src: "assets/images/svg/man.svg",
                               onTap: () {
-                                context.pushNamed(AppRoutes.defaultPage.name,
-                                    pathParameters: {'lang': context.locale.languageCode,
-                                      "type" : "blogs",
-                                    });
+                                if (kIsWeb) {
+                                  context.pushNamed(
+                                    AppRoutes.defaultListPage.name,
+                                    pathParameters: {
+                                      "lang": context.locale.languageCode,
+                                      "type": "blogs"
+                                    },
+                                  );
+                                } else {
+                                  context.pushNamed(
+                                    AppRoutes.defaultPage.name,
+                                    pathParameters: {
+                                      "lang": context.locale.languageCode,
+                                      "type": "blogs"
+                                    },
+                                  );
+                                }
                               },
                             ),
                             DefaultListTile(
@@ -254,7 +333,8 @@ class _MoreScreenState extends State<MoreScreen> {
                                   },
                                 );
                               },
-                            ), DefaultListTile(
+                            ),
+                            DefaultListTile(
                               title: AppStrings.faqs.tr(),
                               src: "assets/images/svg/faqqs.svg",
                               onTap: () {
@@ -266,9 +346,33 @@ class _MoreScreenState extends State<MoreScreen> {
                                 );
                               },
                             ),
+                            DefaultListTile(
+                              title: AppStrings.companyPolicy.tr(),
+                              src: "assets/images/svg/faqqs.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.generalDataScreen.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
                             const SizedBox(height : 15),
-                            Text(AppStrings.myAccount.tr().toUpperCase(),
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: kIsWeb ? 1070 : double.infinity,
+                                ),
+                                child: Container(
+                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                  child: Text(AppStrings.myAccount.tr().toUpperCase(),
+                                      style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(AppColors.primary))),
+                                ),
+                              ),
                             ),
                             const SizedBox(height : 15),
                             DefaultListTile(
@@ -329,12 +433,15 @@ class _MoreScreenState extends State<MoreScreen> {
                             DefaultListTile(
                               title: AppStrings.logout.tr(),
                               src: "assets/images/svg/mlo.svg",
-                              onTap: ()async{
+                              onTap: () async {
                                 final appConfigService =
-                                Provider.of<AppConfigService>(context, listen: false);
-                                appConfigService.logout().then((v){
-                                  context.goNamed(AppRoutes.splash.name,
-                                      pathParameters: {'lang': context.locale.languageCode});
+                                Provider.of<AppConfigService>(context,
+                                    listen: false);
+                                appConfigService.logout(context, viewAlert: true).then((v) {
+                                  context.goNamed(
+                                    AppRoutes.splash.name,
+                                    pathParameters: {'lang': context.locale.languageCode,},
+                                  );
                                 });
                               },
                             ),
@@ -386,7 +493,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           .textTheme
                           .titleMedium
                           ?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Color(0xff224982),
                         // fontSize: 16,
 
                         // fontWeight: FontWeight.w700,
@@ -417,9 +524,10 @@ class _MoreScreenState extends State<MoreScreen> {
                   )
                 ],
               ),
-            )
-          ],
-        ) ;
+            
+        )
+        ]
+        );
       },
     );
   }
@@ -439,24 +547,32 @@ class DefaultListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric( vertical: 8),
-      padding: EdgeInsets.zero,
-      child: ListTile(
-        leading: SvgPicture.asset(
-          src,
-          color: const Color(AppColors.primary),
-          fit: BoxFit.contain,
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: kIsWeb ? 1100 : double.infinity,
         ),
-        title: Text(
-          title.toUpperCase(),
-          style: Theme.of(context).textTheme.labelSmall,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            leading: SvgPicture.asset(
+              src,
+              color: const Color(AppColors.primary),
+              fit: BoxFit.scaleDown,
+              width: 20, height: 20,
+            ),
+            title: Text(
+              title!.toUpperCase() ?? "",
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+            // trailing: Icon(
+            //   Icons.arrow_forward_ios,
+            //   color: Theme.of(context).colorScheme.primary,
+            // ),
+            onTap: onTap ?? () {}, // Add your onTap functionality here
+          ),
         ),
-        // trailing: Icon(
-        //   Icons.arrow_forward_ios,
-        //   color: Theme.of(context).colorScheme.primary,
-        // ),
-        onTap: onTap ?? () {}, // Add your onTap functionality here
       ),
     );
   }

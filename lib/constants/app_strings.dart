@@ -6,8 +6,14 @@ abstract class AppStrings {
   static const updatedSuccessfully = "updatedSuccessfully";
   static const noDepartment = "noDepartment";
   static const management = "management";
+  static const voiceMessage = "voiceMessage";
+  static const faceVerification = "faceVerification";
+  static const faceVerificationSuccess = "faceVerificationSuccess";
+  static const faceVerificationError = "faceVerificationError";
+  static const faceVerificationFailure = "faceVerificationFailure";
   static const updateNow = "updateNow";
   static const rewardsOrPenalties = "rewardsOrPenalties";
+  static const companyPolicy = "companyPolicy";
   static const two_factor_auth = "two_factor_auth";
   static const thereIsStillNoResponseFromTheManager = "thereIsStillNoResponseFromTheManager";
   static const delete_account = "delete_account";

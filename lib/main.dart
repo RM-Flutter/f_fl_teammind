@@ -92,8 +92,6 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   /// Retrieve and print the FCM Token
-  String? token = await FirebaseMessaging.instance.getToken();
-  print("FCM Token: $token");
   if (!PlatformIs.android && !PlatformIs.iOS) {
     changeUrlStrategyService();
   }

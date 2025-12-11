@@ -16,13 +16,14 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
   bool isLoading = true;
   String? errorMessage;
   List? evaluations = [];
+  List? salaryAdvances = [];
   void updateLoadingStatus({required bool laodingValue}) {
     isLoading = laodingValue;
     notifyListeners();
   }
 
   Future<void> initializeEmployeesListScreen(
-      {required BuildContext context, required String employeeId}) async {
+      {required BuildContext context, required String employeeId,required bool getTeam, }) async {
     updateLoadingStatus(laodingValue: true);
     var jsonString;
     UserSettingsModel? userSettingsModel;
@@ -34,10 +35,37 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     }
     userSettingsModel = UserSettingsModel.fromJson(gCache);
     currentUserSettings = userSettingsModel;
+    await getSaleryAdvance(context, getTeam: getTeam, empId: employeeId);
     await _getEmployeeData(context: context, employeeId: employeeId);
     updateLoadingStatus(laodingValue: false);
   }
-
+ getSaleryAdvance(BuildContext context, {bool getTeam = true, empId})async{
+    isLoading = true;
+    notifyListeners();
+    await DioHelper.getData(
+        url: "/emp-salary-advances/entities-operations",
+      query: {
+          // "get_team" : getTeam,
+          // "with" : "payroll_id",
+          "emp_id" : empId
+      },
+      context: context,
+    ).then((v){
+      if(v.data['status'] == true){
+        salaryAdvances = v.data['data'];
+        isLoading = false;
+        notifyListeners();
+      }
+    }).catchError((error){
+      isLoading = false;
+      notifyListeners();
+      if (error is DioError) {
+        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+      } else {
+        errorMessage = error.toString();
+      }
+    });
+}
   Future<void> _getEmployeeData(
       {required BuildContext context, required String employeeId}) async {
     try {

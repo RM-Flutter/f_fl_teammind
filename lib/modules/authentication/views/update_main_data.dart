@@ -9,6 +9,8 @@ import 'package:rmemp/routing/app_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:rmemp/platform/platform_is.dart';
 
 import '../../../general_services/alert_service/alerts.service.dart';
 import '../../../general_services/app_config.service.dart';
@@ -23,6 +25,11 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
   @override
   void initState() {
     super.initState();
+    if (PlatformIs.web) {
+      // On web, open URL in browser
+      _openUrlInBrowser();
+      return;
+    }
     controller = WebViewController()
       ..loadRequest(Uri.parse('${CacheHelper.getString("update_url")}'))
       ..setNavigationDelegate(
@@ -108,8 +115,46 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
       );
   }
 
+  Future<void> _openUrlInBrowser() async {
+    final url = CacheHelper.getString("update_url");
+    if (url == null || url.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No URL to open')),
+        );
+        Navigator.of(context).pop();
+      }
+      return;
+    }
+    
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      // Close the screen after opening browser
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open $url')),
+        );
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (PlatformIs.web) {
+      // On web, show loading while opening browser
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     return Stack(
       children: [
         SizedBox(height: 30,),

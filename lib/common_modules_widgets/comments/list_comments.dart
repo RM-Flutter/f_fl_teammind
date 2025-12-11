@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rmemp/common_modules_widgets/comments/logic/view_model.dart';
@@ -111,164 +112,171 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
               onRefresh: ()async{
                 await value.getComment(context,widget.slug,widget.id, pages: 1, );
               },
-              child: ListView(
-                controller: _scrollController,
-                children: [
-                  const SizedBox(height: 15,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      reverse: false,
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: value.isGetCommentLoading && value.comments.isEmpty
-                          ? 12 // Show 5 loading items initially
-                          : value.comments.length,
-                      itemBuilder: (context, index) {
-                        if (value.isGetCommentLoading == true && value.pageNumber == 1) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                              padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
-                              ),
-                              height: 100,
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 12),
-                            decoration: ShapeDecoration(
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              shadows: const [
-                                BoxShadow(
-                                  color: Color(0x0C000000),
-                                  blurRadius: 10,
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 0,
-                                )
-                              ],
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(63),
-                                  child:  CachedNetworkImage(
-                                    width: 63,
-                                    height: 63,
-                                    fit: BoxFit.cover,
-                                    imageUrl: value.comments[index]['user']['avatar'] ?? "",
-                                    placeholder: (context, url) =>
-                                    const ShimmerAnimatedLoading(),
-                                    errorWidget: (context, url, error) => const Icon(
-                                      Icons.image_not_supported_outlined,
-                                      size: AppSizes.s32,
-                                      color: Colors.white,
-                                    ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  ),
+                  child: ListView(
+                    controller: _scrollController,
+                    children: [
+                      const SizedBox(height: 15,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          reverse: false,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: value.isGetCommentLoading && value.comments.isEmpty
+                              ? 12 // Show 5 loading items initially
+                              : value.comments.length,
+                          itemBuilder: (context, index) {
+                            if (value.isGetCommentLoading == true && value.pageNumber == 1) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                                  padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(AppSizes.s15),
                                   ),
+                                  height: 100,
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: MediaQuery.sizeOf(context).width * 0.4,
-                                        child: Text(
-                                            value.comments[index]['user']['name'] ?? "", maxLines: 1,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w700, fontSize: 12,color: Color(AppColors.dark)
-                                            )
+                              );
+                            } else {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 12),
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  shadows: const [
+                                    BoxShadow(
+                                      color: Color(0x0C000000),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 1),
+                                      spreadRadius: 0,
+                                    )
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(63),
+                                      child:  CachedNetworkImage(
+                                        width: 63,
+                                        height: 63,
+                                        fit: BoxFit.cover,
+                                        imageUrl: value.comments[index]['user']['avatar'] ?? "",
+                                        placeholder: (context, url) =>
+                                        const ShimmerAnimatedLoading(),
+                                        errorWidget: (context, url, error) => const Icon(
+                                          Icons.image_not_supported_outlined,
+                                          size: AppSizes.s32,
+                                          color: Colors.white,
                                         ),
                                       ),
-                                      const SizedBox(height: 5,),SizedBox(
-                                        width: MediaQuery.sizeOf(context).width * 0.4,
-                                        child: Text(
-                                            "${DateFormat("dd/MM/yyyy hh:mm a", context.locale.languageCode).format(DateTime.parse("${value.comments[index]['created_at']}"))}", maxLines: 1,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w500, fontSize: 12,color: Color(0xff5E5E5E)
-                                            )
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5,),
-                                      if(value.comments[index]['content'] != null)Text(
-                                        value.comments[index]['content'] ?? "",
-                                        style: const TextStyle(color: Color(AppColors.black), fontSize: 12, fontWeight: FontWeight.w500),
-                                      ),
-                                      if(value.comments[index]['images'].isNotEmpty)Container(
-                                          width: 94,
-                                          height: 94,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: Color(AppColors.primary),
-                                                width: 2
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: MediaQuery.sizeOf(context).width * 0.4,
+                                            child: Text(
+                                                value.comments[index]['user']['name'] ?? "", maxLines: 1,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w700, fontSize: 12,color: Color(AppColors.dark)
+                                                )
                                             ),
                                           ),
-                                          child: GestureDetector(
-                                            onTap: (){
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => FullScreenImageViewer(
-                                                    initialIndex: 0,
-                                                    imageUrls: [""],
-                                                    one: true,
-                                                    url: false,
-                                                    image: value.comments[index]['images'][0]['file'],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            child: CachedNetworkImage(
-                                              imageUrl: value.comments[index]['images'][0]['file'],
-                                              fit: BoxFit.cover,
+                                          const SizedBox(height: 5,),SizedBox(
+                                            width: MediaQuery.sizeOf(context).width * 0.4,
+                                            child: Text(
+                                                "${DateFormat("dd/MM/yyyy hh:mm a", context.locale.languageCode).format(DateTime.parse("${value.comments[index]['created_at']}"))}", maxLines: 1,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w500, fontSize: 12,color: Color(0xff5E5E5E)
+                                                )
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5,),
+                                          if(value.comments[index]['content'] != null)Text(
+                                            value.comments[index]['content'] ?? "",
+                                            style: const TextStyle(color: Color(AppColors.black), fontSize: 12, fontWeight: FontWeight.w500),
+                                          ),
+                                          if(value.comments[index]['images'].isNotEmpty)Container(
                                               width: 94,
                                               height: 94,
-                                              placeholder: (context, url) =>
-                                              const ShimmerAnimatedLoading(),
-                                              errorWidget: (context, url, error) => const Icon(
-                                                Icons.image_not_supported_outlined,
-                                                size: AppSizes.s32,
+                                              decoration: BoxDecoration(
                                                 color: Colors.white,
+                                                border: Border.all(
+                                                    color: Color(AppColors.primary),
+                                                    width: 2
+                                                ),
                                               ),
-                                            ),
+                                              child: GestureDetector(
+                                                onTap: (){
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => FullScreenImageViewer(
+                                                        initialIndex: 0,
+                                                        imageUrls: [""],
+                                                        one: true,
+                                                        url: false,
+                                                        image: value.comments[index]['images'][0]['file'],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: CachedNetworkImage(
+                                                  imageUrl: value.comments[index]['images'][0]['file'],
+                                                  fit: BoxFit.cover,
+                                                  width: 94,
+                                                  height: 94,
+                                                  placeholder: (context, url) =>
+                                                  const ShimmerAnimatedLoading(),
+                                                  errorWidget: (context, url, error) => const Icon(
+                                                    Icons.image_not_supported_outlined,
+                                                    size: AppSizes.s32,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                          ),
+                                          if(value.comments[index]['sounds'].isNotEmpty)VoiceMessageWidget(
+                                            audioUrl: value.comments[index]['sounds'][0]['file'] ,
                                           )
+                                        ],
                                       ),
-                                      if(value.comments[index]['sounds'].isNotEmpty)VoiceMessageWidget(
-                                        audioUrl: value.comments[index]['sounds'][0]['file'] ,
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      if(!value.isGetCommentLoading && value.comments.isEmpty) Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child:  NoExistingPlaceholderScreen(
+                            height: LayoutService.getHeight(context) *
+                                0.6,
+                            title: AppStrings.thereIsNoComments.tr()),
+                      ),
+                      if (value.isGetCommentLoading && value.pageNumber != 1)
+                        const Center(child: CircularProgressIndicator()),
+                    ],
                   ),
-                  if(!value.isGetCommentLoading && value.comments.isEmpty) Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child:  NoExistingPlaceholderScreen(
-                        height: LayoutService.getHeight(context) *
-                            0.6,
-                        title: AppStrings.thereIsNoComments.tr()),
-                  ),
-                  if (value.isGetCommentLoading && value.pageNumber != 1)
-                    const Center(child: CircularProgressIndicator()),
-                ],
+                ),
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
@@ -53,50 +54,57 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
           pageContext: context,
           title: AppStrings.evaluation.tr(),
           onRefresh: () async => await viewModel.getEvaluation(context, widget.empId),
-          body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
-            child: SingleChildScrollView(
-              child: Consumer<EvaluationViewModel>(
-                  builder: (context, viewModel, child) => viewModel.isLoading
-                      ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                      : viewModel.evaluations?.isEmpty == true ||
-                      viewModel.evaluations == null
-                      ? NoExistingPlaceholderScreen(
-                      height: LayoutService.getHeight(context) * 0.6,
-                      title: AppStrings.noExistingEvaluation.tr())
-                      : Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                       if(gCache['employee_profile_id'].toString() != widget.empId.toString()) Text("", style:
-                        const TextStyle(
-                            fontWeight: FontWeight.w600,fontSize: 20,
-                            color: Color(AppColors.dark)
-                        )
-                          ,),
-                        if(gCache['employee_profile_id'].toString() != widget.empId.toString()) const SizedBox(height: 20,),
-                        /// general screen message widget for other requests types
-                        // GeneralScreenMessageWidget(
-                        //     screenId: '/payrolls'),
-                        ListView.separated(
-                            reverse: false,
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            itemBuilder: (context, index) {
-                              return ProfileTileEva(
-                                isTitleOnly: false,
-                                isViewArrow: true,
-                                createAt: viewModel.evaluations[index]['created_at'],
-                                eva: viewModel.evaluations[index]['results'],
-                                title: "${viewModel.evaluations[index]['title']}",
-                                icon: (viewModel.evaluations[index]['done'] != null)?
-                                viewModel.evaluations[index]['done'] == true ?const Icon(Icons.check_circle_outline, color: Colors.green,):const Icon(Icons.calendar_month, color: Colors.black,): const Icon(Icons.check_circle_outline, color: Colors.green,),
-                                url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
-                              );
-                            },
-                            separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                            itemCount: viewModel.evaluations!.length)
-                      ])),
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSizes.s12),
+                child: SingleChildScrollView(
+                  child: Consumer<EvaluationViewModel>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                          : viewModel.evaluations?.isEmpty == true ||
+                          viewModel.evaluations == null
+                          ? NoExistingPlaceholderScreen(
+                          height: LayoutService.getHeight(context) * 0.6,
+                          title: AppStrings.noExistingEvaluation.tr())
+                          : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                           if(gCache['employee_profile_id'].toString() != widget.empId.toString()) Text("", style:
+                            const TextStyle(
+                                fontWeight: FontWeight.w600,fontSize: 20,
+                                color: Color(AppColors.dark)
+                            )
+                              ,),
+                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) const SizedBox(height: 20,),
+                            /// general screen message widget for other requests types
+                            // GeneralScreenMessageWidget(
+                            //     screenId: '/payrolls'),
+                            ListView.separated(
+                                reverse: false,
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  return ProfileTileEva(
+                                    isTitleOnly: false,
+                                    isViewArrow: true,
+                                    createAt: viewModel.evaluations[index]['created_at'],
+                                    eva: viewModel.evaluations[index]['results'],
+                                    title: "${viewModel.evaluations[index]['title']}",
+                                    icon: (viewModel.evaluations[index]['done'] != null)?
+                                    viewModel.evaluations[index]['done'] == true ?const Icon(Icons.check_circle_outline, color: Colors.green,):const Icon(Icons.calendar_month, color: Colors.black,): const Icon(Icons.check_circle_outline, color: Colors.green,),
+                                    url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
+                                  );
+                                },
+                                separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                itemCount: viewModel.evaluations!.length)
+                          ])),
+                ),
+              ),
             ),
           )),
     );
