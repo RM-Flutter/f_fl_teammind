@@ -1,16 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:inv/modules/points/widgets/bottom_sheet_external_success.dart';
-import 'package:inv/modules/points/widgets/raya_add_data_bottomsheet.dart';
+import 'package:app_test/modules/points/widgets/bottom_sheet_external_success.dart';
+import 'package:app_test/modules/points/widgets/raya_add_data_bottomsheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/layout.service.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../utils/componentes/general_components/gradient_bg_image.dart';
@@ -21,7 +21,7 @@ import 'logic/points_cubit/points_provider.dart';
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;
   var id;
-  PrizeScreen(this.viewArrow,this.id);
+  PrizeScreen(this.viewArrow,this.id, {super.key});
 
   @override
   _PrizeScreenState createState() => _PrizeScreenState();
@@ -115,17 +115,17 @@ class _PrizeScreenState extends State<PrizeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.arrow_back, color:Color(0xff224982)),
+                                icon:  const Icon(Icons.arrow_back, color:Color(0xff224982)),
                                 onPressed: !kIsWeb?() {
                                   Navigator.pop(context);
                                 } : (){},
                               ),
                               Text(
                                 AppStrings.chooseThePrize.tr().toUpperCase(),
-                                style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+                                style:  const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.arrow_back, color: Colors.transparent),
+                                icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
                                 onPressed: () {},
                               ),
                             ],
@@ -211,7 +211,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                     padding: const EdgeInsetsDirectional.symmetric(
                                         horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                     decoration: BoxDecoration(
-                                      color: const Color(AppColors.textC5),
+                                      color: Color(AppColors.textC5),
                                       borderRadius: BorderRadius.circular(AppSizes.s15),
                                       boxShadow: const [
                                         BoxShadow(
@@ -236,7 +236,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                                 height: 63,
                                                 circularRaduis: 63,
                                               ),
-                                              errorWidget: (context, url, error) => const Icon(
+                                              errorWidget: (context, url, error) =>  const Icon(
                                                 Icons.image_not_supported_outlined,
                                               )),
                                         ),
@@ -244,10 +244,10 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            if(!points.isRedeemLoading) Icon(Icons.arrow_back_ios, size: 16,),
+                                            if(!points.isRedeemLoading) const Icon(Icons.arrow_back_ios, size: 16,),
                                             if(!points.isRedeemLoading)  gapH4,
                                             if(!points.isRedeemLoading)  Text("${points.prizes[index]['points']} ${AppStrings.points.tr()}".toString(),
-                                              style: const TextStyle(
+                                              style:  const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight:  FontWeight.w700,
                                                   color: Color(0xff0D3B6F)),

@@ -1,8 +1,8 @@
-import 'package:inv/utils/helpers/media_query_values.dart';
+import 'package:app_test/utils/helpers/media_query_values.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/utils/componentes/general_components/button_widget.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
+import 'package:app_test/utils/componentes/general_components/button_widget.dart';
 
 import '../../../common_modules_widgets/cached_network_image_widget.dart';
 
@@ -155,7 +155,7 @@ class CustomListTileWidget extends StatelessWidget {
                       backgroundColor:
                           buttonOneColor, //const Color(AppColors.red1),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               isButtonTwoVisible == true
                   ? Padding(
                       padding: const EdgeInsets.only(left: AppSizes.s8),
@@ -169,7 +169,7 @@ class CustomListTileWidget extends StatelessWidget {
                             buttonTwoColor, //const Color(AppColors.red1),
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ],
           ),
         ],

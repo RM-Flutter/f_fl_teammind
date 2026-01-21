@@ -253,4 +253,5 @@ abstract class AppColors {
   // input colors (legacy)
   static int get inputHintColor => shadowColor;
   static int get inputLabelColor => dividerColor;
+  static int get inputTextColor => bodyTextColor;
 }

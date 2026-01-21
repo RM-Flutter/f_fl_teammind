@@ -1,9 +1,9 @@
-import 'package:inv/common_modules_widgets/comments/comments_audio_widget.dart';
+import 'package:app_test/common_modules_widgets/comments/comments_audio_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/common_modules_widgets/comments/list_comments.dart';
-import 'package:inv/common_modules_widgets/comments/send_comment_widget.dart';
+import 'package:app_test/common_modules_widgets/comments/list_comments.dart';
+import 'package:app_test/common_modules_widgets/comments/send_comment_widget.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_sizes.dart';
@@ -19,11 +19,11 @@ class CommentsWidget extends StatelessWidget {
   var loading;
   var scrollController;
   var id;
-  CommentsWidget(this.slug,{this.comments,this.enable,this.pageNumber,this.loading,this.scrollController,this.id});
+  CommentsWidget(this.slug,{super.key, this.comments,this.enable,this.pageNumber,this.loading,this.scrollController,this.id});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.5,
       child: Column(
         children: [
@@ -33,7 +33,7 @@ class CommentsWidget extends StatelessWidget {
                 controller: scrollController,
                 shrinkWrap: true,
                 reverse: true,
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index){
                   DateTime utcDateTime = DateTime.parse("${comments![index]['created_at']}");
@@ -68,7 +68,7 @@ class CommentsWidget extends StatelessWidget {
                             imageUrl: comments![index]['user']['avatar'] ?? "",
                             placeholder: (context, url) =>
                             const ShimmerAnimatedLoading(),
-                            errorWidget: (context, url, error) => const Icon(
+                            errorWidget: (context, url, error) =>  const Icon(
                               Icons.image_not_supported_outlined,
                               size: AppSizes.s32,
                               color: Colors.white,
@@ -84,7 +84,7 @@ class CommentsWidget extends StatelessWidget {
                                 width: MediaQuery.sizeOf(context).width * 0.4,
                                 child: Text(
                                     comments![index]['user']['name'] ?? "", maxLines: 1,
-                                    style: const TextStyle(
+                                    style:  TextStyle(
                                         fontWeight: FontWeight.w700, fontSize: 12,color: Color(AppColors.dark)
                                     )
                                 ),
@@ -92,8 +92,8 @@ class CommentsWidget extends StatelessWidget {
                               const SizedBox(height: 5,),SizedBox(
                                 width: MediaQuery.sizeOf(context).width * 0.4,
                                 child: Text(
-                                    "$formattedDate", maxLines: 1,
-                                    style: const TextStyle(
+                                    formattedDate, maxLines: 1,
+                                    style:  const TextStyle(
                                         fontWeight: FontWeight.w500, fontSize: 12,color: Color(0xff5E5E5E)
                                     )
                                 ),
@@ -101,7 +101,7 @@ class CommentsWidget extends StatelessWidget {
                               const SizedBox(height: 5,),
                               if(comments![index]['content'] != null)Text(
                                 comments![index]['content'] ?? "",
-                                style: const TextStyle(color: Color(AppColors.black), fontSize: 12, fontWeight: FontWeight.w500),
+                                style:  const TextStyle(color: Color(AppColors.black), fontSize: 12, fontWeight: FontWeight.w500),
                               ),
                               if(comments![index]['images'].isNotEmpty)Container(
                                   width: 94,
@@ -120,7 +120,7 @@ class CommentsWidget extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) => FullScreenImageViewer(
                                             initialIndex: 0,
-                                            imageUrls: [""],
+                                            imageUrls: const [""],
                                             one: true,
                                             url: false,
                                             image: comments![index]['images'][0]['file'],
@@ -135,7 +135,7 @@ class CommentsWidget extends StatelessWidget {
                                       height: 94,
                                       placeholder: (context, url) =>
                                       const ShimmerAnimatedLoading(),
-                                      errorWidget: (context, url, error) => const Icon(
+                                      errorWidget: (context, url, error) =>  const Icon(
                                         Icons.image_not_supported_outlined,
                                         size: AppSizes.s32,
                                         color: Colors.white,
@@ -162,7 +162,7 @@ class CommentsWidget extends StatelessWidget {
             alignment: Alignment.center,
             height: MediaQuery.sizeOf(context).height * 0.3,
             child: Center(
-              child: Text(AppStrings.noCommentsFound.tr().toUpperCase(), style: const TextStyle(fontSize: 18, color: Colors.black),),
+              child: Text(AppStrings.noCommentsFound.tr().toUpperCase(), style:  const TextStyle(fontSize: 18, color: Colors.black),),
             ),
           ),
           Padding(
@@ -182,7 +182,7 @@ class CommentsWidget extends StatelessWidget {
           if(enable == "enable")
             SendCommentWidget(id, slug),
           if(enable != "enable")Text(AppStrings.theCommentOnThisRequestHasBeenClosedByTheAdmin.tr(),
-            style: const TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w500),
+            style:  const TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
         ],

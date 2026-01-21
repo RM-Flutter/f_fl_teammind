@@ -1,7 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/common_modules_widgets/dynamic_image_widget.dart';
-import 'package:inv/constants/app_images.dart';
+import 'package:app_test/common_modules_widgets/dynamic_image_widget.dart';
+import 'package:app_test/constants/app_images.dart';
 
 class MainLogoAndTitleWidget extends StatelessWidget {
   const MainLogoAndTitleWidget({super.key});

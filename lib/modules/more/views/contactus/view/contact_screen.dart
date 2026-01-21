@@ -3,15 +3,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/modules/more/views/contactus/controller/controller.dart';
+import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/modules/more/views/contactus/controller/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactScreen extends StatefulWidget {
+  const ContactScreen({super.key});
+
   @override
   State<ContactScreen> createState() => _ContactScreenState();
 }
@@ -60,14 +62,14 @@ class _ContactScreenState extends State<ContactScreen> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: const Icon(
+                      child:  const Icon(
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
                     ),
                     title: Text(
                       AppStrings.contactUs.tr().toUpperCase(),
-                      style: const TextStyle(
+                      style:  const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -76,7 +78,7 @@ class _ContactScreenState extends State<ContactScreen> {
                   ),
                   body: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     child: Center(
                       child: SizedBox(
@@ -103,8 +105,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                     children: [
                                       Text(
                                         AppStrings.phone.tr().toUpperCase(),
-                                        style: TextStyle(
-                                            color: const Color(0xffFFFFFF),
+                                        style: const TextStyle(
+                                            color: Color(0xffFFFFFF),
                                             fontWeight: FontWeight.w700,
                                             fontSize: 18),
                                       ),
@@ -123,8 +125,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                           },
                                           child: Text(
                                             "${AppStrings.hotline.tr().toUpperCase()} ${gCache['company_contacts']['phone']}",
-                                            style: TextStyle(
-                                                color: const Color(0xffFFFFFF),
+                                            style: const TextStyle(
+                                                color: Color(0xffFFFFFF),
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14),
                                           )),
@@ -138,7 +140,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         child: ListView.separated(
                                             shrinkWrap: true,
                                             physics:
-                                            NeverScrollableScrollPhysics(),
+                                            const NeverScrollableScrollPhysics(),
                                             reverse: false,
                                             scrollDirection: Axis.vertical,
                                             itemBuilder: (context, index) =>
@@ -156,15 +158,15 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     },
                                                     child: Text(
                                                       "${gCache['company_contacts']['otherphones'][index]}",
-                                                      style: TextStyle(
-                                                          color: const Color(
+                                                      style: const TextStyle(
+                                                          color: Color(
                                                               0xffFFFFFF),
                                                           fontWeight:
                                                           FontWeight.w400,
                                                           fontSize: 14),
                                                     )),
                                             separatorBuilder:
-                                                (context, index) => SizedBox(
+                                                (context, index) => const SizedBox(
                                               height: 5,
                                             ),
                                             itemCount:
@@ -196,7 +198,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                       children: [
                                         Text(
                                           AppStrings.address.tr().toUpperCase(),
-                                          style: const TextStyle(
+                                          style:  const TextStyle(
                                               color: Color(0xffFFFFFF),
                                               fontWeight: FontWeight.w700,
                                               fontSize: 18),
@@ -223,7 +225,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       [index]
                                                       ['title']['ar']
                                                           : gCache['company_contacts']['branches'][index]['title']['en'],
-                                                      style: const TextStyle(
+                                                      style:  const TextStyle(
                                                           color:
                                                           Color(0xffFFFFFF),
                                                           fontWeight:
@@ -243,7 +245,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                           LocalizationService.isArabic(context: context)
                                                               ? "${gCache['company_contacts']['branches'][index]['co_info_address']['ar']}"
                                                               : "${gCache['company_contacts']['branches'][index]['co_info_address']['en']}",
-                                                          style: const TextStyle(
+                                                          style:  const TextStyle(
                                                               color: Color(
                                                                   0xffFFFFFF),
                                                               fontWeight:
@@ -280,8 +282,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                                         child: Text(
                                                           AppStrings.showMap
                                                               .tr(),
-                                                          style: TextStyle(
-                                                              color: const Color(
+                                                          style: const TextStyle(
+                                                              color: Color(
                                                                   0xffFFFFFF),
                                                               fontSize: 10,
                                                               fontWeight:
@@ -293,7 +295,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                   ],
                                                 ),
                                             separatorBuilder:
-                                                (context, index) => SizedBox(
+                                                (context, index) => const SizedBox(
                                               height: 10,
                                             ),
                                             itemCount:
@@ -325,7 +327,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                       children: [
                                         Text(
                                           AppStrings.email.tr().toUpperCase(),
-                                          style: const TextStyle(
+                                          style:  const TextStyle(
                                               color: Color(0xffFFFFFF),
                                               fontWeight: FontWeight.w700,
                                               fontSize: 18),
@@ -336,7 +338,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                         //whatsAppConversationStarterMessage en/ar
                                         ListView.separated(
                                             padding: EdgeInsets.zero,
-                                            physics: NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             reverse: false,
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) => GestureDetector(
@@ -353,13 +355,13 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       0.6,
                                                   child: Text(
                                                     gCache['company_contacts']['otheremails'][index]??"",
-                                                    style: const TextStyle(
+                                                    style:  const TextStyle(
                                                         color: Color(0xffFFFFFF),
                                                         fontWeight: FontWeight.w400,
                                                         fontSize: 14),
                                                   )),
                                             ),
-                                            separatorBuilder: (context, index) => SizedBox(height: 5,),
+                                            separatorBuilder: (context, index) => const SizedBox(height: 5,),
                                             itemCount: gCache['company_contacts']['otheremails'].length)
                                       ],
                                     ),
@@ -377,7 +379,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                   children: [
                                     Text(
                                       AppStrings.followUs.tr().toUpperCase(),
-                                      style: const TextStyle(
+                                      style:  const TextStyle(
                                           color: Color(0xffFFFFFF),
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16),
@@ -385,7 +387,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: 60,
                                       child: Wrap(
                                         spacing: 10,
@@ -596,7 +598,7 @@ class _ContactScreenState extends State<ContactScreen> {
           padding: const EdgeInsets.all(5),
           height: 30,
           width: 30,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               shape: BoxShape.circle, color: Color(AppColors.primary)),
           child: SvgPicture.asset(src, color: Colors.white),
         ),

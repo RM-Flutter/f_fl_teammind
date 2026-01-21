@@ -1,14 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_colors.dart';
+import 'package:app_test/constants/app_colors.dart';
 
 class SliderHomeMenu extends StatelessWidget {
   var title;
   var description;
   var onTap;
   var src;
-  SliderHomeMenu({this.description, this.title, this.onTap, this.src});
+  SliderHomeMenu({super.key, this.description, this.title, this.onTap, this.src});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +16,13 @@ class SliderHomeMenu extends StatelessWidget {
       alignment: Alignment.topCenter,
       children: [
         Container(
-          padding:EdgeInsets.symmetric(vertical: 25),
+          padding:const EdgeInsets.symmetric(vertical: 25),
           width: 150,
           height: 170,
           color: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
-                color: const Color(AppColors.textC5),
+                color: Color(AppColors.textC5),
                 borderRadius: BorderRadius.circular(15)),
             padding: const EdgeInsetsDirectional.only(
               bottom: 30,
@@ -34,15 +34,15 @@ class SliderHomeMenu extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style:  const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: Color(0xff15223D)),
                 ),
-                SizedBox(height: 4,),
+                const SizedBox(height: 4,),
                 Text(
                   description.toUpperCase(),
-                  style: const TextStyle(
+                  style:  const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w400,
                       color: Color(0xff231F20)),
@@ -56,7 +56,7 @@ class SliderHomeMenu extends StatelessWidget {
             height: 64,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: Color(0xFFE93F81),
+                color: const Color(0xFFE93F81),
                 borderRadius: BorderRadius.circular(15)),
             child: SvgPicture.asset(src ??"assets/images/svg/ref_link.svg")
         ),
@@ -97,7 +97,7 @@ class SliderHomeMenu2 extends StatelessWidget {
           height: cardHeight,
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(AppColors.textC5),
+              color: Color(AppColors.textC5),
               borderRadius: BorderRadius.circular(15),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
@@ -108,7 +108,7 @@ class SliderHomeMenu2 extends StatelessWidget {
                   title,
                   maxLines: 1,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style:  const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: Color(0xff15223D),
@@ -120,7 +120,7 @@ class SliderHomeMenu2 extends StatelessWidget {
                   maxLines: 2,
                   minFontSize: 8,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style:  const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
                     color: Color(0xff231F20),
@@ -135,7 +135,7 @@ class SliderHomeMenu2 extends StatelessWidget {
           height: cardWidth * 0.4,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: const Color(AppColors.dark),
+            color: Color(AppColors.dark),
             borderRadius: BorderRadius.circular(15),
           ),
           child: SvgPicture.asset(src),

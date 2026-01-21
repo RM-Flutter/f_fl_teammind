@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../backend_services/api_service/dio_api_service/shared.dart';
+import 'backend_services/api_service/dio_api_service/shared.dart';
 
 /// Service to get dynamic app configuration from gCache['USG']
 /// Uses caching to avoid repeated JSON decoding and CacheHelper reads

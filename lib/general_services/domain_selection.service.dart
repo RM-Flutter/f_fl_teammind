@@ -3,11 +3,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/main_app_fab_widget/widgets/qrcode_Scanner_view.widget.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/app_config.service.dart';
+import 'package:app_test/common_modules_widgets/main_app_fab_widget/widgets/qrcode_Scanner_view.widget.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/app_config.service.dart';
 
 import '../constants/app_colors.dart';
 
@@ -203,7 +203,7 @@ class DomainSelectionService {
                         hintText: AppStrings.domainExample.tr(),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
-                          icon: const Icon(Icons.qr_code_scanner),
+                          icon:  const Icon(Icons.qr_code_scanner),
                           onPressed: () async {
                             // Scan QR code
                             final scannedText = await Navigator.push<String>(
@@ -254,10 +254,10 @@ class DomainSelectionService {
                             return ListTile(
                               title: Text(
                                 displayDomain,
-                                style: const TextStyle(fontSize: 14),
+                                style:  const TextStyle(fontSize: 14),
                               ),
                               trailing: IconButton(
-                                icon: const Icon(Icons.close, size: 20, color: Colors.red),
+                                icon:  const Icon(Icons.close, size: 20, color: Colors.red),
                                 onPressed: () async {
                                   await removeDomainFromList(domain);
                                   setState(() {
@@ -296,7 +296,7 @@ class DomainSelectionService {
                 },
                 child: Text(
                   AppStrings.confirm.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style:  const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -369,7 +369,7 @@ class DomainSelectionService {
                 },
                 child: Text(
                   AppStrings.useDefault.tr(),
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  style:  const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ),
               TextButton(
@@ -379,7 +379,7 @@ class DomainSelectionService {
                 },
                 child: Text(
                   AppStrings.tryAgain.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  style:  const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                 ),
               ),
             ],

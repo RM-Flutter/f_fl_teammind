@@ -3,25 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/home/view_models/home.viewmodel.dart';
-import 'package:inv/routing/app_router.dart';
+import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/routing/app_router.dart';
 
-import '../modules/home/view_models/home.viewmodel.dart';
 
 class SuccessfullAddRequestSheet extends StatelessWidget {
   var title;
   var onTap;
-  SuccessfullAddRequestSheet({this.title, this.onTap});
+  SuccessfullAddRequestSheet({super.key, this.title, this.onTap});
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeViewModel>(builder: (context, value, child) {
       return Container(
         height: MediaQuery.of(context).size.height * 0.5,
         width: MediaQuery.sizeOf(context).width * 0.99,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
@@ -30,21 +29,21 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
             const SizedBox(height: 30),
             SvgPicture.asset("assets/images/svg/success_reqs.svg"),
             const SizedBox(height: 15,),
-            Text(AppStrings.success.tr().toUpperCase(), style: const TextStyle(fontSize: 24,
+            Text(AppStrings.success.tr().toUpperCase(), style:  TextStyle(fontSize: 24,
                 fontWeight: FontWeight.w700, color: Color(AppColors.dark))),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 AppStrings.yourRequestHasBeenSubmittedSuccessfully.tr().toUpperCase(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style:  const TextStyle(
                     color: Color(0xff231F20),
                     fontWeight: FontWeight.w400,
                     fontSize: 14
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
@@ -55,7 +54,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                         context.goNamed(AppRoutes.home.name,
                             pathParameters: {'lang': context.locale.languageCode,});
                       },
-                      backgroundColor: const Color(AppColors.dark),
+                      backgroundColor: Color(AppColors.dark),
                       title: AppStrings.goToHome.tr().toUpperCase(),
                       isPrimaryBackground: true,
                       width: MediaQuery.sizeOf(context).width * 0.45,
@@ -69,14 +68,14 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                         });
                       },
                       width: MediaQuery.sizeOf(context).width * 0.45,
-                      backgroundColor: const Color(AppColors.dark),
+                      backgroundColor: Color(AppColors.dark),
                       title: title ?? AppStrings.goToRequest.tr().toUpperCase(),
                       isPrimaryBackground: true,
                       isFuture: false),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       );

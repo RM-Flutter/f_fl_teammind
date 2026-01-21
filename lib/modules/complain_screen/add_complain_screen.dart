@@ -5,15 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/controller/request_controller/request_controller.dart';
-import 'package:inv/utils/componentes/general_components/all_text_field.dart';
+import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/controller/request_controller/request_controller.dart';
+import 'package:app_test/utils/componentes/general_components/all_text_field.dart';
 
 import '../../utils/componentes/general_components/gradient_bg_image.dart';
 
 class NewComplainScreen extends StatefulWidget {
+  const NewComplainScreen({super.key});
+
 
   @override
   State<NewComplainScreen> createState() => _NewComplainScreenState();
@@ -39,15 +41,15 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
               elevation: 0,
               centerTitle: true,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
             ),
-            backgroundColor: Color(0xffFFFFFF),
+            backgroundColor: const Color(0xffFFFFFF),
             body: GradientBgImage(
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               child: Container(
                 width: double.infinity,
                 alignment: Alignment.center,
@@ -56,10 +58,10 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                       ? double.infinity
                       : 800,
                   child: SingleChildScrollView(
-                    child: Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Column(
                         children: [
-                          SizedBox(height: 20,),
+                          const SizedBox(height: 20,),
                           defaultDropdownField(
                             value: value.selectDepartment,
                             title: value.selectDepartment ?? AppStrings.specifyTheTypeOfRequest.tr(),
@@ -67,7 +69,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                               value: e['id'].toString(),
                               child: Text(
                                 e['title'].toString(),
-                                style: const TextStyle(
+                                style:  const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     color: Color(0xff464646)
@@ -81,7 +83,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                               });
                             },
                           ),
-                          SizedBox(height: 15,),
+                          const SizedBox(height: 15,),
                           Form(
                             key: formKey,
                             child: defaultTextFormField(
@@ -92,10 +94,11 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                                   if(value!.isEmpty){
                                     return "${AppStrings.subject.tr()} ${AppStrings.isRequired.tr()}";
                                   }
+                                  return null;
                               }
                             ),
                           ),
-                          SizedBox(height: 15,),
+                          const SizedBox(height: 15,),
                           defaultTextFormField(
                               hintText: AppStrings.details.tr(),
                               controller: value.detailsController,
@@ -129,7 +132,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                                   right: 16, left: 16, top: 16, bottom: 10
                               ),
                               decoration: ShapeDecoration(
-                                color: Color(0xffFFFFFF),
+                                color: const Color(0xffFFFFFF),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   side:  const BorderSide(
@@ -153,7 +156,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                                     children: [
                                       Text(
                                         AppStrings.uploadImage.tr(),
-                                        style: const TextStyle(
+                                        style:  const TextStyle(
 
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400,
@@ -206,8 +209,8 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 35,),
-                          if(value.isAddRequestLoading == true) Center(child: CircularProgressIndicator(),),
+                          const SizedBox(height: 35,),
+                          if(value.isAddRequestLoading == true) const Center(child: CircularProgressIndicator(),),
                           if(value.isAddRequestLoading == false) CustomElevatedButton(
                               onPressed: () async {
                                 print("value.listXAttachmentPersonalImage ${value.listXAttachmentPersonalImage}");
@@ -246,7 +249,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
         child: kIsWeb
             ? (file is Uint8List
             ? Image.memory(file, fit: BoxFit.cover) // 🖥️ ويب
-            : const Icon(Icons.image_not_supported))
+            :  const Icon(Icons.image_not_supported))
             : Image.file(file as File, fit: BoxFit.cover), // 📱 موبايل
       ),
     );

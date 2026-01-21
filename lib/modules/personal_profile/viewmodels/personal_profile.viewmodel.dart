@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -11,17 +10,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/localization.service.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
 import '../../../general_services/alert_service/alerts.service.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/date.service.dart';
-import '../../../general_services/image_file_picker.service.dart';
 import '../../../general_services/layout.service.dart';
 import '../../../general_services/settings.service.dart';
 import '../../../general_services/validation_service.dart';
@@ -100,7 +98,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
           context: context,
           message: AppStrings.errorPleaseTryAgain.tr(),
           title: AppStrings.failed.tr().toUpperCase());
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? AppStrings.failed.tr();
       } else {
         errorMessage = error.toString();
@@ -117,7 +115,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
     // First get current user Data
     var jsonString;
     UserSettingsModel userSettingsModel;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -133,12 +131,12 @@ class PersonalProfileViewModel extends ChangeNotifier {
 
   setInititalValues() {
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
-      print("gCache is --> ${gCache}");
+      print("gCache is --> $gCache");
     }
     if (UserSettingConst.userSettings == null) return;
     emailController.text = UserSettingConst.userSettings?.email ?? '';
@@ -210,7 +208,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -228,10 +226,10 @@ class PersonalProfileViewModel extends ChangeNotifier {
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -248,7 +246,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -259,12 +257,13 @@ class PersonalProfileViewModel extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
@@ -277,7 +276,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -288,10 +287,9 @@ class PersonalProfileViewModel extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style: const TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),
@@ -305,7 +303,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       context: context,
       barrierColor: Colors.white,
       initialDate: UserSettingConst.userSettings?.birthDate,
-      switchToInputEntryModeIcon: const Icon(Icons.add, color: Colors.transparent,),
+      switchToInputEntryModeIcon:  const Icon(Icons.add, color: Colors.transparent,),
       firstDate: DateTime(1900),
       lastDate: DateTime(2101),
       locale:  Locale(LocalizationService.isArabic(context: context)?'ar':'en', ''),
@@ -385,7 +383,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           title: Text(
             AppStrings.fa_activated.tr(),
             style: TextStyle(color: Theme.of(context).colorScheme.primary),
@@ -416,7 +414,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
                         width: MediaQuery.sizeOf(context).width * 0.3,
                         child: SelectableText(serial)),
                     IconButton(
-                      icon: const Icon(Icons.copy),
+                      icon:  const Icon(Icons.copy),
                       onPressed: () {
                         FlutterClipboard.copy(serial).then((value) => {
                           AlertsService.success(
@@ -514,7 +512,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final json1String = CacheHelper.getString("US1");
-      var us1Cache;
+      Map<String, dynamic> us1Cache = {};
       if (json1String != null && json1String != "") {
         us1Cache = json.decode(json1String) as Map<String, dynamic>;// Convert String back to JSON
         print("S1 IS --> $us1Cache");
@@ -879,7 +877,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       builder: (BuildContext context) {
         return Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               maxWidth: kIsWeb ? 800 : double.infinity,
             ),
             child: AlertDialog(
@@ -899,7 +897,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon:  const Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
                         color: Colors.red,
@@ -1029,7 +1027,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       builder: (BuildContext context) {
         return Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               maxWidth: kIsWeb ? 800 : double.infinity,
             ),
             child: AlertDialog(
@@ -1049,7 +1047,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon:  const Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
                         color: Colors.red,

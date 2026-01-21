@@ -2,13 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/modules/authentication/view_models/login.viewmodel.dart';
-import 'package:inv/utils/helpers/media_query_values.dart';
+import 'package:app_test/modules/authentication/view_models/login.viewmodel.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
 import '../../../general_services/validation_service.dart';
-import '../../../utils/widgets/text_form_widget.dart';
 import '../view_models/create_account.viewmodel.dart';
 import 'widgets/phone_number_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -159,7 +157,7 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
                                     if(viewModel.formKey.currentState!.validate()){
                                       viewModel.createAccount(context: context,
                                           making: (){
-                                            if(viewModel.phoneController.text.isEmpty || viewModel.phoneController.text == null){
+                                            if(viewModel.phoneController.text.isEmpty){
                                               setState(() {
                                                 authenticationViewModel.isPhoneLogin = false;
                                               });

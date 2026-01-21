@@ -61,7 +61,7 @@ class VerificationTileWidget extends StatelessWidget {
             children: [
               Text(
                 description,
-                style: const TextStyle(
+                style:  const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
                 maxLines: 1,
@@ -69,7 +69,7 @@ class VerificationTileWidget extends StatelessWidget {
               ),
               Text(
                 subDiscription,
-                style: const TextStyle(color: Colors.grey),
+                style:  const TextStyle(color: Colors.grey),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

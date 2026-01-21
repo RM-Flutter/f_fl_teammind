@@ -2,24 +2,19 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/models/settings/general_settings.model.dart';
-import 'package:inv/models/settings/user_settings.model.dart';
-import 'package:inv/models/settings/user_settings_2.model.dart';
-import 'package:inv/modules/home/view_models/home.viewmodel.dart';
-import 'package:inv/routing/app_router.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/models/settings/general_settings.model.dart';
+import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/models/settings/user_settings_2.model.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import '../../../common_modules_widgets/dynamic_image_widget.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
-import '../../../constants/general_listener.dart';
 import '../../../constants/update_app.dart';
-import '../../../general_services/app_config.service.dart';
 import '../../../general_services/device_info.service.dart';
-import '../../../general_services/device_info.service.dart' as checkForForceUpdate;
 import '../../../general_services/internet_check.dart';
 import '../../../general_services/localization.service.dart';
 import '../../../general_services/domain_selection.service.dart';
@@ -170,9 +165,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final jsonString = CacheHelper.getString("US1");
     final json2String = CacheHelper.getString("US2");
     final json3String = CacheHelper.getString("USG");
-    var us1Cache;
-    var us2Cache;
-    var us3Cache;
+    Map<String, dynamic> us1Cache = {};
+    Map<String, dynamic> us2Cache = {};
+    Map<String, dynamic> us3Cache = {};
     GeneralSettingsModel? generalSettingsModel;
     if (jsonString != null && jsonString != "") {
       us1Cache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
@@ -183,7 +178,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (json3String != null && json3String != "") {
       us3Cache = json.decode(json3String) as Map<String, dynamic>;// Convert String back to JSON
     }
-    if (us1Cache != null && us1Cache.isNotEmpty && us1Cache != "") {
+    if (us1Cache.isNotEmpty && us1Cache != "") {
       try {
         // Decode JSON string into a Map
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
@@ -195,7 +190,7 @@ class _SplashScreenState extends State<SplashScreen> {
     else {
       print("us1Cache is null or empty.");
     }
-    if (us2Cache != null && us2Cache.isNotEmpty && us2Cache != "") {
+    if (us2Cache.isNotEmpty && us2Cache != "") {
       try {
         // Decode JSON string into a Map
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
@@ -207,7 +202,7 @@ class _SplashScreenState extends State<SplashScreen> {
     else {
       print("us2Cache is null or empty.");
     }
-    if (us3Cache != null && us3Cache.isNotEmpty && us3Cache != "") {
+    if (us3Cache.isNotEmpty && us3Cache != "") {
       try {
         UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
         generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);

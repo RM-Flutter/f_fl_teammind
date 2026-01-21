@@ -98,7 +98,7 @@ class RequestController extends ChangeNotifier {
       isGetRequestTypeLoading = false;
       notifyListeners();
     } catch (error) {
-      getRequestTypeErrorMessage = error is DioError
+      getRequestTypeErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -124,7 +124,7 @@ class RequestController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      var response;
+      Response response;
       print("Voice Path: $voicePath");
 
       // Check if we have either images or a voice file to send
@@ -183,7 +183,7 @@ class RequestController extends ChangeNotifier {
         // getRequestComment(context, id);
       }
     } catch (error) {
-      errorAddCommentMessage = error is DioError
+      errorAddCommentMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
 
@@ -260,7 +260,7 @@ class RequestController extends ChangeNotifier {
       isGetRequestLoading = false;
       notifyListeners();
     } catch (error) {
-      getRequestErrorMessage = error is DioError
+      getRequestErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -363,7 +363,7 @@ class RequestController extends ChangeNotifier {
       isGetRequestLoading = false;
       notifyListeners();
     } catch (error) {
-      getRequestErrorMessage = error is DioError
+      getRequestErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -386,10 +386,10 @@ class RequestController extends ChangeNotifier {
     //      .toList();
     isAddRequestLoading = true;
     notifyListeners();
-    var response;
+    Response response;
     FormData formData = FormData.fromMap({
-      if(subjectController.text != null && subjectController.text.isNotEmpty)"title" : subjectController.text,
-      if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
+      if(subjectController.text.isNotEmpty)"title" : subjectController.text,
+      if(detailsController.text.isNotEmpty) "content" : detailsController.text,
       "type_id" : selectDepartment.toString(),
       "main_thumbnail[]": images != null
           ? !kIsWeb? await Future.wait(
@@ -417,8 +417,8 @@ class RequestController extends ChangeNotifier {
             url: "/rm_postcontrol/v1/add_request",
             context: context,
             data: {
-              if(subjectController.text != null && subjectController.text.isNotEmpty) "title" : subjectController.text,
-              if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
+              if(subjectController.text.isNotEmpty) "title" : subjectController.text,
+              if(detailsController.text.isNotEmpty) "content" : detailsController.text,
               "type_id" : selectDepartment.toString(),
             }
         );
@@ -440,14 +440,14 @@ class RequestController extends ChangeNotifier {
           isScrollControlled: true,
           backgroundColor: Colors.white,
           builder: (context) {
-            return SuccessfulSendRequestBottomsheet();
+            return const SuccessfulSendRequestBottomsheet();
           },
         );
       }
       isAddRequestLoading = false;
       notifyListeners();
     } catch (error) {
-      errorAddRequestMessage = error is DioError
+      errorAddRequestMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -534,7 +534,7 @@ class RequestController extends ChangeNotifier {
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -552,10 +552,10 @@ class RequestController extends ChangeNotifier {
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -572,7 +572,7 @@ class RequestController extends ChangeNotifier {
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -583,12 +583,13 @@ class RequestController extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
@@ -601,7 +602,7 @@ class RequestController extends ChangeNotifier {
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -612,10 +613,9 @@ class RequestController extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style: const TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),

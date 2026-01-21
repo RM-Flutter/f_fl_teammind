@@ -2,15 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/general_services/validation_service.dart';
-import 'package:inv/modules/home/view_models/home.viewmodel.dart';
-import 'package:inv/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
-import 'package:inv/utils/widgets/text_form_widget.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/general_services/validation_service.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
 import '../../../../constants/app_strings.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
+  const UpdatePasswordScreen({super.key});
+
   @override
   State<UpdatePasswordScreen> createState() => _UpdatePasswordScreenState();
 }
@@ -28,7 +29,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
           builder: (context, values, child) {
             return Consumer<PersonalProfileViewModel>(
               builder: (context, value, child) {
-                if(value.isSuccess){
+                if(value.isSuccess == true){
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     passwordController.clear();
                   });
@@ -45,7 +46,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Color(AppColors.dark)),
-                          child: const Icon(
+                          child:  const Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.white,
                             size: AppSizes.s18,
@@ -55,7 +56,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     ),
                     title: Text(
                       AppStrings.updatePassword.tr().toUpperCase(),
-                      style: const TextStyle(
+                      style:  TextStyle(
                           fontSize: AppSizes.s16,
                           fontWeight: FontWeight.w700,
                           color: Color(AppColors.dark)),
@@ -102,7 +103,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                     height: 50,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
-                                      color: const Color(AppColors.primary),
+                                      color: Color(AppColors.primary),
                                       borderRadius: BorderRadius.circular(50),
                                     ),
                                     padding: const EdgeInsets.symmetric(horizontal: 40),

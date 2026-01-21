@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/authentication/views/widgets/phone_number_field.dart';
-import 'package:inv/utils/componentes/general_components/all_text_field.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
+import 'package:app_test/utils/componentes/general_components/all_text_field.dart';
 
 import '../../home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
@@ -41,7 +41,7 @@ class AddFriendBottomSheet extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Center(
@@ -50,7 +50,7 @@ class AddFriendBottomSheet extends StatelessWidget {
                         width: 63,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: Color(0xffB9C0C9)),
+                            color: const Color(0xffB9C0C9)),
                       ),
                     ),
                     Padding(
@@ -62,7 +62,7 @@ class AddFriendBottomSheet extends StatelessWidget {
                           const SizedBox(height: 20),
                           Text(
                             AppStrings.registerYourFriendData.tr().toUpperCase(),
-                            style: const TextStyle(
+                            style:  TextStyle(
 
                               fontWeight: FontWeight.w700,
                               fontSize: 20,
@@ -72,7 +72,7 @@ class AddFriendBottomSheet extends StatelessWidget {
                           const SizedBox(height: 10),
                           Text(
                             AppStrings.pointsCondationAbout.tr(),
-                            style: const TextStyle(
+                            style:  const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Color(AppColors.black),
@@ -90,7 +90,7 @@ class AddFriendBottomSheet extends StatelessWidget {
                             countryCodeController: value.countryCodeController,
                           ),
                           const SizedBox(height: 20),
-                          if(value.isAddFriendLoading)Center(child: CircularProgressIndicator(),),
+                          if(value.isAddFriendLoading)const Center(child: CircularProgressIndicator(),),
                           if(!value.isAddFriendLoading)GestureDetector(
                             onTap: (){
                               value.addFriend(context);
@@ -101,10 +101,10 @@ class AddFriendBottomSheet extends StatelessWidget {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: const Color(AppColors.primary)),
+                                  color: Color(AppColors.primary)),
                               child: Text(
                                 AppStrings.invitation.tr().toUpperCase(),
-                                style: const TextStyle(
+                                style:  const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xffFFFFFF),

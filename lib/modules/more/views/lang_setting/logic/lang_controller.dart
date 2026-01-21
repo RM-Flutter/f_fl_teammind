@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/general_services/app_config.service.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/app_config.service.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 
 class LangControllerProvider extends ChangeNotifier{
   bool isLoading = false;
@@ -39,7 +39,7 @@ class LangControllerProvider extends ChangeNotifier{
     } catch (error) {
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();

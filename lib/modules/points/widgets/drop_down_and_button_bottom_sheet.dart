@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/componentes/general_components/all_text_field.dart';
 import '../../home/view_models/home.viewmodel.dart';
@@ -46,7 +46,7 @@ class _DropDownAndButtonBottomSheetState extends State<DropDownAndButtonBottomSh
                         items: provider.prizeModel!.prizes!.map(
                               (e) => DropdownMenuItem(
                             value: e,
-                            child: Text(e, style: const TextStyle(
+                            child: Text(e, style:  const TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
@@ -62,7 +62,7 @@ class _DropDownAndButtonBottomSheetState extends State<DropDownAndButtonBottomSh
                         },
                       ),
                       const SizedBox(height: 30,),
-                      if(provider.status == RedeemPrizeStatus.loading)Center(
+                      if(provider.status == RedeemPrizeStatus.loading)const Center(
                         child: CircularProgressIndicator(),
                       ),
                       if(provider.status != RedeemPrizeStatus.loading) GestureDetector(
@@ -97,7 +97,7 @@ class _DropDownAndButtonBottomSheetState extends State<DropDownAndButtonBottomSh
                           height: 50,
                           width: 224,
                           decoration: BoxDecoration(
-                            color: Color(0xFF0D3B6F),
+                            color: const Color(0xFF0D3B6F),
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: Row(
@@ -105,7 +105,7 @@ class _DropDownAndButtonBottomSheetState extends State<DropDownAndButtonBottomSh
                             children: [
                               Image.asset("assets/images/png/icon.png"),
                               gapW4,
-                              Text(AppStrings.redeemNow.tr().toUpperCase(),style: const TextStyle(
+                              Text(AppStrings.redeemNow.tr().toUpperCase(),style:  const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,

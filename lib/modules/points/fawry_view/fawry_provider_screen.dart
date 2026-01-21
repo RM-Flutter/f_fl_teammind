@@ -1,18 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:inv/modules/points/fawry_view/charge_phone_screen.dart';
+import 'package:app_test/modules/points/fawry_view/charge_phone_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../utils/gradient_bg_image.dart';
 import '../logic/fawry_cubit/fawry_provider.dart';
 
 class FawryProviderScreen extends StatelessWidget {
+  const FawryProviderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -26,13 +28,13 @@ class FawryProviderScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: const Icon(
+                    child:  Icon(
                       Icons.arrow_back,
                       color: Color(AppColors.primary),
                     )),
                 title: Text(
                   AppStrings.chooseFromFawryServices.tr().toUpperCase(),
-                  style: const TextStyle(
+                  style:  TextStyle(
                       fontSize: AppSizes.s16,
                       fontWeight: FontWeight.w700,
                       color: Color(AppColors.primary)),
@@ -50,7 +52,7 @@ class FawryProviderScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              body: Container(
+              body: SizedBox(
                 height: MediaQuery.sizeOf(context).height * 1,
                 child: GradientBgImage(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -97,7 +99,7 @@ class FawryProviderScreen extends StatelessWidget {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ChargePhoneScreen(service, ),));
       },
-      child: Container(
+      child: SizedBox(
         height: 150,
         child: Stack(
           alignment: Alignment.topCenter,
@@ -115,7 +117,7 @@ class FawryProviderScreen extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.15),
                       blurRadius: 10,
                       spreadRadius: 2,
-                      offset: Offset(0, 4),
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -124,7 +126,7 @@ class FawryProviderScreen extends StatelessWidget {
                   child: Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 16,
                       color: Color(AppColors.primary),
                       fontWeight: FontWeight.w600,
@@ -134,7 +136,7 @@ class FawryProviderScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: CachedNetworkImage(
@@ -144,7 +146,7 @@ class FawryProviderScreen extends StatelessWidget {
                   imageUrl: src,
                   placeholder: (context, url) =>
                   const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) => const Icon(
+                  errorWidget: (context, url, error) =>  const Icon(
                     Icons.image_not_supported_outlined,
                     size: AppSizes.s32,
                     color: Colors.black,

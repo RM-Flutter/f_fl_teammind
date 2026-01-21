@@ -75,7 +75,7 @@ class ButtonWidget extends StatelessWidget {
               children: [
                 svgIcon != null
                     ? Padding(
-                        padding: EdgeInsets.only(right: AppSizes.s12),
+                        padding: const EdgeInsets.only(right: AppSizes.s12),
                         child: SvgPicture.asset(
                           svgIcon!,
                           // colorFilter: ColorFilter.mode(
@@ -86,7 +86,7 @@ class ButtonWidget extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                         ),
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 Text(
                   title,
                   style: Theme.of(context)

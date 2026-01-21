@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../common_modules_widgets/webview_offers.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_strings.dart';
 import '../general_services/localization.service.dart';
-import '../main.dart';
 import '../routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -60,7 +59,7 @@ class GeneralListener {
           interval = Duration(days: count);
           break;
         default:
-          interval = Duration(minutes: 5);
+          interval = const Duration(minutes: 5);
       }
 
       String key = 'last_seen_${popup['title']['en']}';
@@ -110,7 +109,7 @@ class GeneralListener {
                   LocalizationService.isArabic(context: context)
                       ? popup['title']['ar']
                       : popup['title']['en'] ?? "",
-                  style: const TextStyle(
+                  style:  TextStyle(
                     color: Color(AppColors.primary),
                     fontWeight: FontWeight.bold,
                   ),
@@ -126,7 +125,7 @@ class GeneralListener {
             LocalizationService.isArabic(context: context)
                 ? popup['content']['ar']
                 : popup['content']['en'] ?? "",
-            style: const TextStyle(color: Color(AppColors.primary)),
+            style: TextStyle(color: Color(AppColors.primary)),
           ),
         )
             : null,
@@ -149,8 +148,8 @@ class GeneralListener {
   }
 
   void listenToNotifications(BuildContext context) async {
-    final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
-    await _analytics.logEvent(
+    final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+    await analytics.logEvent(
       name: 'open_home_screen',
       parameters: {'timestamp': DateTime.now().toIso8601String()},
     );

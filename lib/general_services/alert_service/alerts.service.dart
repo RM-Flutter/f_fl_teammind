@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/validation_service.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/validation_service.dart';
 import '../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../constants/app_sizes.dart';
 import '../../platform/platform_is.dart';
@@ -191,7 +191,7 @@ abstract class AlertsService {
                   if (imageAssert != null) const SizedBox(height: AppSizes.s25),
                   Text(
                     title,
-                    style: const TextStyle(
+                    style:  const TextStyle(
                         fontSize: AppSizes.s25, color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
@@ -202,7 +202,7 @@ abstract class AlertsService {
                         horizontal: AppSizes.s30),
                     child: Text(
                       message,
-                      style: const TextStyle(
+                      style:  const TextStyle(
                           fontSize: AppSizes.s18, color: Colors.black45),
                       textAlign: TextAlign.center,
                       softWrap: true,
@@ -272,7 +272,7 @@ abstract class AlertsService {
                           },
                           child: Text(AppStrings.no.tr(),
                               style:
-                              const TextStyle(color: Color(0xff0FF3389EE))),
+                              const TextStyle(color: Color(0xff0ff3389ee))),
                         ),
                       ),
                     ],

@@ -128,7 +128,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                           if(viewModel.codeFormKey.currentState!.validate()){
                             await viewModel.resetNewPasswordWithCodeAndNewPassword(
                                 mak: ()async{
-                                  if(viewModel.phoneController.text.isEmpty || viewModel.phoneController.text == null){
+                                  if(viewModel.phoneController.text.isEmpty){
                                     setState(() {
                                       authenticationViewModel.isPhoneLogin = false;
                                     });

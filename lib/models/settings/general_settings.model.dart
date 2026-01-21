@@ -1,5 +1,4 @@
 import '../../general_services/model_helpers.service.dart';
-import '../file_model.DART';
 import 'app_settings_model.dart';
 
 class GeneralSettingsModel extends AppSettingsModel {
@@ -434,22 +433,22 @@ class FeatureItems {
   FeatureItems.fromJson(Map<String, dynamic> json) {
     if (json['image'] != null) {
       image = <ImageF>[];
-      json['image'].forEach((v) { image!.add(new ImageF.fromJson(v)); });
+      json['image'].forEach((v) { image!.add(ImageF.fromJson(v)); });
     }
-    title = json['title'] != null ? new Title.fromJson(json['title']) : null;
-    info = json['info'] != null ? new Title.fromJson(json['info']) : null;
+    title = json['title'] != null ? Title.fromJson(json['title']) : null;
+    info = json['info'] != null ? Title.fromJson(json['info']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.image != null) {
-      data['image'] = this.image!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (image != null) {
+      data['image'] = image!.map((v) => v.toJson()).toList();
     }
-    if (this.title != null) {
-      data['title'] = this.title!.toJson();
+    if (title != null) {
+      data['title'] = title!.toJson();
     }
-    if (this.info != null) {
-      data['info'] = this.info!.toJson();
+    if (info != null) {
+      data['info'] = info!.toJson();
     }
     return data;
   }
@@ -473,19 +472,19 @@ class ImageF {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? new SizesF.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? SizesF.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
-    if (this.sizes != null) {
-      data['sizes'] = this.sizes!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
+    if (sizes != null) {
+      data['sizes'] = sizes!.toJson();
     }
     return data;
   }
@@ -515,15 +514,15 @@ class SizesF {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['thumbnail'] = this.thumbnail;
-    data['medium'] = this.medium;
-    data['large'] = this.large;
-    data['1200_800'] = this.s1200800;
-    data['800_1200'] = this.s8001200;
-    data['1200_300'] = this.s1200300;
-    data['300_1200'] = this.s3001200;
-    data['Screenshot_webp'] = this.screenshotWebp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['thumbnail'] = thumbnail;
+    data['medium'] = medium;
+    data['large'] = large;
+    data['1200_800'] = s1200800;
+    data['800_1200'] = s8001200;
+    data['1200_300'] = s1200300;
+    data['300_1200'] = s3001200;
+    data['Screenshot_webp'] = screenshotWebp;
     return data;
   }
 }
@@ -540,9 +539,9 @@ class TitleF {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['en'] = this.en;
-    data['ar'] = this.ar;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['en'] = en;
+    data['ar'] = ar;
     return data;
   }
 }

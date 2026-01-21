@@ -1,15 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_images.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 class BlogListViewItem extends StatelessWidget {
   final List blog;
@@ -31,7 +27,7 @@ class BlogListViewItem extends StatelessWidget {
         padding: const EdgeInsetsDirectional.symmetric(
             horizontal: AppSizes.s15, vertical: AppSizes.s12),
         decoration: BoxDecoration(
-          color: const Color(AppColors.textC5),
+          color: Color(AppColors.textC5),
           borderRadius: BorderRadius.circular(AppSizes.s15),
           boxShadow: const [
             BoxShadow(
@@ -65,7 +61,7 @@ class BlogListViewItem extends StatelessWidget {
                         height: 63,
                         circularRaduis: 63,
                       ),
-                      errorWidget: (context, url, error) => const Icon(
+                      errorWidget: (context, url, error) =>  const Icon(
                         Icons.image_not_supported_outlined,
                       )),
                 ),
@@ -78,7 +74,7 @@ class BlogListViewItem extends StatelessWidget {
                 children: [
                  if (blog[index]['created_at'] != null) Text(
                   (blog[index]['created_at'] != null)?  "${blog[index]['created_at']}".toUpperCase() : "0",
-                    style: const TextStyle(
+                    style:  const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Color(0xff606060)),
@@ -87,9 +83,9 @@ class BlogListViewItem extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.zero,
                     child: Text(
-                        "${blog[index]['title'].toString()}".toUpperCase(),
+                        blog[index]['title'].toString().toUpperCase(),
                         maxLines: 2,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: Color(0xff0D3B6F)),

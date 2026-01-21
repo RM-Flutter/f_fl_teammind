@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -12,6 +12,8 @@ import '../../../../general_services/app_config.service.dart';
 import '../../../../general_services/layout.service.dart';
 
 class UserDeviceScreen extends StatefulWidget {
+  const UserDeviceScreen({super.key});
+
   @override
   State<UserDeviceScreen> createState() => _UserDeviceScreenState();
 }
@@ -54,17 +56,17 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Color(AppColors.dark)),
+                          icon: Icon(Icons.arrow_back, color: Color(AppColors.dark)),
                           onPressed: () {
                             Navigator.pop(context);
                           },
                         ),
                         Text(
                           AppStrings.userDevices.tr().toUpperCase(),
-                          style: const TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.transparent),
+                            icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
                             onPressed: (){}
                         ),
                       ],
@@ -104,7 +106,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                           padding: const EdgeInsetsDirectional.symmetric(
                               horizontal: AppSizes.s15, vertical: AppSizes.s12),
                           decoration: BoxDecoration(
-                            color: const Color(AppColors.textC5),
+                            color: Color(AppColors.textC5),
                             borderRadius: BorderRadius.circular(AppSizes.s15),
                             boxShadow: const [
                               BoxShadow(
@@ -119,13 +121,13 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                             children: [
                               if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg"),
                               if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg"),
-                              SizedBox(width: 15,),
+                              const SizedBox(width: 15,),
                               SizedBox(
                                 width : MediaQuery.sizeOf(context).width * 0.5,
                                 child: Text(
                                   "${value.devices[index]['browser'].toString()} (${value.devices[index]['os_version'].toString()})".toUpperCase(),
                                   maxLines: 2,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                       color: Color(AppColors.dark)),
@@ -135,7 +137,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                               if(appConfigServiceProvider.deviceInformation.deviceUniqueId == value.devices[index]['unique_id'].toString())Text(
                                 AppStrings.currentDevice.tr(),
                                 maxLines: 2,
-                                style: const TextStyle(
+                                style:  const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.green),

@@ -1,13 +1,8 @@
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/home/widget/grid_view_model.dart';
-import 'package:inv/modules/home/widget/home_grid_view_item.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/modules/home/widget/grid_view_model.dart';
+import 'package:app_test/modules/home/widget/home_grid_view_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../../../routing/app_router.dart';
 
 class HomeGridView extends StatelessWidget {
   const HomeGridView({super.key});
@@ -21,7 +16,7 @@ class HomeGridView extends StatelessWidget {
       padding: const EdgeInsetsDirectional.only(
           top: AppSizes.s90),
       sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 300,
           mainAxisSpacing: 5,
           crossAxisSpacing: 12,

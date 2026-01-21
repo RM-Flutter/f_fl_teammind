@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_strings.dart';
 import 'dart:ui' as ui;
 
 import '../../constants/app_images.dart';

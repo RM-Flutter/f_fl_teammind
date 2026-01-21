@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:inv/modules/points/fawry_view/pay_bill_screen.dart';
-import 'package:inv/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart';
+import 'package:app_test/modules/points/fawry_view/pay_bill_screen.dart';
+import 'package:app_test/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import '../../../common_modules_widgets/button_widget.dart';
 import '../../../utils/gradient_bg_image.dart';
@@ -19,7 +19,7 @@ import '../logic/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneScreen extends StatefulWidget {
   var service;
-  ChargePhoneScreen(this.service);
+  ChargePhoneScreen(this.service, {super.key});
   @override
   State<ChargePhoneScreen> createState() => _ChargePhoneScreenState();
 }
@@ -56,7 +56,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
         fawryProviderModel.focusNodes[key] = FocusNode();
       }
     }
-    if(inquiry != null && inputs != null && inputs.isNotEmpty &&
+    if(inquiry != null && inputs.isNotEmpty &&
         serviceObject != null && totalPoints != null &&serviceId != null && serviceTitle != null
         &&singlePrice != null && pointsPerOne != null){
       selectIndex = 0;
@@ -71,15 +71,15 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
       _didCalculateFee = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return; // ✅ الحماية هنا
-        fawryProviderModel!.updateFee(
+        fawryProviderModel.updateFee(
           serviceObject,
           double.parse(
-            fawryProviderModel!.rechargeAmountController.text.isNotEmpty
-                ? fawryProviderModel!.rechargeAmountController.text
+            fawryProviderModel.rechargeAmountController.text.isNotEmpty
+                ? fawryProviderModel.rechargeAmountController.text
                 : "0",
           ),
         );
-        print("FFES IS --> ${fawryProviderModel!.cachedFee}");
+        print("FFES IS --> ${fawryProviderModel.cachedFee}");
       });
     }
   }
@@ -97,7 +97,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
             "${double.parse(value.rechargeAmountController.text.toString()) * double.parse(totalPoints.toString())}";
           }
           final json2String = CacheHelper.getString("US2");
-          var us2Cache;
+          Map<String, dynamic> us2Cache = {};
           if (json2String != null && json2String != "") {
             us2Cache = json.decode(json2String)
                 as Map<String, dynamic>; // Convert String back to JSON
@@ -131,13 +131,13 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: const Icon(
+                  child:  const Icon(
                     Icons.arrow_back,
                     color: Color(0XFF224982),
                   )),
               title: Text(
                 widget.service['title'].toString().toUpperCase(),
-                style: const TextStyle(
+                style:  const TextStyle(
                     fontSize: AppSizes.s16,
                     fontWeight: FontWeight.w700,
                     color: Color(0XFF224982)),
@@ -171,10 +171,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                 vertical: 10, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: Color(0xffFFFFFF),
+                              color: const Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(0xffC9CFD2).withOpacity(0.5),
+                                  color: const Color(0xffC9CFD2).withOpacity(0.5),
                                   blurRadius: AppSizes.s5,
                                   spreadRadius: 1,
                                 )
@@ -187,7 +187,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                   AppStrings.selectServiceProvider
                                       .tr()
                                       .toUpperCase(),
-                                  style: const TextStyle(
+                                  style:  const TextStyle(
                                       fontSize: AppSizes.s14,
                                       fontWeight: FontWeight.w700,
                                       color: Color(0XFF224982)),
@@ -258,7 +258,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                       border: Border.all(
                                                           color: selectIndex ==
                                                                   index
-                                                              ? const Color(
+                                                              ?  Color(
                                                                   AppColors.primary)
                                                               : Colors
                                                                   .transparent)),
@@ -301,7 +301,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                 Text(
                                                   widget.service['services']
                                                       [index]['title'],
-                                                  style: const TextStyle(
+                                                  style:  const TextStyle(
                                                       fontSize: AppSizes.s10,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -378,10 +378,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                 vertical: 25, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: Color(0xffFFFFFF),
+                              color: const Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(0xffC9CFD2).withOpacity(0.5),
+                                  color: const Color(0xffC9CFD2).withOpacity(0.5),
                                   blurRadius: AppSizes.s5,
                                   spreadRadius: 1,
                                 )
@@ -439,10 +439,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                         },
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     SvgPicture.asset(
                                         "assets/images/svg/transfer.svg"),
-                                    Spacer(),
+                                    const Spacer(),
                                     SizedBox(
                                       width: MediaQuery.sizeOf(context).width *
                                           0.35,
@@ -505,10 +505,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                     "${value.cachedFee} ج.م"),
                                 defaultTransferDetailsTexts(
                                     AppStrings.total.tr(),
-                                    "${double.parse(value.rechargeAmountController.text.isNotEmpty ? value.rechargeAmountController.text : "0") + double.parse(value.cachedFee != null ? value.cachedFee.toStringAsFixed(0) : "0")} ج.م"),
+                                    "${double.parse(value.rechargeAmountController.text.isNotEmpty ? value.rechargeAmountController.text : "0") + double.parse(value.cachedFee.toStringAsFixed(0))} ج.م"),
                                 SizedBox(
                                   width: MediaQuery.sizeOf(context).width * 0.6,
-                                  child: const Divider(
+                                  child: Divider(
                                     color: Color(AppColors.primary),
                                   ),
                                 ),
@@ -524,8 +524,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                   "${double.parse(us2Cache['points']['available'].toString())-
                                       ((double.parse(value.rechargeAmountController.text.isNotEmpty ?
                                       value.rechargeAmountController.text : "0") +
-                                          double.parse(value.cachedFee != null ? value.cachedFee.toStringAsFixed(0)
-                                              : "0"))* double.parse(pointsPerOne.toString()))}")
+                                          double.parse(value.cachedFee.toStringAsFixed(0)))* double.parse(pointsPerOne.toString()))}")
                               ],
                             ),
                           ),
@@ -550,7 +549,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
           children: [
             Text(
               t1,
-              style: const TextStyle(
+              style:  TextStyle(
                   color: Color(AppColors.primary),
                   fontSize: 12,
                   fontWeight: FontWeight.w600),
@@ -558,7 +557,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
             const Spacer(),
             Text(
               t2,
-              style: const TextStyle(
+              style:  TextStyle(
                   color: Color(AppColors.c3),
                   fontSize: 12,
                   fontWeight: FontWeight.w500),
@@ -584,7 +583,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
               child: Text(LocalizationService.isArabic(context: context)
                   ? e['title_ar']
                   : e['title_en'],
-                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+                style:  const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
               ),
             );
           }).toList(),

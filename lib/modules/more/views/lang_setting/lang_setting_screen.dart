@@ -3,20 +3,20 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/general_services/settings.service.dart';
-import 'package:inv/models/settings/general_settings.model.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/modules/more/views/lang_setting/logic/lang_controller.dart';
+import 'package:app_test/modules/more/views/lang_setting/logic/lang_controller.dart';
 
 import '../../../../constants/user_consts.dart';
 
 class LangSettingScreens extends StatefulWidget {
+  const LangSettingScreens({super.key});
+
   @override
   State<LangSettingScreens> createState() => _LangSettingScreensState();
 }
@@ -27,7 +27,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
   @override
   Widget build(BuildContext context) {
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     GeneralSettingsModel? generalSettingsModel;
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
@@ -41,14 +41,12 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
       "اللغه العربية"]
         : lang;
     print("is--->${context.locale.languageCode}");
-    if(context.locale.languageCode != null){
-      if(context.locale.languageCode.contains("en")){
-        selectIndex = 0;
-      }if(context.locale.languageCode.contains("ar")){
-        selectIndex = 1;
-      }
+    if(context.locale.languageCode.contains("en")){
+      selectIndex = 0;
+    }if(context.locale.languageCode.contains("ar")){
+      selectIndex = 1;
     }
-    print("LANG Is : $lang");
+      print("LANG Is : $lang");
     return ChangeNotifierProvider(create: (context) => LangControllerProvider(),
       child: Consumer<LangControllerProvider>(builder: (context, value, child) {
         return Scaffold(
@@ -59,10 +57,10 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(Icons.arrow_back, color: Color(AppColors.dark),)),
+                child: Icon(Icons.arrow_back, color: Color(AppColors.dark),)),
             title: Text(
               AppStrings.languageSettings.tr().toUpperCase(),
-              style: const TextStyle(
+              style:  TextStyle(
                   fontSize: AppSizes.s16,
                   fontWeight: FontWeight.w700,
                   color: Color(AppColors.dark)),
@@ -102,7 +100,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                     color: const Color(0xffFFFFFF),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Color(0xffC9CFD2).withOpacity(0.5),
+                                        color: const Color(0xffC9CFD2).withOpacity(0.5),
                                         blurRadius: AppSizes.s5,
                                         spreadRadius: 1,
                                       )
@@ -117,15 +115,15 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                       padding: const EdgeInsets.all(2),
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          border: Border.all(color: const Color(AppColors.primary)),
-                                          color:(selectIndex == index)? const Color(AppColors.primary) : const Color(0xffFFFFFF)
+                                          border: Border.all(color: Color(AppColors.primary)),
+                                          color:(selectIndex == index)? Color(AppColors.primary) : const Color(0xffFFFFFF)
                                       ),
-                                      child: const Icon(Icons.check, color: Colors.white, size: 18,),
+                                      child:  const Icon(Icons.check, color: Colors.white, size: 18,),
                                     ),
                                     const SizedBox(width: 15,),
-                                    Text((lang![index].contains("English language")||lang![index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style: const TextStyle(color: Color(0xff191C1F), fontWeight: FontWeight.w500, fontSize: 14),)
+                                    Text((lang![index].contains("English language")||lang[index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style:  const TextStyle(color: Color(0xff191C1F), fontWeight: FontWeight.w500, fontSize: 14),)
                                     ,const Spacer(),
-                                    Text((lang![index].contains("en"))?"change".toUpperCase() : "تغيير", style: const TextStyle(fontSize: 12 ,fontWeight: FontWeight.w500, color: Color(AppColors.primary)),)
+                                    Text((lang[index].contains("en"))?"change".toUpperCase() : "تغيير", style: TextStyle(fontSize: 12 ,fontWeight: FontWeight.w500, color: Color(AppColors.primary)),)
                                   ],
                                 ),
                               ),

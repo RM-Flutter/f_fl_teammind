@@ -42,7 +42,7 @@ class HomeViewModel extends ChangeNotifier {
     if (!context.mounted) return;
     var jsonString;
     UserSettingsModel? userSettingsModel;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -50,14 +50,14 @@ class HomeViewModel extends ChangeNotifier {
     }
     var jsonString2;
     UserSettings2Model? userSettings2Model;
-    var gCache2;
+    Map<String, dynamic> gCache2 = {};
     jsonString2 = CacheHelper.getString("US2");
     if (jsonString2 != null && jsonString2.isNotEmpty && jsonString2 != "") {
       gCache2 = json.decode(jsonString2) as Map<String, dynamic>; // Convert String back to JSON
       // UserSettingConst.userSettings2 = UserSettings2Model.fromJson(gCache2);
     }
-    userSettingsModel = gCache != null ? UserSettingsModel.fromJson(gCache) : userSettingsModel;
-    userSettings2Model = gCache2 != null ?UserSettings2Model.fromJson(gCache2) : userSettings2Model;
+    userSettingsModel = UserSettingsModel.fromJson(gCache);
+    userSettings2Model = UserSettings2Model.fromJson(gCache2);
     userSettings = userSettingsModel;
     userSettings2 = userSettings2Model;
     // get user requests
@@ -70,7 +70,7 @@ class HomeViewModel extends ChangeNotifier {
         // intialize Birthday Service Checker
         var jsonString;
         UserSettingsModel userSettingsModel;
-        var gCache;
+        Map<String, dynamic> gCache = {};
         jsonString = CacheHelper.getString("US1");
         if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
           gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON

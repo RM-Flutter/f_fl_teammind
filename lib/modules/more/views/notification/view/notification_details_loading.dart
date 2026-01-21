@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NotificationDetailsLoading extends StatelessWidget {
+  const NotificationDetailsLoading({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(

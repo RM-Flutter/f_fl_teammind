@@ -2,11 +2,8 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
 
 import '../../constants/app_images.dart';
-import '../../platform/platform_is.dart';
-import '../backend_services/api_service/dio_api_service/dio_api.service.dart';
 import 'timeout_message.service.dart';
 
 ///  A service to handle push notifications using Firebase Messaging.

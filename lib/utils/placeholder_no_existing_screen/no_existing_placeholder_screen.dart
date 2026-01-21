@@ -25,7 +25,7 @@ class NoExistingPlaceholderScreen extends StatelessWidget {
           gapH16,
           Text(
             title,
-            style: const TextStyle(color: Colors.grey),
+            style:  const TextStyle(color: Colors.grey),
           ),
         ],
       ),

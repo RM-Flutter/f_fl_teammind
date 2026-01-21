@@ -11,17 +11,17 @@ class GetRequestCommentModel {
     if (json['comments'] != null) {
       comments = <Comments>[];
       json['comments'].forEach((v) {
-        comments!.add(new Comments.fromJson(v));
+        comments!.add(Comments.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.comments != null) {
-      data['comments'] = this.comments!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (comments != null) {
+      data['comments'] = comments!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -47,18 +47,18 @@ class Comments {
 
   Comments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     content = json['content'];
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
     if (json['sounds'] != null) {
       sounds = <Sounds>[];
       json['sounds'].forEach((v) {
-        sounds!.add(new Sounds.fromJson(v));
+        sounds!.add(Sounds.fromJson(v));
       });
     }
     createdAt = json['created_at'];
@@ -66,20 +66,20 @@ class Comments {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
-    data['content'] = this.content;
-    if (this.images != null) {
-      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    data['content'] = content;
+    if (images != null) {
+      data['images'] = images!.map((v) => v.toJson()).toList();
     }
-    if (this.sounds != null) {
-      data['sounds'] = this.sounds!.map((v) => v.toJson()).toList();
+    if (sounds != null) {
+      data['sounds'] = sounds!.map((v) => v.toJson()).toList();
     }
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
@@ -98,10 +98,10 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['avatar'] = this.avatar;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['avatar'] = avatar;
     return data;
   }
 }
@@ -134,13 +134,13 @@ class Images {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
     return data;
   }
 }
@@ -172,13 +172,13 @@ class Sounds {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
     return data;
   }
 }

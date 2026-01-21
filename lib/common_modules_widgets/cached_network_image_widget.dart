@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 import '../constants/app_sizes.dart';
 
@@ -64,7 +64,7 @@ class CachedNetWorkImageWidget extends StatelessWidget {
       ),
       placeholder: (context, url) =>
       const ShimmerAnimatedLoading(),
-      errorWidget: (context, url, error) => const Icon(
+      errorWidget: (context, url, error) =>  const Icon(
         Icons.image_not_supported_outlined,
         size: AppSizes.s32,
         color: Colors.white,

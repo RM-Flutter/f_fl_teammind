@@ -61,7 +61,7 @@ class CompanyInfoHeader extends StatelessWidget {
                     child: Center(
                       child: IconButton(
                         onPressed: () => context.pop(),
-                        icon: const Icon(
+                        icon:  Icon(
                           Icons.arrow_back_ios_new,
                           color: Colors.white,
                           size: AppSizes.s18,

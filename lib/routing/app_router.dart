@@ -1,27 +1,19 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/modules/complain_screen/complain_details_screen.dart';
-import 'package:inv/modules/complain_screen/complains_screen.dart';
-import 'package:inv/modules/more/views/aboutus/view/aboutus_screen.dart';
-import 'package:inv/modules/more/views/blog/view/blog_details_screen.dart';
-import 'package:inv/modules/more/views/blog/view/blog_screen.dart';
-import 'package:inv/modules/more/views/company_structure/company_structure_screen.dart';
-import 'package:inv/modules/more/views/contactus/view/contact_screen.dart';
-import 'package:inv/modules/more/views/faq/view/faq_screen.dart';
-import 'package:inv/modules/more/views/lang_setting/lang_setting_screen.dart';
-import 'package:inv/modules/more/views/notification/view/add_notification_screen.dart';
-import 'package:inv/modules/more/views/notification/view/notification_details_screen.dart';
-import 'package:inv/modules/more/views/notification/view/notification_screen.dart';
-import 'package:inv/modules/complain_screen/add_complain_screen.dart';
-import 'package:inv/modules/more/views/update_password/update_password_screen.dart';
-import 'package:inv/modules/pages/default_list_page.dart';
-import '../constants/user_consts.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/modules/complain_screen/complain_details_screen.dart';
+import 'package:app_test/modules/complain_screen/complains_screen.dart';
+import 'package:app_test/modules/more/views/aboutus/view/aboutus_screen.dart';
+import 'package:app_test/modules/more/views/company_structure/company_structure_screen.dart';
+import 'package:app_test/modules/more/views/contactus/view/contact_screen.dart';
+import 'package:app_test/modules/more/views/faq/view/faq_screen.dart';
+import 'package:app_test/modules/more/views/lang_setting/lang_setting_screen.dart';
+import 'package:app_test/modules/more/views/notification/view/add_notification_screen.dart';
+import 'package:app_test/modules/more/views/notification/view/notification_details_screen.dart';
+import 'package:app_test/modules/more/views/notification/view/notification_screen.dart';
+import 'package:app_test/modules/complain_screen/add_complain_screen.dart';
+import 'package:app_test/modules/more/views/update_password/update_password_screen.dart';
+import 'package:app_test/modules/pages/default_list_page.dart';
 import '../general_services/app_config.service.dart';
-import '../general_services/internet_check.dart';
-import '../models/settings/user_settings.model.dart';
 import '../modules/authentication/views/login_screen.dart';
 import '../modules/authentication/views/update_main_data.dart';
 import '../modules/home/view/home_screen.dart';
@@ -42,7 +34,6 @@ import '../modules/splash_and_onboarding/views/onboarding_screen.dart';
 import '../modules/splash_and_onboarding/views/splash_screen.dart';
 import '../routing/app_router_transitions.dart';
 import '../routing/not_found/not_found_screen.dart';
-import '../services/requests.services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
@@ -220,7 +211,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                 });
                 return AppRouterTransitions.slideTransition(
                   key: state.pageKey,
-                  child:  HomeScreen(),
+                  child:  const HomeScreen(),
                   animation: animationController,
                   begin: begin ?? const Offset(1.0, 0.0),
                 );
@@ -276,7 +267,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                 CacheHelper.deleteData(key: "value");
                 return AppRouterTransitions.slideTransition(
                   key: state.pageKey,
-                  child: NotificationScreen(false),
+                  child: const NotificationScreen(false),
                   animation: animationController,
                   begin: begin ?? const Offset(1.0, 0.0),
                 );
@@ -329,7 +320,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: WebViewStack(),
+                      child: const WebViewStack(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
@@ -357,7 +348,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: UpdatePasswordScreen(),
+                      child: const UpdatePasswordScreen(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
@@ -385,7 +376,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: AboutUsScreen(),
+                      child: const AboutUsScreen(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
@@ -420,12 +411,12 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                             });
                             return AppRouterTransitions.slideTransition(
                               key: state.pageKey,
-                              child: ContactSelectionScreen(),
+                              child: const ContactSelectionScreen(),
                               animation: animationController,
                               begin: begin ?? const Offset(1.0, 0.0),
                             );
                           },
-                          routes: [
+                          routes: const [
 
                           ]
                       ),
@@ -478,7 +469,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                             });
                             return AppRouterTransitions.slideTransition(
                               key: state.pageKey,
-                              child: PointsCategoriesScreen(true,),
+                              child: const PointsCategoriesScreen(true,),
                               animation: animationController,
                               begin: const Offset(1.0, 0.0),
                             );
@@ -507,7 +498,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                                 });
                                 return AppRouterTransitions.slideTransition(
                                   key: state.pageKey,
-                                  child: FawryProviderScreen(),
+                                  child: const FawryProviderScreen(),
                                   animation: animationController,
                                   begin: const Offset(1.0, 0.0),
                                 );
@@ -656,7 +647,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: FaqScreen(),
+                      child: const FaqScreen(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
@@ -684,7 +675,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child:  ContactScreen(),
+                      child:  const ContactScreen(),
                       animation: animationController,
                       begin: const Offset(1.0, 0.0),
                     );
@@ -737,7 +728,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                       });
                       return AppRouterTransitions.slideTransition(
                         key: state.pageKey,
-                        child: ComplainScreen(),
+                        child: const ComplainScreen(),
                         animation: animationController,
                         begin: begin ?? const Offset(1.0, 0.0),
                       );
@@ -766,7 +757,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                           });
                           return AppRouterTransitions.slideTransition(
                             key: state.pageKey,
-                            child: NewComplainScreen(),
+                            child: const NewComplainScreen(),
                             animation: animationController,
                             begin: begin ?? const Offset(1.0, 0.0),
                           );
@@ -837,7 +828,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             });
             return AppRouterTransitions.slideTransition(
               key: state.pageKey,
-              child: LangSettingScreens(),
+              child: const LangSettingScreens(),
               animation: animationController,
               begin: begin ?? const Offset(1.0, 0.0),
             );
@@ -847,7 +838,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
           path: '/:lang/notification-screen',
           parentNavigatorKey: rootNavigatorKey,
           name: AppRoutes.notification.name,
-          builder: (context, state) => NotificationScreen(true),
+          builder: (context, state) => const NotificationScreen(true),
           routes: [
             GoRoute(
               path: 'add-notification',
@@ -1008,7 +999,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
           path: '/:lang/userDevices-screen',
           parentNavigatorKey: rootNavigatorKey,
           name: AppRoutes.userDevices.name,
-          builder: (context, state) => UserDeviceScreen(),
+          builder: (context, state) => const UserDeviceScreen(),
         ),
         GoRoute(
           path: '/:lang/blog_details/:title/:type/:id',
@@ -1119,7 +1110,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
             });
             return AppRouterTransitions.slideTransition(
               key: state.pageKey,
-              child: WebViewStackMainData(),
+              child: const WebViewStackMainData(),
               animation: animationController,
               begin: begin ?? const Offset(1.0, 0.0),
             );

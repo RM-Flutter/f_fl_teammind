@@ -8,15 +8,15 @@ class AboutUsModel {
   AboutUsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    page = json['page'] != null ? new Page.fromJson(json['page']) : null;
+    page = json['page'] != null ? Page.fromJson(json['page']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.page != null) {
-      data['page'] = this.page!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (page != null) {
+      data['page'] = page!.toJson();
     }
     return data;
   }
@@ -52,30 +52,30 @@ class Page {
     if (json['certificates'] != null) {
       certificates = <Certificates>[];
       json['certificates'].forEach((v) {
-        certificates!.add(new Certificates.fromJson(v));
+        certificates!.add(Certificates.fromJson(v));
       });
     }
     if (json['partners'] != null) {
       partners = <Partners>[];
       json['partners'].forEach((v) {
-        partners!.add(new Partners.fromJson(v));
+        partners!.add(Partners.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['slug'] = this.slug;
-    data['type'] = this.type;
-    data['content'] = this.content;
-    data['history'] = this.history;
-    if (this.certificates != null) {
-      data['certificates'] = this.certificates!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['slug'] = slug;
+    data['type'] = type;
+    data['content'] = content;
+    data['history'] = history;
+    if (certificates != null) {
+      data['certificates'] = certificates!.map((v) => v.toJson()).toList();
     }
-    if (this.partners != null) {
-      data['partners'] = this.partners!.map((v) => v.toJson()).toList();
+    if (partners != null) {
+      data['partners'] = partners!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -106,19 +106,19 @@ class Certificates {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
-    if (this.sizes != null) {
-      data['sizes'] = this.sizes!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
+    if (sizes != null) {
+      data['sizes'] = sizes!.toJson();
     }
     return data;
   }
@@ -148,19 +148,19 @@ class Partners {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
-    if (this.sizes != null) {
-      data['sizes'] = this.sizes!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
+    if (sizes != null) {
+      data['sizes'] = sizes!.toJson();
     }
     return data;
   }
@@ -216,21 +216,21 @@ class Sizes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['thumbnail'] = this.thumbnail;
-    data['medium'] = this.medium;
-    data['large'] = this.large;
-    data['1200_800'] = this.s1200800;
-    data['800_1200'] = this.s8001200;
-    data['1200_300'] = this.s1200300;
-    data['300_1200'] = this.s3001200;
-    data['TUV5100_webp'] = this.tUV5100Webp;
-    data['Made-in-Egypt5100_webp'] = this.madeInEgypt5100Webp;
-    data['ISO-450015058_webp'] = this.iSO450015058Webp;
-    data['ISO-90015058_webp'] = this.iSO90015058Webp;
-    data['IAS5056_webp'] = this.iAS5056Webp;
-    data['IAF5055_webp'] = this.iAF5055Webp;
-    data['EOS5054_webp'] = this.eOS5054Webp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['thumbnail'] = thumbnail;
+    data['medium'] = medium;
+    data['large'] = large;
+    data['1200_800'] = s1200800;
+    data['800_1200'] = s8001200;
+    data['1200_300'] = s1200300;
+    data['300_1200'] = s3001200;
+    data['TUV5100_webp'] = tUV5100Webp;
+    data['Made-in-Egypt5100_webp'] = madeInEgypt5100Webp;
+    data['ISO-450015058_webp'] = iSO450015058Webp;
+    data['ISO-90015058_webp'] = iSO90015058Webp;
+    data['IAS5056_webp'] = iAS5056Webp;
+    data['IAF5055_webp'] = iAF5055Webp;
+    data['EOS5054_webp'] = eOS5054Webp;
     return data;
   }
 }
@@ -312,30 +312,30 @@ class PartnerSizes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['thumbnail'] = this.thumbnail;
-    data['medium'] = this.medium;
-    data['large'] = this.large;
-    data['1200_800'] = this.s1200800;
-    data['800_1200'] = this.s8001200;
-    data['1200_300'] = this.s1200300;
-    data['300_1200'] = this.s3001200;
-    data['orient-partners145720_webp'] = this.orientPartners145720Webp;
-    data['orient-partners145720.png_webp'] = this.orientPartners145720PngWebp;
-    data['orient-partners135718_webp'] = this.orientPartners135718Webp;
-    data['orient-partners135718.png_webp'] = this.orientPartners135718PngWebp;
-    data['orient-partners125718_webp'] = this.orientPartners125718Webp;
-    data['orient-partners115716_webp'] = this.orientPartners115716Webp;
-    data['orient-partners10_webp'] = this.orientPartners10Webp;
-    data['orient-partners085714_webp'] = this.orientPartners085714Webp;
-    data['orient-partners095714_webp'] = this.orientPartners095714Webp;
-    data['orient-partners075712_webp'] = this.orientPartners075712Webp;
-    data['orient-partners065711_webp'] = this.orientPartners065711Webp;
-    data['orient-partners055711_webp'] = this.orientPartners055711Webp;
-    data['orient-partners035709_webp'] = this.orientPartners035709Webp;
-    data['orient-partners045709_webp'] = this.orientPartners045709Webp;
-    data['orient-partners015707_webp'] = this.orientPartners015707Webp;
-    data['orient-partners025706_webp'] = this.orientPartners025706Webp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['thumbnail'] = thumbnail;
+    data['medium'] = medium;
+    data['large'] = large;
+    data['1200_800'] = s1200800;
+    data['800_1200'] = s8001200;
+    data['1200_300'] = s1200300;
+    data['300_1200'] = s3001200;
+    data['orient-partners145720_webp'] = orientPartners145720Webp;
+    data['orient-partners145720.png_webp'] = orientPartners145720PngWebp;
+    data['orient-partners135718_webp'] = orientPartners135718Webp;
+    data['orient-partners135718.png_webp'] = orientPartners135718PngWebp;
+    data['orient-partners125718_webp'] = orientPartners125718Webp;
+    data['orient-partners115716_webp'] = orientPartners115716Webp;
+    data['orient-partners10_webp'] = orientPartners10Webp;
+    data['orient-partners085714_webp'] = orientPartners085714Webp;
+    data['orient-partners095714_webp'] = orientPartners095714Webp;
+    data['orient-partners075712_webp'] = orientPartners075712Webp;
+    data['orient-partners065711_webp'] = orientPartners065711Webp;
+    data['orient-partners055711_webp'] = orientPartners055711Webp;
+    data['orient-partners035709_webp'] = orientPartners035709Webp;
+    data['orient-partners045709_webp'] = orientPartners045709Webp;
+    data['orient-partners015707_webp'] = orientPartners015707Webp;
+    data['orient-partners025706_webp'] = orientPartners025706Webp;
     return data;
   }
 }

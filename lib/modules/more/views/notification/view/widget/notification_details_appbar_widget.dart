@@ -1,16 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/layout.service.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/models/get_one_notification_model.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/models/get_one_notification_model.dart';
 
 
 class NotificationDetailsAppbarWidget extends StatelessWidget {
   NotificationSingleModel? notificationSingleModel;
-  NotificationDetailsAppbarWidget({this.notificationSingleModel});
+  NotificationDetailsAppbarWidget({super.key, this.notificationSingleModel});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,37 +35,37 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 50,),
+                const SizedBox(height: 50,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                         onTap: (){Navigator.pop(context);},
-                        child: Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
-                    Spacer(),
+                        child: const Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
+                    const Spacer(),
                     Text(
                       AppStrings.notificationInfo.tr().toUpperCase(),
-                      style: const TextStyle(
+                      style:  const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(width: 20,),
                   ],
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Text(
                   notificationSingleModel!.title?.toString() ?? "",
-                  style: const TextStyle(
+                  style:  const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 25,),
+                const SizedBox(height: 25,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +73,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                     Text(
                      DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(notificationSingleModel!.createdAt.toString())).toString(),
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style:  const TextStyle(
                         fontSize: 12,
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -102,12 +102,12 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Icon(Icons.category, color: Color(AppColors.primary),),
+                        Icon(Icons.category, color: Color(AppColors.primary),),
                         const SizedBox(width: 5,),
                         Text(
                           notificationSingleModel!.ptype!.key!.toString().tr(),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style:  const TextStyle(
                             fontSize: 12,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -117,7 +117,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
 
               ],
             ),

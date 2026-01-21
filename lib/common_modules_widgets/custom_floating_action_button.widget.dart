@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_colors.dart';
+import 'package:app_test/constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../general_services/app_theme.service.dart';
 
@@ -21,7 +21,7 @@ class CustomFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      backgroundColor: const Color(AppColors.blue),
+      backgroundColor: Color(AppColors.blue),
       heroTag: ValueKey('$iconPath-$tagSuffix'),
       onPressed: onPressed,
       child: Center(

@@ -1,14 +1,13 @@
-import 'package:inv/utils/helpers/media_query_values.dart';
+import 'package:app_test/utils/helpers/media_query_values.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
 import '../../../utils/componentes/general_components/all_bottom_sheet.dart';
 
 class PointsSuccessSheet{
@@ -31,7 +30,7 @@ class PointsSuccessSheet{
                 children: [
                   Text(
                      AppStrings.areYouSureYouWantToMakeTransferPoints.tr(),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style:  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -153,7 +152,7 @@ class PointsSuccessSheet{
                       borderRadius: BorderRadius.circular(8),
                       color: const Color(0xffE8E8E8)
                   ),
-                  child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
+                  child: Text(AppStrings.copy.tr(), style:  const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
                 ),
               )
             ],

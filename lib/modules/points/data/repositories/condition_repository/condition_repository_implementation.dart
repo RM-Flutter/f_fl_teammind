@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:inv/general_services/app_config.service.dart';
+import 'package:app_test/general_services/app_config.service.dart';
 import 'package:provider/provider.dart';
 import '../../../core/api/api_services.dart';
 import '../../../core/api/end_points.dart';

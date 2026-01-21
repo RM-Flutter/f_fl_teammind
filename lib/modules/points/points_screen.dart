@@ -1,5 +1,5 @@
-import 'package:inv/modules/points/widgets/sliver_app_bar_points.dart';
-import 'package:inv/modules/points/widgets/sliver_list_points.dart';
+import 'package:app_test/modules/points/widgets/sliver_app_bar_points.dart';
+import 'package:app_test/modules/points/widgets/sliver_list_points.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/componentes/general_components/gradient_bg_image.dart';
@@ -33,7 +33,7 @@ class _PointsScreenState extends State<PointsScreen> {
         create: (context) => PrizeProvider(
             GetPrizeRepositoryImplementation(ApiServicesImplementation(),context), RedeemPrizeRepositoryImplementation(ApiServicesImplementation(), context)),
         child: Scaffold( resizeToAvoidBottomInset: true,
-          backgroundColor: Color(0xffFFFFFF),
+          backgroundColor: const Color(0xffFFFFFF),
           body: SafeArea(
             child: GradientBgImage(
               padding: EdgeInsets.zero,
@@ -42,11 +42,11 @@ class _PointsScreenState extends State<PointsScreen> {
           await Provider.of<HomeViewModel>(context, listen: false).initializeHomeScreen(context, ["user_settings"]);
           },
             child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(), // << مهم هنا
+              physics: const AlwaysScrollableScrollPhysics(), // << مهم هنا
               slivers: [
                 SliverAppBarPoints(arrow: widget.arrow),
                 // SizedBox(height: 20,),
-                SliverListPoints(),
+                const SliverListPoints(),
               ],
             ),
           ),

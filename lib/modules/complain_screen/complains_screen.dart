@@ -5,22 +5,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/controller/request_controller/request_controller.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/layout.service.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/models/settings/user_settings.model.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/controller/request_controller/request_controller.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../utils/componentes/general_components/gradient_bg_image.dart';
 
 class ComplainScreen extends StatefulWidget {
+  const ComplainScreen({super.key});
+
   @override
   State<ComplainScreen> createState() => _ComplainScreenState();
 }
@@ -56,7 +58,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
     return Consumer<RequestController>(
       builder: (context, value, child) {
         var jsonString;
-        var gCache;
+        Map<String, dynamic> gCache = {};
         jsonString = CacheHelper.getString("US1");
         if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
           gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -67,10 +69,10 @@ class _ComplainScreenState extends State<ComplainScreen> {
           appBar: AppBar(
             title: Text(
               AppStrings.ticketSystem.tr().toUpperCase(),
-              style: const TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
             ),
             centerTitle: true,
-            backgroundColor: Color(0xffFFFFFF),
+            backgroundColor: const Color(0xffFFFFFF),
             elevation: 0,
           ),
           floatingActionButton: FloatingActionButton(
@@ -79,8 +81,8 @@ class _ComplainScreenState extends State<ComplainScreen> {
                   pathParameters: {'lang': context.locale.languageCode,});
              await requestController.getRequest(context, page: 1, );
             },
-            backgroundColor: const Color(AppColors.primary),
-            child: const Icon(Icons.add, color: Colors.white),
+            backgroundColor: Color(AppColors.primary),
+            child:  const Icon(Icons.add, color: Colors.white),
           ),
           body: (value.isGetRequestLoading == true && value.currentPage == 1)
               ? ListView.builder(
@@ -103,7 +105,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 ),
               ), ):
           GradientBgImage(
-            padding: EdgeInsets.all(0),
+            padding: const EdgeInsets.all(0),
                  child: SafeArea(
                              child: RefreshIndicator.adaptive(
                                onRefresh: ()async{
@@ -119,14 +121,14 @@ class _ComplainScreenState extends State<ComplainScreen> {
                         const SizedBox(height: 10,),
                         Center(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(
+                            constraints: const BoxConstraints(
                               maxWidth: kIsWeb ? 1100 : double.infinity,
                             ),
                             child: ListView.builder(
                               itemCount: value.requests.length,
                               reverse: false,
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
                                 var request = value.requests[index];
@@ -142,27 +144,27 @@ class _ComplainScreenState extends State<ComplainScreen> {
                                           .format(DateTime.parse(request['created_at'].toString()))
                                           .toString(),
                                       status: request['pstatus']['key'].toString().tr(),
-                                      statusColor: Color(0xffFFFFFF)
+                                      statusColor: const Color(0xffFFFFFF)
                                   );
                                 }else{
                                  return defaultRequestContainer(
                                       context,
                                      "mine",
                                       id: request['id'],
-                                      containerColor: Color(0xffFFFFFF),
+                                      containerColor: const Color(0xffFFFFFF),
                                       title: request['title'],
                                       date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
                                           .format(DateTime.parse(request['created_at'].toString()))
                                           .toString(),
                                       status: request['pstatus']['key'].toString().tr(),
                                       titleColor: Color(AppColors.primary),
-                                      dateColor: Color(0xff5E5E5E),
+                                      dateColor: const Color(0xff5E5E5E),
                                       statusColor: statusKey == "closed"
-                                          ? Color(AppColors.red)
+                                          ? const Color(AppColors.red)
                                           : Color(AppColors.primary)
                                   );
                                 }
-                                return SizedBox.shrink();  // Return nothing for non-hold items in this section
+                                return const SizedBox.shrink();  // Return nothing for non-hold items in this section
                               },
                             ),
                           ),
@@ -191,13 +193,13 @@ class _ComplainScreenState extends State<ComplainScreen> {
         onTap: (){
          parentContext.pushNamed(AppRoutes.complainDetails.name,
               pathParameters: {'lang': parentContext.locale.languageCode,
-              'id' : "${id}",
+              'id' : "$id",
               });
 
         },
         child: Container(
-            padding: EdgeInsets.all(12),
-            margin: EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.only(bottom: 16),
 
             decoration: BoxDecoration(
               boxShadow: const [
@@ -218,23 +220,23 @@ class _ComplainScreenState extends State<ComplainScreen> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: titleColor??Color(0xffFFFFFF),
+              color: titleColor??const Color(0xffFFFFFF),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             children: [
               Icon(Icons.circle, color: statusColor, size: 10),
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Text(
                 "$status".toUpperCase(),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: titleColor??Color(0xffFFFFFF),
+                  color: titleColor??const Color(0xffFFFFFF),
                 ),
               ),
-              SizedBox(width: 30,),
+              const SizedBox(width: 30,),
               Text(
                 "$date".toUpperCase(),
                 style: TextStyle(color: dateColor??Color(AppColors.grey50), fontWeight: FontWeight.w500, fontSize: 12),

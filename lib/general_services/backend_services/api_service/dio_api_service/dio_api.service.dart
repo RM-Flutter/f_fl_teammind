@@ -11,7 +11,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:inv/routing/app_router.dart';
+import 'package:app_test/routing/app_router.dart';
 
 import '../../../../models/operation_result.model.dart';
 import '../../../app_config.service.dart';
@@ -96,7 +96,7 @@ class DioApiService implements BackEndServicesInterface {
 
       case 401:
         respond = 'Unauthorized';
-        print("Unauthorized is ${respond}");
+        print("Unauthorized is $respond");
         // _toast.toastMethod(LocaleKeys.respond_401.tr());
         final appConfigService = Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false, skipServerLogout: true).then((v){
@@ -226,7 +226,7 @@ class DioApiService implements BackEndServicesInterface {
           applyTokenLogic: checkOnTokenExpiration!,
           dataKey: dataKey,
           context: context);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       print("Caught DioError with status code: $statusCode");
 
@@ -288,7 +288,7 @@ class DioApiService implements BackEndServicesInterface {
           applyTokenLogic: checkOnTokenExpiration!,
           dataKey: dataKey,
           context: context);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       print("Caught DioError with status code: $statusCode");
 
@@ -388,7 +388,7 @@ class DioApiService implements BackEndServicesInterface {
           message: 'Result code = ${response.statusCode}',
         );
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       print("Caught DioError with status code: $statusCode");
 
@@ -512,7 +512,7 @@ class DioApiService implements BackEndServicesInterface {
           context: context,
           allData: allData,
           dataKey: dataKey);
-    }on DioError catch (e) {
+    }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       print("Caught DioError with status code: $statusCode");
 
@@ -571,7 +571,7 @@ class DioApiService implements BackEndServicesInterface {
           dataKey: dataKey,
           allData: allData,
           context: context);
-    }on DioError catch (e) {
+    }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       print("Caught DioError with status code: $statusCode");
 
@@ -655,7 +655,7 @@ class DioApiService implements BackEndServicesInterface {
           message: 'Result code = ${response.statusCode}',
         );
       }
-    }on DioError catch (e) {
+    }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       print("Caught DioError with status code: $statusCode");
 

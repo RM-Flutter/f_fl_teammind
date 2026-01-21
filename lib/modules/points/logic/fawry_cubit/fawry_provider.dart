@@ -2,17 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/alert_service/alerts.service.dart';
-import 'package:inv/general_services/app_config.service.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/birthday_checker.service.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/general_services/settings.service.dart';
-import 'package:inv/models/settings/user_settings.model.dart';
-import 'package:inv/models/settings/user_settings_2.model.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/alert_service/alerts.service.dart';
+import 'package:app_test/general_services/app_config.service.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/birthday_checker.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/general_services/settings.service.dart';
+import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/models/settings/user_settings_2.model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/user_consts.dart';
@@ -100,7 +100,7 @@ class FawryProviderModel extends ChangeNotifier {
   }
 
   double calcFees(Map<String, dynamic> service, double amount) {
-    print("service is --> ${service}");
+    print("service is --> $service");
     List<dynamic> rules = [];
 
     try {
@@ -156,7 +156,7 @@ class FawryProviderModel extends ChangeNotifier {
       isGetFawryCategoryLoading = true;
       notifyListeners();
     } catch (error) {
-      getNotificationErrorMessage = error is DioError
+      getNotificationErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -214,7 +214,7 @@ class FawryProviderModel extends ChangeNotifier {
       isGetFawryCategoryLoading = false;
       notifyListeners();
     } catch (error) {
-      getNotificationErrorMessage = error is DioError
+      getNotificationErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -286,7 +286,7 @@ class FawryProviderModel extends ChangeNotifier {
                           borderRadius: BorderRadius.circular(8),
                           color: const Color(0xffE8E8E8)
                       ),
-                      child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
+                      child: Text(AppStrings.copy.tr(), style:  const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
                     ),
                   )
                 ],
@@ -323,7 +323,7 @@ class FawryProviderModel extends ChangeNotifier {
       isPostPayLoading = true;
       notifyListeners();
     } catch (error) {
-      getNotificationErrorMessage = error is DioError
+      getNotificationErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {

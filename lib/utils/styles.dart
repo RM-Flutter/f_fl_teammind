@@ -29,23 +29,23 @@ class TextsStyles{
       fontWeight: FontWeight.w700,
     ),
     "p": Style(
-      color: Color(0xff525252),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff525252),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(14), // Adjust font size for better visibility
       fontWeight: FontWeight.w400,
     ), "ul": Style(
-      color: Color(0xff333333),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff333333),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(18), // Adjust font size for better visibility
       fontWeight: FontWeight.w700,
     ),"li": Style(
-      color: Color(0xff333333),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff333333),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(18), // Adjust font size for better visibility
       fontWeight: FontWeight.w700,
     ),"ol": Style(
-      color: Color(0xff333333),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff333333),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(18), // Adjust font size for better visibility
       fontWeight: FontWeight.w700,
     ),
@@ -77,23 +77,23 @@ class TextsStyles{
       fontWeight: FontWeight.w700,
     ),
     "p": Style(
-      color: Color(0xffFFFFFF),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xffFFFFFF),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(14), // Adjust font size for better visibility
       fontWeight: FontWeight.w400,
     ), "ul": Style(
-      color: Color(0xff333333),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff333333),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(18), // Adjust font size for better visibility
       fontWeight: FontWeight.w700,
     ),"li": Style(
-      color: Color(0xff333333),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff333333),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(18), // Adjust font size for better visibility
       fontWeight: FontWeight.w700,
     ),"ol": Style(
-      color: Color(0xff333333),
-      lineHeight: LineHeight(1.5),
+      color: const Color(0xff333333),
+      lineHeight: const LineHeight(1.5),
       fontSize: FontSize(18), // Adjust font size for better visibility
       fontWeight: FontWeight.w700,
     ),

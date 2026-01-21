@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/models/get_one_blog_model.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/models/get_one_blog_model.dart';
 
 class BlogProviderModel extends ChangeNotifier {
   bool isGetBlogLoading = false;
@@ -46,7 +46,7 @@ class BlogProviderModel extends ChangeNotifier {
       }
       notifyListeners();
     } catch (error) {
-      getBlogErrorMessage = error is DioError
+      getBlogErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -83,7 +83,7 @@ class BlogProviderModel extends ChangeNotifier {
 
       isGetBlogSuccess = true;
     } catch (error) {
-      getBlogErrorMessage = error is DioError
+      getBlogErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {

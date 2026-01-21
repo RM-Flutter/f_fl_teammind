@@ -7,14 +7,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:inv/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
 
 class SendCommentWidget extends StatefulWidget {
   final String id;
   final String slug;
-  SendCommentWidget(this.id, this.slug);
+  const SendCommentWidget(this.id, this.slug, {super.key});
 
   @override
   _SendCommentWidgetState createState() =>
@@ -35,14 +35,14 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
         final path = '${directory.path}/recorded_audio.m4a';
 
         await _audioRecorder.start(
-          RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000),
+          const RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000),
           path: path,
         );
 
         setState(() {
           _isRecording = true;
           _elapsedTime = 0;
-          _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+          _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
             setState(() {
               _elapsedTime++;
             });
@@ -83,7 +83,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
           });
           value.isAddCommentSuccess = false;
         }
-        Future<void> _stopRecording() async {
+        Future<void> stopRecording() async {
           try {
             final path = await _audioRecorder.stop();
             if (path != null) {
@@ -114,11 +114,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.75,
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 5,
@@ -140,7 +140,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                         focusedErrorBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         hintText: AppStrings.typeYourMessage.tr().toUpperCase(),
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
                             color: Color(0xff5E5E5E)),
@@ -168,11 +168,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                     },
                     child: SvgPicture.asset("assets/images/svg/image.svg", color: Color(AppColors.primary),),
                   ),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                   GestureDetector(
-                    onTap: _isRecording ? () => _stopRecording() : null,
-                    onLongPress: _isRecording ? () => _stopRecording() : _startRecording,
-                    onLongPressUp: () => _stopRecording(),
+                    onTap: _isRecording ? () => stopRecording() : null,
+                    onLongPress: _isRecording ? () => stopRecording() : _startRecording,
+                    onLongPressUp: () => stopRecording(),
                     child: _isRecording
                         ? Text(
                       '$_elapsedTime s',
@@ -184,7 +184,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                 ],
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             CircleAvatar(
               backgroundColor: Color(AppColors.primary),
               radius: 24,
@@ -193,9 +193,9 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                   value.addComment(context, id: widget.id, slug: "emp-complains",);
                 },
                 child: (value.isAddCommentLoading == false)
-                    ? SvgPicture.asset("assets/images/svg/send.svg", color: Color(0xffFFFFFF))
-                    : Padding(
-                  padding: const EdgeInsets.all(3.0),
+                    ? SvgPicture.asset("assets/images/svg/send.svg", color: const Color(0xffFFFFFF))
+                    : const Padding(
+                  padding: EdgeInsets.all(3.0),
                   child: CircularProgressIndicator(color: Colors.white),
                 ),
               ),

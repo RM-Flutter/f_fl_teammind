@@ -19,9 +19,9 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 Shimmer.fromColors(
@@ -33,7 +33,7 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     Expanded(
@@ -63,10 +63,10 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ListView.separated(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) => Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
@@ -101,7 +101,7 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
                                   height: 12,
                                   color: Colors.white,
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Container(
                                   width: double.infinity,
                                   height: 12,
@@ -114,10 +114,10 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  separatorBuilder: (context, index) => SizedBox(height: 5),
+                  separatorBuilder: (context, index) => const SizedBox(height: 5),
                   itemCount: 6,
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
@@ -127,7 +127,7 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
           )

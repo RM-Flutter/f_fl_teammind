@@ -3,15 +3,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 
 import '../../constants/app_strings.dart';
 import '../../general_services/alert_service/alerts.service.dart';
-import '../../general_services/app_config.service.dart';
-import '../../modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
-import '../../routing/app_router.dart';
 
 class DeviceControllerProvider extends ChangeNotifier {
   bool isLoading = false;
@@ -46,7 +42,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     } catch (error) {
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -82,7 +78,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     } catch (error) {
       isDeleteLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -109,7 +105,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     } catch (error) {
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -152,7 +148,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     } catch (error) {
       isLoading2 = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage2 = error.toString();
@@ -202,7 +198,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     } catch (error) {
       isLoading2 = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage2 = error.toString();

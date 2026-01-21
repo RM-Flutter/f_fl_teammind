@@ -3,7 +3,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewStackOffers extends StatefulWidget {
   var link;
-  WebViewStackOffers(this.link);
+  WebViewStackOffers(this.link, {super.key});
   @override
   State<WebViewStackOffers> createState() => _WebViewStackOffersState();
 }
@@ -18,7 +18,7 @@ class _WebViewStackOffersState extends State<WebViewStackOffers> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
-            print("onPageStarted is -> ${url}");
+            print("onPageStarted is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 0;
@@ -33,7 +33,7 @@ class _WebViewStackOffersState extends State<WebViewStackOffers> {
             }
           },
           onPageFinished: (url) {
-            print("onPageFinished is -> ${url}");
+            print("onPageFinished is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 100;
@@ -102,7 +102,7 @@ class _WebViewStackOffersState extends State<WebViewStackOffers> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox(height: 30,),
+        const SizedBox(height: 30,),
         WebViewWidget(controller: controller),
         if (loadingPercentage < 100)
           LinearProgressIndicator(value: loadingPercentage / 100.0),

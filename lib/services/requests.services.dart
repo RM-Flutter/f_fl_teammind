@@ -162,7 +162,7 @@ abstract class RequestsServices {
       page: page,
       type: type,
     );
-    print("queryParams is --> ${queryParams}");
+    print("queryParams is --> $queryParams");
     final url = queryParams.isEmpty ? baseUrl : '$baseUrl&$queryParams';
 
     final response = await DioApiService().get<Map<String, dynamic>>(url,

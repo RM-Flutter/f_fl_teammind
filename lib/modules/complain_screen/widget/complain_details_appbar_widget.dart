@@ -1,16 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/layout.service.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
 
 import '../../../models/get_one_complain_model.dart';
 
 
 class ComplainDetailsAppbarWidget extends StatelessWidget {
   GetOneComplainModel? getOneRequestModel;
-  ComplainDetailsAppbarWidget({this.getOneRequestModel});
+  ComplainDetailsAppbarWidget({super.key, this.getOneRequestModel});
 
   @override
   Widget build(BuildContext context) {
@@ -36,37 +36,37 @@ class ComplainDetailsAppbarWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 50,),
+                const SizedBox(height: 50,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                         onTap: (){Navigator.pop(context);},
-                        child: Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
-                    Spacer(),
+                        child: const Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
+                    const Spacer(),
                     Text(
                       AppStrings.myRequests.tr().toUpperCase(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(width: 20,),
                   ],
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Text(
                   getOneRequestModel!.complain!.subject!.toUpperCase(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 25,),
+                const SizedBox(height: 25,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -75,7 +75,7 @@ class ComplainDetailsAppbarWidget extends StatelessWidget {
                       child: Text(
                        DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(getOneRequestModel!.complain!.createdAt.toString())).toString(),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style:  const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -84,15 +84,15 @@ class ComplainDetailsAppbarWidget extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.folder_open_outlined, color: Colors.white,),
-                        SizedBox(width: 5,),
+                        const Icon(Icons.folder_open_outlined, color: Colors.white,),
+                        const SizedBox(width: 5,),
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.25,
                           child: Text(
                               (getOneRequestModel!.complain!.departmentName != null)?
                               getOneRequestModel!.complain!.departmentName!.toUpperCase() : "",
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style:  const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -106,18 +106,18 @@ class ComplainDetailsAppbarWidget extends StatelessWidget {
                         Container(
                           width: 8,
                           height: 8,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle
                           ),
                         ),
-                        SizedBox(width: 5,),
+                        const SizedBox(width: 5,),
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.25,
                           child: Text(
                             getOneRequestModel!.complain!.pstatus!.tr().toUpperCase() ?? "",
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style:  const TextStyle(
                               fontSize: 12,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
@@ -128,7 +128,7 @@ class ComplainDetailsAppbarWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
 
               ],
             ),

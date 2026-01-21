@@ -2,33 +2,23 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_images.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/layout.service.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/models/settings/user_settings.model.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:inv/modules/more/views/notification/logic/notification_provider.dart';
-import 'package:inv/modules/more/views/notification/view/notification_list_view_item.dart';
-import 'package:inv/modules/more/views/notification/view/widget/switch_row_notification.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
+import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../more/views/blog/widget/blog_list_view_item.dart';
 
 class DefaultPage extends StatefulWidget {
   var type;
-  DefaultPage(this.type,);
+  DefaultPage(this.type, {super.key});
 
   @override
   _DefaultPageState createState() => _DefaultPageState();
@@ -80,7 +70,7 @@ class _DefaultPageState extends State<DefaultPage> {
     return Consumer<BlogProviderModel>(
       builder: (context, provider, child) {
         var jsonString;
-        var gCache;
+        Map<String, dynamic> gCache = {};
         jsonString = CacheHelper.getString("US1");
         if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
           gCache = json.decode(jsonString)
@@ -92,7 +82,7 @@ class _DefaultPageState extends State<DefaultPage> {
             backgroundColor: const Color(0xffFFFFFF),
             appBar: AppBar(
               surfaceTintColor: Colors.transparent,
-              title:  Text(widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(), style: const TextStyle(fontSize: 16,
+              title:  Text(widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(), style:  TextStyle(fontSize: 16,
                   color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
               backgroundColor: Colors.transparent,
             ),

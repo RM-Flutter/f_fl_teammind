@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:inv/models/get_comment_model.dart';
+import 'package:app_test/models/get_comment_model.dart';
 
 import '../../../constants/app_strings.dart';
 import '../../../general_services/backend_services/api_service/dio_api_service/dio.dart';
@@ -47,7 +47,7 @@ class CommentProvider extends ChangeNotifier{
     notifyListeners();
 
     try {
-      var response;
+      Response response;
       print("Voice Path: $voicePath");
 
       // Check if we have either images or a voice file to send
@@ -106,7 +106,7 @@ class CommentProvider extends ChangeNotifier{
         // getRequestComment(context, id);
       }
     } catch (error) {
-      errorAddCommentMessage = error is DioError
+      errorAddCommentMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
 
@@ -150,7 +150,7 @@ class CommentProvider extends ChangeNotifier{
       }
       isGetCommentSuccess = true;
     } catch (error) {
-      getRequestCommentErrorMessage = error is DioError
+      getRequestCommentErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -211,7 +211,7 @@ class CommentProvider extends ChangeNotifier{
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -229,10 +229,10 @@ class CommentProvider extends ChangeNotifier{
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -249,7 +249,7 @@ class CommentProvider extends ChangeNotifier{
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -260,12 +260,13 @@ class CommentProvider extends ChangeNotifier{
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
@@ -278,7 +279,7 @@ class CommentProvider extends ChangeNotifier{
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -289,10 +290,9 @@ class CommentProvider extends ChangeNotifier{
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style: const TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),

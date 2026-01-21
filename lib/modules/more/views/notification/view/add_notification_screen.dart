@@ -2,15 +2,14 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:inv/common_modules_widgets/template_page.widget.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/more/views/notification/logic/notification_provider.dart';
-import 'package:inv/utils/widgets/text_form_widget.dart';
+import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/common_modules_widgets/template_page.widget.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/more/views/notification/logic/notification_provider.dart';
+import 'package:app_test/utils/widgets/text_form_widget.dart';
 
 import '../../../../../constants/app_sizes.dart';
 import '../../../../../constants/check_values.dart';
@@ -89,7 +88,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             value: e['value'].toString(),
                             child: Text(
                               e['name'].toString(),
-                              style: const TextStyle(
+                              style:  const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff191C1F)
@@ -124,7 +123,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       children: [
                                         Text(
                                           AppStrings.employeeName.tr(),
-                                          style: const TextStyle(
+                                          style:  TextStyle(
                                               color: Color(AppColors.dark),
                                               fontWeight: FontWeight.w700,
                                               fontSize: 18),
@@ -133,7 +132,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                         TextFormField(
                                           decoration: InputDecoration(
                                             hintText: AppStrings.searchByName.tr(),
-                                            prefixIcon: const Icon(Icons.search),
+                                            prefixIcon:  const Icon(Icons.search),
                                             border: OutlineInputBorder(
                                               borderRadius: BorderRadius.circular(8),
                                             ),
@@ -184,7 +183,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                           },
                                           child: Text(
                                             AppStrings.confirm.tr(),
-                                            style: const TextStyle(
+                                            style:  const TextStyle(
                                                 fontSize: 16, fontWeight: FontWeight.w500),
                                           ),
                                         ),
@@ -230,7 +229,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             children: [
                               Text(viewModel.listIds.isEmpty
                                   ? AppStrings.employeeName.tr()
-                                  : '${viewModel.listIds.length} ${AppStrings.selected.tr()}', style: const TextStyle(
+                                  : '${viewModel.listIds.length} ${AppStrings.selected.tr()}', style:  const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff191C1F)),),
@@ -254,12 +253,12 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(AppStrings.departmentName.tr(), style:
-                                        const TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.w700, fontSize: 18),),
+                                        TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.w700, fontSize: 18),),
                                         ...viewModel.departments.map((department) {
                                           final isSelected = tempDepSelectedIds.contains(department['id']);
                                           return CheckboxListTile(
                                             value: isSelected,
-                                            selectedTileColor: const Color(AppColors.dark),
+                                            selectedTileColor: Color(AppColors.dark),
                                             title: Text(department['title']),
                                             onChanged: (bool? value) {
                                               setModalState(() {
@@ -271,14 +270,14 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                               });
                                             },
                                           );
-                                        }).toList(),
+                                        }),
                                         ElevatedButton(
                                           onPressed: () {
-                                            print("tempDepSelectedIds --> ${tempDepSelectedIds}");
+                                            print("tempDepSelectedIds --> $tempDepSelectedIds");
                                             print("listIds --> ${viewModel.listIdsDepartment}");
                                             Navigator.pop(context, viewModel.departments.where((e) => tempDepSelectedIds.contains(e['id'])).toList());
                                           },
-                                          child: Text(AppStrings.confirm.tr(), style: const TextStyle(
+                                          child: Text(AppStrings.confirm.tr(), style:  const TextStyle(
                                             fontSize: 16, fontWeight: FontWeight.w500
                                           ),),
                                         ),
@@ -323,7 +322,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             children: [
                               Text(viewModel.listIdsDepartment.isEmpty
                                   ? AppStrings.departmentName.tr()
-                                  : '${viewModel.listIdsDepartment.length} ${AppStrings.selected.tr()}', style: const TextStyle(
+                                  : '${viewModel.listIdsDepartment.length} ${AppStrings.selected.tr()}', style:  const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff191C1F)),),
@@ -359,7 +358,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               right: 16, left: 16, top: 16, bottom: 10
                           ),
                           decoration: ShapeDecoration(
-                            color: Color(0xffFFFFFF),
+                            color: const Color(0xffFFFFFF),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side:  const BorderSide(
@@ -383,7 +382,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 children: [
                                   Text(
                                     AppStrings.uploadImage.tr(),
-                                    style: const TextStyle(
+                                    style:  const TextStyle(
 
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
@@ -469,7 +468,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(AppStrings.allowComments.tr(), style: const TextStyle(
+                            Text(AppStrings.allowComments.tr(), style:  TextStyle(
                               color: Color(AppColors.textC4), fontWeight: FontWeight.w400, fontSize: 12,
                             ),),
                             const Spacer(),
@@ -548,8 +547,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
           ),
           GestureDetector(
             onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
+            child: const Padding(
+              padding: EdgeInsets.all(5.0),
               child: Icon(Icons.delete, color: Colors.red,),
             ),
           )

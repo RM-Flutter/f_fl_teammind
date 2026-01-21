@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../constants/user_consts.dart';
 import '../../general_services/backend_services/api_service/dio_api_service/shared.dart';
-import '../../general_services/settings.service.dart';
 import '../../models/settings/user_settings.model.dart';
 import '../../platform/platform_is.dart';
 import '../../utils/custom_expandable_fab/action_button.widget.dart';
@@ -19,7 +18,7 @@ import 'main_app_fab.service.dart';
 class MainAppFabWidget extends StatelessWidget {
   bool? requests = false;
   bool viewRequest = true;
-   MainAppFabWidget({
+   MainAppFabWidget({super.key, 
      this.requests,
      required this.viewRequest,
   });
@@ -27,7 +26,7 @@ class MainAppFabWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     UserSettingsModel? userSettingsModel;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {

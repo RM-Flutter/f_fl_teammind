@@ -11,66 +11,66 @@ abstract class AppThemeService {
     name: 'Main Theme',
     // application primary colors
     primaryColor: ColorValue(
-        light: const Color(AppColors.primary), dark: const Color(AppColors.primary)),
+        light: Color(AppColors.primary), dark: Color(AppColors.primary)),
     secondaryColor: ColorValue(
-        light: const Color(AppColors.c2), dark: const Color(AppColors.c2)),
+        light: Color(AppColors.c2), dark: Color(AppColors.c2)),
     tertiaryColor: ColorValue(
-        light: const Color(AppColors.c3), dark: const Color(AppColors.c3)),
+        light: Color(AppColors.c3), dark: Color(AppColors.c3)),
     // application background colors
     primaryColorBackground: ColorValue(
-        light: const Color(AppColors.bgC1), dark: const Color(AppColors.bgC1)),
+        light: Color(AppColors.bgC1), dark: Color(AppColors.bgC1)),
     secondaryColorBackground: ColorValue(
-        light: const Color(AppColors.bgC2), dark: const Color(AppColors.bgC2)),
+        light: Color(AppColors.bgC2), dark: Color(AppColors.bgC2)),
     tertiaryColorBackground: ColorValue(
-        light: const Color(AppColors.bgC3), dark: const Color(AppColors.bgC3)),
+        light: Color(AppColors.bgC3), dark: Color(AppColors.bgC3)),
     // application texts colors
     primaryTextColor: ColorValue(
-        light: const Color(AppColors.textC1),
-        dark: const Color(AppColors.textC1)),
+        light: Color(AppColors.textC1),
+        dark: Color(AppColors.textC1)),
     secondaryTextColor: ColorValue(
-        light: const Color(AppColors.c2),
-        dark: const Color(AppColors.c2)),
+        light: Color(AppColors.c2),
+        dark: Color(AppColors.c2)),
     tertiaryTextColor: ColorValue(
-        light: const Color(AppColors.textC3),
-        dark: const Color(AppColors.textC3)),
+        light: Color(AppColors.textC3),
+        dark: Color(AppColors.textC3)),
     quaternaryTextColor: ColorValue(
-        light: const Color(AppColors.textC4),
-        dark: const Color(AppColors.textC4)),
+        light: Color(AppColors.textC4),
+        dark: Color(AppColors.textC4)),
     quinaryTextColor: ColorValue(
-        light: const Color(AppColors.textC5),
-        dark: const Color(AppColors.textC5)),
+        light: Color(AppColors.textC5),
+        dark: Color(AppColors.textC5)),
     //scaffold colors
     appBarBackgroundColor: ColorValue(
-        light: const Color(AppColors.appBarBackgroundColor),
-        dark: const Color(AppColors.appBarBackgroundColor)),
+        light: Color(AppColors.appBarBackgroundColor),
+        dark: Color(AppColors.appBarBackgroundColor)),
     bodyBackgroundColor: ColorValue(
-        light: const Color(AppColors.bodyBackgroundColor),
-        dark: const Color(AppColors.bodyBackgroundColor)),
+        light: Color(AppColors.bodyBackgroundColor),
+        dark: Color(AppColors.bodyBackgroundColor)),
     btmAppBarBackgroundColor: ColorValue(
-        light: const Color(AppColors.btmAppBarBackgroundColor),
-        dark: const Color(AppColors.btmAppBarBackgroundColor)),
+        light: Color(AppColors.btmAppBarBackgroundColor),
+        dark: Color(AppColors.btmAppBarBackgroundColor)),
     fabBackgroundColor: ColorValue(
-        light: const Color(AppColors.fabBackgroundColor),
-        dark: const Color(AppColors.fabBackgroundColor)),
+        light: Color(AppColors.fabBackgroundColor),
+        dark: Color(AppColors.fabBackgroundColor)),
     fabIconColor: ColorValue(
-        light: const Color(AppColors.fabIconColor),
-        dark: const Color(AppColors.fabIconColor)),
+        light: Color(AppColors.fabIconColor),
+        dark: Color(AppColors.fabIconColor)),
     // input colors
     inputBorderColor: ColorValue(
-        light: const Color(AppColors.inputBorderColor),
-        dark: const Color(AppColors.inputBorderColor)),
+        light: Color(AppColors.inputBorderColor),
+        dark: Color(AppColors.inputBorderColor)),
     inputFillColor: ColorValue(
-        light: const Color(AppColors.inputFillColor),
-        dark: const Color(AppColors.inputFillColor)),
+        light: Color(AppColors.inputFillColor),
+        dark: Color(AppColors.inputFillColor)),
     inputHintColor: ColorValue(
-        light: const Color(AppColors.inputHintColor),
-        dark: const Color(AppColors.inputHintColor)),
+        light: Color(AppColors.inputHintColor),
+        dark: Color(AppColors.inputHintColor)),
     inputLabelColor: ColorValue(
-        light: const Color(AppColors.inputLabelColor),
-        dark: const Color(AppColors.inputLabelColor)),
+        light: Color(AppColors.inputLabelColor),
+        dark: Color(AppColors.inputLabelColor)),
     inputTextColor: ColorValue(
-        light: const Color(AppColors.inputTextColor),
-        dark: const Color(AppColors.inputTextColor)),
+        light: Color(AppColors.inputTextColor),
+        dark: Color(AppColors.inputTextColor)),
   );
   static TextTheme _textTheme(
           {required bool isDark, required BuildContext context}) =>
@@ -234,7 +234,7 @@ abstract class AppThemeService {
         // application theme
         brightness: isDark ? Brightness.dark : Brightness.light,
         // application btm nav bar theme
-        bottomAppBarTheme: BottomAppBarTheme(
+        bottomAppBarTheme: BottomAppBarThemeData(
           color: colorPalette.btmAppBarBackgroundColor.color,
         ),
         colorScheme: ColorScheme.fromSeed(

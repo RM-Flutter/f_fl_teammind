@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_strings.dart';
 
 abstract class ValidationService {
   // Validate email format

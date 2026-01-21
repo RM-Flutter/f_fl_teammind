@@ -4,14 +4,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../constants/app_images.dart';
 import '../constants/app_sizes.dart';
 import '../general_services/date.service.dart';
 import '../models/notification.model.dart';
-import 'cached_network_image_widget.dart';
 
 class NotificationCard extends StatefulWidget {
   final NotificationModel notification;
@@ -43,7 +42,7 @@ class _NotificationCardState extends State<NotificationCard> {
     return InkWell(
       onTap: (){
         setState(() {
-          widget.notification!.seen = true;
+          widget.notification.seen = true;
         });
         context.pushNamed(AppRoutes.notificationDetails.name,
             pathParameters: {'lang': context.locale.languageCode,
@@ -68,7 +67,7 @@ class _NotificationCardState extends State<NotificationCard> {
                               imageUrl: widget.notification.mainThumbnail![0].file ?? "",
                               placeholder: (context, url) =>
                               const ShimmerAnimatedLoading(),
-                              errorWidget: (context, url, error) => const Icon(
+                              errorWidget: (context, url, error) =>  const Icon(
                   Icons.image_not_supported_outlined,
                   size: AppSizes.s32,
                   color: Colors.white,
@@ -78,7 +77,7 @@ class _NotificationCardState extends State<NotificationCard> {
                 : Container(
                     height: AppSizes.s75,
                     width: AppSizes.s75,
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.secondary,
                       borderRadius: const BorderRadius.all(

@@ -26,7 +26,7 @@ class CacheHelper{
     return sharedPreferences.getString("F");
   }
   static Future<bool> deleteData({@required key})async{
-    return await sharedPreferences!.remove(key);
+    return await sharedPreferences.remove(key);
   }
   static getBool(key){
     return sharedPreferences.getBool(key);

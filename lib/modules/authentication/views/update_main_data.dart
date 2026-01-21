@@ -1,18 +1,18 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../general_services/alert_service/alerts.service.dart';
 import '../../../general_services/app_config.service.dart';
 class WebViewStackMainData extends StatefulWidget {
+  const WebViewStackMainData({super.key});
+
 
   @override
   State<WebViewStackMainData> createState() => _WebViewStackMainDataState();
@@ -28,7 +28,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
-            print("onPageStarted is -> ${url}");
+            print("onPageStarted is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 0;
@@ -43,7 +43,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
             }
           },
           onPageFinished: (url) {
-            print("onPageFinished is -> ${url}");
+            print("onPageFinished is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 100;
@@ -112,7 +112,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox(height: 30,),
+        const SizedBox(height: 30,),
         WebViewWidget(controller: controller),
         if (loadingPercentage < 100)
           LinearProgressIndicator(value: loadingPercentage / 100.0),

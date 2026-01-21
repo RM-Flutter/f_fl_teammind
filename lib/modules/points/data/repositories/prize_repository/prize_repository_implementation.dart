@@ -1,7 +1,7 @@
-import 'package:inv/modules/points/data/repositories/prize_repository/prize_repository.dart';
+import 'package:app_test/modules/points/data/repositories/prize_repository/prize_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:inv/general_services/app_config.service.dart';
+import 'package:app_test/general_services/app_config.service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/api/api_services.dart';
@@ -39,7 +39,7 @@ class GetPrizeRepositoryImplementation extends GetPrizeRepository {
   @override
   Future<Either<Failure, CopounModel>> sendCopoun({required String copounCode}) async{
     var get = Provider.of<AppConfigService>(context, listen: false);
-    print("SERIAL IS ---> ${copounCode}");
+    print("SERIAL IS ---> $copounCode");
     try {
       Response data = await apiServices.post(
           endPoint: EndPoints.coupoun,

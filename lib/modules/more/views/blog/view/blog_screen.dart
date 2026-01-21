@@ -1,10 +1,10 @@
 // import 'package:easy_localization/easy_localization.dart';
 // import 'package:flutter/material.dart';
-// import 'package:inv/constants/app_sizes.dart';
-// import 'package:inv/constants/app_strings.dart';
+// import 'package:app_test/constants/app_sizes.dart';
+// import 'package:app_test/constants/app_strings.dart';
 // import 'package:provider/provider.dart';
-// import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-// import 'package:inv/modules/more/views/blog/widget/blog_list_view_item.dart';
+// import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
+// import 'package:app_test/modules/more/views/blog/widget/blog_list_view_item.dart';
 // import 'package:shimmer/shimmer.dart';
 //
 // class BlogScreen extends StatefulWidget {
@@ -51,17 +51,17 @@
 //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                       children: [
 //                         IconButton(
-//                           icon: const Icon(Icons.arrow_back, color: Color(0xff224982)),
+//                           icon:  Icon(Icons.arrow_back, color: Color(0xff224982)),
 //                           onPressed: () {
 //                             Navigator.pop(context);
 //                           },
 //                         ),
 //                         Text(
 //                           AppStrings.blogCenter.tr().toUpperCase(),
-//                           style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+//                           style:  TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
 //                         ),
 //                         IconButton(
-//                             icon: const Icon(Icons.arrow_back, color: Colors.transparent),
+//                             icon:  Icon(Icons.arrow_back, color: Colors.transparent),
 //                             onPressed: (){}
 //                         ),
 //                       ],

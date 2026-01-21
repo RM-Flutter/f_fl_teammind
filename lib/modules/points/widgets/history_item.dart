@@ -1,14 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/localization.service.dart';
 import 'package:provider/provider.dart';
 import '../logic/history_cubit/history_provider.dart';
 import 'history_drop_down_widget.dart';
 
 class HistoryItem extends StatelessWidget {
-  HistoryItem({super.key});
+  const HistoryItem({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +58,12 @@ class HistoryItem extends StatelessWidget {
                       width: kIsWeb? 800:double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderRadius: const BorderRadius.all(Radius.circular(15)),
                         boxShadow: [
                           BoxShadow(
                               color: Colors.black.withOpacity(0.05),
                               spreadRadius: 0,
-                              offset: Offset(0, 1),
+                              offset: const Offset(0, 1),
                               blurRadius: 10)
                         ],
                       ),
@@ -88,13 +88,13 @@ class HistoryItem extends StatelessWidget {
                                   Text(
                                     e.title!,
                                     maxLines: 2,
-                                    style: const TextStyle(
+                                    style:  const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xff464646),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(
@@ -112,7 +112,7 @@ class HistoryItem extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 15,
                             ),
                             Align(
@@ -121,7 +121,7 @@ class HistoryItem extends StatelessWidget {
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Text(
                                     formattedDate,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.grey, fontSize: 12),
                                   ),
                                 ))

@@ -15,7 +15,7 @@ class UpdateApp{
   static checkForForceUpdate(BuildContext context) async {
     final packageInfo = await PackageInfo.fromPlatform();
     final jsonString = CacheHelper.getString("USG");
-    var gCache;
+    Map<String, dynamic> gCache = {};
     if (jsonString != null) {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
@@ -33,7 +33,7 @@ class UpdateApp{
                   backgroundColor: const Color(0xffFFFFFF),
                   title: Text(
                     LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update", style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),),
-                  content: Text(AppStrings.youMustUpdateTheAppToContinue.tr(), style:  TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
+                  content: Text(AppStrings.youMustUpdateTheAppToContinue.tr(), style:  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
                   actions: [
                     CustomElevatedButton(
                       title: AppStrings.updateNow.tr(),
@@ -67,8 +67,8 @@ class UpdateApp{
                 onWillPop: () async => true,
                 child: AlertDialog(
                   backgroundColor: const Color(0xffFFFFFF),
-                  title: Text(AppStrings.available_update.tr(), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),),
-                  content: Text(AppStrings.youMustUpdateTheAppToContinue.tr(), style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
+                  title: Text(AppStrings.available_update.tr(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),),
+                  content: Text(AppStrings.youMustUpdateTheAppToContinue.tr(), style:  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
                   actions: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

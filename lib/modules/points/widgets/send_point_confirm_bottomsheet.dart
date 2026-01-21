@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/app_colors.dart';
 import '../../../utils/componentes/general_components/all_bottom_sheet.dart';
@@ -119,7 +119,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                               AppStrings.confirmSending
                                   .tr()
                                   .toUpperCase(),
-                              style: const TextStyle(
+                              style:  const TextStyle(
                                 fontFamily: "Poppins",
                                 fontWeight: FontWeight.w600,
                                 fontSize: 24,
@@ -130,7 +130,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                             Text(
                               "${AppStrings.areYouSureThatPointsWillBeSentTo.tr()} $name"
                                   .toUpperCase(),
-                              style: const TextStyle(
+                              style:  const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xff1B1B1B),
@@ -155,12 +155,12 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                           BorderRadius.circular(50),
-                                          color: const Color(AppColors.primary)),
+                                          color: Color(AppColors.primary)),
                                       child: Text(
                                         AppStrings.sendPoints
                                             .tr()
                                             .toUpperCase(),
-                                        style: const TextStyle(
+                                        style:  const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                             color: Color(0xffFFFFFF),
@@ -190,7 +190,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                         AppStrings.cancel
                                             .tr()
                                             .toUpperCase(),
-                                        style: const TextStyle(
+                                        style:  const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                             color: Color(0xffFFFFFF),

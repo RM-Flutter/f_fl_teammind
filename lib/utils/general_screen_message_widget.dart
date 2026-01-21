@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/localization.service.dart';
 
 import '../constants/app_sizes.dart';
-import '../general_services/settings.service.dart';
 
 class GeneralScreenMessageWidget extends StatelessWidget {
   /// current Screen route
@@ -20,7 +18,7 @@ class GeneralScreenMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var gCache;
+    Map<String, dynamic> gCache = {};
     final jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
@@ -36,7 +34,7 @@ class GeneralScreenMessageWidget extends StatelessWidget {
                 itemBuilder: (context, index) => AutoSizeText(
                   LocalizationService.isArabic(context: context)? gCache["general_message_by_screen"][index]["screen_message"]["ar"]:gCache["general_message_by_screen"][index]["screen_message"]["en"] ?? "",
                   maxLines: maxTextLines,
-                  style: const TextStyle(
+                  style:  const TextStyle(
                       color: Color(0xff404040),
                       fontSize: AppSizes.s12,
                       fontWeight: FontWeight.w400),

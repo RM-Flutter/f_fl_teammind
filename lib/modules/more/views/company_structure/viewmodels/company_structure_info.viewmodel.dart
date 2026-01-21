@@ -30,7 +30,7 @@ class CompanyStructureInfoViewModel extends ChangeNotifier {
     try {
       var jsonString;
       GeneralSettingsModel generalSettingsModel;
-      var gCache;
+      Map<String, dynamic> gCache = {};
       jsonString = CacheHelper.getString("USG");
       if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
         gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON

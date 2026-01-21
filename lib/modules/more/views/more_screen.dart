@@ -7,20 +7,16 @@ import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/modules/more/widgets/customize_notification_screen.dart';
-import 'package:inv/services/requests.services.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/modules/more/widgets/customize_notification_screen.dart';
+import 'package:app_test/services/requests.services.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_icons.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
-import '../../../general_services/settings.service.dart';
 import '../../../models/settings/user_settings.model.dart';
 
-import '../../../common_modules_widgets/cached_network_image_widget.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../routing/app_router.dart';
 import '../../home/view_models/home.viewmodel.dart';
@@ -58,7 +54,7 @@ class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -86,13 +82,13 @@ class _MoreScreenState extends State<MoreScreen> {
               top: MediaQuery.sizeOf(context).height * 0.25,
               child: Container(
                 // height: MediaQuery.sizeOf(context).height * 0.66,
-                decoration: const ShapeDecoration(
+                decoration:  ShapeDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment(0, 0),
-                    end: Alignment(1, 0),
+                    begin: const Alignment(0, 0),
+                    end: const Alignment(1, 0),
                     colors: [Colors.white, Color(AppColors.bgC4)],
                   ),
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
@@ -110,7 +106,7 @@ class _MoreScreenState extends State<MoreScreen> {
                         child: ListView(
                           children: [
                             Text(AppStrings.functionality.tr().toUpperCase(),
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
                             ),
                             const SizedBox(height : 15),
                             DefaultListTile(
@@ -152,7 +148,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Text(AppStrings.management.tr().toUpperCase(),
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
                             ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
                               title: AppStrings.teamRequests.tr(),
@@ -190,7 +186,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             const SizedBox(height : 15),
                             Text(AppStrings.more.tr().toUpperCase(),
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
                             ),
                             const SizedBox(height : 15),
                             DefaultListTile(
@@ -280,7 +276,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             const SizedBox(height : 15),
                             Text(AppStrings.myAccount.tr().toUpperCase(),
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(AppColors.primary))
                             ),
                             const SizedBox(height : 15),
                             DefaultListTile(
@@ -290,7 +286,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return CustomizeNotificationScreen();
+                                      return const CustomizeNotificationScreen();
                                     });
                               },
                             ),DefaultListTile(
@@ -380,7 +376,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             height: 63,
                             circularRaduis: 63,
                           ),
-                          errorWidget: (context, url, error) => const Icon(
+                          errorWidget: (context, url, error) =>  const Icon(
                             Icons.image_not_supported_outlined,
                           )),
                     ),
@@ -413,7 +409,7 @@ class _MoreScreenState extends State<MoreScreen> {
                         .textTheme
                         .bodySmall
                         ?.copyWith(
-                      color: Color(0xff4F4F4F),
+                      color: const Color(0xff4F4F4F),
                        fontSize: 11,
                        fontWeight: FontWeight.w500,
                       // height: 0,
@@ -457,7 +453,7 @@ class DefaultListTile extends StatelessWidget {
       child: ListTile(
         leading: SvgPicture.asset(
           src,
-          color: const Color(AppColors.primary),
+          color: Color(AppColors.primary),
           fit: BoxFit.contain,
         ),
         title: Text(

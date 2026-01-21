@@ -1,17 +1,19 @@
+import 'package:app_test/constants/app_strings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/more/views/aboutus/logic/aboutus_logic.dart';
-import 'package:inv/modules/more/views/aboutus/view/main_logo_and_title_widget.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import 'package:inv/utils/styles.dart';
-import 'package:inv/utils/tab_bar_widget.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/modules/more/views/aboutus/logic/aboutus_logic.dart';
+import 'package:app_test/modules/more/views/aboutus/view/main_logo_and_title_widget.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/utils/styles.dart';
+import 'package:app_test/utils/tab_bar_widget.dart';
 
 class AboutUsScreen extends StatefulWidget {
+  const AboutUsScreen({super.key});
+
   @override
   State<AboutUsScreen> createState() => _AboutUsScreenState();
 }
@@ -46,14 +48,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: const Icon(
+                      child:  const Icon(
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
                     ),
                     title: Text(
                       AppStrings.aboutComapny.tr().toUpperCase(),
-                      style: const TextStyle(
+                      style:  const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -151,7 +153,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                   //         ),
                                   //       )
                                       : (selectIndex == 2)
-                                          ? Container(
+                                          ? SizedBox(
                                               height:
                                                   MediaQuery.sizeOf(context)
                                                           .height *

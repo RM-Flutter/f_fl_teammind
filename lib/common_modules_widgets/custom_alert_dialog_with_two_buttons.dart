@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_colors.dart';
+import 'package:app_test/constants/app_colors.dart';
 
 import '../constants/app_sizes.dart';
-import 'button_widget.dart';
 import 'custom_elevated_button.widget.dart';
 
 Future<void> customAlertDialogWithTwoButtons(
@@ -35,7 +34,7 @@ Future<void> customAlertDialogWithTwoButtons(
         title: Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style:  TextStyle(
               color: Color(AppColors.dark),
               fontWeight: FontWeight.w700,
               fontSize: 18),

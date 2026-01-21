@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
 
 import '../../../constants/app_colors.dart';
 
@@ -46,7 +46,7 @@ class ButtonWidget extends StatelessWidget {
         elevation: WidgetStateProperty.all(0),
         padding: WidgetStateProperty.all(
           padding ??
-              EdgeInsets.symmetric(
+              const EdgeInsets.symmetric(
                   horizontal: AppSizes.s18, vertical: AppSizes.s12),
         ),
         shape: WidgetStateProperty.all(
@@ -92,7 +92,7 @@ class ButtonWidget extends StatelessWidget {
                                   fit: BoxFit.scaleDown,
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                         Text(
                           title,
                           style:
@@ -107,7 +107,7 @@ class ButtonWidget extends StatelessWidget {
                         ),
                       ],
                     )
-                  : Center(
+                  : const Center(
                       child: CircularProgressIndicator(),
                     ),
             )
@@ -129,7 +129,7 @@ class ButtonWidget extends StatelessWidget {
                               fit: BoxFit.scaleDown,
                             ),
                           )
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -143,7 +143,7 @@ class ButtonWidget extends StatelessWidget {
                     ),
                   ],
                 )
-              : Center(
+              : const Center(
                   child: CircularProgressIndicator(),
                 ),
       // ),

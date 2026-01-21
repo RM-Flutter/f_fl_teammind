@@ -24,7 +24,7 @@ abstract class DeviceInformationService {
           print("Error fetching Android ID: $e");
         }
         deviceIdentifier = "$androidId";
-        print("androidId -> ${androidId}");
+        print("androidId -> $androidId");
       } else if (PlatformIs.iOS) {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";

@@ -10,16 +10,16 @@ class GetOneRequestModel {
     status = json['status'];
     message = json['message'];
     create = json['create'];
-    item = json['item'] != null ? new Item.fromJson(json['item']) : null;
+    item = json['item'] != null ? Item.fromJson(json['item']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    data['create'] = this.create;
-    if (this.item != null) {
-      data['item'] = this.item!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    data['create'] = create;
+    if (item != null) {
+      data['item'] = item!.toJson();
     }
     return data;
   }
@@ -63,55 +63,55 @@ class Item {
     if (json['voice'] != null) {
       voice = <Voice>[];
       json['voice'].forEach((v) {
-        voice!.add(new Voice.fromJson(v));
+        voice!.add(Voice.fromJson(v));
       });
     }
-    pfor = json['pfor'] != null ? new Pfor.fromJson(json['pfor']) : null;
+    pfor = json['pfor'] != null ? Pfor.fromJson(json['pfor']) : null;
     if (json['pfor_value'] != null) {
       pforValue = <PforValue>[];
       json['pfor_value'].forEach((v) {
-        pforValue!.add(new PforValue.fromJson(v));
+        pforValue!.add(PforValue.fromJson(v));
       });
     } if (json['main_thumbnail'] != null) {
       mainThum = <MainThum>[];
       json['main_thumbnail'].forEach((v) {
-        mainThum!.add(new MainThum.fromJson(v));
+        mainThum!.add(MainThum.fromJson(v));
       });
     }
-    commentStatus = json['comment_status'] != null ? new CommentStatus.fromJson(json['comment_status']) : null;
-    ticketPriority = json['ticket_priority'] != null ? new TicketPriority.fromJson(json['ticket_priority']) : null;
+    commentStatus = json['comment_status'] != null ? CommentStatus.fromJson(json['comment_status']) : null;
+    ticketPriority = json['ticket_priority'] != null ? TicketPriority.fromJson(json['ticket_priority']) : null;
     pstatus =
-    json['pstatus'] != null ? new Pfor.fromJson(json['pstatus']) : null;
+    json['pstatus'] != null ? Pfor.fromJson(json['pstatus']) : null;
     pType =
-    json['ptype'] != null ? new PType.fromJson(json['ptype']) : null;
+    json['ptype'] != null ? PType.fromJson(json['ptype']) : null;
     content = json['content'];
     createdAt = json['created_at'];
-    status = json['status'] != null ? new Pfor.fromJson(json['status']) : null;
+    status = json['status'] != null ? Pfor.fromJson(json['status']) : null;
     scheduleDate = json['schedule_date'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    if (this.voice != null) {
-      data['voice'] = this.voice!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    if (voice != null) {
+      data['voice'] = voice!.map((v) => v.toJson()).toList();
     }
-    if (this.pfor != null) {
-      data['pfor'] = this.pfor!.toJson();
+    if (pfor != null) {
+      data['pfor'] = pfor!.toJson();
     }
-    if (this.pforValue != null) {
-      data['pfor_value'] = this.pforValue!.map((v) => v.toJson()).toList();
+    if (pforValue != null) {
+      data['pfor_value'] = pforValue!.map((v) => v.toJson()).toList();
     }
-    if (this.pstatus != null) {
-      data['pstatus'] = this.pstatus!.toJson();
+    if (pstatus != null) {
+      data['pstatus'] = pstatus!.toJson();
     }
-    data['content'] = this.content;
-    data['created_at'] = this.createdAt;
-    if (this.status != null) {
-      data['status'] = this.status!.toJson();
+    data['content'] = content;
+    data['created_at'] = createdAt;
+    if (status != null) {
+      data['status'] = status!.toJson();
     }
-    data['schedule_date'] = this.scheduleDate;
+    data['schedule_date'] = scheduleDate;
     return data;
   }
 }
@@ -136,13 +136,13 @@ class Voice {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
     return data;
   }
 }
@@ -166,13 +166,13 @@ class MainThum {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
     return data;
   }
 }
@@ -189,9 +189,9 @@ class Pfor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['key'] = key;
+    data['value'] = value;
     return data;
   }
 }
@@ -207,9 +207,9 @@ class TicketPriority {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['key'] = key;
+    data['value'] = value;
     return data;
   }
 }
@@ -225,9 +225,9 @@ class PType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
     return data;
   }
 }
@@ -243,9 +243,9 @@ class CommentStatus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['key'] = key;
+    data['value'] = value;
     return data;
   }
 }
@@ -262,9 +262,9 @@ class PforValue {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['label'] = this.label;
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['label'] = label;
+    data['value'] = value;
     return data;
   }
 }

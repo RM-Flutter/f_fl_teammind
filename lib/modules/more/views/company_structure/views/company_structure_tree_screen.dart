@@ -1,11 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_strings.dart';
 import '../../../../../constants/app_colors.dart';
-import '../../../../../constants/app_images.dart';
 import '../../../../../constants/app_sizes.dart';
 import '../viewmodels/company_structure_tree.viewmodel.dart';
 import 'widgets/company_tree_node.widget.dart';
@@ -35,17 +33,17 @@ class _CompanyStructureTreeScreenState
         child: Scaffold(
             appBar: AppBar(
               surfaceTintColor: Colors.transparent,
-              title:  Text(AppStrings.companyStructure.tr().toUpperCase(), style: const TextStyle(fontSize: 16,
+              title:  Text(AppStrings.companyStructure.tr().toUpperCase(), style:  TextStyle(fontSize: 16,
                   color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
               leading: Padding(
                 padding: const EdgeInsets.all(AppSizes.s10),
                 child: InkWell(
                   onTap: () =>  Navigator.pop(context),
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Color(AppColors.dark)),
-                    child: const Icon(
+                    child:  const Icon(
                       Icons.arrow_back_sharp,
                       color: Colors.white,
                       size: AppSizes.s18,

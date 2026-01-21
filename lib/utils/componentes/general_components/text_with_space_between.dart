@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
 
 class TextWithSpaceBetween extends StatelessWidget {
   final String textOnLeft;
@@ -99,7 +99,7 @@ class TrackingOrderTextWidget extends StatelessWidget {
           textOnRight,
           textAlign:LocalizationService.isArabic(context: context)? TextAlign.left: LocalizationService.isArabic(context: context)? TextAlign.left: TextAlign.right,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Color(0xFF2AA952),
+                color: const Color(0xFF2AA952),
                 height: 0,
                 letterSpacing: 0,
               ),

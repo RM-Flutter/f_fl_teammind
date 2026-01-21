@@ -4,8 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/app_constants.dart';
 import '../../../constants/app_images.dart';
@@ -133,6 +133,7 @@ class OnboardingViewModel extends ChangeNotifier {
 
         return gCache['features']['items'];
       }
+      return null;
     }
   List<Map<String, dynamic>>? _getOnboardingDataFromCache() {
     final jsonString = CacheHelper.getString("USG");
@@ -164,7 +165,7 @@ class OnboardingViewModel extends ChangeNotifier {
     Future<void> _initializeAppServices(BuildContext context, AppConfigService appConfigService) async {
       try {
         // Precache logo image
-        await precacheImage(const AssetImage(AppImages.logo), context);
+        await precacheImage(AssetImage(AppImages.logo), context);
         print("done service 1");
         // Initialize application services
         await appConfigService.init();
@@ -264,7 +265,7 @@ class OnboardingViewModel extends ChangeNotifier {
       try {
         await _initializeAppServices(context, appConfigService);
         String? payload = CacheHelper.getString('initialNotification');
-        print("payload is --> ${payload}");
+        print("payload is --> $payload");
         if(payload != null && payload.isNotEmpty){
           print("ANA GY MN PRA");
           await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
@@ -287,7 +288,7 @@ class OnboardingViewModel extends ChangeNotifier {
             }
             final features = getAllOnboardingData(context: context);
             final jsonString = CacheHelper.getString("USG");
-            var gCache;
+            Map<String, dynamic> gCache = {};
             if (jsonString != null && jsonString != "") {
               gCache = json.decode(jsonString) as Map<String, dynamic>;
             }
@@ -320,16 +321,16 @@ class OnboardingViewModel extends ChangeNotifier {
           else {
             print("WATCH 0");
             final jsonString2 = CacheHelper.getString("USG");
-            var cache;
+            Map<String, dynamic> cache = {};
             if (jsonString2 != null && jsonString2.isNotEmpty) {
               cache = json.decode(jsonString2) as Map<String, dynamic>;
             }
             final features = cache['features']['items'];
             print("WATCH 1");
             final jsonString = CacheHelper.getString("USG");
-            var gCache;
-            var dateToCheck;
-            var referenceDate;
+            Map<String, dynamic> gCache = {};
+            DateTime? dateToCheck;
+            DateTime? referenceDate;
             print("WATCH 2");
             if (jsonString != null && jsonString != "") {
               gCache = json.decode(jsonString) as Map<String,
@@ -343,9 +344,8 @@ class OnboardingViewModel extends ChangeNotifier {
                   safeParseDateTime(CacheHelper.getString("dateWatchScreen"));
             } else {
               if (CacheHelper.getString("dateWatchScreen") == null ||
-                  CacheHelper.getString("dateWatchScreen") == "" ||
-                  gCache == null || gCache['features']['date'] == "" ||
-                  dateToCheck.isAfter(referenceDate) == false){
+                  CacheHelper.getString("dateWatchScreen") == "" || gCache['features']['date'] == "" ||
+                  dateToCheck?.isAfter(referenceDate ?? DateTime.now()) == false){
                 print("WATCH IN IN");
                 await _precacheImages(context);
                 print("WATCH IN 2");
@@ -369,9 +369,8 @@ class OnboardingViewModel extends ChangeNotifier {
               return;
             } else {
               if (CacheHelper.getString("dateWatchScreen") == null ||
-                  CacheHelper.getString("dateWatchScreen") == "" ||
-                  gCache == null || gCache['features']['date'] == "" ||
-                  dateToCheck.isAfter(referenceDate) == false) {
+                  CacheHelper.getString("dateWatchScreen") == "" || gCache['features']['date'] == "" ||
+                dateToCheck?.isAfter(referenceDate ?? DateTime.now()) == false) {
                 await _precacheImages(context);
                 print("WATCH IN 4");
                 context.goNamed(AppRoutes.onboarding.name,
@@ -391,7 +390,7 @@ class OnboardingViewModel extends ChangeNotifier {
             // );
           }
         }
-      } catch (err, t) {
+      } catch (err) {
         print("login-5");
         return context.goNamed(
           AppRoutes.login.name,
@@ -417,7 +416,7 @@ class OnboardingViewModel extends ChangeNotifier {
           final appConfigService =
           Provider.of<AppConfigService>(context, listen: false);
           final jsonString = CacheHelper.getString("US1");
-          var us1Cache;
+          Map<String, dynamic> us1Cache = {};
           var role;
           if (jsonString != "") {
             us1Cache = json.decode(jsonString) as Map<String,

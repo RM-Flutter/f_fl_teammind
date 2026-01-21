@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:inv/common_modules_widgets/main_app_fab_widget/main_app_fab.service.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/constants/internet_check.dart';
-import 'package:inv/constants/restart_app.dart';
-import 'package:inv/general_services/offline_overlay.service.dart';
-import 'package:inv/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
+import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/common_modules_widgets/main_app_fab_widget/main_app_fab.service.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/internet_check.dart';
+import 'package:app_test/general_services/restart_app.dart';
+import 'package:app_test/general_services/offline_overlay.service.dart';
+import 'package:app_test/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
 import '../../../constants/app_sizes.dart';
 import '../view_models/offline_viewmodel.dart';
 
@@ -178,7 +177,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         const SizedBox(height: 25,),
                         Text(AppStrings.youAreOffline.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
                         const SizedBox(height: 15,),
-                        Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(AppColors.black)),),
+                        Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style:  const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(AppColors.black)),),
                         const SizedBox(height: 25,),
                         Consumer<ConnectionService>(
                           builder: (context, connectionService, _) {
@@ -204,7 +203,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
                         const SizedBox(height: 15,),
                         if (viewModel.usersFingerprints.isNotEmpty)
-                          Container(
+                          SizedBox(
                             height: 50,
                             child: ListView.builder(
                               itemCount: viewModel.usersFingerprints.length,
@@ -277,7 +276,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         if (viewModel.savedFingerprints != null && 
                             viewModel.savedFingerprints!.isNotEmpty)
                           Padding(
-                            padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                            padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

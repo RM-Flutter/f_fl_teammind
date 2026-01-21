@@ -1,13 +1,10 @@
-import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
+import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../constants/app_sizes.dart';
@@ -20,7 +17,7 @@ import '../../utils/placeholder_no_existing_screen/no_existing_placeholder_scree
 
 class DefaultListPage extends StatefulWidget {
   var type;
-  DefaultListPage({this.type});
+  DefaultListPage({super.key, this.type});
 
   @override
   _DefaultListPageState createState() => _DefaultListPageState();
@@ -79,14 +76,14 @@ class _DefaultListPageState extends State<DefaultListPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_back, color:  const Color(0xff224982)),
+                            icon: const Icon(Icons.arrow_back, color:  Color(0xff224982)),
                             onPressed: () =>  Navigator.pop(context),
                           ),
                           Text(
-                            widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),                            style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+                            widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),                            style:  const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.transparent),
+                            icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
                             onPressed: () {},
                           ),
                         ],
@@ -109,7 +106,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
                             crossAxisSpacing: 12,
                             childAspectRatio: 1/1.3,
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: List.generate((points.isGetBlogLoading && points.currentPage == 1)?8 :
                             points.blogs.length, (index){
                               return (points.isGetBlogLoading && points.currentPage == 1)?
@@ -195,7 +192,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
           child: Column(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                 child:  CachedNetworkImage(
                   height: 135,
                   fit: BoxFit.cover,
@@ -203,19 +200,19 @@ class _DefaultListPageState extends State<DefaultListPage> {
                   imageUrl: src,
                   placeholder: (context, url) =>
                   const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) => const Icon(
+                  errorWidget: (context, url, error) =>  const Icon(
                     Icons.image_not_supported_outlined,
                     size: AppSizes.s32,
                     color: Colors.white,
                   ),
                 ),), // Replace with project images
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10, color: Color(0xFF090B60))),],
+                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 10, color: Color(0xFF090B60))),],
                 ),
               ),
             ],

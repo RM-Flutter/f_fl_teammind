@@ -1,10 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
 import '../../../../constants/app_sizes.dart';
-import '../../../../constants/app_strings.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../general_services/date.service.dart';
 

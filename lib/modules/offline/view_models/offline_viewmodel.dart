@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +35,7 @@ class OfflineViewModel with ChangeNotifier {
     }
     
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     UserSettingsModel? userSettingsModel;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
@@ -52,16 +51,11 @@ class OfflineViewModel with ChangeNotifier {
       return;
     }
 
-    if (gCache == null) {
-      debugPrint("⚠️ gCache is null");
-      return;
-    }
-
     try {
       userSettingsModel = UserSettingsModel.fromJson(gCache);
       final fingerprints = userSettingsModel.avFingerprint;
-      print("fingerprints --> ${fingerprints}");
-      if (fingerprints != null && fingerprints is Map) {
+      print("fingerprints --> $fingerprints");
+      if (fingerprints != null) {
         fingerprints.forEach((key, value) {
           if (value == 'active_all' || value == 'active_some') {
             _usersFingerprints.add(key);
@@ -97,7 +91,7 @@ class OfflineViewModel with ChangeNotifier {
           final List<dynamic> decodedList = jsonDecode(jsonString);
           savedFingerprints = decodedList.cast<Map<String, dynamic>>();
           AppConstants.fingerPrints = savedFingerprints;
-          print("Loaded fingerprints in offline screen: ${savedFingerprints}");
+          print("Loaded fingerprints in offline screen: $savedFingerprints");
         } else {
           savedFingerprints = [];
           AppConstants.fingerPrints = [];

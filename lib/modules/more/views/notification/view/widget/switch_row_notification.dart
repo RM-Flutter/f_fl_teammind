@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/authentication/views/widgets/custom_switch_button.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/authentication/views/widgets/custom_switch_button.dart';
 
 class SwitchRowNotification extends StatelessWidget {
   final bool value;

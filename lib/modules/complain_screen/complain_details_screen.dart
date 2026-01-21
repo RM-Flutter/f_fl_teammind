@@ -4,22 +4,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/common_modules_widgets/comments/comments_widget.dart';
-import 'package:inv/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/controller/request_controller/request_controller.dart';
-import 'package:inv/modules/complain_screen/widget/full_image_screen.dart';
-import 'package:inv/modules/complain_screen/widget/request_details_appbar_widget.dart';
-import 'package:inv/modules/complain_screen/widget/request_details_loading_screen.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/common_modules_widgets/comments/comments_widget.dart';
+import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/controller/request_controller/request_controller.dart';
+import 'package:app_test/modules/complain_screen/widget/full_image_screen.dart';
+import 'package:app_test/modules/complain_screen/widget/request_details_appbar_widget.dart';
+import 'package:app_test/modules/complain_screen/widget/request_details_loading_screen.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../utils/componentes/general_components/gradient_bg_image.dart';
 
 
   class ComplainDetailsScreen extends StatefulWidget {
     var id;
-    ComplainDetailsScreen({required this.id});
+    ComplainDetailsScreen({super.key, required this.id});
 
   @override
   State<ComplainDetailsScreen> createState() => _ComplainDetailsScreenState();
@@ -28,7 +28,7 @@ import '../../utils/componentes/general_components/gradient_bg_image.dart';
 class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
   late RequestController requestController;
   late ScrollController _scrollController;
-  Set<int> _loadedPages = {}; // Keep track of loaded pages
+  final Set<int> _loadedPages = {}; // Keep track of loaded pages
   final PageController _controller = PageController();
   int _currentIndex = 0;
   @override
@@ -65,7 +65,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
           return Consumer<CommentProvider>(
               builder: (context, values, child) {
                 return Scaffold(
-                  backgroundColor: Color(0xffFFFFFF),
+                  backgroundColor: const Color(0xffFFFFFF),
                   body: (value.getOneRequestModel != null && value.isGetRequestCommentLoading != true
                       &&!value.isGetRequestCommentLoading)?RefreshIndicator.adaptive(
                     onRefresh: ()async{
@@ -73,7 +73,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                       await values.getComment(context,"csrequests", widget.id);
                     },
                         child: GradientBgImage(
-                          padding: EdgeInsets.all(0),
+                          padding: const EdgeInsets.all(0),
                           child: SingleChildScrollView(
                                               child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,11 +82,11 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                               getOneRequestModel: value.getOneRequestModel,
                               types: value.requestTypes,
                             ),
-                            SizedBox(height: 20,),
-                            Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+                            const SizedBox(height: 20,),
+                            Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
                               child: Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     maxWidth: kIsWeb ? 1100 : double.infinity,
                                   ),
                                   child: Column(
@@ -122,34 +122,34 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                             "p": Style(
-                                              color: Color(0xff525252),
-                                              lineHeight: LineHeight(1.5),
+                                              color: const Color(0xff525252),
+                                              lineHeight: const LineHeight(1.5),
                                               fontSize: FontSize(12), // Adjust font size for better visibility
                                               fontWeight: FontWeight.w400,
                                             ), "ul": Style(
-                                              color: Color(0xff333333),
-                                              lineHeight: LineHeight(1.5),
+                                              color: const Color(0xff333333),
+                                              lineHeight: const LineHeight(1.5),
                                               fontSize: FontSize(18), // Adjust font size for better visibility
                                               fontWeight: FontWeight.w500,
                                             ),"li": Style(
-                                              color: Color(0xff333333),
-                                              lineHeight: LineHeight(1.5),
+                                              color: const Color(0xff333333),
+                                              lineHeight: const LineHeight(1.5),
                                               fontSize: FontSize(18), // Adjust font size for better visibility
                                               fontWeight: FontWeight.w500,
                                             ),"ol": Style(
-                                              color: Color(0xff333333),
-                                              lineHeight: LineHeight(1.5),
+                                              color: const Color(0xff333333),
+                                              lineHeight: const LineHeight(1.5),
                                               fontSize: FontSize(18), // Adjust font size for better visibility
                                               fontWeight: FontWeight.w500,
                                             ),"*": Style(
-                                              color: Color(0xff333333),
-                                              lineHeight: LineHeight(1.5),
+                                              color: const Color(0xff333333),
+                                              lineHeight: const LineHeight(1.5),
                                               fontSize: FontSize(14), // Adjust font size for better visibility
                                               fontWeight: FontWeight.w500,
                                             ),
                                           }),
 
-                                      SizedBox(height: 10,),
+                                      const SizedBox(height: 10,),
                                       if(value.getOneRequestModel!.item!.mainThum != null &&value.getOneRequestModel!.item!.mainThum!.isNotEmpty)Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
@@ -183,7 +183,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                                         imageUrl: value.getOneRequestModel!.item!.mainThum![index].file ?? "",
                                                         placeholder: (context, url) =>
                                                         const ShimmerAnimatedLoading(),
-                                                        errorWidget: (context, url, error) => const Icon(
+                                                        errorWidget: (context, url, error) =>  const Icon(
                                                           Icons.image_not_supported_outlined,
                                                           size: AppSizes.s32,
                                                           color: Colors.white,
@@ -200,19 +200,19 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                                     child: ListView.separated(
                                                         shrinkWrap: true,
                                                         reverse: false,
-                                                        physics: ClampingScrollPhysics(),
+                                                        physics: const ClampingScrollPhysics(),
                                                         scrollDirection: Axis.horizontal,
                                                         padding: EdgeInsets.zero,
                                                         itemBuilder: (context, index) => AnimatedContainer(
-                                                          duration: Duration(milliseconds: 300),
-                                                          margin: EdgeInsets.symmetric(horizontal: 4),
+                                                          duration: const Duration(milliseconds: 300),
+                                                          margin: const EdgeInsets.symmetric(horizontal: 4),
                                                           width: _currentIndex == index ? 12 : 8,
                                                           height: _currentIndex == index ? 12 : 8,
                                                           decoration: BoxDecoration(
                                                             shape: BoxShape.circle,
-                                                            color: _currentIndex == index ? Color(0xffFFFFFF) : Colors.grey,
+                                                            color: _currentIndex == index ? const Color(0xffFFFFFF) : Colors.grey,
                                                           ),
-                                                        ), separatorBuilder: (context, index) => SizedBox(width: 5,),
+                                                        ), separatorBuilder: (context, index) => const SizedBox(width: 5,),
                                                         itemCount: value.getOneRequestModel!.item!.mainThum!.length),
                                                   )
                                               )
@@ -224,7 +224,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) => FullScreenImageViewer(
-                                                      imageUrls: [""],
+                                                      imageUrls: const [""],
                                                       one:  true,
                                                       image: value.getOneRequestModel!.item!.mainThum![0].file, initialIndex: 1, url: false,
 
@@ -237,7 +237,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                               imageUrl: value.getOneRequestModel!.item!.mainThum![0].file ?? "",
                                               placeholder: (context, url) =>
                                               const ShimmerAnimatedLoading(),
-                                              errorWidget: (context, url, error) => const Icon(
+                                              errorWidget: (context, url, error) =>  const Icon(
                                                 Icons.image_not_supported_outlined,
                                                 size: AppSizes.s32,
                                                 color: Colors.white,
@@ -246,7 +246,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 30,),
+                                      const SizedBox(height: 30,),
                                       Row(
                                         children: [
                                           Expanded(
@@ -254,7 +254,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                               padding: const EdgeInsets.symmetric(horizontal: 10),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    border: Border.all(strokeAlign: 1, color: Color(0xffDFDFDF))
+                                                    border: Border.all(strokeAlign: 1, color: const Color(0xffDFDFDF))
                                                 ),
                                               ),
                                             ),
@@ -266,14 +266,14 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                               padding: const EdgeInsets.symmetric(horizontal: 10),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    border: Border.all(strokeAlign: 1, color: Color(0xffDFDFDF))
+                                                    border: Border.all(strokeAlign: 1, color: const Color(0xffDFDFDF))
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10,),
+                                      const SizedBox(height: 10,),
                                       CommentsWidget(
                                           "csrequests",
                                           enable: value.getOneRequestModel!.item!.commentStatus!.key,
@@ -283,7 +283,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                           scrollController: _scrollController,
                                           id : widget.id
                                       ),
-                                      SizedBox(height: 20,)
+                                      const SizedBox(height: 20,)
                                     ],
                                   ),
                                 ),
@@ -293,7 +293,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                                               ),
                                             ),
                         ),
-                      ): RequestDetailsLoadingScreen(),
+                      ): const RequestDetailsLoadingScreen(),
                 );
               },
           );

@@ -11,9 +11,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_constants.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/utils/helpers/media_query_values.dart';
+import 'package:app_test/constants/app_constants.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/utils/helpers/media_query_values.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../../common_modules_widgets/language_dropdown_button.widget.dart';
 import '../../../constants/app_icons.dart';
@@ -22,12 +22,10 @@ import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
 import '../../../general_services/app_config.service.dart';
-import '../../../general_services/settings.service.dart';
 import '../../../general_services/validation_service.dart';
 import '../../../models/settings/general_settings.model.dart';
 import '../../../routing/app_router.dart';
 import '../../../utils/overlay_gradient_widget.dart';
-import '../../../utils/widgets/text_form_widget.dart';
 import '../view_models/login.viewmodel.dart';
 import 'widgets/phone_number_field.dart';
 import 'widgets/switch_row_widget.dart';
@@ -98,7 +96,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    var gCache;
+    Map<String, dynamic> gCache = {};
     final jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
@@ -114,9 +112,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
             child: Stack(
               children: [
                 //const OverlayBackgroundGradientWidget(),
-                AnimatedBackgroundWidget(),
+                const AnimatedBackgroundWidget(),
                 //const OverlayGradientWidget(),
-                Positioned.fill(child: const OverlayGradientWidget()),
+                const Positioned.fill(child: OverlayGradientWidget()),
 
                 Container(
                   width: double.infinity,
@@ -250,7 +248,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               isPrimaryBackground: false,
                             ),
                             gapH16,
-                            if(gCache != null && gCache['can_visit'] == true) CustomElevatedButton(
+                            if(gCache['can_visit'] == true) CustomElevatedButton(
                               title: AppStrings.visitor.tr(),
                               onPressed: () async {
                                 final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
@@ -263,7 +261,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               isPrimaryBackground: false,
                             ),
                             const SizedBox(height: 25),
-                            if(gCache != null && gCache != "") Row(
+                            if(gCache != "") Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -334,7 +332,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               ],
                             ),
                             const SizedBox(height: 25),
-                             if(gCache != null && gCache['can_new_register'] == true) Row(
+                             if(gCache['can_new_register'] == true) Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CustomElevatedButton(

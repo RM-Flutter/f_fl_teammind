@@ -1,10 +1,10 @@
-import 'package:inv/utils/helpers/media_query_values.dart';
+import 'package:app_test/utils/helpers/media_query_values.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/app_theme.service.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
 
 import '../../../common_modules_widgets/cached_network_image_widget.dart';
 import '../../../constants/app_icons.dart';
@@ -170,7 +170,7 @@ class CommentWidget extends StatelessWidget {
                                       .colorPalette.tertiaryTextColor.color,
                               fontSize: commentFontSize ?? AppSizes.s10,
                             ),
-                      ) : SizedBox.shrink(),
+                      ) : const SizedBox.shrink(),
                 SizedBox(height:rate != null ? 5 : 0,),
                 rate != null ? Row(
                   children: [
@@ -178,7 +178,7 @@ class CommentWidget extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 1),
                             decoration: ShapeDecoration(
-                              color: Color(0xffFFFABB),
+                              color: const Color(0xffFFFABB),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(AppSizes.s18),
                               ),
@@ -205,7 +205,7 @@ class CommentWidget extends StatelessWidget {
                               ],
                             ),
                           ),
-                    SizedBox(width: 20,),
+                    const SizedBox(width: 20,),
                   if(isVerified == true)  Row(
                     children: [
                       Text(
@@ -218,9 +218,9 @@ class CommentWidget extends StatelessWidget {
                             fontSize: dateFontSize,
                           ),
                         ),
-                      SizedBox(width: 2,),
+                      const SizedBox(width: 2,),
                       Padding(
-                        padding: EdgeInsets.only(left: 4),
+                        padding: const EdgeInsets.only(left: 4),
                         child: SvgPicture.asset(
                           AppIcons.checkMarkDashed,
                           width: 12,
@@ -235,7 +235,7 @@ class CommentWidget extends StatelessWidget {
                     ],
                   )
                   ],
-                ) : SizedBox.shrink(),
+                ) : const SizedBox.shrink(),
               ],
             ),
           ),

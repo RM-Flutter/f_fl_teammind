@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_colors.dart';
+import 'package:app_test/constants/app_colors.dart';
 
 Widget defaultTapBarItem(
     {required List<String>? items,
@@ -21,7 +21,7 @@ Widget defaultTapBarItem(
           alignment: Alignment.center,
           width: double.infinity,
           decoration: BoxDecoration(
-              color: const Color(AppColors.dark),
+              color: Color(AppColors.dark),
               borderRadius: BorderRadius.circular(25)),
           child: ListView.builder(
             shrinkWrap: true,
@@ -34,7 +34,7 @@ Widget defaultTapBarItem(
                     selectIndex = index;
                     selectName = items[index];
                     if (onTapItem != null) {
-                      onTapItem!(index);
+                      onTapItem(index);
                     }
                   });
                 },
@@ -45,19 +45,19 @@ Widget defaultTapBarItem(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                     color: (selectIndex == index || selectName == items[index])
-                        ? const Color(AppColors.primary)
+                        ? Color(AppColors.primary)
                         : Colors.transparent,
                   ),
                   child: Text(
-                    items![index].toUpperCase(),
-                    style: TextStyle(
+                    items[index].toUpperCase(),
+                    style: const TextStyle(
                       fontSize: 10,
                       color: Color(0xffFFFFFF),
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                 )),
-            itemCount: items!.length,
+            itemCount: items.length,
           ));
     },
   );

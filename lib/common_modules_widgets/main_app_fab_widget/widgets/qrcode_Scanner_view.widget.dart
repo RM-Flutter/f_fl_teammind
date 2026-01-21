@@ -25,7 +25,7 @@ class QRScannerViewState extends State<QRScannerView> {
         title: const Text('Scan QR Code'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.flash_on),
+            icon:  const Icon(Icons.flash_on),
             onPressed: () {
               controller.toggleTorch();
             },

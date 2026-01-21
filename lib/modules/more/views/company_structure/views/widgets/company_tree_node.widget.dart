@@ -43,7 +43,7 @@ class CompanyStructureNode extends StatelessWidget {
                   placeholder: (context, url) => const ShimmerAnimatedLoading(
                     circularRaduis: AppSizes.s50,
                   ),
-                  errorWidget: (context, url, error) => const Icon(
+                  errorWidget: (context, url, error) =>  const Icon(
                     Icons.image_not_supported_outlined,
                     size: AppSizes.s32,
                     color: Colors.white,

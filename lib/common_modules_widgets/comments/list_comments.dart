@@ -1,26 +1,24 @@
 import 'dart:convert';
 
-import 'package:inv/common_modules_widgets/comments/comments_audio_widget.dart';
+import 'package:app_test/common_modules_widgets/comments/comments_audio_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:inv/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:inv/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_images.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_images.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/general_services/layout.service.dart';
-import 'package:inv/general_services/localization.service.dart';
-import 'package:inv/models/settings/user_settings.model.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../modules/complain_screen/widget/full_image_screen.dart';
 import '../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -28,7 +26,7 @@ import '../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 class ListCommentsScreen extends StatefulWidget {
   var id;
   var slug;
-  ListCommentsScreen({
+  ListCommentsScreen({super.key, 
     this.id,
     this.slug,
   });
@@ -67,7 +65,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
     return Consumer<CommentProvider>(
       builder: (context, value, child) {
         var jsonString;
-        var gCache;
+        Map<String, dynamic> gCache = {};
         jsonString = CacheHelper.getString("US1");
         if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
           gCache = json.decode(jsonString)
@@ -79,7 +77,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
             backgroundColor: const Color(0xffFFFFFF),
             appBar: AppBar(
               surfaceTintColor: Colors.transparent,
-              title:  Text(AppStrings.comments.tr().toUpperCase(), style: const TextStyle(fontSize: 16,
+              title:  Text(AppStrings.comments.tr().toUpperCase(), style:  TextStyle(fontSize: 16,
                   color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
               backgroundColor: Colors.transparent,
             ),
@@ -97,7 +95,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                     pathParameters: {
                       'lang': context.locale.languageCode
                     }), // Icon inside FAB
-                backgroundColor: const Color(
+                backgroundColor:  Color(
                     AppColors.primary), // Optional: change color
                 tooltip: 'Add',
                 child: Center(
@@ -176,7 +174,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                     imageUrl: value.comments[index]['user']['avatar'] ?? "",
                                     placeholder: (context, url) =>
                                     const ShimmerAnimatedLoading(),
-                                    errorWidget: (context, url, error) => const Icon(
+                                    errorWidget: (context, url, error) =>  const Icon(
                                       Icons.image_not_supported_outlined,
                                       size: AppSizes.s32,
                                       color: Colors.white,
@@ -192,7 +190,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                         width: MediaQuery.sizeOf(context).width * 0.4,
                                         child: Text(
                                             value.comments[index]['user']['name'] ?? "", maxLines: 1,
-                                            style: const TextStyle(
+                                            style:  TextStyle(
                                                 fontWeight: FontWeight.w700, fontSize: 12,color: Color(AppColors.dark)
                                             )
                                         ),
@@ -200,8 +198,8 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                       const SizedBox(height: 5,),SizedBox(
                                         width: MediaQuery.sizeOf(context).width * 0.4,
                                         child: Text(
-                                            "$formattedDate", maxLines: 1,
-                                            style: const TextStyle(
+                                            formattedDate, maxLines: 1,
+                                            style:  const TextStyle(
                                                 fontWeight: FontWeight.w500, fontSize: 12,color: Color(0xff5E5E5E)
                                             )
                                         ),
@@ -209,7 +207,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                       const SizedBox(height: 5,),
                                       if(value.comments[index]['content'] != null)Text(
                                         value.comments[index]['content'] ?? "",
-                                        style: const TextStyle(color: Color(AppColors.black), fontSize: 12, fontWeight: FontWeight.w500),
+                                        style:  const TextStyle(color: Color(AppColors.black), fontSize: 12, fontWeight: FontWeight.w500),
                                       ),
                                       if(value.comments[index]['images'].isNotEmpty)Container(
                                           width: 94,
@@ -228,7 +226,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) => FullScreenImageViewer(
                                                     initialIndex: 0,
-                                                    imageUrls: [""],
+                                                    imageUrls: const [""],
                                                     one: true,
                                                     url: false,
                                                     image: value.comments[index]['images'][0]['file'],
@@ -243,7 +241,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                               height: 94,
                                               placeholder: (context, url) =>
                                               const ShimmerAnimatedLoading(),
-                                              errorWidget: (context, url, error) => const Icon(
+                                              errorWidget: (context, url, error) =>  const Icon(
                                                 Icons.image_not_supported_outlined,
                                                 size: AppSizes.s32,
                                                 color: Colors.white,

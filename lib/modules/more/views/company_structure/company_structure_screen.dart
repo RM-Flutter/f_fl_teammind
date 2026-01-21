@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 class WebViewStack extends StatefulWidget {
+  const WebViewStack({super.key});
+
 
   @override
   State<WebViewStack> createState() => _WebViewStackState();
@@ -15,7 +17,7 @@ class _WebViewStackState extends State<WebViewStack> {
   void initState() {
     super.initState();
     final jsonString = CacheHelper.getString("USG");
-    var gCache;
+    Map<String, dynamic> gCache = {};
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;
     }
@@ -25,7 +27,7 @@ class _WebViewStackState extends State<WebViewStack> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
-            print("onPageStarted is -> ${url}");
+            print("onPageStarted is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 0;
@@ -40,7 +42,7 @@ class _WebViewStackState extends State<WebViewStack> {
             }
           },
           onPageFinished: (url) {
-            print("onPageFinished is -> ${url}");
+            print("onPageFinished is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 100;
@@ -90,7 +92,7 @@ class _WebViewStackState extends State<WebViewStack> {
       ),
       body: Stack(
         children: [
-          SizedBox(height: 30,),
+          const SizedBox(height: 30,),
           WebViewWidget(controller: controller),
           if (loadingPercentage < 100)
             LinearProgressIndicator(value: loadingPercentage / 100.0),

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
@@ -9,21 +8,21 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 Widget defaultViewImageGallery({ List? listImagesUrl , bool url = false})=> listImagesUrl!.isEmpty
-    ? Center(child: CircularProgressIndicator())
+    ? const Center(child: CircularProgressIndicator())
     : MasonryGridView.builder(
   shrinkWrap: true,
   reverse: false,
   padding: EdgeInsets.zero,
-  physics: NeverScrollableScrollPhysics(),
+  physics: const NeverScrollableScrollPhysics(),
   gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: (listImagesUrl!.length <= 7) ? 2 : 3,
+    crossAxisCount: (listImagesUrl.length <= 7) ? 2 : 3,
   ),
   itemCount: listImagesUrl.length,
   mainAxisSpacing: 8.0,
   crossAxisSpacing: 8.0,
   itemBuilder: (BuildContext context, int index) {
-    return Container(
-      height:(listImagesUrl!.length <= 7) ? (index % 2 == 0) ? 180 : 80 : (index % 3 == 0) ? 200 : 100,
+    return SizedBox(
+      height:(listImagesUrl.length <= 7) ? (index % 2 == 0) ? 180 : 80 : (index % 3 == 0) ? 200 : 100,
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -40,13 +39,13 @@ Widget defaultViewImageGallery({ List? listImagesUrl , bool url = false})=> list
         child:ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: CachedNetworkImage(
-              imageUrl:url ==  false ? listImagesUrl![index]['file'] :listImagesUrl![index]['images'][0]['file'],
+              imageUrl:url ==  false ? listImagesUrl[index]['file'] :listImagesUrl[index]['images'][0]['file'],
               fit: BoxFit.cover,
               placeholder: (context, url) => const ShimmerAnimatedLoading(
                 width:  100,
                 height: 100,
               ),
-              errorWidget: (context, url, error) => const Icon(
+              errorWidget: (context, url, error) =>  const Icon(
                 Icons.image_not_supported_outlined,
               )),
         ),
@@ -63,7 +62,7 @@ class FullScreenImageViewer extends StatelessWidget {
   var image;
   final int initialIndex;
 
-  FullScreenImageViewer({required this.imageUrls,
+  FullScreenImageViewer({super.key, required this.imageUrls,
     this.one,
     this.image,
     required this.initialIndex,required this.url, this.file, this.thum});
@@ -91,8 +90,8 @@ class FullScreenImageViewer extends StatelessWidget {
             maxScale: PhotoViewComputedScale.covered * 2,
           );
         },
-        scrollPhysics: BouncingScrollPhysics(),
-        backgroundDecoration: BoxDecoration(color: Colors.black),
+        scrollPhysics: const BouncingScrollPhysics(),
+        backgroundDecoration: const BoxDecoration(color: Colors.black),
         pageController: PageController(initialPage: initialIndex),
       ),
     );
@@ -103,7 +102,7 @@ class FullScreenImageViewers extends StatelessWidget {
   final bool? url;
   final int initialIndex;
 
-  FullScreenImageViewers({required this.imageUrls, required this.initialIndex,required this.url});
+  const FullScreenImageViewers({super.key, required this.imageUrls, required this.initialIndex,required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +125,8 @@ class FullScreenImageViewers extends StatelessWidget {
             maxScale: PhotoViewComputedScale.covered * 2,
           );
         },
-        scrollPhysics: BouncingScrollPhysics(),
-        backgroundDecoration: BoxDecoration(color: Colors.black),
+        scrollPhysics: const BouncingScrollPhysics(),
+        backgroundDecoration: const BoxDecoration(color: Colors.black),
         pageController: PageController(initialPage: initialIndex),
       ),
     );

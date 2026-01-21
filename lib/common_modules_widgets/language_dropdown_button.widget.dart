@@ -6,7 +6,6 @@ import '../constants/app_sizes.dart';
 import '../constants/user_consts.dart';
 import '../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../general_services/localization.service.dart';
-import '../general_services/settings.service.dart';
 import '../models/settings/general_settings.model.dart';
 
 class LanguageDropdownButton extends StatelessWidget {
@@ -16,7 +15,7 @@ class LanguageDropdownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var jsonString;
     GeneralSettingsModel generalSettingsModel;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON

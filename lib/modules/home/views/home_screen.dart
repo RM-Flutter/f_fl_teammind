@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:app_test/constants/cache_consts.dart';
 import '../../../constants/app_colors.dart';
 import '../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../general_services/general_listener.dart';
-import '../../../utils/base_page/mobile.scaffold.dart';
-import '../view_models/home.viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,12 +16,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
     }
-    final popups = gCache?['popups'];
+    final popups = gCache['popups'];
     if (popups != null && popups.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) {
@@ -38,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    Widget _sectionTitle(String title) {
+    Widget sectionTitle(String title) {
       return LayoutBuilder(
         builder: (context, constraints) {
           final bool isWideScreen = constraints.maxWidth >= 800;
@@ -98,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: const Color(0xffFFFFFF),
           body: RefreshIndicator.adaptive(
             onRefresh: () async {},
-            child: SingleChildScrollView(
+            child: const SingleChildScrollView(
               child: Center(
                   child: Text("HOME SCREEN")
               ),

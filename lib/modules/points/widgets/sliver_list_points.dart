@@ -1,12 +1,11 @@
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/modules/points/widgets/condition_section.dart';
-import 'package:inv/modules/points/widgets/copoun_section.dart';
-import 'package:inv/modules/points/widgets/history_item.dart';
-import 'package:inv/modules/points/widgets/referral_section.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/modules/points/widgets/condition_section.dart';
+import 'package:app_test/modules/points/widgets/history_item.dart';
+import 'package:app_test/modules/points/widgets/referral_section.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../core/api/api_services_implementation.dart';
 import '../data/repositories/condition_repository/condition_repository_implementation.dart';
@@ -27,11 +26,11 @@ class SliverListPoints extends StatelessWidget {
                 (BuildContext context, index) {
               return Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     maxWidth: kIsWeb ? 1200 : double.infinity,
                   ),
                   child: Container(
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 15),
+                    padding: const EdgeInsetsGeometry.symmetric(vertical: 15),
                     decoration: const BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.only(
@@ -54,7 +53,7 @@ class SliverListPoints extends StatelessWidget {
                               :provider.selectedIndex == 2?
                           ChangeNotifierProvider(
                               create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(ApiServicesImplementation(), context))..getHistory(),
-                              child: HistoryItem()): ReferralSection()
+                              child: const HistoryItem()): const ReferralSection()
                           ,
                         ],
                       ):Column(
@@ -65,26 +64,26 @@ class SliverListPoints extends StatelessWidget {
                             children: [
                       if(kIsWeb&& provider.selectedIndex == 0)Text(
                         AppStrings.aboutPointsProgram.tr().toUpperCase(),
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 14,
                           color: Color(AppColors.primary),
                           fontWeight: FontWeight.w500,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                            if(kIsWeb&& provider.selectedIndex == 0) SizedBox(height: 15,),
+                            if(kIsWeb&& provider.selectedIndex == 0) const SizedBox(height: 15,),
                             if(kIsWeb&& provider.selectedIndex == 0) Text(
                               AppStrings.pointsCondationAbout.tr(),
-                              style: const TextStyle(
+                              style:  const TextStyle(
                                 fontSize: 12,
                                 color: Color(AppColors.black),
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            if(kIsWeb&& provider.selectedIndex == 0) SizedBox(height: 20,),
+                            if(kIsWeb&& provider.selectedIndex == 0) const SizedBox(height: 20,),
                           ],),
-                          SizedBox(height: 20,),
+                          const SizedBox(height: 20,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +100,7 @@ class SliverListPoints extends StatelessWidget {
                                   :provider.selectedIndex == 2?
                               ChangeNotifierProvider(
                                   create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(ApiServicesImplementation(), context))..getHistory(),
-                                  child: HistoryItem()): ReferralSection()
+                                  child: const HistoryItem()): const ReferralSection()
                               ,
                             ],
                           ),
@@ -139,7 +138,7 @@ Widget defaultTap2BarItem({
               ? 200 // عرض ثابت للمنيو في الويب
               : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9),
           decoration: BoxDecoration(
-            color: const Color(AppColors.dark),
+            color: Color(AppColors.dark),
             borderRadius: BorderRadius.circular(25),
           ),
           child: ListView.builder(
@@ -152,7 +151,7 @@ Widget defaultTap2BarItem({
               onTap: () {
                 provider.changeIndex(index);
                 if (onTapItem != null) {
-                  onTapItem!(index);
+                  onTapItem(index);
                 }
               },
               child: Container(
@@ -165,12 +164,12 @@ Widget defaultTap2BarItem({
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: (provider.selectedIndex == index)
-                      ? const Color(AppColors.primary)
+                      ? Color(AppColors.primary)
                       : Colors.transparent,
                 ),
                 child: Text(
                   items[index].toUpperCase(),
-                  style: const TextStyle(
+                  style:  const TextStyle(
                     fontSize: 12,
                     color: Color(0xffFFFFFF),
                     fontWeight: FontWeight.w500,

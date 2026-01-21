@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:inv/constants/app_constants.dart';
-import 'package:inv/general_services/app_config.service.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/constants/app_constants.dart';
+import 'package:app_test/general_services/app_config.service.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:provider/provider.dart';
 
 
 import 'api_services.dart';
-import 'end_points.dart';
 
 class ApiServicesImplementation implements ApiServices {
   Dio? _dio;

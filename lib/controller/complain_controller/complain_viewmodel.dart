@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:inv/models/get_one_complain_model.dart';
+import 'package:app_test/models/get_one_complain_model.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:inv/constants/app_constants.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/constants/app_constants.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../general_services/image_file_picker.service.dart';
 import '../../../models/settings/user_settings_2.model.dart';
 import '../../common_modules_widgets/successful_add.dart';
@@ -116,7 +116,7 @@ class ComplainViewModel extends ChangeNotifier {
   }
   Future<void> getImage( context, {image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -132,11 +132,11 @@ class ComplainViewModel extends ChangeNotifier {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("Select Photo",
+                    const Text("Select Photo",
                       style: TextStyle(
                           fontSize: 20, color: Color(0xFF011A51)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -154,7 +154,7 @@ class ComplainViewModel extends ChangeNotifier {
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -163,13 +163,14 @@ class ComplainViewModel extends ChangeNotifier {
                                 ),
                               ),
                             ),
-                            Text("Gallery",
+                            const Text("Gallery",
                               style: TextStyle(
                                   fontSize: 18, color: Color(0xFF011A51)),
                             ),
                           ],
                         ),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
@@ -182,7 +183,7 @@ class ComplainViewModel extends ChangeNotifier {
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -191,12 +192,11 @@ class ComplainViewModel extends ChangeNotifier {
                                 ),
                               ),
                             ),
-                            Text(
+                            const Text(
                               "Camera",
                               style: TextStyle(fontSize: 18, color: Color(0xFF011A51)),
                             ),
                           ],
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),
@@ -232,7 +232,7 @@ class ComplainViewModel extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -242,7 +242,7 @@ class ComplainViewModel extends ChangeNotifier {
   void _getComplaintTypes({required BuildContext context}) {
     try {
       var jsonString;
-      var gCache;
+      Map<String, dynamic> gCache = {};
       jsonString = CacheHelper.getString("US2");
       if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
         gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -297,10 +297,10 @@ class ComplainViewModel extends ChangeNotifier {
   Future<void> createNewComplaint(BuildContext context, {List<XFile>? images}) async {
     isAddComplaintLoading = true;
     notifyListeners();
-    var response;
+    Response response;
     FormData formData = FormData.fromMap({
-      if(subjectController.text != null && subjectController.text.isNotEmpty)"title" : subjectController.text,
-      if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
+      if(subjectController.text.isNotEmpty)"title" : subjectController.text,
+      if(detailsController.text.isNotEmpty) "content" : detailsController.text,
       "department_id" : selectedComplaintTypes.toString(),
       "main_thumbnail[]": images != null
           ? await Future.wait(
@@ -320,8 +320,8 @@ class ComplainViewModel extends ChangeNotifier {
             url: "/emp_requests/v1/complain",
             context: context,
             data: {
-              if(subjectController.text != null && subjectController.text.isNotEmpty) "title" : subjectController.text,
-              if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
+              if(subjectController.text.isNotEmpty) "title" : subjectController.text,
+              if(detailsController.text.isNotEmpty) "content" : detailsController.text,
               "department_id" : selectedComplaintTypes.toString(),
             }
         );
@@ -355,7 +355,7 @@ class ComplainViewModel extends ChangeNotifier {
       isAddComplaintLoading = false;
       notifyListeners();
     } catch (error) {
-      errorAddComplaintMessage = error is DioError
+      errorAddComplaintMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -415,7 +415,7 @@ class ComplainViewModel extends ChangeNotifier {
       isGetComplainLoading = false;
       notifyListeners();
     } catch (error) {
-      getComplainErrorMessage = error is DioError
+      getComplainErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -459,7 +459,7 @@ class ComplainViewModel extends ChangeNotifier {
       isGetComplainLoading = false;
       notifyListeners();
     } catch (error) {
-      getComplainErrorMessage = error is DioError
+      getComplainErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -518,7 +518,7 @@ class ComplainViewModel extends ChangeNotifier {
       isGetComplainLoading = false;
       notifyListeners();
     } catch (error) {
-      getComplainErrorMessage = error is DioError
+      getComplainErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(

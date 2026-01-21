@@ -8,15 +8,15 @@ class FaqModel {
   FaqModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    page = json['page'] != null ? new Page.fromJson(json['page']) : null;
+    page = json['page'] != null ? Page.fromJson(json['page']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.page != null) {
-      data['page'] = this.page!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (page != null) {
+      data['page'] = page!.toJson();
     }
     return data;
   }
@@ -37,18 +37,18 @@ class Page {
     if (json['questions'] != null) {
       questions = <Questions>[];
       json['questions'].forEach((v) {
-        questions!.add(new Questions.fromJson(v));
+        questions!.add(Questions.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['slug'] = this.slug;
-    if (this.questions != null) {
-      data['questions'] = this.questions!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['slug'] = slug;
+    if (questions != null) {
+      data['questions'] = questions!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -66,9 +66,9 @@ class Questions {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['question'] = this.question;
-    data['answer'] = this.answer;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['question'] = question;
+    data['answer'] = answer;
     return data;
   }
 }

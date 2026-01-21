@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/constants/app_colors.dart';
+import 'package:app_test/constants/app_colors.dart';
 
 import '../constants/app_sizes.dart';
 
@@ -53,7 +53,7 @@ class TemplatePage extends StatelessWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Color(AppColors.dark)),
-                    child: const Icon(
+                    child:  const Icon(
                       Icons.arrow_back_sharp,
                       color: Colors.white,
                       size: AppSizes.s18,

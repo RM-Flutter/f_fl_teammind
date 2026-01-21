@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
-import 'package:inv/general_services/backend_services/get_endpoint.service.dart';
-import 'package:inv/models/endpoint.model.dart';
-import 'package:inv/models/operation_result.model.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
+import 'package:app_test/general_services/backend_services/get_endpoint.service.dart';
+import 'package:app_test/models/endpoint.model.dart';
+import 'package:app_test/models/operation_result.model.dart';
 
 import '../../../constants/string_convert.dart';
 
@@ -51,7 +50,7 @@ abstract class PersonalProfileService {
     List<XFile>? avatar,
     required BuildContext context,
   }) async {
-    print("AVATAR IS-->${avatar}");
+    print("AVATAR IS-->$avatar");
     print("SERVER FORM DATA");
     FormData formData = FormData.fromMap(
         {

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 Widget defaultProjectCard(String? title1, String? title2, src, {onTap}) {
   return GestureDetector(
@@ -24,7 +24,7 @@ Widget defaultProjectCard(String? title1, String? title2, src, {onTap}) {
         child: Column(
           children: [
             ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                 child:  CachedNetworkImage(
                   height: 135,
                   fit: BoxFit.cover,
@@ -32,7 +32,7 @@ Widget defaultProjectCard(String? title1, String? title2, src, {onTap}) {
                   imageUrl: src,
                   placeholder: (context, url) =>
                   const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) => const Icon(
+                  errorWidget: (context, url, error) =>  const Icon(
                     Icons.image_not_supported_outlined,
                     size: AppSizes.s32,
                     color: Colors.white,
@@ -43,8 +43,8 @@ Widget defaultProjectCard(String? title1, String? title2, src, {onTap}) {
               child: Column(
                 children: [
                   Text(title1 ?? "".toUpperCase(),maxLines: 1, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10, color: Color(AppColors.primary))),
-                  SizedBox(height: 7,),
-                  Text(title2 ?? "".toUpperCase(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF090B60))),
+                  const SizedBox(height: 7,),
+                  Text(title2 ?? "".toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF090B60))),
                 ],
               ),
             ),

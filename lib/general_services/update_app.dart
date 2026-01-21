@@ -15,7 +15,7 @@ class UpdateApp{
   static checkForForceUpdate(BuildContext context) async {
     final packageInfo = await PackageInfo.fromPlatform();
     final jsonString = CacheHelper.getString("USG");
-    var gCache;
+    Map<String, dynamic> gCache = {};
     if (jsonString != null) {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
@@ -33,7 +33,7 @@ class UpdateApp{
                   title: Center(
                     child: Text(
                       LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update",
-                      style:  const TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.primary)),
+                      style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.primary)),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -42,7 +42,7 @@ class UpdateApp{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(AppStrings.youMustUpdateTheAppToContinue.tr(),
-                        style:  TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black)),
+                        style:  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black)),
                         textAlign: TextAlign.center,
 
                       ),
@@ -84,7 +84,7 @@ class UpdateApp{
                   backgroundColor: const Color(0xffFFFFFF),
                   title: Center(
                       child: Text(AppStrings.available_update.tr(),
-                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.primary)),
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.primary)),
                         textAlign: TextAlign.center,)
                   ),
                   content: Column(
@@ -93,7 +93,7 @@ class UpdateApp{
                     children: [
                       Text(AppStrings.youMustUpdateTheAppToContinue.tr(),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
+                          style:  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
                     ],
                   ),
                   actionsAlignment: MainAxisAlignment.center,

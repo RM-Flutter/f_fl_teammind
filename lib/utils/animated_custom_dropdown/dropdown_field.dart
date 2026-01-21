@@ -119,7 +119,7 @@ class _DropDownFieldState extends State<_DropDownField> {
                     widget.controller.clear();
                     widget.onRemoveClicked?.call();
                   },
-                  child: const Icon(
+                  child:  const Icon(
                     Icons.close,
                     color: Colors.red,
                     size: 20,

@@ -1,12 +1,13 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/controller/device_sys/device_controller.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/controller/device_sys/device_controller.dart';
 class CustomizeNotificationScreen extends StatefulWidget {
+  const CustomizeNotificationScreen({super.key});
+
   @override
   State<CustomizeNotificationScreen> createState() => _CustomizeNotificationScreenState();
 }
@@ -37,7 +38,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: const TextStyle(
+                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style:  const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                       color: Color(0xff0D3B6F)
@@ -134,18 +135,18 @@ class SwitchRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(AppStrings.deactivate.tr().toUpperCase(),
-              style: const TextStyle(
+              style:  const TextStyle(
                   fontSize: 11, color: Color(0xff224982), fontWeight: FontWeight.w500)),
           gapW8,
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xff224982),
+            activeThumbColor: const Color(0xff224982),
             inactiveThumbColor: Colors.black,
           ),
           gapW8,
           Text(AppStrings.activation.tr().toUpperCase(),
-              style: const TextStyle(
+              style:  const TextStyle(
                   fontSize: 11, color: Color(0xff224982), fontWeight: FontWeight.w500)),
 
         ],

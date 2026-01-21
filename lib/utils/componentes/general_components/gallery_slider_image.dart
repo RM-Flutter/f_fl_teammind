@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 class ImageGallerySlider extends StatefulWidget {
   List? listImageUrl = [];
   ImageGallerySlider({super.key, required this.listImageUrl});
@@ -44,7 +44,7 @@ class _ImageGallerySliderState extends State<ImageGallerySlider> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 200,
       child: ListView.separated(
@@ -55,7 +55,7 @@ class _ImageGallerySliderState extends State<ImageGallerySlider> {
         itemCount: widget.listImageUrl!.length,
         itemBuilder: (context, index) {
           double imageWidth = index % 2 == 0 ? 280.0 : 92.0;
-          return Container(
+          return SizedBox(
             height: 200.0,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
@@ -68,7 +68,7 @@ class _ImageGallerySliderState extends State<ImageGallerySlider> {
                     circularRaduis:
                     AppSizes.s50,
                   ),
-                  errorWidget: (context, url, error) => const Icon(Icons.image_not_supported_outlined,)),
+                  errorWidget: (context, url, error) =>  const Icon(Icons.image_not_supported_outlined,)),
             ),
           );
         },

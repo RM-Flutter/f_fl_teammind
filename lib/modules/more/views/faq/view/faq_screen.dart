@@ -1,14 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/more/views/faq/logic/faq_model.dart';
-import 'package:inv/modules/more/views/faq/logic/get_faq_model.dart';
-import 'package:inv/modules/more/views/faq/view/faq_loading_widget.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/more/views/faq/logic/faq_model.dart';
+import 'package:app_test/modules/more/views/faq/logic/get_faq_model.dart';
+import 'package:app_test/modules/more/views/faq/view/faq_loading_widget.dart';
 
 class FaqScreen extends StatefulWidget {
+  const FaqScreen({super.key});
+
   @override
   _FaqScreenState createState() => _FaqScreenState();
 }
@@ -24,7 +26,7 @@ class _FaqScreenState extends State<FaqScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,
-            title:  Text(AppStrings.faqs.tr().toUpperCase(), style: const TextStyle(fontSize: 16,
+            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  TextStyle(fontSize: 16,
                 color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
             leading: Padding(
               padding: const EdgeInsets.all(AppSizes.s10),
@@ -34,7 +36,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(AppColors.dark)),
-                  child: const Icon(
+                  child:  const Icon(
                     Icons.arrow_back_sharp,
                     color: Colors.white,
                     size: AppSizes.s18,
@@ -81,7 +83,7 @@ class FaqItem {
 class FaqTile extends StatefulWidget {
   final Questions item;
 
-  const FaqTile({Key? key, required this.item}) : super(key: key);
+  const FaqTile({super.key, required this.item});
 
   @override
   _FaqTileState createState() => _FaqTileState();
@@ -117,7 +119,7 @@ class _FaqTileState extends State<FaqTile> {
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           title: Text(
             widget.item.question??"",
-            style: const TextStyle(
+            style:  const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Color(0xFF1B1B1B),
@@ -132,7 +134,7 @@ class _FaqTileState extends State<FaqTile> {
           children: [
             Text(
               widget.item.answer ?? "",
-              style: const TextStyle(
+              style:  const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: Color(0xFF464646),

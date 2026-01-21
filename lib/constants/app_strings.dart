@@ -494,4 +494,5 @@ abstract class AppStrings {
   static const domainNotFound = 'domainNotFound';
   static const useDefault = 'useDefault';
   static const savedDomains = 'savedDomains';
+  static const tryAgain = "tryAgain";
 }

@@ -1,26 +1,25 @@
 import 'dart:convert';
 
-import 'package:inv/modules/points/widgets/add_friend_bottom_sheet.dart';
+import 'package:app_test/modules/points/widgets/add_friend_bottom_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/componentes/general_components/all_bottom_sheet.dart';
-import 'package:inv/utils/componentes/general_components/slider_home_menu.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/utils/componentes/general_components/all_bottom_sheet.dart';
+import 'package:app_test/utils/componentes/general_components/slider_home_menu.dart';
 
 import '../../home/view_models/home.viewmodel.dart';
 
 
 class ReferralSection extends StatefulWidget {
-  ReferralSection({super.key});
+  const ReferralSection({super.key});
 
   @override
   State<ReferralSection> createState() => _ReferralSectionState();
@@ -49,12 +48,12 @@ class _ReferralSectionState extends State<ReferralSection> {
     child: Consumer<HomeViewModel>(
       builder: (context, value, child) {
         final json2String = CacheHelper.getString("US2");
-        var us2Cache;
+        Map<String, dynamic> us2Cache = {};
         if (json2String != null && json2String != "") {
           us2Cache = json.decode(json2String) as Map<String, dynamic>;
         }
         final json1String = CacheHelper.getString("US1");
-        var us1Cache;
+        Map<String, dynamic> us1Cache = {};
         if (json1String != null && json1String != "") {
           us1Cache = json.decode(json1String) as Map<String, dynamic>;
         }
@@ -68,7 +67,7 @@ class _ReferralSectionState extends State<ReferralSection> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   AppStrings.aboutPointsProgram.tr().toUpperCase(),
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 14,
                     color: Color(AppColors.primary),
                     fontWeight: FontWeight.w500,
@@ -76,24 +75,24 @@ class _ReferralSectionState extends State<ReferralSection> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              if(!kIsWeb) SizedBox(height: 15,),
+              if(!kIsWeb) const SizedBox(height: 15,),
               if(!kIsWeb) Text(
                 AppStrings.pointsCondationAbout.tr(),
-                style: const TextStyle(
+                style:  const TextStyle(
                   fontSize: 12,
                   color: Color(AppColors.black),
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
               ),
-              if(!kIsWeb) SizedBox(height: 30,),
+              if(!kIsWeb) const SizedBox(height: 30,),
               Container(
                 alignment: Alignment.topLeft,
                 height: 200,
                 child: ListView(
                   reverse: false,
                   padding: EdgeInsets.zero,
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   children: [
@@ -150,17 +149,17 @@ class _ReferralSectionState extends State<ReferralSection> {
                         src: "assets/images/svg/rec.svg",
                       ),
                     ),
-                    SizedBox(width: 0,),
+                    const SizedBox(width: 0,),
                     GestureDetector(
                       onTap: ()async{
                         await showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                           ),
                           builder: (BuildContext context) {
-                            return AddFriendBottomSheet();
+                            return const AddFriendBottomSheet();
                           },
                         );
                       },

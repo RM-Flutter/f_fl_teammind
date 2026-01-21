@@ -2,16 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/app_theme.service.dart';
-import 'package:inv/general_services/localization.service.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/app_theme.service.dart';
+import 'package:app_test/general_services/localization.service.dart';
 
 class HistoryDropDownWidget extends StatelessWidget {
   var notes;
   var code;
-  HistoryDropDownWidget({this.code, this.notes});
+  HistoryDropDownWidget({super.key, this.code, this.notes});
   void copyToClipboard(BuildContext context, {text}) {
     Clipboard.setData(ClipboardData(text: text));
     Fluttertoast.showToast(
@@ -63,7 +63,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 if(code != null && code != "") Text(AppStrings.voucherCouponCode.tr().toUpperCase(), style: const TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w400, fontSize: 12),),
+                 if(code != null && code != "") Text(AppStrings.voucherCouponCode.tr().toUpperCase(), style: TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(code != null && code != "")  const SizedBox(height: 15,),
                   if(code != null && code != "")   Container(
                     height: 50,
@@ -89,7 +89,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Text(code.toString(), style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.grey50)),),
+                        Text(code.toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.grey50)),),
                         const Spacer(),
                         GestureDetector(
                           onTap: (){
@@ -103,16 +103,16 @@ class HistoryDropDownWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 color: const Color(0xffE8E8E8)
                             ),
-                            child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
+                            child: Text(AppStrings.copy.tr(), style:  const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
                           ),
                         )
                       ],
                     ),
                   ),
                   if(notes != null && notes != "") const SizedBox(height: 30),
-                 if(notes != null && notes != "") Text(AppStrings.notes.tr().toUpperCase(), style: const TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w400, fontSize: 12),),
+                 if(notes != null && notes != "") Text(AppStrings.notes.tr().toUpperCase(), style: TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(notes != null && notes != "")  const SizedBox(height: 15,),
-                  if(notes != null && notes != "")  Text(notes.toString(), style: const TextStyle(color: Color(AppColors.grey50), fontWeight: FontWeight.w400, fontSize: 14)),
+                  if(notes != null && notes != "")  Text(notes.toString(), style: TextStyle(color: Color(AppColors.grey50), fontWeight: FontWeight.w400, fontSize: 14)),
 
                 ],
               ),

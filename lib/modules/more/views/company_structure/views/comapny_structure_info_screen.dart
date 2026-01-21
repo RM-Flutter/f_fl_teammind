@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../constants/app_images.dart';
 import '../../../../../constants/app_sizes.dart';
-import 'widgets/company_social_contacts.widget.dart';
 import '../viewmodels/company_structure_info.viewmodel.dart';
 import 'widgets/company_info_header/company_info_header_widget.dart';
 
@@ -53,7 +52,7 @@ class _CompanyStructureInfoScreenState
                         const EdgeInsets.symmetric(horizontal: AppSizes.s12),
                     child: AutoSizeText(
                       '${viewModel.applicationName} application is an innovative recruitment platform that aims to connect job seekers with employers easily and effectively. The application provides a range of tools and features that facilitate the hiring process for both sides, making it faster and more efficient.\n\n${viewModel.applicationName} application is an innovative recruitment platform that aims to connect job seekers with employers easily and effectively. The application provides a range of tools and features that facilitate the hiring process for both sides, making it faster and more efficient.',
-                      style: const TextStyle(
+                      style:  const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: AppSizes.s12,
                       ),

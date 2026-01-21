@@ -1,9 +1,9 @@
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/modules/points/widgets/send_point_confirm_bottomsheet.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/modules/points/widgets/send_point_confirm_bottomsheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/authentication/views/widgets/phone_number_field.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/componentes/general_components/all_text_field.dart';
 import '../../home/view_models/home.viewmodel.dart';
@@ -71,7 +71,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                         children: [
                           Text(
                             AppStrings.sendToFriends.tr().toUpperCase(),
-                            style: const TextStyle(
+                            style:  const TextStyle(
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w600,
                               fontSize: 24,
@@ -104,10 +104,10 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: const Color(AppColors.primary)),
+                                  color: Color(AppColors.primary)),
                               child: Text(
                                 AppStrings.sendPoints.tr().toUpperCase(),
-                                style: const TextStyle(
+                                style:  const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xffFFFFFF),

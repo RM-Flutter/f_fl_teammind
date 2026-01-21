@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_strings.dart';
+import 'package:app_test/constants/app_strings.dart';
 import '../../../../constants/app_images.dart';
 import '../../../../constants/app_sizes.dart';
 import '../../../../general_services/layout.service.dart';
@@ -38,7 +38,7 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                       child: Center(
                         child: IconButton(
                           onPressed: () => context.pop(),
-                          icon: const Icon(
+                          icon:  const Icon(
                             Icons.arrow_back_ios_new,
                             color: Colors.white,
                             size: AppSizes.s18,
@@ -47,7 +47,7 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                       )),
                    Text(
                     AppStrings.accountAndSettings.tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.s14,
                       letterSpacing: 1.4,
@@ -63,7 +63,7 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                         child: IconButton(
                           onPressed: () async =>
                               await viewModel.logout(context: context),
-                          icon: const Icon(
+                          icon:  const Icon(
                             Icons.logout_outlined,
                             color: Colors.red,
                             size: AppSizes.s18,

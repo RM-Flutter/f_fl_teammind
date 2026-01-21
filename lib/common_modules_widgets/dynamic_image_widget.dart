@@ -31,7 +31,7 @@ class DynamicImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // If imageUrl is empty, show error widget or default icon
     if (imageUrl.isEmpty) {
-      return errorWidget ?? const Icon(Icons.image_not_supported_outlined);
+      return errorWidget ??  const Icon(Icons.image_not_supported_outlined);
     }
     
     if (_isNetworkImage) {

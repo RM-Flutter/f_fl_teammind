@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/constants/user_consts.dart';
-import 'package:inv/general_services/alert_service/alerts.service.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/models/get_one_notification_model.dart';
-import 'package:inv/models/settings/user_settings.model.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/general_services/alert_service/alerts.service.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/models/get_one_notification_model.dart';
+import 'package:app_test/models/settings/user_settings.model.dart';
 
 class NotificationProviderModel extends ChangeNotifier {
   bool isLoading = false;
@@ -99,7 +99,7 @@ class NotificationProviderModel extends ChangeNotifier {
   }
   void getEmployees({required BuildContext context}) {
     var jsonString;
-    var gCache;
+    Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -123,7 +123,7 @@ class NotificationProviderModel extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -146,7 +146,7 @@ class NotificationProviderModel extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -183,7 +183,7 @@ class NotificationProviderModel extends ChangeNotifier {
 
       isGetNotificationSuccess = true;
     } catch (error) {
-      getNotificationErrorMessage = error is DioError
+      getNotificationErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -206,7 +206,7 @@ class NotificationProviderModel extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
-      getNotificationErrorMessage = error is DioError
+      getNotificationErrorMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -217,21 +217,19 @@ class NotificationProviderModel extends ChangeNotifier {
   addNotification(BuildContext context, {empIds, depIds})async {
     isLoading = true;
     notifyListeners();
-    print("empIds is --> ${empIds}");
+    print("empIds is --> $empIds");
     print("empIds is --> ${listXAttachmentPersonalImage.length}");
     final image = listAttachmentPersonalImage
         .map((e) => XFile(e["compressed"].path)) // تحويل File → XFile
         .toList();
-    final images = image != null
-        ? await Future.wait(
+    final images = await Future.wait(
       listXAttachmentPersonalImage.map(
             (file) async => await MultipartFile.fromFile(
           file.path,
           filename: file.name,
         ),
       ),
-    )
-        : [];
+    );
     FormData formData = FormData.fromMap({
       "titles[en]" : titleEnController.text,
       "titles[ar]" : titleArController.text,
@@ -243,9 +241,9 @@ class NotificationProviderModel extends ChangeNotifier {
       if(empIds != null && empIds.isNotEmpty)"employee_ids[]" : empIds,
       if(depIds != null && depIds.isNotEmpty)"department_ids[]" : depIds
     });
-    var response;
+    Response response;
     try{
-      if(listXAttachmentPersonalImage == null || listXAttachmentPersonalImage.isEmpty){
+      if(listXAttachmentPersonalImage.isEmpty){
         response = await DioHelper.postFormData(
             url: "/emp_requests/v1/notifications/create",
             context: context,
@@ -274,7 +272,7 @@ class NotificationProviderModel extends ChangeNotifier {
             title: AppStrings.failed.tr());
       }
     }catch (error) {
-      errorAddNotificationMessage = error is DioError
+      errorAddNotificationMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -343,7 +341,7 @@ class NotificationProviderModel extends ChangeNotifier {
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -361,10 +359,10 @@ class NotificationProviderModel extends ChangeNotifier {
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -381,7 +379,7 @@ class NotificationProviderModel extends ChangeNotifier {
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -392,12 +390,13 @@ class NotificationProviderModel extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
@@ -410,7 +409,7 @@ class NotificationProviderModel extends ChangeNotifier {
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -421,10 +420,9 @@ class NotificationProviderModel extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style: const TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),

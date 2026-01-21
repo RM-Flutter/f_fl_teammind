@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_images.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/routing/app_router.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 class PainterNotificationListViewItem extends StatefulWidget {
   final List notifications;
@@ -35,7 +33,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
         padding: const EdgeInsetsDirectional.symmetric(
             horizontal: AppSizes.s15, vertical: AppSizes.s12),
         decoration: BoxDecoration(
-          color: const Color(AppColors.textC5),
+          color: Color(AppColors.textC5),
           borderRadius: BorderRadius.circular(AppSizes.s15),
           boxShadow: const [
             BoxShadow(
@@ -59,7 +57,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(63),
                   child: CachedNetworkImage(
-                      imageUrl: (widget.notifications![widget.index]['main_thumbnail'].isNotEmpty)?
+                      imageUrl: (widget.notifications[widget.index]['main_thumbnail'].isNotEmpty)?
                       widget.notifications[widget.index]['main_thumbnail'][0]['file'] : "",
                       fit: BoxFit.cover,
                       height: 40,
@@ -69,7 +67,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                         height: 63,
                         circularRaduis: 63,
                       ),
-                      errorWidget: (context, url, error) => const Icon(
+                      errorWidget: (context, url, error) =>  const Icon(
                         Icons.image_not_supported_outlined,
                       )),
                 ),
@@ -82,7 +80,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 children: [
                   Text(
                     DateFormat("yyyy/MM/dd hh:mm a", context.locale.languageCode).format(DateTime.parse(widget.notifications[widget.index]['created_at'])),
-                    style: const TextStyle(
+                    style:  const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Color(0xff606060)),
@@ -92,7 +90,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: widget.notifications[widget.index]['seen'] == true? FontWeight.w300 : FontWeight.w700,
-                      color: widget.notifications[widget.index]['seen'] == true? Colors.black.withOpacity(0.5):Color(0xff0D3B6F)),
+                      color: widget.notifications[widget.index]['seen'] == true? Colors.black.withOpacity(0.5):const Color(0xff0D3B6F)),
                   )
                   // Html(
                   //     shrinkWrap: true,

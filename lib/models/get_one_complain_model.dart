@@ -9,16 +9,16 @@ class GetOneComplainModel {
     status = json['status'];
     message = json['message'];
     complain = json['complain'] != null
-        ? new Complain.fromJson(json['complain'])
+        ? Complain.fromJson(json['complain'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.complain != null) {
-      data['complain'] = this.complain!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (complain != null) {
+      data['complain'] = complain!.toJson();
     }
     return data;
   }
@@ -59,12 +59,12 @@ class Complain {
     if (json['main_thumbnail'] != null) {
       mainThumbnail = <MainThumbnail>[];
       json['main_thumbnail'].forEach((v) {
-        mainThumbnail!.add(new MainThumbnail.fromJson(v));
+        mainThumbnail!.add(MainThumbnail.fromJson(v));
       });
     }
     employeeId = json['employee_id'];
     employee = json['employee'] != null
-        ? new Employee.fromJson(json['employee'])
+        ? Employee.fromJson(json['employee'])
         : null;
     commentStatus = json['comment_status'];
     createdAt = json['created_at'];
@@ -72,21 +72,21 @@ class Complain {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['department_id'] = this.departmentId;
-    data['subject'] = this.subject;
-    data['details'] = this.details;
-    if (this.mainThumbnail != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['department_id'] = departmentId;
+    data['subject'] = subject;
+    data['details'] = details;
+    if (mainThumbnail != null) {
       data['main_thumbnail'] =
-          this.mainThumbnail!.map((v) => v.toJson()).toList();
+          mainThumbnail!.map((v) => v.toJson()).toList();
     }
-    data['employee_id'] = this.employeeId;
-    if (this.employee != null) {
-      data['employee'] = this.employee!.toJson();
+    data['employee_id'] = employeeId;
+    if (employee != null) {
+      data['employee'] = employee!.toJson();
     }
-    data['created_at'] = this.createdAt;
-    data['pstatus'] = this.pstatus;
+    data['created_at'] = createdAt;
+    data['pstatus'] = pstatus;
     return data;
   }
 }
@@ -116,19 +116,19 @@ class MainThumbnail {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
-    if (this.sizes != null) {
-      data['sizes'] = this.sizes!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['type'] = type;
+    data['title'] = title;
+    data['alt'] = alt;
+    data['file'] = file;
+    data['thumbnail'] = thumbnail;
+    if (sizes != null) {
+      data['sizes'] = sizes!.toJson();
     }
     return data;
   }
@@ -163,14 +163,14 @@ class Sizes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['thumbnail'] = this.thumbnail;
-    data['medium'] = this.medium;
-    data['large'] = this.large;
-    data['1200_800'] = this.s1200800;
-    data['800_1200'] = this.s8001200;
-    data['1200_300'] = this.s1200300;
-    data['300_1200'] = this.s3001200;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['thumbnail'] = thumbnail;
+    data['medium'] = medium;
+    data['large'] = large;
+    data['1200_800'] = s1200800;
+    data['800_1200'] = s8001200;
+    data['1200_300'] = s1200300;
+    data['300_1200'] = s3001200;
     return data;
   }
 }
@@ -206,20 +206,20 @@ class Employee {
     avatar = json['avatar'];
     jobTitle = json['job_title'];
     social =
-    json['social'] != null ? new Social.fromJson(json['social']) : null;
+    json['social'] != null ? Social.fromJson(json['social']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['country_key'] = this.countryKey;
-    data['phone'] = this.phone;
-    data['avatar'] = this.avatar;
-    data['job_title'] = this.jobTitle;
-    if (this.social != null) {
-      data['social'] = this.social!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['country_key'] = countryKey;
+    data['phone'] = phone;
+    data['avatar'] = avatar;
+    data['job_title'] = jobTitle;
+    if (social != null) {
+      data['social'] = social!.toJson();
     }
     return data;
   }
@@ -257,15 +257,15 @@ class Social {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['facebook'] = this.facebook;
-    data['twitter'] = this.twitter;
-    data['linkedin'] = this.linkedin;
-    data['instagram'] = this.instagram;
-    data['youtube'] = this.youtube;
-    data['pinterest'] = this.pinterest;
-    data['snapchat'] = this.snapchat;
-    data['whatsapp'] = this.whatsapp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['facebook'] = facebook;
+    data['twitter'] = twitter;
+    data['linkedin'] = linkedin;
+    data['instagram'] = instagram;
+    data['youtube'] = youtube;
+    data['pinterest'] = pinterest;
+    data['snapchat'] = snapchat;
+    data['whatsapp'] = whatsapp;
     return data;
   }
 }

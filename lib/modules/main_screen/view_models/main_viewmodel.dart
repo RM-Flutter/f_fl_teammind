@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/modules/more/views/notification/view/notification_screen.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/modules/more/views/notification/view/notification_screen.dart';
 import '../../../routing/app_router.dart';
 import '../../home/view/home_screen.dart';
 import '../../more/views/more_screen.dart';
@@ -41,16 +41,16 @@ class MainScreenViewModel extends ChangeNotifier {
   Widget getCurrentMainPage(NavbarPages currPage) {
     switch (currPage) {
       case NavbarPages.home:
-        return  HomeScreen();
+        return  const HomeScreen();
       case NavbarPages.fingerprint:
-        return  HomeScreen();
+        return  const HomeScreen();
       case NavbarPages.requests:
-        return  HomeScreen();
+        return  const HomeScreen();
       case NavbarPages.notifications:
         CacheHelper.deleteData(key: "value");
-        return NotificationScreen(false);
+        return const NotificationScreen(false);
       case NavbarPages.more:
-        return  MoreScreen();
+        return  const MoreScreen();
     }
   }
 

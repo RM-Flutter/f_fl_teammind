@@ -1,16 +1,13 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:provider/provider.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
@@ -21,13 +18,11 @@ import '../../../general_services/validation_service.dart';
 import '../../../models/operation_result.model.dart';
 import '../../../routing/app_router.dart';
 import '../../../utils/modal_sheet_helper.dart';
-import '../../more/views/company_structure/company_structure_screen.dart';
 import '../auth_services/account_verification.service.dart';
 import '../auth_services/authentication.service.dart';
 import '../auth_services/two_factor_authentication.service.dart';
 import '../views/create_account_modal.dart';
 import '../views/forget_password_modal.dart';
-import '../views/update_main_data.dart';
 import '../views/widgets/verification_tile_widget.dart';
 
 enum AuthStatus {
@@ -138,7 +133,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
       final completePhoneNumber = (countryCodeController.text.isEmpty
-          ? '${phoneController.text}'
+          ? phoneController.text
           : countryCodeController.text + phoneController.text)
           .trim();
       OperationResult<Map<String, dynamic>> result =
@@ -276,7 +271,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       builder: (BuildContext context) {
         return Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
                 maxWidth: kIsWeb ? 800 : double.infinity
             ),
             child: AlertDialog(
@@ -296,7 +291,7 @@ class AuthenticationViewModel extends ChangeNotifier {
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon:  const Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
                         color: Colors.red,
@@ -523,7 +518,7 @@ class AuthenticationViewModel extends ChangeNotifier {
       builder: (BuildContext context) {
         return Center(
           child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   maxWidth: kIsWeb ? 800 : double.infinity
               ),
             child: AlertDialog(
@@ -543,7 +538,7 @@ class AuthenticationViewModel extends ChangeNotifier {
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon:  const Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
                         color: Colors.red,

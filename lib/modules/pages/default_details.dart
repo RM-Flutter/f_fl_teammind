@@ -3,19 +3,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
-import 'package:inv/constants/app_colors.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:inv/utils/gradient_bg_image.dart';
-import 'package:inv/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import 'package:inv/utils/styles.dart';
+import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
+import 'package:app_test/utils/gradient_bg_image.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/utils/styles.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DefaultDetails extends StatelessWidget {
   String? id;
   String? type;
-  DefaultDetails({required this.id, this.type});
+  DefaultDetails({super.key, required this.id, this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -43,16 +43,16 @@ class DefaultDetails extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.arrow_back, color: Color(0xff224982)),
+                                icon:  const Icon(Icons.arrow_back, color: Color(0xff224982)),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                               ),
                               Text(
-                                type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : type.toString().tr().toUpperCase(),                                style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+                                type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : type.toString().tr().toUpperCase(),                                style:  const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               IconButton(
-                                  icon: const Icon(Icons.arrow_back, color: Colors.transparent),
+                                  icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
                                   onPressed: (){}
                               ),
                             ],
@@ -68,7 +68,7 @@ class DefaultDetails extends StatelessWidget {
                             imageUrl: value.getOneBlogModel!.item!.mainThumbnail![0].file ?? "",
                             placeholder: (context, url) =>
                             const ShimmerAnimatedLoading(),
-                            errorWidget: (context, url, error) => const Icon(
+                            errorWidget: (context, url, error) =>  const Icon(
                               Icons.image_not_supported_outlined,
                               size: AppSizes.s32,
                               color: Colors.white,
@@ -88,7 +88,7 @@ class DefaultDetails extends StatelessWidget {
                             const SizedBox(width: 20,),
                             if(value.getOneBlogModel!.item!.category!.title != null)Row(
                               children: [
-                                Icon(Icons.category, color: Colors.black,),
+                                const Icon(Icons.category, color: Colors.black,),
                                 const SizedBox(width: 5,),
                                 Text(
                                   value.getOneBlogModel!.item!.category!.title!.toUpperCase(),
@@ -104,7 +104,7 @@ class DefaultDetails extends StatelessWidget {
                         gapH14,
                         Text(
                           value.getOneBlogModel!.item!.title ?? "",
-                          style: const TextStyle(
+                          style:  TextStyle(
                               fontSize: AppSizes.s16,
                               fontWeight: FontWeight.bold,
                               color: Color(AppColors.c1)),

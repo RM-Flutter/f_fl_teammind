@@ -1,20 +1,19 @@
 import 'dart:convert';
-import 'package:inv/modules/points/widgets/redeem_now_button.dart';
+import 'package:app_test/modules/points/widgets/redeem_now_button.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inv/constants/app_sizes.dart';
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:inv/routing/app_router.dart';
+import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import '../../home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;
-  SliverAppBarPoints({required this.arrow});
+  SliverAppBarPoints({super.key, required this.arrow});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class SliverAppBarPoints extends StatelessWidget {
           return Consumer<HomeViewModel>(
             builder: (context, value, child) {
               final json2String = CacheHelper.getString("US2");
-              var us2Cache;
+              Map<String, dynamic> us2Cache = {};
               if (json2String != null && json2String != "") {
                 us2Cache = json.decode(json2String)
                     as Map<String, dynamic>; // Convert String back to JSON
@@ -40,7 +39,7 @@ class SliverAppBarPoints extends StatelessWidget {
                 pinned: true,
                 title: Text(
                   AppStrings.myPoints.tr(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -79,7 +78,7 @@ class SliverAppBarPoints extends StatelessWidget {
                               children: [
                                 Text(
                                   AppStrings.myPointsEarned.tr(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
@@ -91,7 +90,7 @@ class SliverAppBarPoints extends StatelessWidget {
                             Text.rich(TextSpan(children: [
                               TextSpan(
                                 text: us2Cache['points']['available'].toString(),
-                                style: const TextStyle(
+                                style:  const TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -99,7 +98,7 @@ class SliverAppBarPoints extends StatelessWidget {
                               ),
                               TextSpan(
                                 text: "\t ${AppStrings.points.tr()}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
@@ -108,7 +107,7 @@ class SliverAppBarPoints extends StatelessWidget {
                             ])),
                             Text(
                               "${AppStrings.from.tr().toUpperCase()} ${us2Cache['points']['total'].toString()} ${AppStrings.myPoints.tr()}",
-                              style: const TextStyle(
+                              style:  const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -168,7 +167,7 @@ class SliverAppBarPoints extends StatelessWidget {
                                 //                       AppStrings.redeemNow
                                 //                           .tr()
                                 //                           .toUpperCase(),
-                                //                       style: const TextStyle(
+                                //                       style:  TextStyle(
                                 //                         fontSize: 16,
                                 //                         fontWeight:
                                 //                             FontWeight.bold,
@@ -189,7 +188,7 @@ class SliverAppBarPoints extends StatelessWidget {
                                 //   },
                                 // );
                               },
-                              child: RedeemNowButton(
+                              child: const RedeemNowButton(
                                 friends: false,
                               ),
                             ),

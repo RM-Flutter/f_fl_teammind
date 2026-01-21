@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:app_test/models/operation_result.model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:dio/dio.dart';
@@ -16,12 +17,11 @@ as permission_handler;
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:inv/common_modules_widgets/custom_alert_dialog_with_two_buttons.dart';
-import 'package:inv/constants/app_constants.dart';
+import 'package:app_test/common_modules_widgets/custom_alert_dialog_with_two_buttons.dart';
+import 'package:app_test/constants/app_constants.dart';
 
-import 'package:inv/constants/app_strings.dart';
-import 'package:inv/general_services/internet_check.dart';
-import 'package:inv/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 // import 'package:wifi_scan/wifi_scan.dart';
@@ -31,7 +31,6 @@ import '../../general_services/settings.service.dart';
 import '../../models/settings/general_settings.model.dart';
 import '../../services/fingerprint_service.dart';
 import 'widgets/qrcode_Scanner_view.widget.dart';
-import 'package:location/location.dart' as location_package;
 
 abstract class MainFabServices {
   static IconData getFingerprintMethodIcon(
@@ -119,9 +118,7 @@ abstract class MainFabServices {
   // Cache the fingerprint locally if no internet connection
   static Future<void> _cacheFingerprint({required String data, required String type, List<FilePickerResult>? file}) async {
     // Initialize the list if it is null
-    if (AppConstants.fingerPrints == null) {
-      AppConstants.fingerPrints = [];
-    }
+    AppConstants.fingerPrints ??= [];
     final fingerprintEntry = {
       'type': type,
       'data': data,
@@ -308,7 +305,7 @@ abstract class MainFabServices {
           }
         }).toList();
       }
-      var empPhoto;
+      Map<String, dynamic>? empPhoto;
       empPhoto = await FileAndImagePickerService.pickImage(
           type: "camera",
           cameraDevice: "rear",
@@ -405,7 +402,7 @@ abstract class MainFabServices {
               final results = snapshot.data?.where((r) => r.device.name.isNotEmpty).toList() ?? [];
 
               if (results.isEmpty) {
-                return  Center(child: Text('${AppStrings.scanningForDevices.tr()}'));
+                return  Center(child: Text(AppStrings.scanningForDevices.tr()));
               }
               return ListView.builder(
                 itemCount: results.length,
@@ -414,7 +411,7 @@ abstract class MainFabServices {
                   return ListTile(
                     title: Text(
                       result.device.name.isEmpty ? AppStrings.unknownDevice.tr() : result.device.name,
-                      style: const TextStyle(color: Colors.black),
+                      style:  const TextStyle(color: Colors.black),
                     ),
                     onTap: ()async{
                       await FlutterBluePlus.stopScan();
@@ -441,7 +438,7 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      var result;
+      OperationResult<Map<String, dynamic>> result;
       customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
@@ -469,7 +466,7 @@ abstract class MainFabServices {
                 await _cacheFingerprint(
                   data: encodedData,
                   type: "fp_bluetooth",
-                  file: empPhoto != null ? convertMapListToFilePickerResults([empPhoto]) : [],
+                  file: convertMapListToFilePickerResults([empPhoto]),
                 );
               } else {
                 await _cacheFingerprint(
@@ -481,7 +478,7 @@ abstract class MainFabServices {
             }
 
             // ✅ Show result
-            if (result != null && result.success) {
+            if (result.success) {
               AlertsService.success(
                 context: context,
                 message: result.message!,
@@ -550,7 +547,7 @@ abstract class MainFabServices {
           }
         }).toList();
       }
-      var empPhoto;
+      Map<String, dynamic>? empPhoto;
       // if (fingerprintMustUploadImage == true) {
       empPhoto = await FileAndImagePickerService.pickImage(
           type: "camera",
@@ -584,7 +581,7 @@ abstract class MainFabServices {
 
       // Show available Wi-Fi networks in a popup or sheet
       final List<WiFiAccessPoint> filteredNetworks = wifiNetworks
-          .where((net) => net.ssid != null && net.ssid.trim().isNotEmpty)
+          .where((net) => net.ssid.trim().isNotEmpty)
           .toList();
       final selectedNetwork = await showModalBottomSheet<WiFiAccessPoint>(
         context: context,
@@ -594,7 +591,7 @@ abstract class MainFabServices {
             itemBuilder: (context, index) {
               final network = filteredNetworks[index];
               return ListTile(
-                title: Text(network.ssid != null && network.ssid.toString().isNotEmpty ? network.ssid : AppStrings.unknownDevice.tr()),
+                title: Text(network.ssid.toString().isNotEmpty ? network.ssid : AppStrings.unknownDevice.tr()),
                 onTap: () => Navigator.pop(context, network),
               );
             },
@@ -618,8 +615,8 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      print("isConnected --> ${isConnected}");
-      var result;
+      print("isConnected --> $isConnected");
+      OperationResult<Map<String, dynamic>> result;
       customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
@@ -651,10 +648,10 @@ abstract class MainFabServices {
             }
 
             // Handle the server response
-            if (result != null && result.success) {
+            if (result.success) {
               AlertsService.success(
                 context: context,
-                message: result.data['message'],
+                message: result.data!['message'],
                 title: AppStrings.success.tr(),
               );
               return;
@@ -662,7 +659,7 @@ abstract class MainFabServices {
             else {
               AlertsService.error(
                 context: context,
-                message: result.data['message'] ?? AppStrings.noInternetConnection.tr(),
+                message: result.data!['message'] ?? AppStrings.noInternetConnection.tr(),
                 title: AppStrings.failed.tr(),
               );
               return;
@@ -757,7 +754,7 @@ abstract class MainFabServices {
           }
         }).toList();
       }
-      var empPhoto;
+      Map<String, dynamic>? empPhoto;
       // if (fingerprintMustUploadImage == true) {
       empPhoto = await FileAndImagePickerService.pickImage(
           type: "camera",
@@ -783,8 +780,8 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      print("isConnected --> ${isConnected}");
-      var result;
+      print("isConnected --> $isConnected");
+      OperationResult<Map<String, dynamic>> result;
       customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
@@ -825,7 +822,7 @@ abstract class MainFabServices {
             }
             print("GPS DONE TWO");
             // Handle the server response
-            if (result != null && result.data!['status'] == true) {
+            if (result.data!['status'] == true) {
               AlertsService.success(
                   context: context,
                   message: result.data!['message'],
@@ -883,7 +880,7 @@ abstract class MainFabServices {
       }
       final String? scanedQrCode =
       await _scanQrcodeToGetSecretKeyString(context: context);
-      var empPhoto;
+      Map<String, dynamic>? empPhoto;
       // if (fingerprintMustUploadImage == true) {
       empPhoto = await FileAndImagePickerService.pickImage(
         type: "camera",
@@ -918,8 +915,8 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      print("isConnected --> ${isConnected}");
-      var result;
+      print("isConnected --> $isConnected");
+      OperationResult<Map<String, dynamic>> result;
       if(empPhoto == null){
         AlertsService.warning(
             context: context,
@@ -973,7 +970,7 @@ abstract class MainFabServices {
             //     type: "fp_scan", file: empPhoto != null ? convertMapListToFilePickerResults([empPhoto]) : []);
           }
           print("result.data!['status'] --> ${result.data!['status'] }");
-          if (result!= null &&result.data!['status'] == true) {
+          if (result.data!['status'] == true) {
             AlertsService.success(
                 context: context,
                 message: result.data!['message'],

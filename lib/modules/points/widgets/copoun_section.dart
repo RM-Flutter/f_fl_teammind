@@ -3,10 +3,10 @@
 // import 'package:flutter/services.dart';
 // import 'package:flutter_svg/svg.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:inv/constants/app_images.dart';
-// import 'package:inv/constants/app_sizes.dart';
-// import 'package:inv/constants/app_strings.dart';
-// import 'package:inv/utils/media_query_values.dart';
+// import 'package:app_test/constants/app_images.dart';
+// import 'package:app_test/constants/app_sizes.dart';
+// import 'package:app_test/constants/app_strings.dart';
+// import 'package:app_test/utils/media_query_values.dart';
 // import 'package:provider/provider.dart';
 //
 // import '../../../controller/home_model/home_model.dart';
@@ -46,7 +46,7 @@
 //                     children: [
 //                       Text(
 //                         AppStrings.aboutPointsProgram.tr(),
-//                         style: const TextStyle(
+//                         style:  TextStyle(
 //                           fontSize: 14,
 //                           color: Color(0xffE6007E),
 //                           fontWeight: FontWeight.w600,
@@ -54,7 +54,7 @@
 //                       ),
 //                       Text(
 //                         AppStrings.enterYourCouponCodeHereToGetPointsFromOrientPaintsProducts.tr(),
-//                         style: const TextStyle(
+//                         style:  TextStyle(
 //                           fontSize: 12,
 //                           color: Color(0xff464646),
 //                           fontWeight: FontWeight.w400,
@@ -74,7 +74,7 @@
 //                                 ),
 //                                 SizedBox(width: 10,),
 //                                 Text(AppStrings.couponCode.tr().toUpperCase(),
-//                                 style: const TextStyle(fontSize: 17,
+//                                 style:  TextStyle(fontSize: 17,
 //                                 color: Color(0xffE6007E),
 //                                   fontWeight: FontWeight.w600,
 //                                 ),
@@ -141,7 +141,7 @@
 //                                 children: [
 //                                   SvgPicture.asset("assets/images/png/verified.svg"),
 //                                   gapW4,
-//                                   Text(AppStrings.sendCoupon.tr(),style: const TextStyle(
+//                                   Text(AppStrings.sendCoupon.tr(),style:  TextStyle(
 //                                     fontSize: 12,
 //                                     fontWeight: FontWeight.w500,
 //                                     color: Colors.white,

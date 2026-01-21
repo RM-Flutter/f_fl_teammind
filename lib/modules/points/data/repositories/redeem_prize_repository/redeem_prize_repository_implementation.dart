@@ -1,7 +1,7 @@
-import 'package:inv/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository.dart';
+import 'package:app_test/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:inv/general_services/app_config.service.dart';
+import 'package:app_test/general_services/app_config.service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/api/api_services.dart';
