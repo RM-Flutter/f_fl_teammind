@@ -27,12 +27,15 @@ void registerErrorHandlers() {
       details.exception,
       stackTrace: details.stack,
     );
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: const Text('An error occurred'),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: const Text('An error occurred'),
+        ),
+        body: Center(child: Text(details.toString())),
       ),
-      body: Center(child: Text(details.toString())),
     );
   };
 }

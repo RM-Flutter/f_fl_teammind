@@ -50,8 +50,7 @@ void main() async {
     );
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
   } else {
-    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+    await Firebase.initializeApp();
   }
 
   GoRouter.optionURLReflectsImperativeAPIs = true;

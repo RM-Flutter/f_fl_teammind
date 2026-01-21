@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     if(CacheHelper.getString("lang") == ""){
       CacheHelper.setString(key: "lang", value: context.locale.languageCode);
     }
-    precacheImage(const AssetImage(AppImages.splashScreenBackground), context);
+    // precacheImage(const AssetImage(AppImages.splashScreenBackground), context);
     final appGoRouter = goRouter(context);
     // return MaterialApp(
     //   title: 'rmemp',
