@@ -4,8 +4,8 @@ import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart' as intl_phone_field;
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 
-import '../../../../constants/app_sizes.dart';
-import '../../../../constants/app_strings.dart';
+import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../general_services/localization.service.dart';
 
 class PhoneNumberField extends StatefulWidget {
@@ -41,8 +41,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
 
   @override
   Widget build(BuildContext context) {
-    print("detectedCountryCode is --> ${CacheHelper.getString("flag")}");
-    print("detectedCountryCode is --> ${CacheHelper.getString("flagCode")}");
+    debugPrint("detectedCountryCode is --> ${CacheHelper.getString("flag")}");
+    debugPrint("detectedCountryCode is --> ${CacheHelper.getString("flagCode")}");
     return Directionality(
       textDirection: LocalizationService.isArabic(context: context)
           ? TextDirection.rtl

@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:app_test/utils/componentes/general_components/all_text_field.dart';
 

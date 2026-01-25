@@ -2,10 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../../../../common_modules_widgets/dynamic_image_widget.dart';
-import '../../../../../../../constants/app_sizes.dart';
-import '../../../../../../../routing/app_router.dart';
+import '../../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../../core/routing/app_router.dart';
 
 class CompanyInfoNotchedContainer extends StatelessWidget {
   final double notchedContainerHeight;

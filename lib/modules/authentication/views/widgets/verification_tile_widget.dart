@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../constants/app_sizes.dart';
+import '../../../../core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
-import '../../../../constants/app_strings.dart';
+import '../../../../core/constants/app_strings.dart';
 
 class VerificationTileWidget extends StatelessWidget {
   final Map<String, dynamic> method;

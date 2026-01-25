@@ -11,7 +11,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 
 import '../../../../models/operation_result.model.dart';
 import '../../../app_config.service.dart';
@@ -52,7 +52,7 @@ class DioApiService implements BackEndServicesInterface {
         required String dataKey,
         required BuildContext context,
         bool? allData = false}) async {
-    print("STATUS CODE IS --> ${response.statusCode}");
+    debugPrint("STATUS CODE IS --> ${response.statusCode}");
     String? respond;
     final appConfigServiceProvider =
     Provider.of<AppConfigService>(context, listen: false);
@@ -96,7 +96,7 @@ class DioApiService implements BackEndServicesInterface {
 
       case 401:
         respond = 'Unauthorized';
-        print("Unauthorized is $respond");
+        debugPrint("Unauthorized is $respond");
         // _toast.toastMethod(LocaleKeys.respond_401.tr());
         final appConfigService = Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false, skipServerLogout: true).then((v){
@@ -228,10 +228,10 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -290,10 +290,10 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -390,10 +390,10 @@ class DioApiService implements BackEndServicesInterface {
       }
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -514,10 +514,10 @@ class DioApiService implements BackEndServicesInterface {
           dataKey: dataKey);
     }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -573,10 +573,10 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -657,10 +657,10 @@ class DioApiService implements BackEndServicesInterface {
       }
     }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -912,7 +912,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await request.send();
       if (response.statusCode == 200) {
         var data = (await response.stream.toBytes());
-        if (kDebugMode) print(data.length);
+        if (kDebugMode) debugPrint("${data.length}");
         dataString = utf8.decode(data);
         var r = json.decode(dataString);
         return OperationResult(

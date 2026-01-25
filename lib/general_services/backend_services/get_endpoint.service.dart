@@ -1,4 +1,4 @@
-import '../../constants/app_constants.dart';
+import '../../core/constants/app_constants.dart';
 import '../../models/endpoint.model.dart';
 
 abstract class EndpointServices {

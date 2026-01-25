@@ -5,9 +5,9 @@ import 'package:app_test/modules/points/fawry_view/widget/charge_phone_bottom_ba
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/localization.service.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -79,7 +79,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                 : "0",
           ),
         );
-        print("FFES IS --> ${fawryProviderModel.cachedFee}");
+        debugPrint("FFES IS --> ${fawryProviderModel.cachedFee}");
       });
     }
   }
@@ -621,7 +621,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
               value.controllers[key]?.text = outputDate; // ✅ ده اللي بيظهر في الفورم
               value.inputValues[key] = outputDate;       // ✅ ده اللي بيتبعت للسيرفر
 
-              print("✅ اخترت $key = $outputDate");
+              debugPrint("✅ اخترت $key = $outputDate");
             }
           },
           decoration: InputDecoration(hintText: title),

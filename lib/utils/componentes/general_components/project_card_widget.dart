@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 Widget defaultProjectCard(String? title1, String? title2, src, {onTap}) {

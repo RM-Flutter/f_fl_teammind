@@ -2,6 +2,7 @@ import 'package:app_test/modules/points/data/repositories/prize_repository/prize
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:app_test/general_services/app_config.service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/api/api_services.dart';
@@ -25,7 +26,7 @@ class GetPrizeRepositoryImplementation extends GetPrizeRepository {
             'device_unique_id': get.deviceInformation.deviceUniqueId
           }
       );
-      print(data.data);
+      debugPrint(data.data);
       return Right(PrizeModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {
@@ -39,7 +40,7 @@ class GetPrizeRepositoryImplementation extends GetPrizeRepository {
   @override
   Future<Either<Failure, CopounModel>> sendCopoun({required String copounCode}) async{
     var get = Provider.of<AppConfigService>(context, listen: false);
-    print("SERIAL IS ---> $copounCode");
+    debugPrint("SERIAL IS ---> $copounCode");
     try {
       Response data = await apiServices.post(
           endPoint: EndPoints.coupoun,
@@ -48,7 +49,7 @@ class GetPrizeRepositoryImplementation extends GetPrizeRepository {
             'serial' : copounCode.replaceAll('-', ''),
           }
       );
-      print(data.data);
+      debugPrint(data.data);
       return Right(CopounModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {

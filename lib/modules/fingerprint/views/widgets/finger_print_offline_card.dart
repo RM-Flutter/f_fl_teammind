@@ -2,8 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_test/general_services/localization.service.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../general_services/date.service.dart';
 
 class FingerprintCardOffiline extends StatelessWidget {

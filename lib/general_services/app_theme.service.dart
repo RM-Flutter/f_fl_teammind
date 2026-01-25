@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
-import '../constants/app_constants.dart';
-import '../constants/app_sizes.dart';
+import '../core/constants/app_colors.dart';
+import '../core/constants/app_constants.dart';
+import '../core/constants/app_sizes.dart';
 import '../models/color_palette.model.dart';
 import '../models/color_value.model.dart';
 import 'localization.service.dart';

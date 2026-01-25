@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/componentes/general_components/all_text_field.dart';
 import '../../home/view_models/home.viewmodel.dart';
@@ -55,7 +55,7 @@ class _DropDownAndButtonBottomSheetState extends State<DropDownAndButtonBottomSh
                           ),
                         ).toList(),
                         onChanged: (String? value) {
-                          print(value);
+                          debugPrint(value);
                           setState(() {
                             provider.prize = value!;
                           });

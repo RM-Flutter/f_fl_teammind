@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/utils/componentes/general_components/all_bottom_sheet.dart';
 import 'package:app_test/utils/componentes/general_components/slider_home_menu.dart';
 

@@ -10,13 +10,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/localization.service.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../general_services/alert_service/alerts.service.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/date.service.dart';
@@ -78,7 +78,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
           "password" : password
         }
     ).then((value){
-      print(value.data);
+      debugPrint(value.data);
       isLoading = false;
       notifyListeners();
       if(value.data['errors'] !=null){
@@ -136,7 +136,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
-      print("gCache is --> $gCache");
+      debugPrint("gCache is --> $gCache");
     }
     if (UserSettingConst.userSettings == null) return;
     emailController.text = UserSettingConst.userSettings?.email ?? '';
@@ -268,8 +268,8 @@ class PersonalProfileViewModel extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                print(image1);
-                                print(image2);
+                                debugPrint(image1);
+                                debugPrint(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(
@@ -314,7 +314,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       var outputDate = outputFormat.format(birthDate!);
       birthDateController.text = outputDate;
       notifyListeners();
-      print( birthDateController.text);
+      debugPrint( birthDateController.text);
     }
   }
   // Future<void> selectBirthDate(BuildContext context) async {
@@ -515,14 +515,14 @@ class PersonalProfileViewModel extends ChangeNotifier {
       Map<String, dynamic> us1Cache = {};
       if (json1String != null && json1String != "") {
         us1Cache = json.decode(json1String) as Map<String, dynamic>;// Convert String back to JSON
-        print("S1 IS --> $us1Cache");
+        debugPrint("S1 IS --> $us1Cache");
         UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
       }
       //check if there is changes on the user profil
-      print("isThis --> ${nameController.text == us1Cache['name']}");
-      print("isThis --> ${us1Cache['birthday']}");
-      print("isThis --> ${birthDateController.text}");
-      print("isThis --> ${ birthDateController.text == us1Cache['birthday']}");
+      debugPrint("isThis --> ${nameController.text == us1Cache['name']}");
+      debugPrint("isThis --> ${us1Cache['birthday']}");
+      debugPrint("isThis --> ${birthDateController.text}");
+      debugPrint("isThis --> ${ birthDateController.text == us1Cache['birthday']}");
       if (nameController.text == us1Cache['name'] &&
           birthDateController.text ==
               us1Cache['birthday']) {
@@ -545,7 +545,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
               DateService.formatDateTime(UserSettingConst.userSettings?.birthDate) ? birthDateController.text:DateService.formatDateTime(birthDate, format: 'yyyy-MM-dd'),
         );
         result.then((value)async{
-          print("Update2");
+          debugPrint("Update2");
           Fluttertoast.showToast(
               msg: value.data['message'],
               toastLength: Toast.LENGTH_LONG,
@@ -586,7 +586,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       //   bool isUpdate = await AlertsService.confirmMessage(
       //       context, AppStrings.updateProfile.tr(),
       //       message: AppStrings.areYouSureYouWantToUpdateYourProfile.tr());
-      //   print("UPDATE IS---> $isUpdate");
+      //   debugPrint("UPDATE IS---> $isUpdate");
       //   if (isUpdate == false) return;
       var result = PersonalProfileService.updateProfile(
         context: context,
@@ -596,7 +596,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
 
       );
       result.then((value)async{
-        print("Update2");
+        debugPrint("Update2");
         Fluttertoast.showToast(
             msg: value.data['message'],
             toastLength: Toast.LENGTH_LONG,
@@ -647,7 +647,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         if (isUpdate == false) return;
         final result = await PersonalProfileService.updateProfile(
             context: context, email: emailController.text);
-        print("result is --> $result");
+        debugPrint("result is --> $result");
         if(result != null){
           if(result.data['status'] == true ){
             if (
@@ -850,7 +850,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       }
       notifyListeners();
     }).catchError((e){
-      print(e);
+      debugPrint(e);
     });
   }
   verfiy(context, {sendBy, code})async{

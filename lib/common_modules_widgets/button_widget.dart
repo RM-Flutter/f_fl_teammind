@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 
 class ButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;

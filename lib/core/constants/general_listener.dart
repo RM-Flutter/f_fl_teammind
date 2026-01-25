@@ -7,9 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../constants/app_colors.dart';
-import '../constants/app_strings.dart';
-import '../general_services/localization.service.dart';
+import 'app_colors.dart';
+import 'app_strings.dart';
+import '../../general_services/localization.service.dart';
 import '../routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -197,16 +197,16 @@ class GeneralListener {
   }
 
   static routeCompile(urls) async {
-    print("PLAY IS IN PROCESS");
-    print(urls);
+    debugPrint("PLAY IS IN PROCESS");
+    debugPrint(urls);
     final url = urls;
     final result = await analyzeRoute(url);
     if (result != null) {
-      print("Route Key: ${result['key']}");
-      print("Parameters: ${result['values']}");
+      debugPrint("Route Key: ${result['key']}");
+      debugPrint("Parameters: ${result['values']}");
       return result;
     } else {
-      print("No matching route found.");
+      debugPrint("No matching route found.");
     }
   }
 

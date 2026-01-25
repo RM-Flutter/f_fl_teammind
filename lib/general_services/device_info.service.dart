@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
 import '../models/device_information.model.dart';
-import '../platform/platform_is.dart';
+import '../core/platform/platform_is.dart';
 import 'app_config.service.dart';
 
 abstract class DeviceInformationService {
@@ -21,10 +21,10 @@ abstract class DeviceInformationService {
            androidId = await platform.invokeMethod('getAndroidId');
 
         } catch (e) {
-          print("Error fetching Android ID: $e");
+          debugPrint("Error fetching Android ID: $e");
         }
         deviceIdentifier = "$androidId";
-        print("androidId -> $androidId");
+        debugPrint("androidId -> $androidId");
       } else if (PlatformIs.iOS) {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";

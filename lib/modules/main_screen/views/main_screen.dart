@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/app_strings.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/constants/app_images.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/routing/app_router.dart';
 import '../view_models/main_viewmodel.dart';
 
 class BottomNavigationBarModel {

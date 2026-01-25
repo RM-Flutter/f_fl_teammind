@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'offline_overlay.service.dart';
-import '../routing/app_router.dart';
+import '../core/routing/app_router.dart';
 
 class ConnectionService extends ChangeNotifier {
   bool _isConnected = true;

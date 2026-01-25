@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_images.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/app_theme.service.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/layout.service.dart';
@@ -17,7 +17,7 @@ import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/modules/more/views/notification/logic/notification_provider.dart';
 import 'package:app_test/modules/more/views/notification/view/notification_list_view_item.dart';
 import 'package:app_test/modules/more/views/notification/view/widget/switch_row_notification.dart';
-import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -37,7 +37,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("CacheHelper.getBool --> ${CacheHelper.getBool("value")}");
+      debugPrint("CacheHelper.getBool --> ${CacheHelper.getBool("value")}");
       notificationProvider = Provider.of<NotificationProviderModel>(context, listen: false);
       if(CacheHelper.getBool("value") != null){
         if(CacheHelper.getBool("value") == false){
@@ -50,13 +50,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
       }
     });
     _scrollController.addListener(() {
-      print("Current scroll position: ${_scrollController.position.pixels}");
-      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !notificationProvider.isGetNotificationLoading &&
           notificationProvider.hasMoreNotifications) {
-        print("BOTTOM BOTTOM");
+        debugPrint("BOTTOM BOTTOM");
         if(CacheHelper.getBool("value") != null){
           if(CacheHelper.getBool("value") == false){
             notificationProvider.getNotification(context, page: notificationProvider.currentPage, forWho: "all");

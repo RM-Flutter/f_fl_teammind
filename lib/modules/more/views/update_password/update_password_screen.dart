@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/general_services/validation_service.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import 'package:app_test/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
-import '../../../../constants/app_strings.dart';
+import '../../../../core/constants/app_strings.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
   const UpdatePasswordScreen({super.key});

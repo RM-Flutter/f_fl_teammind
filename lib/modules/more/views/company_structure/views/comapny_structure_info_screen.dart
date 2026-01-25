@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../constants/app_images.dart';
-import '../../../../../constants/app_sizes.dart';
+import '../../../../../core/constants/app_images.dart';
+import '../../../../../core/constants/app_sizes.dart';
 import '../viewmodels/company_structure_info.viewmodel.dart';
 import 'widgets/company_info_header/company_info_header_widget.dart';
 

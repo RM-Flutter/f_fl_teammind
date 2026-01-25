@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_colors.dart';
-import '../constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import '../core/constants/app_sizes.dart';
 
 class CustomElevatedButton extends StatefulWidget {
   final Future<void> Function() onPressed;

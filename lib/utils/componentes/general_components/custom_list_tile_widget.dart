@@ -1,6 +1,6 @@
 import 'package:app_test/utils/helpers/media_query_values.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/general_services/app_theme.service.dart';
 import 'package:app_test/utils/componentes/general_components/button_widget.dart';
 

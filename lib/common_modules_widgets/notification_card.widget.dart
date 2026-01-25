@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/general_services/localization.service.dart';
-import 'package:app_test/routing/app_router.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../constants/app_images.dart';
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
+import '../core/routing/app_router.dart';
 import '../general_services/date.service.dart';
 import '../models/notification.model.dart';
 
@@ -24,20 +23,6 @@ class NotificationCard extends StatefulWidget {
 class _NotificationCardState extends State<NotificationCard> {
   @override
   Widget build(BuildContext context) {
-    String getPlaceholderImageDependsOnNotificationPType() {
-      switch (widget.notification.ptype?.key?.toLowerCase()) {
-        case 'event':
-          return AppImages.notificationEvent;
-        case 'birthday':
-          return AppImages.notificationBirthDay;
-        case 'offers':
-          return AppImages.notificationOffers;
-        case 'rules':
-          return AppImages.notificationRules;
-        default:
-          return AppImages.notificationGeneral;
-      }
-    }
 
     return InkWell(
       onTap: (){

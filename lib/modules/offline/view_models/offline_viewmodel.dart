@@ -6,14 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../constants/app_constants.dart';
-import '../../../constants/user_consts.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/user_consts.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../general_services/location.service.dart';
 import '../../../general_services/settings.service.dart';
 import '../../../models/settings/user_settings.model.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 
 class OfflineViewModel with ChangeNotifier {
   final List<String> _usersFingerprints = [];
@@ -54,16 +54,16 @@ class OfflineViewModel with ChangeNotifier {
     try {
       userSettingsModel = UserSettingsModel.fromJson(gCache);
       final fingerprints = userSettingsModel.avFingerprint;
-      print("fingerprints --> $fingerprints");
+      debugPrint("fingerprints --> $fingerprints");
       if (fingerprints != null) {
         fingerprints.forEach((key, value) {
           if (value == 'active_all' || value == 'active_some') {
             _usersFingerprints.add(key);
-            print("_usersFingerprints --> $_usersFingerprints");
+            debugPrint("_usersFingerprints --> $_usersFingerprints");
           }
         });
       } else {
-        print("⚠️ fingerprints is null or not a Map");
+        debugPrint("⚠️ fingerprints is null or not a Map");
       }
     } catch (e) {
       debugPrint("❌ Error initializing fingerprints: $e");
@@ -91,7 +91,7 @@ class OfflineViewModel with ChangeNotifier {
           final List<dynamic> decodedList = jsonDecode(jsonString);
           savedFingerprints = decodedList.cast<Map<String, dynamic>>();
           AppConstants.fingerPrints = savedFingerprints;
-          print("Loaded fingerprints in offline screen: $savedFingerprints");
+          debugPrint("Loaded fingerprints in offline screen: $savedFingerprints");
         } else {
           savedFingerprints = [];
           AppConstants.fingerPrints = [];
@@ -99,10 +99,10 @@ class OfflineViewModel with ChangeNotifier {
       } else {
         savedFingerprints = [];
         AppConstants.fingerPrints = [];
-        print("No fingerprints found in shared preferences");
+        debugPrint("No fingerprints found in shared preferences");
       }
     } catch (e) {
-      print("Error loading fingerprints: $e");
+      debugPrint("Error loading fingerprints: $e");
       savedFingerprints = [];
       AppConstants.fingerPrints = [];
     } finally {

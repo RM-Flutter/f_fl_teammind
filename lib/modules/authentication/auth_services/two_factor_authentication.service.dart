@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../constants/app_constants.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
 import '../../../models/operation_result.model.dart';
 

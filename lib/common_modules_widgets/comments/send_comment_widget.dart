@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 
 class SendCommentWidget extends StatefulWidget {
   final String id;
@@ -50,7 +50,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
         });
       }
     } catch (e) {
-      print("Error starting recording: $e");
+      debugPrint("Error starting recording: $e");
     }
   }
   Future<Duration?> _getAudioDuration(String filePath) async {
@@ -61,7 +61,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
       await player.dispose();
       return duration;
     } catch (e) {
-      print("Error getting duration: $e");
+      debugPrint("Error getting duration: $e");
       return null;
     }
   }
@@ -77,7 +77,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
     return Consumer<CommentProvider>(
       builder: (context, value, child) {
         if(value.isAddCommentSuccess == true){
-          print("ADDED SUCCESS");
+          debugPrint("ADDED SUCCESS");
           WidgetsBinding.instance.addPostFrameCallback((_) {
             value.getComment(context, widget.slug,widget.id);
           });
@@ -91,17 +91,17 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
               if (await file.exists()) {
                 Duration? duration = await _getAudioDuration(path);
                 if (duration != null && duration.inSeconds > 0) {
-                  print("Audio Duration: ${duration.inSeconds} seconds");
+                  debugPrint("Audio Duration: ${duration.inSeconds} seconds");
                   value.addComment(context, id: widget.id, voicePath: path, slug: "emp-complains");
                 } else {
-                  print("Error: Recorded audio has zero duration!");
+                  debugPrint("Error: Recorded audio has zero duration!");
                 }
               } else {
-                print("Error: Recorded file does not exist.");
+                debugPrint("Error: Recorded file does not exist.");
               }
             }
           } catch (e) {
-            print("Error stopping recording: $e");
+            debugPrint("Error stopping recording: $e");
           } finally {
             setState(() {
               _isRecording = false;

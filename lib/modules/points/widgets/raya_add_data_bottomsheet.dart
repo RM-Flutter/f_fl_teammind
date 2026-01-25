@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../utils/componentes/general_components/all_text_field.dart';
 import '../logic/points_cubit/points_provider.dart';
 import 'bottom_sheet_external_success.dart';
@@ -37,11 +37,11 @@ class RayaAddDataBottomsheet extends StatelessWidget {
           }
           values.clear();
           needData.forEach((e){
-            print("e['value'] ---> ${e['value']}");
+            debugPrint("e['value'] ---> ${e['value']}");
             values.add(e['key']);
-            print("values --> $values");
+            debugPrint("values --> $values");
           });
-          print("values --> $values");
+          debugPrint("values --> $values");
           return Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom, // Push above keyboard

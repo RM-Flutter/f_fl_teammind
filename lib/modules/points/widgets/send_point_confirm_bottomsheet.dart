@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_colors.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../utils/componentes/general_components/all_bottom_sheet.dart';
 import '../../home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
@@ -144,8 +144,8 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                   child: (!value.isRedeemLoading)?
                                   GestureDetector(
                                     onTap: () {
-                                      print("USER IS $user");
-                                      print("AMOUNT IS $amount");
+                                      debugPrint("USER IS $user");
+                                      debugPrint("AMOUNT IS $amount");
                                       value.postTransferPoints(context, confirmed: true, amount: amount, user: user);
                                     },
                                     child: Container(

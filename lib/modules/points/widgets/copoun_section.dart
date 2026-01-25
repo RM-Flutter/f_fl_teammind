@@ -3,9 +3,9 @@
 // import 'package:flutter/services.dart';
 // import 'package:flutter_svg/svg.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:app_test/constants/app_images.dart';
-// import 'package:app_test/constants/app_sizes.dart';
-// import 'package:app_test/constants/app_strings.dart';
+// import 'package:app_test/core/constants/app_images.dart';
+// import 'package:app_test/core/constants/app_sizes.dart';
+// import 'package:app_test/core/constants/app_strings.dart';
 // import 'package:app_test/utils/media_query_values.dart';
 // import 'package:provider/provider.dart';
 //
@@ -238,7 +238,7 @@
 // //                               setState(() {
 // //                                 provider.isRequestSent = true;
 // //                               });// Reset flag after completion
-// //                               print("isRequestSent success --> ${provider.isRequestSent}");
+// //                               debugPrint("isRequestSent success --> ${provider.isRequestSent}");
 // //                               if(provider.status == false){
 // //                                 if(widget.points == true){
 // //                                   Navigator.pop(context);
@@ -248,7 +248,7 @@
 // //                                 }}
 // //                             }).catchError((_) {
 // //                               provider.isRequestSent = false; // Reset flag on error
-// //                               print("isRequestSent error --> ${provider.isRequestSent}");
+// //                               debugPrint("isRequestSent error --> ${provider.isRequestSent}");
 // //                               if(widget.points == true){
 // //                                 Navigator.pop(context);
 // //                                 Navigator.pop(context);

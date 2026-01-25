@@ -3,10 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/constants/app_constants.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/general_services/app_config.service.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 
@@ -37,11 +37,11 @@ class DioHelper{
     dio!.interceptors.add(
       InterceptorsWrapper(
         onResponse: (response, handler) {
-          print("response.statusCode == ${response.statusCode}");
+          debugPrint("response.statusCode == ${response.statusCode}");
           return handler.next(response);
         },
         onError: (DioException error, handler) {
-          print("error.response?.statusCode ==z ${error.response?.statusCode}");
+          debugPrint("error.response?.statusCode ==z ${error.response?.statusCode}");
           if (error.response?.statusCode == 401) {
             final appConfigService =
             Provider.of<AppConfigService>(context, listen: false);
@@ -72,7 +72,7 @@ class DioHelper{
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       "lang" : "${CacheHelper.getString("lang")}",
     };
-    print("Headers: ${dio!.options.headers}");
+    debugPrint("Headers: ${dio!.options.headers}");
     return await dio!.download(url, savePath );
   }
   static Future<Response> getData({@required url, @required Map<String, dynamic>? query,context,lang,  token,bool sendLang = false, Map<String, dynamic>? data})async{
@@ -84,7 +84,7 @@ class DioHelper{
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
        "lang" : "${CacheHelper.getString("lang")}",
     };
-    print("Headers: ${dio!.options.headers}");
+    debugPrint("Headers: ${dio!.options.headers}");
     return await dio!.get(url, queryParameters: query );
   }
   static Future<Response> deleteData({@required url, @required Map<String, dynamic>? query, token, data})async{

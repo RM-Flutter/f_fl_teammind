@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/controller/device_sys/device_controller.dart';
 class CustomizeNotificationScreen extends StatefulWidget {
   const CustomizeNotificationScreen({super.key});

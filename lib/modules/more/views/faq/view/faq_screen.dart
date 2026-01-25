@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/more/views/faq/logic/faq_model.dart';
 import 'package:app_test/modules/more/views/faq/logic/get_faq_model.dart';
 import 'package:app_test/modules/more/views/faq/view/faq_loading_widget.dart';

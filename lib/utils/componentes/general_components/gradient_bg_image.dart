@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_sizes.dart';
+import '../../../core/constants/app_sizes.dart';
 
 class GradientBgImage extends StatelessWidget {
   final Widget child;

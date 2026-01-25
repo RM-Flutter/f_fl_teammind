@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../common_modules_widgets/webview_offers.dart';
-import '../constants/app_colors.dart';
-import '../constants/app_strings.dart';
+import '../core/constants/app_colors.dart';
+import '../core/constants/app_strings.dart';
 import '../general_services/localization.service.dart';
-import '../routing/app_router.dart';
+import '../core/routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,13 +24,13 @@ class GeneralListener {
   void someFunction() async{
     // قبل الخطوة
     final start = DateTime.now();
-    print("⏳ بدأت عند: $start");
+    debugPrint("⏳ بدأت عند: $start");
 
     // الخطوة اللي عايز تقيس وقتها
 
     // بعد الخطوة
     final end = DateTime.now();
-    print("✅ خلصت عند: $end");
+    debugPrint("✅ خلصت عند: $end");
 
     // الفرق
     final diff = end.difference(start).inMilliseconds;
@@ -194,16 +194,16 @@ class GeneralListener {
   }
 
   static routeCompile(urls) async {
-    print("PLAY IS IN PROCESS");
-    print(urls);
+    debugPrint("PLAY IS IN PROCESS");
+    debugPrint(urls);
     final url = urls;
     final result = await analyzeRoute(url);
     if (result != null) {
-      print("Route Key: ${result['key']}");
-      print("Parameters: ${result['values']}");
+      debugPrint("Route Key: ${result['key']}");
+      debugPrint("Parameters: ${result['values']}");
       return result;
     } else {
-      print("No matching route found.");
+      debugPrint("No matching route found.");
     }
   }
 

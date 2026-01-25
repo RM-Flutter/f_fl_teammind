@@ -137,7 +137,7 @@ abstract class FingerprintService {
       'data': encoded,
       'finger_day': DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now()),
     };
-    print("formData is --> $formData");
+    debugPrint("formData is --> $formData");
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
         url,

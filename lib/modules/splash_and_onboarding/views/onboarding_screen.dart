@@ -7,8 +7,8 @@ import 'package:app_test/general_services/backend_services/api_service/dio_api_s
 import 'package:app_test/general_services/localization.service.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../../common_modules_widgets/language_dropdown_button.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_strings.dart';
 import '../view_models/splash_onboarding.viewmodel.dart';
 
 class OnBoardingScreen extends StatelessWidget {

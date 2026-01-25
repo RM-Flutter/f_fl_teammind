@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/localization.service.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/modules/more/views/lang_setting/logic/lang_controller.dart';
 
-import '../../../../constants/user_consts.dart';
+import '../../../../core/constants/user_consts.dart';
 
 class LangSettingScreens extends StatefulWidget {
   const LangSettingScreens({super.key});
@@ -40,13 +40,13 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
         ? ["English language",
       "اللغه العربية"]
         : lang;
-    print("is--->${context.locale.languageCode}");
+    debugPrint("is--->${context.locale.languageCode}");
     if(context.locale.languageCode.contains("en")){
       selectIndex = 0;
     }if(context.locale.languageCode.contains("ar")){
       selectIndex = 1;
     }
-      print("LANG Is : $lang");
+      debugPrint("LANG Is : $lang");
     return ChangeNotifierProvider(create: (context) => LangControllerProvider(),
       child: Consumer<LangControllerProvider>(builder: (context, value, child) {
         return Scaffold(

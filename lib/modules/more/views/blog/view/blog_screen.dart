@@ -1,7 +1,7 @@
 // import 'package:easy_localization/easy_localization.dart';
 // import 'package:flutter/material.dart';
-// import 'package:app_test/constants/app_sizes.dart';
-// import 'package:app_test/constants/app_strings.dart';
+// import 'package:app_test/core/constants/app_sizes.dart';
+// import 'package:app_test/core/constants/app_strings.dart';
 // import 'package:provider/provider.dart';
 // import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
 // import 'package:app_test/modules/more/views/blog/widget/blog_list_view_item.dart';
@@ -20,13 +20,13 @@
 //     final notificationProvider = Provider.of<BlogProviderModel>(context, listen: false);
 //     notificationProvider.getBlog(context, page: 1); // Load initial notifications
 //     _scrollController.addListener(() {
-//       print("Current scroll position: ${_scrollController.position.pixels}");
-//       print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+//       debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+//       debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 //
 //       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
 //           !notificationProvider.isGetBlogLoading &&
 //           notificationProvider.hasMoreBlogs) {
-//         print("BOTTOM BOTTOM");
+//         debugPrint("BOTTOM BOTTOM");
 //         notificationProvider.getBlog(context, page: notificationProvider.currentPage);
 //       }
 //     });

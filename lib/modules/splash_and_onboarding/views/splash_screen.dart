@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/models/settings/user_settings_2.model.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import '../../../common_modules_widgets/dynamic_image_widget.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
-import '../../../constants/update_app.dart';
+import '../../../core/constants/app_images.dart';
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/update_app.dart';
 import '../../../general_services/device_info.service.dart';
 import '../../../general_services/internet_check.dart';
 import '../../../general_services/localization.service.dart';
@@ -184,11 +184,11 @@ class _SplashScreenState extends State<SplashScreen> {
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
         UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
       } catch (e) {
-        print("Error decoding user settings: $e");
+        debugPrint("Error decoding user settings: $e");
       }
     }
     else {
-      print("us1Cache is null or empty.");
+      debugPrint("us1Cache is null or empty.");
     }
     if (us2Cache.isNotEmpty && us2Cache != "") {
       try {
@@ -196,23 +196,23 @@ class _SplashScreenState extends State<SplashScreen> {
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
         UserSettingConst.userSettings2 = UserSettings2Model.fromJson(us2Cache);
       } catch (e) {
-        print("Error decoding user settings: $e");
+        debugPrint("Error decoding user settings: $e");
       }
     }
     else {
-      print("us2Cache is null or empty.");
+      debugPrint("us2Cache is null or empty.");
     }
     if (us3Cache.isNotEmpty && us3Cache != "") {
       try {
         UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
         generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
-        print("IS THIS IS -> ${generalSettingsModel.requestTypes}");
+        debugPrint("IS THIS IS -> ${generalSettingsModel.requestTypes}");
       } catch (e) {
-        print("Error decoding user settings: $e");
+        debugPrint("Error decoding user settings: $e");
       }
     }
     else {
-      print("us2Cache is null or empty.");
+      debugPrint("us2Cache is null or empty.");
     }
     viewModel.initializeSplashScreen(
         context: context,

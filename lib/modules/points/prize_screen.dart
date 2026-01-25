@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/layout.service.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
@@ -40,17 +40,17 @@ class _PrizeScreenState extends State<PrizeScreen> {
       pointsProvider.getPrize(context,widget.id, page: 1);
     });
     _scrollController.addListener(() {
-      print("Current scroll position: ${_scrollController.position.pixels}");
-      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !pointsProvider.isLoading &&
           pointsProvider.hasMorePrizes) {
-        print("BOTTOM BOTTOM");
+        debugPrint("BOTTOM BOTTOM");
         if(pointsProvider.hasMorePrizes == true){
           pointsProvider.getPrize(context,widget.id, page: pointsProvider.currentPage);
         }else{
-          print("NO PRIZE GET");
+          debugPrint("NO PRIZE GET");
         }
       }
     });
@@ -74,7 +74,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
         return Consumer<PointsProvider>(
           builder: (context, points, child) {
             if(points.isRedeemSuccess == true){
-              print("points.type --> ${points.type}");
+              debugPrint("points.type --> ${points.type}");
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 points.getPrize(context,widget.id, page: 1);
               });
@@ -204,7 +204,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                        await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
                                      });
                                    }else{
-                                     print("DATA --> ${points.prizes[index]['needed_data']}");
+                                     debugPrint("DATA --> ${points.prizes[index]['needed_data']}");
                                    }
                                   } : (){},
                                   child: Container(

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 class ImageGallerySlider extends StatefulWidget {
   List? listImageUrl = [];

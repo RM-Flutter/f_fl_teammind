@@ -7,18 +7,18 @@ import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/modules/more/widgets/customize_notification_screen.dart';
 import 'package:app_test/services/requests.services.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_icons.dart';
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_icons.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../models/settings/user_settings.model.dart';
 
 import '../../../general_services/app_config.service.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 import '../../home/view_models/home.viewmodel.dart';
 import '../../personal_profile/viewmodels/personal_profile.viewmodel.dart';
 

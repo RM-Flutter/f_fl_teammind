@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 
 class CachedNetWorkImageWidget extends StatelessWidget {
   const CachedNetWorkImageWidget({

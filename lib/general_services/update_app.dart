@@ -4,10 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../constants/app_colors.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../constants/app_strings.dart';
+import '../core/constants/app_colors.dart';
+import '../core/constants/app_strings.dart';
 import '../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../general_services/localization.service.dart';
 
@@ -141,7 +141,7 @@ class UpdateApp{
 
       }
     } catch (e) {
-      print("❌ Error checking update: $e");
+      debugPrint("❌ Error checking update: $e");
     }
   }
 }

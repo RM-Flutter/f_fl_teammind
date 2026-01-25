@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_colors.dart';
 
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 
 class TemplatePage extends StatelessWidget {
   final String title;

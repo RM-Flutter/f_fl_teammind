@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/modules/home/widget/appbar_profile_container.dart';

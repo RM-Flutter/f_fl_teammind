@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io' show File;         // هيتجاهلها في Web
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import '../../constants/app_strings.dart';
+import '../../core/constants/app_strings.dart';
 import '../../general_services/backend_services/api_service/dio_api_service/dio.dart';
 import '../../models/get_one_request_model.dart';
 import '../../models/get_request_comment_model.dart';
@@ -17,7 +17,6 @@ import '../../modules/complain_screen/widget/success_send_complain.dart';
 class RequestController extends ChangeNotifier {
   bool isGetRequestLoading = false;
   bool empty = false;
-  bool isAddCommentLoading = false;
   bool getMore = false;
   bool isAddRequestLoading = false;
   bool isGetRequestCommentLoading = false;
@@ -25,9 +24,7 @@ class RequestController extends ChangeNotifier {
   bool isGetRequestSuccess = false;
   bool isAddCommentSuccess = false;
   bool isAddRequestSuccess = false;
-  bool isGetRequestCommentSuccess = false;
   bool isGetRequestTypeSuccess = false;
-  TextEditingController contentController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
   TextEditingController detailsController = TextEditingController();
   bool hasMoreRequests = true;
@@ -38,41 +35,16 @@ class RequestController extends ChangeNotifier {
   String? errorAddCommentMessage;
   String? errorAddRequestMessage;
   final picker = ImagePicker();
-  bool hasMore = true;
-  bool loading = true;
-  final ScrollController controller = ScrollController();
-  final int expectedPageSize = 9;
-  int pageNumber = 1;
-  int count = 0;
   Set<int> requestsIds = {};
   XFile? XImageFileAttachmentPersonal;
   File? attachmentPersonalImage;
   List listAttachmentPersonalImage = [];
   List<XFile> listXAttachmentPersonalImage = [];
-  GetRequestCommentModel? getRequestCommentModel;
   GetOneRequestModel? getOneRequestModel;
   List requests = [];
-  List requestsTeam = [];
-  List newRequestsTeam = [];
   List requestTypes = [];
-  List newComments = [];
-  List comments = [];
-  List newRequests = [];
   int currentPage = 1;
   final int itemsCount = 9;
-  bool hasMoreData(int length) {
-    if (length < expectedPageSize) {
-      return false;
-    } else {
-      currentPage += 1;
-      return true;
-    }
-  }
-
-  Future<void> refreshPaints(context) async{
-    currentPage = 1;
-    hasMore = true;
-  }
   Future<void> getRequestType(BuildContext context) async {
     isGetRequestTypeLoading = true;
     notifyListeners();
@@ -115,96 +87,10 @@ class RequestController extends ChangeNotifier {
       notifyListeners();
     }
   }
-  Future<void> addComment(BuildContext context, {required String id, List<XFile>? images, String? voicePath, slug}) async {
-    if(images == null  && voicePath == null && contentController.text.isEmpty){
-      print("NULL COMMENT");
-      return;
-    }
-    isAddCommentLoading = true;
-    notifyListeners();
-
-    try {
-      Response response;
-      print("Voice Path: $voicePath");
-
-      // Check if we have either images or a voice file to send
-      if (images != null || voicePath != null) {
-        print("Uploading media...");
-
-        FormData formData = FormData.fromMap({
-          if (contentController.text.isNotEmpty) "content": contentController.text,
-          if (images != null && images.isNotEmpty)
-            "images[]": await Future.wait(images.map(
-                  (file) async => await MultipartFile.fromFile(file.path, filename: file.name),
-            ).toList()),
-          if (voicePath != null && File(voicePath).existsSync())
-            "sounds": await MultipartFile.fromFile(voicePath, filename: "recorded_audio.m4a"),
-        });
-
-        response = await DioHelper.postFormData(
-          url: "/$slug/entities-operations/$id/comments",
-          context: context,
-          formdata: formData,
-        );
-      } else {
-        response = await DioHelper.postData(
-          url: "/$slug/entities-operations/$id/comments",
-          context: context,
-          data: {
-            if (contentController.text.isNotEmpty) "content": contentController.text,
-          },
-        );
-      }
-
-      if (response.data['status'] == false) {
-        Fluttertoast.showToast(
-          msg: response.data['message'],
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      } else {
-        isAddCommentSuccess = true;
-        Fluttertoast.showToast(
-          msg: response.data['message'],
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        contentController.clear();
-        // Refresh comments after successful upload
-        getRequestCommentModel = null;
-        // getRequestComment(context, id);
-      }
-    } catch (error) {
-      errorAddCommentMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
-          : error.toString();
-
-      Fluttertoast.showToast(
-        msg: errorAddCommentMessage!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    } finally {
-      isAddCommentLoading = false;
-      notifyListeners();
-    }
-  }
   Future<void> getRequest(BuildContext context, {int? page}) async {
     if (page != null) currentPage = page;
 
-    print("currentPage is --> $currentPage");
+    debugPrint("currentPage is --> $currentPage");
     isGetRequestLoading = true;
     notifyListeners();
 
@@ -279,7 +165,7 @@ class RequestController extends ChangeNotifier {
   }
   // Future<void> getRequestMine(BuildContext context, {int? page}) async {
   //   if(page != null){currentPage = page;}
-  //   print("currentPage is --> $currentPage}");
+  //   debugPrint("currentPage is --> $currentPage}");
   //   isGetRequestLoading = true;
   //   notifyListeners();
   //   try {
@@ -308,7 +194,7 @@ class RequestController extends ChangeNotifier {
   //       }
   //       if (newRequests.isNotEmpty) {
   //         requests.addAll(newRequests);
-  //         print("LENGTH IS --> ${newRequests.length}");
+  //         debugPrint("LENGTH IS --> ${newRequests.length}");
   //         if (hasMore) currentPage++;
   //       } else {
   //         hasMoreRequests = false; // No more data to fetch
@@ -594,8 +480,8 @@ class RequestController extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                print(image1);
-                                print(image2);
+                                debugPrint(image1);
+                                debugPrint(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -141,7 +141,7 @@ Widget defaultBottomNavigationBar(
       double itemWidth =(items!.length > 4)? containerWidth / items.length * 0.9 :containerWidth / items.length * 0.95;
       double itemHeight = itemWidth * 1;
       double itemRadius = (items.length > 4)?itemWidth / 2 : itemHeight;
-      print("SELECTED => $selectIndex");
+      debugPrint("SELECTED => $selectIndex");
       return Center(
         child: Container(
           alignment: Alignment.center,

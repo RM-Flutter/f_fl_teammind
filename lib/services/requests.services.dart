@@ -1,4 +1,4 @@
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 import '../general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
 import '../general_services/backend_services/get_endpoint.service.dart';
 import '../models/endpoint.model.dart';
@@ -162,7 +162,7 @@ abstract class RequestsServices {
       page: page,
       type: type,
     );
-    print("queryParams is --> $queryParams");
+    debugPrint("queryParams is --> $queryParams");
     final url = queryParams.isEmpty ? baseUrl : '$baseUrl&$queryParams';
 
     final response = await DioApiService().get<Map<String, dynamic>>(url,
@@ -239,8 +239,8 @@ abstract class RequestsServices {
       {required BuildContext context,
         required Map<String, String> requestData,
         required List<FilePickerResult> files}) async {
-    print("REQUEST DATA IS --> $requestData");
-    print("REQUEST DATA IS --> $files");
+    debugPrint("REQUEST DATA IS --> $requestData");
+    debugPrint("REQUEST DATA IS --> $files");
     return await DioApiService().postWithFormData<Map<String, dynamic>>(
         EndpointServices.getApiEndpoint(EndpointsNames.empAddRequest).url,
         context: context,

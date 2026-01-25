@@ -12,9 +12,9 @@ def fix_file_content(filepath, replacements):
         if new_content != content:
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(new_content)
-            print(f"Updated: {filepath}")
+            debugPrint(f"Updated: {filepath}")
     except Exception as e:
-        print(f"Error processing {filepath}: {e}")
+        debugPrint(f"Error processing {filepath}: {e}")
 
 def remove_const_at_lines(file_line_map):
     for filepath, lines in file_line_map.items():
@@ -33,9 +33,9 @@ def remove_const_at_lines(file_line_map):
             if modified:
                 with open(filepath, 'w', encoding='utf-8') as f:
                     f.writelines(file_lines)
-                print(f"Removed const from: {filepath}")
+                debugPrint(f"Removed const from: {filepath}")
         except Exception as e:
-            print(f"Error processing {filepath}: {e}")
+            debugPrint(f"Error processing {filepath}: {e}")
 
 def main():
     # 1. Fix dynamic_app_config.service.dart import

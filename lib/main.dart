@@ -22,12 +22,11 @@ import 'modules/main_screen/view_models/main_viewmodel.dart';
 import 'utils/error_handling/global_error_handler.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print("🔹 Background Notification: ${message.notification?.title}");
+  debugPrint("🔹 Background Notification: ${message.notification?.title}");
 }
 
 void main() async {

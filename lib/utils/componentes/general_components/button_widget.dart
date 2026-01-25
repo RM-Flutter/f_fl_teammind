@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/general_services/app_theme.service.dart';
 import 'package:app_test/general_services/localization.service.dart';
 
-import '../../../constants/app_colors.dart';
+import '../../../core/constants/app_colors.dart';
 
 class ButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;

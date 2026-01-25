@@ -1,4 +1,4 @@
-import 'package:app_test/constants/app_constants.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 
 class EndPoints {
   String postId = '';

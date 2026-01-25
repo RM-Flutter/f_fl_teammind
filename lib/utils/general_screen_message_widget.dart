@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/localization.service.dart';
 
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 
 class GeneralScreenMessageWidget extends StatelessWidget {
   /// current Screen route

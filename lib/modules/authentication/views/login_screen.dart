@@ -11,20 +11,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/app_constants.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/utils/helpers/media_query_values.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
 import '../../../common_modules_widgets/language_dropdown_button.widget.dart';
-import '../../../constants/app_icons.dart';
+import '../../../core/constants/app_icons.dart';
 import '../../../common_modules_widgets/dynamic_image_widget.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_images.dart';
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/validation_service.dart';
 import '../../../models/settings/general_settings.model.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 import '../../../utils/overlay_gradient_widget.dart';
 import '../view_models/login.viewmodel.dart';
 import 'widgets/phone_number_field.dart';
@@ -84,7 +84,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     viewModel = AuthenticationViewModel();
     viewModel.initializeAnimation(this);
     WidgetsBinding.instance.addObserver(this);
-    print("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
+    debugPrint("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
   }
 
   @override
@@ -101,7 +101,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
-    print("Can Register is --> ${gCache['can_new_register']}");
+    debugPrint("Can Register is --> ${gCache['can_new_register']}");
     return ChangeNotifierProvider<AuthenticationViewModel>(
       create: (context) => viewModel,
       child: Scaffold(

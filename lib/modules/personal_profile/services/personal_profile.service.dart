@@ -7,7 +7,7 @@ import 'package:app_test/general_services/backend_services/get_endpoint.service.
 import 'package:app_test/models/endpoint.model.dart';
 import 'package:app_test/models/operation_result.model.dart';
 
-import '../../../constants/string_convert.dart';
+import '../../../core/constants/string_convert.dart';
 
 abstract class PersonalProfileService {
   // update password
@@ -50,8 +50,8 @@ abstract class PersonalProfileService {
     List<XFile>? avatar,
     required BuildContext context,
   }) async {
-    print("AVATAR IS-->$avatar");
-    print("SERVER FORM DATA");
+    debugPrint("AVATAR IS-->$avatar");
+    debugPrint("SERVER FORM DATA");
     FormData formData = FormData.fromMap(
         {
           if (name != null) 'name' : name,
@@ -76,7 +76,7 @@ abstract class PersonalProfileService {
     // if(avatar != null && avatar.isNotEmpty){
     //
     // }else{
-    //   print("SERVER POST DATA");
+    //   debugPrint("SERVER POST DATA");
     //   var res =  await DioHelper.postData(
     //       url: "/rm_users/v1/update_profile",
     //       context: context,

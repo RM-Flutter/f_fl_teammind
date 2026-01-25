@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import '../../constants/app_images.dart';
-import '../../constants/app_sizes.dart';
+import '../../core/constants/app_images.dart';
+import '../../core/constants/app_sizes.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab(

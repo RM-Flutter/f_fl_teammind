@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../constants/user_consts.dart';
+import '../../core/constants/user_consts.dart';
+import '../../core/routing/app_router.dart';
 import '../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../models/settings/user_settings.model.dart';
-import '../../platform/platform_is.dart';
+import '../../core/platform/platform_is.dart';
 import '../../utils/custom_expandable_fab/action_button.widget.dart';
 import '../../utils/custom_expandable_fab/expandable_fab.dart';
 import '../custom_floating_action_button.widget.dart';
-import '../../constants/app_images.dart';
-import '../../constants/app_sizes.dart';
-import '../../routing/app_router.dart';
+import '../../core/constants/app_images.dart';
+import '../../core/constants/app_sizes.dart';
 import 'main_app_fab.service.dart';
 
 class MainAppFabWidget extends StatelessWidget {

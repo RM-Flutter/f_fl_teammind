@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import '../platform/platform_is.dart';
+import '../core/platform/platform_is.dart';
 
 abstract class LocationService {
   static Future<LocationData?> getLocation() async {

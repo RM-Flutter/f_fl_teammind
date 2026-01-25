@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../../../common_modules_widgets/button_widget.dart';
 import '../../logic/fawry_cubit/fawry_provider.dart';

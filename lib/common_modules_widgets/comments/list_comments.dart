@@ -6,18 +6,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_images.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/app_theme.service.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/layout.service.dart';
 import 'package:app_test/general_services/localization.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
-import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../modules/complain_screen/widget/full_image_screen.dart';
@@ -47,13 +47,13 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
       notificationProvider.getComment(context,widget.slug,widget.id, pages: 1, );
     });
     _scrollController.addListener(() {
-      print("Current scroll position: ${_scrollController.position.pixels}");
-      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !notificationProvider.isGetCommentLoading &&
           notificationProvider.hasMore) {
-        print("BOTTOM BOTTOM");
+        debugPrint("BOTTOM BOTTOM");
         notificationProvider.getComment(context,widget.slug,widget.id, pages: notificationProvider.pageNumber,);
       }
     });

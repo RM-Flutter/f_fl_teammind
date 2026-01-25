@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/localization.service.dart';
 import 'package:provider/provider.dart';
 import '../logic/history_cubit/history_provider.dart';
@@ -38,8 +38,8 @@ class HistoryItem extends StatelessWidget {
                       DateFormat('MMM d, yyyy',LocalizationService.isArabic(context: context)? "ar": "en").format(parsedDate);
                 return GestureDetector(
                   onTap: (){
-                    print("e.notes ---> ${e.notes}");
-                    print("e.code ---> ${e.code}");
+                    debugPrint("e.notes ---> ${e.notes}");
+                    debugPrint("e.code ---> ${e.code}");
                     if((e.notes != null && e.notes != "") || (e.code != null && e.code != "")){
                       showModalBottomSheet(
                           context: context,

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:app_test/common_modules_widgets/main_app_fab_widget/widgets/qrcode_Scanner_view.widget.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/general_services/app_config.service.dart';
 
-import '../constants/app_colors.dart';
+import '../core/constants/app_colors.dart';
 
 class DomainSelectionService {
   static const String _domainCacheKey = "custom_domain";
@@ -38,8 +38,8 @@ class DomainSelectionService {
     // Clean and format domain
     final cleanedDomain = _cleanDomain(domain);
     final formattedDomain = _formatDomain(cleanedDomain);
-    print("🌐 Domain cleaned: $cleanedDomain");
-    print("🌐 Domain formatted: $formattedDomain");
+    debugPrint("🌐 Domain cleaned: $cleanedDomain");
+    debugPrint("🌐 Domain formatted: $formattedDomain");
 
     // Validate domain by calling startApp
     final isValid = await _validateDomain(context, formattedDomain);
@@ -63,7 +63,7 @@ class DomainSelectionService {
     // Domain is valid, save it and add to list
     await _saveDomain(formattedDomain);
     await CacheHelper.setBool(_domainSelectedKey, true);
-    print("🌐 Domain saved successfully: $formattedDomain");
+    debugPrint("🌐 Domain saved successfully: $formattedDomain");
     
     // Reinitialize DioHelper with the new domain
     if (context.mounted) {
@@ -290,7 +290,7 @@ class DomainSelectionService {
                 onPressed: () {
                   final domain = controller.text.trim();
                   if (domain.isNotEmpty) {
-                    print("🌐 Domain entered: $domain");
+                    debugPrint("🌐 Domain entered: $domain");
                     Navigator.of(ctx).pop(domain);
                   }
                 },

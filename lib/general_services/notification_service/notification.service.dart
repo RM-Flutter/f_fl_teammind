@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_images.dart';
+import '../../core/constants/app_images.dart';
 import 'timeout_message.service.dart';
 
 ///  A service to handle push notifications using Firebase Messaging.

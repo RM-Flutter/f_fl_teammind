@@ -2,13 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import '../routing/app_router.dart';
+import '../core/routing/app_router.dart';
 
 abstract class LocalizationService {
   static void setLocaleAndUpdateUrl(
       {required BuildContext context, required String newLangCode}) {
     // Set the locale
-    print("i will put lang");
+    debugPrint("i will put lang");
     final locale = Locale(newLangCode);
     CacheHelper.setString(key: "lang", value: newLangCode);
     context.setLocale(locale);

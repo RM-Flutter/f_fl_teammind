@@ -1,12 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../controller/device_sys/device_controller.dart';
 import '../../../../general_services/app_config.service.dart';
 import '../../../../general_services/layout.service.dart';

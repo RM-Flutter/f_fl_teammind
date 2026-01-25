@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/general_services/notification_service.dart';
-import 'constants/app_images.dart';
+import 'core/constants/app_images.dart';
 import 'general_services/app_theme.service.dart';
-import 'platform/platform_is.dart';
-import 'routing/app_router.dart';
+import 'core/platform/platform_is.dart';
+import 'core/routing/app_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 class MyApp extends StatelessWidget {

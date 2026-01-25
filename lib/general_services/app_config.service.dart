@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants/app_strings.dart';
+import '../core/constants/app_strings.dart';
 import '../models/device_information.model.dart';
 import '../models/settings/app_settings_model.dart';
 import '../models/settings/general_settings.model.dart';
@@ -149,7 +149,7 @@ class AppConfigService extends ChangeNotifier {
     switch (type) {
       case SettingsType.generalSettings || SettingsType.startupSettings:
         if (data != null && dataS1 != null && dataS2 != null) {
-          print("Done S");
+          debugPrint("Done S");
           _generalSettigns = data;
           _userSettings = dataS1;
           _user2Settings = dataS2;
@@ -157,13 +157,13 @@ class AppConfigService extends ChangeNotifier {
         }
       case SettingsType.userSettings|| SettingsType.startupSettings:
         if (dataS1 != null) {
-          print("Done S1");
+          debugPrint("Done S1");
           _userSettings = dataS1;
         }
         return;
       case SettingsType.user2Settings|| SettingsType.startupSettings:
         if (dataS2 != null) {
-          print("Done S2");
+          debugPrint("Done S2");
           _user2Settings = dataS2;
         }
         return;

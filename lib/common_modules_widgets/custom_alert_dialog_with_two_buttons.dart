@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_colors.dart';
 
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 import 'custom_elevated_button.widget.dart';
 
 Future<void> customAlertDialogWithTwoButtons(

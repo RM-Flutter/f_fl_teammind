@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:app_test/constants/app_strings.dart';
-import 'package:app_test/constants/user_consts.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/general_services/alert_service/alerts.service.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
@@ -155,7 +155,7 @@ class NotificationProviderModel extends ChangeNotifier {
   }
   Future<void> getNotification(BuildContext context, {int? page, forWho}) async {
     if(page != null){currentPage = page;}
-    print("currentPage is --> $currentPage}");
+    debugPrint("currentPage is --> $currentPage}");
     isGetNotificationLoading = true;
     notifyListeners();
     try {
@@ -175,7 +175,7 @@ class NotificationProviderModel extends ChangeNotifier {
       }
       if (newNotifications.isNotEmpty) {
         notifications.addAll(newNotifications);
-        print("LENGTH IS --> ${newNotifications.length}");
+        debugPrint("LENGTH IS --> ${newNotifications.length}");
         if (hasMore) currentPage++;
       } else {
         hasMoreNotifications = false; // No more data to fetch
@@ -217,8 +217,8 @@ class NotificationProviderModel extends ChangeNotifier {
   addNotification(BuildContext context, {empIds, depIds})async {
     isLoading = true;
     notifyListeners();
-    print("empIds is --> $empIds");
-    print("empIds is --> ${listXAttachmentPersonalImage.length}");
+    debugPrint("empIds is --> $empIds");
+    debugPrint("empIds is --> ${listXAttachmentPersonalImage.length}");
     final image = listAttachmentPersonalImage
         .map((e) => XFile(e["compressed"].path)) // تحويل File → XFile
         .toList();
@@ -401,8 +401,8 @@ class NotificationProviderModel extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                print(image1);
-                                print(image2);
+                                debugPrint(image1);
+                                debugPrint(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(

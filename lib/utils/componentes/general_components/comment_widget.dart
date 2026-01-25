@@ -2,12 +2,12 @@ import 'package:app_test/utils/helpers/media_query_values.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/app_theme.service.dart';
 
 import '../../../common_modules_widgets/cached_network_image_widget.dart';
-import '../../../constants/app_icons.dart';
+import '../../../core/constants/app_icons.dart';
 
 class CommentWidget extends StatelessWidget {
   final String image;

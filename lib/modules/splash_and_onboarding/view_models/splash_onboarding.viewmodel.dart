@@ -7,16 +7,16 @@ import 'package:go_router/go_router.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_constants.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/general_listener.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_images.dart';
+import '../../../core/constants/general_listener.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/app_info.service.dart';
 import '../../../general_services/backend_services/get_endpoint.service.dart';
 import '../../../general_services/device_info.service.dart';
 import '../../../general_services/notification_service/notification.service.dart';
 import '../../../models/endpoint.model.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 
 class OnboardingViewModel extends ChangeNotifier {
   final PageController pageController = PageController();
@@ -166,37 +166,37 @@ class OnboardingViewModel extends ChangeNotifier {
       try {
         // Precache logo image
         await precacheImage(AssetImage(AppImages.logo), context);
-        print("done service 1");
+        debugPrint("done service 1");
         // Initialize application services
         await appConfigService.init();
         // Initialize and set device information in local storage
-        print("done service 2");
+        debugPrint("done service 2");
         // Set base API URL
         appConfigService.apiURL = AppConstants.baseUrl;
-        print("done service 3");
+        debugPrint("done service 3");
         // Optional: Enable or disable checking for token expiration
         appConfigService.checkOnTokenExpiration = false;
 
         // Optional: Set refresh token API URL
         appConfigService.refreshTokenApiUrl =
             AppConstants.refreshTokenBaseUrl;
-        print("done service 4");
+        debugPrint("done service 4");
         // Optional: Set application name
         appConfigService.appName =
         await ApplicationInformationService.getAppName();
-        print("done service 5");
+        debugPrint("done service 5");
         // Optional: Set application version
         appConfigService.appVersion =
         await ApplicationInformationService.getAppVersion();
-        print("done service 6");
+        debugPrint("done service 6");
         // Optional: Set application build number
         appConfigService.buildNumber =
         await ApplicationInformationService.getAppBuildNumber();
-        print("done service 7");
+        debugPrint("done service 7");
         // Optional: Set application package name
         appConfigService.packageName =
         await ApplicationInformationService.getAppPackageName();
-        print("done service 8");
+        debugPrint("done service 8");
         // await ConnectionsService.init();
       } catch (e) {
         debugPrint('Error initializing app services: $e');
@@ -265,9 +265,9 @@ class OnboardingViewModel extends ChangeNotifier {
       try {
         await _initializeAppServices(context, appConfigService);
         String? payload = CacheHelper.getString('initialNotification');
-        print("payload is --> $payload");
+        debugPrint("payload is --> $payload");
         if(payload != null && payload.isNotEmpty){
-          print("ANA GY MN PRA");
+          debugPrint("ANA GY MN PRA");
           await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
           await GeneralListener.linksAction(popup: payload);
           await CacheHelper.setString(key: 'initialNotification',value: '');
@@ -294,7 +294,7 @@ class OnboardingViewModel extends ChangeNotifier {
             }
             var dateToCheck = safeParseDateTime(CacheHelper.getString("dateWatchScreen"));
             final referenceDate = safeParseDateTime(gCache['features']['date']);
-            print("dateWatchScreen is ${CacheHelper.getString("dateWatchScreen") ?? ""}");
+            debugPrint("dateWatchScreen is ${CacheHelper.getString("dateWatchScreen") ?? ""}");
             if (CacheHelper.getString("dateWatchScreen") == null ||
                 CacheHelper.getString("dateWatchScreen") == "" ||
                 gCache['features']['date'] == null ||
@@ -319,25 +319,25 @@ class OnboardingViewModel extends ChangeNotifier {
             return;
           }
           else {
-            print("WATCH 0");
+            debugPrint("WATCH 0");
             final jsonString2 = CacheHelper.getString("USG");
             Map<String, dynamic> cache = {};
             if (jsonString2 != null && jsonString2.isNotEmpty) {
               cache = json.decode(jsonString2) as Map<String, dynamic>;
             }
             final features = cache['features']['items'];
-            print("WATCH 1");
+            debugPrint("WATCH 1");
             final jsonString = CacheHelper.getString("USG");
             Map<String, dynamic> gCache = {};
             DateTime? dateToCheck;
             DateTime? referenceDate;
-            print("WATCH 2");
+            debugPrint("WATCH 2");
             if (jsonString != null && jsonString != "") {
               gCache = json.decode(jsonString) as Map<String,
                   dynamic>; // Convert String back to JSON
               referenceDate = safeParseDateTime(gCache['features']['date']);
             }
-            print("WATCH IN1 ${CacheHelper.getString("dateWatchScreen")}");
+            debugPrint("WATCH IN1 ${CacheHelper.getString("dateWatchScreen")}");
             if (CacheHelper.getString("dateWatchScreen") != null &&
                 CacheHelper.getString("dateWatchScreen") != "") {
               dateToCheck =
@@ -346,13 +346,13 @@ class OnboardingViewModel extends ChangeNotifier {
               if (CacheHelper.getString("dateWatchScreen") == null ||
                   CacheHelper.getString("dateWatchScreen") == "" || gCache['features']['date'] == "" ||
                   dateToCheck?.isAfter(referenceDate ?? DateTime.now()) == false){
-                print("WATCH IN IN");
+                debugPrint("WATCH IN IN");
                 await _precacheImages(context);
-                print("WATCH IN 2");
+                debugPrint("WATCH IN 2");
                 context.goNamed(AppRoutes.onboarding.name,
                     pathParameters: {'lang': context.locale.languageCode});
               }else{
-                print("login-1");
+                debugPrint("login-1");
                 context.goNamed(
                   AppRoutes.login.name,
                   pathParameters: {'lang': context.locale.languageCode},
@@ -360,7 +360,7 @@ class OnboardingViewModel extends ChangeNotifier {
               }
             }
             if (features == null || features.isEmpty) {
-              print("login-2");
+              debugPrint("login-2");
               context.goNamed(
                 AppRoutes.login.name,
                 pathParameters: {'lang': context.locale.languageCode,
@@ -372,18 +372,18 @@ class OnboardingViewModel extends ChangeNotifier {
                   CacheHelper.getString("dateWatchScreen") == "" || gCache['features']['date'] == "" ||
                 dateToCheck?.isAfter(referenceDate ?? DateTime.now()) == false) {
                 await _precacheImages(context);
-                print("WATCH IN 4");
+                debugPrint("WATCH IN 4");
                 context.goNamed(AppRoutes.onboarding.name,
                     pathParameters: {'lang': context.locale.languageCode});
               } else {
-                print("login-3");
+                debugPrint("login-3");
                 context.goNamed(
                   AppRoutes.login.name,
                   pathParameters: {'lang': context.locale.languageCode},
                 );
               }
             }
-            // print("login-4");
+            // debugPrint("login-4");
             // return context.goNamed(
             //   AppRoutes.login.name,
             //   pathParameters: {'lang': context.locale.languageCode},
@@ -391,7 +391,7 @@ class OnboardingViewModel extends ChangeNotifier {
           }
         }
       } catch (err) {
-        print("login-5");
+        debugPrint("login-5");
         return context.goNamed(
           AppRoutes.login.name,
           pathParameters: {'lang': context.locale.languageCode},
@@ -421,7 +421,7 @@ class OnboardingViewModel extends ChangeNotifier {
           if (jsonString != "") {
             us1Cache = json.decode(jsonString) as Map<String,
                 dynamic>; // Convert String back to JSON
-            print("S2 IS --> $us1Cache");
+            debugPrint("S2 IS --> $us1Cache");
             role = us1Cache['role'];
           }
           if (appConfigService.isLogin && appConfigService.token.isNotEmpty) {

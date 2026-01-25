@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/modules/more/views/notification/view/notification_screen.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 import '../../home/view/home_screen.dart';
 import '../../more/views/more_screen.dart';
+
 
 class MainScreenViewModel extends ChangeNotifier {
   NavbarPages currentPage = NavbarPages.home;

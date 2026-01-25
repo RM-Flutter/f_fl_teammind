@@ -1,4 +1,4 @@
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/modules/home/widget/grid_view_model.dart';
 import 'package:app_test/modules/home/widget/home_grid_view_item.dart';
 import 'package:flutter/foundation.dart';

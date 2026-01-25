@@ -3,10 +3,10 @@ import 'package:app_test/modules/points/widgets/redeem_now_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/routing/app_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import '../../home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
@@ -28,7 +28,7 @@ class SliverAppBarPoints extends StatelessWidget {
               if (json2String != null && json2String != "") {
                 us2Cache = json.decode(json2String)
                     as Map<String, dynamic>; // Convert String back to JSON
-                print("S111111 IS --> ${us2Cache['points']['available']}");
+                debugPrint("S111111 IS --> ${us2Cache['points']['available']}");
               }
               // value.userSettings2!.balance!.forEach((key, balance) {
               //   balancePoints = balance.max;

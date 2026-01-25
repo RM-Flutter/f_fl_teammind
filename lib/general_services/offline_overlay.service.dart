@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../modules/offline/views/offline_screen.dart';
-import '../routing/app_router.dart';
+import '../core/routing/app_router.dart';
 
 class OfflineOverlayService {
   static OverlayEntry? _offlineOverlay;

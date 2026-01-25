@@ -1,9 +1,8 @@
-import '../../models/settings/general_settings.model.dart';
+import '../../../models/settings/general_settings.model.dart';
 import '../app_images.dart';
 
 /// getter for default [generalSettings].
-final GeneralSettingsModel defaultGeneralSettings =
-    GeneralSettingsModel.fromJson(defaultGeneralSettingsMap);
+final GeneralSettingsModel defaultGeneralSettings = GeneralSettingsModel.fromJson(defaultGeneralSettingsMap);
 
  Map<String, dynamic> defaultGeneralSettingsMap = {
   "last_update_date": "2022-02-16",

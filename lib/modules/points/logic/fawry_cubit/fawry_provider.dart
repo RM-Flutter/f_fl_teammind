@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/alert_service/alerts.service.dart';
 import 'package:app_test/general_services/app_config.service.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
@@ -15,9 +15,10 @@ import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/models/settings/user_settings_2.model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../constants/user_consts.dart';
+import '../../../../core/constants/user_consts.dart';
 import '../../../../general_services/app_theme.service.dart';
 import '../../../../utils/componentes/general_components/all_bottom_sheet.dart';
+
 
 class FawryProviderModel extends ChangeNotifier {
   bool isGetFawryCategoryLoading = false;
@@ -100,7 +101,7 @@ class FawryProviderModel extends ChangeNotifier {
   }
 
   double calcFees(Map<String, dynamic> service, double amount) {
-    print("service is --> $service");
+    debugPrint("service is --> $service");
     List<dynamic> rules = [];
 
     try {
@@ -133,7 +134,7 @@ class FawryProviderModel extends ChangeNotifier {
         }
       }
     }
-    print("totalFee --> ${totalFee.toString()}");
+    debugPrint("totalFee --> ${totalFee.toString()}");
     return totalFee;
   }
 
@@ -209,7 +210,6 @@ class FawryProviderModel extends ChangeNotifier {
             );
           }
         });
-
       }
       isGetFawryCategoryLoading = false;
       notifyListeners();
@@ -349,8 +349,9 @@ class FawryProviderModel extends ChangeNotifier {
       inputValues[key] = outputDate;       // ✅ يخزن القيمة
 
       notifyListeners(); // ← لو بتستخدم Consumer أو Provider
-      print("📅 $key selected: $outputDate");
+      debugPrint("📅 $key selected: $outputDate");
     }
   }
 
 }
+

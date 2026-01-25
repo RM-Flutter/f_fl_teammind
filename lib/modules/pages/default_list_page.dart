@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../constants/app_sizes.dart';
-import '../../constants/app_strings.dart';
+import '../../core/constants/app_sizes.dart';
+import '../../core/constants/app_strings.dart';
 import '../../general_services/layout.service.dart';
-import '../../routing/app_router.dart';
+import '../../core/routing/app_router.dart';
 import '../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../utils/gradient_bg_image.dart';
 import '../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
@@ -35,18 +35,18 @@ class _DefaultListPageState extends State<DefaultListPage> {
       pointsProvider.getBlog(context,"${widget.type}" ,page: 1);
     });
     _scrollController.addListener(() {
-      print("Current scroll position: ${_scrollController.position.pixels}");
-      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !pointsProvider.isGetBlogLoading &&
           pointsProvider.hasMore) {
-        print("BOTTOM BOTTOM");
+        debugPrint("BOTTOM BOTTOM");
         if(pointsProvider.hasMore == true) {
           pointsProvider.getBlog(
               context, "${widget.type}",page: pointsProvider.currentPage);
         }else{
-          print("NO DATA MORE");
+          debugPrint("NO DATA MORE");
         }
       }
     });

@@ -6,13 +6,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/common_modules_widgets/template_page.widget.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/more/views/notification/logic/notification_provider.dart';
 import 'package:app_test/utils/widgets/text_form_widget.dart';
 
-import '../../../../../constants/app_sizes.dart';
-import '../../../../../constants/check_values.dart';
+import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/constants/check_values.dart';
 
 
 class AddNotificationScreen extends StatefulWidget {
@@ -96,10 +96,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                         ),
                         ).toList(),
                         onChanged: (String? values) {
-                          print(values);
+                          debugPrint(values);
                           setState(() {
                             viewModel.selectNotificationType = values;
-                            print("selectNotificationType is --> ${viewModel.selectNotificationType}");
+                            debugPrint("selectNotificationType is --> ${viewModel.selectNotificationType}");
                             viewModel.listIds.clear();
                             viewModel.listIdsDepartment.clear();
                           });
@@ -273,8 +273,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                         }),
                                         ElevatedButton(
                                           onPressed: () {
-                                            print("tempDepSelectedIds --> $tempDepSelectedIds");
-                                            print("listIds --> ${viewModel.listIdsDepartment}");
+                                            debugPrint("tempDepSelectedIds --> $tempDepSelectedIds");
+                                            debugPrint("listIds --> ${viewModel.listIdsDepartment}");
                                             Navigator.pop(context, viewModel.departments.where((e) => tempDepSelectedIds.contains(e['id'])).toList());
                                           },
                                           child: Text(AppStrings.confirm.tr(), style:  const TextStyle(

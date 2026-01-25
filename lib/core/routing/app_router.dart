@@ -13,27 +13,27 @@ import 'package:app_test/modules/more/views/notification/view/notification_scree
 import 'package:app_test/modules/complain_screen/add_complain_screen.dart';
 import 'package:app_test/modules/more/views/update_password/update_password_screen.dart';
 import 'package:app_test/modules/pages/default_list_page.dart';
-import '../general_services/app_config.service.dart';
-import '../modules/authentication/views/login_screen.dart';
-import '../modules/authentication/views/update_main_data.dart';
-import '../modules/home/view/home_screen.dart';
-import '../modules/main_screen/views/main_screen.dart';
-import '../modules/more/views/company_structure/views/company_structure_tree_screen.dart';
-import '../modules/more/views/more_screen.dart';
-import '../modules/more/views/user_devices/user_devices_screen.dart';
-import '../modules/offline/views/offline_screen.dart';
-import '../modules/pages/default_page.dart';
-import '../modules/pages/default_details.dart';
-import '../modules/personal_profile/views/personal_profile_screen.dart';
-import '../modules/points/fawry_view/fawry_provider_screen.dart';
-import '../modules/points/points_categories_screen.dart';
-import '../modules/points/points_screen.dart';
-import '../modules/points/prize_screen.dart';
-import '../modules/points/widgets/select_contact_screen.dart';
-import '../modules/splash_and_onboarding/views/onboarding_screen.dart';
-import '../modules/splash_and_onboarding/views/splash_screen.dart';
-import '../routing/app_router_transitions.dart';
-import '../routing/not_found/not_found_screen.dart';
+import '../../general_services/app_config.service.dart';
+import '../../modules/authentication/views/login_screen.dart';
+import '../../modules/authentication/views/update_main_data.dart';
+import '../../modules/home/view/home_screen.dart';
+import '../../modules/main_screen/views/main_screen.dart';
+import '../../modules/more/views/company_structure/views/company_structure_tree_screen.dart';
+import '../../modules/more/views/more_screen.dart';
+import '../../modules/more/views/user_devices/user_devices_screen.dart';
+import '../../modules/offline/views/offline_screen.dart';
+import '../../modules/pages/default_page.dart';
+import '../../modules/pages/default_details.dart';
+import '../../modules/personal_profile/views/personal_profile_screen.dart';
+import '../../modules/points/fawry_view/fawry_provider_screen.dart';
+import '../../modules/points/points_categories_screen.dart';
+import '../../modules/points/points_screen.dart';
+import '../../modules/points/prize_screen.dart';
+import '../../modules/points/widgets/select_contact_screen.dart';
+import '../../modules/splash_and_onboarding/views/onboarding_screen.dart';
+import '../../modules/splash_and_onboarding/views/splash_screen.dart';
+import 'app_router_transitions.dart';
+import 'not_found/not_found_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
@@ -99,6 +99,7 @@ enum AppRoutes {
   notificationDetails
 }
 
+
 const TestVSync ticker = TestVSync();
 
 class TestVSync implements TickerProvider {
@@ -124,6 +125,7 @@ NavbarPages getNavbarPage({required String currentLocationRoute}) {
   }
   return NavbarPages.home;
 }
+
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();

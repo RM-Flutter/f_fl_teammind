@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/general_services/validation_service.dart';
 import '../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../constants/app_sizes.dart';
-import '../../platform/platform_is.dart';
+import '../../core/constants/app_sizes.dart';
+import '../../core/platform/platform_is.dart';
 import 'custom_alert.dart';
 
 enum DialogAnimationTypes { none, feedIn, open, opacity }

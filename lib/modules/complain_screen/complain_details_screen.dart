@@ -6,9 +6,9 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/common_modules_widgets/comments/comments_widget.dart';
 import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/controller/request_controller/request_controller.dart';
 import 'package:app_test/modules/complain_screen/widget/full_image_screen.dart';
 import 'package:app_test/modules/complain_screen/widget/request_details_appbar_widget.dart';
@@ -60,7 +60,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
       child: Consumer<RequestController>(
         builder: (context, value, child) {
           if(value.isAddCommentSuccess){
-            print("ADDED SUCCESS");
+            debugPrint("ADDED SUCCESS");
           }
           return Consumer<CommentProvider>(
               builder: (context, values, child) {

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../../home/view_models/home.viewmodel.dart';
@@ -73,15 +73,15 @@ class _ContactSelectionScreenState extends State<ContactSelectionScreen> {
         });
       }
     });
-    print("_selectedContacts is --> $_selectedContacts");
-    print("_selectedContacts is --> ${_selectedContacts.length}");
+    debugPrint("_selectedContacts is --> $_selectedContacts");
+    debugPrint("_selectedContacts is --> ${_selectedContacts.length}");
   }
   Future<String> getCountryCode(String phoneNumber) async {
     try {
       final parsed = PhoneNumber.parse(phoneNumber, callerCountry: IsoCode.EG); // Use IsoCode.EG instead of "EG"
       return "+${parsed.countryCode}"; // Returns country code with "+"
     } catch (e) {
-      print("Error extracting country code: $e");
+      debugPrint("Error extracting country code: $e");
       return ""; // Return empty if parsing fails
     }
   }

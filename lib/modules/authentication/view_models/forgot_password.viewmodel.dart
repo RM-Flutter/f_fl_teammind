@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../general_services/alert_service/alerts.service.dart';
 import '../../../general_services/app_config.service.dart';
 import '../auth_services/forgot_password.service.dart';
@@ -62,7 +62,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
         notifyListeners();
         return;
       } else {
-        print("ERROR FROM ${result.message!}");
+        debugPrint("ERROR FROM ${result.message!}");
         Fluttertoast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
@@ -119,7 +119,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
       notifyListeners();
       return;
     } else {
-      print("ERROR FROM HERE");
+      debugPrint("ERROR FROM HERE");
       Fluttertoast.showToast(
           msg: result.message!,
           toastLength: Toast.LENGTH_LONG,

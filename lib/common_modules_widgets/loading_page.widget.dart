@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_sizes.dart';
+import '../core/constants/app_sizes.dart';
 import '../general_services/layout.service.dart';
 import '../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 

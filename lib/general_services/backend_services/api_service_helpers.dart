@@ -14,7 +14,7 @@ abstract class ApiServiceHelpers {
       {Map<String, dynamic>? additionalHeaders,
       bool? addToken = true,
       required BuildContext context}) {
-    print("LANGSSS IS --> ${CacheHelper.getString("lang")}");
+    debugPrint("LANGSSS IS --> ${CacheHelper.getString("lang")}");
     final appConfigServiceProvider =
         Provider.of<AppConfigService>(context, listen: false);
     var headers = {

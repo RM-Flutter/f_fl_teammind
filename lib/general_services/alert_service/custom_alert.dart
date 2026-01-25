@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui' as ui;
 
-import '../../constants/app_images.dart';
-import '../../constants/app_sizes.dart';
+import '../../core/constants/app_images.dart';
+import '../../core/constants/app_sizes.dart';
 
 class AlertType {
   /// message is `required` parameter

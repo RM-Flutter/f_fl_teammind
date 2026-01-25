@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/user_consts.dart';
+import '../../../core/constants/user_consts.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../general_services/settings.service.dart';

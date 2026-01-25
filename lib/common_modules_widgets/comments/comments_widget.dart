@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:app_test/common_modules_widgets/comments/list_comments.dart';
 import 'package:app_test/common_modules_widgets/comments/send_comment_widget.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_sizes.dart';
-import '../../constants/app_strings.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_sizes.dart';
+import '../../core/constants/app_strings.dart';
 import '../../modules/complain_screen/widget/full_image_screen.dart';
 import '../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 

@@ -9,14 +9,14 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../general_services/alert_service/alerts.service.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/layout.service.dart';
 import '../../../general_services/validation_service.dart';
 import '../../../models/operation_result.model.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 import '../../../utils/modal_sheet_helper.dart';
 import '../auth_services/account_verification.service.dart';
 import '../auth_services/authentication.service.dart';
@@ -171,7 +171,7 @@ class AuthenticationViewModel extends ChangeNotifier {
         );
       }
     } else {
-      print("request login REG");
+      debugPrint("request login REG");
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
       final completePhoneNumber =
@@ -179,7 +179,7 @@ class AuthenticationViewModel extends ChangeNotifier {
           ? '${phones.text}'
           : cCode + phones.text ?? "")
           .trim();
-      print("request login /////");
+      debugPrint("request login /////");
       OperationResult<Map<String, dynamic>> result =
       await AuthenticationService.login(
           context: context,
@@ -188,7 +188,7 @@ class AuthenticationViewModel extends ChangeNotifier {
           deviceInformation:
           appConfigServiceProvider.deviceInformation.toMap());
 
-      print("response login /////");
+      debugPrint("response login /////");
 
       if (result.success &&
           result.data != null &&

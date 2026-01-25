@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/constants/app_colors.dart';
-import 'package:app_test/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/general_services/app_theme.service.dart';
 import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:app_test/utils/componentes/general_components/all_text_field.dart';
@@ -9,9 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../constants/app_strings.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../general_services/localization.service.dart';
-import '../../../routing/app_router.dart';
+import '../../../core/routing/app_router.dart';
 void copyToClipboard(BuildContext context, {text}) {
   Clipboard.setData(ClipboardData(text: text));
   Fluttertoast.showToast(
@@ -69,7 +69,7 @@ Future<void> defaultActionBottomSheet2({
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          print("close1");
+          debugPrint("close1");
           if (home == true) {
             context.goNamed(AppRoutes.home.name,
                 pathParameters: {'lang': context.locale.languageCode});
@@ -82,7 +82,7 @@ Future<void> defaultActionBottomSheet2({
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {
-                  print("close2");
+                  debugPrint("close2");
                   if (home == true) {
                     context.goNamed(AppRoutes.home.name,
                         pathParameters: {
