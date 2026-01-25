@@ -1,15 +1,15 @@
 import 'package:app_test/modules/points/data/repositories/prize_repository/prize_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:app_test/general_services/app_config.service.dart';
+import 'package:app_test/core/services/app_config.service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/api/api_services.dart';
-import '../../../core/api/end_points.dart';
-import '../../../core/errors/failures.dart';
-import '../../models/Prize_model.dart';
-import '../../models/copoun_model.dart';
+import 'package:app_test/modules/points/core/api/api_services.dart';
+import 'package:app_test/modules/points/core/api/end_points.dart';
+import 'package:app_test/modules/points/core/errors/failures.dart';
+import 'package:app_test/modules/points/data/models/Prize_model.dart';
+import 'package:app_test/modules/points/data/models/copoun_model.dart';
 
 class GetPrizeRepositoryImplementation extends GetPrizeRepository {
   final ApiServices apiServices;

@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/controller/request_controller/request_controller.dart';
-import 'package:app_test/utils/componentes/general_components/all_text_field.dart';
+import 'package:app_test/core/controllers/request_controller/request_controller.dart';
+import 'package:app_test/core/widgets/all_text_field.dart';
 
-import '../../utils/componentes/general_components/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/gradient_bg_image.dart';
 
 class NewComplainScreen extends StatefulWidget {
   const NewComplainScreen({super.key});

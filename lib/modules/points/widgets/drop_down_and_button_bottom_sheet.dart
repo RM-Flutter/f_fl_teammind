@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/componentes/general_components/all_text_field.dart';
-import '../../home/view_models/home.viewmodel.dart';
+import 'package:app_test/core/widgets/all_text_field.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import '../logic/prize_cubit/prize_provider.dart';
 
 

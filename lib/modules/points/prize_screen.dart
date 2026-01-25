@@ -9,13 +9,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../utils/componentes/general_components/gradient_bg_image.dart';
-import '../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../home/view_models/home.viewmodel.dart';
+import 'package:app_test/core/widgets/gradient_bg_image.dart';
+import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import 'logic/points_cubit/points_provider.dart';
 
 class PrizeScreen extends StatefulWidget {

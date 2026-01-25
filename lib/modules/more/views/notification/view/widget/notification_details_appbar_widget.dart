@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/layout.service.dart';
-import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/models/get_one_notification_model.dart';
 
 

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/user_consts.dart';
-import '../../../../../general_services/app_info.service.dart';
-import '../../../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
-import '../../../../../general_services/url_launcher.service.dart';
-import '../../../../../models/settings/general_settings.model.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/services/app_info.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/url_launcher.service.dart';
+import 'package:app_test/models/settings/general_settings.model.dart';
 
 class CompanyStructureInfoViewModel extends ChangeNotifier {
   final double pageLeftRightPadding = AppSizes.s14;

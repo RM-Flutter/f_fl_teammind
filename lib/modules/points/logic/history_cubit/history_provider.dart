@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../core/errors/failures.dart';
-import '../../data/models/history_model.dart';
+import 'package:app_test/modules/points/core/errors/failures.dart';
+import 'package:app_test/modules/points/data/models/history_model.dart';
 import '../../data/repositories/history_repository/get_history_repository.dart';
 
 enum HistoryState { initial, loading, success, failure }

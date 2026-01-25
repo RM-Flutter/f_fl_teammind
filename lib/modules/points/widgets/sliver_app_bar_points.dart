@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
-import '../../home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
 
 class SliverAppBarPoints extends StatelessWidget {

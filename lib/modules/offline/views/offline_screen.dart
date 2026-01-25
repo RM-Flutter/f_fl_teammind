@@ -3,16 +3,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:app_test/common_modules_widgets/main_app_fab_widget/main_app_fab.service.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.service.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/internet_check.dart';
-import 'package:app_test/general_services/restart_app.dart';
-import 'package:app_test/general_services/offline_overlay.service.dart';
+import 'package:app_test/core/services/internet_check.dart';
+import 'package:app_test/core/services/restart_app.dart';
+import 'package:app_test/core/services/offline_overlay.service.dart';
 import 'package:app_test/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
-import '../../../core/constants/app_sizes.dart';
-import '../view_models/offline_viewmodel.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/modules/offline/view_models/offline_viewmodel.dart';
 
 class OfflineScreen extends StatefulWidget {
   const OfflineScreen({super.key});

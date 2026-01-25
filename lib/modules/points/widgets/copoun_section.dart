@@ -10,7 +10,7 @@
 // import 'package:provider/provider.dart';
 //
 // import '../../../controller/home_model/home_model.dart';
-// import '../core/functions/show_progress_indicator.dart';
+// import 'package:app_test/modules/points/core/functions/show_progress_indicator.dart';
 // import '../logic/prize_cubit/prize_provider.dart';
 //
 //

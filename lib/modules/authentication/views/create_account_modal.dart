@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/modules/authentication/view_models/login.viewmodel.dart';
-import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../core/constants/app_sizes.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../general_services/validation_service.dart';
-import '../view_models/create_account.viewmodel.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/validation_service.dart';
+import 'package:app_test/modules/authentication/view_models/create_account.viewmodel.dart';
 import 'widgets/phone_number_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

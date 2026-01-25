@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../general_services/layout.service.dart';
-import '../../viewmodels/personal_profile.viewmodel.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
 import 'personal_profile_header.widget.dart';
 
 class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {

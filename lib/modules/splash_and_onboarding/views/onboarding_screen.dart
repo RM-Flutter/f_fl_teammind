@@ -3,12 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/general_services/localization.service.dart';
-import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../common_modules_widgets/language_dropdown_button.widget.dart';
-import '../../../core/constants/app_sizes.dart';
-import '../../../core/constants/app_strings.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+
 import '../view_models/splash_onboarding.viewmodel.dart';
 
 class OnBoardingScreen extends StatelessWidget {

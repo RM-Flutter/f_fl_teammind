@@ -1,4 +1,4 @@
-import '../../general_services/dynamic_app_config.service.dart';
+import 'package:app_test/core/services/dynamic_app_config.service.dart';
 
 abstract class AppImages {
   // base images directories

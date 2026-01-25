@@ -10,12 +10,11 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/utils/componentes/general_components/all_bottom_sheet.dart';
-import 'package:app_test/utils/componentes/general_components/slider_home_menu.dart';
-
-import '../../home/view_models/home.viewmodel.dart';
+import 'package:app_test/core/widgets/all_bottom_sheet.dart';
+import 'package:app_test/core/widgets/slider_home_menu.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 
 
 class ReferralSection extends StatefulWidget {

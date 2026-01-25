@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 
 class CompanyInfoShrinkedHeader extends StatelessWidget {
   final double notchRadius;

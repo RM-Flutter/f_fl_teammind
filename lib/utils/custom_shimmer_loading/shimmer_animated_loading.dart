@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 
 class ShimmerAnimatedLoading extends StatefulWidget {
   final double? height, width, circularRaduis, maxHeight, maxWidth;

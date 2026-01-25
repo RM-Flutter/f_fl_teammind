@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_images.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../core/routing/app_router.dart';
-import '../view_models/main_viewmodel.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/modules/main_screen/view_models/main_viewmodel.dart';
 
 class BottomNavigationBarModel {
   final String icon;

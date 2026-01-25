@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 class WebViewStack extends StatefulWidget {
   const WebViewStack({super.key});

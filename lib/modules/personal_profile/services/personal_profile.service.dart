@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
-import 'package:app_test/general_services/backend_services/get_endpoint.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart';
+import 'package:app_test/core/services/backend_services/get_endpoint.service.dart';
 import 'package:app_test/models/endpoint.model.dart';
 import 'package:app_test/models/operation_result.model.dart';
 
-import '../../../core/constants/string_convert.dart';
+import 'package:app_test/core/constants/string_convert.dart';
 
 abstract class PersonalProfileService {
   // update password

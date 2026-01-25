@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../utils/componentes/general_components/all_bottom_sheet.dart';
-import '../../home/view_models/home.viewmodel.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/widgets/all_bottom_sheet.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
 
 class SendPointConfirmBottomsheet extends StatelessWidget {

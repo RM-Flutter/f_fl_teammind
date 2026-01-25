@@ -4,17 +4,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/common_modules_widgets/comments/comments_widget.dart';
-import 'package:app_test/common_modules_widgets/comments/logic/view_model.dart';
+import 'package:app_test/core/widgets/comments/comments_widget.dart';
+import 'package:app_test/core/widgets/comments/logic/view_model.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/controller/request_controller/request_controller.dart';
+import 'package:app_test/core/controllers/request_controller/request_controller.dart';
 import 'package:app_test/modules/complain_screen/widget/full_image_screen.dart';
 import 'package:app_test/modules/complain_screen/widget/request_details_appbar_widget.dart';
 import 'package:app_test/modules/complain_screen/widget/request_details_loading_screen.dart';
 import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../utils/componentes/general_components/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/gradient_bg_image.dart';
 
 
   class ComplainDetailsScreen extends StatefulWidget {

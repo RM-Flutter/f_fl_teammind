@@ -9,16 +9,16 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/controller/request_controller/request_controller.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/general_services/layout.service.dart';
-import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/core/controllers/request_controller/request_controller.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../utils/componentes/general_components/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/gradient_bg_image.dart';
 
 class ComplainScreen extends StatefulWidget {
   const ComplainScreen({super.key});

@@ -4,15 +4,15 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:app_test/common_modules_widgets/template_page.widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/more/views/notification/logic/notification_provider.dart';
 import 'package:app_test/utils/widgets/text_form_widget.dart';
 
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/check_values.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/check_values.dart';
 
 
 class AddNotificationScreen extends StatefulWidget {

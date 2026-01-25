@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_images.dart';
-import '../../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 
 class NoExistingPlaceholderScreen extends StatelessWidget {
   final String title;

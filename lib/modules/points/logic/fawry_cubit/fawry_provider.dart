@@ -5,19 +5,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/alert_service/alerts.service.dart';
-import 'package:app_test/general_services/app_config.service.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/general_services/birthday_checker.service.dart';
-import 'package:app_test/general_services/localization.service.dart';
-import 'package:app_test/general_services/settings.service.dart';
+import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/core/services/birthday_checker.service.dart';
+import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/settings.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/models/settings/user_settings_2.model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/constants/user_consts.dart';
-import '../../../../general_services/app_theme.service.dart';
-import '../../../../utils/componentes/general_components/all_bottom_sheet.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/services/app_theme.service.dart';
+import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 
 
 class FawryProviderModel extends ChangeNotifier {

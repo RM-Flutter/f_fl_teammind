@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../core/errors/failures.dart';
-import '../../data/models/condition_model.dart';
+import 'package:app_test/modules/points/core/errors/failures.dart';
+import 'package:app_test/modules/points/data/models/condition_model.dart';
 import '../../data/repositories/condition_repository/condition_repository.dart';
 
 class ConditionProvider with ChangeNotifier {

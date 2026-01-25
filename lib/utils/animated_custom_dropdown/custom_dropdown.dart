@@ -5,7 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
-import '../../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 part 'animated_section.dart';
 part 'dropdown_field.dart';
 part 'dropdown_overlay.dart';

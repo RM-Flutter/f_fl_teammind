@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/modules/more/views/lang_setting/logic/lang_controller.dart';
 
-import '../../../../core/constants/user_consts.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 
 class LangSettingScreens extends StatefulWidget {
   const LangSettingScreens({super.key});

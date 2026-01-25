@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import '../../../core/errors/failures.dart';
-import '../../models/Prize_model.dart';
-import '../../models/copoun_model.dart';
+import 'package:app_test/modules/points/core/errors/failures.dart';
+import 'package:app_test/modules/points/data/models/Prize_model.dart';
+import 'package:app_test/modules/points/data/models/copoun_model.dart';
 
 abstract class GetPrizeRepository {
   Future<Either<Failure,PrizeModel>> getPrize();

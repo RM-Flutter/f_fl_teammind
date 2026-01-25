@@ -5,11 +5,11 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../controller/device_sys/device_controller.dart';
-import '../../../../general_services/app_config.service.dart';
-import '../../../../general_services/layout.service.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/controllers/device_sys/device_controller.dart';
+import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/layout.service.dart';
 
 class UserDeviceScreen extends StatefulWidget {
   const UserDeviceScreen({super.key});

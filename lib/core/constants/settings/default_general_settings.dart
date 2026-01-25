@@ -1,4 +1,4 @@
-import '../../../models/settings/general_settings.model.dart';
+import 'package:app_test/models/settings/general_settings.model.dart';
 import '../app_images.dart';
 
 /// getter for default [generalSettings].

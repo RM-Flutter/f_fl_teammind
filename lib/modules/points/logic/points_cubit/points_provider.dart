@@ -3,8 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/alert_service/alerts.service.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 
 class PointsProvider extends ChangeNotifier {

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/componentes/general_components/all_text_field.dart';
-import '../../home/view_models/home.viewmodel.dart';
+import 'package:app_test/core/widgets/all_text_field.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import '../logic/points_cubit/points_provider.dart';
 
 class SendPointFriendBottomSheet extends StatelessWidget {

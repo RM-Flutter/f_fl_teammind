@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
-import '../models/company_tree_node.model.dart';
-import '../services/general.service.dart';
+import 'package:app_test/modules/more/views/company_structure/models/company_tree_node.model.dart';
+import 'package:app_test/modules/more/views/company_structure/services/general.service.dart';
 
 class CompanyStructureTreeViewModel extends ChangeNotifier {
   List<CompanyTreeNodeModel>? companyStructureTree;

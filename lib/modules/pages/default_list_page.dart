@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../core/constants/app_sizes.dart';
-import '../../core/constants/app_strings.dart';
-import '../../general_services/layout.service.dart';
-import '../../core/routing/app_router.dart';
-import '../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../utils/gradient_bg_image.dart';
-import '../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/utils/gradient_bg_image.dart';
+import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 class DefaultListPage extends StatefulWidget {
   var type;

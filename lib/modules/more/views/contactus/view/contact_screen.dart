@@ -3,11 +3,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/modules/more/views/contactus/controller/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 

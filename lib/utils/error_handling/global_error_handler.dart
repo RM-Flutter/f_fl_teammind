@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../general_services/telegram_error_service.dart';
+import 'package:app_test/core/services/telegram_error_service.dart';
 
 void registerErrorHandlers() {
   // * Show some error UI if any uncaught exception happens

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/general_services/localization.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/localization.service.dart';
 
-import '../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 
 class GeneralScreenMessageWidget extends StatelessWidget {
   /// current Screen route

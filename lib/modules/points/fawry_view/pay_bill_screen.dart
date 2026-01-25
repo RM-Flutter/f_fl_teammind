@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/layout.service.dart';
+import 'package:app_test/core/services/layout.service.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../common_modules_widgets/button_widget.dart';
-import '../../../utils/gradient_bg_image.dart';
-import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/button_widget.dart';
+import 'package:app_test/utils/gradient_bg_image.dart';
+import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../logic/fawry_cubit/fawry_provider.dart';
 
 class PayBillScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/modules/home/widget/appbar_profile_container.dart';
 import 'package:app_test/modules/home/widget/home_grid_view.dart';
@@ -8,9 +8,9 @@ import 'package:app_test/modules/personal_profile/views/personal_profile_screen.
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../general_services/general_listener.dart';
-import '../../../utils/componentes/general_components/gradient_bg_image.dart';
-import '../view_models/home.viewmodel.dart';
+import 'package:app_test/core/services/general_listener.dart';
+import 'package:app_test/core/widgets/gradient_bg_image.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

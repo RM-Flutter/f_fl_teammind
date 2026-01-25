@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
-import '../core/constants/app_sizes.dart';
-import '../models/operation_result.model.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/models/operation_result.model.dart';
 import 'package:flutter/material.dart';
 
 abstract class ModalSheetHelper {

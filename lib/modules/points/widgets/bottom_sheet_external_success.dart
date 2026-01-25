@@ -6,9 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/general_services/app_theme.service.dart';
-import 'package:app_test/general_services/localization.service.dart';
-import '../../../utils/componentes/general_components/all_bottom_sheet.dart';
+import 'package:app_test/core/services/app_theme.service.dart';
+import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 
 class PointsSuccessSheet{
  static void showConfirmationSheet(BuildContext context, {onTap}) {

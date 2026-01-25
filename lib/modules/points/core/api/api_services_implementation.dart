@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:app_test/core/constants/app_constants.dart';
-import 'package:app_test/general_services/app_config.service.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

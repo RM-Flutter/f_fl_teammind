@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:app_test/general_services/webview_offers.dart';
+import 'package:app_test/core/services/webview_offers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'app_colors.dart';
 import 'app_strings.dart';
-import '../../general_services/localization.service.dart';
+import 'package:app_test/core/services/localization.service.dart';
 import '../routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';

@@ -10,9 +10,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/general_services/alert_service/alerts.service.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/models/get_one_notification_model.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 

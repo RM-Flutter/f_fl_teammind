@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import '../core/api/api_services_implementation.dart';
+import 'package:app_test/modules/points/core/api/api_services_implementation.dart';
 import '../data/repositories/condition_repository/condition_repository_implementation.dart';
 import '../data/repositories/history_repository/get_history_repository_implementation.dart';
 import '../logic/condition_cubit/condition_provider.dart';

@@ -3,12 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
-import '../../home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 
 class ContactSelectionScreen extends StatefulWidget {
   const ContactSelectionScreen({super.key});
