@@ -23,7 +23,7 @@ import 'package:app_test/core/services/date.service.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/settings.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/modules/personal_profile/services/personal_profile.service.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 

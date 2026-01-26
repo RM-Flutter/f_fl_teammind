@@ -13,8 +13,8 @@ import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/models/get_one_notification_model.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/modules/more/views/notification/models/get_one_notification_model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 
 class NotificationProviderModel extends ChangeNotifier {
   bool isLoading = false;

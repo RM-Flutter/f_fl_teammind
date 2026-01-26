@@ -13,7 +13,7 @@ import 'package:app_test/core/controllers/request_controller/request_controller.
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';

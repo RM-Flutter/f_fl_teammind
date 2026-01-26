@@ -1,8 +1,8 @@
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart';
 import 'package:app_test/core/services/backend_services/get_endpoint.service.dart';
-import 'package:app_test/models/endpoint.model.dart';
-import 'package:app_test/models/operation_result.model.dart';
+import 'package:app_test/core/models/endpoint.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 

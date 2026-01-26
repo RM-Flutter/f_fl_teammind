@@ -23,7 +23,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/models/settings/general_settings.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/modules/authentication/controllers/login_controller.dart';
 import '../../../core/utils/overlay_gradient_widget.dart';

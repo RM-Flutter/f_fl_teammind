@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/models/color_palette.model.dart';
-import 'package:app_test/models/color_value.model.dart';
+import 'package:app_test/core/models/color_palette.model.dart';
+import 'package:app_test/core/models/color_value.model.dart';
 import 'localization.service.dart';
 
 abstract class AppThemeService {

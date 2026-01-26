@@ -12,7 +12,7 @@ import 'package:app_test/core/services/requests.services.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_icons.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/modules/home/controllers/home_controller.dart';

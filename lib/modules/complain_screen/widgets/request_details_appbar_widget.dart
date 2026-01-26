@@ -5,7 +5,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/models/get_one_request_model.dart';
+import 'package:app_test/modules/complain_screen/models/get_one_request_model.dart';
 
 
 class RequestDetailsAppbarWidget extends StatelessWidget {

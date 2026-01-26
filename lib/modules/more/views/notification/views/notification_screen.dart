@@ -13,7 +13,7 @@ import 'package:app_test/core/services/app_theme.service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/modules/more/views/notification/controllers/notification_provider.dart';
 import 'package:app_test/modules/more/views/notification/views/notification_list_view_item.dart';
 import 'package:app_test/modules/more/views/notification/views/widgets/switch_row_notification.dart';

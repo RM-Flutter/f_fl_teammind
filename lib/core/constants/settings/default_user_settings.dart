@@ -1,4 +1,4 @@
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 
 /// getter for default [userSettings].
 final UserSettingsModel defaultUserSettings =

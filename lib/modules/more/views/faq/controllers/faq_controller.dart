@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/modules/more/views/faq/controllers/get_faq_model.dart';
+import 'package:app_test/modules/more/views/faq/models/get_faq_model.dart';
 
 class FaqModelProvider extends ChangeNotifier{
   bool isLoading = false;

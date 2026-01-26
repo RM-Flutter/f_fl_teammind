@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:app_test/models/operation_result.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:dio/dio.dart';
@@ -28,7 +28,7 @@ import 'package:wifi_scan/wifi_scan.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
 import 'package:app_test/core/services/image_file_picker.service.dart';
 import 'package:app_test/core/services/settings.service.dart';
-import 'package:app_test/models/settings/general_settings.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/services/fingerprint_service.dart';
 import 'widgets/qrcode_Scanner_view.widget.dart';
 

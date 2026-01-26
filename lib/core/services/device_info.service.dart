@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:app_test/models/device_information.model.dart';
+import 'package:app_test/core/models/device_information.model.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'app_config.service.dart';
 

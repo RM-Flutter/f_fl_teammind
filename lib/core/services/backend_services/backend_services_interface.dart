@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/models/operation_result.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
 
 abstract class BackEndServicesInterface {
   static Function(dynamic response)? unauthrizedCallback;

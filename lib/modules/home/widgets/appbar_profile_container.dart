@@ -15,7 +15,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 
 class AppbarProfileContainer extends StatelessWidget {
    String? imageUrl;

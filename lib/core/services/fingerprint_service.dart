@@ -7,8 +7,8 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/backend_services/get_endpoint.service.dart';
 import 'package:app_test/core/services/connections.service.dart';
 import 'package:app_test/core/services/db_hive.service.dart';
-import 'package:app_test/models/endpoint.model.dart';
-import 'package:app_test/models/operation_result.model.dart';
+import 'package:app_test/core/models/endpoint.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
 
 enum Order { asc, desc }
 

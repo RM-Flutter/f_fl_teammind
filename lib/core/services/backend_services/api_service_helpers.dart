@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/models/operation_result.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
 import '../app_config.service.dart';
 import 'api_service/dio_api_service/dio_api.service.dart';
 import 'backend_services_interface.dart';

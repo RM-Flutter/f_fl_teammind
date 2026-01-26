@@ -8,7 +8,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/models/settings/general_settings.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/modules/more/views/lang_setting/controllers/lang_controller.dart';
 

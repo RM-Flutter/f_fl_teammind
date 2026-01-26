@@ -11,8 +11,8 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/birthday_checker.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/core/services/settings.service.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
-import 'package:app_test/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:app_test/core/constants/user_consts.dart';

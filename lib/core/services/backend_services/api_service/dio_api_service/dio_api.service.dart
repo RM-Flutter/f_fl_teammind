@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:app_test/core/routing/app_router.dart';
 
-import 'package:app_test/models/operation_result.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
 import '../../../app_config.service.dart';
 import '../../../telegram_error_service.dart';
 import '../../api_service_helpers.dart';

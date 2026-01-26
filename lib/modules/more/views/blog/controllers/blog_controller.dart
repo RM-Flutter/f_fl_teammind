@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/models/get_one_blog_model.dart';
+import 'package:app_test/modules/more/views/blog/models/get_one_blog_model.dart';
 
 class BlogProviderModel extends ChangeNotifier {
   bool isGetBlogLoading = false;

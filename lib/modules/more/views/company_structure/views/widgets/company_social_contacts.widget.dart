@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/url_launcher.service.dart';
-import 'package:app_test/models/settings/general_settings.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
 
 class CompanySocialContacts extends StatelessWidget {
   final CompanyContacts socialData;

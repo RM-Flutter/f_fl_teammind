@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/modules/more/views/aboutus/controllers/get_about_model.dart';
+import 'package:app_test/modules/more/views/aboutus/models/get_about_model.dart';
 
 class AboutUsLogicProvider extends ChangeNotifier{
   bool isLoading = false;

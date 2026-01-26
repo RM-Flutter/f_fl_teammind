@@ -1,6 +1,6 @@
-import 'package:app_test/models/settings/general_settings.model.dart';
-import 'package:app_test/models/settings/user_settings.model.dart';
-import 'package:app_test/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 
 class UserSettingConst{
   static UserSettingsModel? userSettings;

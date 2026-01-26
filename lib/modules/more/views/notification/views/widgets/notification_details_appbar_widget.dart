@@ -5,7 +5,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/models/get_one_notification_model.dart';
+import 'package:app_test/modules/more/views/notification/models/get_one_notification_model.dart';
 
 
 class NotificationDetailsAppbarWidget extends StatelessWidget {
