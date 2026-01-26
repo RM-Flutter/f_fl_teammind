@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_theme.service.dart';
-import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
+import 'package:app_test/features/authentication/views/widgets/phone_number_field.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';

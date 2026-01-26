@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_test/modules/offline/views/offline_screen.dart';
+import 'package:app_test/features/offline/views/offline_screen.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
 class OfflineOverlayService {

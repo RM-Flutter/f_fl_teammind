@@ -10,8 +10,8 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/modules/complaints/models/get_one_request_model.dart';
-import 'package:app_test/modules/complaints/views/widgets/success_send_complain.dart';
+import 'package:app_test/features/complaints/models/get_one_request_model.dart';
+import 'package:app_test/features/complaints/views/widgets/success_send_complain.dart';
 
 class RequestController extends ChangeNotifier {
   bool isGetRequestLoading = false;

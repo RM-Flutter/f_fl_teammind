@@ -1,5 +1,5 @@
 import 'package:app_test/core/widgets/comments/comments_audio_widget.dart';
-import 'package:app_test/modules/complaints/views/widgets/full_image_screen.dart';
+import 'package:app_test/features/complaints/views/widgets/full_image_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
