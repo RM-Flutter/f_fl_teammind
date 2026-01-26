@@ -10,7 +10,7 @@ import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
-import '../view_models/splash_onboarding.viewmodel.dart';
+import 'package:app_test/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});

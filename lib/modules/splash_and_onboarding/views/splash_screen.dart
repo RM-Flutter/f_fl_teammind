@@ -20,7 +20,7 @@ import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/core/services/domain_selection.service.dart';
 import 'package:app_test/utils/overlay_gradient_widget.dart';
 
-import '../view_models/splash_onboarding.viewmodel.dart';
+import 'package:app_test/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
