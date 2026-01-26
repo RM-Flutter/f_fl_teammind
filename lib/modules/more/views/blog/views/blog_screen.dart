@@ -3,7 +3,7 @@
 // import 'package:app_test/core/constants/app_sizes.dart';
 // import 'package:app_test/core/constants/app_strings.dart';
 // import 'package:provider/provider.dart';
-// import 'package:app_test/modules/more/views/blog/view_models/blog_controller.dart';
+// import 'package:app_test/modules/more/views/blog/controllers/blog_controller.dart';
 // import 'package:app_test/modules/more/views/blog/widgets/blog_list_view_item.dart';
 // import 'package:shimmer/shimmer.dart';
 //

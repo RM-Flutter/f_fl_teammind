@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/services/general_listener.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,10 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
     }
-    return ChangeNotifierProvider(create: (context) => HomeViewModel()..initializeHomeScreen(context, [   "general_settings",
+    return ChangeNotifierProvider(create: (context) => HomeController()..initializeHomeScreen(context, [   "general_settings",
       "user_settings",
       "user2_settings",]),
-    child: Consumer<HomeViewModel>(
+    child: Consumer<HomeController>(
       builder: (context, value, child) {
       return Scaffold(
         backgroundColor: const Color(0xffFFFFFF),

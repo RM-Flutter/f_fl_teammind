@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import '../view_models/company_structure_tree.viewmodel.dart';
+import '../controllers/company_structure_tree_controller.dart';
 import 'widgets/company_tree_node.widget.dart';
 
 class CompanyStructureTreeScreen extends StatefulWidget {
@@ -18,17 +18,17 @@ class CompanyStructureTreeScreen extends StatefulWidget {
 
 class _CompanyStructureTreeScreenState
     extends State<CompanyStructureTreeScreen> {
-  late final CompanyStructureTreeViewModel viewModel;
+  late final CompanyStructureTreeController viewModel;
   @override
   void initState() {
     super.initState();
-    viewModel = CompanyStructureTreeViewModel();
+    viewModel = CompanyStructureTreeController();
     viewModel.initializeCompanyinformationScreen(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CompanyStructureTreeViewModel>(
+    return ChangeNotifierProvider<CompanyStructureTreeController>(
         create: (_) => viewModel,
         child: Scaffold(
             appBar: AppBar(
@@ -54,7 +54,7 @@ class _CompanyStructureTreeScreenState
               backgroundColor: Colors.transparent,
             ),
             backgroundColor: Colors.white,
-            body: Consumer<CompanyStructureTreeViewModel>(
+            body: Consumer<CompanyStructureTreeController>(
                 builder: (context, viewModel, child) {
               if (viewModel.isLoading) {
                 return const Center(

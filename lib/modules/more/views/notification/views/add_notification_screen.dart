@@ -8,7 +8,7 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/modules/more/views/notification/view_models/notification_provider.dart';
+import 'package:app_test/modules/more/views/notification/controllers/notification_provider.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
 
 import 'package:app_test/core/constants/app_sizes.dart';

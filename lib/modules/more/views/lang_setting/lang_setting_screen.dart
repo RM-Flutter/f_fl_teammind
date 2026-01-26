@@ -10,7 +10,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/modules/more/views/lang_setting/view_models/lang_controller.dart';
+import 'package:app_test/modules/more/views/lang_setting/controllers/lang_controller.dart';
 
 import 'package:app_test/core/constants/user_consts.dart';
 

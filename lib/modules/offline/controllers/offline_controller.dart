@@ -15,7 +15,7 @@ import 'package:app_test/core/services/settings.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
-class OfflineViewModel with ChangeNotifier {
+class OfflineController with ChangeNotifier {
   final List<String> _usersFingerprints = [];
   bool isLoadingFingerprints = true;
   List<Map<String, dynamic>>? savedFingerprints = [];

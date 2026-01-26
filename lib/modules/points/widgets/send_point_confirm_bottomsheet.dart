@@ -5,8 +5,8 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../view_models/points_cubit/points_provider.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
+import '../controllers/points_cubit/points_provider.dart';
 
 class SendPointConfirmBottomsheet extends StatelessWidget {
   var user;
@@ -18,7 +18,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => PointsProvider(),
-      child: Consumer<HomeViewModel>(
+      child: Consumer<HomeController>(
         builder: (context, values, child) {
           return Consumer<PointsProvider>(
             builder: (context, value, child) {

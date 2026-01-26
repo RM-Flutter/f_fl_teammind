@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
-import '../view_models/condition_cubit/condition_provider.dart';
+import '../controllers/condition_cubit/condition_provider.dart';
 
 class ConditionSection extends StatelessWidget {
   const ConditionSection({super.key});

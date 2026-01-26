@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:app_test/core/widgets/comments/logic/view_model.dart';
+import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 

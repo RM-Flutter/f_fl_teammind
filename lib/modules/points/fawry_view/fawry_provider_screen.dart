@@ -10,7 +10,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
-import '../view_models/fawry_cubit/fawry_provider.dart';
+import '../controllers/fawry_cubit/fawry_provider.dart';
 
 class FawryProviderScreen extends StatelessWidget {
   const FawryProviderScreen({super.key});

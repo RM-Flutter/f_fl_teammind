@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/modules/more/views/faq/view_models/faq_model.dart';
-import 'package:app_test/modules/more/views/faq/view_models/get_faq_model.dart';
+import 'package:app_test/modules/more/views/faq/controllers/faq_model.dart';
+import 'package:app_test/modules/more/views/faq/controllers/get_faq_model.dart';
 import 'package:app_test/modules/more/views/faq/views/faq_loading_widget.dart';
 
 class FaqScreen extends StatefulWidget {

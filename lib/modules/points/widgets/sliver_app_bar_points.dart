@@ -8,8 +8,8 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../view_models/points_cubit/points_provider.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
+import '../controllers/points_cubit/points_provider.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;
@@ -21,7 +21,7 @@ class SliverAppBarPoints extends StatelessWidget {
       create: (context) => PointsProvider(),
       child: Consumer<PointsProvider>(
         builder: (context, pointsProvider, child) {
-          return Consumer<HomeViewModel>(
+          return Consumer<HomeController>(
             builder: (context, value, child) {
               final json2String = CacheHelper.getString("US2");
               Map<String, dynamic> us2Cache = {};

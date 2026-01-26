@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import '../view_models/company_structure_info.viewmodel.dart';
+import '../controllers/company_structure_info_controller.dart';
 import 'widgets/company_info_header/company_info_header_widget.dart';
 
 class CompanyStructureInfoScreen extends StatefulWidget {
@@ -16,19 +16,19 @@ class CompanyStructureInfoScreen extends StatefulWidget {
 
 class _CompanyStructureInfoScreenState
     extends State<CompanyStructureInfoScreen> {
-  late final CompanyStructureInfoViewModel viewModel;
+  late final CompanyStructureInfoController viewModel;
   @override
   void initState() {
     super.initState();
-    viewModel = CompanyStructureInfoViewModel();
+    viewModel = CompanyStructureInfoController();
     viewModel.initializeCompanyinformationScreen(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CompanyStructureInfoViewModel>(
+    return ChangeNotifierProvider<CompanyStructureInfoController>(
       create: (_) => viewModel,
-      child: Consumer<CompanyStructureInfoViewModel>(
+      child: Consumer<CompanyStructureInfoController>(
         builder: (context, viewModel, child) => Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(

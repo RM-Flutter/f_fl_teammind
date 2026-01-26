@@ -14,14 +14,14 @@ import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
-import 'package:app_test/modules/personal_profile/view_models/personal_profile.viewmodel.dart';
+import 'package:app_test/modules/personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 class PersonalProfileHeaderWidget extends StatelessWidget {
-  final PersonalProfileViewModel viewModel;
+  final PersonalProfileController viewModel;
   final String headerImage;
   final double notchedContainerHeight;
   final double backgroundHeight;

@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/modules/authentication/view_models/login.viewmodel.dart';
+import 'package:app_test/modules/authentication/controllers/login_controller.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/modules/authentication/view_models/create_account.viewmodel.dart';
+import 'package:app_test/modules/authentication/controllers/create_account_controller.dart';
 import 'widgets/phone_number_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,14 +30,14 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers:[
-          ChangeNotifierProvider<AuthenticationViewModel>(
-            create: (_) => AuthenticationViewModel(),),
-          ChangeNotifierProvider<CreateAccountViewModel>(
-            create: (_) => CreateAccountViewModel(),),
+          ChangeNotifierProvider<AuthenticationController>(
+            create: (_) => AuthenticationController(),),
+          ChangeNotifierProvider<CreateAccountController>(
+            create: (_) => CreateAccountController(),),
         ],
-        child: Consumer<AuthenticationViewModel>(
-            builder:(context, authenticationViewModel, child){
-              return Consumer<CreateAccountViewModel>(
+        child: Consumer<AuthenticationController>(
+            builder:(context, authenticationController, child){
+              return Consumer<CreateAccountController>(
                   builder: (context, viewModel, child) {
                     return Form(
                       key: viewModel.formKey,
@@ -159,14 +159,14 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
                                           making: (){
                                             if(viewModel.phoneController.text.isEmpty){
                                               setState(() {
-                                                authenticationViewModel.isPhoneLogin = false;
+                                                authenticationController.isPhoneLogin = false;
                                               });
                                             }else{
                                               setState(() {
-                                                authenticationViewModel.isPhoneLogin = true;
+                                                authenticationController.isPhoneLogin = true;
                                               });
                                             }
-                                            authenticationViewModel.login(
+                                            authenticationController.login(
                                                 context: context,
                                                 password: viewModel.passwordController.text,
                                                 email: viewModel.emailController.text,

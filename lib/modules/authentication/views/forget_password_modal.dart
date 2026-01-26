@@ -5,8 +5,8 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/modules/authentication/view_models/forgot_password.viewmodel.dart';
-import 'package:app_test/modules/authentication/view_models/login.viewmodel.dart';
+import 'package:app_test/modules/authentication/controllers/forgot_password_controller.dart';
+import 'package:app_test/modules/authentication/controllers/login_controller.dart';
 import 'widgets/phone_number_field.dart';
 import 'widgets/switch_row_widget.dart';
 import 'widgets/verification_tile_widget.dart';
@@ -24,12 +24,12 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider<ForgotPasswordViewModel>(create: (_) => ForgotPasswordViewModel()..init(widget.isPhoneLogin),),
-      ChangeNotifierProvider<AuthenticationViewModel>(create: (_) => AuthenticationViewModel(),),
+      ChangeNotifierProvider<ForgotPasswordController>(create: (_) => ForgotPasswordController()..init(widget.isPhoneLogin),),
+      ChangeNotifierProvider<AuthenticationController>(create: (_) => AuthenticationController(),),
     ],
-    child: Consumer<AuthenticationViewModel>(
-      builder: (context, authenticationViewModel, child) {
-        return Consumer<ForgotPasswordViewModel>(
+    child: Consumer<AuthenticationController>(
+      builder: (context, authenticationController, child) {
+        return Consumer<ForgotPasswordController>(
           builder: (context, viewModel, child) {
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -130,14 +130,14 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                                 mak: ()async{
                                   if(viewModel.phoneController.text.isEmpty){
                                     setState(() {
-                                      authenticationViewModel.isPhoneLogin = false;
+                                      authenticationController.isPhoneLogin = false;
                                     });
                                   }else{
                                     setState(() {
-                                      authenticationViewModel.isPhoneLogin = true;
+                                      authenticationController.isPhoneLogin = true;
                                     });
                                   }
-                                 authenticationViewModel.login(
+                                 authenticationController.login(
                                       context: context,
                                       password: viewModel.newPasswordController.text,
                                       email: viewModel.emailController,

@@ -12,7 +12,7 @@ import 'package:app_test/core/services/restart_app.dart';
 import 'package:app_test/core/services/offline_overlay.service.dart';
 import 'package:app_test/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/modules/offline/view_models/offline_viewmodel.dart';
+import 'package:app_test/modules/offline/controllers/offline_controller.dart';
 
 class OfflineScreen extends StatefulWidget {
   const OfflineScreen({super.key});
@@ -66,7 +66,7 @@ class _OfflineScreenState extends State<OfflineScreen> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) {
-            final viewModel = OfflineViewModel()..initialize(ctx: context);
+            final viewModel = OfflineController()..initialize(ctx: context);
             // Reload fingerprints after provider is created
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) {
@@ -93,7 +93,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
     // Reload fingerprints when screen becomes visible
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        final viewModel = Provider.of<OfflineViewModel>(context, listen: false);
+        final viewModel = Provider.of<OfflineController>(context, listen: false);
         viewModel.loadFingerprintsFromPreferences();
       }
     });
@@ -102,7 +102,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consumer2<OfflineViewModel, ConnectionService>(
+        body: Consumer2<OfflineController, ConnectionService>(
           builder: (context, viewModel, connectionService, _) {
             // Listen to connection changes and close overlay automatically when connection is restored
             WidgetsBinding.instance.addPostFrameCallback((_) {

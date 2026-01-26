@@ -10,7 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../view_models/fawry_cubit/fawry_provider.dart';
+import '../controllers/fawry_cubit/fawry_provider.dart';
 
 class PayBillScreen extends StatefulWidget {
   var title;

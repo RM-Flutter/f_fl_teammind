@@ -6,8 +6,8 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../view_models/points_cubit/points_provider.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
+import '../controllers/points_cubit/points_provider.dart';
 
 class AddFriendBottomSheet extends StatelessWidget {
   const AddFriendBottomSheet({super.key});
@@ -16,9 +16,9 @@ class AddFriendBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => PointsProvider(),),
-      ChangeNotifierProvider(create: (context) => HomeViewModel(),),
+      ChangeNotifierProvider(create: (context) => HomeController(),),
     ],
-    child: Consumer<HomeViewModel>(
+    child: Consumer<HomeController>(
       builder: (context, values, child) {
         return Consumer<PointsProvider>(
           builder: (context, value, child) {

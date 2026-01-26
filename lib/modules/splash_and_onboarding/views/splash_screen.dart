@@ -8,7 +8,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/models/settings/user_settings_2.model.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 import 'package:app_test/core/widgets/dynamic_image_widget.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -18,7 +18,7 @@ import 'package:app_test/core/services/device_info.service.dart';
 import 'package:app_test/core/services/internet_check.dart';
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/core/services/domain_selection.service.dart';
-import 'package:app_test/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart';
+import 'package:app_test/modules/splash_and_onboarding/controllers/splash_onboarding_controller.dart';
 
 import '../../../core/utils/overlay_gradient_widget.dart';
 
@@ -30,8 +30,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late final OnboardingViewModel viewModel;
-  late final HomeViewModel homeViewModel;
+  late final OnboardingController viewModel;
+  late final HomeController homeController;
   bool _initializationCompleted = false;
   bool _isInitializing = false;
   ConnectionService? _connectionService;
@@ -50,8 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState(){
     super.initState();
-    homeViewModel = HomeViewModel();
-    viewModel = OnboardingViewModel();
+    homeController = HomeController();
+    viewModel = OnboardingController();
     
     initializeHomeAndSplash();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -149,7 +149,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     
     try {
-      await homeViewModel.initializeHomeScreen(context, null);
+      await homeController.initializeHomeScreen(context, null);
     } catch (e) {
       print("❌ Error in initializeHomeScreen, continuing anyway: $e");
       // Continue even if home screen initialization fails (e.g., due to network issues)
@@ -226,7 +226,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<OnboardingViewModel>(
+    return ChangeNotifierProvider<OnboardingController>(
         create: (context) => viewModel,
         child: Scaffold(
             body: Stack(

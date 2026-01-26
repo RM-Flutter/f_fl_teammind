@@ -15,9 +15,9 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 import '../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../personal_profile/view_models/personal_profile.viewmodel.dart';
+import '../../personal_profile/controllers/personal_profile_controller.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -38,7 +38,7 @@ class _MoreScreenState extends State<MoreScreen> {
       } else if (isLogout.value == true) {
         context.pop();
 
-        PersonalProfileViewModel().logout(context: context);
+        PersonalProfileController().logout(context: context);
       }
     });
   }
@@ -58,7 +58,7 @@ class _MoreScreenState extends State<MoreScreen> {
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
 
-    return Consumer<HomeViewModel>(
+    return Consumer<HomeController>(
       builder: (context, value, child) {
         return Stack(
           alignment: Alignment.center,

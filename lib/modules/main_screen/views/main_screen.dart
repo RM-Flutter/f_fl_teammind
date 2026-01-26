@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/modules/main_screen/view_models/main_viewmodel.dart';
+import 'package:app_test/modules/main_screen/controllers/main_controller.dart';
 
 class BottomNavigationBarModel {
   final String icon;
@@ -46,7 +46,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ConnectionsService.init();
-    final viewModel = Provider.of<MainScreenViewModel>(context);
+    final viewModel = Provider.of<MainScreenController>(context);
     viewModel.currentPage = currentNavPage;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

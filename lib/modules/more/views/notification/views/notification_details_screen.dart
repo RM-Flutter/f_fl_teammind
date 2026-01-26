@@ -1,15 +1,15 @@
-  import 'package:app_test/core/controllers/complain_controller/complain_viewmodel.dart';
+  import 'package:app_test/core/controllers/complain_controller/complain_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
   import 'package:easy_localization/easy_localization.dart';
   import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
   import 'package:provider/provider.dart';
-import 'package:app_test/core/widgets/comments/logic/view_model.dart';
+import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/complain_screen/widgets/full_image_screen.dart';
-import 'package:app_test/modules/more/views/notification/view_models/notification_provider.dart';
+import 'package:app_test/modules/more/views/notification/controllers/notification_provider.dart';
 import 'package:app_test/modules/more/views/notification/views/widgets/notification_details_appbar_widget.dart';
 import 'package:app_test/modules/more/views/notification/views/widgets/notification_details_loading_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -63,10 +63,10 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
     Widget build(BuildContext context) {
       return MultiProvider(providers: [
         ChangeNotifierProvider(create: (context) => NotificationProviderModel()..getNotificationSingle(context, widget.id)),
-        ChangeNotifierProvider(create: (context) => ComplainViewModel()),
+        ChangeNotifierProvider(create: (context) => ComplainController()),
         ChangeNotifierProvider(create: (context) => CommentProvider()..getComment(context, "rmnotifications", widget.id)),
       ],
-      child: Consumer<ComplainViewModel>(
+      child: Consumer<ComplainController>(
         builder: (context, reqModel, child) {
           return Consumer<NotificationProviderModel>(
             builder: (context, value, child) {

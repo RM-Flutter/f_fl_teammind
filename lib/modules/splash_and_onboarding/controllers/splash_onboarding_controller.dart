@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_images.dart';
@@ -18,7 +18,7 @@ import 'package:app_test/core/services/notification_service/notification.service
 import 'package:app_test/models/endpoint.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
-class OnboardingViewModel extends ChangeNotifier {
+class OnboardingController extends ChangeNotifier {
   final PageController pageController = PageController();
   final PageController pageController2 = PageController();
   int _currentIndex = 0;
@@ -260,8 +260,8 @@ class OnboardingViewModel extends ChangeNotifier {
     Future<void> initializeSplashScreen({required BuildContext context, role}) async {
       final appConfigService =
       Provider.of<AppConfigService>(context, listen: false);
-      late final HomeViewModel homeViewModel;
-      homeViewModel = HomeViewModel();
+      late final HomeController homeController;
+      homeController = HomeController();
       try {
         await _initializeAppServices(context, appConfigService);
         String? payload = CacheHelper.getString('initialNotification');

@@ -8,7 +8,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/modules/more/views/contactus/view_models/controller.dart';
+import 'package:app_test/modules/more/views/contactus/controllers/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactScreen extends StatefulWidget {

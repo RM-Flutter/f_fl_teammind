@@ -14,7 +14,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 import 'package:app_test/core/widgets/slider_home_menu.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 
 
 class ReferralSection extends StatefulWidget {
@@ -43,8 +43,8 @@ class _ReferralSectionState extends State<ReferralSection> {
   }
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => HomeViewModel(),
-    child: Consumer<HomeViewModel>(
+    return ChangeNotifierProvider(create: (context) => HomeController(),
+    child: Consumer<HomeController>(
       builder: (context, value, child) {
         final json2String = CacheHelper.getString("US2");
         Map<String, dynamic> us2Cache = {};

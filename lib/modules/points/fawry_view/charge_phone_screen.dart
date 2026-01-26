@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
-import '../view_models/fawry_cubit/fawry_provider.dart';
+import '../controllers/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneScreen extends StatefulWidget {
   var service;

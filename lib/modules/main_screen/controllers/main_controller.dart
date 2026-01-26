@@ -8,7 +8,7 @@ import '../../home/views/home_screen.dart';
 import '../../more/views/more_screen.dart';
 
 
-class MainScreenViewModel extends ChangeNotifier {
+class MainScreenController extends ChangeNotifier {
   NavbarPages currentPage = NavbarPages.home;
   int get pageIndex => NavbarPages.values.indexOf(currentPage);
 

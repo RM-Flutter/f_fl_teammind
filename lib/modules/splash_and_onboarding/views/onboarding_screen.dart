@@ -10,7 +10,7 @@ import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
-import 'package:app_test/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart';
+import 'package:app_test/modules/splash_and_onboarding/controllers/splash_onboarding_controller.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -20,10 +20,10 @@ class OnBoardingScreen extends StatelessWidget {
     CacheHelper.setString(key: "watchScreen", value: "yes");
     CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now().toUtc()));
 
-    return ChangeNotifierProvider<OnboardingViewModel>(
-        create: (context) => OnboardingViewModel(),
+    return ChangeNotifierProvider<OnboardingController>(
+        create: (context) => OnboardingController(),
         child: Scaffold(body:
-            Consumer<OnboardingViewModel>(builder: (context, viewModel, child) {
+            Consumer<OnboardingController>(builder: (context, viewModel, child) {
           return Stack(
             children: [
               PageView.builder(

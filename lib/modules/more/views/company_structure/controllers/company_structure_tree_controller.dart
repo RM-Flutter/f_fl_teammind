@@ -3,7 +3,7 @@ import 'package:graphview/GraphView.dart';
 import 'package:app_test/modules/more/views/company_structure/models/company_tree_node.model.dart';
 import 'package:app_test/modules/more/views/company_structure/services/general.service.dart';
 
-class CompanyStructureTreeViewModel extends ChangeNotifier {
+class CompanyStructureTreeController extends ChangeNotifier {
   List<CompanyTreeNodeModel>? companyStructureTree;
   final Graph graph = Graph();
   final BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();

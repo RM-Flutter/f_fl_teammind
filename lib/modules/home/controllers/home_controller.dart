@@ -10,7 +10,7 @@ import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/models/settings/user_settings_2.model.dart';
 
-class HomeViewModel extends ChangeNotifier {
+class HomeController extends ChangeNotifier {
   UserSettingsModel? userSettings;
   UserSettings2Model? userSettings2;
   GeneralSettingsModel? generalSettings;

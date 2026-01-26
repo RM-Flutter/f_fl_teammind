@@ -6,10 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:app_test/core/widgets/comments/logic/view_model.dart';
+import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/modules/more/views/blog/view_models/blog_controller.dart';
-import 'package:app_test/modules/more/views/notification/view_models/notification_provider.dart';
+import 'package:app_test/modules/more/views/blog/controllers/blog_controller.dart';
+import 'package:app_test/modules/more/views/notification/controllers/notification_provider.dart';
 import 'app.dart';
 import 'core/controllers/device_sys/device_controller.dart';
 import 'core/services/app_config.service.dart';
@@ -17,8 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'core/services/internet_check.dart';
-import 'modules/home/view_models/home.viewmodel.dart';
-import 'modules/main_screen/view_models/main_viewmodel.dart';
+import 'modules/home/controllers/home_controller.dart';
+import 'modules/main_screen/controllers/main_controller.dart';
 import 'package:app_test/core/utils/error_handling/global_error_handler.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
@@ -71,11 +71,11 @@ void main() async {
           ChangeNotifierProvider<AppConfigService>(
             create: (_) => AppConfigService(),
           ),
-          ChangeNotifierProvider<MainScreenViewModel>(
-            create: (_) => MainScreenViewModel(),
+          ChangeNotifierProvider<MainScreenController>(
+            create: (_) => MainScreenController(),
           ),
-          ChangeNotifierProvider<HomeViewModel>(
-            create: (_) => HomeViewModel(),
+          ChangeNotifierProvider<HomeController>(
+            create: (_) => HomeController(),
           ),
           ChangeNotifierProvider(create: (context) => BlogProviderModel()),
           ChangeNotifierProvider(create: (context) => ConnectionService()),

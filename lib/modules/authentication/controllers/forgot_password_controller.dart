@@ -7,7 +7,7 @@ import 'package:app_test/core/services/alert_service/alerts.service.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import '../auth_services/forgot_password.service.dart';
 
-class ForgotPasswordViewModel extends ChangeNotifier {
+class ForgotPasswordController extends ChangeNotifier {
   bool goToChooseForgotMethod = false;
   bool codeSent = false;
   bool isPhoneLogin = false;

@@ -14,7 +14,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
-import 'package:app_test/modules/more/views/notification/view_models/notification_provider.dart';
+import 'package:app_test/modules/more/views/notification/controllers/notification_provider.dart';
 import 'package:app_test/modules/more/views/notification/views/notification_list_view_item.dart';
 import 'package:app_test/modules/more/views/notification/views/widgets/switch_row_notification.dart';
 import 'package:app_test/core/routing/app_router.dart';

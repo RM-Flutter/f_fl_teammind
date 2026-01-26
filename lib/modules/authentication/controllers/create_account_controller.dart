@@ -8,7 +8,7 @@ import 'package:app_test/core/services/app_config.service.dart';
 import '../auth_services/authentication.service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class CreateAccountViewModel extends ChangeNotifier {
+class CreateAccountController extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

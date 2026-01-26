@@ -6,8 +6,8 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/modules/authentication/views/widgets/phone_number_field.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../view_models/points_cubit/points_provider.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
+import '../controllers/points_cubit/points_provider.dart';
 
 class SendPointFriendBottomSheet extends StatelessWidget {
    SendPointFriendBottomSheet({super.key});
@@ -15,7 +15,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(create: (context) => PointsProvider(),
-    child: Consumer<HomeViewModel>(
+    child: Consumer<HomeController>(
       builder: (context, values, child) {
         return Consumer<PointsProvider>(builder: (context, value, child) {
           if(value.isRedeemSuccess == true){

@@ -1,11 +1,11 @@
-import 'package:app_test/modules/points/view_models/points_cubit/points_provider.dart';
-import 'package:app_test/modules/points/view_models/prize_cubit/prize_provider.dart';
+import 'package:app_test/modules/points/controllers/points_cubit/points_provider.dart';
+import 'package:app_test/modules/points/controllers/prize_cubit/prize_provider.dart';
 import 'package:app_test/modules/points/widgets/sliver_app_bar_points.dart';
 import 'package:app_test/modules/points/widgets/sliver_list_points.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 import 'core/api/api_services_implementation.dart';
 import 'data/repositories/prize_repository/prize_repository_implementation.dart';
 import 'data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart';
@@ -24,7 +24,7 @@ class _PointsScreenState extends State<PointsScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PointsProvider()),
-        ChangeNotifierProvider(create: (context) => HomeViewModel()),
+        ChangeNotifierProvider(create: (context) => HomeController()),
         // BlocProvider(create: (context) => HistoryCubit(GetHistoryRepositoryImplementation(ApiServicesImplementation()))..getHistory()),
 
         //BlocProvider(create: (context) => ConditionCubit(GetConditionRepositoryImplementation(ApiServicesImplementation()))..getCondition()),
@@ -39,7 +39,7 @@ class _PointsScreenState extends State<PointsScreen> {
               padding: EdgeInsets.zero,
               child: RefreshIndicator.adaptive(
                 onRefresh: () async {
-          await Provider.of<HomeViewModel>(context, listen: false).initializeHomeScreen(context, ["user_settings"]);
+          await Provider.of<HomeController>(context, listen: false).initializeHomeScreen(context, ["user_settings"]);
           },
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(), // << مهم هنا

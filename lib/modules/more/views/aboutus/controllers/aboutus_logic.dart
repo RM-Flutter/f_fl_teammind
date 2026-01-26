@@ -1,21 +1,22 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/modules/more/views/faq/view_models/get_faq_model.dart';
+import 'package:app_test/modules/more/views/aboutus/controllers/get_about_model.dart';
 
-class FaqModelProvider extends ChangeNotifier{
+class AboutUsLogicProvider extends ChangeNotifier{
   bool isLoading = false;
   String? errorMessage;
-  FaqModel? faqModel;
-  getFaq(context){
+  AboutUsModel? aboutUsModel;
+  getAboutUs(context){
     isLoading = true;
     notifyListeners();
     DioHelper.getData(
-        url: "/rm_page/v1/show?slug=faq",
-        context: context,
+        url: "/rm_page/v1/show?with=metas&slug=about-us-app",
+        sendLang: true,
+        context : context,
     ).then((value){
+      aboutUsModel = AboutUsModel.fromJson(value.data);
       isLoading = false;
-      faqModel = FaqModel.fromJson(value.data);
       notifyListeners();
     }).catchError((error){
       if (error is DioException) {
@@ -23,6 +24,7 @@ class FaqModelProvider extends ChangeNotifier{
       } else {
         errorMessage = error.toString();
       }
+      isLoading = false;
     });
   }
 }

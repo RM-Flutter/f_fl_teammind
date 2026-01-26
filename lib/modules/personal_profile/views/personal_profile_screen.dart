@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
@@ -16,7 +16,7 @@ import 'package:app_test/core/services/validation_service.dart';
 import '../../../core/utils/base_page/mobile.header.dart';
 import '../../../core/utils/base_page/mobile.scaffold.dart';
 import '../../authentication/views/widgets/phone_number_field.dart';
-import '../view_models/personal_profile.viewmodel.dart';
+import '../controllers/personal_profile_controller.dart';
 import 'widgets/personal_profile_header.widget.dart';
 import 'widgets/personal_profile_shrinked_header.widget.dart';
 
@@ -28,13 +28,13 @@ class PersonalProfileScreen extends StatefulWidget {
 }
 
 class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
-  late final PersonalProfileViewModel viewModel;
+  late final PersonalProfileController viewModel;
   bool fa = CacheHelper.getBool("twoFa") ?? false;
 
   @override
   void initState() {
     super.initState();
-    viewModel = PersonalProfileViewModel();
+    viewModel = PersonalProfileController();
     viewModel.initializePersonalProfileScreen(context: context);
   }
 
@@ -45,7 +45,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
       color: Theme.of(context).colorScheme.secondary,
       fontSize: AppSizes.s14,
     );
-    return ChangeNotifierProvider<PersonalProfileViewModel>(
+    return ChangeNotifierProvider<PersonalProfileController>(
       create: (_) => viewModel,
       child: CoreMobileScaffold(
           backgroundColor: Colors.white,
@@ -59,7 +59,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
               shrinkChild: const PersonalProfileShrinkedHeaderWidget(),
               child: SingleChildScrollView(
                   controller: viewModel.scrollController,
-                  child: Consumer<PersonalProfileViewModel>(
+                  child: Consumer<PersonalProfileController>(
                     builder: (context, viewModel, child) =>
                         PersonalProfileHeaderWidget(
                             viewModel: viewModel,
@@ -79,9 +79,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
             )
           ],
           children: [
-            Consumer<HomeViewModel>(
+            Consumer<HomeController>(
               builder: (context, value, child) {
-                return Consumer<PersonalProfileViewModel>(
+                return Consumer<PersonalProfileController>(
                     builder: (context, viewModel, child) {
                       if (viewModel.isSuccessUpdate == true ||
                           viewModel.isSuccessUpdateImage == true) {

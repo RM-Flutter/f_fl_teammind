@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:provider/provider.dart';
-import '../view_models/history_cubit/history_provider.dart';
+import '../controllers/history_cubit/history_provider.dart';
 import 'history_drop_down_widget.dart';
 
 class HistoryItem extends StatelessWidget {

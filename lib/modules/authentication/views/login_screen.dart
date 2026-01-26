@@ -25,7 +25,7 @@ import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/modules/authentication/view_models/login.viewmodel.dart';
+import 'package:app_test/modules/authentication/controllers/login_controller.dart';
 import '../../../core/utils/overlay_gradient_widget.dart';
 import 'widgets/phone_number_field.dart';
 import 'widgets/switch_row_widget.dart';
@@ -38,7 +38,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin,WidgetsBindingObserver {
-  late AuthenticationViewModel viewModel;
+  late AuthenticationController viewModel;
   bool hidePassword = true;
   final ValueNotifier<bool> isLoginBySocial = ValueNotifier<bool>(false);
 
@@ -81,7 +81,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
-    viewModel = AuthenticationViewModel();
+    viewModel = AuthenticationController();
     viewModel.initializeAnimation(this);
     WidgetsBinding.instance.addObserver(this);
     print("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
@@ -102,7 +102,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
     print("Can Register is --> ${gCache['can_new_register']}");
-    return ChangeNotifierProvider<AuthenticationViewModel>(
+    return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -151,7 +151,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             ),
                             gapH32,
                             // TOGGLE BUTTON TO TOGGLE BETWEEN (PHONE || EMAIL)
-                            Consumer<AuthenticationViewModel>(
+                            Consumer<AuthenticationController>(
                               builder: (context, viewModel, child) {
                                 return SwitchRow(
                                   viewPhone: true,
@@ -164,7 +164,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             ),
                             gapH20,
                             // EMAIL OR PHONE FIELD
-                            Consumer<AuthenticationViewModel>(
+                            Consumer<AuthenticationController>(
                               builder: (context, viewModel, child) {
                                 return viewModel.isPhoneLogin
                                     ? PhoneNumberField(

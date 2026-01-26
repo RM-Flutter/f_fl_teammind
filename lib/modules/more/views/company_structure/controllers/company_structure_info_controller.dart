@@ -8,7 +8,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/url_launcher.service.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 
-class CompanyStructureInfoViewModel extends ChangeNotifier {
+class CompanyStructureInfoController extends ChangeNotifier {
   final double pageLeftRightPadding = AppSizes.s14;
   final double backgroundHeight = AppSizes.s270;
   final double notchedContainerHeight = AppSizes.s200;

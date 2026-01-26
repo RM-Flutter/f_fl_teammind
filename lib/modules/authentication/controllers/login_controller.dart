@@ -34,7 +34,7 @@ enum AuthStatus {
   twoFactorAuthentication,
 }
 
-class AuthenticationViewModel extends ChangeNotifier {
+class AuthenticationController extends ChangeNotifier {
   bool isPhoneLogin = true;
   bool isLoading2 = false;
   bool isSuccess = false;

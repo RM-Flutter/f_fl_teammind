@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ComplainViewModel extends ChangeNotifier {
+class ComplainController extends ChangeNotifier {
   bool isAddComplaintLoading = false;
   bool isGetComplainLoading = false;
   bool isGetComplainSuccess = false;

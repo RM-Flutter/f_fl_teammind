@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_test/modules/points/view_models/points_cubit/points_provider.dart';
+import 'package:app_test/modules/points/controllers/points_cubit/points_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +15,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 
 import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
@@ -57,7 +57,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(create: (context) => PointsProvider()..getCategoriesPrize(context, page: 1),
-    child: Consumer<HomeViewModel>(
+    child: Consumer<HomeController>(
       builder: (context, value, child) {
         return Consumer<PointsProvider>(
           builder: (context, points, child) {

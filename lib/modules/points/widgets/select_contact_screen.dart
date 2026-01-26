@@ -7,9 +7,9 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
 
-import '../view_models/points_cubit/points_provider.dart';
+import '../controllers/points_cubit/points_provider.dart';
 
 class ContactSelectionScreen extends StatefulWidget {
   const ContactSelectionScreen({super.key});
@@ -90,9 +90,9 @@ class _ContactSelectionScreenState extends State<ContactSelectionScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => PointsProvider(),),
-      ChangeNotifierProvider(create: (context) => HomeViewModel(),),
+      ChangeNotifierProvider(create: (context) => HomeController(),),
     ],
-    child: Consumer<HomeViewModel>(
+    child: Consumer<HomeController>(
       builder: (context, values, child) {
         return Consumer<PointsProvider>(
           builder: (context, value, child) {

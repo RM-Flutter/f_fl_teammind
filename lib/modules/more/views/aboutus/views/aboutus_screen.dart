@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/modules/more/views/aboutus/view_models/aboutus_logic.dart';
+import 'package:app_test/modules/more/views/aboutus/controllers/aboutus_logic.dart';
 import 'package:app_test/modules/more/views/aboutus/views/main_logo_and_title_widget.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/utils/styles.dart';

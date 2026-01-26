@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:otient_test/points/view_models/history_cubit/history_cubit.dart';
+// import 'package:otient_test/points/controllers/history_cubit/history_cubit.dart';
 // import 'package:otient_test/points/widgets/history_item.dart';
 //
 // class HistoryList extends StatelessWidget {

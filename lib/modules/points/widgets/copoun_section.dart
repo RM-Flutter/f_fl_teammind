@@ -20,7 +20,7 @@
 //   FocusNode copounCodeFocusNode = FocusNode();
 //   @override
 //   Widget build(BuildContext context) {
-//     return Consumer<HomeViewModel>(
+//     return Consumer<HomeController>(
 //         builder: (context, value, child) {
 //           return Consumer<PrizeProvider>(
 //             builder: (context, provider, child) {
@@ -200,10 +200,10 @@
 // //   @override
 // //   Widget build(BuildContext context) {
 // //     return ChangeNotifierProvider(
-// //       create: (context) => HomeViewModel(),
-// //       child: Consumer<HomeViewModel>(
+// //       create: (context) => HomeController(),
+// //       child: Consumer<HomeController>(
 // //         builder: (context, value, child) {
-// //           return Consumer<HomeViewModel>(
+// //           return Consumer<HomeController>(
 // //             builder: (context, provider, child) {
 // //               if (provider.is) {
 // //                 WidgetsBinding.instance.addPostFrameCallback((_)async {

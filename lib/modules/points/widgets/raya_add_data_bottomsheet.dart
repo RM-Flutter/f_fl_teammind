@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
-import '../view_models/points_cubit/points_provider.dart';
+import '../controllers/points_cubit/points_provider.dart';
 import 'bottom_sheet_external_success.dart';
 
 class RayaAddDataBottomsheet extends StatelessWidget {

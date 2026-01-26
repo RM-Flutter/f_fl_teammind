@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import 'package:app_test/modules/personal_profile/view_models/personal_profile.viewmodel.dart';
+import 'package:app_test/modules/home/controllers/home_controller.dart';
+import 'package:app_test/modules/personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
@@ -24,10 +24,10 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => PersonalProfileViewModel(),
-        child: Consumer<HomeViewModel>(
+    return ChangeNotifierProvider(create: (context) => PersonalProfileController(),
+        child: Consumer<HomeController>(
           builder: (context, values, child) {
-            return Consumer<PersonalProfileViewModel>(
+            return Consumer<PersonalProfileController>(
               builder: (context, value, child) {
                 if(value.isSuccess == true){
                   WidgetsBinding.instance.addPostFrameCallback((_) {

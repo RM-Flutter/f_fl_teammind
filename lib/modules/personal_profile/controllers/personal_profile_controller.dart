@@ -27,7 +27,7 @@ import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/modules/personal_profile/services/personal_profile.service.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
-class PersonalProfileViewModel extends ChangeNotifier {
+class PersonalProfileController extends ChangeNotifier {
   bool isLoading = false;
   bool isSuccess = false;
   bool isSuccessUpdate = false;
