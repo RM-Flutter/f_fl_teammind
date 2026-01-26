@@ -9,7 +9,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../logic/points_cubit/points_provider.dart';
+import '../view_models/points_cubit/points_provider.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;

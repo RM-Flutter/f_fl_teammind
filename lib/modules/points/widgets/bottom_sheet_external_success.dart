@@ -1,4 +1,4 @@
-import 'package:app_test/utils/helpers/media_query_values.dart';
+import 'package:app_test/core/utils/helpers/media_query_values.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

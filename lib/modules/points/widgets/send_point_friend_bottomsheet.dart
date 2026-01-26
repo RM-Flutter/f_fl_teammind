@@ -7,7 +7,7 @@ import 'package:app_test/modules/authentication/views/widgets/phone_number_field
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../logic/points_cubit/points_provider.dart';
+import '../view_models/points_cubit/points_provider.dart';
 
 class SendPointFriendBottomSheet extends StatelessWidget {
    SendPointFriendBottomSheet({super.key});

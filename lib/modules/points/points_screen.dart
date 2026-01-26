@@ -1,3 +1,5 @@
+import 'package:app_test/modules/points/view_models/points_cubit/points_provider.dart';
+import 'package:app_test/modules/points/view_models/prize_cubit/prize_provider.dart';
 import 'package:app_test/modules/points/widgets/sliver_app_bar_points.dart';
 import 'package:app_test/modules/points/widgets/sliver_list_points.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +9,6 @@ import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
 import 'core/api/api_services_implementation.dart';
 import 'data/repositories/prize_repository/prize_repository_implementation.dart';
 import 'data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart';
-import 'logic/points_cubit/points_provider.dart';
-import 'logic/prize_cubit/prize_provider.dart';
 
 class PointsScreen extends StatefulWidget {
   bool arrow;

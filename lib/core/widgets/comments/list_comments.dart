@@ -18,10 +18,10 @@ import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:app_test/modules/complain_screen/widget/full_image_screen.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/modules/complain_screen/widgets/full_image_screen.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 class ListCommentsScreen extends StatefulWidget {
   var id;

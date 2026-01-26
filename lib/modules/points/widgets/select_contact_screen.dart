@@ -1,4 +1,3 @@
-import 'package:app_test/modules/points/logic/points_cubit/points_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -9,6 +8,8 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
+
+import '../view_models/points_cubit/points_provider.dart';
 
 class ContactSelectionScreen extends StatefulWidget {
   const ContactSelectionScreen({super.key});

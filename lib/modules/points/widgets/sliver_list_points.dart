@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:app_test/modules/points/core/api/api_services_implementation.dart';
 import '../data/repositories/condition_repository/condition_repository_implementation.dart';
 import '../data/repositories/history_repository/get_history_repository_implementation.dart';
-import '../logic/condition_cubit/condition_provider.dart';
-import '../logic/history_cubit/history_provider.dart';
-import '../logic/points_cubit/points_provider.dart';
+import '../view_models/condition_cubit/condition_provider.dart';
+import '../view_models/history_cubit/history_provider.dart';
+import '../view_models/points_cubit/points_provider.dart';
 
 class SliverListPoints extends StatelessWidget {
   const SliverListPoints({super.key});

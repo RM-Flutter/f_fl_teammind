@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/modules/more/views/blog/controller/blog_controller.dart';
-import 'package:app_test/utils/gradient_bg_image.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import 'package:app_test/utils/styles.dart';
+import 'package:app_test/modules/more/views/blog/view_models/blog_controller.dart';
+import 'package:app_test/core/utils/gradient_bg_image.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/styles.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DefaultDetails extends StatelessWidget {

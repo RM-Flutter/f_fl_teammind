@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/modules/more/views/company_structure/viewmodels/company_structure_tree.viewmodel.dart';
+import '../view_models/company_structure_tree.viewmodel.dart';
 import 'widgets/company_tree_node.widget.dart';
 
 class CompanyStructureTreeScreen extends StatefulWidget {

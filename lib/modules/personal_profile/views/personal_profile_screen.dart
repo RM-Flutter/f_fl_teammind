@@ -13,10 +13,10 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/utils/base_page/mobile.header.dart';
-import 'package:app_test/utils/base_page/mobile.scaffold.dart';
+import '../../../core/utils/base_page/mobile.header.dart';
+import '../../../core/utils/base_page/mobile.scaffold.dart';
 import '../../authentication/views/widgets/phone_number_field.dart';
-import 'package:app_test/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
+import '../view_models/personal_profile.viewmodel.dart';
 import 'widgets/personal_profile_header.widget.dart';
 import 'widgets/personal_profile_shrinked_header.widget.dart';
 

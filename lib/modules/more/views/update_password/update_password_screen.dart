@@ -6,7 +6,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import 'package:app_test/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
+import 'package:app_test/modules/personal_profile/view_models/personal_profile.viewmodel.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {

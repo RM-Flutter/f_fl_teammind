@@ -17,7 +17,7 @@ import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/models/operation_result.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/utils/modal_sheet_helper.dart';
+import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import '../auth_services/account_verification.service.dart';
 import '../auth_services/authentication.service.dart';
 import '../auth_services/two_factor_authentication.service.dart';

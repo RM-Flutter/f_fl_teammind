@@ -6,11 +6,11 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:app_test/utils/gradient_bg_image.dart';
-import '../logic/fawry_cubit/fawry_provider.dart';
+import 'package:app_test/core/utils/gradient_bg_image.dart';
+import '../view_models/fawry_cubit/fawry_provider.dart';
 
 class FawryProviderScreen extends StatelessWidget {
   const FawryProviderScreen({super.key});

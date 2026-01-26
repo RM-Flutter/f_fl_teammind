@@ -6,7 +6,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout.service.dart';
-import 'package:app_test/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart';
+import '../../view_models/personal_profile.viewmodel.dart';
 import 'personal_profile_header.widget.dart';
 
 class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {

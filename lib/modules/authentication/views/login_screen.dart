@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:app_test/core/utils/helpers/media_query_values.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/utils/helpers/media_query_values.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:app_test/core/constants/app_icons.dart';
@@ -25,8 +25,8 @@ import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/models/settings/general_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/utils/overlay_gradient_widget.dart';
 import 'package:app_test/modules/authentication/view_models/login.viewmodel.dart';
+import '../../../core/utils/overlay_gradient_widget.dart';
 import 'widgets/phone_number_field.dart';
 import 'widgets/switch_row_widget.dart';
 

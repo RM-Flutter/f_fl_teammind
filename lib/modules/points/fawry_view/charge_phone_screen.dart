@@ -10,12 +10,12 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
-import 'package:app_test/utils/gradient_bg_image.dart';
-import 'package:app_test/utils/widgets/text_form_widget.dart';
-import '../logic/fawry_cubit/fawry_provider.dart';
+import 'package:app_test/core/utils/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/text_form_widget.dart';
+import '../view_models/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneScreen extends StatefulWidget {
   var service;

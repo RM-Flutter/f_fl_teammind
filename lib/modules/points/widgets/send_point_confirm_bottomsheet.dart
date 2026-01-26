@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import '../logic/points_cubit/points_provider.dart';
+import '../view_models/points_cubit/points_provider.dart';
 
 class SendPointConfirmBottomsheet extends StatelessWidget {
   var user;

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 

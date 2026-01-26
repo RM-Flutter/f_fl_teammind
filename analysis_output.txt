@@ -1,46 +1,241 @@
 Analyzing f_fl_core...                                          
 
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: MyApp.notificationService • lib/app.dart:10:7 • must_be_immutable
+   info • Don't invoke 'print' in production code • lib/core/constants/general_listener.dart:200:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/constants/general_listener.dart:201:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/constants/general_listener.dart:205:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/constants/general_listener.dart:206:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/constants/general_listener.dart:209:7 • avoid_print
    info • Use interpolation to compose strings and values • lib/core/constants/general_listener.dart:241:23 • prefer_interpolation_to_compose_strings
    info • 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre • lib/core/constants/update_app.dart:30:22 • deprecated_member_use
    info • 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre • lib/core/constants/update_app.dart:66:22 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/core/constants/update_app.dart:116:7 • avoid_print
    info • The variable name 'XImageFileAttachmentPersonal' isn't a lowerCamelCase identifier • lib/core/controllers/complain_controller/complain_viewmodel.dart:18:10 • non_constant_identifier_names
+   info • Don't invoke 'print' in production code • lib/core/controllers/complain_controller/complain_viewmodel.dart:139:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/controllers/complain_controller/complain_viewmodel.dart:140:33 • avoid_print
 warning • The parameter 'query' is required • lib/core/controllers/device_sys/device_controller.dart:27:40 • missing_required_param
 warning • The parameter 'query' is required • lib/core/controllers/device_sys/device_controller.dart:48:23 • missing_required_param
 warning • The parameter 'query' is required • lib/core/controllers/device_sys/device_controller.dart:84:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/controllers/device_sys/device_controller.dart:94:7 • avoid_print
 warning • The parameter 'query' is required • lib/core/controllers/device_sys/device_controller.dart:110:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/controllers/device_sys/device_controller.dart:121:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/controllers/device_sys/device_controller.dart:123:7 • avoid_print
 warning • The parameter 'query' is required • lib/core/controllers/device_sys/device_controller.dart:161:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/controllers/device_sys/device_controller.dart:185:7 • avoid_print
    info • The variable name 'XImageFileAttachmentPersonal' isn't a lowerCamelCase identifier • lib/core/controllers/request_controller/request_controller.dart:38:10 • non_constant_identifier_names
 warning • The parameter 'query' is required • lib/core/controllers/request_controller/request_controller.dart:51:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/controllers/request_controller/request_controller.dart:92:5 • avoid_print
 warning • The parameter 'query' is required • lib/core/controllers/request_controller/request_controller.dart:295:36 • missing_required_param
 warning • The parameter 'query' is required • lib/core/controllers/request_controller/request_controller.dart:301:36 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/controllers/request_controller/request_controller.dart:482:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/controllers/request_controller/request_controller.dart:483:33 • avoid_print
    info • 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead • lib/core/platform/universal_platform_web.dart:2:1 • deprecated_member_use
    info • The constant name 'CategoriesprizePointsViewScreen' isn't a lowerCamelCase identifier • lib/core/routing/app_router.dart:55:3 • constant_identifier_names
+   info • Don't invoke 'print' in production code • lib/core/routing/app_router.dart:157:7 • avoid_print
 warning • The value of the local variable 'type' isn't used • lib/core/routing/app_router.dart:776:33 • unused_local_variable
 warning • The value of the local variable 'title' isn't used • lib/core/routing/app_router.dart:1015:19 • unused_local_variable
 warning • Unused import: 'package:app_test/core/services/validation_service.dart' • lib/core/services/alert_service/alerts.service.dart:4:8 • unused_import
    info • Instances of 'Color' should be created using an 8-digit hexadecimal integer (such as '0xFFFFFFFF') • lib/core/services/alert_service/alerts.service.dart:275:60 • use_full_hex_values_for_flutter_colors
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:89:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:152:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:160:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:166:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:302:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:305:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:412:7 • avoid_print
 warning • The parameter 'data' is required • lib/core/services/app_config.service.dart:417:25 • missing_required_param
 warning • The parameter 'query' is required • lib/core/services/app_config.service.dart:417:25 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/services/app_config.service.dart:420:9 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/services/app_theme.service.dart:168:60 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio.dart:40:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio.dart:44:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio.dart:75:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio.dart:87:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:55:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:76:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:99:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:231:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:234:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:249:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:293:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:296:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:311:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:393:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:396:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:411:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:517:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:520:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:535:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:576:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:579:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:594:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:660:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:663:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:678:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:722:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:756:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:786:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:810:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:833:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:859:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:939:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:962:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:987:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1009:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1036:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1058:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1094:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1115:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1143:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1165:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1193:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1215:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1242:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart:1262:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service_helpers.dart:17:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/backend_services/api_service_helpers.dart:121:11 • avoid_print
 warning • This case is covered by the previous cases • lib/core/services/backend_services/get_endpoint.service.dart:237:9 • unreachable_switch_case
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:32:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:34:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:36:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:38:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:40:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:42:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:45:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/connections.service.dart:56:7 • avoid_print
    info • The imported package 'hive' isn't a dependency of the importing package • lib/core/services/db_hive.service.dart:1:8 • depend_on_referenced_packages
 warning • The value of the local variable 'androidInfo' isn't used • lib/core/services/device_info.service.dart:18:27 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/services/device_info.service.dart:24:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/device_info.service.dart:27:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:41:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:42:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:66:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:143:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:164:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:293:21 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/domain_selection.service.dart:342:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/dynamic_app_config.service.dart:56:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/dynamic_app_config.service.dart:59:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/dynamic_app_config.service.dart:64:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/dynamic_app_config.service.dart:93:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/dynamic_app_config.service.dart:98:7 • avoid_print
 warning • The value of the local variable 'fromDate' isn't used • lib/core/services/fingerprint_service.dart:48:20 • unused_local_variable
 warning • The declaration 'formatDate' isn't referenced • lib/core/services/fingerprint_service.dart:52:12 • unused_element
+   info • Don't invoke 'print' in production code • lib/core/services/fingerprint_service.dart:97:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/fingerprint_service.dart:101:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/fingerprint_service.dart:104:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/fingerprint_service.dart:140:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:27:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:33:5 • avoid_print
 warning • The value of the local variable 'diff' isn't used • lib/core/services/general_listener.dart:36:11 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:197:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:198:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:202:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:203:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/general_listener.dart:206:7 • avoid_print
    info • Use interpolation to compose strings and values • lib/core/services/general_listener.dart:238:23 • prefer_interpolation_to_compose_strings
+   info • Don't invoke 'print' in production code • lib/core/services/image_file_picker.service.dart:26:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/image_file_picker.service.dart:71:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/image_file_picker.service.dart:95:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:59:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:92:15 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:103:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:123:19 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:126:19 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:129:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:132:15 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/internet_check.dart:139:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/localization.service.dart:11:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/location.service.dart:45:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:31:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:34:7 • avoid_print
 warning • The declaration '_showWebToast' isn't referenced • lib/core/services/notification_service.dart:38:8 • unused_element
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:53:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:55:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:80:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:86:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:91:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:149:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:163:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service.dart:168:5 • avoid_print
 warning • The value of the field '_isTokenInit' isn't used • lib/core/services/notification_service/notification.service.dart:36:15 • unused_field
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service/notification.service.dart:101:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service/notification.service.dart:113:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service/notification.service.dart:158:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service/notification.service.dart:224:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service/notification.service.dart:256:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/notification_service/timeout_message.service.dart:26:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:33:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:42:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:45:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:48:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:66:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:68:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:75:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:85:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:104:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:106:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/offline_overlay.service.dart:111:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/requests.services.dart:165:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/requests.services.dart:242:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/requests.services.dart:243:5 • avoid_print
 warning • This default clause is covered by the previous cases • lib/core/services/settings.service.dart:83:7 • unreachable_switch_default
 warning • The parameter 'query' is required • lib/core/services/settings.service.dart:91:21 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:99:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:102:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:108:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:131:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:145:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:146:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:148:7 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/core/services/settings.service.dart:166:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:167:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:173:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:176:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:234:11 • avoid_print
 warning • The value of the local variable 'generalSettingsModel' isn't used • lib/core/services/settings.service.dart:250:31 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:270:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/settings.service.dart:290:7 • avoid_print
    info • The imported package 'html' isn't a dependency of the importing package • lib/core/services/string_helpers.service.dart:1:8 • depend_on_referenced_packages
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:18:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:37:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:58:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:60:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:63:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:124:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:126:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:129:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:143:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:156:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:158:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/telegram_error_service.dart:183:7 • avoid_print
    info • 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre • lib/core/services/update_app.dart:29:22 • deprecated_member_use
    info • 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre • lib/core/services/update_app.dart:81:22 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/core/services/update_app.dart:144:7 • avoid_print
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: WebViewStackOffers.link • lib/core/services/webview_offers.dart:4:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/core/services/webview_offers.dart:5:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:21:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:36:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:44:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:45:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:46:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:47:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:50:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/services/webview_offers.dart:53:13 • avoid_print
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/animated_custom_dropdown/dropdown_overlay.dart:190:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/animated_custom_dropdown/dropdown_overlay.dart:409:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/animated_custom_dropdown/dropdown_overlay.dart:416:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/animated_custom_dropdown/dropdown_overlay.dart:423:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart:32:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart:33:31 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/core/utils/error_handling/global_error_handler.dart:9:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/utils/error_handling/global_error_handler.dart:18:5 • avoid_print
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/gradient_bg_image.dart:18:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/gradient_bg_image.dart:19:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/utils/overlay_gradient_widget.dart:15:37 • deprecated_member_use
+warning • The value of the local variable 'itemWidth' isn't used • lib/core/utils/tab_bar_widget.dart:15:14 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/widgets/all_bottom_sheet.dart:72:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/all_bottom_sheet.dart:85:19 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/all_bottom_sheet.dart:156:44 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/all_bottom_sheet.dart:469:62 • deprecated_member_use
    info • Invalid use of a private type in a public API • lib/core/widgets/comments/comments_audio_widget.dart:10:3 • library_private_types_in_public_api
@@ -55,37 +250,96 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/core/widgets/comments/list_comments.dart:27:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/core/widgets/comments/list_comments.dart:28:7 • prefer_typing_uninitialized_variables
    info • Invalid use of a private type in a public API • lib/core/widgets/comments/list_comments.dart:35:3 • library_private_types_in_public_api
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/list_comments.dart:50:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/list_comments.dart:51:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/list_comments.dart:56:9 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/core/widgets/comments/list_comments.dart:67:13 • prefer_typing_uninitialized_variables
    info • The variable name 'XImageFileAttachmentPersonal' isn't a lowerCamelCase identifier • lib/core/widgets/comments/logic/view_model.dart:28:10 • non_constant_identifier_names
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/logic/view_model.dart:51:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/logic/view_model.dart:55:9 • avoid_print
 warning • The parameter 'data' is required • lib/core/widgets/comments/logic/view_model.dart:67:36 • missing_required_param
 warning • The parameter 'query' is required • lib/core/widgets/comments/logic/view_model.dart:67:36 • missing_required_param
 warning • The parameter 'query' is required • lib/core/widgets/comments/logic/view_model.dart:73:36 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/logic/view_model.dart:146:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/logic/view_model.dart:274:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/logic/view_model.dart:275:33 • avoid_print
    info • Invalid use of a private type in a public API • lib/core/widgets/comments/send_comment_widget.dart:20:3 • library_private_types_in_public_api
 warning • The value of the field '_recordedFilePath' isn't used • lib/core/widgets/comments/send_comment_widget.dart:26:11 • unused_field
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:53:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:64:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:80:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:94:19 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:97:19 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:100:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/comments/send_comment_widget.dart:104:13 • avoid_print
    info • 'color' is deprecated and shouldn't be used • lib/core/widgets/comments/send_comment_widget.dart:169:76 • deprecated_member_use
    info • 'color' is deprecated and shouldn't be used • lib/core/widgets/comments/send_comment_widget.dart:182:75 • deprecated_member_use
    info • 'color' is deprecated and shouldn't be used • lib/core/widgets/comments/send_comment_widget.dart:196:70 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/gradient_bg_image.dart:18:37 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/gradient_bg_image.dart:19:37 • deprecated_member_use
    info • An uninitialized variable should have an explicit type annotation • lib/core/widgets/language_dropdown_button.widget.dart:16:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:40:5 • avoid_print
 warning • The value of the local variable 'multipartFile' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:76:17 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:89:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:94:7 • avoid_print
 warning • The value of the local variable 'dataToSave' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:133:32 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:147:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:174:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:254:7 • avoid_print
 warning • The value of the local variable 'fingerprintMustUploadImage' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:265:19 • unused_local_variable
    info • 'name' is deprecated and shouldn't be used. Use platformName instead • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:378:68 • deprecated_member_use
    info • 'name' is deprecated and shouldn't be used. Use platformName instead • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:389:37 • deprecated_member_use
    info • 'name' is deprecated and shouldn't be used. Use platformName instead • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:389:98 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:473:7 • avoid_print
    info • The type of the right operand ('ConnectivityResult') isn't a subtype or a supertype of the left operand ('List<ConnectivityResult>') • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:484:31 • unrelated_type_equality_checks
 warning • The value of the local variable 'fingerprintMustUploadImage' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:491:19 • unused_local_variable
 warning • The value of the local variable 'wifiData' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:574:13 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:587:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:607:15 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:640:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:659:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:668:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:674:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:686:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:690:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:698:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:700:7 • avoid_print
 warning • The value of the local variable 'fingerprintMustUploadImage' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:701:19 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:745:7 • avoid_print
 warning • The left operand can't be null, so the right operand is never executed • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:761:70 • dead_null_aware_expression
 warning • The left operand can't be null, so the right operand is never executed • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:762:72 • dead_null_aware_expression
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:766:15 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:785:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:805:7 • avoid_print
 warning • The value of the local variable 'fingerprintMustUploadImage' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:818:19 • unused_local_variable
 warning • Dead code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:855:18 • dead_code
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:863:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:866:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:867:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:880:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:905:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:927:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:946:7 • avoid_print
 warning • The value of the local variable 'qrKey' isn't used • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:969:23 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/core/widgets/main_app_fab_widget/main_app_fab.service.dart:981:7 • avoid_print
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SliderHomeMenu.title, SliderHomeMenu.description, SliderHomeMenu.onTap, SliderHomeMenu.src • lib/core/widgets/slider_home_menu.dart:6:7 • must_be_immutable
+   info • An uninitialized field should have an explicit type annotation • lib/core/widgets/slider_home_menu.dart:7:7 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/core/widgets/slider_home_menu.dart:8:7 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/core/widgets/slider_home_menu.dart:9:7 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/core/widgets/slider_home_menu.dart:10:7 • prefer_typing_uninitialized_variables
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: WebViewStackOffers.link • lib/core/widgets/webview_offers.dart:4:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/core/widgets/webview_offers.dart:5:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:21:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:36:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:44:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:45:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:46:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:47:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:50:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/core/widgets/webview_offers.dart:53:13 • avoid_print
    info • The imported package 'hive' isn't a dependency of the importing package • lib/main.dart:7:8 • depend_on_referenced_packages
+   info • Don't invoke 'print' in production code • lib/main.dart:29:3 • avoid_print
+   info • Don't invoke 'print' in production code • lib/main.dart:60:5 • avoid_print
    info • An uninitialized field should have an explicit type annotation • lib/models/get_one_complain_model.dart:229:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/models/get_one_complain_model.dart:230:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/models/get_one_complain_model.dart:231:7 • prefer_typing_uninitialized_variables
@@ -106,114 +360,222 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/models/settings/user_settings_2.model.dart:207:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/models/settings/user_settings_2.model.dart:210:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/models/settings/user_settings_2.model.dart:211:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/authentication/auth_services/authentication.service.dart:13:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/create_account.viewmodel.dart:79:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/forgot_password.viewmodel.dart:65:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/forgot_password.viewmodel.dart:122:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/login.viewmodel.dart:65:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/login.viewmodel.dart:128:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/login.viewmodel.dart:174:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/login.viewmodel.dart:182:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/view_models/login.viewmodel.dart:191:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/login_screen.dart:87:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/login_screen.dart:104:5 • avoid_print
    info • The type of the right operand ('String') isn't a subtype or a supertype of the left operand ('Map<String, dynamic>') • lib/modules/authentication/views/login_screen.dart:264:39 • unrelated_type_equality_checks
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/login_screen.dart:425:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:31:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:46:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:54:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:55:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:56:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:57:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:60:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/update_main_data.dart:63:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/widgets/phone_number_field.dart:44:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/authentication/views/widgets/phone_number_field.dart:45:5 • avoid_print
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SwitchRow.viewPhone, SwitchRow.axis • lib/modules/authentication/views/widgets/switch_row_widget.dart:7:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/complain_screen/add_complain_screen.dart:25:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/complain_screen/add_complain_screen.dart:80:31 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/complain_screen/add_complain_screen.dart:216:33 • avoid_print
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: ComplainDetailsScreen.id • lib/modules/complain_screen/complain_details_screen.dart:20:9 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/complain_screen/complain_details_screen.dart:21:9 • prefer_typing_uninitialized_variables
 warning • The value of the field '_loadedPages' isn't used • lib/modules/complain_screen/complain_details_screen.dart:31:18 • unused_field
+   info • Don't invoke 'print' in production code • lib/modules/complain_screen/complain_details_screen.dart:63:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/complain_screen/complains_screen.dart:44:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/complain_screen/complains_screen.dart:45:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/complain_screen/complains_screen.dart:49:9 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/modules/complain_screen/complains_screen.dart:60:13 • prefer_typing_uninitialized_variables
 warning • Dead code • lib/modules/complain_screen/complains_screen.dart:167:33 • dead_code
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: ComplainDetailsAppbarWidget.getOneRequestModel • lib/modules/complain_screen/widget/complain_details_appbar_widget.dart:11:7 • must_be_immutable
-warning • The left operand can't be null, so the right operand is never executed • lib/modules/complain_screen/widget/complain_details_appbar_widget.dart:118:90 • dead_null_aware_expression
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: FullScreenImageViewer.file, FullScreenImageViewer.one, FullScreenImageViewer.thum, FullScreenImageViewer.image • lib/modules/complain_screen/widget/full_image_screen.dart:56:7 • must_be_immutable
-   info • An uninitialized field should have an explicit type annotation • lib/modules/complain_screen/widget/full_image_screen.dart:62:7 • prefer_typing_uninitialized_variables
-   info • Invalid use of a private type in a public API • lib/modules/complain_screen/widget/request_audio_widget.dart:10:3 • library_private_types_in_public_api
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: RequestDetailsAppbarWidget.getOneRequestModel, RequestDetailsAppbarWidget.types, RequestDetailsAppbarWidget.type • lib/modules/complain_screen/widget/request_details_appbar_widget.dart:11:7 • must_be_immutable
-   info • An uninitialized field should have an explicit type annotation • lib/modules/complain_screen/widget/request_details_appbar_widget.dart:15:7 • prefer_typing_uninitialized_variables
-warning • The left operand can't be null, so the right operand is never executed • lib/modules/complain_screen/widget/request_details_appbar_widget.dart:129:112 • dead_null_aware_expression
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: ComplainDetailsAppbarWidget.getOneRequestModel • lib/modules/complain_screen/widgets/complain_details_appbar_widget.dart:11:7 • must_be_immutable
+warning • The left operand can't be null, so the right operand is never executed • lib/modules/complain_screen/widgets/complain_details_appbar_widget.dart:118:90 • dead_null_aware_expression
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: FullScreenImageViewer.file, FullScreenImageViewer.one, FullScreenImageViewer.thum, FullScreenImageViewer.image • lib/modules/complain_screen/widgets/full_image_screen.dart:56:7 • must_be_immutable
+   info • An uninitialized field should have an explicit type annotation • lib/modules/complain_screen/widgets/full_image_screen.dart:62:7 • prefer_typing_uninitialized_variables
+   info • Invalid use of a private type in a public API • lib/modules/complain_screen/widgets/request_audio_widget.dart:10:3 • library_private_types_in_public_api
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: RequestDetailsAppbarWidget.getOneRequestModel, RequestDetailsAppbarWidget.types, RequestDetailsAppbarWidget.type • lib/modules/complain_screen/widgets/request_details_appbar_widget.dart:11:7 • must_be_immutable
+   info • An uninitialized field should have an explicit type annotation • lib/modules/complain_screen/widgets/request_details_appbar_widget.dart:15:7 • prefer_typing_uninitialized_variables
+warning • The left operand can't be null, so the right operand is never executed • lib/modules/complain_screen/widgets/request_details_appbar_widget.dart:129:112 • dead_null_aware_expression
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: FingerprintCardOffiline.fingerprint • lib/modules/fingerprint/views/widgets/finger_print_offline_card.dart:9:7 • must_be_immutable
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/fingerprint/views/widgets/finger_print_offline_card.dart:30:51 • deprecated_member_use
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/home/view/home_screen.dart:26:9 • prefer_typing_uninitialized_variables
-warning • The value of the local variable 'width' isn't used • lib/modules/home/view/home_screen.dart:46:9 • unused_local_variable
-warning • The value of the local variable 'us2Cache' isn't used • lib/modules/home/view/home_screen.dart:49:26 • unused_local_variable
-warning • The value of the local variable 'top' isn't used • lib/modules/home/view/home_screen.dart:81:27 • unused_local_variable
    info • An uninitialized field should have an explicit type annotation • lib/modules/home/view_models/home.viewmodel.dart:20:7 • prefer_typing_uninitialized_variables
 warning • The value of the local variable 'appConfigServiceProvider' isn't used • lib/modules/home/view_models/home.viewmodel.dart:34:11 • unused_local_variable
    info • An uninitialized variable should have an explicit type annotation • lib/modules/home/view_models/home.viewmodel.dart:43:9 • prefer_typing_uninitialized_variables
    info • An uninitialized variable should have an explicit type annotation • lib/modules/home/view_models/home.viewmodel.dart:51:9 • prefer_typing_uninitialized_variables
    info • An uninitialized variable should have an explicit type annotation • lib/modules/home/view_models/home.viewmodel.dart:71:13 • prefer_typing_uninitialized_variables
 warning • The value of the local variable 'userSettingsModel' isn't used • lib/modules/home/view_models/home.viewmodel.dart:72:27 • unused_local_variable
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: AppbarProfileContainer.imageUrl, AppbarProfileContainer.userName, AppbarProfileContainer.userRole • lib/modules/home/widget/appbar_profile_container.dart:20:7 • must_be_immutable
-warning • The declaration 'formatName' isn't referenced • lib/modules/home/widget/appbar_profile_container.dart:65:12 • unused_element
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/home/widget/appbar_profile_container.dart:74:9 • prefer_typing_uninitialized_variables
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/home/widget/appbar_profile_container.dart:186:62 • deprecated_member_use
-   info • 'color' is deprecated and shouldn't be used • lib/modules/home/widget/appbar_profile_container.dart:219:19 • deprecated_member_use
-   info • An uninitialized field should have an explicit type annotation • lib/modules/home/widget/grid_view_model.dart:7:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/home/view_models/home.viewmodel.dart:85:7 • avoid_print
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/home/views/home_screen.dart:26:9 • prefer_typing_uninitialized_variables
+warning • The value of the local variable 'width' isn't used • lib/modules/home/views/home_screen.dart:46:9 • unused_local_variable
+warning • The value of the local variable 'us2Cache' isn't used • lib/modules/home/views/home_screen.dart:49:26 • unused_local_variable
+warning • The value of the local variable 'top' isn't used • lib/modules/home/views/home_screen.dart:81:27 • unused_local_variable
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: AppbarProfileContainer.imageUrl, AppbarProfileContainer.userName, AppbarProfileContainer.userRole • lib/modules/home/widgets/appbar_profile_container.dart:20:7 • must_be_immutable
+warning • The declaration 'formatName' isn't referenced • lib/modules/home/widgets/appbar_profile_container.dart:65:12 • unused_element
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/home/widgets/appbar_profile_container.dart:74:9 • prefer_typing_uninitialized_variables
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/home/widgets/appbar_profile_container.dart:186:62 • deprecated_member_use
+   info • 'color' is deprecated and shouldn't be used • lib/modules/home/widgets/appbar_profile_container.dart:219:19 • deprecated_member_use
+   info • An uninitialized field should have an explicit type annotation • lib/modules/home/widgets/grid_view_model.dart:7:9 • prefer_typing_uninitialized_variables
 warning • This case is covered by the previous cases • lib/modules/main_screen/view_models/main_viewmodel.dart:23:7 • unreachable_switch_case
 warning • This case is covered by the previous cases • lib/modules/main_screen/view_models/main_viewmodel.dart:26:7 • unreachable_switch_case
-warning • The parameter 'query' is required • lib/modules/more/views/aboutus/logic/aboutus_logic.dart:13:15 • missing_required_param
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/aboutus/view/aboutus_screen.dart:182:64 • deprecated_member_use
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: BlogListDetailsScreen.title • lib/modules/more/views/blog/view/blog_details_screen.dart:15:7 • must_be_immutable
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: BlogListViewItem.type • lib/modules/more/views/blog/widget/blog_list_view_item.dart:10:7 • must_be_immutable
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/blog/widget/blog_list_view_item.dart:13:7 • prefer_typing_uninitialized_variables
+warning • The parameter 'query' is required • lib/modules/more/views/aboutus/view_models/aboutus_logic.dart:13:15 • missing_required_param
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/aboutus/views/aboutus_screen.dart:182:64 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/modules/more/views/blog/view_models/blog_controller.dart:28:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/blog/view_models/blog_controller.dart:59:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/blog/view_models/blog_controller.dart:78:9 • avoid_print
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: BlogListDetailsScreen.title • lib/modules/more/views/blog/views/blog_details_screen.dart:15:7 • must_be_immutable
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: BlogListViewItem.type • lib/modules/more/views/blog/widgets/blog_list_view_item.dart:10:7 • must_be_immutable
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/blog/widgets/blog_list_view_item.dart:13:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:30:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:45:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:53:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:54:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:55:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:56:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:59:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/company_structure_screen.dart:62:13 • avoid_print
    info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/company_structure/models/company_tree_node.model.dart:4:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/company_structure/models/company_tree_node.model.dart:5:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/company_structure/models/company_tree_node.model.dart:6:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/company_structure/models/company_tree_node.model.dart:7:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/company_structure/models/company_tree_node.model.dart:8:7 • prefer_typing_uninitialized_variables
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/company_structure/viewmodels/company_structure_info.viewmodel.dart:31:11 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/contactus/view/contact_screen.dart:23:7 • prefer_typing_uninitialized_variables
-   info • 'canLaunch' is deprecated and shouldn't be used. Use canLaunchUrl instead • lib/modules/more/views/contactus/view/contact_screen.dart:28:15 • deprecated_member_use
-   info • 'launch' is deprecated and shouldn't be used. Use launchUrl instead • lib/modules/more/views/contactus/view/contact_screen.dart:29:13 • deprecated_member_use
-   info • 'canLaunch' is deprecated and shouldn't be used. Use canLaunchUrl instead • lib/modules/more/views/contactus/view/contact_screen.dart:120:55 • deprecated_member_use
-   info • 'launch' is deprecated and shouldn't be used. Use launchUrl instead • lib/modules/more/views/contactus/view/contact_screen.dart:121:53 • deprecated_member_use
-   info • 'canLaunch' is deprecated and shouldn't be used. Use canLaunchUrl instead • lib/modules/more/views/contactus/view/contact_screen.dart:151:65 • deprecated_member_use
-   info • 'launch' is deprecated and shouldn't be used. Use launchUrl instead • lib/modules/more/views/contactus/view/contact_screen.dart:153:63 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/contactus/view/contact_screen.dart:276:66 • deprecated_member_use
-   info • 'color' is deprecated and shouldn't be used • lib/modules/more/views/contactus/view/contact_screen.dart:603:40 • deprecated_member_use
-warning • The parameter 'query' is required • lib/modules/more/views/faq/logic/faq_model.dart:13:15 • missing_required_param
-   info • Invalid use of a private type in a public API • lib/modules/more/views/faq/view/faq_screen.dart:15:3 • library_private_types_in_public_api
-   info • Invalid use of a private type in a public API • lib/modules/more/views/faq/view/faq_screen.dart:89:3 • library_private_types_in_public_api
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/faq/view/faq_screen.dart:104:35 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/faq/view/faq_screen.dart:111:35 • deprecated_member_use
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/company_structure/view_models/company_structure_info.viewmodel.dart:31:11 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/view_models/company_structure_info.viewmodel.dart:46:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/view_models/company_structure_tree.viewmodel.dart:44:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/company_structure/view_models/company_structure_tree.viewmodel.dart:57:7 • avoid_print
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/contactus/views/contact_screen.dart:23:7 • prefer_typing_uninitialized_variables
+   info • 'canLaunch' is deprecated and shouldn't be used. Use canLaunchUrl instead • lib/modules/more/views/contactus/views/contact_screen.dart:28:15 • deprecated_member_use
+   info • 'launch' is deprecated and shouldn't be used. Use launchUrl instead • lib/modules/more/views/contactus/views/contact_screen.dart:29:13 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/modules/more/views/contactus/views/contact_screen.dart:46:11 • avoid_print
+   info • 'canLaunch' is deprecated and shouldn't be used. Use canLaunchUrl instead • lib/modules/more/views/contactus/views/contact_screen.dart:120:55 • deprecated_member_use
+   info • 'launch' is deprecated and shouldn't be used. Use launchUrl instead • lib/modules/more/views/contactus/views/contact_screen.dart:121:53 • deprecated_member_use
+   info • 'canLaunch' is deprecated and shouldn't be used. Use canLaunchUrl instead • lib/modules/more/views/contactus/views/contact_screen.dart:151:65 • deprecated_member_use
+   info • 'launch' is deprecated and shouldn't be used. Use launchUrl instead • lib/modules/more/views/contactus/views/contact_screen.dart:153:63 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/contactus/views/contact_screen.dart:276:66 • deprecated_member_use
+   info • 'color' is deprecated and shouldn't be used • lib/modules/more/views/contactus/views/contact_screen.dart:603:40 • deprecated_member_use
+warning • The parameter 'query' is required • lib/modules/more/views/faq/view_models/faq_model.dart:13:15 • missing_required_param
+   info • Invalid use of a private type in a public API • lib/modules/more/views/faq/views/faq_screen.dart:15:3 • library_private_types_in_public_api
+   info • Invalid use of a private type in a public API • lib/modules/more/views/faq/views/faq_screen.dart:89:3 • library_private_types_in_public_api
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/faq/views/faq_screen.dart:104:35 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/faq/views/faq_screen.dart:111:35 • deprecated_member_use
    info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/lang_setting/lang_setting_screen.dart:29:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/more/views/lang_setting/lang_setting_screen.dart:43:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/lang_setting/lang_setting_screen.dart:49:7 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/lang_setting/lang_setting_screen.dart:103:72 • deprecated_member_use
-warning • The parameter 'query' is required • lib/modules/more/views/lang_setting/logic/lang_controller.dart:17:40 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/more/views/lang_setting/view_models/lang_controller.dart:17:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/more/views/lang_setting/view_models/lang_controller.dart:35:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/lang_setting/view_models/lang_controller.dart:37:7 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/more_screen.dart:56:9 • prefer_typing_uninitialized_variables
 warning • The operand can't be 'null', so the condition is always 'true' • lib/modules/more/views/more_screen.dart:370:44 • unnecessary_null_comparison
    info • 'color' is deprecated and shouldn't be used • lib/modules/more/views/more_screen.dart:456:11 • deprecated_member_use
-   info • The variable name 'XImageFileAttachmentPersonal' isn't a lowerCamelCase identifier • lib/modules/more/views/notification/logic/notification_provider.dart:43:10 • non_constant_identifier_names
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/notification/logic/notification_provider.dart:101:9 • prefer_typing_uninitialized_variables
-warning • The parameter 'query' is required • lib/modules/more/views/notification/logic/notification_provider.dart:198:40 • missing_required_param
-warning • The value of the local variable 'image' isn't used • lib/modules/more/views/notification/logic/notification_provider.dart:222:11 • unused_local_variable
-warning • The parameter 'data' is required • lib/modules/more/views/notification/logic/notification_provider.dart:247:36 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/more/views/notification/logic/notification_provider.dart:247:36 • missing_required_param
-warning • The parameter 'data' is required • lib/modules/more/views/notification/logic/notification_provider.dart:253:36 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/more/views/notification/logic/notification_provider.dart:253:36 • missing_required_param
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: NotificationDetailsScreen.id, NotificationDetailsScreen.date, NotificationDetailsScreen.title, NotificationDetailsScreen.image, NotificationDetailsScreen.contant • lib/modules/more/views/notification/view/notification_details_screen.dart:20:9 • must_be_immutable
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/view/notification_details_screen.dart:21:9 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/view/notification_details_screen.dart:22:9 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/view/notification_details_screen.dart:23:9 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/view/notification_details_screen.dart:24:9 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/view/notification_details_screen.dart:25:9 • prefer_typing_uninitialized_variables
-warning • The value of the field '_loadedPages' isn't used • lib/modules/more/views/notification/view/notification_details_screen.dart:38:18 • unused_field
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/notification/view/notification_list_view_item.dart:93:95 • deprecated_member_use
-   info • Invalid use of a private type in a public API • lib/modules/more/views/notification/view/notification_screen.dart:29:3 • library_private_types_in_public_api
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/notification/view/notification_screen.dart:78:13 • prefer_typing_uninitialized_variables
-   info • Invalid use of a private type in a public API • lib/modules/more/views/notification/view/widget/notification_audio_widget.dart:10:3 • library_private_types_in_public_api
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: NotificationDetailsAppbarWidget.notificationSingleModel • lib/modules/more/views/notification/view/widget/notification_details_appbar_widget.dart:11:7 • must_be_immutable
+   info • The variable name 'XImageFileAttachmentPersonal' isn't a lowerCamelCase identifier • lib/modules/more/views/notification/view_models/notification_provider.dart:43:10 • non_constant_identifier_names
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/notification/view_models/notification_provider.dart:101:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/view_models/notification_provider.dart:158:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/view_models/notification_provider.dart:178:9 • avoid_print
+warning • The parameter 'query' is required • lib/modules/more/views/notification/view_models/notification_provider.dart:198:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/view_models/notification_provider.dart:220:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/view_models/notification_provider.dart:221:5 • avoid_print
+warning • The value of the local variable 'image' isn't used • lib/modules/more/views/notification/view_models/notification_provider.dart:222:11 • unused_local_variable
+warning • The parameter 'data' is required • lib/modules/more/views/notification/view_models/notification_provider.dart:247:36 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/more/views/notification/view_models/notification_provider.dart:247:36 • missing_required_param
+warning • The parameter 'data' is required • lib/modules/more/views/notification/view_models/notification_provider.dart:253:36 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/more/views/notification/view_models/notification_provider.dart:253:36 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/view_models/notification_provider.dart:404:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/view_models/notification_provider.dart:405:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/add_notification_screen.dart:99:27 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/add_notification_screen.dart:102:29 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/add_notification_screen.dart:276:45 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/add_notification_screen.dart:277:45 • avoid_print
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: NotificationDetailsScreen.id, NotificationDetailsScreen.date, NotificationDetailsScreen.title, NotificationDetailsScreen.image, NotificationDetailsScreen.contant • lib/modules/more/views/notification/views/notification_details_screen.dart:20:9 • must_be_immutable
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/views/notification_details_screen.dart:21:9 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/views/notification_details_screen.dart:22:9 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/views/notification_details_screen.dart:23:9 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/views/notification_details_screen.dart:24:9 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/notification/views/notification_details_screen.dart:25:9 • prefer_typing_uninitialized_variables
+warning • The value of the field '_loadedPages' isn't used • lib/modules/more/views/notification/views/notification_details_screen.dart:38:18 • unused_field
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/more/views/notification/views/notification_list_view_item.dart:93:95 • deprecated_member_use
+   info • Invalid use of a private type in a public API • lib/modules/more/views/notification/views/notification_screen.dart:29:3 • library_private_types_in_public_api
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/notification_screen.dart:40:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/notification_screen.dart:53:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/notification_screen.dart:54:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/more/views/notification/views/notification_screen.dart:59:9 • avoid_print
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/more/views/notification/views/notification_screen.dart:78:13 • prefer_typing_uninitialized_variables
+   info • Invalid use of a private type in a public API • lib/modules/more/views/notification/views/widgets/notification_audio_widget.dart:10:3 • library_private_types_in_public_api
+warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: NotificationDetailsAppbarWidget.notificationSingleModel • lib/modules/more/views/notification/views/widgets/notification_details_appbar_widget.dart:11:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/more/views/user_devices/user_devices_screen.dart:24:7 • prefer_typing_uninitialized_variables
 warning • The value of the local variable 'textStyle' isn't used • lib/modules/more/widgets/customize_notification_screen.dart:125:11 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:33:7 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/modules/offline/view_models/offline_viewmodel.dart:37:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:46:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:50:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:57:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:62:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:66:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:69:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:94:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:102:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/view_models/offline_viewmodel.dart:105:7 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/offline/views/offline_screen.dart:151:34 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/offline/views/offline_screen.dart:153:34 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/modules/offline/views/offline_screen.dart:217:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/views/offline_screen.dart:222:39 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/views/offline_screen.dart:234:39 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/views/offline_screen.dart:245:39 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/views/offline_screen.dart:256:39 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/offline/views/offline_screen.dart:265:37 • avoid_print
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: DefaultDetails.id, DefaultDetails.type • lib/modules/pages/default_details.dart:15:7 • must_be_immutable
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: DefaultListPage.type • lib/modules/pages/default_list_page.dart:18:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/pages/default_list_page.dart:19:7 • prefer_typing_uninitialized_variables
    info • Invalid use of a private type in a public API • lib/modules/pages/default_list_page.dart:23:3 • library_private_types_in_public_api
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_list_page.dart:38:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_list_page.dart:39:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_list_page.dart:44:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_list_page.dart:49:11 • avoid_print
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: DefaultPage.type • lib/modules/pages/default_page.dart:19:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/pages/default_page.dart:20:7 • prefer_typing_uninitialized_variables
    info • Invalid use of a private type in a public API • lib/modules/pages/default_page.dart:24:3 • library_private_types_in_public_api
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_page.dart:47:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_page.dart:48:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/pages/default_page.dart:53:9 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/modules/pages/default_page.dart:72:13 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/services/personal_profile.service.dart:53:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/services/personal_profile.service.dart:54:5 • avoid_print
 warning • The parameter 'data' is required • lib/modules/personal_profile/services/personal_profile.service.dart:70:31 • missing_required_param
 warning • The parameter 'query' is required • lib/modules/personal_profile/services/personal_profile.service.dart:70:31 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart:74:15 • missing_required_param
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart:116:9 • prefer_typing_uninitialized_variables
-   info • An uninitialized variable should have an explicit type annotation • lib/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart:133:9 • prefer_typing_uninitialized_variables
-   info • The variable name 'XImageFileProfile' isn't a lowerCamelCase identifier • lib/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart:155:10 • non_constant_identifier_names
-warning • The parameter 'query' is required • lib/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart:840:21 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/personal_profile/viewmodels/personal_profile.viewmodel.dart:857:31 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:74:15 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:81:7 • avoid_print
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:116:9 • prefer_typing_uninitialized_variables
+   info • An uninitialized variable should have an explicit type annotation • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:133:9 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:139:7 • avoid_print
+   info • The variable name 'XImageFileProfile' isn't a lowerCamelCase identifier • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:155:10 • non_constant_identifier_names
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:271:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:272:33 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:317:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:370:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:518:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:522:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:523:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:524:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:525:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:548:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:565:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:599:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:614:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:650:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:677:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:753:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:775:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:824:7 • avoid_print
+warning • The parameter 'query' is required • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:840:21 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:853:7 • avoid_print
+warning • The parameter 'query' is required • lib/modules/personal_profile/view_models/personal_profile.viewmodel.dart:857:31 • missing_required_param
    info • An uninitialized variable should have an explicit type annotation • lib/modules/personal_profile/views/personal_profile_screen.dart:96:27 • prefer_typing_uninitialized_variables
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/personal_profile/views/personal_profile_screen.dart:624:58 • deprecated_member_use
    info • An uninitialized variable should have an explicit type annotation • lib/modules/personal_profile/views/widgets/personal_profile_header.widget.dart:88:9 • prefer_typing_uninitialized_variables
@@ -225,17 +587,25 @@ warning • This class (or a class that this class inherits from) is marked as '
 warning • The left operand can't be null, so the right operand is never executed • lib/modules/personal_profile/views/widgets/personal_profile_header.widget.dart:346:37 • dead_null_aware_expression
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/personal_profile/views/widgets/personal_profile_shrinked_header.widget.dart:35:56 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/personal_profile/views/widgets/personal_profile_shrinked_header.widget.dart:59:56 • deprecated_member_use
-warning • The left operand can't be null, so the right operand is never executed • lib/modules/points/core/api/api_services_implementation.dart:30:70 • dead_null_aware_expression
-warning • The left operand can't be null, so the right operand is never executed • lib/modules/points/core/api/api_services_implementation.dart:49:50 • dead_null_aware_expression
-warning • The left operand can't be null, so the right operand is never executed • lib/modules/points/core/api/api_services_implementation.dart:70:50 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/modules/points/core/api/api_services_implementation.dart:29:70 • dead_null_aware_expression
+   info • Don't invoke 'print' in production code • lib/modules/points/core/api/api_services_implementation.dart:34:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/core/api/api_services_implementation.dart:35:5 • avoid_print
+warning • The left operand can't be null, so the right operand is never executed • lib/modules/points/core/api/api_services_implementation.dart:48:50 • dead_null_aware_expression
+warning • The left operand can't be null, so the right operand is never executed • lib/modules/points/core/api/api_services_implementation.dart:69:50 • dead_null_aware_expression
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/core/functions/show_progress_indicator.dart:14:32 • deprecated_member_use
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/models/history_model.dart:29:7 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/condition_repository/condition_repository_implementation.dart:14:7 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/history_repository/get_history_repository_implementation.dart:14:7 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:16:7 • prefer_typing_uninitialized_variables
-warning • The value of the local variable 'get' isn't used • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:42:9 • unused_local_variable
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart:15:7 • prefer_typing_uninitialized_variables
-warning • The value of the local variable 'get' isn't used • lib/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart:20:9 • unused_local_variable
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/condition_repository/condition_repository_implementation.dart:13:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/points/data/repositories/condition_repository/condition_repository_implementation.dart:26:7 • avoid_print
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/history_repository/get_history_repository_implementation.dart:13:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/points/data/repositories/history_repository/get_history_repository_implementation.dart:26:7 • avoid_print
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:15:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:28:7 • avoid_print
+warning • The value of the local variable 'get' isn't used • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:41:9 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:42:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/data/repositories/prize_repository/prize_repository_implementation.dart:51:7 • avoid_print
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart:14:7 • prefer_typing_uninitialized_variables
+warning • The value of the local variable 'get' isn't used • lib/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart:19:9 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/points/data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart:28:7 • avoid_print
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: ChargePhoneScreen.service • lib/modules/points/fawry_view/charge_phone_screen.dart:20:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/charge_phone_screen.dart:21:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/charge_phone_screen.dart:33:7 • prefer_typing_uninitialized_variables
@@ -244,13 +614,26 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/charge_phone_screen.dart:36:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/charge_phone_screen.dart:37:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/charge_phone_screen.dart:38:7 • prefer_typing_uninitialized_variables
+   info • Don't invoke 'print' in production code • lib/modules/points/fawry_view/charge_phone_screen.dart:82:9 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/charge_phone_screen.dart:151:47 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/charge_phone_screen.dart:152:47 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/charge_phone_screen.dart:177:66 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/charge_phone_screen.dart:384:66 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/modules/points/fawry_view/charge_phone_screen.dart:624:15 • avoid_print
+  error • Target of URI doesn't exist: '../logic/fawry_cubit/fawry_provider.dart' • lib/modules/points/fawry_view/fawry_provider_screen.dart:13:8 • uri_does_not_exist
+  error • The method 'FawryProviderModel' isn't defined for the type 'FawryProviderScreen' • lib/modules/points/fawry_view/fawry_provider_screen.dart:21:28 • undefined_method
+  error • The name 'FawryProviderModel' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/fawry_provider_screen.dart:22:23 • non_type_as_type_argument
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/fawry_provider_screen.dart:48:49 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/fawry_provider_screen.dart:49:49 • deprecated_member_use
+  error • The property 'isGetFawryCategoryLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:66:54 • unchecked_use_of_nullable_value
+  error • The property 'fawryCategory' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:67:29 • unchecked_use_of_nullable_value
+  error • The property 'isGetFawryCategoryLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:68:39 • unchecked_use_of_nullable_value
+  error • The property 'fawryCategory' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:82:43 • unchecked_use_of_nullable_value
+  error • The property 'fawryCategory' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:83:35 • unchecked_use_of_nullable_value
+  error • The property 'fawryCategory' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:84:35 • unchecked_use_of_nullable_value
+  error • The property 'fawryCategory' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:85:35 • unchecked_use_of_nullable_value
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/fawry_provider_screen.dart:117:42 • deprecated_member_use
+  error • Target of URI doesn't exist: '../logic/fawry_cubit/fawry_provider.dart' • lib/modules/points/fawry_view/pay_bill_screen.dart:13:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: PayBillScreen.title, PayBillScreen.phone, PayBillScreen.totalPoints, PayBillScreen.us2Cache, PayBillScreen.pointsPerOne, PayBillScreen.id, PayBillScreen.serviceObject, PayBillScreen.fawryInqury, PayBillScreen.inquiryId, PayBillScreen.inputsValues • lib/modules/points/fawry_view/pay_bill_screen.dart:15:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:16:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:17:7 • prefer_typing_uninitialized_variables
@@ -261,71 +644,371 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:21:16 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:23:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:24:7 • prefer_typing_uninitialized_variables
+  error • Undefined class 'FawryProviderModel' • lib/modules/points/fawry_view/pay_bill_screen.dart:37:3 • undefined_class
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:38:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:39:7 • prefer_typing_uninitialized_variables
+  error • The method 'FawryProviderModel' isn't defined for the type '_PayBillScreenState' • lib/modules/points/fawry_view/pay_bill_screen.dart:43:56 • undefined_method
+  error • The name 'FawryProviderModel' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/pay_bill_screen.dart:44:21 • non_type_as_type_argument
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:72:49 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:73:49 • deprecated_member_use
+  error • The property 'isGetFawryCategoryLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:112:67 • unchecked_use_of_nullable_value
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:133:68 • deprecated_member_use
+  error • The property 'selectIndix' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:147:51 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:150:51 • unchecked_use_of_nullable_value
+  error • The method 'updateFee' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:151:51 • unchecked_use_of_nullable_value
+  error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:152:51 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:152:105 • unchecked_use_of_nullable_value
+  error • The property 'selectIndix' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:165:60 • unchecked_use_of_nullable_value
+  error • The method 'calcFees' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:177:94 • unchecked_use_of_nullable_value
+  error • The method 'calcFees' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:178:108 • unchecked_use_of_nullable_value
+  error • The property 'isGetFawryCategoryLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:183:45 • unchecked_use_of_nullable_value
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:193:64 • deprecated_member_use
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:209:57 • unchecked_use_of_nullable_value
+  error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:215:49 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:215:103 • unchecked_use_of_nullable_value
+  error • The method 'updateFee' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:216:49 • unchecked_use_of_nullable_value
+  error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:229:57 • unchecked_use_of_nullable_value
+  error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:235:49 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:235:103 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:246:102 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:246:150 • unchecked_use_of_nullable_value
+  error • The property 'cachedFee' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:247:90 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:248:104 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:248:152 • unchecked_use_of_nullable_value
+  error • The property 'cachedFee' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:248:210 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:260:55 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:261:61 • unchecked_use_of_nullable_value
+  error • The property 'cachedFee' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:265:55 • unchecked_use_of_nullable_value
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:289:55 • deprecated_member_use
+  error • The property 'isPostPayLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:297:30 • unchecked_use_of_nullable_value
+  error • The method 'postPay' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:301:27 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: '../../logic/fawry_cubit/fawry_provider.dart' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:6:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: ChargePhoneBottomBar.serviceId • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:8:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:9:7 • prefer_typing_uninitialized_variables
+  error • The name 'FawryProviderModel' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:14:21 • non_type_as_type_argument
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:24:50 • deprecated_member_use
-warning • The value of the local variable 'appConfigServiceProvider' isn't used • lib/modules/points/logic/fawry_cubit/fawry_provider.dart:58:11 • unused_local_variable
-warning • The parameter 'query' is required • lib/modules/points/logic/fawry_cubit/fawry_provider.dart:145:40 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/points/logic/fawry_cubit/fawry_provider.dart:175:40 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/points/logic/fawry_cubit/fawry_provider.dart:229:40 • missing_required_param
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/logic/points_cubit/points_provider.dart:28:7 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/logic/points_cubit/points_provider.dart:29:7 • prefer_typing_uninitialized_variables
-   info • An uninitialized field should have an explicit type annotation • lib/modules/points/logic/points_cubit/points_provider.dart:30:7 • prefer_typing_uninitialized_variables
-warning • The parameter 'query' is required • lib/modules/points/logic/points_cubit/points_provider.dart:68:40 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/points/logic/points_cubit/points_provider.dart:133:40 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/points/logic/points_cubit/points_provider.dart:326:15 • missing_required_param
-warning • The parameter 'query' is required • lib/modules/points/logic/points_cubit/points_provider.dart:385:15 • missing_required_param
-warning • The value of the field '_isLoading' isn't used • lib/modules/points/logic/prize_cubit/prize_provider.dart:27:8 • unused_field
+  error • The property 'isPostPayLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:31:25 • unchecked_use_of_nullable_value
+  error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:33:59 • unchecked_use_of_nullable_value
+  error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:34:19 • unchecked_use_of_nullable_value
+  error • The method 'postPay' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:37:21 • unchecked_use_of_nullable_value
+  error • The property 'inputValues' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:39:37 • unchecked_use_of_nullable_value
+  error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:40:34 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: 'logic/points_cubit/points_provider.dart' • lib/modules/points/points_categories_screen.dart:20:8 • uri_does_not_exist
    info • Invalid use of a private type in a public API • lib/modules/points/points_categories_screen.dart:27:3 • library_private_types_in_public_api
+  error • Undefined class 'PointsProvider' • lib/modules/points/points_categories_screen.dart:32:8 • undefined_class
+   info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:38:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:39:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:44:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:49:10 • avoid_print
+  error • The method 'PointsProvider' isn't defined for the type '_PointsCategoriesScreenState' • lib/modules/points/points_categories_screen.dart:58:56 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/points_categories_screen.dart:61:25 • non_type_as_type_argument
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:64:26 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:65:41 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:71:30 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:119:35 • unchecked_use_of_nullable_value
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:144:54 • unchecked_use_of_nullable_value
+  error • The property 'currentPage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:144:74 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:146:48 • unchecked_use_of_nullable_value
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:148:48 • unchecked_use_of_nullable_value
+  error • The property 'currentPage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:148:68 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:161:48 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:162:49 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:163:52 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:164:54 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:167:54 • unchecked_use_of_nullable_value
+  error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:177:62 • unchecked_use_of_nullable_value
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:190:36 • unchecked_use_of_nullable_value
+  error • The property 'currentPage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:190:56 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: 'logic/points_cubit/points_provider.dart' • lib/modules/points/points_screen.dart:10:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: 'logic/prize_cubit/prize_provider.dart' • lib/modules/points/points_screen.dart:11:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: PointsScreen.arrow • lib/modules/points/points_screen.dart:13:7 • must_be_immutable
+  error • The method 'PointsProvider' isn't defined for the type '_PointsScreenState' • lib/modules/points/points_screen.dart:26:53 • undefined_method
+  error • The method 'PrizeProvider' isn't defined for the type '_PointsScreenState' • lib/modules/points/points_screen.dart:33:30 • undefined_method
+  error • Target of URI doesn't exist: 'logic/points_cubit/points_provider.dart' • lib/modules/points/prize_screen.dart:19:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: PrizeScreen.id • lib/modules/points/prize_screen.dart:21:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/prize_screen.dart:23:7 • prefer_typing_uninitialized_variables
    info • Invalid use of a private type in a public API • lib/modules/points/prize_screen.dart:27:3 • library_private_types_in_public_api
+  error • Undefined class 'PointsProvider' • lib/modules/points/prize_screen.dart:32:8 • undefined_class
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/prize_screen.dart:39:36 • non_type_as_type_argument
+   info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:43:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:44:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:49:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:53:11 • avoid_print
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/prize_screen.dart:74:25 • non_type_as_type_argument
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:76:23 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:77:15 • avoid_print
+  error • The property 'type' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:77:47 • unchecked_use_of_nullable_value
+  error • The method 'getPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/prize_screen.dart:79:24 • unchecked_use_of_nullable_value
+  error • The property 'type' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:86:27 • unchecked_use_of_nullable_value
+  error • The property 'type' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:86:56 • unchecked_use_of_nullable_value
+  error • The property 'redeemCode' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:87:29 • unchecked_use_of_nullable_value
+  error • The property 'redeemCode' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:89:44 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:97:22 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:135:35 • unchecked_use_of_nullable_value
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:150:47 • unchecked_use_of_nullable_value
+  error • The property 'currentPage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:150:67 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:152:42 • unchecked_use_of_nullable_value
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:154:42 • unchecked_use_of_nullable_value
+  error • The property 'currentPage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:154:62 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:170:49 • unchecked_use_of_nullable_value
+  error • The property 'selectIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:172:46 • unchecked_use_of_nullable_value
+  error • The property 'type' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:173:46 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:173:60 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:175:47 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:175:100 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:176:48 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:176:98 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:176:143 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:181:81 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:182:55 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:187:52 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:187:105 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:188:48 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:188:94 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:188:139 • unchecked_use_of_nullable_value
+  error • The method 'postRedeemPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/prize_screen.dart:191:53 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:191:89 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:194:52 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:194:105 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:195:48 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:195:95 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:195:140 • unchecked_use_of_nullable_value
+  error • The method 'postRedeemPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/prize_screen.dart:198:53 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:198:89 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:201:51 • unchecked_use_of_nullable_value
+  error • The method 'postRedeemPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/prize_screen.dart:204:53 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:204:89 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:207:38 • avoid_print
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:207:63 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:229:65 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:230:54 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:247:56 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:248:56 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:249:56 • unchecked_use_of_nullable_value
+  error • The property 'prizes' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:249:89 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:255:55 • unchecked_use_of_nullable_value
+  error • The property 'selectIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:255:81 • unchecked_use_of_nullable_value
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:266:36 • unchecked_use_of_nullable_value
+  error • The property 'currentPage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:266:56 • unchecked_use_of_nullable_value
+warning • The value of the local variable 'appConfigServiceProvider' isn't used • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:58:11 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:89:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:104:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:137:5 • avoid_print
+warning • The parameter 'query' is required • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:145:40 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:175:40 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:229:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/fawry_cubit/fawry_provider.dart:352:7 • avoid_print
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/view_models/points_cubit/points_provider.dart:28:7 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/view_models/points_cubit/points_provider.dart:29:7 • prefer_typing_uninitialized_variables
+   info • An uninitialized field should have an explicit type annotation • lib/modules/points/view_models/points_cubit/points_provider.dart:30:7 • prefer_typing_uninitialized_variables
+warning • The parameter 'query' is required • lib/modules/points/view_models/points_cubit/points_provider.dart:68:40 • missing_required_param
+warning • The parameter 'query' is required • lib/modules/points/view_models/points_cubit/points_provider.dart:133:40 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:186:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:224:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:249:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:264:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:273:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:299:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:303:7 • avoid_print
+warning • The parameter 'query' is required • lib/modules/points/view_models/points_cubit/points_provider.dart:326:15 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:373:7 • avoid_print
+warning • The parameter 'query' is required • lib/modules/points/view_models/points_cubit/points_provider.dart:385:15 • missing_required_param
+   info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:420:7 • avoid_print
+warning • The value of the field '_isLoading' isn't used • lib/modules/points/view_models/prize_cubit/prize_provider.dart:27:8 • unused_field
+  error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:10:8 • uri_does_not_exist
+  error • The method 'PointsProvider' isn't defined for the type 'AddFriendBottomSheet' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:18:51 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/add_friend_bottom_sheet.dart:23:25 • non_type_as_type_argument
+  error • The property 'isAddFriendSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:25:22 • unchecked_use_of_nullable_value
+  error • The property 'isAddFriendSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:29:21 • unchecked_use_of_nullable_value
+  error • The property 'friendNameController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:86:49 • unchecked_use_of_nullable_value
+  error • The property 'phoneController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:89:47 • unchecked_use_of_nullable_value
+  error • The property 'countryCodeController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:90:58 • unchecked_use_of_nullable_value
+  error • The property 'isAddFriendLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:93:36 • unchecked_use_of_nullable_value
+  error • The property 'isAddFriendLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:94:37 • unchecked_use_of_nullable_value
+  error • The method 'addFriend' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:96:37 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: '../logic/condition_cubit/condition_provider.dart' • lib/modules/points/widgets/condition_section.dart:5:8 • uri_does_not_exist
+  error • The name 'ConditionProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/condition_section.dart:12:43 • non_type_as_type_argument
+  error • Target of URI doesn't exist: '../logic/prize_cubit/prize_provider.dart' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:9:8 • uri_does_not_exist
+  error • The name 'PrizeProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:24:27 • non_type_as_type_argument
+  error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:34:28 • unchecked_use_of_nullable_value
+  error • The property 'prizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:40:30 • unchecked_use_of_nullable_value
+  error • The property 'prize' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:44:41 • unchecked_use_of_nullable_value
+  error • The property 'prize' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:45:41 • unchecked_use_of_nullable_value
+  error • The property 'prizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:46:41 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:58:27 • avoid_print
+  error • The property 'prize' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:60:38 • unchecked_use_of_nullable_value
+  error • The property 'status' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:65:35 • unchecked_use_of_nullable_value
+  error • Undefined name 'RedeemPrizeStatus' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:65:45 • undefined_identifier
+  error • The property 'status' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:68:35 • unchecked_use_of_nullable_value
+  error • Undefined name 'RedeemPrizeStatus' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:68:45 • undefined_identifier
+  error • The method 'redeemPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:70:36 • unchecked_use_of_nullable_value
+  error • The name 'PrizeProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:70:71 • non_type_as_type_argument
+  error • The property 'redeemPrizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:71:42 • unchecked_use_of_nullable_value
+  error • The property 'redeemPrizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:73:49 • unchecked_use_of_nullable_value
+  error • The property 'redeemPrizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:84:49 • unchecked_use_of_nullable_value
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: HistoryDropDownWidget.notes, HistoryDropDownWidget.code • lib/modules/points/widgets/history_drop_down_widget.dart:11:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/history_drop_down_widget.dart:12:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/history_drop_down_widget.dart:13:7 • prefer_typing_uninitialized_variables
+  error • Target of URI doesn't exist: '../logic/history_cubit/history_provider.dart' • lib/modules/points/widgets/history_item.dart:7:8 • uri_does_not_exist
+  error • The name 'HistoryProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/history_item.dart:17:21 • non_type_as_type_argument
+  error • The property 'state' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:19:22 • unchecked_use_of_nullable_value
+  error • Undefined name 'HistoryState' • lib/modules/points/widgets/history_item.dart:19:31 • undefined_identifier
+  error • The property 'state' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:21:29 • unchecked_use_of_nullable_value
+  error • Undefined name 'HistoryState' • lib/modules/points/widgets/history_item.dart:21:38 • undefined_identifier
+  error • The property 'errorMessage' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:23:44 • unchecked_use_of_nullable_value
+  error • The property 'state' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:25:29 • unchecked_use_of_nullable_value
+  error • Undefined name 'HistoryState' • lib/modules/points/widgets/history_item.dart:25:38 • undefined_identifier
+  error • The property 'historyModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:26:27 • unchecked_use_of_nullable_value
+  error • The property 'historyModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:26:69 • unchecked_use_of_nullable_value
+  error • The property 'historyModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:30:36 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/history_item.dart:41:21 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/history_item.dart:42:21 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/widgets/history_item.dart:64:51 • deprecated_member_use
+  error • The method 'getHistory' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:141:26 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:9:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: RayaAddDataBottomsheet.id, RayaAddDataBottomsheet.needData, RayaAddDataBottomsheet.keys, RayaAddDataBottomsheet.values, RayaAddDataBottomsheet.fieldFocusNode, RayaAddDataBottomsheet.fieldFocusNode2, RayaAddDataBottomsheet.dataIdFocusNode, RayaAddDataBottomsheet.dataNameFocusNode • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:12:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:13:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:14:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:16:7 • prefer_typing_uninitialized_variables
+  error • The method 'PointsProvider' isn't defined for the type 'RayaAddDataBottomsheet' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:24:56 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:25:25 • non_type_as_type_argument
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:26:20 • unchecked_use_of_nullable_value
+  error • The property 'redeemCode' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:28:24 • unchecked_use_of_nullable_value
+  error • The property 'redeemCode' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:30:103 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:36:19 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:40:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:42:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:44:11 • avoid_print
+  error • The property 'dataNameController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:92:51 • unchecked_use_of_nullable_value
+  error • The property 'phoneController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:94:49 • unchecked_use_of_nullable_value
+  error • The property 'countryCodeController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:95:60 • unchecked_use_of_nullable_value
+  error • The property 'dataIdController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:106:51 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:108:38 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:109:39 • unchecked_use_of_nullable_value
+  error • The method 'postRedeemPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:111:39 • unchecked_use_of_nullable_value
    info • Invalid use of a private type in a public API • lib/modules/points/widgets/select_contact_screen.dart:17:3 • library_private_types_in_public_api
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/select_contact_screen.dart:76:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/select_contact_screen.dart:77:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/select_contact_screen.dart:84:7 • avoid_print
+  error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:9:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SendPointConfirmBottomsheet.user, SendPointConfirmBottomsheet.amount, SendPointConfirmBottomsheet.name, SendPointConfirmBottomsheet.fieldFocusNode • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:11:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:12:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:13:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:14:7 • prefer_typing_uninitialized_variables
+  error • The method 'PointsProvider' isn't defined for the type 'SendPointConfirmBottomsheet' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:20:28 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:23:27 • non_type_as_type_argument
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:25:24 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:54:23 • unchecked_use_of_nullable_value
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:84:36 • deprecated_member_use
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:144:50 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:147:39 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:148:39 • avoid_print
+  error • The method 'postTransferPoints' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:149:45 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:10:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SendPointFriendBottomSheet.pointsFocusNode • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:12:7 • must_be_immutable
+  error • The method 'PointsProvider' isn't defined for the type 'SendPointFriendBottomSheet' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:17:56 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:20:25 • non_type_as_type_argument
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:21:20 • unchecked_use_of_nullable_value
+  error • The property 'pointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:27:70 • unchecked_use_of_nullable_value
+  error • The property 'countryCodeController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:28:35 • unchecked_use_of_nullable_value
+  error • The property 'phoneController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:28:84 • unchecked_use_of_nullable_value
+  error • The property 'countryCodeController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:28:118 • unchecked_use_of_nullable_value
+  error • The property 'phoneController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:28:153 • unchecked_use_of_nullable_value
+  error • The property 'userName' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:29:33 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:34:19 • unchecked_use_of_nullable_value
+  error • The property 'phoneController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:82:47 • unchecked_use_of_nullable_value
+  error • The property 'countryCodeController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:83:58 • unchecked_use_of_nullable_value
+  error • The property 'pointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:94:49 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:96:36 • unchecked_use_of_nullable_value
+  error • The property 'isRedeemLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:97:37 • unchecked_use_of_nullable_value
+  error • The method 'postTransferPoints' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:99:37 • unchecked_use_of_nullable_value
+  error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/sliver_app_bar_points.dart:12:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SliverAppBarPoints.arrow • lib/modules/points/widgets/sliver_app_bar_points.dart:14:7 • must_be_immutable
+  error • The method 'PointsProvider' isn't defined for the type 'SliverAppBarPoints' • lib/modules/points/widgets/sliver_app_bar_points.dart:21:28 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_app_bar_points.dart:22:23 • non_type_as_type_argument
+   info • Don't invoke 'print' in production code • lib/modules/points/widgets/sliver_app_bar_points.dart:31:17 • avoid_print
+  error • Target of URI doesn't exist: '../logic/condition_cubit/condition_provider.dart' • lib/modules/points/widgets/sliver_list_points.dart:13:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../logic/history_cubit/history_provider.dart' • lib/modules/points/widgets/sliver_list_points.dart:14:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/sliver_list_points.dart:15:8 • uri_does_not_exist
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_list_points.dart:22:21 • non_type_as_type_argument
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:49:36 • unchecked_use_of_nullable_value
+  error • The method 'ConditionProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:51:46 • undefined_method
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:53:41 • unchecked_use_of_nullable_value
+  error • The method 'HistoryProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:55:52 • undefined_method
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:65:44 • unchecked_use_of_nullable_value
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:74:50 • unchecked_use_of_nullable_value
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:75:50 • unchecked_use_of_nullable_value
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:84:50 • unchecked_use_of_nullable_value
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:96:40 • unchecked_use_of_nullable_value
+  error • The method 'ConditionProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:98:50 • undefined_method
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:100:45 • unchecked_use_of_nullable_value
+  error • The method 'HistoryProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:102:56 • undefined_method
+  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_list_points.dart:127:19 • non_type_as_type_argument
+  error • The method 'changeIndex' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:152:26 • unchecked_use_of_nullable_value
+  error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:166:36 • unchecked_use_of_nullable_value
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:58:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:65:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:71:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:77:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:110:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:117:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:120:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:123:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:141:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:150:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:169:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:173:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:176:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:183:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:187:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:191:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:195:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:199:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:202:9 • avoid_print
    info • Use interpolation to compose strings and values • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:231:25 • prefer_interpolation_to_compose_strings
 warning • The value of the local variable 'homeViewModel' isn't used • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:263:32 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:268:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:270:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:286:15 • avoid_print
 warning • The value of the local variable 'features' isn't used • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:289:19 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:297:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:322:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:329:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:334:13 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:340:13 • avoid_print
 warning • Dead code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:348:19 • dead_code
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:349:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:351:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:355:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:363:15 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:375:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:379:17 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:394:9 • avoid_print
    info • An uninitialized variable should have an explicit type annotation • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:420:15 • prefer_typing_uninitialized_variables
 warning • The value of the local variable 'role' isn't used • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:420:15 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:424:13 • avoid_print
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/splash_and_onboarding/views/onboarding_screen.dart:64:59 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/splash_and_onboarding/views/onboarding_screen.dart:65:59 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/splash_and_onboarding/views/onboarding_screen.dart:66:59 • deprecated_member_use
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:74:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:104:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:105:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:115:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:122:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:126:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:131:5 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:140:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:147:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:154:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:161:7 • avoid_print
    info • The type of the right operand ('String') isn't a subtype or a supertype of the left operand ('Map<String, dynamic>') • lib/modules/splash_and_onboarding/views/splash_screen.dart:182:41 • unrelated_type_equality_checks
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:188:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:192:7 • avoid_print
    info • The type of the right operand ('String') isn't a subtype or a supertype of the left operand ('Map<String, dynamic>') • lib/modules/splash_and_onboarding/views/splash_screen.dart:194:41 • unrelated_type_equality_checks
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:200:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:204:7 • avoid_print
    info • The type of the right operand ('String') isn't a subtype or a supertype of the left operand ('Map<String, dynamic>') • lib/modules/splash_and_onboarding/views/splash_screen.dart:206:41 • unrelated_type_equality_checks
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/animated_custom_dropdown/dropdown_overlay.dart:190:43 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/animated_custom_dropdown/dropdown_overlay.dart:409:34 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/animated_custom_dropdown/dropdown_overlay.dart:416:34 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/animated_custom_dropdown/dropdown_overlay.dart:423:34 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/custom_animated_action_button/lib/src/quick_action_menu.dart:57:37 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/custom_shimmer_loading/shimmer_animated_loading.dart:32:33 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/custom_shimmer_loading/shimmer_animated_loading.dart:33:31 • deprecated_member_use
-warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: GeneralScreenMessageWidget.id • lib/utils/general_screen_message_widget.dart:11:7 • must_be_immutable
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/gradient_bg_image.dart:18:37 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/gradient_bg_image.dart:19:37 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/utils/overlay_gradient_widget.dart:15:37 • deprecated_member_use
-warning • The value of the local variable 'itemWidth' isn't used • lib/utils/tab_bar_widget.dart:15:14 • unused_local_variable
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:210:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:212:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/views/splash_screen.dart:216:7 • avoid_print
 

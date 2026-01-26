@@ -18,9 +18,9 @@ import 'package:app_test/core/services/device_info.service.dart';
 import 'package:app_test/core/services/internet_check.dart';
 import 'package:app_test/core/services/localization.service.dart';
 import 'package:app_test/core/services/domain_selection.service.dart';
-import 'package:app_test/utils/overlay_gradient_widget.dart';
-
 import 'package:app_test/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart';
+
+import '../../../core/utils/overlay_gradient_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

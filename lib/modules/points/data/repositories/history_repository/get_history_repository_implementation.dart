@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:app_test/core/services/app_config.service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/modules/points/core/api/api_services.dart';
 import 'package:app_test/modules/points/core/api/end_points.dart';

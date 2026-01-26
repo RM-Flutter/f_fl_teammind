@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/modules/more/views/company_structure/viewmodels/company_structure_info.viewmodel.dart';
+import '../view_models/company_structure_info.viewmodel.dart';
 import 'widgets/company_info_header/company_info_header_widget.dart';
 
 class CompanyStructureInfoScreen extends StatefulWidget {

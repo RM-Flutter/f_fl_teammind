@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_test/modules/points/view_models/points_cubit/points_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -11,13 +12,13 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
-import 'package:app_test/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/modules/home/view_models/home.viewmodel.dart';
-import 'logic/points_cubit/points_provider.dart';
+
+import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import '../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;

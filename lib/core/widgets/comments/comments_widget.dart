@@ -8,8 +8,8 @@ import 'package:app_test/core/widgets/comments/send_comment_widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/modules/complain_screen/widget/full_image_screen.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/modules/complain_screen/widgets/full_image_screen.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 class CommentsWidget extends StatelessWidget {
   List? comments = [];

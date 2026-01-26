@@ -10,10 +10,10 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/controllers/request_controller/request_controller.dart';
-import 'package:app_test/modules/complain_screen/widget/full_image_screen.dart';
-import 'package:app_test/modules/complain_screen/widget/request_details_appbar_widget.dart';
-import 'package:app_test/modules/complain_screen/widget/request_details_loading_screen.dart';
-import 'package:app_test/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/modules/complain_screen/widgets/full_image_screen.dart';
+import 'package:app_test/modules/complain_screen/widgets/request_details_appbar_widget.dart';
+import 'package:app_test/modules/complain_screen/widgets/request_details_loading_screen.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 
 

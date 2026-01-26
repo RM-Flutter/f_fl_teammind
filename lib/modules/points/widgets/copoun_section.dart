@@ -6,7 +6,7 @@
 // import 'package:app_test/core/constants/app_images.dart';
 // import 'package:app_test/core/constants/app_sizes.dart';
 // import 'package:app_test/core/constants/app_strings.dart';
-// import 'package:app_test/utils/media_query_values.dart';
+// import 'package:app_test/core/utils/media_query_values.dart';
 // import 'package:provider/provider.dart';
 //
 // import '../../../controller/home_model/home_model.dart';
