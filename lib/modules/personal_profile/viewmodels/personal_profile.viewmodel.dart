@@ -78,7 +78,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
           "password" : password
         }
     ).then((value){
-      debugPrint(value.data);
+      print(value.data);
       isLoading = false;
       notifyListeners();
       if(value.data['errors'] !=null){
@@ -136,7 +136,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
-      debugPrint("gCache is --> $gCache");
+      print("gCache is --> $gCache");
     }
     if (UserSettingConst.userSettings == null) return;
     emailController.text = UserSettingConst.userSettings?.email ?? '';
@@ -268,8 +268,8 @@ class PersonalProfileViewModel extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                debugPrint(image1);
-                                debugPrint(image2);
+                                print(image1);
+                                print(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(
@@ -314,7 +314,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       var outputDate = outputFormat.format(birthDate!);
       birthDateController.text = outputDate;
       notifyListeners();
-      debugPrint( birthDateController.text);
+      print( birthDateController.text);
     }
   }
   // Future<void> selectBirthDate(BuildContext context) async {
@@ -367,7 +367,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         return;
       }
     } catch (ex, t) {
-      debugPrint(
+      print(
           'Failed to Activate 2FA , Please Try Later ,${ex.toString()} at $t');
       AlertsService.error(
           context: context,
@@ -515,14 +515,14 @@ class PersonalProfileViewModel extends ChangeNotifier {
       Map<String, dynamic> us1Cache = {};
       if (json1String != null && json1String != "") {
         us1Cache = json.decode(json1String) as Map<String, dynamic>;// Convert String back to JSON
-        debugPrint("S1 IS --> $us1Cache");
+        print("S1 IS --> $us1Cache");
         UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
       }
       //check if there is changes on the user profil
-      debugPrint("isThis --> ${nameController.text == us1Cache['name']}");
-      debugPrint("isThis --> ${us1Cache['birthday']}");
-      debugPrint("isThis --> ${birthDateController.text}");
-      debugPrint("isThis --> ${ birthDateController.text == us1Cache['birthday']}");
+      print("isThis --> ${nameController.text == us1Cache['name']}");
+      print("isThis --> ${us1Cache['birthday']}");
+      print("isThis --> ${birthDateController.text}");
+      print("isThis --> ${ birthDateController.text == us1Cache['birthday']}");
       if (nameController.text == us1Cache['name'] &&
           birthDateController.text ==
               us1Cache['birthday']) {
@@ -545,7 +545,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
               DateService.formatDateTime(UserSettingConst.userSettings?.birthDate) ? birthDateController.text:DateService.formatDateTime(birthDate, format: 'yyyy-MM-dd'),
         );
         result.then((value)async{
-          debugPrint("Update2");
+          print("Update2");
           Fluttertoast.showToast(
               msg: value.data['message'],
               toastLength: Toast.LENGTH_LONG,
@@ -562,7 +562,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         });
       }
     } catch (ex, t) {
-      debugPrint(
+      print(
           '${AppStrings.failedToUpdateProfilePleaseTryLater.tr()} ,${ex.toString()} at $t');
       Fluttertoast.showToast(
           msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
@@ -586,7 +586,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       //   bool isUpdate = await AlertsService.confirmMessage(
       //       context, AppStrings.updateProfile.tr(),
       //       message: AppStrings.areYouSureYouWantToUpdateYourProfile.tr());
-      //   debugPrint("UPDATE IS---> $isUpdate");
+      //   print("UPDATE IS---> $isUpdate");
       //   if (isUpdate == false) return;
       var result = PersonalProfileService.updateProfile(
         context: context,
@@ -596,7 +596,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
 
       );
       result.then((value)async{
-        debugPrint("Update2");
+        print("Update2");
         Fluttertoast.showToast(
             msg: value.data['message'],
             toastLength: Toast.LENGTH_LONG,
@@ -611,7 +611,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         return;
       });
     } catch (ex, t) {
-      debugPrint(
+      print(
           '${AppStrings.failedToUpdateProfilePleaseTryLater.tr()} ,${ex.toString()} at $t');
       Fluttertoast.showToast(
           msg:"${ex.toString()} ${AppStrings.at.tr()} $t",
@@ -647,7 +647,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         if (isUpdate == false) return;
         final result = await PersonalProfileService.updateProfile(
             context: context, email: emailController.text);
-        debugPrint("result is --> $result");
+        print("result is --> $result");
         if(result != null){
           if(result.data['status'] == true ){
             if (
@@ -674,7 +674,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         }
       }
     } catch (ex, t) {
-      debugPrint(
+      print(
           '${AppStrings.failedToUpdateEmailPleaseTryLater.tr()} ,${ex.toString()} at $t');
       Fluttertoast.showToast(
           msg:"${ex.toString()} ${AppStrings.at.tr()} $t",
@@ -750,7 +750,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
         }
       }
     } catch (ex, t) {
-      debugPrint(
+      print(
           '${AppStrings.failedToUpdatePhonePleaseTryLater.tr()} ,${ex.toString()} at $t');
       Fluttertoast.showToast(
           msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
@@ -772,7 +772,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       Provider.of<AppConfigService>(context, listen: false);
       await appConfigService.logout(context, viewAlert: true);
     } catch (ex, t) {
-      debugPrint('${AppStrings.failedToLogoutPleaseTryLater.tr()} ,${ex.toString()} at $t');
+      print('${AppStrings.failedToLogoutPleaseTryLater.tr()} ,${ex.toString()} at $t');
     }
   }
 
@@ -821,7 +821,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       );
 
     } catch (ex, t) {
-      debugPrint(
+      print(
           '${AppStrings.failedToDeleteAccountPleaseTryLater.tr()} ,${ex.toString()} at $t');
       Fluttertoast.showToast(
           msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
@@ -850,7 +850,7 @@ class PersonalProfileViewModel extends ChangeNotifier {
       }
       notifyListeners();
     }).catchError((e){
-      debugPrint(e);
+      print(e);
     });
   }
   verfiy(context, {sendBy, code})async{

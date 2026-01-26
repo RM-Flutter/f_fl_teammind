@@ -55,7 +55,7 @@ class _DropDownAndButtonBottomSheetState extends State<DropDownAndButtonBottomSh
                           ),
                         ).toList(),
                         onChanged: (String? value) {
-                          debugPrint(value);
+                          print(value);
                           setState(() {
                             provider.prize = value!;
                           });

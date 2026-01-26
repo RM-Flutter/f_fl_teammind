@@ -24,13 +24,13 @@ class GeneralListener {
   void someFunction() async{
     // قبل الخطوة
     final start = DateTime.now();
-    debugPrint("⏳ بدأت عند: $start");
+    print("⏳ بدأت عند: $start");
 
     // الخطوة اللي عايز تقيس وقتها
 
     // بعد الخطوة
     final end = DateTime.now();
-    debugPrint("✅ خلصت عند: $end");
+    print("✅ خلصت عند: $end");
 
     // الفرق
     final diff = end.difference(start).inMilliseconds;
@@ -194,16 +194,16 @@ class GeneralListener {
   }
 
   static routeCompile(urls) async {
-    debugPrint("PLAY IS IN PROCESS");
-    debugPrint(urls);
+    print("PLAY IS IN PROCESS");
+    print(urls);
     final url = urls;
     final result = await analyzeRoute(url);
     if (result != null) {
-      debugPrint("Route Key: ${result['key']}");
-      debugPrint("Parameters: ${result['values']}");
+      print("Route Key: ${result['key']}");
+      print("Parameters: ${result['values']}");
       return result;
     } else {
-      debugPrint("No matching route found.");
+      print("No matching route found.");
     }
   }
 

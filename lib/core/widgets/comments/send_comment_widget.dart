@@ -50,7 +50,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
         });
       }
     } catch (e) {
-      debugPrint("Error starting recording: $e");
+      print("Error starting recording: $e");
     }
   }
   Future<Duration?> _getAudioDuration(String filePath) async {
@@ -61,7 +61,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
       await player.dispose();
       return duration;
     } catch (e) {
-      debugPrint("Error getting duration: $e");
+      print("Error getting duration: $e");
       return null;
     }
   }
@@ -77,7 +77,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
     return Consumer<CommentProvider>(
       builder: (context, value, child) {
         if(value.isAddCommentSuccess == true){
-          debugPrint("ADDED SUCCESS");
+          print("ADDED SUCCESS");
           WidgetsBinding.instance.addPostFrameCallback((_) {
             value.getComment(context, widget.slug,widget.id);
           });
@@ -91,17 +91,17 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
               if (await file.exists()) {
                 Duration? duration = await _getAudioDuration(path);
                 if (duration != null && duration.inSeconds > 0) {
-                  debugPrint("Audio Duration: ${duration.inSeconds} seconds");
+                  print("Audio Duration: ${duration.inSeconds} seconds");
                   value.addComment(context, id: widget.id, voicePath: path, slug: "emp-complains");
                 } else {
-                  debugPrint("Error: Recorded audio has zero duration!");
+                  print("Error: Recorded audio has zero duration!");
                 }
               } else {
-                debugPrint("Error: Recorded file does not exist.");
+                print("Error: Recorded file does not exist.");
               }
             }
           } catch (e) {
-            debugPrint("Error stopping recording: $e");
+            print("Error stopping recording: $e");
           } finally {
             setState(() {
               _isRecording = false;

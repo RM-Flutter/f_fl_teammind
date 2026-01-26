@@ -26,7 +26,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  debugPrint("🔹 Background Notification: ${message.notification?.title}");
+  print("🔹 Background Notification: ${message.notification?.title}");
 }
 
 void main() async {
@@ -57,7 +57,7 @@ void main() async {
     final appDocumentDirectory = await getApplicationDocumentsDirectory();
     Hive.init(appDocumentDirectory.path);
   } catch (ex, t) {
-    debugPrint('Failed to initialize Hive Database $ex $t');
+    print('Failed to initialize Hive Database $ex $t');
   }
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],

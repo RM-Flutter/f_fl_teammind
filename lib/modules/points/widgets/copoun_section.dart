@@ -238,7 +238,7 @@
 // //                               setState(() {
 // //                                 provider.isRequestSent = true;
 // //                               });// Reset flag after completion
-// //                               debugPrint("isRequestSent success --> ${provider.isRequestSent}");
+// //                               print("isRequestSent success --> ${provider.isRequestSent}");
 // //                               if(provider.status == false){
 // //                                 if(widget.points == true){
 // //                                   Navigator.pop(context);
@@ -248,7 +248,7 @@
 // //                                 }}
 // //                             }).catchError((_) {
 // //                               provider.isRequestSent = false; // Reset flag on error
-// //                               debugPrint("isRequestSent error --> ${provider.isRequestSent}");
+// //                               print("isRequestSent error --> ${provider.isRequestSent}");
 // //                               if(widget.points == true){
 // //                                 Navigator.pop(context);
 // //                                 Navigator.pop(context);

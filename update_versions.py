@@ -85,10 +85,10 @@ def main():
         with open(yaml_file, 'w') as f:
             f.write('\n'.join(new_lines))
             
-        debugPrint("Updated pubspec.yaml with versions from pubspec.lock")
+        print("Updated pubspec.yaml with versions from pubspec.lock")
 
     except Exception as e:
-        debugPrint(f"Error: {e}")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     main()

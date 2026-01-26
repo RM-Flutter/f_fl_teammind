@@ -154,7 +154,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
         context.setLocale(Locale(lang));
       }
     } catch (e) {
-      debugPrint('Error setting locale: $e');
+      print('Error setting locale: $e');
     }
 
     // 🌐 Offline handling is now done via overlay, no redirect needed

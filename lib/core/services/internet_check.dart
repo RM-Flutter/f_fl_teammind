@@ -56,7 +56,7 @@ class ConnectionService extends ChangeNotifier {
       final results = await _connectivity.checkConnectivity();
       _updateConnectionStatus(results);
     } catch (e) {
-      debugPrint('Error checking connection status: $e');
+      print('Error checking connection status: $e');
     }
   }
 
@@ -89,7 +89,7 @@ class ConnectionService extends ChangeNotifier {
                                  currentLocation.contains('offline') ||
                                  currentLocation.contains('fingerPrintOffline');
             } catch (e) {
-              debugPrint("⚠️ Error checking route: $e");
+              print("⚠️ Error checking route: $e");
             }
           }
           
@@ -100,7 +100,7 @@ class ConnectionService extends ChangeNotifier {
           
           // NEVER call onConnectionRestored if we're on offline screen or overlay is temporarily hidden
           if (isOnOfflineScreen || OfflineOverlayService.isTemporarilyHidden) {
-            debugPrint("🔄 Connection restored, but user is on offline screen or overlay is temporarily hidden - NOT calling onConnectionRestored");
+            print("🔄 Connection restored, but user is on offline screen or overlay is temporarily hidden - NOT calling onConnectionRestored");
             return;
           }
           
@@ -120,23 +120,23 @@ class ConnectionService extends ChangeNotifier {
                                            currentLocation.contains('fingerPrintOffline');
                 
                 if (!stillOnOfflineScreen) {
-                  debugPrint("🔄 Connection restored, triggering initialization callback... (current location: $currentLocation)");
+                  print("🔄 Connection restored, triggering initialization callback... (current location: $currentLocation)");
                   onConnectionRestored!();
                 } else {
-                  debugPrint("🔄 Connection restored, but user is still on offline screen ($currentLocation) - NOT calling onConnectionRestored");
+                  print("🔄 Connection restored, but user is still on offline screen ($currentLocation) - NOT calling onConnectionRestored");
                 }
               } catch (e) {
-                debugPrint("⚠️ Error checking route: $e - NOT calling onConnectionRestored to be safe");
+                print("⚠️ Error checking route: $e - NOT calling onConnectionRestored to be safe");
               }
             } else {
-              debugPrint("🔄 Connection restored, but no context available - NOT calling onConnectionRestored");
+              print("🔄 Connection restored, but no context available - NOT calling onConnectionRestored");
             }
           }
         });
       }
       
       notifyListeners();
-      debugPrint('Connection status changed: ${_isConnected ? "Connected" : "Offline"}');
+      print('Connection status changed: ${_isConnected ? "Connected" : "Offline"}');
     }
   }
 

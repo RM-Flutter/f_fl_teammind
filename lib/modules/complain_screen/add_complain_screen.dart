@@ -77,7 +77,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                             ),
                             ).toList(),
                             onChanged: (String? values) {
-                              debugPrint(values);
+                              print(values);
                               setState(() {
                                 value.selectDepartment = values;
                               });
@@ -213,7 +213,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                           if(value.isAddRequestLoading == true) const Center(child: CircularProgressIndicator(),),
                           if(value.isAddRequestLoading == false) CustomElevatedButton(
                               onPressed: () async {
-                                debugPrint("value.listXAttachmentPersonalImage ${value.listXAttachmentPersonalImage}");
+                                print("value.listXAttachmentPersonalImage ${value.listXAttachmentPersonalImage}");
                                 if(formKey.currentState!.validate()){
                                   value.addRequest(context, images: value.listXAttachmentPersonalImage);
                                 }

@@ -23,7 +23,7 @@ class TimeoutMessage {
     try {
       _activeOverlay?.remove();
     } catch (err) {
-      debugPrint('cannot remove old overlay ${err.toString}');
+      print('cannot remove old overlay ${err.toString}');
     }
     _activeOverlay = null;
   }

@@ -41,8 +41,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("detectedCountryCode is --> ${CacheHelper.getString("flag")}");
-    debugPrint("detectedCountryCode is --> ${CacheHelper.getString("flagCode")}");
+    print("detectedCountryCode is --> ${CacheHelper.getString("flag")}");
+    print("detectedCountryCode is --> ${CacheHelper.getString("flagCode")}");
     return Directionality(
       textDirection: LocalizationService.isArabic(context: context)
           ? TextDirection.rtl

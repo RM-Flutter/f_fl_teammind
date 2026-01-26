@@ -6,7 +6,7 @@ void registerErrorHandlers() {
   // * Show some error UI if any uncaught exception happens
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
-    debugPrint(details.toString());
+    print(details.toString());
     // Send to Telegram
     TelegramErrorService.captureException(
       details.exception,
@@ -15,7 +15,7 @@ void registerErrorHandlers() {
   };
   // * Handle errors from the underlying platform/OS
   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
-    debugPrint(error.toString());
+    print(error.toString());
     // Send to Telegram
     TelegramErrorService.captureException(error, stackTrace: stack);
     return true;

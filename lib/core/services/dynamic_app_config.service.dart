@@ -54,15 +54,15 @@ class DynamicAppConfigService {
     if (jsonString != null && jsonString.isNotEmpty) {
       try {
         _cachedGCache = json.decode(jsonString) as Map<String, dynamic>;
-        debugPrint('🎨 DynamicAppConfig: ✅ gCache loaded from API (keys: ${_cachedGCache!.keys.toList()})');
+        print('🎨 DynamicAppConfig: ✅ gCache loaded from API (keys: ${_cachedGCache!.keys.toList()})');
         return _cachedGCache;
       } catch (e) {
-        debugPrint('🎨 DynamicAppConfig: ❌ Error decoding gCache: $e');
+        print('🎨 DynamicAppConfig: ❌ Error decoding gCache: $e');
         return null;
       }
     }
     
-    debugPrint('🎨 DynamicAppConfig: ⚠️ USG cache is null or empty');
+    print('🎨 DynamicAppConfig: ⚠️ USG cache is null or empty');
     return null;
   }
 
@@ -91,12 +91,12 @@ class DynamicAppConfigService {
         if (profile is Map && profile['system'] == 'teammind') {
           _cachedTeammindProfile = Map<String, dynamic>.from(profile);
           final colors = _cachedTeammindProfile!['colors'] as Map?;
-          debugPrint('🎨 DynamicAppConfig: ✅ Found teammind profile! Colors from API: ${colors?.keys.toList()}');
+          print('🎨 DynamicAppConfig: ✅ Found teammind profile! Colors from API: ${colors?.keys.toList()}');
           return _cachedTeammindProfile;
         }
       }
     } catch (e) {
-      debugPrint('🎨 DynamicAppConfig: ❌ Error getting profile: $e');
+      print('🎨 DynamicAppConfig: ❌ Error getting profile: $e');
     }
     return null;
   }

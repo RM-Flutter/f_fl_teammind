@@ -62,7 +62,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
         notifyListeners();
         return;
       } else {
-        debugPrint("ERROR FROM ${result.message!}");
+        print("ERROR FROM ${result.message!}");
         Fluttertoast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
@@ -119,7 +119,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
       notifyListeners();
       return;
     } else {
-      debugPrint("ERROR FROM HERE");
+      print("ERROR FROM HERE");
       Fluttertoast.showToast(
           msg: result.message!,
           toastLength: Toast.LENGTH_LONG,

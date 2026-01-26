@@ -40,13 +40,13 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
         ? ["English language",
       "اللغه العربية"]
         : lang;
-    debugPrint("is--->${context.locale.languageCode}");
+    print("is--->${context.locale.languageCode}");
     if(context.locale.languageCode.contains("en")){
       selectIndex = 0;
     }if(context.locale.languageCode.contains("ar")){
       selectIndex = 1;
     }
-      debugPrint("LANG Is : $lang");
+      print("LANG Is : $lang");
     return ChangeNotifierProvider(create: (context) => LangControllerProvider(),
       child: Consumer<LangControllerProvider>(builder: (context, value, child) {
         return Scaffold(

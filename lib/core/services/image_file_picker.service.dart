@@ -24,7 +24,7 @@ abstract class FileAndImagePickerService {
         "fileName": image.name,
       };
     } on PlatformException catch (e) {
-      debugPrint("Failed to pick image: ${e.toString()}");
+      print("Failed to pick image: ${e.toString()}");
       return null;
     }
   }
@@ -69,7 +69,7 @@ abstract class FileAndImagePickerService {
 
       return images.map((e) => File(e.path)).toList();
     } on PlatformException catch (e) {
-      debugPrint("Failed to pick images: $e");
+      print("Failed to pick images: $e");
       return null;
     }
   }
@@ -93,7 +93,7 @@ abstract class FileAndImagePickerService {
         type: FileType.custom,
       );
     } on PlatformException catch (e) {
-      debugPrint("Failed to pick files: ${e.toString()}");
+      print("Failed to pick files: ${e.toString()}");
       return null;
     }
   }

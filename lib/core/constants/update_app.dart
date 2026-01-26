@@ -113,7 +113,7 @@ class UpdateApp{
 
       }
     } catch (e) {
-      debugPrint("❌ Error checking update: $e");
+      print("❌ Error checking update: $e");
     }
   }
 }

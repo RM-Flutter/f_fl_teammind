@@ -37,7 +37,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint("CacheHelper.getBool --> ${CacheHelper.getBool("value")}");
+      print("CacheHelper.getBool --> ${CacheHelper.getBool("value")}");
       notificationProvider = Provider.of<NotificationProviderModel>(context, listen: false);
       if(CacheHelper.getBool("value") != null){
         if(CacheHelper.getBool("value") == false){
@@ -50,13 +50,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
       }
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !notificationProvider.isGetNotificationLoading &&
           notificationProvider.hasMoreNotifications) {
-        debugPrint("BOTTOM BOTTOM");
+        print("BOTTOM BOTTOM");
         if(CacheHelper.getBool("value") != null){
           if(CacheHelper.getBool("value") == false){
             notificationProvider.getNotification(context, page: notificationProvider.currentPage, forWho: "all");

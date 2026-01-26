@@ -28,7 +28,7 @@ class SliverAppBarPoints extends StatelessWidget {
               if (json2String != null && json2String != "") {
                 us2Cache = json.decode(json2String)
                     as Map<String, dynamic>; // Convert String back to JSON
-                debugPrint("S111111 IS --> ${us2Cache['points']['available']}");
+                print("S111111 IS --> ${us2Cache['points']['available']}");
               }
               // value.userSettings2!.balance!.forEach((key, balance) {
               //   balancePoints = balance.max;

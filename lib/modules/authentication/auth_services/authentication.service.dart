@@ -10,7 +10,7 @@ abstract class AuthenticationService {
         required String password,
         required Map<String, dynamic> deviceInformation,
         required BuildContext context}) async {
-    debugPrint("deviceInformation --> $deviceInformation");
+    print("deviceInformation --> $deviceInformation");
     Map<String, dynamic> body = {
       "username": username, // may be phone number or email
       "password": password,

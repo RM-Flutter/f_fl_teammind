@@ -8,7 +8,7 @@ abstract class LocalizationService {
   static void setLocaleAndUpdateUrl(
       {required BuildContext context, required String newLangCode}) {
     // Set the locale
-    debugPrint("i will put lang");
+    print("i will put lang");
     final locale = Locale(newLangCode);
     CacheHelper.setString(key: "lang", value: newLangCode);
     context.setLocale(locale);

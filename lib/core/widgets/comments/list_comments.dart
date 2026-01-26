@@ -47,13 +47,13 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
       notificationProvider.getComment(context,widget.slug,widget.id, pages: 1, );
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !notificationProvider.isGetCommentLoading &&
           notificationProvider.hasMore) {
-        debugPrint("BOTTOM BOTTOM");
+        print("BOTTOM BOTTOM");
         notificationProvider.getComment(context,widget.slug,widget.id, pages: notificationProvider.pageNumber,);
       }
     });

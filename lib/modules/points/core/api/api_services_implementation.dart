@@ -32,8 +32,8 @@ class ApiServicesImplementation implements ApiServices {
       'Accept': 'application/json',
       'device-unique-id': appConfigServiceProvider.deviceInformation.deviceUniqueId,
     };
-    debugPrint("TOKENS IS --> ${appConfigServiceProvider.token}");
-    debugPrint("TOKENS IS --> ${appConfigServiceProvider.deviceInformation.deviceUniqueId}");
+    print("TOKENS IS --> ${appConfigServiceProvider.token}");
+    print("TOKENS IS --> ${appConfigServiceProvider.deviceInformation.deviceUniqueId}");
     Response data = await _dio!.get(endPoint, queryParameters: queryParameters,);
     return data;
   }

@@ -35,18 +35,18 @@ class _DefaultListPageState extends State<DefaultListPage> {
       pointsProvider.getBlog(context,"${widget.type}" ,page: 1);
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !pointsProvider.isGetBlogLoading &&
           pointsProvider.hasMore) {
-        debugPrint("BOTTOM BOTTOM");
+        print("BOTTOM BOTTOM");
         if(pointsProvider.hasMore == true) {
           pointsProvider.getBlog(
               context, "${widget.type}",page: pointsProvider.currentPage);
         }else{
-          debugPrint("NO DATA MORE");
+          print("NO DATA MORE");
         }
       }
     });

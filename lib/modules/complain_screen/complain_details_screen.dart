@@ -60,7 +60,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
       child: Consumer<RequestController>(
         builder: (context, value, child) {
           if(value.isAddCommentSuccess){
-            debugPrint("ADDED SUCCESS");
+            print("ADDED SUCCESS");
           }
           return Consumer<CommentProvider>(
               builder: (context, values, child) {

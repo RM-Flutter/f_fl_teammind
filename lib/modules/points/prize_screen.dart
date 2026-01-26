@@ -40,17 +40,17 @@ class _PrizeScreenState extends State<PrizeScreen> {
       pointsProvider.getPrize(context,widget.id, page: 1);
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !pointsProvider.isLoading &&
           pointsProvider.hasMorePrizes) {
-        debugPrint("BOTTOM BOTTOM");
+        print("BOTTOM BOTTOM");
         if(pointsProvider.hasMorePrizes == true){
           pointsProvider.getPrize(context,widget.id, page: pointsProvider.currentPage);
         }else{
-          debugPrint("NO PRIZE GET");
+          print("NO PRIZE GET");
         }
       }
     });
@@ -74,7 +74,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
         return Consumer<PointsProvider>(
           builder: (context, points, child) {
             if(points.isRedeemSuccess == true){
-              debugPrint("points.type --> ${points.type}");
+              print("points.type --> ${points.type}");
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 points.getPrize(context,widget.id, page: 1);
               });
@@ -204,7 +204,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                        await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
                                      });
                                    }else{
-                                     debugPrint("DATA --> ${points.prizes[index]['needed_data']}");
+                                     print("DATA --> ${points.prizes[index]['needed_data']}");
                                    }
                                   } : (){},
                                   child: Container(

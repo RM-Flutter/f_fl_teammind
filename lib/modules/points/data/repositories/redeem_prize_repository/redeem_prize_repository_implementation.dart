@@ -26,7 +26,7 @@ class RedeemPrizeRepositoryImplementation extends RedeemPrizeRepository {
             'prize' : prizeName,
           }
       );
-      debugPrint(data.data);
+      print(data.data);
       return Right(RedeemPrizeModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {

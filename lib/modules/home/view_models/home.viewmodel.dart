@@ -82,7 +82,7 @@ class HomeViewModel extends ChangeNotifier {
         //     birthDate: userSettingsModel.birthDate);
       }
     } catch (err, t) {
-      debugPrint("error while checking on user birthday $err at :- $t");
+      print("error while checking on user birthday $err at :- $t");
     }
     updateLoadingStatus(laodingValue: false);
   }
@@ -105,7 +105,7 @@ class HomeViewModel extends ChangeNotifier {
 //       await prefs.setString("mRequest", jsonString);
 //     }
 //   } catch (err, t) {
-//     debugPrint("error while getting my requests ${err.toString()} at :- $t");
+//     print("error while getting my requests ${err.toString()} at :- $t");
 //   }
 //
 //   // get team request and other department requests if i manager (Manager || team leader)
@@ -132,7 +132,7 @@ class HomeViewModel extends ChangeNotifier {
 //         await prefs.setString("mtRequest", jsonString);
 //       }
 //     } catch (err, t) {
-//       debugPrint(
+//       print(
 //           "error while getting my Team requests ${err.toString()} at :- $t");
 //     }
 //     // get other Department Requests
@@ -156,7 +156,7 @@ class HomeViewModel extends ChangeNotifier {
 //         notifyListeners();
 //       }
 //     } catch (err, t) {
-//       debugPrint(
+//       print(
 //           "error while getting other Departments requests ${err.toString()} at :- $t");
 //     }
 //   }
@@ -181,7 +181,7 @@ class HomeViewModel extends ChangeNotifier {
 //         notifyListeners();
 //       }
 //     } catch (err, t) {
-//       debugPrint(
+//       print(
 //           "error while getting all company requests ${err.toString()} at :- $t");
 //     }
 //   }

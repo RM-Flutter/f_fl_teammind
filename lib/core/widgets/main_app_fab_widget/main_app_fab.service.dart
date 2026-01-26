@@ -37,7 +37,7 @@ abstract class MainFabServices {
   static Future<void> getFingerprintActionMethodDependsOnFingerprintMethod(
       {required BuildContext context,
         required String fingerprintMethod}) async {
-    debugPrint("FINGER IS ---> ${fingerprintMethod.toLowerCase().trim()}");
+    print("FINGER IS ---> ${fingerprintMethod.toLowerCase().trim()}");
     switch (fingerprintMethod.toLowerCase().trim()) {
       case 'fp_scan':
         await addFingerprintUsingQrCode(context: context);
@@ -86,12 +86,12 @@ abstract class MainFabServices {
               'bytes': base64Encode(fileItem.bytes!), // Convert bytes to base64 for storage
             });
 
-            debugPrint("Processed file: ${fileItem.name}, MIME Type: $mimeType");
+            print("Processed file: ${fileItem.name}, MIME Type: $mimeType");
           }
         }
       }
     } else {
-      debugPrint("No files selected or files are empty.");
+      print("No files selected or files are empty.");
     }
 
     // Return the list of processed files for caching
@@ -144,7 +144,7 @@ abstract class MainFabServices {
         textColor: Colors.white,
         fontSize: 16.0
     );
-    debugPrint("Cached fingerprints under 'types': ${AppConstants.fingerPrints}");
+    print("Cached fingerprints under 'types': ${AppConstants.fingerPrints}");
   }
 
 // Method to save fingerprints to shared preferences
@@ -171,7 +171,7 @@ abstract class MainFabServices {
 
     // Save the JSON string in shared preferences
     await prefs.setString('fingerPrints', jsonString);
-    debugPrint("Fingerprints saved to preferences!");
+    print("Fingerprints saved to preferences!");
   }
   // Adding Fingerprint using NFC
   static Future<void> addFingerprintUsingNFC(
@@ -251,7 +251,7 @@ abstract class MainFabServices {
         },
       );
     } catch (e) {
-      debugPrint('Error Adding NFC Fingerprint: $e');
+      print('Error Adding NFC Fingerprint: $e');
       AlertsService.error(
           context: context,
           message: 'Error Happened! Please try later!',
@@ -470,7 +470,7 @@ abstract class MainFabServices {
           }
       );
     } catch (e) {
-      debugPrint('Error Adding Bluetooth Fingerprint: $e');
+      print('Error Adding Bluetooth Fingerprint: $e');
       AlertsService.error(
         context: context,
         message:  AppStrings.noInternetConnection.tr(),
@@ -584,7 +584,7 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      debugPrint("isConnected --> $isConnected");
+      print("isConnected --> $isConnected");
       OperationResult<Map<String, dynamic>> result;
       customAlertDialogWithTwoButtons(
           context,
@@ -604,7 +604,7 @@ abstract class MainFabServices {
             }
             else{
               var date = DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(DateTime.now());
-              debugPrint("[empPhoto] ${[empPhoto]}");
+              print("[empPhoto] ${[empPhoto]}");
               await _cacheFingerprint(
                   data: base64Encode(utf8.encode("${selectedNetwork.bssid.toString()}_$date")),
                   type: "fp_wifi",
@@ -637,7 +637,7 @@ abstract class MainFabServices {
       );
 
     } catch (e) {
-      debugPrint('Error Adding Wi-Fi Fingerprint: $e');
+      print('Error Adding Wi-Fi Fingerprint: $e');
       AlertsService.error(
         context: context,
         message: AppStrings.noInternetConnection.tr(),
@@ -656,7 +656,7 @@ abstract class MainFabServices {
     // تأكد إن خدمة الموقع مفعلة
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      debugPrint('❌ خدمة الموقع غير مفعلة');
+      print('❌ خدمة الموقع غير مفعلة');
       return;
     }
 
@@ -665,13 +665,13 @@ abstract class MainFabServices {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        debugPrint('❌ صلاحيات الموقع مرفوضة');
+        print('❌ صلاحيات الموقع مرفوضة');
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      debugPrint('❌ الصلاحيات مرفوضة دائمًا');
+      print('❌ الصلاحيات مرفوضة دائمًا');
       return;
     }
 
@@ -683,11 +683,11 @@ abstract class MainFabServices {
 
       double lat = position.latitude;
       double long = position.longitude;
-      debugPrint('📍 Latitude: $lat, Longitude: $long');
+      print('📍 Latitude: $lat, Longitude: $long');
       CacheHelper.setString(key: "lat", value: lat.toString());
       CacheHelper.setString(key: "long", value: long.toString());
     } catch (e) {
-      debugPrint('❌ حصل خطأ أثناء تحديد الموقع: $e');
+      print('❌ حصل خطأ أثناء تحديد الموقع: $e');
     }
   }
   // Add Fingerprint Using GPS
@@ -695,9 +695,9 @@ abstract class MainFabServices {
     required BuildContext context,
   }) async {
     try {
-      debugPrint("HEY1");
+      print("HEY1");
       await getCurrentLocation(context);
-      debugPrint("HEY2");
+      print("HEY2");
       final bool? fingerprintMustUploadImage = (AppSettingsService.getSettings(
           settingsType: SettingsType.generalSettings,
           context: context) as GeneralSettingsModel)
@@ -742,7 +742,7 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      debugPrint("isConnected --> $isConnected");
+      print("isConnected --> $isConnected");
       OperationResult<Map<String, dynamic>> result;
       customAlertDialogWithTwoButtons(
           context,
@@ -763,7 +763,7 @@ abstract class MainFabServices {
                   files: empPhoto != null ? convertMapListToFilePickerResults([empPhoto]) : []);
             }
             else{
-              debugPrint("lat is ${CacheHelper.getString('lat')}");
+              print("lat is ${CacheHelper.getString('lat')}");
 
               await _cacheFingerprint(
                   data: '{"lat":${CacheHelper.getString('lat')},"long":${CacheHelper.getString('long')}}',
@@ -782,7 +782,7 @@ abstract class MainFabServices {
               //  await _cacheFingerprint(data: '{"lat":${lat.toString()},"long":${long.toString()}}',
               //      type: "fp_navigate", file: serializableFiles);
             }
-            debugPrint("GPS DONE TWO");
+            print("GPS DONE TWO");
             // Handle the server response
             if (result.data!['status'] == true) {
               AlertsService.success(
@@ -802,7 +802,7 @@ abstract class MainFabServices {
       );
 
     } catch (e) {
-      debugPrint('Error Adding GPS Fingerprint: $e');
+      print('Error Adding GPS Fingerprint: $e');
       AlertsService.error(
           context: context,
           message: AppStrings.noInternetConnection.tr(),
@@ -860,11 +860,11 @@ abstract class MainFabServices {
         return;
       }
 
-      debugPrint("DONE FROM ONE");
+      print("DONE FROM ONE");
       if (scanedQrCode == null || scanedQrCode.isEmpty) return;
       // Call Your Fingerprint Scanner API
-      debugPrint("DONE FROM ONE");
-      debugPrint("DONE FROM ONE");
+      print("DONE FROM ONE");
+      print("DONE FROM ONE");
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -877,7 +877,7 @@ abstract class MainFabServices {
       );
       final bool isConnected = await InternetConnectionChecker.createInstance().hasConnection;
       Navigator.of(context, rootNavigator: true).pop();
-      debugPrint("isConnected --> $isConnected");
+      print("isConnected --> $isConnected");
       OperationResult<Map<String, dynamic>> result;
       customAlertDialogWithTwoButtons(
         context,
@@ -902,7 +902,7 @@ abstract class MainFabServices {
             type: "fp_scan",
             file: empPhoto != null ?convertMapListToFilePickerResults([empPhoto]) : [],
             );
-            debugPrint("Fingerprint cached offline.");
+            print("Fingerprint cached offline.");
             return;
             // var date = DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(DateTime.now());
             // List<Map<String, dynamic>>? serializableFiles;
@@ -924,7 +924,7 @@ abstract class MainFabServices {
             // await _cacheFingerprint(data: base64Encode(utf8.encode("${scanedQrCode}_$date")),
             //     type: "fp_scan", file: empPhoto != null ? convertMapListToFilePickerResults([empPhoto]) : []);
           }
-          debugPrint("result.data!['status'] --> ${result.data!['status'] }");
+          print("result.data!['status'] --> ${result.data!['status'] }");
           if (result.data!['status'] == true) {
             AlertsService.success(
                 context: context,
@@ -943,7 +943,7 @@ abstract class MainFabServices {
       );
 
     } catch (e) {
-      debugPrint(
+      print(
           'Error Happeded While Adding Fingerprint Using Qrcode! Error :-> $e');
       AlertsService.error(
           context: context,
@@ -978,7 +978,7 @@ abstract class MainFabServices {
       return result;
     } catch (e) {
       // Handle any errors, return null in case of an error
-      debugPrint('Error scanning QR code: $e');
+      print('Error scanning QR code: $e');
       AlertsService.error(
           context: context,
           message: 'Error Happeded! Please try later!',

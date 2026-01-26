@@ -76,7 +76,7 @@ class CreateAccountViewModel extends ChangeNotifier {
       }
       return;
     } catch (err, t) {
-      debugPrint('Error :- $err in :- $t');
+      print('Error :- $err in :- $t');
       AlertsService.warning(
           context: context,
           message: AppStrings.failedRegisterationPleaseTryAgain.tr(),

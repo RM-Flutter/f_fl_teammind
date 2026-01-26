@@ -94,14 +94,14 @@ abstract class FingerprintService {
       final result = await _addFingerprints(
           context: context, fingerprints: savedFingerprints);
       if (result.success) {
-        debugPrint('Saved Fingerprints Saved Successfully');
+        print('Saved Fingerprints Saved Successfully');
         await DBHiveService.clearSavedFingerprints();
         return;
       } else {
-        debugPrint('Failed to Save Fingerprints $result');
+        print('Failed to Save Fingerprints $result');
       }
     } catch (e, t) {
-      debugPrint('Error uploading Fingerprints to Server in online mood $e $t');
+      print('Error uploading Fingerprints to Server in online mood $e $t');
     }
   }
 
@@ -137,7 +137,7 @@ abstract class FingerprintService {
       'data': encoded,
       'finger_day': DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now()),
     };
-    debugPrint("formData is --> $formData");
+    print("formData is --> $formData");
     if (await ConnectionsService.isOnline() == true) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
         url,

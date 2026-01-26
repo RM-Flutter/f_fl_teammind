@@ -38,8 +38,8 @@ class DomainSelectionService {
     // Clean and format domain
     final cleanedDomain = _cleanDomain(domain);
     final formattedDomain = _formatDomain(cleanedDomain);
-    debugPrint("🌐 Domain cleaned: $cleanedDomain");
-    debugPrint("🌐 Domain formatted: $formattedDomain");
+    print("🌐 Domain cleaned: $cleanedDomain");
+    print("🌐 Domain formatted: $formattedDomain");
 
     // Validate domain by calling startApp
     final isValid = await _validateDomain(context, formattedDomain);
@@ -63,7 +63,7 @@ class DomainSelectionService {
     // Domain is valid, save it and add to list
     await _saveDomain(formattedDomain);
     await CacheHelper.setBool(_domainSelectedKey, true);
-    debugPrint("🌐 Domain saved successfully: $formattedDomain");
+    print("🌐 Domain saved successfully: $formattedDomain");
     
     // Reinitialize DioHelper with the new domain
     if (context.mounted) {
@@ -140,7 +140,7 @@ class DomainSelectionService {
       try {
         domainsList = List<String>.from(jsonDecode(domainsListJson));
       } catch (e) {
-        debugPrint('Error parsing domains list: $e');
+        print('Error parsing domains list: $e');
       }
     }
     
@@ -161,7 +161,7 @@ class DomainSelectionService {
     try {
       return List<String>.from(jsonDecode(domainsListJson));
     } catch (e) {
-      debugPrint('Error parsing domains list: $e');
+      print('Error parsing domains list: $e');
       return [];
     }
   }
@@ -290,7 +290,7 @@ class DomainSelectionService {
                 onPressed: () {
                   final domain = controller.text.trim();
                   if (domain.isNotEmpty) {
-                    debugPrint("🌐 Domain entered: $domain");
+                    print("🌐 Domain entered: $domain");
                     Navigator.of(ctx).pop(domain);
                   }
                 },
@@ -339,7 +339,7 @@ class DomainSelectionService {
       // Any other status code (200, 401, 500, etc.) means the domain exists
       return response.statusCode != 404;
     } catch (e) {
-      debugPrint("Error validating domain: $e");
+      print("Error validating domain: $e");
       // For network errors or timeouts, we'll consider it invalid
       return false;
     }

@@ -14,7 +14,7 @@ abstract class ApiServiceHelpers {
       {Map<String, dynamic>? additionalHeaders,
       bool? addToken = true,
       required BuildContext context}) {
-    debugPrint("LANGSSS IS --> ${CacheHelper.getString("lang")}");
+    print("LANGSSS IS --> ${CacheHelper.getString("lang")}");
     final appConfigServiceProvider =
         Provider.of<AppConfigService>(context, listen: false);
     var headers = {
@@ -108,17 +108,17 @@ abstract class ApiServiceHelpers {
             appConfigServiceProvider.accessTokenExpDate * 1000);
         DateTime now = DateTime.now();
         // if (dateTimeFromMilliseconds.isBefore(now)) {
-        //   debugPrint(
+        //   print(
         //       '-------> access Expire Date is before current time by ${now.difference(dateTimeFromMilliseconds).inSeconds.toString()}');
         // } else if (dateTimeFromMilliseconds.isAfter(now)) {
-        //   debugPrint(
+        //   print(
         //       '-------> access Expire Date is after current time by ${dateTimeFromMilliseconds.difference(now).inSeconds.toString()}');
         // } else {
-        //   debugPrint('-------> access Expire Date is equal to current time');
+        //   print('-------> access Expire Date is equal to current time');
         // }
         //checks if refresh token is still valid
         if (dateTimeFromMilliseconds.isBefore(now)) {
-          debugPrint("-----> overrides access token with refresh token");
+          print("-----> overrides access token with refresh token");
           //overrides access token with refresh token
           await appConfigServiceProvider
               .setToken(appConfigServiceProvider.refreshToken);

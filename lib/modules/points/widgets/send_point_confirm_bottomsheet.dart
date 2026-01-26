@@ -144,8 +144,8 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                   child: (!value.isRedeemLoading)?
                                   GestureDetector(
                                     onTap: () {
-                                      debugPrint("USER IS $user");
-                                      debugPrint("AMOUNT IS $amount");
+                                      print("USER IS $user");
+                                      print("AMOUNT IS $amount");
                                       value.postTransferPoints(context, confirmed: true, amount: amount, user: user);
                                     },
                                     child: Container(

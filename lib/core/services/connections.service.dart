@@ -30,20 +30,20 @@ abstract class ConnectionsService {
       List<ConnectivityResult> connectivityResults) {
     for (var result in connectivityResults) {
       if (result == ConnectivityResult.mobile) {
-        debugPrint("Mobile network available.");
+        print("Mobile network available.");
       } else if (result == ConnectivityResult.wifi) {
-        debugPrint("Wi-Fi is available.");
+        print("Wi-Fi is available.");
       } else if (result == ConnectivityResult.ethernet) {
-        debugPrint("Ethernet connection available.");
+        print("Ethernet connection available.");
       } else if (result == ConnectivityResult.vpn) {
-        debugPrint("VPN connection active.");
+        print("VPN connection active.");
       } else if (result == ConnectivityResult.bluetooth) {
-        debugPrint("Bluetooth connection available.");
+        print("Bluetooth connection available.");
       } else if (result == ConnectivityResult.other) {
-        debugPrint(
+        print(
             "Connected to a network which is not in the above mentioned networks.");
       } else if (result == ConnectivityResult.none) {
-        debugPrint("No available network types.");
+        print("No available network types.");
       }
     }
   }
@@ -54,7 +54,7 @@ abstract class ConnectionsService {
       final connectivityResult = await _connectivity.checkConnectivity();
       return !connectivityResult.contains(ConnectivityResult.none);
     } catch (e) {
-      debugPrint('Error checking internet connection: $e');
+      print('Error checking internet connection: $e');
       return false; // Assume offline on error
     }
   }

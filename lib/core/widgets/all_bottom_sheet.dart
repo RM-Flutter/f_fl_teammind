@@ -69,7 +69,7 @@ Future<void> defaultActionBottomSheet2({
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          debugPrint("close1");
+          print("close1");
           if (home == true) {
             context.goNamed(AppRoutes.home.name,
                 pathParameters: {'lang': context.locale.languageCode});
@@ -82,7 +82,7 @@ Future<void> defaultActionBottomSheet2({
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {
-                  debugPrint("close2");
+                  print("close2");
                   if (home == true) {
                     context.goNamed(AppRoutes.home.name,
                         pathParameters: {

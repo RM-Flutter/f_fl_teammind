@@ -48,11 +48,11 @@ class CommentProvider extends ChangeNotifier{
 
     try {
       Response response;
-      debugPrint("Voice Path: $voicePath");
+      print("Voice Path: $voicePath");
 
       // Check if we have either images or a voice file to send
       if (images != null || voicePath != null) {
-        debugPrint("Uploading media...");
+        print("Uploading media...");
 
         FormData formData = FormData.fromMap({
           if (contentController.text.isNotEmpty) "content": contentController.text,
@@ -143,7 +143,7 @@ class CommentProvider extends ChangeNotifier{
       }
       if (newComments.isNotEmpty) {
         comments.addAll(newComments);
-        debugPrint("LENGTH IS --> ${newComments.length}");
+        print("LENGTH IS --> ${newComments.length}");
         if (hasMore) pageNumber++;
       } else {
         hasMore = false; // No more data to fetch
@@ -271,8 +271,8 @@ class CommentProvider extends ChangeNotifier{
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                debugPrint(image1);
-                                debugPrint(image2);
+                                print(image1);
+                                print(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(

@@ -38,8 +38,8 @@ class HistoryItem extends StatelessWidget {
                       DateFormat('MMM d, yyyy',LocalizationService.isArabic(context: context)? "ar": "en").format(parsedDate);
                 return GestureDetector(
                   onTap: (){
-                    debugPrint("e.notes ---> ${e.notes}");
-                    debugPrint("e.code ---> ${e.code}");
+                    print("e.notes ---> ${e.notes}");
+                    print("e.code ---> ${e.code}");
                     if((e.notes != null && e.notes != "") || (e.code != null && e.code != "")){
                       showModalBottomSheet(
                           context: context,

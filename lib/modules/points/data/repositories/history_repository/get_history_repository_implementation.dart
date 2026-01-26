@@ -24,7 +24,7 @@ class GetHistoryRepositoryImplementation extends GetHistoryRepository {
             'device_unique_id': get.deviceInformation.deviceUniqueId
         }
       );
-      debugPrint(data.data);
+      print(data.data);
       return Right(HistoryModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {

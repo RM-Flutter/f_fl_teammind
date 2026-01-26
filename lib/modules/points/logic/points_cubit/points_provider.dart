@@ -183,7 +183,7 @@ class PointsProvider extends ChangeNotifier {
   }
   Future<void> getPrize(BuildContext context,id, {int? page}) async {
     if(page != null){currentPage = page;}
-    debugPrint("currentPage is --> $currentPage}");
+    print("currentPage is --> $currentPage}");
     isLoading = true;
     notifyListeners();
     try {
@@ -221,7 +221,7 @@ class PointsProvider extends ChangeNotifier {
       if (newPrizes.isNotEmpty && response.data['data'] != null && response.data['data'].isNotEmpty) {
         isLoading = false;
         prizes.addAll(uniqueNotifications);
-        debugPrint("LENGTH IS --> ${newPrizes.length}");
+        print("LENGTH IS --> ${newPrizes.length}");
       } else {
         hasMorePrizes = false;
       }}
@@ -246,7 +246,7 @@ class PointsProvider extends ChangeNotifier {
   }
   Future<void> getCategoriesPrize(BuildContext context, {int? page, bool? isNewPage,}) async {
     if(page != null){currentPage = page;}
-    debugPrint("currentPage is --> $currentPage}");
+    print("currentPage is --> $currentPage}");
     isLoading = true;
     notifyListeners();
     try {
@@ -261,7 +261,7 @@ class PointsProvider extends ChangeNotifier {
 
       if (response.data['data'] != null && response.data['data'].isNotEmpty) {
         hasMore = true;
-        debugPrint("MORE IS $hasMore");
+        print("MORE IS $hasMore");
         categories = response.data['data'];
 
         List cPrizeIds = response.data['data'];
@@ -270,7 +270,7 @@ class PointsProvider extends ChangeNotifier {
           categories.addAll(uniqueProducts);
         } else {
           categories = uniqueProducts;
-          debugPrint("PRODUCTS SUCCESS");
+          print("PRODUCTS SUCCESS");
         }
         cPrizeIds.addAll(uniqueProducts.map((p) => p['id']));
 
@@ -296,11 +296,11 @@ class PointsProvider extends ChangeNotifier {
       if (categories.isNotEmpty) {
         isLoading = false;
         prizes.addAll(cuniqueNotifications);
-        debugPrint("LENGTH IS --> ${categories.length}");
+        print("LENGTH IS --> ${categories.length}");
       } else {
       }}
       isLoading = false;
-      debugPrint("GOODS");
+      print("GOODS");
       notifyListeners();
     } catch (error) {
       getPrizeErrorMessage = error is DioException
@@ -370,7 +370,7 @@ class PointsProvider extends ChangeNotifier {
       } else {
         postPrizeErrorMessage = error.toString();
       }
-      debugPrint("postPrizeErrorMessage --> $postPrizeErrorMessage");
+      print("postPrizeErrorMessage --> $postPrizeErrorMessage");
       AlertsService.error(
           context: context,
           message: postPrizeErrorMessage!,
@@ -417,7 +417,7 @@ class PointsProvider extends ChangeNotifier {
       } else {
         postPrizeErrorMessage = error.toString();
       }
-      debugPrint("postPrizeErrorMessage --> $postPrizeErrorMessage");
+      print("postPrizeErrorMessage --> $postPrizeErrorMessage");
       Fluttertoast.showToast(
           msg: postPrizeErrorMessage!,
           toastLength: Toast.LENGTH_LONG,

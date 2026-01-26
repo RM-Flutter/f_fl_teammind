@@ -162,7 +162,7 @@ abstract class RequestsServices {
       page: page,
       type: type,
     );
-    debugPrint("queryParams is --> $queryParams");
+    print("queryParams is --> $queryParams");
     final url = queryParams.isEmpty ? baseUrl : '$baseUrl&$queryParams';
 
     final response = await DioApiService().get<Map<String, dynamic>>(url,
@@ -239,8 +239,8 @@ abstract class RequestsServices {
       {required BuildContext context,
         required Map<String, String> requestData,
         required List<FilePickerResult> files}) async {
-    debugPrint("REQUEST DATA IS --> $requestData");
-    debugPrint("REQUEST DATA IS --> $files");
+    print("REQUEST DATA IS --> $requestData");
+    print("REQUEST DATA IS --> $files");
     return await DioApiService().postWithFormData<Map<String, dynamic>>(
         EndpointServices.getApiEndpoint(EndpointsNames.empAddRequest).url,
         context: context,

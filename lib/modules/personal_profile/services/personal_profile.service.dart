@@ -50,8 +50,8 @@ abstract class PersonalProfileService {
     List<XFile>? avatar,
     required BuildContext context,
   }) async {
-    debugPrint("AVATAR IS-->$avatar");
-    debugPrint("SERVER FORM DATA");
+    print("AVATAR IS-->$avatar");
+    print("SERVER FORM DATA");
     FormData formData = FormData.fromMap(
         {
           if (name != null) 'name' : name,
@@ -76,7 +76,7 @@ abstract class PersonalProfileService {
     // if(avatar != null && avatar.isNotEmpty){
     //
     // }else{
-    //   debugPrint("SERVER POST DATA");
+    //   print("SERVER POST DATA");
     //   var res =  await DioHelper.postData(
     //       url: "/rm_users/v1/update_profile",
     //       context: context,

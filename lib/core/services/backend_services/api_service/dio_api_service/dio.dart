@@ -37,11 +37,11 @@ class DioHelper{
     dio!.interceptors.add(
       InterceptorsWrapper(
         onResponse: (response, handler) {
-          debugPrint("response.statusCode == ${response.statusCode}");
+          print("response.statusCode == ${response.statusCode}");
           return handler.next(response);
         },
         onError: (DioException error, handler) {
-          debugPrint("error.response?.statusCode ==z ${error.response?.statusCode}");
+          print("error.response?.statusCode ==z ${error.response?.statusCode}");
           if (error.response?.statusCode == 401) {
             final appConfigService =
             Provider.of<AppConfigService>(context, listen: false);
@@ -72,7 +72,7 @@ class DioHelper{
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       "lang" : "${CacheHelper.getString("lang")}",
     };
-    debugPrint("Headers: ${dio!.options.headers}");
+    print("Headers: ${dio!.options.headers}");
     return await dio!.download(url, savePath );
   }
   static Future<Response> getData({@required url, @required Map<String, dynamic>? query,context,lang,  token,bool sendLang = false, Map<String, dynamic>? data})async{
@@ -84,7 +84,7 @@ class DioHelper{
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
        "lang" : "${CacheHelper.getString("lang")}",
     };
-    debugPrint("Headers: ${dio!.options.headers}");
+    print("Headers: ${dio!.options.headers}");
     return await dio!.get(url, queryParameters: query );
   }
   static Future<Response> deleteData({@required url, @required Map<String, dynamic>? query, token, data})async{
