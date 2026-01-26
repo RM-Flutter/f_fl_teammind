@@ -20,7 +20,7 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:app_test/modules/complain_screen/widgets/full_image_screen.dart';
+import 'package:app_test/modules/complaints/views/widgets/full_image_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
 class ListCommentsScreen extends StatefulWidget {

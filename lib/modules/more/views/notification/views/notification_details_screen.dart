@@ -8,7 +8,7 @@ import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/modules/complain_screen/widgets/full_image_screen.dart';
+import 'package:app_test/modules/complaints/views/widgets/full_image_screen.dart';
 import 'package:app_test/modules/more/views/notification/controllers/notification_provider.dart';
 import 'package:app_test/modules/more/views/notification/views/widgets/notification_details_appbar_widget.dart';
 import 'package:app_test/modules/more/views/notification/views/widgets/notification_details_loading_screen.dart';
