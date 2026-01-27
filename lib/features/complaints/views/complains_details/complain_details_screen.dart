@@ -1,3 +1,4 @@
+import 'package:app_test/features/complaints/controllers/complaints_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -9,10 +10,9 @@ import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/controllers/request_controller/request_controller.dart';
 import 'package:app_test/features/complaints/views/widgets/full_image_screen.dart';
-import 'package:app_test/features/complaints/views/widgets/request_details_appbar_widget.dart';
-import 'package:app_test/features/complaints/views/widgets/request_details_loading_screen.dart';
+import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_appbar_widget.dart';
+import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_loading_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 
@@ -26,9 +26,8 @@ import 'package:app_test/core/widgets/gradient_bg_image.dart';
 }
 
 class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
-  late RequestController requestController;
+  late ComplaintsController complaintsController;
   late ScrollController _scrollController;
-  final Set<int> _loadedPages = {}; // Keep track of loaded pages
   final PageController _controller = PageController();
   int _currentIndex = 0;
   @override
@@ -40,7 +39,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
         setState(() => _currentIndex = newIndex);
       }
     });
-    requestController = RequestController();
+    complaintsController = ComplaintsController();
 
     _scrollController = ScrollController();
   }
@@ -54,10 +53,10 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
     @override
     Widget build(BuildContext context) {
       return MultiProvider(providers: [
-        ChangeNotifierProvider(create: (context) => RequestController()..getOneRequest(context, widget.id),),
+        ChangeNotifierProvider(create: (context) => ComplaintsController()..getOneRequest(context, widget.id),),
         ChangeNotifierProvider(create: (context) => CommentProvider()..getComment(context, "csrequests", widget.id),),
       ],
-      child: Consumer<RequestController>(
+      child: Consumer<ComplaintsController>(
         builder: (context, value, child) {
           if(value.isAddCommentSuccess){
             debugPrint("ADDED SUCCESS");

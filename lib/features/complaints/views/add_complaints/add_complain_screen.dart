@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_test/features/complaints/controllers/complaints_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/controllers/request_controller/request_controller.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
@@ -28,8 +28,8 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
   TextEditingController detailsController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => RequestController()..getRequestType(context),
-      child: Consumer<RequestController>(
+    return ChangeNotifierProvider(create: (context) => ComplaintsController()..getRequestType(context),
+      child: Consumer<ComplaintsController>(
         builder: (context, value, child) {
           return Scaffold(
             appBar: AppBar(

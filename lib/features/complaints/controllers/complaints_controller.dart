@@ -10,10 +10,10 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/features/complaints/models/get_one_request_model.dart';
-import 'package:app_test/features/complaints/views/widgets/success_send_complain.dart';
+import 'package:app_test/features/complaints/data/models/get_one_request_model.dart';
+import 'package:app_test/features/complaints/shared/widgets/success_send_complain.dart';
 
-class RequestController extends ChangeNotifier {
+class ComplaintsController extends ChangeNotifier {
   bool isGetRequestLoading = false;
   bool empty = false;
   bool getMore = false;
@@ -162,65 +162,6 @@ class RequestController extends ChangeNotifier {
       notifyListeners();
     }
   }
-  // Future<void> getRequestMine(BuildContext context, {int? page}) async {
-  //   if(page != null){currentPage = page;}
-  //   debugPrint("currentPage is --> $currentPage}");
-  //   isGetRequestLoading = true;
-  //   notifyListeners();
-  //   try {
-  //     final response = await DioHelper.getData(
-  //       url: "/emp_requests/v1/complain?type=mine",
-  //       context: context, // Pass this explicitly only if necessary
-  //       query: {
-  //         "itemsCount": itemsCount,
-  //         "page": page ?? currentPage,
-  //       },
-  //     );
-  //     if(response.data['status'] == false){
-  //       Fluttertoast.showToast(
-  //           msg: response.data['message'],
-  //           toastLength: Toast.LENGTH_LONG,
-  //           gravity: ToastGravity.BOTTOM,
-  //           timeInSecForIosWeb: 5,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0
-  //       );
-  //     }else{
-  //       newRequests = response.data['complains'] ?? [];
-  //       if (page == 1) {
-  //         requests.clear(); // Clear only when loading the first page
-  //       }
-  //       if (newRequests.isNotEmpty) {
-  //         requests.addAll(newRequests);
-  //         debugPrint("LENGTH IS --> ${newRequests.length}");
-  //         if (hasMore) currentPage++;
-  //       } else {
-  //         hasMoreRequests = false; // No more data to fetch
-  //       }
-  //
-  //       isGetRequestSuccess = true;
-  //     }
-  //     isGetRequestLoading = false;
-  //     notifyListeners();
-  //   } catch (error) {
-  //     getRequestErrorMessage = error is DioError
-  //         ? error.response?.data['message'] ?? 'Something went wrong'
-  //         : error.toString();
-  //     Fluttertoast.showToast(
-  //         msg: getRequestErrorMessage!,
-  //         toastLength: Toast.LENGTH_LONG,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 5,
-  //         backgroundColor: Colors.red,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0
-  //     );
-  //   } finally {
-  //     isGetRequestLoading = false;
-  //     notifyListeners();
-  //   }
-  // }
   Future<void> getOneRequest(BuildContext context, id) async {
     isGetRequestLoading = true;
     notifyListeners();

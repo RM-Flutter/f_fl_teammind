@@ -1,4 +1,4 @@
-import 'package:app_test/core/controllers/request_controller/request_controller.dart';
+import 'package:app_test/features/complaints/controllers/complaints_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -79,7 +79,7 @@ void main() async {
           ),
           ChangeNotifierProvider(create: (context) => BlogProviderModel()),
           ChangeNotifierProvider(create: (context) => ConnectionService()),
-          ChangeNotifierProvider(create: (context) => RequestController()),
+          ChangeNotifierProvider(create: (context) => ComplaintsController()),
           ChangeNotifierProvider(create: (context) => DeviceControllerProvider()),
           ChangeNotifierProvider(create: (context) => CommentProvider()),
           ChangeNotifierProvider(create: (context) => NotificationProviderModel()),

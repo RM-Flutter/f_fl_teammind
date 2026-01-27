@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/features/complaints/views/complain_details_screen.dart';
-import 'package:app_test/features/complaints/views/complains_screen.dart';
+import 'package:app_test/features/complaints/views/complains_details/complain_details_screen.dart';
+import 'package:app_test/features/complaints/views/complain_list/complains_screen.dart';
 import 'package:app_test/features/more/views/aboutus/views/aboutus_screen.dart';
 import 'package:app_test/features/more/views/company_structure/company_structure_screen.dart';
 import 'package:app_test/features/more/views/contactus/views/contact_screen.dart';
@@ -10,7 +10,7 @@ import 'package:app_test/features/more/views/lang_setting/lang_setting_screen.da
 import 'package:app_test/features/more/views/notification/views/add_notification_screen.dart';
 import 'package:app_test/features/more/views/notification/views/notification_details_screen.dart';
 import 'package:app_test/features/more/views/notification/views/notification_screen.dart';
-import 'package:app_test/features/complaints/views/add_complain_screen.dart';
+import 'package:app_test/features/complaints/views/add_complaints/add_complain_screen.dart';
 import 'package:app_test/features/more/views/update_password/update_password_screen.dart';
 import 'package:app_test/features/pages/views/default_list_page.dart';
 import 'package:app_test/core/services/app_config.service.dart';

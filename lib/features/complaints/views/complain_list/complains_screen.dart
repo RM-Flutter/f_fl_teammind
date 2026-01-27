@@ -9,7 +9,6 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/core/controllers/request_controller/request_controller.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/localization.service.dart';
@@ -20,6 +19,8 @@ import 'package:shimmer/shimmer.dart';
 
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 
+import '../../controllers/complaints_controller.dart';
+
 class ComplainScreen extends StatefulWidget {
   const ComplainScreen({super.key});
 
@@ -29,25 +30,24 @@ class ComplainScreen extends StatefulWidget {
 
 class _ComplainScreenState extends State<ComplainScreen> {
   final ScrollController _scrollController = ScrollController();
-  late RequestController requestController;
+  late ComplaintsController complaintsController;
 
   @override
   void initState() {
     super.initState();
-    requestController = RequestController();
+    complaintsController = ComplaintsController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      requestController = Provider.of<RequestController>(context, listen: false);
-      // requestController.getRequestMine(context, page: 1,);
-      requestController.getRequest(context, page: 1,);
+      complaintsController = Provider.of<ComplaintsController>(context, listen: false);
+      complaintsController.getRequest(context, page: 1,);
     });
     _scrollController.addListener(() {
       debugPrint("Current scroll position: ${_scrollController.position.pixels}");
       debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !requestController.isGetRequestLoading && requestController.getMore == true) {
+          !complaintsController.isGetRequestLoading && complaintsController.getMore == true) {
         debugPrint("BOTTOM BOTTOM");
-        requestController.getRequest(context, page: requestController.currentPage);
+        complaintsController.getRequest(context, page: complaintsController.currentPage);
       }
     });
 
@@ -55,7 +55,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RequestController>(
+    return Consumer<ComplaintsController>(
       builder: (context, value, child) {
         var jsonString;
         Map<String, dynamic> gCache = {};
@@ -79,7 +79,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
             onPressed: () async{
              await context.pushNamed(AppRoutes.newComplainScreen.name,
                   pathParameters: {'lang': context.locale.languageCode,});
-             await requestController.getRequest(context, page: 1, );
+             await complaintsController.getRequest(context, page: 1, );
             },
             backgroundColor: Color(AppColors.primary),
             child:  const Icon(Icons.add, color: Colors.white),
@@ -109,7 +109,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                  child: SafeArea(
                              child: RefreshIndicator.adaptive(
                                onRefresh: ()async{
-                  await requestController.getRequest(context, page: 1, );
+                  await complaintsController.getRequest(context, page: 1, );
                                },
                                child: SingleChildScrollView(
                   controller: _scrollController,
