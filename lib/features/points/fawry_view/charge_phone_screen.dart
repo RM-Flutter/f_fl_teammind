@@ -79,7 +79,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                 : "0",
           ),
         );
-        print("FFES IS --> ${fawryProviderModel.cachedFee}");
+        debugPrint("FFES IS --> ${fawryProviderModel.cachedFee}");
       });
     }
   }
@@ -621,7 +621,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
               value.controllers[key]?.text = outputDate; // ✅ ده اللي بيظهر في الفورم
               value.inputValues[key] = outputDate;       // ✅ ده اللي بيتبعت للسيرفر
 
-              print("✅ اخترت $key = $outputDate");
+              debugPrint("✅ اخترت $key = $outputDate");
             }
           },
           decoration: InputDecoration(hintText: title),

@@ -17,9 +17,9 @@ def remove_const_at_lines(file_line_map):
             if modified:
                 with open(filepath, 'w', encoding='utf-8') as f:
                     f.writelines(file_lines)
-                print(f"Removed const from: {filepath}")
+                debugPrint(f"Removed const from: {filepath}")
         except Exception as e:
-            print(f"Error processing {filepath}: {e}")
+            debugPrint(f"Error processing {filepath}: {e}")
 
 def main():
     # 4. Fix const errors (Updated list)

@@ -96,10 +96,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                         ),
                         ).toList(),
                         onChanged: (String? values) {
-                          print(values);
+                          debugPrint(values);
                           setState(() {
                             viewModel.selectNotificationType = values;
-                            print("selectNotificationType is --> ${viewModel.selectNotificationType}");
+                            debugPrint("selectNotificationType is --> ${viewModel.selectNotificationType}");
                             viewModel.listIds.clear();
                             viewModel.listIdsDepartment.clear();
                           });
@@ -273,8 +273,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                         }),
                                         ElevatedButton(
                                           onPressed: () {
-                                            print("tempDepSelectedIds --> $tempDepSelectedIds");
-                                            print("listIds --> ${viewModel.listIdsDepartment}");
+                                            debugPrint("tempDepSelectedIds --> $tempDepSelectedIds");
+                                            debugPrint("listIds --> ${viewModel.listIdsDepartment}");
                                             Navigator.pop(context, viewModel.departments.where((e) => tempDepSelectedIds.contains(e['id'])).toList());
                                           },
                                           child: Text(AppStrings.confirm.tr(), style:  const TextStyle(

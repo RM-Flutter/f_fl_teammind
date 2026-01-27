@@ -62,7 +62,7 @@ class ForgotPasswordController extends ChangeNotifier {
         notifyListeners();
         return;
       } else {
-        print("ERROR FROM ${result.message!}");
+        debugPrint("ERROR FROM ${result.message!}");
         Fluttertoast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
@@ -119,7 +119,7 @@ class ForgotPasswordController extends ChangeNotifier {
       notifyListeners();
       return;
     } else {
-      print("ERROR FROM HERE");
+      debugPrint("ERROR FROM HERE");
       Fluttertoast.showToast(
           msg: result.message!,
           toastLength: Toast.LENGTH_LONG,

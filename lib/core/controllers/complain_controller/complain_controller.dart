@@ -136,8 +136,8 @@ class ComplainController extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                print(image1);
-                                print(image2);
+                                debugPrint(image1);
+                                debugPrint(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(

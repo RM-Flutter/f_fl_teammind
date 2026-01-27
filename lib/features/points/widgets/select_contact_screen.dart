@@ -74,15 +74,15 @@ class _ContactSelectionScreenState extends State<ContactSelectionScreen> {
         });
       }
     });
-    print("_selectedContacts is --> $_selectedContacts");
-    print("_selectedContacts is --> ${_selectedContacts.length}");
+    debugPrint("_selectedContacts is --> $_selectedContacts");
+    debugPrint("_selectedContacts is --> ${_selectedContacts.length}");
   }
   Future<String> getCountryCode(String phoneNumber) async {
     try {
       final parsed = PhoneNumber.parse(phoneNumber, callerCountry: IsoCode.EG); // Use IsoCode.EG instead of "EG"
       return "+${parsed.countryCode}"; // Returns country code with "+"
     } catch (e) {
-      print("Error extracting country code: $e");
+      debugPrint("Error extracting country code: $e");
       return ""; // Return empty if parsing fails
     }
   }

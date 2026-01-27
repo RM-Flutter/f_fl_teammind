@@ -84,7 +84,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     viewModel = AuthenticationController();
     viewModel.initializeAnimation(this);
     WidgetsBinding.instance.addObserver(this);
-    print("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
+    debugPrint("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
   }
 
   @override
@@ -101,7 +101,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
-    print("Can Register is --> ${gCache['can_new_register']}");
+    debugPrint("Can Register is --> ${gCache['can_new_register']}");
     return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
       child: Scaffold(
@@ -422,7 +422,7 @@ Future<void> loginWithSocial(BuildContext context, String url) async {
       ),
     );
   } catch (e) {
-    print(e.toString());
+    debugPrint(e.toString());
   }
 }
 

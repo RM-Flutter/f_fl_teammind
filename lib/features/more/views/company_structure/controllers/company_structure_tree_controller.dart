@@ -41,7 +41,7 @@ class CompanyStructureTreeController extends ChangeNotifier {
 
   void onNodeTap(CompanyTreeNodeModel nodeData) {
     // Handle node tap
-    print('Node tapped: ${nodeData.name}');
+    debugPrint('Node tapped: ${nodeData.name}');
   }
 
   Future<void> getCompanyTreeStructure({required BuildContext context}) async {
@@ -54,7 +54,7 @@ class CompanyStructureTreeController extends ChangeNotifier {
             .toList();
       }
     } catch (ex, t) {
-      print(
+      debugPrint(
           'Failed to get company structure tree ${ex.toString()} at :- $t');
     }
   }

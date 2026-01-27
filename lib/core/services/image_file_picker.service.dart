@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
@@ -23,7 +24,7 @@ abstract class FileAndImagePickerService {
         "fileName": image.name,
       };
     } on PlatformException catch (e) {
-      print("Failed to pick image: ${e.toString()}");
+      debugPrint("Failed to pick image: ${e.toString()}");
       return null;
     }
   }
@@ -68,7 +69,7 @@ abstract class FileAndImagePickerService {
 
       return images.map((e) => File(e.path)).toList();
     } on PlatformException catch (e) {
-      print("Failed to pick images: $e");
+      debugPrint("Failed to pick images: $e");
       return null;
     }
   }
@@ -92,7 +93,7 @@ abstract class FileAndImagePickerService {
         type: FileType.custom,
       );
     } on PlatformException catch (e) {
-      print("Failed to pick files: ${e.toString()}");
+      debugPrint("Failed to pick files: ${e.toString()}");
       return null;
     }
   }

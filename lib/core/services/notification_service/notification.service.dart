@@ -98,7 +98,7 @@ abstract class PushNotificationService {
         //     context: context);
         _isInitialized = true;
       } catch (e) {
-        print(
+        debugPrint(
             'Exception during push notification initialization: ${e.toString()}');
         _isInitialized = true;
         if (_tries <= 20) {
@@ -110,7 +110,7 @@ abstract class PushNotificationService {
         }
       }
     } catch (e) {
-      print("X -- Failed initialization of notifications service $e");
+      debugPrint("X -- Failed initialization of notifications service $e");
     }
   }
 
@@ -143,10 +143,10 @@ abstract class PushNotificationService {
   //             },
   //         dataKey: 'data',
   //         allData: true);
-  //     print(
+  //     debugPrint(
   //         'New Device Notification Token: $userToken, Operation Status: ${result.success}');
   //   }
-  //   print(
+  //   debugPrint(
   //       'New Device Notification Token: $userToken,');
   //   _isTokenInit = true;
   // }
@@ -155,7 +155,7 @@ abstract class PushNotificationService {
   static Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
     await Firebase.initializeApp();
-    print('A background message just showed up: ${message.messageId}');
+    debugPrint('A background message just showed up: ${message.messageId}');
   }
 
   /// Handles notifications received in different states of the application.
@@ -177,7 +177,7 @@ abstract class PushNotificationService {
   ///         default:
   ///       }
   ///     } catch (e) {
-  ///       print('error ${e}');
+  ///       debugPrint('error ${e}');
   ///     }
   //.   }
   static void handleOnNotificationReceived(
@@ -221,7 +221,7 @@ abstract class PushNotificationService {
                   callbackWhenHandelOnNotificationCliked:
                       callbackWhenHandelOnNotificationCliked));
         } else {
-          print("⚠️ Skipping notification: No valid title or body");
+          debugPrint("⚠️ Skipping notification: No valid title or body");
         }
       }
     }
@@ -241,10 +241,10 @@ abstract class PushNotificationService {
   ///       // Implement your logic to navigate to the order edit page
   ///       break;
   ///     default:
-  ///       print('Unknown notification type: ${payload["type"]}');
+  ///       debugPrint('Unknown notification type: ${payload["type"]}');
   ///   }
   /// } catch (e) {
-  ///   print('Error handling notification click: $e');
+  ///   debugPrint('Error handling notification click: $e');
   /// }
   static void handleOnNotificationClicked(
       {required dynamic payload,
@@ -253,7 +253,7 @@ abstract class PushNotificationService {
     try {
       await callbackWhenHandelOnNotificationCliked?.call(payload: payload);
     } catch (e) {
-      print('Error handling notification click: ${e.toString()}');
+      debugPrint('Error handling notification click: ${e.toString()}');
     }
   }
 

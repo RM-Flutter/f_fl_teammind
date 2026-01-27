@@ -52,7 +52,7 @@ class DioApiService implements BackEndServicesInterface {
         required String dataKey,
         required BuildContext context,
         bool? allData = false}) async {
-    print("STATUS CODE IS --> ${response.statusCode}");
+    debugPrint("STATUS CODE IS --> ${response.statusCode}");
     String? respond;
     final appConfigServiceProvider =
     Provider.of<AppConfigService>(context, listen: false);
@@ -73,7 +73,7 @@ class DioApiService implements BackEndServicesInterface {
               }
             }
           } catch (err, t) {
-            print(
+            debugPrint(
                 '--------- Failed while updating current token from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
           }
         }
@@ -96,7 +96,7 @@ class DioApiService implements BackEndServicesInterface {
 
       case 401:
         respond = 'Unauthorized';
-        print("Unauthorized is $respond");
+        debugPrint("Unauthorized is $respond");
         // _toast.toastMethod(LocaleKeys.respond_401.tr());
         final appConfigService = Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false, skipServerLogout: true).then((v){
@@ -162,7 +162,7 @@ class DioApiService implements BackEndServicesInterface {
               }
             }
           } catch (err, t) {
-            print(
+            debugPrint(
                 '--------- Failed while updating current token from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
           }
         }
@@ -228,10 +228,10 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -246,7 +246,7 @@ class DioApiService implements BackEndServicesInterface {
         message: e.message ?? "Unexpected error",
       );
     } catch (err, t) {
-      print(
+      debugPrint(
         '--------- Failed get() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}',
       );
       // Send to Telegram
@@ -290,10 +290,10 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -308,7 +308,7 @@ class DioApiService implements BackEndServicesInterface {
         message: e.message ?? "Unexpected error",
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed post() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       // Send to Telegram
       final screenName = TelegramErrorService.getCurrentScreenName(context);
@@ -390,10 +390,10 @@ class DioApiService implements BackEndServicesInterface {
       }
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -408,7 +408,7 @@ class DioApiService implements BackEndServicesInterface {
         message: e.message ?? "Unexpected error",
       );
     } catch (err, stackTrace) {
-      print(
+      debugPrint(
           'Failed postWithFormData() ❌ \n error ${err.toString()} - in Line :- ${stackTrace.toString()}');
       // Send to Telegram
       final screenName = TelegramErrorService.getCurrentScreenName(context);
@@ -482,7 +482,7 @@ class DioApiService implements BackEndServicesInterface {
   //       );
   //     }
   //   } catch (err, t) {
-  //     print(
+  //     debugPrint(
   //         'Failed postWithFormData() ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
   //     return OperationResult<T>(
   //       success: false,
@@ -514,10 +514,10 @@ class DioApiService implements BackEndServicesInterface {
           dataKey: dataKey);
     }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -532,7 +532,7 @@ class DioApiService implements BackEndServicesInterface {
         message: e.message ?? "Unexpected error",
       );
     }  catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       // Send to Telegram
       final screenName = TelegramErrorService.getCurrentScreenName(context);
@@ -573,10 +573,10 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -591,7 +591,7 @@ class DioApiService implements BackEndServicesInterface {
         message: e.message ?? "Unexpected error",
       );
     }  catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed delete() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       // Send to Telegram
       final screenName = TelegramErrorService.getCurrentScreenName(context);
@@ -657,10 +657,10 @@ class DioApiService implements BackEndServicesInterface {
       }
     }on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      print("Caught DioError with status code: $statusCode");
+      debugPrint("Caught DioError with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioError catch block)");
+        debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
         appConfigService.logout(context, viewAlert: false).then((v) {
@@ -675,7 +675,7 @@ class DioApiService implements BackEndServicesInterface {
         message: e.message ?? "Unexpected error",
       );
     }  catch (err, t) {
-      print(
+      debugPrint(
           'Failed postFileWith_dio ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       // Send to Telegram
       final screenName = TelegramErrorService.getCurrentScreenName(context);
@@ -719,7 +719,7 @@ class DioApiService implements BackEndServicesInterface {
           allData: allData,
           dataKey: dataKey);
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -753,7 +753,7 @@ class DioApiService implements BackEndServicesInterface {
       var map = json.decode(result.data ?? '');
       return OperationResult(success: true, data: map);
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed get() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -783,7 +783,7 @@ class DioApiService implements BackEndServicesInterface {
             .replaceAll('"', '\'');
       }
       var body = json.encode(data, toEncodable: ApiServiceHelpers.customEncode);
-      print('POST --------------------- $url');
+      debugPrint('POST --------------------- $url');
 
       var client = Dio();
       var response = await client.post(url,
@@ -807,7 +807,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed post() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -830,7 +830,7 @@ class DioApiService implements BackEndServicesInterface {
         return validateTokensResult;
       }
 
-      print('POST --------------------- $url');
+      debugPrint('POST --------------------- $url');
 
       var client = Dio();
       var response = await client.post(url,
@@ -856,7 +856,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -912,7 +912,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await request.send();
       if (response.statusCode == 200) {
         var data = (await response.stream.toBytes());
-        if (kDebugMode) print("${data.length}");
+        if (kDebugMode) debugPrint("${data.length}");
         dataString = utf8.decode(data);
         var r = json.decode(dataString);
         return OperationResult(
@@ -936,7 +936,7 @@ class DioApiService implements BackEndServicesInterface {
       return OperationResult(
           success: false, message: 'Error HttpPosFile: ${response.statusCode}');
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed postFile() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -959,7 +959,7 @@ class DioApiService implements BackEndServicesInterface {
         return validateTokensResult;
       }
 
-      print('POST --------------------- $url');
+      debugPrint('POST --------------------- $url');
 
       var client = Dio();
       var response = await client.post(url,
@@ -984,7 +984,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed postEx() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -1006,7 +1006,7 @@ class DioApiService implements BackEndServicesInterface {
       if (validateTokensResult.success == false) {
         return validateTokensResult;
       }
-      print('PUT --------------------- $url');
+      debugPrint('PUT --------------------- $url');
 
       var client = Dio();
       var response = await client.put(url,
@@ -1033,7 +1033,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed putEx() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -1055,7 +1055,7 @@ class DioApiService implements BackEndServicesInterface {
       if (validateTokensResult.success == false) {
         return validateTokensResult;
       }
-      print('GET --------------------- $url');
+      debugPrint('GET --------------------- $url');
       var client = Dio();
       var response = await client.get(url,
           options: Options(
@@ -1091,7 +1091,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed getDynamic() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -1112,7 +1112,7 @@ class DioApiService implements BackEndServicesInterface {
       if (validateTokensResult.success == false) {
         return validateTokensResult;
       }
-      print('GET --------------------- $url');
+      debugPrint('GET --------------------- $url');
       var client = Dio();
       var response = await client.get(url,
           options: Options(
@@ -1140,7 +1140,7 @@ class DioApiService implements BackEndServicesInterface {
         data: reply,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed getDynamic() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -1162,7 +1162,7 @@ class DioApiService implements BackEndServicesInterface {
       if (validateTokensResult.success == false) {
         return validateTokensResult;
       }
-      print('DELETE --------------------- $url');
+      debugPrint('DELETE --------------------- $url');
       var client = Dio();
       var response = await client.delete(url,
           options: Options(
@@ -1190,7 +1190,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed deleteDynamic() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult(success: false, message: err.toString());
     }
@@ -1212,7 +1212,7 @@ class DioApiService implements BackEndServicesInterface {
       if (validateTokensResult.success == false) {
         return validateTokensResult;
       }
-      print('DELETE --------------------- $url');
+      debugPrint('DELETE --------------------- $url');
       var client = Dio();
       var response = await client.delete(url,
           options: Options(
@@ -1239,7 +1239,7 @@ class DioApiService implements BackEndServicesInterface {
         allData: allData,
       );
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed deleteDynamicEx() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
 
       return OperationResult(success: false, message: err.toString());
@@ -1259,7 +1259,7 @@ class DioApiService implements BackEndServicesInterface {
       if (validateTokensResult.success == false) {
         return validateTokensResult;
       }
-      print('GET --------------------- $url');
+      debugPrint('GET --------------------- $url');
       var client = Dio();
       var response = await client.get(url,
           options: Options(

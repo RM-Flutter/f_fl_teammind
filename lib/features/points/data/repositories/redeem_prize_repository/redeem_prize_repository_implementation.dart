@@ -2,6 +2,7 @@ import 'package:app_test/features/points/data/repositories/redeem_prize_reposito
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:app_test/core/services/app_config.service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:app_test/features/points/core/api/api_services.dart';
@@ -25,7 +26,7 @@ class RedeemPrizeRepositoryImplementation extends RedeemPrizeRepository {
             'prize' : prizeName,
           }
       );
-      print(data.data);
+      debugPrint(data.data);
       return Right(RedeemPrizeModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {

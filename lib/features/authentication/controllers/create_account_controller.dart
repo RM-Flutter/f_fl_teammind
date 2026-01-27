@@ -76,7 +76,7 @@ class CreateAccountController extends ChangeNotifier {
       }
       return;
     } catch (err, t) {
-      print('Error :- $err in :- $t');
+      debugPrint('Error :- $err in :- $t');
       AlertsService.warning(
           context: context,
           message: AppStrings.failedRegisterationPleaseTryAgain.tr(),

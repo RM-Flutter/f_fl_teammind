@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:app_test/core/services/app_config.service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/features/points/core/api/api_services.dart';
 import 'package:app_test/features/points/core/api/end_points.dart';
@@ -23,7 +24,7 @@ class GetHistoryRepositoryImplementation extends GetHistoryRepository {
             'device_unique_id': get.deviceInformation.deviceUniqueId
         }
       );
-      print(data.data);
+      debugPrint(data.data);
       return Right(HistoryModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {

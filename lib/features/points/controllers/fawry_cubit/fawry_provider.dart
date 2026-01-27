@@ -86,7 +86,7 @@ class FawryProviderModel extends ChangeNotifier {
                 .birthDate);
       }
     } catch (err, t) {
-      print("error while checking on user birthday $err at :- $t");
+      debugPrint("error while checking on user birthday $err at :- $t");
     }
     updateLoadingStatus(laodingValue: false);
   }
@@ -101,7 +101,7 @@ class FawryProviderModel extends ChangeNotifier {
   }
 
   double calcFees(Map<String, dynamic> service, double amount) {
-    print("service is --> $service");
+    debugPrint("service is --> $service");
     List<dynamic> rules = [];
 
     try {
@@ -134,7 +134,7 @@ class FawryProviderModel extends ChangeNotifier {
         }
       }
     }
-    print("totalFee --> ${totalFee.toString()}");
+    debugPrint("totalFee --> ${totalFee.toString()}");
     return totalFee;
   }
 
@@ -349,7 +349,7 @@ class FawryProviderModel extends ChangeNotifier {
       inputValues[key] = outputDate;       // ✅ يخزن القيمة
 
       notifyListeners(); // ← لو بتستخدم Consumer أو Provider
-      print("📅 $key selected: $outputDate");
+      debugPrint("📅 $key selected: $outputDate");
     }
   }
 

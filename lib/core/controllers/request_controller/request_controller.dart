@@ -89,7 +89,7 @@ class RequestController extends ChangeNotifier {
   Future<void> getRequest(BuildContext context, {int? page}) async {
     if (page != null) currentPage = page;
 
-    print("currentPage is --> $currentPage");
+    debugPrint("currentPage is --> $currentPage");
     isGetRequestLoading = true;
     notifyListeners();
 
@@ -164,7 +164,7 @@ class RequestController extends ChangeNotifier {
   }
   // Future<void> getRequestMine(BuildContext context, {int? page}) async {
   //   if(page != null){currentPage = page;}
-  //   print("currentPage is --> $currentPage}");
+  //   debugPrint("currentPage is --> $currentPage}");
   //   isGetRequestLoading = true;
   //   notifyListeners();
   //   try {
@@ -193,7 +193,7 @@ class RequestController extends ChangeNotifier {
   //       }
   //       if (newRequests.isNotEmpty) {
   //         requests.addAll(newRequests);
-  //         print("LENGTH IS --> ${newRequests.length}");
+  //         debugPrint("LENGTH IS --> ${newRequests.length}");
   //         if (hasMore) currentPage++;
   //       } else {
   //         hasMoreRequests = false; // No more data to fetch
@@ -479,8 +479,8 @@ class RequestController extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                print(image1);
-                                print(image2);
+                                debugPrint(image1);
+                                debugPrint(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(

@@ -28,7 +28,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
-            print("onPageStarted is -> $url");
+            debugPrint("onPageStarted is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 0;
@@ -43,7 +43,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
             }
           },
           onPageFinished: (url) {
-            print("onPageFinished is -> $url");
+            debugPrint("onPageFinished is -> $url");
             if (mounted) {
               setState(() {
                 loadingPercentage = 100;
@@ -51,16 +51,16 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
             }
           },
           onHttpError: (error) {
-            print("onHttpError is --- > ${error.response!.statusCode}");
-            print("onHttpError is --- > ${error.response!.headers}");
-            print("onHttpError is --- > ${error.response!.uri}");
-            print("onHttpError is --- > ${error.request!.uri}");
+            debugPrint("onHttpError is --- > ${error.response!.statusCode}");
+            debugPrint("onHttpError is --- > ${error.response!.headers}");
+            debugPrint("onHttpError is --- > ${error.response!.uri}");
+            debugPrint("onHttpError is --- > ${error.request!.uri}");
           },
           onWebResourceError: (error) {
-            print("onWebResourceError is --- > $error");
+            debugPrint("onWebResourceError is --- > $error");
           },
           onNavigationRequest: (navigation) {
-            print("NAV is -> ${navigation.url}");
+            debugPrint("NAV is -> ${navigation.url}");
             final host = Uri.parse(navigation.url).host;
             if (navigation.url.contains('status=1')) {
               CacheHelper.deleteData(key: "update_url");

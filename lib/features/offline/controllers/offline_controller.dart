@@ -30,7 +30,7 @@ class OfflineController with ChangeNotifier {
     appConfigServiceProvider.getSettings(type: SettingsType.userSettings);
     
     if (settings == null) {
-      print("⚠️ Settings is null, skipping fingerprint initialization");
+      debugPrint("⚠️ Settings is null, skipping fingerprint initialization");
       return;
     }
     
@@ -43,30 +43,30 @@ class OfflineController with ChangeNotifier {
         gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
         UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
       } catch (e) {
-        print("❌ Error decoding US1: $e");
+        debugPrint("❌ Error decoding US1: $e");
         return;
       }
     } else {
-      print("⚠️ US1 cache is empty");
+      debugPrint("⚠️ US1 cache is empty");
       return;
     }
 
     try {
       userSettingsModel = UserSettingsModel.fromJson(gCache);
       final fingerprints = userSettingsModel.avFingerprint;
-      print("fingerprints --> $fingerprints");
+      debugPrint("fingerprints --> $fingerprints");
       if (fingerprints != null) {
         fingerprints.forEach((key, value) {
           if (value == 'active_all' || value == 'active_some') {
             _usersFingerprints.add(key);
-            print("_usersFingerprints --> $_usersFingerprints");
+            debugPrint("_usersFingerprints --> $_usersFingerprints");
           }
         });
       } else {
-        print("⚠️ fingerprints is null or not a Map");
+        debugPrint("⚠️ fingerprints is null or not a Map");
       }
     } catch (e) {
-      print("❌ Error initializing fingerprints: $e");
+      debugPrint("❌ Error initializing fingerprints: $e");
     }
 
     // Load saved fingerprints from preferences
@@ -91,7 +91,7 @@ class OfflineController with ChangeNotifier {
           final List<dynamic> decodedList = jsonDecode(jsonString);
           savedFingerprints = decodedList.cast<Map<String, dynamic>>();
           AppConstants.fingerPrints = savedFingerprints;
-          print("Loaded fingerprints in offline screen: $savedFingerprints");
+          debugPrint("Loaded fingerprints in offline screen: $savedFingerprints");
         } else {
           savedFingerprints = [];
           AppConstants.fingerPrints = [];
@@ -99,10 +99,10 @@ class OfflineController with ChangeNotifier {
       } else {
         savedFingerprints = [];
         AppConstants.fingerPrints = [];
-        print("No fingerprints found in shared preferences");
+        debugPrint("No fingerprints found in shared preferences");
       }
     } catch (e) {
-      print("Error loading fingerprints: $e");
+      debugPrint("Error loading fingerprints: $e");
       savedFingerprints = [];
       AppConstants.fingerPrints = [];
     } finally {

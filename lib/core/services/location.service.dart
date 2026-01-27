@@ -42,7 +42,7 @@ abstract class LocationService {
 
   static Future<LocationData?> _getWebLocation() async {
     // Web specific location logic (fallback to asking the user to enable location services)
-    print('Web platform does not support location service directly.');
+    debugPrint('Web platform does not support location service directly.');
     return null;
   }
 }

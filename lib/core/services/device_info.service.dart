@@ -21,10 +21,10 @@ abstract class DeviceInformationService {
            androidId = await platform.invokeMethod('getAndroidId');
 
         } catch (e) {
-          print("Error fetching Android ID: $e");
+          debugPrint("Error fetching Android ID: $e");
         }
         deviceIdentifier = "$androidId";
-        print("androidId -> $androidId");
+        debugPrint("androidId -> $androidId");
       } else if (PlatformIs.iOS) {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";

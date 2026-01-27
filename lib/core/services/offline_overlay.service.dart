@@ -30,7 +30,7 @@ class OfflineOverlayService {
         // Remove overlay temporarily but keep the entry
         if (rootNavigatorKey.currentState?.overlay != null) {
           overlay.remove();
-          print('Offline overlay hidden temporarily');
+          debugPrint('Offline overlay hidden temporarily');
         }
       } else if (overlay != null) {
         _offlineOverlay = null;
@@ -39,13 +39,13 @@ class OfflineOverlayService {
         // Remove overlay permanently
         if (rootNavigatorKey.currentState?.overlay != null) {
           overlay.remove();
-          print('Offline overlay hidden');
+          debugPrint('Offline overlay hidden');
         }
       } else {
-        print('Offline overlay state reset (navigator not available)');
+        debugPrint('Offline overlay state reset (navigator not available)');
       }
     } catch (e) {
-      print('Error hiding offline overlay: $e');
+      debugPrint('Error hiding offline overlay: $e');
       _isShowing = false;
       _offlineOverlay = null;
       _isTemporarilyHidden = false;
@@ -63,16 +63,16 @@ class OfflineOverlayService {
         try {
           rootNavigatorKey.currentState!.overlay!.insert(_offlineOverlay!);
           _isShowing = true;
-          print('Offline overlay restored from temporary hide');
+          debugPrint('Offline overlay restored from temporary hide');
         } catch (e) {
-          print('Error restoring overlay from temporary hide: $e');
+          debugPrint('Error restoring overlay from temporary hide: $e');
           // If restoration fails, create a new overlay
           _offlineOverlay = null;
           _isShowing = false;
           showOfflineOverlay(); // Recursively call to create new overlay
         }
       } else {
-        print('Offline overlay entry not available, creating new one');
+        debugPrint('Offline overlay entry not available, creating new one');
         _isTemporarilyHidden = false;
         _isShowing = false;
         showOfflineOverlay(); // Recursively call to create new overlay
@@ -82,7 +82,7 @@ class OfflineOverlayService {
     
     // Call the original showOfflineOverlay logic
     if (_isShowing) {
-      print('Offline overlay already showing');
+      debugPrint('Offline overlay already showing');
       return;
     }
     
@@ -101,14 +101,14 @@ class OfflineOverlayService {
         // Use rootNavigatorKey from app_router.dart (GoRouter's navigator)
         if (rootNavigatorKey.currentState?.overlay != null) {
           rootNavigatorKey.currentState!.overlay!.insert(_offlineOverlay!);
-          print('Offline overlay shown successfully');
+          debugPrint('Offline overlay shown successfully');
         } else {
-          print('⚠️ Cannot show offline overlay: navigator overlay not available');
+          debugPrint('⚠️ Cannot show offline overlay: navigator overlay not available');
           _isShowing = false;
           _offlineOverlay = null;
         }
       } catch (e) {
-        print('Error showing offline overlay: $e');
+        debugPrint('Error showing offline overlay: $e');
         _isShowing = false;
         _offlineOverlay = null;
       }

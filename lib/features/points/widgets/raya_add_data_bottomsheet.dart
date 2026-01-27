@@ -37,11 +37,11 @@ class RayaAddDataBottomsheet extends StatelessWidget {
           }
           values.clear();
           needData.forEach((e){
-            print("e['value'] ---> ${e['value']}");
+            debugPrint("e['value'] ---> ${e['value']}");
             values.add(e['key']);
-            print("values --> $values");
+            debugPrint("values --> $values");
           });
-          print("values --> $values");
+          debugPrint("values --> $values");
           return Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom, // Push above keyboard

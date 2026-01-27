@@ -62,7 +62,7 @@ class AuthenticationController extends ChangeNotifier {
       }
     } catch (e) {
       // Ignore if animationController is not initialized or already disposed
-      print('Warning: animationController dispose error: $e');
+      debugPrint('Warning: animationController dispose error: $e');
     }
     
     phoneController.dispose();
@@ -125,7 +125,7 @@ class AuthenticationController extends ChangeNotifier {
         ),
       );
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
   Future<void> login({required BuildContext context, phones, cCode, email, password, loginType, bool noti = true}) async {
@@ -171,7 +171,7 @@ class AuthenticationController extends ChangeNotifier {
         );
       }
     } else {
-      print("request login REG");
+      debugPrint("request login REG");
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
       final completePhoneNumber =
@@ -179,7 +179,7 @@ class AuthenticationController extends ChangeNotifier {
           ? '${phones.text}'
           : cCode + phones.text ?? "")
           .trim();
-      print("request login /////");
+      debugPrint("request login /////");
       OperationResult<Map<String, dynamic>> result =
       await AuthenticationService.login(
           context: context,
@@ -188,7 +188,7 @@ class AuthenticationController extends ChangeNotifier {
           deviceInformation:
           appConfigServiceProvider.deviceInformation.toMap());
 
-      print("response login /////");
+      debugPrint("response login /////");
 
       if (result.success &&
           result.data != null &&

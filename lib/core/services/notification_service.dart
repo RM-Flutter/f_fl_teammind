@@ -28,10 +28,10 @@ class NotificationService {
     try {
       final settings = await _messaging.requestPermission(alert: true, badge: true, sound: true);
       if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        print("❌ Notifications not granted");
+        debugPrint("❌ Notifications not granted");
       }
     } catch (e) {
-      print("⚠️ Failed to request native permissions: $e");
+      debugPrint("⚠️ Failed to request native permissions: $e");
     }
   }
 
@@ -50,9 +50,9 @@ class NotificationService {
 
     try {
       String? token = await _messaging.getToken();
-      print("🔑 FCM Token: $token");
+      debugPrint("🔑 FCM Token: $token");
     } catch (e) {
-      print("⚠️ Failed to get FCM token: $e");
+      debugPrint("⚠️ Failed to get FCM token: $e");
     }
   }
 
@@ -77,18 +77,18 @@ class NotificationService {
     try {
       GeneralListener.linksAction(popup: popup);
     } catch (e) {
-      print("⚠️ Failed to handle message: $e");
+      debugPrint("⚠️ Failed to handle message: $e");
     }
   }
 
   void _setupForegroundMessages() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("🔔 Foreground Notification: ${message.notification?.title}");
+      debugPrint("🔔 Foreground Notification: ${message.notification?.title}");
       // Filter out notifications with no title or body
       if (_shouldShowNotification(message)) {
         _showNotification(message);
       } else {
-        print("⚠️ Skipping notification: No valid title or body");
+        debugPrint("⚠️ Skipping notification: No valid title or body");
       }
     });
   }
@@ -146,7 +146,7 @@ class NotificationService {
         payload: message.data['endpoint'],
       );
     } catch (e) {
-      print("⚠️ Failed to show local notification: $e");
+      debugPrint("⚠️ Failed to show local notification: $e");
     }
   }
 
@@ -160,11 +160,11 @@ class NotificationService {
         );
       }
     } catch (e) {
-      print("⚠️ Failed to check initial message: $e");
+      debugPrint("⚠️ Failed to check initial message: $e");
     }
   }
 
   static Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("🔹 Background Notification: ${message.notification?.title}");
+    debugPrint("🔹 Background Notification: ${message.notification?.title}");
   }
 }

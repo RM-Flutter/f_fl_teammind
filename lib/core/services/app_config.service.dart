@@ -86,7 +86,7 @@ class AppConfigService extends ChangeNotifier {
       {required bool isLogin, required String? token, updateUrl}) async {
     await setIsLogin(isLogin);
     await setToken(token);
-    print(
+    debugPrint(
         '----- Authentication status set to $isLogin with token :- $token');
     notifyListeners();
   }
@@ -149,7 +149,7 @@ class AppConfigService extends ChangeNotifier {
     switch (type) {
       case SettingsType.generalSettings || SettingsType.startupSettings:
         if (data != null && dataS1 != null && dataS2 != null) {
-          print("Done S");
+          debugPrint("Done S");
           _generalSettigns = data;
           _userSettings = dataS1;
           _user2Settings = dataS2;
@@ -157,13 +157,13 @@ class AppConfigService extends ChangeNotifier {
         }
       case SettingsType.userSettings|| SettingsType.startupSettings:
         if (dataS1 != null) {
-          print("Done S1");
+          debugPrint("Done S1");
           _userSettings = dataS1;
         }
         return;
       case SettingsType.user2Settings|| SettingsType.startupSettings:
         if (dataS2 != null) {
-          print("Done S2");
+          debugPrint("Done S2");
           _user2Settings = dataS2;
         }
         return;
@@ -299,10 +299,10 @@ class AppConfigService extends ChangeNotifier {
     try {
       if (_prefs != null) return;
       _prefs = await SharedPreferences.getInstance();
-      print('--------- Config Service is Initialized Successfully ✔️');
+      debugPrint('--------- Config Service is Initialized Successfully ✔️');
       return;
     } catch (err, t) {
-      print(
+      debugPrint(
           '--------- Failed to initialize Config Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
     }
     return;
@@ -409,7 +409,7 @@ class AppConfigService extends ChangeNotifier {
       CacheHelper.deleteData(key: "s2Date");
       CacheHelper.deleteData(key: "fcmToken");
       setIsLogin(false);
-      print('User has been logged out, and token is cleared.');
+      debugPrint('User has been logged out, and token is cleared.');
     
     // Try to notify server, but don't fail if it doesn't work (e.g., 401)
     if (!skipServerLogout) {
@@ -417,7 +417,7 @@ class AppConfigService extends ChangeNotifier {
         await DioHelper.postData(url: "/rm_users/v1/log_out", context: context);
       } catch (e) {
         // Ignore errors when logging out (especially 401)
-        print('Logout API call failed (this is OK): $e');
+        debugPrint('Logout API call failed (this is OK): $e');
       }
     }
   }

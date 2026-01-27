@@ -41,12 +41,12 @@ class _ComplainScreenState extends State<ComplainScreen> {
       requestController.getRequest(context, page: 1,);
     });
     _scrollController.addListener(() {
-      print("Current scroll position: ${_scrollController.position.pixels}");
-      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !requestController.isGetRequestLoading && requestController.getMore == true) {
-        print("BOTTOM BOTTOM");
+        debugPrint("BOTTOM BOTTOM");
         requestController.getRequest(context, page: requestController.currentPage);
       }
     });

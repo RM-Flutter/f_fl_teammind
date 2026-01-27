@@ -43,7 +43,7 @@ class CompanyStructureInfoController extends ChangeNotifier {
       applicationDescription =
           await ApplicationInformationService.getAppDescription();
     } catch (ex, t) {
-      print(
+      debugPrint(
           "Failed to initialize and getting applicaiton information -> $ex at-> $t");
     }
     notifyListeners();

@@ -155,7 +155,7 @@ class NotificationProviderModel extends ChangeNotifier {
   }
   Future<void> getNotification(BuildContext context, {int? page, forWho}) async {
     if(page != null){currentPage = page;}
-    print("currentPage is --> $currentPage}");
+    debugPrint("currentPage is --> $currentPage}");
     isGetNotificationLoading = true;
     notifyListeners();
     try {
@@ -175,7 +175,7 @@ class NotificationProviderModel extends ChangeNotifier {
       }
       if (newNotifications.isNotEmpty) {
         notifications.addAll(newNotifications);
-        print("LENGTH IS --> ${newNotifications.length}");
+        debugPrint("LENGTH IS --> ${newNotifications.length}");
         if (hasMore) currentPage++;
       } else {
         hasMoreNotifications = false; // No more data to fetch
@@ -217,8 +217,8 @@ class NotificationProviderModel extends ChangeNotifier {
   addNotification(BuildContext context, {empIds, depIds})async {
     isLoading = true;
     notifyListeners();
-    print("empIds is --> $empIds");
-    print("empIds is --> ${listXAttachmentPersonalImage.length}");
+    debugPrint("empIds is --> $empIds");
+    debugPrint("empIds is --> ${listXAttachmentPersonalImage.length}");
     final image = listAttachmentPersonalImage
         .map((e) => XFile(e["compressed"].path)) // تحويل File → XFile
         .toList();
@@ -401,8 +401,8 @@ class NotificationProviderModel extends ChangeNotifier {
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                print(image1);
-                                print(image2);
+                                debugPrint(image1);
+                                debugPrint(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(

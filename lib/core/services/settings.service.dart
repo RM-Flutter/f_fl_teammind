@@ -96,16 +96,16 @@ abstract class AppSettingsService {
           "token" : token
         }
     ).then((value){
-      print(value.data['message']);
+      debugPrint(value.data['message']);
       if(value.data['status'] == true){
         if(value.data['update_url'] != null){
-          print("THE UPDATE URL IS CHANGES");
+          debugPrint("THE UPDATE URL IS CHANGES");
           CacheHelper.setString(key: "update_url", value:value.data['update_url'] );
         }
       }
     }).catchError((error){
       if (error is DioException) {
-        print(error.response?.data['message'] ?? 'Something went wrong');
+        debugPrint(error.response?.data['message'] ?? 'Something went wrong');
       }
     });
   }
@@ -128,7 +128,7 @@ abstract class AppSettingsService {
       //   final ipData = jsonDecode(ipResponse.body);
       // }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
     return null;
   }
@@ -142,10 +142,10 @@ abstract class AppSettingsService {
       String dialCode = info['dialCode'] ?? AppConstants.countryCode;       // كود الاتصال الدولي، مثل +20
       CacheHelper.setString(key: "flag", value: countryCode);
       CacheHelper.setString(key: "flagCode", value: dialCode);
-      print('Country Code: $countryCode');
-      print('Dial Code: $dialCode');
+      debugPrint('Country Code: $countryCode');
+      debugPrint('Dial Code: $dialCode');
     } else {
-      print('لم يتم الحصول على معلومات الدولة.');
+      debugPrint('لم يتم الحصول على معلومات الدولة.');
     }
   }
 
@@ -164,16 +164,16 @@ abstract class AppSettingsService {
     Map<String, dynamic> s1Cache = {};
     Map<String, dynamic> s2Cache = {};
     var gCache;
-    print("FAAAAAAAAAAAAAAAILD");
+    debugPrint("FAAAAAAAAAAAAAAAILD");
     String? fcmToken;
 
     try {
       fcmToken = await FirebaseMessaging.instance.getToken();
     } catch (e) {
-      print("🔥 Error while requesting permission or token: $e");
+      debugPrint("🔥 Error while requesting permission or token: $e");
     }
 
-    print("FAAAAAAAAAAAAAAAILD 2");
+    debugPrint("FAAAAAAAAAAAAAAAILD 2");
 
     fcmToken ??= CacheHelper.getString("fcm_token"); // fallback
 
@@ -231,7 +231,7 @@ abstract class AppSettingsService {
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null && result.data!['user2_settings'] ['status']  != false  && CacheHelper.getString("US2") != null && CacheHelper.getString("US2") != ""){
         CacheHelper.deleteData(key: "US2").then((v){
-          print("DELETED FROM CACHE SUCCESS");
+          debugPrint("DELETED FROM CACHE SUCCESS");
         });}
       if((need == null || need.contains('general_settings')) &&result.data!['general_settings'] != null && result.data!['general_settings'] ['status']  != false && CacheHelper.getString("USG") != null && CacheHelper.getString("USG") != ""){
         CacheHelper.deleteData(key: "USG");
@@ -267,7 +267,7 @@ abstract class AppSettingsService {
           final jsonString = prefs.getString("US1");
           if (jsonString != null) {
             s1Cache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-            print("S1 IS --> $s1Cache");
+            debugPrint("S1 IS --> $s1Cache");
           }
         }
       }
@@ -287,7 +287,7 @@ abstract class AppSettingsService {
           dataS2: (result.data!['user2_settings'] != null)?(result.data!['user2_settings']['status'] == false)? s2Cache : result.data!['user2_settings']['data'] : null
       );
     } else {
-      print("ERROR DIO IS  --> ${result.errorCodeString}");
+      debugPrint("ERROR DIO IS  --> ${result.errorCodeString}");
       // if error happened , then check if i have cached version of settings or not , if i have cached version i will use it , if not , i will store the default settings version into local storage.
       if (appConfigServiceProvider.getSettings(type: settingType) == null) {
         appConfigServiceProvider.setSettings(

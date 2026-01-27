@@ -214,12 +214,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                 Function()? function;
                                 String hero;
                                 final fingerprintType = viewModel.usersFingerprints[index];
-                                print("🔍 Setting up fingerprint button: $fingerprintType");
+                                debugPrint("🔍 Setting up fingerprint button: $fingerprintType");
                                 switch (fingerprintType) {
                                   case 'fp_scan':
                                     icon = Icons.qr_code;
                                     function = () async{
-                                      print("👆 QR Code fingerprint button pressed");
+                                      debugPrint("👆 QR Code fingerprint button pressed");
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: context,
                                         fingerprintMethod: 'fp_scan',
@@ -231,7 +231,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.wifi;
                                     hero = 'wifi';
                                     function = ()async {
-                                      print("👆 WiFi fingerprint button pressed");
+                                      debugPrint("👆 WiFi fingerprint button pressed");
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: context,
                                         fingerprintMethod: 'fp_wifi',
@@ -242,7 +242,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                   case 'custom_fp_navigate':
                                     icon = Icons.gps_fixed;
                                     function = () async{
-                                      print("👆 GPS fingerprint button pressed: $fingerprintType");
+                                      debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: context,
                                         fingerprintMethod: fingerprintType,
@@ -253,7 +253,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                   case 'fp_bluetooth':
                                     icon = Icons.bluetooth;
                                     function = ()async{
-                                      print("👆 Bluetooth fingerprint button pressed");
+                                      debugPrint("👆 Bluetooth fingerprint button pressed");
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: context,
                                         fingerprintMethod: 'fp_bluetooth',
@@ -262,7 +262,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     hero = 'bluetooth';
                                     break;
                                   default:
-                                    print("⚠️ Unknown fingerprint type: $fingerprintType");
+                                    debugPrint("⚠️ Unknown fingerprint type: $fingerprintType");
                                     return const SizedBox.shrink();
                                 }
 

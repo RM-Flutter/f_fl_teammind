@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class ConnectionsService {
   static final Connectivity _connectivity = Connectivity();
@@ -29,20 +30,20 @@ abstract class ConnectionsService {
       List<ConnectivityResult> connectivityResults) {
     for (var result in connectivityResults) {
       if (result == ConnectivityResult.mobile) {
-        print("Mobile network available.");
+        debugPrint("Mobile network available.");
       } else if (result == ConnectivityResult.wifi) {
-        print("Wi-Fi is available.");
+        debugPrint("Wi-Fi is available.");
       } else if (result == ConnectivityResult.ethernet) {
-        print("Ethernet connection available.");
+        debugPrint("Ethernet connection available.");
       } else if (result == ConnectivityResult.vpn) {
-        print("VPN connection active.");
+        debugPrint("VPN connection active.");
       } else if (result == ConnectivityResult.bluetooth) {
-        print("Bluetooth connection available.");
+        debugPrint("Bluetooth connection available.");
       } else if (result == ConnectivityResult.other) {
-        print(
+        debugPrint(
             "Connected to a network which is not in the above mentioned networks.");
       } else if (result == ConnectivityResult.none) {
-        print("No available network types.");
+        debugPrint("No available network types.");
       }
     }
   }
@@ -53,7 +54,7 @@ abstract class ConnectionsService {
       final connectivityResult = await _connectivity.checkConnectivity();
       return !connectivityResult.contains(ConnectivityResult.none);
     } catch (e) {
-      print('Error checking internet connection: $e');
+      debugPrint('Error checking internet connection: $e');
       return false; // Assume offline on error
     }
   }

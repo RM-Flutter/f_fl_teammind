@@ -43,7 +43,7 @@ class _ContactScreenState extends State<ContactScreen> {
             gCache = json.decode(jsonString)
                 as Map<String, dynamic>; // Convert String back to JSON
           }
-          print("gCache['company_contacts'] --> ${gCache['company_contacts']}");
+          debugPrint("gCache['company_contacts'] --> ${gCache['company_contacts']}");
           return Stack(
             children: [
               Positioned.fill(

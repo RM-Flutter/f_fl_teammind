@@ -36,18 +36,18 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      print("Current scroll position: ${_scrollController.position.pixels}");
-      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
           !pointsProvider.isLoading &&
           pointsProvider.hasMore) {
-        print("BOTTOM BOTTOM");
+        debugPrint("BOTTOM BOTTOM");
        if(pointsProvider.hasMore == true) {
          pointsProvider.getCategoriesPrize(
              context, page: pointsProvider.currentPage);
        }else{
-         print("NO DATA MORE");
+         debugPrint("NO DATA MORE");
        }
       }
     });

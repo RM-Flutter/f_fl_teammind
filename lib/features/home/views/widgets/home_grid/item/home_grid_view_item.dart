@@ -1,6 +1,6 @@
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/features/home/widgets/grid_view_model.dart';
+import 'package:app_test/features/home/views/widgets/home_grid/model/grid_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
   // Callback to resume initialization when connection is restored
   void _resumeInitialization() {
     if (!_initializationCompleted && !_isInitializing && mounted) {
-      print("🔄 Connection restored, resuming initialization...");
+      debugPrint("🔄 Connection restored, resuming initialization...");
       initializeHomeAndSplash();
     }
   }
@@ -101,8 +101,8 @@ class _SplashScreenState extends State<SplashScreen> {
     
     // If offline, skip API calls and use cached data only
     if (!connectionService.isConnected) {
-      print("⚠️ Offline detected: Skipping ALL API calls, using cached data only");
-      print("⚠️ Connection status: ${connectionService.isConnected}");
+      debugPrint("⚠️ Offline detected: Skipping ALL API calls, using cached data only");
+      debugPrint("⚠️ Connection status: ${connectionService.isConnected}");
       
       // Check and select domain (may require network, but try anyway)
       try {
@@ -112,23 +112,23 @@ class _SplashScreenState extends State<SplashScreen> {
           return;
         }
       } catch (e) {
-        print("❌ Error in checkAndSelectDomain (offline), continuing anyway: $e");
+        debugPrint("❌ Error in checkAndSelectDomain (offline), continuing anyway: $e");
       }
       
       // Only initialize device info (doesn't require network)
       try {
         await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
       } catch (e) {
-        print("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
+        debugPrint("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
       }
       // Skip initializeHomeScreen which makes API calls
       // The overlay will be shown automatically by ConnectionService
-      print("⚠️ Exiting initializeHomeAndSplash early - no API calls will be made");
+      debugPrint("⚠️ Exiting initializeHomeAndSplash early - no API calls will be made");
       _isInitializing = false;
       return;
     }
     
-    print("✅ Online: Proceeding with normal initialization");
+    debugPrint("✅ Online: Proceeding with normal initialization");
     
     if (!mounted) return;
     
@@ -137,28 +137,28 @@ class _SplashScreenState extends State<SplashScreen> {
       final domainSelected = await DomainSelectionService.checkAndSelectDomain(context);
       if (!domainSelected || !mounted) return;
     } catch (e) {
-      print("❌ Error in checkAndSelectDomain, continuing anyway: $e");
+      debugPrint("❌ Error in checkAndSelectDomain, continuing anyway: $e");
     }
     
     // Online: proceed with normal initialization
     try {
       await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
     } catch (e) {
-      print("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
+      debugPrint("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
       // Continue even if device info initialization fails
     }
     
     try {
       await homeController.initializeHomeScreen(context, null);
     } catch (e) {
-      print("❌ Error in initializeHomeScreen, continuing anyway: $e");
+      debugPrint("❌ Error in initializeHomeScreen, continuing anyway: $e");
       // Continue even if home screen initialization fails (e.g., due to network issues)
     }
     
     try {
       await UpdateApp.checkForForceUpdate(context);
     } catch (e) {
-      print("❌ Error in checkForForceUpdate, continuing anyway: $e");
+      debugPrint("❌ Error in checkForForceUpdate, continuing anyway: $e");
       // Continue even if update check fails
     }
 
@@ -185,11 +185,11 @@ class _SplashScreenState extends State<SplashScreen> {
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
         UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
       } catch (e) {
-        print("Error decoding user settings: $e");
+        debugPrint("Error decoding user settings: $e");
       }
     }
     else {
-      print("us1Cache is null or empty.");
+      debugPrint("us1Cache is null or empty.");
     }
     if (us2Cache.isNotEmpty && us2Cache != "") {
       try {
@@ -197,23 +197,23 @@ class _SplashScreenState extends State<SplashScreen> {
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
         UserSettingConst.userSettings2 = UserSettings2Model.fromJson(us2Cache);
       } catch (e) {
-        print("Error decoding user settings: $e");
+        debugPrint("Error decoding user settings: $e");
       }
     }
     else {
-      print("us2Cache is null or empty.");
+      debugPrint("us2Cache is null or empty.");
     }
     if (us3Cache.isNotEmpty && us3Cache != "") {
       try {
         UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
         generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
-        print("IS THIS IS -> ${generalSettingsModel.requestTypes}");
+        debugPrint("IS THIS IS -> ${generalSettingsModel.requestTypes}");
       } catch (e) {
-        print("Error decoding user settings: $e");
+        debugPrint("Error decoding user settings: $e");
       }
     }
     else {
-      print("us2Cache is null or empty.");
+      debugPrint("us2Cache is null or empty.");
     }
     viewModel.initializeSplashScreen(
         context: context,

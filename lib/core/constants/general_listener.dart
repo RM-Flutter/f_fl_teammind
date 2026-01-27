@@ -197,16 +197,16 @@ class GeneralListener {
   }
 
   static routeCompile(urls) async {
-    print("PLAY IS IN PROCESS");
-    print(urls);
+    debugPrint("PLAY IS IN PROCESS");
+    debugPrint(urls);
     final url = urls;
     final result = await analyzeRoute(url);
     if (result != null) {
-      print("Route Key: ${result['key']}");
-      print("Parameters: ${result['values']}");
+      debugPrint("Route Key: ${result['key']}");
+      debugPrint("Parameters: ${result['values']}");
       return result;
     } else {
-      print("No matching route found.");
+      debugPrint("No matching route found.");
     }
   }
 

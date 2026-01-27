@@ -91,7 +91,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       );
       isLoading = false;
       notificationStatus = response.data['device']['notification_token_status'] == 1 ? true : false;
-      print("notificationStatus --> $notificationStatus");
+      debugPrint("notificationStatus --> $notificationStatus");
       notifyListeners();
     } catch (error) {
       isLoading = false;
@@ -118,9 +118,9 @@ class DeviceControllerProvider extends ChangeNotifier {
       );
       isLoading2 = false;
       notificationStatus = state;
-      print("state---$state");
+      debugPrint("state---$state");
       CacheHelper.setBool("status", state);
-      print("STATUS IS ---> ${CacheHelper.getBool("status")}");
+      debugPrint("STATUS IS ---> ${CacheHelper.getBool("status")}");
       if(response.data['status'] == true){
         getDeviceSysSet2(context: context,state: state);
       }else{
@@ -182,7 +182,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       }
       isLoading2 = false;
       notificationStatus = state;
-      print("state---$state");
+      debugPrint("state---$state");
       CacheHelper.setBool("status", state);
       notifyListeners();
     } catch (error) {

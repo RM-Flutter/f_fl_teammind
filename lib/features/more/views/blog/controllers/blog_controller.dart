@@ -25,7 +25,7 @@ class BlogProviderModel extends ChangeNotifier {
   }
   Future<void> getOneBlog(BuildContext context, {page, id, type}) async {
     if(page != null){currentPage = page;}
-    print("currentPage is --> $currentPage}");
+    debugPrint("currentPage is --> $currentPage}");
     isGetBlogLoading = true;
     notifyListeners();
     try {
@@ -56,7 +56,7 @@ class BlogProviderModel extends ChangeNotifier {
   }
   Future<void> getBlog(BuildContext context,slug, {page}) async {
     if(page != null){currentPage = page;}
-    print("currentPage is --> $currentPage}");
+    debugPrint("currentPage is --> $currentPage}");
     isGetBlogLoading = true;
     notifyListeners();
     try {
@@ -75,7 +75,7 @@ class BlogProviderModel extends ChangeNotifier {
       }
       if (newBlogs.isNotEmpty) {
         blogs.addAll(newBlogs);
-        print("LENGTH IS --> ${newBlogs.length}");
+        debugPrint("LENGTH IS --> ${newBlogs.length}");
         if (hasMore) currentPage++;
       } else {
         hasMoreBlogs = false; // No more data to fetch

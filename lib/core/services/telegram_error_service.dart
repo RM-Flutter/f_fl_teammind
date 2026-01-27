@@ -15,7 +15,7 @@ class TelegramErrorService {
   static void setCurrentScreen(String screenName, {BuildContext? context}) {
     _currentScreenName = screenName;
     _currentContext = context;
-    print('📍 Screen tracked: $screenName');
+    debugPrint('📍 Screen tracked: $screenName');
   }
 
   /// Get current screen name from GoRouter
@@ -34,7 +34,7 @@ class TelegramErrorService {
           return route;
         }
       } catch (e) {
-        print('Error getting screen name from router: $e');
+        debugPrint('Error getting screen name from router: $e');
       }
     }
     return _currentScreenName ?? 'unknown';
@@ -55,12 +55,12 @@ class TelegramErrorService {
       ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        print('✅ Error sent to Telegram successfully');
+        debugPrint('✅ Error sent to Telegram successfully');
       } else {
-        print('⚠️ Failed to send error to Telegram: ${response.statusCode} - ${response.body}');
+        debugPrint('⚠️ Failed to send error to Telegram: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('⚠️ Error sending message to Telegram: $e');
+      debugPrint('⚠️ Error sending message to Telegram: $e');
     }
   }
 
@@ -121,12 +121,12 @@ class TelegramErrorService {
   }) async {
     final screen = screenName ?? _currentScreenName ?? getCurrentScreenName(_currentContext) ?? 'unknown';
     
-    print('🚨 Telegram Error [Screen: $screen]: ${exception.toString()}');
+    debugPrint('🚨 Telegram Error [Screen: $screen]: ${exception.toString()}');
     if (stackTrace != null) {
-      print('   StackTrace: ${stackTrace.toString()}');
+      debugPrint('   StackTrace: ${stackTrace.toString()}');
     }
     if (extra != null) {
-      print('   Extra: $extra');
+      debugPrint('   Extra: $extra');
     }
     
     try {
@@ -140,7 +140,7 @@ class TelegramErrorService {
       
       await _sendMessage(message);
     } catch (e) {
-      print('⚠️ Error sending exception to Telegram: $e');
+      debugPrint('⚠️ Error sending exception to Telegram: $e');
     }
   }
 
@@ -153,9 +153,9 @@ class TelegramErrorService {
   }) async {
     final screen = screenName ?? _currentScreenName ?? getCurrentScreenName(_currentContext) ?? 'unknown';
     
-    print('📝 Telegram Message [Screen: $screen] [$level]: $message');
+    debugPrint('📝 Telegram Message [Screen: $screen] [$level]: $message');
     if (extra != null) {
-      print('   Extra: $extra');
+      debugPrint('   Extra: $extra');
     }
     
     try {
@@ -180,7 +180,7 @@ class TelegramErrorService {
       
       await _sendMessage(formattedMessage.toString());
     } catch (e) {
-      print('⚠️ Error sending message to Telegram: $e');
+      debugPrint('⚠️ Error sending message to Telegram: $e');
     }
   }
 

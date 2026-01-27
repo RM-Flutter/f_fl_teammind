@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 import 'backend_services/api_service/dio_api_service/shared.dart';
 
 /// Service to get dynamic app configuration from gCache['USG']
@@ -53,15 +55,15 @@ class DynamicAppConfigService {
     if (jsonString != null && jsonString.isNotEmpty) {
       try {
         _cachedGCache = json.decode(jsonString) as Map<String, dynamic>;
-        print('🎨 DynamicAppConfig: ✅ gCache loaded from API (keys: ${_cachedGCache!.keys.toList()})');
+        debugPrint('🎨 DynamicAppConfig: ✅ gCache loaded from API (keys: ${_cachedGCache!.keys.toList()})');
         return _cachedGCache;
       } catch (e) {
-        print('🎨 DynamicAppConfig: ❌ Error decoding gCache: $e');
+        debugPrint('🎨 DynamicAppConfig: ❌ Error decoding gCache: $e');
         return null;
       }
     }
     
-    print('🎨 DynamicAppConfig: ⚠️ USG cache is null or empty');
+    debugPrint('🎨 DynamicAppConfig: ⚠️ USG cache is null or empty');
     return null;
   }
 
@@ -90,12 +92,12 @@ class DynamicAppConfigService {
         if (profile is Map && profile['system'] == 'teammind') {
           _cachedTeammindProfile = Map<String, dynamic>.from(profile);
           final colors = _cachedTeammindProfile!['colors'] as Map?;
-          print('🎨 DynamicAppConfig: ✅ Found teammind profile! Colors from API: ${colors?.keys.toList()}');
+          debugPrint('🎨 DynamicAppConfig: ✅ Found teammind profile! Colors from API: ${colors?.keys.toList()}');
           return _cachedTeammindProfile;
         }
       }
     } catch (e) {
-      print('🎨 DynamicAppConfig: ❌ Error getting profile: $e');
+      debugPrint('🎨 DynamicAppConfig: ❌ Error getting profile: $e');
     }
     return null;
   }
