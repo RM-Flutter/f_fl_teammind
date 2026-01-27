@@ -12,6 +12,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/features/complaints/data/models/get_one_request_model.dart';
 import 'package:app_test/features/complaints/shared/widgets/success_send_complain.dart';
+import 'package:app_test/features/complaints/data/remote_data/complaints_repo.dart';
 
 class ComplaintsController extends ChangeNotifier {
   bool isGetRequestLoading = false;
@@ -48,10 +49,7 @@ class ComplaintsController extends ChangeNotifier {
     isGetRequestTypeLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/csrequests-type/entities-operations",
-        context: context,
-      );
+    final response = await ComplaintsRepo.getRequestTypes(context);
       if(response.data['status'] == false){
         Fluttertoast.showToast(
             msg: response.data['message'],
@@ -94,14 +92,11 @@ class ComplaintsController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await DioHelper.getData(
-        url: "/csrequests/entities-operations",
-        context: context,
-        query: {
-          "itemsCount": itemsCount,
-          "page": page ?? currentPage,
-        },
-      );
+    final response = await ComplaintsRepo.getRequests(
+      context,
+      itemsCount: itemsCount,
+      page: page ?? currentPage,
+    );
 
       if (response.data['status'] == false) {
         Fluttertoast.showToast(
@@ -166,13 +161,7 @@ class ComplaintsController extends ChangeNotifier {
     isGetRequestLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/csrequests/entities-operations/$id",
-        query: {
-          "with" : "ptype_id"
-        },
-        context: context,
-      );
+      final response = await ComplaintsRepo.getOneRequest(context, id);
       if(response.data['status'] == false){
         Fluttertoast.showToast(
             msg: response.data['message'],
@@ -213,42 +202,14 @@ class ComplaintsController extends ChangeNotifier {
     isAddRequestLoading = true;
     notifyListeners();
     Response response;
-    FormData formData = FormData.fromMap({
-      if(subjectController.text.isNotEmpty)"title" : subjectController.text,
-      if(detailsController.text.isNotEmpty) "content" : detailsController.text,
-      "type_id" : selectDepartment.toString(),
-      "main_thumbnail[]": images != null
-          ? !kIsWeb? await Future.wait(
-          images.map((file) async =>await MultipartFile.fromFile(file.path, filename: file.name))
-      ):await Future.wait(
-        images.map((file) async {
-          final bytes = await file.readAsBytes();
-          return MultipartFile.fromBytes(
-            bytes,
-            filename: file.name,
-          );
-        }),
-      )
-          : [],
-    });
     try {
-      if(images != null && images.isNotEmpty){
-        response = await DioHelper.postData(
-            url: "/rm_postcontrol/v1/add_request",
-            context: context,
-            data: formData
-        );
-      }else{
-        response = await DioHelper.postData(
-            url: "/rm_postcontrol/v1/add_request",
-            context: context,
-            data: {
-              if(subjectController.text.isNotEmpty) "title" : subjectController.text,
-              if(detailsController.text.isNotEmpty) "content" : detailsController.text,
-              "type_id" : selectDepartment.toString(),
-            }
-        );
-      }
+      response = await ComplaintsRepo.addRequest(
+      context,
+      title: subjectController.text.isNotEmpty ? subjectController.text : null,
+      content: detailsController.text.isNotEmpty ? detailsController.text : null,
+      typeId: selectDepartment.toString(),
+      images: images,
+    );
       if(response.data['status']== false){
         Fluttertoast.showToast(
             msg: response.data['message'],

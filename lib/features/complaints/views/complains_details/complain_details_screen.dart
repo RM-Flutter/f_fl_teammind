@@ -1,4 +1,4 @@
-import 'package:app_test/features/complaints/controllers/complaints_controller.dart';
+import 'package:app_test/features/complaints/controller/complaints_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +10,7 @@ import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/features/complaints/views/widgets/full_image_screen.dart';
+import 'package:app_test/core/widgets/full_image_screen.dart';
 import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_appbar_widget.dart';
 import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_loading_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';

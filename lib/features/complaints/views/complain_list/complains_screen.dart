@@ -16,10 +16,8 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
-
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
-
-import '../../controllers/complaints_controller.dart';
+import '../../controller/complaints_controller.dart';
 
 class ComplainScreen extends StatefulWidget {
   const ComplainScreen({super.key});

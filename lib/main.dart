@@ -1,4 +1,4 @@
-import 'package:app_test/features/complaints/controllers/complaints_controller.dart';
+import 'package:app_test/features/complaints/controller/complaints_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
