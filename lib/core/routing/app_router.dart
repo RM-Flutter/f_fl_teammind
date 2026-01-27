@@ -15,6 +15,7 @@ import 'package:app_test/features/more/views/update_password/update_password_scr
 import 'package:app_test/features/pages/default_list_page.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/features/authentication/login/views/login_screen.dart';
+import 'package:app_test/features/authentication/login/views/update_main_data.dart';
 import 'package:app_test/features/home/views/home_screen.dart';
 import 'package:app_test/features/main_screen/views/main_screen.dart';
 import 'package:app_test/features/more/views/company_structure/views/company_structure_tree_screen.dart';
