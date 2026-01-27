@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/features/authentication/views/widgets/phone_number_field.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 
 import 'package:app_test/features/home/controllers/home_controller.dart';
+import '../../authentication/shared/widgets/phone_number_field.dart';
 import '../controllers/points_cubit/points_provider.dart';
 
 class AddFriendBottomSheet extends StatelessWidget {

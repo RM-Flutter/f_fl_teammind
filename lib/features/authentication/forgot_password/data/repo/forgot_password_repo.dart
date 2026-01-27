@@ -4,7 +4,7 @@ import 'package:app_test/core/services/backend_services/get_endpoint.service.dar
 import 'package:app_test/core/models/endpoint.model.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 
-abstract class ForgotPasswordService {
+abstract class ForgotPasswordRepo {
   /// [FIRST] call [prepareForgetPassword] to get uuid and forget password options.
   static Future<OperationResult<Map<String, dynamic>>> prepareForgetPassword(
       {required String username,
@@ -27,6 +27,7 @@ abstract class ForgotPasswordService {
   /// [SECOND] call [forgetPassword] to send uuid and forget password option to get code.
   static Future<OperationResult<Map<String, dynamic>>> forgetPassword(
       {required String username,
+
       required String sendType,
       required String uuid,
       required BuildContext context,

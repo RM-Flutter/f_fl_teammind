@@ -18,12 +18,10 @@ import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
-import '../auth_services/account_verification.service.dart';
-import '../auth_services/authentication.service.dart';
-import '../auth_services/two_factor_authentication.service.dart';
-import '../views/create_account_modal.dart';
-import '../views/forget_password_modal.dart';
-import '../views/widgets/verification_tile_widget.dart';
+import '../../create_account/views/create_account_screen.dart';
+import '../../forgot_password/views/forget_password_screen.dart';
+import '../data/login_repo.dart';
+import '../../shared/widgets/verification_tile_widget.dart';
 
 enum AuthStatus {
   active,
@@ -87,7 +85,7 @@ class AuthenticationController extends ChangeNotifier {
   }
   Future<void> getDeviceToken({required BuildContext context}) async {
     OperationResult<Map<String, dynamic>> result =
-    await AuthenticationService.getDeviceToken(
+    await LoginRepo.getDeviceToken(
       context: context,
     );
     if (result.success &&
@@ -137,7 +135,7 @@ class AuthenticationController extends ChangeNotifier {
           : countryCodeController.text + phoneController.text)
           .trim();
       OperationResult<Map<String, dynamic>> result =
-      await AuthenticationService.login(
+      await LoginRepo.login(
           context: context,
           username: isPhoneLogin ? completePhoneNumber :emailController.text,
           password: passwordController.text,
@@ -181,7 +179,7 @@ class AuthenticationController extends ChangeNotifier {
           .trim();
       debugPrint("request login /////");
       OperationResult<Map<String, dynamic>> result =
-      await AuthenticationService.login(
+      await LoginRepo.login(
           context: context,
           username: isPhoneLogin ? completePhoneNumber :  email.text,
           password:  password,
@@ -218,7 +216,7 @@ class AuthenticationController extends ChangeNotifier {
     OperationResult<Map<String, dynamic>>? result =
     await ModalSheetHelper.showModalSheet(
         context: context,
-        modalContent: ForgotPasswordModal(
+        modalContent: ForgotPasswordScreen(
           isPhoneLogin: isPhoneLogin,
         ),
         height: LayoutService.getHeight(context) * 0.45,
@@ -242,7 +240,7 @@ class AuthenticationController extends ChangeNotifier {
     OperationResult<Map<String, dynamic>>? result =
     await ModalSheetHelper.showModalSheet(viewProfile: false,
         context: context,
-        modalContent: const CreateAccountModal(),
+        modalContent: const CreateAccountScreen(),
         title: AppStrings.createNewAccount.tr(),
         height: MediaQuery.of(context).viewInsets.bottom > AppSizes.s32
             ? LayoutService.getHeight(context) * 0.9
@@ -332,7 +330,7 @@ class AuthenticationController extends ChangeNotifier {
                                   onSelected: () async {
                                     AlertsService.showLoading(context);
                                     final result =
-                                    await TwoFactorAuthenticationService.send2FAVerificationCode(
+                                      await LoginRepo.send2FAVerificationCode(
                                         context: context,
                                         uuid: uuid,
                                         sendType: method.keys.first);
@@ -417,7 +415,7 @@ class AuthenticationController extends ChangeNotifier {
                                 if (codeFormKey.currentState?.validate() == false) {
                                   return;
                                 }
-                                final result = await TwoFactorAuthenticationService
+                                  final result = await LoginRepo
                                     .validate2FAVerificationCode(
                                     uuid: uuid,
                                     context: context,
@@ -470,7 +468,7 @@ class AuthenticationController extends ChangeNotifier {
                               ),
                               onPressed: () async {
                                 AlertsService.showLoading(context);
-                                final result = await TwoFactorAuthenticationService
+                                  final result = await LoginRepo
                                     .send2FAVerificationCode(
                                     context: context,
                                     uuid: uuid,
@@ -579,7 +577,7 @@ class AuthenticationController extends ChangeNotifier {
                                   method: method,
                                   onSelected: () async {
                                     AlertsService.showLoading(context);
-                                    final result = await AccountVerificationService
+                                    final result = await LoginRepo
                                         .accoutnVerification(
                                         uuid: uuid,
                                         method: method.keys.first,
@@ -667,7 +665,7 @@ class AuthenticationController extends ChangeNotifier {
                                 if (codeFormKey.currentState?.validate() == false) {
                                   return;
                                 }
-                                final result = await AccountVerificationService
+                                final result = await LoginRepo
                                     .validateAccoutnVerificationCode(
                                     uuid: uuid,
                                     context: context,
@@ -720,7 +718,7 @@ class AuthenticationController extends ChangeNotifier {
                               ),
                               onPressed: () async {
                                 AlertsService.showLoading(context);
-                                final result = await AccountVerificationService.accoutnVerification(
+                                final result = await LoginRepo.accoutnVerification(
                                     uuid: uuid,
                                     method: choosenMethod ?? 'email',
                                     context: context);

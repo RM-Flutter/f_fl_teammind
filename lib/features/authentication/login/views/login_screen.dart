@@ -25,10 +25,10 @@ import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/features/authentication/controllers/login_controller.dart';
-import '../../../core/utils/overlay_gradient_widget.dart';
-import 'widgets/phone_number_field.dart';
-import 'widgets/switch_row_widget.dart';
+import 'package:app_test/features/authentication/login/controller/login_controller.dart';
+import 'package:app_test/core/utils/overlay_gradient_widget.dart';
+import '../../shared/widgets/phone_number_field.dart';
+import '../../shared/widgets/switch_row_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

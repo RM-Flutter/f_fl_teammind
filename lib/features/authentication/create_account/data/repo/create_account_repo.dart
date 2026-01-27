@@ -4,36 +4,7 @@ import 'package:app_test/core/services/backend_services/get_endpoint.service.dar
 import 'package:app_test/core/models/endpoint.model.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 
-abstract class AuthenticationService {
-  static Future<OperationResult<Map<String, dynamic>>> login(
-      {required String username,
-        required String password,
-        required Map<String, dynamic> deviceInformation,
-        required BuildContext context}) async {
-    debugPrint("deviceInformation --> $deviceInformation");
-    Map<String, dynamic> body = {
-      "username": username, // may be phone number or email
-      "password": password,
-      "device_info": deviceInformation
-    };
-    return await DioApiService().post<Map<String, dynamic>>(
-        EndpointServices.getApiEndpoint(EndpointsNames.createAuthentication)
-            .url,
-        body,
-        dataKey: 'token',
-        context: context,
-        allData: true);
-  }
-
-  static Future<OperationResult<Map<String, dynamic>>> getDeviceToken({
-    required BuildContext context,
-  }) async {
-    return await DioApiService().get<Map<String, dynamic>>(
-        EndpointServices.getApiEndpoint(EndpointsNames.getDeviceToken).url,
-        dataKey: 'data',
-        // allData: true,
-        context: context);
-  }
+abstract class CreateAccountRepo {
 
   static Future<OperationResult<Map<String, dynamic>>> createAccount({
     required String name,

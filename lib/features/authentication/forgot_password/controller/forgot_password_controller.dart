@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
 import 'package:app_test/core/services/app_config.service.dart';
-import '../auth_services/forgot_password.service.dart';
+import '../data/repo/forgot_password_repo.dart';
 
 class ForgotPasswordController extends ChangeNotifier {
   bool goToChooseForgotMethod = false;
@@ -45,7 +45,7 @@ class ForgotPasswordController extends ChangeNotifier {
     Provider.of<AppConfigService>(context, listen: false);
     if ((isPhoneLogin && phoneController.text.isNotEmpty) ||
         (!isPhoneLogin && emailController.text.isNotEmpty)) {
-      final result = await ForgotPasswordService.prepareForgetPassword(
+      final result = await ForgotPasswordRepo.prepareForgetPassword(
           context: context,
           username: isPhoneLogin ? phoneController.text : emailController.text,
           deviceUniqueId:
@@ -105,7 +105,7 @@ class ForgotPasswordController extends ChangeNotifier {
         ? '+02'
         : countryCodeController.text + phoneController.text)
         .trim();
-    final result = await ForgotPasswordService.forgetPassword(
+    final result = await ForgotPasswordRepo.forgetPassword(
         context: context,
         username: isPhoneLogin ? completePhoneNumber : emailController.text,
         sendType: sendType!,
@@ -143,7 +143,7 @@ class ForgotPasswordController extends ChangeNotifier {
           ? '+02'
           : countryCodeController.text + phoneController.text)
           .trim();
-      final result = await ForgotPasswordService.codeNewPassword(
+      final result = await ForgotPasswordRepo.codeNewPassword(
           context: context,
           code: codeController.text,
           newPassword: newPasswordController.text,

@@ -15,7 +15,7 @@ import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import '../../../core/utils/base_page/mobile.header.dart';
 import '../../../core/utils/base_page/mobile.scaffold.dart';
-import '../../authentication/views/widgets/phone_number_field.dart';
+import '../../authentication/shared/widgets/phone_number_field.dart';
 import '../controllers/personal_profile_controller.dart';
 import 'widgets/personal_profile_header.widget.dart';
 import 'widgets/personal_profile_shrinked_header.widget.dart';

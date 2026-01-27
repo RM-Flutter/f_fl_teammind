@@ -5,21 +5,21 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/features/authentication/controllers/forgot_password_controller.dart';
-import 'package:app_test/features/authentication/controllers/login_controller.dart';
-import 'widgets/phone_number_field.dart';
-import 'widgets/switch_row_widget.dart';
-import 'widgets/verification_tile_widget.dart';
+import '../../shared/widgets/switch_row_widget.dart';
+import '../controller/forgot_password_controller.dart';
+import '../../login/controller/login_controller.dart';
+import '../../shared/widgets/phone_number_field.dart';
+import '../../shared/widgets/verification_tile_widget.dart';
 
-class ForgotPasswordModal extends StatefulWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   final bool isPhoneLogin;
-  const ForgotPasswordModal({super.key, required this.isPhoneLogin});
+  const ForgotPasswordScreen({super.key, required this.isPhoneLogin});
 
   @override
-  State<ForgotPasswordModal> createState() => _ForgotPasswordModalState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordModalState();
 }
 
-class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
+class _ForgotPasswordModalState extends State<ForgotPasswordScreen> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {

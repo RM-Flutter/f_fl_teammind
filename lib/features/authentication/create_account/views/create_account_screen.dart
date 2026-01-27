@@ -2,24 +2,24 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/features/authentication/controllers/login_controller.dart';
+import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import 'package:app_test/features/authentication/controllers/create_account_controller.dart';
-import 'widgets/phone_number_field.dart';
+import '../controller/create_account_controller.dart';
+import '../../shared/widgets/phone_number_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-class CreateAccountModal extends StatefulWidget {
-  const CreateAccountModal({super.key});
+class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({super.key});
 
   @override
-  State<CreateAccountModal> createState() => _CreateAccountModalState();
+  State<CreateAccountScreen> createState() => _CreateAccountModalState();
 }
 
-class _CreateAccountModalState extends State<CreateAccountModal> {
+class _CreateAccountModalState extends State<CreateAccountScreen> {
   bool _obscureText = true;
   @override
   void initState() {
@@ -97,45 +97,6 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
                             ),
                             validator: (val) => ValidationService.validateRequired(val, AppStrings.yourName.tr()),
                           ),
-                          // const SizedBox(height: 10,),
-                          // Container(
-                          //   height: 55,
-                          //   alignment: LocalizationService.isArabic(context: context)
-                          //       ?Alignment.centerRight : Alignment.centerLeft,
-                          //   margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
-                          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                          //   decoration: ShapeDecoration(
-                          //     color: AppThemeService.colorPalette.tertiaryColorBackground.color,
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(AppSizes.s8),
-                          //       side: const BorderSide(
-                          //         color: Color(0xffE3E5E5),
-                          //         width: 1.0,
-                          //       ),
-                          //     ),
-                          //     shadows: const [
-                          //       BoxShadow(
-                          //         color: Color(0x0C000000),
-                          //         blurRadius: 10,
-                          //         offset: Offset(0, 1),
-                          //         spreadRadius: 0,
-                          //       )
-                          //     ],
-                          //   ),
-                          //   child: Directionality(
-                          //     textDirection: LocalizationService.isArabic(context: context)
-                          //         ? TextDirection.rtl
-                          //         : TextDirection.ltr,
-                          //     child: Text(
-                          //          "${CacheHelper.getString("role")}".tr(),
-                          //       style: TextStyle(
-                          //           fontSize: 16,
-                          //           fontWeight: FontWeight.w400,
-                          //           color:const Color(0xff000000)
-                          //               .withOpacity(0.74)),
-                          //     ),
-                          //   ),
-                          // ),
                           gapH28,
                           Center(
                               child: viewModel.isEmailRegister == false ?CustomElevatedButton(

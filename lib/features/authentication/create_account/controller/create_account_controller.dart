@@ -5,8 +5,9 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
 import 'package:app_test/core/services/app_config.service.dart';
-import '../auth_services/authentication.service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../data/repo/create_account_repo.dart';
 
 class CreateAccountController extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
@@ -99,7 +100,7 @@ class CreateAccountController extends ChangeNotifier {
     notifyListeners();
     final appConfigServiceProvider =
     Provider.of<AppConfigService>(context, listen: false);
-    final result = await AuthenticationService.createAccount(
+    final result = await CreateAccountRepo.createAccount(
         context: context,
         name: name,
         phone: phone,
