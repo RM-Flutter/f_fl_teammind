@@ -17,6 +17,7 @@ import 'package:app_test/core/services/device_info.service.dart';
 import 'package:app_test/core/services/notification_service/notification.service.dart';
 import 'package:app_test/core/models/endpoint.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/features/splash_and_onboarding/data/local_data/splash_onboarding_local_data_source.dart';
 
 class OnboardingController extends ChangeNotifier {
   final PageController pageController = PageController();
@@ -60,17 +61,14 @@ class OnboardingController extends ChangeNotifier {
     }
   }
   Future<void> _precacheImages(BuildContext context, {int maxItems = 50}) async {
-    final jsonString = CacheHelper.getString("USG");
-    if (jsonString == null || jsonString.isEmpty) {
+    // Use local data source to get onboarding data
+    final gCache = SplashOnboardingLocalDataSource.getOnboardingDataFromCache();
+    if (gCache == null) {
       debugPrint('⚠️ _precacheImages: USG cache empty');
       return;
     }
 
-    final gCache = json.decode(jsonString) as Map<String, dynamic>?;
-    if (gCache == null) {
-      debugPrint('⚠️ _precacheImages: decoded gCache is null');
-      return;
-    }
+
 
     final features = gCache['features']?['items'];
     if (features == null || features is! List || features.isEmpty) {
@@ -126,24 +124,20 @@ class OnboardingController extends ChangeNotifier {
   }
 
     List? getAllOnboardingData({required BuildContext context}) {
-      final jsonString = CacheHelper.getString("USG");
-      if (jsonString != null && jsonString.isNotEmpty) {
-        final gCache = json.decode(jsonString) as Map<String,
-            dynamic>; // Convert String back to JSON
-
+      // Use local data source to get onboarding data
+      final gCache = SplashOnboardingLocalDataSource.getOnboardingDataFromCache();
+      if (gCache != null) {
         return gCache['features']['items'];
       }
       return null;
     }
   List<Map<String, dynamic>>? _getOnboardingDataFromCache() {
-    final jsonString = CacheHelper.getString("USG");
-    if (jsonString == null || jsonString.isEmpty) {
+    // Use local data source to get onboarding data
+    final gCache = SplashOnboardingLocalDataSource.getOnboardingDataFromCache();
+    if (gCache == null) {
       debugPrint('⚠️ Cache empty');
       return null;
     }
-
-    final gCache = json.decode(jsonString) as Map<String, dynamic>?;
-    if (gCache == null) return null;
 
     final features = gCache['features']?['items'];
     if (features == null || features is! List || features.isEmpty) {
@@ -264,13 +258,14 @@ class OnboardingController extends ChangeNotifier {
       homeController = HomeController();
       try {
         await _initializeAppServices(context, appConfigService);
-        String? payload = CacheHelper.getString('initialNotification');
+        // Use local data source to get initial notification
+        String? payload = SplashOnboardingLocalDataSource.getInitialNotification();
         debugPrint("payload is --> $payload");
         if(payload != null && payload.isNotEmpty){
           debugPrint("ANA GY MN PRA");
           await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
           await GeneralListener.linksAction(popup: payload);
-          await CacheHelper.setString(key: 'initialNotification',value: '');
+          await SplashOnboardingLocalDataSource.setInitialNotification('');
         }
         else{
           if (appConfigService.isLogin && appConfigService.token.isNotEmpty) {
