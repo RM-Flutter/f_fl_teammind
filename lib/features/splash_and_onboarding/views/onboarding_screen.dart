@@ -10,7 +10,7 @@ import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
-import 'package:app_test/features/splash_and_onboarding/controllers/splash_onboarding_controller.dart';
+import 'package:app_test/features/splash_and_onboarding/controller/splash_onboarding_controller.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -34,6 +34,7 @@ class OnBoardingScreen extends StatelessWidget {
                       viewModel.getAllOnboardingData(context: context)?.length,
                   itemBuilder: (context, index) {
                     final image = viewModel
+
                         .getOnboardingDataWithIndex(index, context)
                         ?['image']![0]['file'];
                     if (image?.startsWith('http') == true ||
@@ -75,19 +76,6 @@ class OnBoardingScreen extends StatelessWidget {
                       );
                     }
                   }),
-              // Logo
-              // Positioned(
-              //   top: MediaQuery.of(context).size.height * 0.3,
-              //   left: AppSizes.s0,
-              //   right: AppSizes.s0,
-              //   child: Image.asset(
-              //     AppImages.logo,
-              //     width: AppSizes.s125,
-              //     height: AppSizes.s125,
-              //     key: const ValueKey<String>(AppImages.logo),
-              //   ),
-              // ),
-
               Positioned(
                 bottom: AppSizes.s48,
                 left: AppSizes.s0,
