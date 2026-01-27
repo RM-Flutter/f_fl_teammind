@@ -8,55 +8,12 @@ import '../../home/views/home_screen.dart';
 import '../../more/views/more_screen.dart';
 
 
-class MainScreenController extends ChangeNotifier {
+class MainLayoutController extends ChangeNotifier {
   NavbarPages currentPage = NavbarPages.home;
   int get pageIndex => NavbarPages.values.indexOf(currentPage);
 
-  void initializeMainScreen({
-    required BuildContext context,
-    required Type currentScreen,
-  }) {
-    switch (currentScreen) {
-      case HomeScreen _:
-        currentPage = NavbarPages.home;
-        return;
-      case HomeScreen _:
-        currentPage = NavbarPages.requests;
-        return;
-      case HomeScreen _:
-        currentPage = NavbarPages.fingerprint;
-        return;
-      case NotificationScreen _:
-        CacheHelper.deleteData(key: "value");
-        currentPage = NavbarPages.notifications;
-        return;
-      case MoreScreen _:
-        currentPage = NavbarPages.notifications;
-        return;
-      default:
-        currentPage = NavbarPages.home;
-        return;
-    }
-  }
 
-  Widget getCurrentMainPage(NavbarPages currPage) {
-    switch (currPage) {
-      case NavbarPages.home:
-        return  const HomeScreen();
-      case NavbarPages.fingerprint:
-        return  const HomeScreen();
-      case NavbarPages.requests:
-        return  const HomeScreen();
-      case NavbarPages.notifications:
-        CacheHelper.deleteData(key: "value");
-        return const NotificationScreen(false);
-      case NavbarPages.more:
-        return  const MoreScreen();
-    }
-  }
-
-  void onItemTapped(
-      {required BuildContext context, required NavbarPages page}) {
+  void onItemTapped({required BuildContext context, required NavbarPages page}) {
     if (page == currentPage) return;
     int oldIndex = pageIndex;
     int newIndex = NavbarPages.values.indexOf(page);

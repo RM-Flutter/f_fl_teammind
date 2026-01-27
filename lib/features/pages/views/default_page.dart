@@ -14,7 +14,7 @@ import 'package:app_test/features/more/views/blog/controllers/blog_controller.da
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../more/views/blog/widgets/blog_list_view_item.dart';
+import '../../more/views/blog/widgets/blog_list_view_item.dart';
 
 class DefaultPage extends StatefulWidget {
   var type;

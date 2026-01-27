@@ -18,7 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'core/services/internet_check.dart';
 import 'features/home/controllers/home_controller.dart';
-import 'features/main_screen/controllers/main_controller.dart';
+import 'features/main_layout/controllers/main_controller.dart';
 import 'package:app_test/core/utils/error_handling/global_error_handler.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
@@ -71,8 +71,8 @@ void main() async {
           ChangeNotifierProvider<AppConfigService>(
             create: (_) => AppConfigService(),
           ),
-          ChangeNotifierProvider<MainScreenController>(
-            create: (_) => MainScreenController(),
+          ChangeNotifierProvider<MainLayoutController>(
+            create: (_) => MainLayoutController(),
           ),
           ChangeNotifierProvider<HomeController>(
             create: (_) => HomeController(),

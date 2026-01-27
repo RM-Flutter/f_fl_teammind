@@ -9,7 +9,7 @@ import 'package:app_test/core/models/operation_result.model.dart';
 
 import 'package:app_test/core/constants/string_convert.dart';
 
-abstract class PersonalProfileService {
+abstract class PersonalProfileRepo {
   // update password
   static Future<OperationResult<Map<String, dynamic>>> updatePassword({
     required String newPassword,
@@ -73,40 +73,7 @@ abstract class PersonalProfileService {
         formdata: formData
     );
     return res;
-    // if(avatar != null && avatar.isNotEmpty){
-    //
-    // }else{
-    //   debugPrint("SERVER POST DATA");
-    //   var res =  await DioHelper.postData(
-    //       url: "/rm_users/v1/update_profile",
-    //       context: context,
-    //       data: {
-    //         if (name != null) 'name' : name,
-    //         if (email != null) 'email' : email,
-    //         if (emailUuid != null) 'email_uuid' : emailUuid,
-    //         if (phoneUuid != null) 'phone_uuid' : phoneUuid,
-    //         if (emailCode != null) 'email_code' : emailCode,
-    //         if (countryKey != null) 'country_key' : countryKey,
-    //         if (phoneCode != null) 'phone_code' : phoneCode,
-    //         if (phone != null) 'phone' : phone,
-    //         if (birthDay != null) 'birth_day' : birthDay,
-    //       }
-    //   );
-    //   return res;
-    // }
-
-    // Send request
-    // return await DioApiService().postWithFormData<Map<String, dynamic>>(
-    //   EndpointServices.getApiEndpoint(EndpointsNames.updateInfo).url,
-    //   context: context,
-    //   requestData,
-    //   files: files,
-    //   fileFieldName: 'avatar',
-    //   dataKey: 'data',
-    //   allData: true,
-    // );
   }
-
   // Logout
   static Future<OperationResult<void>> logout({
     required BuildContext context,

@@ -12,18 +12,17 @@ import 'package:app_test/features/more/views/notification/views/notification_det
 import 'package:app_test/features/more/views/notification/views/notification_screen.dart';
 import 'package:app_test/features/complaints/views/add_complain_screen.dart';
 import 'package:app_test/features/more/views/update_password/update_password_screen.dart';
-import 'package:app_test/features/pages/default_list_page.dart';
+import 'package:app_test/features/pages/views/default_list_page.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/features/authentication/login/views/login_screen.dart';
 import 'package:app_test/features/authentication/login/views/update_main_data.dart';
 import 'package:app_test/features/home/views/home_screen.dart';
-import 'package:app_test/features/main_screen/views/main_screen.dart';
 import 'package:app_test/features/more/views/company_structure/views/company_structure_tree_screen.dart';
 import 'package:app_test/features/more/views/more_screen.dart';
 import 'package:app_test/features/more/views/user_devices/user_devices_screen.dart';
 import 'package:app_test/features/offline/views/offline_screen.dart';
-import 'package:app_test/features/pages/default_page.dart';
-import 'package:app_test/features/pages/default_details.dart';
+import 'package:app_test/features/pages/views/default_page.dart';
+import 'package:app_test/features/pages/views/default_details.dart';
 import 'package:app_test/features/personal_profile/views/personal_profile_screen.dart';
 import 'package:app_test/features/points/fawry_view/fawry_provider_screen.dart';
 import 'package:app_test/features/points/points_categories_screen.dart';
@@ -32,6 +31,7 @@ import 'package:app_test/features/points/prize_screen.dart';
 import 'package:app_test/features/points/widgets/select_contact_screen.dart';
 import 'package:app_test/features/splash_and_onboarding/views/onboarding_screen.dart';
 import 'package:app_test/features/splash_and_onboarding/views/splash_screen.dart';
+import '../../features/main_layout/views/main_layout_screen.dart';
 import 'app_router_transitions.dart';
 import 'not_found/not_found_screen.dart';
 import 'package:flutter/material.dart';
@@ -182,7 +182,7 @@ GoRouter goRouter(BuildContext context) => GoRouter(
   routes: [
         ShellRoute(
           navigatorKey: _shellNavigatorKey,
-          builder: (context, state, child) => MainScreen(
+          builder: (context, state, child) => MainLayoutScreen(
             key: UniqueKey(),
             currentNavPage: state.fullPath == null
                 ? NavbarPages.home

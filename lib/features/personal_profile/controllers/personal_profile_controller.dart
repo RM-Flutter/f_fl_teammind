@@ -24,7 +24,7 @@ import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/settings.service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
-import 'package:app_test/features/personal_profile/services/personal_profile.service.dart';
+import 'package:app_test/features/personal_profile/data/repo/personal_profile_repo.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class PersonalProfileController extends ChangeNotifier {
@@ -345,7 +345,7 @@ class PersonalProfileController extends ChangeNotifier {
       //   return;
       // }
       // if (isActivate2FA == false) return;
-      final result = await PersonalProfileService.activateTfa(context: context, tfa: tfa);
+      final result = await PersonalProfileRepo.activateTfa(context: context, tfa: tfa);
       if (result.success) {
         if(twoFa == true){
           String serial = result.data?['serial'];
@@ -457,7 +457,7 @@ class PersonalProfileController extends ChangeNotifier {
                   title: AppStrings.activeNow.tr(),
                   onPressed: () async {
                     if(faController.text.isNotEmpty){
-                      final result = await PersonalProfileService.activateTfa(context: context, type: "verify", code: faController.text, tfa: "1");
+                      final result = await PersonalProfileRepo.activateTfa(context: context, type: "verify", code: faController.text, tfa: "1");
                       if (result.success) {
                         Navigator.pop(context);
                         AlertsService.success(
@@ -538,7 +538,7 @@ class PersonalProfileController extends ChangeNotifier {
             context, AppStrings.updateProfile.tr(),
             message: AppStrings.areYouSureYouWantToUpdateYourProfile.tr());
         if (isUpdate == false) return;
-        var result = PersonalProfileService.updateProfile(
+        var result = PersonalProfileRepo.updateProfile(
           context: context,
           name: nameController.text,
           birthDay: birthDateController.text ==
@@ -588,7 +588,7 @@ class PersonalProfileController extends ChangeNotifier {
       //       message: AppStrings.areYouSureYouWantToUpdateYourProfile.tr());
       //   debugPrint("UPDATE IS---> $isUpdate");
       //   if (isUpdate == false) return;
-      var result = PersonalProfileService.updateProfile(
+      var result = PersonalProfileRepo.updateProfile(
         context: context,
         avatar: listProfileImage.isNotEmpty ?listProfileImage
             .map((e) => XFile(e["compressed"].path)) // تحويل File → XFile
@@ -645,7 +645,7 @@ class PersonalProfileController extends ChangeNotifier {
             message: AppStrings.areYouSureYouWantToUpdateYourEmail.tr());
 
         if (isUpdate == false) return;
-        final result = await PersonalProfileService.updateProfile(
+        final result = await PersonalProfileRepo.updateProfile(
             context: context, email: emailController.text);
         debugPrint("result is --> $result");
         if(result != null){
@@ -719,7 +719,7 @@ class PersonalProfileController extends ChangeNotifier {
           form3Key: form3Key,
           message: AppStrings.areYouSureYouWantToUpdateYourPhone.tr());
       if (isUpdate == false) return;
-      final result = await PersonalProfileService.updateProfile(
+      final result = await PersonalProfileRepo.updateProfile(
           context: context,
           phone: phoneNumberController.text,
           countryKey: countryCodeController.text.trim().isEmpty
@@ -787,7 +787,7 @@ class PersonalProfileController extends ChangeNotifier {
         message: AppStrings.areYouSureYouWantToDeleteAccount.tr(),
         onTap: () async {
           if(form3Key.currentState!.validate()){
-            final result = await PersonalProfileService.removeAccount(
+            final result = await PersonalProfileRepo.removeAccount(
                 context: context, password: passwordForRemoveAccountController.text);
             if (result.success) {
               // Clear user data and navigate to login screen
@@ -952,7 +952,7 @@ class PersonalProfileController extends ChangeNotifier {
                           title: AppStrings.verify.tr(),
                           onPressed: () async {
                             if (codeController.text.isNotEmpty) {
-                              final result = validate == false ?  await PersonalProfileService.updateProfile(
+                              final result = validate == false ?  await PersonalProfileRepo.updateProfile(
                                   context: context,
                                   phone: newPhoneNumber,
                                   phoneCode: codeController.text,
@@ -1102,7 +1102,7 @@ class PersonalProfileController extends ChangeNotifier {
                           title: AppStrings.verify.tr(),
                           onPressed: () async {
                             if (codeController.text.isNotEmpty) {
-                              final result = validate== false?  await PersonalProfileService.updateProfile(
+                              final result = validate== false?  await PersonalProfileRepo.updateProfile(
                                   context: context,
                                   email: emailController.text,
                                   emailCode: codeController.text,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app_test/features/offline/views/widgets/finger_print_offline_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +11,6 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/internet_check.dart';
 import 'package:app_test/core/services/restart_app.dart';
 import 'package:app_test/core/services/offline_overlay.service.dart';
-import 'package:app_test/features/fingerprint/views/widgets/finger_print_offline_card.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/offline/controllers/offline_controller.dart';
 

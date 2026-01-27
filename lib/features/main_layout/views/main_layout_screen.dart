@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/features/main_screen/controllers/main_controller.dart';
+import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 
 class BottomNavigationBarModel {
   final String icon;
@@ -37,16 +37,16 @@ final bottomNavigationBarItems = [
   ),
 ];
 
-class MainScreen extends StatelessWidget {
+class MainLayoutScreen extends StatelessWidget {
   final Widget child;
   final NavbarPages currentNavPage;
-  const MainScreen(
+  const MainLayoutScreen(
       {super.key, required this.child, required this.currentNavPage});
 
   @override
   Widget build(BuildContext context) {
     // ConnectionsService.init();
-    final viewModel = Provider.of<MainScreenController>(context);
+    final viewModel = Provider.of<MainLayoutController>(context);
     viewModel.currentPage = currentNavPage;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
