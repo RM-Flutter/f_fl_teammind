@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/settings.service.dart';
-import 'package:app_test/features/more/views/notification/models/notification.model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';

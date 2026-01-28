@@ -10,11 +10,11 @@ import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
-import 'package:app_test/features/more/views/blog/controllers/blog_controller.dart';
+import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../more/views/blog/widgets/blog_list_view_item.dart';
+import '../../more/blog/views/blog_list_view_item.dart';
 
 class DefaultPage extends StatefulWidget {
   var type;

@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/features/more/views/blog/controllers/blog_controller.dart';
+import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:app_test/core/constants/app_sizes.dart';

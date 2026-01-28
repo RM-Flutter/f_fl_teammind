@@ -317,34 +317,9 @@ class PersonalProfileController extends ChangeNotifier {
       debugPrint( birthDateController.text);
     }
   }
-  // Future<void> selectBirthDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: UserSettingConst.userSettings?.birthDate,
-  //     firstDate: DateTime(1900),
-  //     lastDate: DateTime(2101),
-  //     locale:  const Locale('en', ''),
-  //   );
-  //   if (picked != null && picked != birthDate) {
-  //     birthDate = picked;
-  //     birthDateController.text = DateService.formatDateTime(birthDate, format: 'yyyy-MM-dd');
-  //   }
-  //   notifyListeners();
-  // }
 
   Future<void> activate2FA({required BuildContext context, tfa , bool twoFa = false}) async {
     try {
-      // bool isActivate2FA = await AlertsService.confirmMessage(
-      //     context, AppStrings.activate_2fa.tr(),
-      //     message: AppStrings.activate_2fa_confirmation.tr());
-      // if (UserSettingConst.userSettings?.emailVerifiedAt == null) {
-      //   AlertsService.info(
-      //       context: context,
-      //       message: AppStrings.email_verification_required.tr(),
-      //       title: AppStrings.information.tr());
-      //   return;
-      // }
-      // if (isActivate2FA == false) return;
       final result = await PersonalProfileRepo.activateTfa(context: context, tfa: tfa);
       if (result.success) {
         if(twoFa == true){

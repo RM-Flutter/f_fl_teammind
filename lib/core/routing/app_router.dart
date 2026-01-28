@@ -2,24 +2,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/complaints/views/complains_details/complain_details_screen.dart';
 import 'package:app_test/features/complaints/views/complain_list/complains_screen.dart';
-import 'package:app_test/features/more/views/aboutus/views/aboutus_screen.dart';
-import 'package:app_test/features/more/views/company_structure/company_structure_screen.dart';
-import 'package:app_test/features/more/views/contactus/views/contact_screen.dart';
-import 'package:app_test/features/more/views/faq/views/faq_screen.dart';
-import 'package:app_test/features/more/views/lang_setting/lang_setting_screen.dart';
-import 'package:app_test/features/more/views/notification/views/add_notification_screen.dart';
-import 'package:app_test/features/more/views/notification/views/notification_details_screen.dart';
-import 'package:app_test/features/more/views/notification/views/notification_screen.dart';
+import 'package:app_test/features/more/faqs/views/faq_screen.dart';
+import 'package:app_test/features/more/notifications/views/widgets/add_notifications/add_notification_screen.dart';
+import 'package:app_test/features/more/notifications/views/widgets/notifications_list/widgets/notifications_details/notification_details_screen.dart';
+import 'package:app_test/features/more/notifications/views/notification_screen.dart';
 import 'package:app_test/features/complaints/views/add_complaints/add_complain_screen.dart';
-import 'package:app_test/features/more/views/update_password/update_password_screen.dart';
+import 'package:app_test/features/more/update_profile/views/update_password_screen.dart';
 import 'package:app_test/features/pages/views/default_list_page.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/features/authentication/login/views/login_screen.dart';
 import 'package:app_test/features/authentication/login/views/update_main_data.dart';
 import 'package:app_test/features/home/views/home_screen.dart';
-import 'package:app_test/features/more/views/company_structure/views/company_structure_tree_screen.dart';
-import 'package:app_test/features/more/views/more_screen.dart';
-import 'package:app_test/features/more/views/user_devices/user_devices_screen.dart';
+import 'package:app_test/features/more/more_screen.dart';
+import 'package:app_test/features/more/user_device/views/user_devices_screen.dart';
 import 'package:app_test/features/offline/views/offline_screen.dart';
 import 'package:app_test/features/pages/views/default_page.dart';
 import 'package:app_test/features/pages/views/default_details.dart';
@@ -32,6 +27,10 @@ import 'package:app_test/features/points/widgets/select_contact_screen.dart';
 import 'package:app_test/features/splash_and_onboarding/views/onboarding_screen.dart';
 import 'package:app_test/features/splash_and_onboarding/views/splash_screen.dart';
 import '../../features/main_layout/views/main_layout_screen.dart';
+import '../../features/more/about_us/views/about_us_screen.dart';
+import '../../features/more/company_structure/company_structure_screen.dart';
+import '../../features/more/contact_us/views/contact_us_screen.dart';
+import '../../features/more/language_settings/views/language_setting_screen.dart';
 import 'app_router_transitions.dart';
 import 'not_found/not_found_screen.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +80,7 @@ enum AppRoutes {
   employeesList,
   newComplainScreen,
   employeeDetails,
-  companyTree,
+  // companyTree,
   updatePassword,
   personalProfile,
   payrollsList,
@@ -506,122 +505,6 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                                 );
                               },
                             ),
-                            // GoRoute(
-                            //   path: 'billPaymentScreen',
-                            //   parentNavigatorKey: rootNavigatorKey,
-                            //   name: AppRoutes.billPaymentScreen.name,
-                            //   pageBuilder: (context, state) {
-                            //     //  Offset? begin = state.extra as Offset?;
-                            //     final lang = state.pathParameters['lang'];
-                            //     if (lang != null) {
-                            //       final locale = Locale(lang);
-                            //       context.setLocale(locale);
-                            //     }
-                            //     final animationController = AnimationController(
-                            //       vsync: ticker,
-                            //     );
-                            //     // Make sure to dispose the controller after the transition is complete
-                            //     animationController.addStatusListener((status) {
-                            //       if (status == AnimationStatus.completed ||
-                            //           status == AnimationStatus.dismissed) {
-                            //         animationController.dispose();
-                            //       }
-                            //     });
-                            //     return AppRouterTransitions.slideTransition(
-                            //       key: state.pageKey,
-                            //       child: BillPaymentScreen(),
-                            //       animation: animationController,
-                            //       begin: const Offset(1.0, 0.0),
-                            //     );
-                            //   },
-                            // ),
-                            // GoRoute(
-                            //   path: 'chargePhoneScreen',
-                            //   parentNavigatorKey: rootNavigatorKey,
-                            //   name: AppRoutes.chargePhoneScreen.name,
-                            //   pageBuilder: (context, state) {
-                            //     //  Offset? begin = state.extra as Offset?;
-                            //     final lang = state.pathParameters['lang'];
-                            //     if (lang != null) {
-                            //       final locale = Locale(lang);
-                            //       context.setLocale(locale);
-                            //     }
-                            //     final animationController = AnimationController(
-                            //       vsync: ticker,
-                            //     );
-                            //     // Make sure to dispose the controller after the transition is complete
-                            //     animationController.addStatusListener((status) {
-                            //       if (status == AnimationStatus.completed ||
-                            //           status == AnimationStatus.dismissed) {
-                            //         animationController.dispose();
-                            //       }
-                            //     });
-                            //     return AppRouterTransitions.slideTransition(
-                            //       key: state.pageKey,
-                            //       child: ChargePhoneScreen(),
-                            //       animation: animationController,
-                            //       begin: const Offset(1.0, 0.0),
-                            //     );
-                            //   },
-                            // ),
-                            // GoRoute(
-                            //   path: 'payBillScreen',
-                            //   parentNavigatorKey: rootNavigatorKey,
-                            //   name: AppRoutes.payBillScreen.name,
-                            //   pageBuilder: (context, state) {
-                            //     //  Offset? begin = state.extra as Offset?;
-                            //     final lang = state.pathParameters['lang'];
-                            //     if (lang != null) {
-                            //       final locale = Locale(lang);
-                            //       context.setLocale(locale);
-                            //     }
-                            //     final animationController = AnimationController(
-                            //       vsync: ticker,
-                            //     );
-                            //     // Make sure to dispose the controller after the transition is complete
-                            //     animationController.addStatusListener((status) {
-                            //       if (status == AnimationStatus.completed ||
-                            //           status == AnimationStatus.dismissed) {
-                            //         animationController.dispose();
-                            //       }
-                            //     });
-                            //     return AppRouterTransitions.slideTransition(
-                            //       key: state.pageKey,
-                            //       child: PayBillScreen(),
-                            //       animation: animationController,
-                            //       begin: const Offset(1.0, 0.0),
-                            //     );
-                            //   },
-                            // ),
-                            // GoRoute(
-                            //   path: 'withdrawMoneyScreen',
-                            //   parentNavigatorKey: rootNavigatorKey,
-                            //   name: AppRoutes.withdrawMoneyScreen.name,
-                            //   pageBuilder: (context, state) {
-                            //     //  Offset? begin = state.extra as Offset?;
-                            //     final lang = state.pathParameters['lang'];
-                            //     if (lang != null) {
-                            //       final locale = Locale(lang);
-                            //       context.setLocale(locale);
-                            //     }
-                            //     final animationController = AnimationController(
-                            //       vsync: ticker,
-                            //     );
-                            //     // Make sure to dispose the controller after the transition is complete
-                            //     animationController.addStatusListener((status) {
-                            //       if (status == AnimationStatus.completed ||
-                            //           status == AnimationStatus.dismissed) {
-                            //         animationController.dispose();
-                            //       }
-                            //     });
-                            //     return AppRouterTransitions.slideTransition(
-                            //       key: state.pageKey,
-                            //       child: WithdrawMoneyScreen(),
-                            //       animation: animationController,
-                            //       begin: const Offset(1.0, 0.0),
-                            //     );
-                            //   },
-                            // ),
                           ]
                       ),
 
@@ -680,30 +563,6 @@ GoRouter goRouter(BuildContext context) => GoRouter(
                       child:  const ContactScreen(),
                       animation: animationController,
                       begin: const Offset(1.0, 0.0),
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: 'company-tree',
-                  parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.companyTree.name,
-                  pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
-                    final animationController = AnimationController(
-                      vsync: ticker,
-                    );
-                    // Make sure to dispose the controller after the transition is complete
-                    animationController.addStatusListener((status) {
-                      if (status == AnimationStatus.completed ||
-                          status == AnimationStatus.dismissed) {
-                        animationController.dispose();
-                      }
-                    });
-                    return AppRouterTransitions.slideTransition(
-                      key: state.pageKey,
-                      child: const CompanyStructureTreeScreen(),
-                      animation: animationController,
-                      begin: begin ?? const Offset(1.0, 0.0),
                     );
                   },
                 ),
