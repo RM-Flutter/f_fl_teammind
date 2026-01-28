@@ -1,9 +1,8 @@
-  import 'package:app_test/core/controllers/complain_controller/complain_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-  import 'package:easy_localization/easy_localization.dart';
-  import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-  import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -16,8 +15,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 
 import 'package:app_test/core/widgets/comments/comments_widget.dart';
 
-
-  class NotificationDetailsScreen extends StatefulWidget {
+class NotificationDetailsScreen extends StatefulWidget {
     var id;
     var date;
     var title;
