@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/features/more/blog/data/remote_data/blog_repo.dart';
 import 'package:app_test/features/more/blog/data/models/get_one_blog_model.dart';
 
 class BlogProviderModel extends ChangeNotifier {
@@ -29,13 +29,12 @@ class BlogProviderModel extends ChangeNotifier {
     isGetBlogLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/$type/entities-operations/$id?with=tags,category_id",
+      final response = await BlogRepo.getOneBlog(
         context: context,
-        query: {
-          "itemsCount": itemsCount,
-          "page":page ?? currentPage,
-        },
+        id: id.toString(),
+        type: type.toString(),
+        itemsCount: itemsCount,
+        page: page ?? currentPage,
       );
       isGetBlogLoading = false;
       if(response.data["status"] ==true){
@@ -60,13 +59,11 @@ class BlogProviderModel extends ChangeNotifier {
     isGetBlogLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/$slug/entities-operations?with=tags,category_id",
+      final response = await BlogRepo.getBlog(
         context: context,
-        query: {
-          "itemsCount": itemsCount,
-          "page":page ?? currentPage,
-        },
+        slug: slug.toString(),
+        itemsCount: itemsCount,
+        page: page ?? currentPage,
       );
 
       newBlogs = response.data['data'] ?? [];
@@ -92,4 +89,3 @@ class BlogProviderModel extends ChangeNotifier {
     }
   }
 }
-

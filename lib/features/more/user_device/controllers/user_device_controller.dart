@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/features/more/user_device/data/remote_data/user_device_repo.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 
 import 'package:app_test/core/constants/app_strings.dart';
@@ -24,10 +24,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/rm_users/v1/devices/get",
-        context: context,
-      );
+      final response = await UserDeviceRepo.getDevices(context: context);
       isLoading = false;
       devices = response.data['devices'];
       notifyListeners();
@@ -45,13 +42,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     isDeleteLoading = true;
     notifyListeners();
     try {
-      await DioHelper.postData(
-        url: "/rm_users/v1/devices/stop",
-        data:(deviceId != null)? {
-         if(deviceId != null) "device_id" : deviceId
-        } : null,
-        context: context,
-      ).then((v){
+      await UserDeviceRepo.stopDevice(context: context, deviceId: deviceId).then((v){
         if(v.data['status'] == true){
           AlertsService.success(
             title: AppStrings.success.tr(),
@@ -81,14 +72,7 @@ class DeviceControllerProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.postData(
-        url: "/rm_users/v1/device_sys",
-        context: context,
-        data: {
-          "action": "get",
-          "key": "notification_token_status",
-        },
-      );
+      final response = await UserDeviceRepo.deviceSysGet(context: context);
       isLoading = false;
       notificationStatus = response.data['device']['notification_token_status'] == 1 ? true : false;
       debugPrint("notificationStatus --> $notificationStatus");
@@ -107,14 +91,9 @@ class DeviceControllerProvider extends ChangeNotifier {
     isLoading2 = true;
     notifyListeners();
     try {
-      final response = await DioHelper.postData(
-        url: "/rm_users/v1/device_sys",
+      final response = await UserDeviceRepo.deviceSysSetToken(
         context: context,
-        data: {
-          "action": "set",
-          "key": "notification_token",
-          "value": await FirebaseMessaging.instance.getToken(),
-        },
+        token: await FirebaseMessaging.instance.getToken(),
       );
       isLoading2 = false;
       notificationStatus = state;
@@ -158,14 +137,9 @@ class DeviceControllerProvider extends ChangeNotifier {
     isLoading2 = true;
     notifyListeners();
     try {
-      final response = await DioHelper.postData(
-        url: "/rm_users/v1/device_sys",
+      final response = await UserDeviceRepo.deviceSysSetTokenStatus(
         context: context,
-        data: {
-          "action": "set",
-          "key": "notification_token_status",
-          "value": state,
-        },
+        state: state,
       );
       if(response.data['status'] == true){
         isSuccess = true;

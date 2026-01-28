@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/features/more/about_us/data/models/get_about_model.dart';
+import '../data/remote_data/about_us_repo.dart';
 
 class AboutUsLogicProvider extends ChangeNotifier{
   bool isLoading = false;
@@ -10,11 +11,7 @@ class AboutUsLogicProvider extends ChangeNotifier{
   getAboutUs(context){
     isLoading = true;
     notifyListeners();
-    DioHelper.getData(
-        url: "/rm_page/v1/show?with=metas&slug=about-us-app",
-        sendLang: true,
-        context : context,
-    ).then((value){
+    AboutUsRepo.getAboutUs(context).then((value){
       aboutUsModel = AboutUsModel.fromJson(value.data);
       isLoading = false;
       notifyListeners();

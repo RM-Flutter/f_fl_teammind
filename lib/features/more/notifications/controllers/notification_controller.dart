@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/features/more/notifications/data/remote_data/notifications_repo.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/more/notifications/data/models/get_one_notification_model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
@@ -107,12 +107,9 @@ class NotificationProviderModel extends ChangeNotifier {
     }
     isLoading = true;
     notifyListeners();
-    DioHelper.getData(
-      url: "/emp_requests/v1/employees",
-      query: {
-        "under_my_management" : true
-      },
+    NotificationsRepo.getEmployees(
       context: context,
+      underMyManagement: true,
     ).then((value){
       isLoading = false;
       employees = [];
@@ -133,12 +130,9 @@ class NotificationProviderModel extends ChangeNotifier {
   void getDepartment({required BuildContext context}) {
     isLoading = true;
     notifyListeners();
-    DioHelper.getData(
-      url: "/departments/entities-operations",
-      query: {
-        "under_my_management" : true
-      },
+    NotificationsRepo.getDepartments(
       context: context,
+      underMyManagement: true,
     ).then((value){
       isLoading = false;
       departments = List<Map<String, dynamic>>.from(value.data['data']);
@@ -159,14 +153,11 @@ class NotificationProviderModel extends ChangeNotifier {
     isGetNotificationLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/emp_requests/v1/notifications/list",
-        context: context, // Pass this explicitly only if necessary
-        query: {
-          "itemsCount": itemsCount,
-          "page": page ?? currentPage,
-          "for" : forWho
-        },
+      final response = await NotificationsRepo.getNotifications(
+        context: context,
+        itemsCount: itemsCount,
+        page: page ?? currentPage,
+        forWho: forWho,
       );
 
        newNotifications = response.data['notifications'] ?? [];
@@ -195,9 +186,9 @@ class NotificationProviderModel extends ChangeNotifier {
     isGetNotificationLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/rmnotifications/entities-operations/$id",
-        context: context, // Pass this explicitly only if necessary
+      final response = await NotificationsRepo.getNotificationSingle(
+        context: context,
+        id: id.toString(),
       );
       if(response.data["status"] == true){
         notificationModel = NotificationSingleModel.fromJson(response.data['item']);
@@ -243,19 +234,10 @@ class NotificationProviderModel extends ChangeNotifier {
     });
     Response response;
     try{
-      if(listXAttachmentPersonalImage.isEmpty){
-        response = await DioHelper.postFormData(
-            url: "/emp_requests/v1/notifications/create",
-            context: context,
-            formdata: formData
-        );
-      }else{
-        response = await DioHelper.postFormData(
-            url: "/emp_requests/v1/notifications/create",
-            context: context,
-            formdata: formData
-        );
-      }
+      response = await NotificationsRepo.addNotification(
+        context: context,
+        formData: formData,
+      );
       if(response.data['status'] == true){
         titleEnController.clear();
         titleArController.clear();

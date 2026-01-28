@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/features/more/faqs/data/remote_data/faqs_repo.dart';
 import 'package:app_test/features/more/faqs/data/models/get_faq_model.dart';
 
 class FaqModelProvider extends ChangeNotifier{
@@ -10,10 +10,7 @@ class FaqModelProvider extends ChangeNotifier{
   getFaq(context){
     isLoading = true;
     notifyListeners();
-    DioHelper.getData(
-        url: "/rm_page/v1/show?slug=faq",
-        context: context,
-    ).then((value){
+    FaqsRepo.getFaq(context).then((value){
       isLoading = false;
       faqModel = FaqModel.fromJson(value.data);
       notifyListeners();
