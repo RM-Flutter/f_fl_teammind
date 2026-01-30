@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
-import '../../../core/api/api_services_implementation.dart';
+ 
 import '../../../data/repositories/prize_repository/prize_repository_implementation.dart';
 import '../../../data/repositories/redeem_prize_repository/redeem_prize_repository_implementation.dart';
 
@@ -31,7 +31,9 @@ class _PointsScreenState extends State<PointsScreen> {
       ],
       child: ChangeNotifierProvider(
         create: (context) => PrizeProvider(
-            GetPrizeRepositoryImplementation(ApiServicesImplementation(),context), RedeemPrizeRepositoryImplementation(ApiServicesImplementation(), context)),
+          GetPrizeRepositoryImplementation(context),
+          RedeemPrizeRepositoryImplementation(context),
+        ),
         child: Scaffold( resizeToAvoidBottomInset: true,
           backgroundColor: const Color(0xffFFFFFF),
           body: SafeArea(

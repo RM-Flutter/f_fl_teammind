@@ -7,11 +7,11 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/features/points/core/errors/failures.dart';
 import 'package:app_test/features/points/data/models/condition_model.dart';
 import 'condition_repository.dart';
-import 'package:app_test/features/points/core/api/api_services.dart';
+ 
 
 class GetConditionRepositoryImplementation extends ConditionRepository {
-  var context;
-  GetConditionRepositoryImplementation( this.context);
+  final BuildContext context;
+  GetConditionRepositoryImplementation(this.context);
   @override
   Future<Either<Failure, TermsAndConditionsModel>> getCondition() async{
     var get = Provider.of<AppConfigService>(context, listen: false);
