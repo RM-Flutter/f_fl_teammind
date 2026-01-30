@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/features/points/data/remote_data/points_repo.dart';
 import 'package:dio/dio.dart';
 
 class PointsProvider extends ChangeNotifier {
@@ -65,17 +65,15 @@ class PointsProvider extends ChangeNotifier {
     }
     notifyListeners();
     try {
-      final response = await DioHelper.postData(
-          url: "/rm_pointsys/v1/add_new",
-          context: context,
-          data: {
-            "items":[{
-              "name":friendNameController.text,
-              "country_code": countryCodeController.text,
-              "phonesNumbers":[phoneController.text],
-            }
-            ]
+      final response = await PointsRepo.addFriend(
+        context: context,
+        items: [
+          {
+            "name": friendNameController.text,
+            "country_code": countryCodeController.text,
+            "phonesNumbers": [phoneController.text],
           }
+        ],
       );
       if(response.data['status']== false){
         Fluttertoast.showToast(
@@ -130,10 +128,9 @@ class PointsProvider extends ChangeNotifier {
     }
     notifyListeners();
     try {
-      final response = await DioHelper.postData(
-          url: "/rm_pointsys/v1/add_new",
-          context: context,
-          data: contact
+      final response = await PointsRepo.addFriend(
+        context: context,
+        items: List<Map<String, dynamic>>.from(contact["items"] ?? []),
       );
       if(response.data['status']== false){
         Fluttertoast.showToast(
@@ -187,13 +184,11 @@ class PointsProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/prizes/entities-operations?category_id=$id",
-        context: context, // Pass this explicitly only if necessary
-        query: {
-          "itemsCount": itemsCount,
-          "page": page ?? currentPage,
-        },
+      final response = await PointsRepo.getPrizesByCategory(
+        context: context,
+        categoryId: id.toString(),
+        itemsCount: itemsCount,
+        page: page ?? currentPage,
       );
 
       if(response.data['data'] != null && response.data['data'].isNotEmpty){
@@ -250,13 +245,10 @@ class PointsProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await DioHelper.getData(
-        url: "/prize-categories/entities-operations",
-        context: context, // Pass this explicitly only if necessary
-        query: {
-          "itemsCount": itemsCount,
-          "page": page ?? currentPage,
-        },
+      final response = await PointsRepo.getPrizeCategories(
+        context: context,
+        itemsCount: itemsCount,
+        page: page ?? currentPage,
       );
 
       if (response.data['data'] != null && response.data['data'].isNotEmpty) {
@@ -323,15 +315,16 @@ class PointsProvider extends ChangeNotifier {
   Future<void> postRedeemPrize(context, {id, name, phone, nationalId}) async {
     isRedeemLoading = true;
     notifyListeners();
-    DioHelper.postData(
-        url: "/rm_pointsys/v1/prizes",
-        context: context,
-        data: {
-          "prize_id" :id,
-          if(dataNameController.text.isNotEmpty) "name" : dataNameController.text,
-          if(phoneController.text.isNotEmpty) "phone" : countryCodeController.text.isNotEmpty?"${countryCodeController.text}${phoneController.text}" : '+20${phoneController.text}',
-          if(dataIdController.text.isNotEmpty) "national_id" : dataIdController.text,
-        },
+    PointsRepo.redeemPrizeViaPointsys(
+      context: context,
+      prizeId: id.toString(),
+      name: dataNameController.text.isNotEmpty ? dataNameController.text : null,
+      phone: phoneController.text.isNotEmpty
+          ? (countryCodeController.text.isNotEmpty
+              ? "${countryCodeController.text}${phoneController.text}"
+              : '+20${phoneController.text}')
+          : null,
+      nationalId: dataIdController.text.isNotEmpty ? dataIdController.text : null,
     ).then((value){
       if(value.data["status"] == true){
         if(value.data['code'] != null){
@@ -382,14 +375,15 @@ class PointsProvider extends ChangeNotifier {
   Future<void> postTransferPoints(context, {confirmed = false, user, amount}) async {
     isRedeemLoading = true;
     notifyListeners();
-    DioHelper.postData(
-        url: "/rm_pointsys/v1/transfer-points",
-        context: context,
-        data: {
-          "user" : (user != null && user.isNotEmpty)? user : countryCodeController.text.isEmpty ? '+20${phoneController.text}' : "${countryCodeController.text}${phoneController.text}",
-          "amount" : (amount != null && amount.isNotEmpty)?amount : pointsController.text,
-         if(confirmed == true) "confirmed" : confirmed
-        },
+    PointsRepo.transferPoints(
+      context: context,
+      user: (user != null && user.isNotEmpty)
+          ? user
+          : (countryCodeController.text.isEmpty
+              ? '+20${phoneController.text}'
+              : "${countryCodeController.text}${phoneController.text}"),
+      amount: (amount != null && amount.isNotEmpty) ? amount : pointsController.text,
+      confirmed: confirmed == true,
     ).then((value){
       if(value.data["status"] == true){
         isRedeemSuccess = true;
