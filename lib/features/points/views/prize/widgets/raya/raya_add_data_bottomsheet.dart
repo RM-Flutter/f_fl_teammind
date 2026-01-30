@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
-import '../../authentication/shared/widgets/phone_number_field.dart';
-import '../controllers/points_cubit/points_provider.dart';
-import 'bottom_sheet_external_success.dart';
+import '../../../../../authentication/shared/widgets/phone_number_field.dart';
+import '../../../../controllers/points_cubit/points_provider.dart';
+import 'widgets/bottom_sheet_external_success.dart';
 
 class RayaAddDataBottomsheet extends StatelessWidget {
   var id;

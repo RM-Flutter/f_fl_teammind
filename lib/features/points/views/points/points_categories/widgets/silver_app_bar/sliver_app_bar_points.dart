@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:app_test/features/points/widgets/redeem_now_button.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/silver_app_bar/widgets/redeem_now_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +9,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
-import '../controllers/points_cubit/points_provider.dart';
+import '../../../../../controllers/points_cubit/points_provider.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;
@@ -30,10 +30,6 @@ class SliverAppBarPoints extends StatelessWidget {
                     as Map<String, dynamic>; // Convert String back to JSON
                 debugPrint("S111111 IS --> ${us2Cache['points']['available']}");
               }
-              // value.userSettings2!.balance!.forEach((key, balance) {
-              //   balancePoints = balance.max;
-              //   availablePoints = balance.available;
-              // });
               return SliverAppBar(
                 elevation: 0,
                 pinned: true,
@@ -118,96 +114,12 @@ class SliverAppBarPoints extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                context.pushNamed(AppRoutes.CategoriesprizePointsViewScreen.name,
-                                    pathParameters: {'lang': context.locale.languageCode,});
-
-                                // showModalBottomSheet(
-                                //   backgroundColor: Colors.white,
-                                //   context: context,
-                                //   shape: const RoundedRectangleBorder(
-                                //     borderRadius: BorderRadius.only(
-                                //       topLeft: Radius.circular(50),
-                                //       topRight: Radius.circular(50),
-                                //     ),
-                                //   ),
-                                //   clipBehavior: Clip.antiAlias,
-                                //   builder: (context) {
-                                //     return MultiProvider(
-                                //       providers: [
-                                //         ChangeNotifierProvider(
-                                //           create: (context) => PrizeProvider(
-                                //               GetPrizeRepositoryImplementation(
-                                //                   ApiServicesImplementation(),
-                                //                   context),
-                                //               RedeemPrizeRepositoryImplementation(
-                                //                   ApiServicesImplementation(),
-                                //                   context))
-                                //             ..getPrize(),
-                                //         ),
-                                //       ],
-                                //       child: StatefulBuilder(
-                                //         builder: (context, setState) {
-                                //           return SizedBox(
-                                //             width: double.infinity,
-                                //             child: Padding(
-                                //               padding: EdgeInsets.all(12.0),
-                                //               child: Column(
-                                //                 mainAxisSize: MainAxisSize.min,
-                                //                 crossAxisAlignment:
-                                //                     CrossAxisAlignment.center,
-                                //                 children: [
-                                //                   const SizedBox(
-                                //                     height: 5,
-                                //                   ),
-                                //                   const BottomSheetEdge(),
-                                //                   const SizedBox(
-                                //                     height: 15,
-                                //                   ),
-                                //                   Text(
-                                //                       AppStrings.redeemNow
-                                //                           .tr()
-                                //                           .toUpperCase(),
-                                //                       style:  TextStyle(
-                                //                         fontSize: 16,
-                                //                         fontWeight:
-                                //                             FontWeight.bold,
-                                //                         color:
-                                //                             Color(0xFFE6007E),
-                                //                       )),
-                                //                   const SizedBox(
-                                //                     height: 25,
-                                //                   ),
-                                //                   const DropDownAndButtonBottomSheet()
-                                //                 ],
-                                //               ),
-                                //             ),
-                                //           );
-                                //         },
-                                //       ),
-                                //     );
-                                //   },
-                                // );
+                                context.pushNamed(AppRoutes.CategoriesprizePointsViewScreen.name, pathParameters: {'lang': context.locale.languageCode,});
                               },
                               child: const RedeemNowButton(
                                 friends: false,
                               ),
                             ),
-                            // const SizedBox(
-                            //   height: 10,
-                            // ),
-                            // GestureDetector(
-                            //   onTap: () async {
-                            //     await showModalBottomSheet(
-                            //         context: context,
-                            //         isScrollControlled: true, // Allow full screen interaction
-                            //         builder: (BuildContext context) {
-                            //           return SendPointFriendBottomSheet();
-                            //         });
-                            //   },
-                            //   child: const RedeemNowButton(
-                            //     friends: true,
-                            //   ),
-                            // ),
                             const Spacer(
                               flex: 1,
                             ),

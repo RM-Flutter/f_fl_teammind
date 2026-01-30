@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
-import '../../controllers/fawry_cubit/fawry_provider.dart';
+import '../../../../../controllers/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneBottomBar extends StatelessWidget {
   var serviceId;

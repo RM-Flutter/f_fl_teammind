@@ -17,8 +17,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
 
-import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import '../../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import '../../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;

@@ -1,18 +1,18 @@
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/features/points/widgets/condition_section.dart';
-import 'package:app_test/features/points/widgets/history_item.dart';
-import 'package:app_test/features/points/widgets/referral_section.dart';
+import 'package:app_test/features/points/views/conditions/condition_section.dart';
+import 'package:app_test/features/points/views/history/history_item.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/sliver_list/widgets/referral/referral_section.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/features/points/core/api/api_services_implementation.dart';
-import '../data/repositories/condition_repository/condition_repository_implementation.dart';
-import '../data/repositories/history_repository/get_history_repository_implementation.dart';
-import '../controllers/condition_cubit/condition_provider.dart';
-import '../controllers/history_cubit/history_provider.dart';
-import '../controllers/points_cubit/points_provider.dart';
+ 
+import '../../../../../data/repositories/condition_repository/condition_repository_implementation.dart';
+import '../../../../../data/repositories/history_repository/get_history_repository_implementation.dart';
+import '../../../../../controllers/condition_cubit/condition_provider.dart';
+import '../../../../../controllers/history_cubit/history_provider.dart';
+import '../../../../../controllers/points_cubit/points_provider.dart';
 
 class SliverListPoints extends StatelessWidget {
   const SliverListPoints({super.key});
@@ -48,11 +48,11 @@ class SliverListPoints extends StatelessWidget {
                           const SizedBox(height: 29,),
                           provider.selectedIndex == 1?
                           ChangeNotifierProvider(
-                              create: (_) => ConditionProvider(GetConditionRepositoryImplementation(ApiServicesImplementation(), context))..getCondition(),
+                              create: (_) => ConditionProvider(GetConditionRepositoryImplementation(context))..getCondition(),
                               child: const ConditionSection())
                               :provider.selectedIndex == 2?
                           ChangeNotifierProvider(
-                              create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(ApiServicesImplementation(), context))..getHistory(),
+                              create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(context))..getHistory(),
                               child: const HistoryItem()): const ReferralSection()
                           ,
                         ],
@@ -95,11 +95,11 @@ class SliverListPoints extends StatelessWidget {
                               const SizedBox(height: 29,),
                               provider.selectedIndex == 1?
                               ChangeNotifierProvider(
-                                  create: (_) => ConditionProvider(GetConditionRepositoryImplementation(ApiServicesImplementation(), context))..getCondition(),
+                                  create: (_) => ConditionProvider(GetConditionRepositoryImplementation(context))..getCondition(),
                                   child: const ConditionSection())
                                   :provider.selectedIndex == 2?
                               ChangeNotifierProvider(
-                                  create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(ApiServicesImplementation(), context))..getHistory(),
+                                  create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(context))..getHistory(),
                                   child: const HistoryItem()): const ReferralSection()
                               ,
                             ],

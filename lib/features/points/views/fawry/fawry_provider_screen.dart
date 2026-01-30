@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:app_test/features/points/fawry_view/charge_phone_screen.dart';
+import 'package:app_test/features/points/views/fawry/widgets/charge_phone/charge_phone_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -10,7 +10,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
-import '../controllers/fawry_cubit/fawry_provider.dart';
+import '../../controllers/fawry_cubit/fawry_provider.dart';
 
 class FawryProviderScreen extends StatelessWidget {
   const FawryProviderScreen({super.key});

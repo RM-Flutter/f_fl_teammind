@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_test/features/points/widgets/add_friend_bottom_sheet.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/sliver_list/widgets/referral/widgets/add_friend_bottom_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

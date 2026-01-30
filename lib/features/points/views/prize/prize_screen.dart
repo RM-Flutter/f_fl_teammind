@@ -1,7 +1,7 @@
 import 'package:app_test/features/points/controllers/points_cubit/points_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:app_test/features/points/widgets/bottom_sheet_external_success.dart';
-import 'package:app_test/features/points/widgets/raya_add_data_bottomsheet.dart';
+import 'package:app_test/features/points/views/prize/widgets/raya/widgets/bottom_sheet_external_success.dart';
+import 'package:app_test/features/points/views/prize/widgets/raya/raya_add_data_bottomsheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
-import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;

@@ -4,9 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-
 import 'package:app_test/features/points/core/api/api_services.dart';
-import 'package:app_test/features/points/core/api/end_points.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/features/points/core/errors/failures.dart';
 import 'package:app_test/features/points/data/models/redeem_prize_model.dart';
 
@@ -19,12 +18,12 @@ class RedeemPrizeRepositoryImplementation extends RedeemPrizeRepository {
   Future<Either<Failure, RedeemPrizeModel>> redeemPrize({required String prizeName}) async{
     var get = Provider.of<AppConfigService>(context, listen: false);
     try {
-      Response data = await apiServices.post(
-          endPoint: EndPoints.postPrize,
-          context: context,
-          data: {
-            'prize' : prizeName,
-          }
+      Response data = await DioHelper.postData(
+        url: "/redeem-requests/entities-operations/store",
+        context: context,
+        data: {
+          'prize' : prizeName,
+        },
       );
       debugPrint(data.data);
       return Right(RedeemPrizeModel.fromJson(data.data));

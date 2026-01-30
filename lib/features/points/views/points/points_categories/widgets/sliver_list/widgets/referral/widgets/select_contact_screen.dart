@@ -9,7 +9,7 @@ import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import 'package:app_test/features/home/controllers/home_controller.dart';
 
-import '../controllers/points_cubit/points_provider.dart';
+import '../../../../../../../../controllers/points_cubit/points_provider.dart';
 
 class ContactSelectionScreen extends StatefulWidget {
   const ContactSelectionScreen({super.key});

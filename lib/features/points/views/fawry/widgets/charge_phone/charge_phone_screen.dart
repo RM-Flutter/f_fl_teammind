@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:app_test/features/points/fawry_view/pay_bill_screen.dart';
-import 'package:app_test/features/points/fawry_view/widget/charge_phone_bottom_bar.dart';
+import 'package:app_test/features/points/views/fawry/widgets/charge_phone/widgets/pay_bill_screen.dart';
+import 'package:app_test/features/points/views/fawry/widgets/charge_phone/widgets/charge_phone_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
-import '../controllers/fawry_cubit/fawry_provider.dart';
+import '../../../../controllers/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneScreen extends StatefulWidget {
   var service;
