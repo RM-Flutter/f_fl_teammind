@@ -65,12 +65,6 @@ class OfflineController with ChangeNotifier {
 
     // Load saved fingerprints from preferences
     await loadFingerprintsFromPreferences();
-
-    // ConnectionsService.connectionStream.listen((result) {
-    //   if (result.contains(ConnectivityResult.none)) {
-    //     Navigator.pop(ctx);
-    //   }
-    // });
   }
 
   Future<void> loadFingerprintsFromPreferences() async {

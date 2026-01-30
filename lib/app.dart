@@ -21,19 +21,6 @@ class MyApp extends StatelessWidget {
     }
     // precacheImage(const AssetImage(AppImages.splashScreenBackground), context);
     final appGoRouter = goRouter(context);
-    // return MaterialApp(
-    //   title: 'rmemp',
-    //   restorationScopeId: 'app',
-    //   localizationsDelegates: context.localizationDelegates,
-    //   supportedLocales: context.supportedLocales,
-    //   locale: context.locale,
-    //   home: LoginScreen(),
-    //   debugShowCheckedModeBanner: false,
-    //   themeMode: ThemeMode.light,
-    //   theme: AppThemeService.getTheme(isDark: false, context: context),
-    //   darkTheme: AppThemeService.getTheme(isDark: true, context: context),
-    //   scrollBehavior: PlatformIs.web ? AppScrollBehavior() : null,
-    // );
     return MaterialApp.router(
       title: 'rmemp',
       restorationScopeId: 'app',
