@@ -557,12 +557,6 @@ class PersonalProfileController extends ChangeNotifier {
     }
     notifyListeners();
     try {
-      // Vaidation
-      //   bool isUpdate = await AlertsService.confirmMessage(
-      //       context, AppStrings.updateProfile.tr(),
-      //       message: AppStrings.areYouSureYouWantToUpdateYourProfile.tr());
-      //   debugPrint("UPDATE IS---> $isUpdate");
-      //   if (isUpdate == false) return;
       var result = PersonalProfileRepo.updateProfile(
         context: context,
         avatar: listProfileImage.isNotEmpty ?listProfileImage
@@ -620,8 +614,7 @@ class PersonalProfileController extends ChangeNotifier {
             message: AppStrings.areYouSureYouWantToUpdateYourEmail.tr());
 
         if (isUpdate == false) return;
-        final result = await PersonalProfileRepo.updateProfile(
-            context: context, email: emailController.text);
+        final result = await PersonalProfileRepo.updateProfile(context: context, email: emailController.text);
         debugPrint("result is --> $result");
         if(result != null){
           if(result.data['status'] == true ){
@@ -632,7 +625,8 @@ class PersonalProfileController extends ChangeNotifier {
               return await showEmailVerificationPopup(
                   context: context,
                   newEmail: emailController.text,
-                  emailUuid: result.data?['email_code_uuid']);
+                  emailUuid: result.data?['email_code_uuid'],
+              );
             }
           }else{
             Fluttertoast.showToast(
@@ -989,8 +983,8 @@ class PersonalProfileController extends ChangeNotifier {
   }
 
   // Email Update Verification
-  Future<void> showEmailVerificationPopup(
-      {required BuildContext context,
+  Future<void> showEmailVerificationPopup({
+        required BuildContext context,
         required String newEmail,
         bool validate = false,
         sendBy,

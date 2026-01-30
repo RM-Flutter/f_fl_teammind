@@ -19,7 +19,7 @@ class ConditionSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 16),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800), // 👈 عرض ثابت في الويب
+            constraints: const BoxConstraints(maxWidth: 800),
             child: HtmlWidget(
               conditionProvider.termsAndConditionsModel!.page!.content ?? "",
               renderMode: RenderMode.column,
