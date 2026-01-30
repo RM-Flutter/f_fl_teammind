@@ -5,10 +5,10 @@ import 'package:app_test/features/points/core/errors/failures.dart';
 import 'package:app_test/features/points/data/models/condition_model.dart';
 import '../../data/repositories/condition_repository/condition_repository.dart';
 
-class ConditionProvider with ChangeNotifier {
+class ConditionController with ChangeNotifier {
   final ConditionRepository getConditionRepository;
 
-  ConditionProvider(this.getConditionRepository);
+  ConditionController(this.getConditionRepository);
 
   TermsAndConditionsModel? termsAndConditionsModel;
   bool isLoading = false;

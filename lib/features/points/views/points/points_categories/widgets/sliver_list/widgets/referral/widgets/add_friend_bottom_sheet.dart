@@ -7,7 +7,7 @@ import 'package:app_test/core/widgets/all_text_field.dart';
 
 import 'package:app_test/features/home/controllers/home_controller.dart';
 import '../../../../../../../../../authentication/shared/widgets/phone_number_field.dart';
-import '../../../../../../../../controllers/points_cubit/points_provider.dart';
+import '../../../../../../../../controllers/points_controller/points_controller.dart';
 
 class AddFriendBottomSheet extends StatelessWidget {
   const AddFriendBottomSheet({super.key});
@@ -15,12 +15,12 @@ class AddFriendBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => PointsProvider(),),
+      ChangeNotifierProvider(create: (context) => PointsController(),),
       ChangeNotifierProvider(create: (context) => HomeController(),),
     ],
     child: Consumer<HomeController>(
       builder: (context, values, child) {
-        return Consumer<PointsProvider>(
+        return Consumer<PointsController>(
           builder: (context, value, child) {
             if(value.isAddFriendSuccess == true){
               WidgetsBinding.instance.addPostFrameCallback((_) {

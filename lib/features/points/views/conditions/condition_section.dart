@@ -1,27 +1,27 @@
+import 'package:app_test/features/points/controllers/condition_controller/condition_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/condition_cubit/condition_provider.dart';
 
 class ConditionSection extends StatelessWidget {
   const ConditionSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final conditionProvider = Provider.of<ConditionProvider>(context);
+    final conditionController = Provider.of<ConditionController>(context);
 
-    if (conditionProvider.isLoading) {
+    if (conditionController.isLoading) {
       return const Center(child: CircularProgressIndicator());
-    } else if (conditionProvider.errorMessage != null) {
-      return Text(conditionProvider.errorMessage!);
-    } else if (conditionProvider.termsAndConditionsModel != null) {
+    } else if (conditionController.errorMessage != null) {
+      return Text(conditionController.errorMessage!);
+    } else if (conditionController.termsAndConditionsModel != null) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 16),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: HtmlWidget(
-              conditionProvider.termsAndConditionsModel!.page!.content ?? "",
+              conditionController.termsAndConditionsModel!.page!.content ?? "",
               renderMode: RenderMode.column,
               textStyle: const TextStyle(
                 fontSize: 14,

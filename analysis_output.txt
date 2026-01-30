@@ -621,8 +621,8 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/charge_phone_screen.dart:384:66 • deprecated_member_use
    info • Don't invoke 'print' in production code • lib/modules/points/fawry_view/charge_phone_screen.dart:624:15 • avoid_print
   error • Target of URI doesn't exist: '../logic/fawry_cubit/fawry_provider.dart' • lib/modules/points/fawry_view/fawry_provider_screen.dart:13:8 • uri_does_not_exist
-  error • The method 'FawryProviderModel' isn't defined for the type 'FawryProviderScreen' • lib/modules/points/fawry_view/fawry_provider_screen.dart:21:28 • undefined_method
-  error • The name 'FawryProviderModel' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/fawry_provider_screen.dart:22:23 • non_type_as_type_argument
+  error • The method 'FawryController' isn't defined for the type 'FawryProviderScreen' • lib/modules/points/fawry_view/fawry_provider_screen.dart:21:28 • undefined_method
+  error • The name 'FawryController' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/fawry_provider_screen.dart:22:23 • non_type_as_type_argument
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/fawry_provider_screen.dart:48:49 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/fawry_provider_screen.dart:49:49 • deprecated_member_use
   error • The property 'isGetFawryCategoryLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/fawry_provider_screen.dart:66:54 • unchecked_use_of_nullable_value
@@ -644,11 +644,11 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:21:16 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:23:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:24:7 • prefer_typing_uninitialized_variables
-  error • Undefined class 'FawryProviderModel' • lib/modules/points/fawry_view/pay_bill_screen.dart:37:3 • undefined_class
+  error • Undefined class 'FawryController' • lib/modules/points/fawry_view/pay_bill_screen.dart:37:3 • undefined_class
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:38:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/pay_bill_screen.dart:39:7 • prefer_typing_uninitialized_variables
-  error • The method 'FawryProviderModel' isn't defined for the type '_PayBillScreenState' • lib/modules/points/fawry_view/pay_bill_screen.dart:43:56 • undefined_method
-  error • The name 'FawryProviderModel' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/pay_bill_screen.dart:44:21 • non_type_as_type_argument
+  error • The method 'FawryController' isn't defined for the type '_PayBillScreenState' • lib/modules/points/fawry_view/pay_bill_screen.dart:43:56 • undefined_method
+  error • The name 'FawryController' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/pay_bill_screen.dart:44:21 • non_type_as_type_argument
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:72:49 • deprecated_member_use
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/pay_bill_screen.dart:73:49 • deprecated_member_use
   error • The property 'isGetFawryCategoryLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/pay_bill_screen.dart:112:67 • unchecked_use_of_nullable_value
@@ -685,7 +685,7 @@ warning • This class (or a class that this class inherits from) is marked as '
   error • Target of URI doesn't exist: '../../logic/fawry_cubit/fawry_provider.dart' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:6:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: ChargePhoneBottomBar.serviceId • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:8:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:9:7 • prefer_typing_uninitialized_variables
-  error • The name 'FawryProviderModel' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:14:21 • non_type_as_type_argument
+  error • The name 'FawryController' isn't a type, so it can't be used as a type argument • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:14:21 • non_type_as_type_argument
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:24:50 • deprecated_member_use
   error • The property 'isPostPayLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:31:25 • unchecked_use_of_nullable_value
   error • The property 'numberOfPointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:33:59 • unchecked_use_of_nullable_value
@@ -695,13 +695,13 @@ warning • This class (or a class that this class inherits from) is marked as '
   error • The property 'rechargeAmountController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/fawry_view/widget/charge_phone_bottom_bar.dart:40:34 • unchecked_use_of_nullable_value
   error • Target of URI doesn't exist: 'logic/points_cubit/points_provider.dart' • lib/modules/points/points_categories_screen.dart:20:8 • uri_does_not_exist
    info • Invalid use of a private type in a public API • lib/modules/points/points_categories_screen.dart:27:3 • library_private_types_in_public_api
-  error • Undefined class 'PointsProvider' • lib/modules/points/points_categories_screen.dart:32:8 • undefined_class
+  error • Undefined class 'PointsController' • lib/modules/points/points_categories_screen.dart:32:8 • undefined_class
    info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:38:7 • avoid_print
    info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:39:7 • avoid_print
    info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:44:9 • avoid_print
    info • Don't invoke 'print' in production code • lib/modules/points/points_categories_screen.dart:49:10 • avoid_print
-  error • The method 'PointsProvider' isn't defined for the type '_PointsCategoriesScreenState' • lib/modules/points/points_categories_screen.dart:58:56 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/points_categories_screen.dart:61:25 • non_type_as_type_argument
+  error • The method 'PointsController' isn't defined for the type '_PointsCategoriesScreenState' • lib/modules/points/points_categories_screen.dart:58:56 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/points_categories_screen.dart:61:25 • non_type_as_type_argument
   error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:64:26 • unchecked_use_of_nullable_value
   error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:65:41 • unchecked_use_of_nullable_value
   error • The property 'categories' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/points_categories_screen.dart:71:30 • unchecked_use_of_nullable_value
@@ -722,19 +722,19 @@ warning • This class (or a class that this class inherits from) is marked as '
   error • Target of URI doesn't exist: 'logic/points_cubit/points_provider.dart' • lib/modules/points/points_screen.dart:10:8 • uri_does_not_exist
   error • Target of URI doesn't exist: 'logic/prize_cubit/prize_provider.dart' • lib/modules/points/points_screen.dart:11:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: PointsScreen.arrow • lib/modules/points/points_screen.dart:13:7 • must_be_immutable
-  error • The method 'PointsProvider' isn't defined for the type '_PointsScreenState' • lib/modules/points/points_screen.dart:26:53 • undefined_method
-  error • The method 'PrizeProvider' isn't defined for the type '_PointsScreenState' • lib/modules/points/points_screen.dart:33:30 • undefined_method
+  error • The method 'PointsController' isn't defined for the type '_PointsScreenState' • lib/modules/points/points_screen.dart:26:53 • undefined_method
+  error • The method 'PrizeController' isn't defined for the type '_PointsScreenState' • lib/modules/points/points_screen.dart:33:30 • undefined_method
   error • Target of URI doesn't exist: 'logic/points_cubit/points_provider.dart' • lib/modules/points/prize_screen.dart:19:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: PrizeScreen.id • lib/modules/points/prize_screen.dart:21:7 • must_be_immutable
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/prize_screen.dart:23:7 • prefer_typing_uninitialized_variables
    info • Invalid use of a private type in a public API • lib/modules/points/prize_screen.dart:27:3 • library_private_types_in_public_api
-  error • Undefined class 'PointsProvider' • lib/modules/points/prize_screen.dart:32:8 • undefined_class
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/prize_screen.dart:39:36 • non_type_as_type_argument
+  error • Undefined class 'PointsController' • lib/modules/points/prize_screen.dart:32:8 • undefined_class
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/prize_screen.dart:39:36 • non_type_as_type_argument
    info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:43:7 • avoid_print
    info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:44:7 • avoid_print
    info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:49:9 • avoid_print
    info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:53:11 • avoid_print
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/prize_screen.dart:74:25 • non_type_as_type_argument
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/prize_screen.dart:74:25 • non_type_as_type_argument
   error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:76:23 • unchecked_use_of_nullable_value
    info • Don't invoke 'print' in production code • lib/modules/points/prize_screen.dart:77:15 • avoid_print
   error • The property 'type' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/prize_screen.dart:77:47 • unchecked_use_of_nullable_value
@@ -816,8 +816,8 @@ warning • The parameter 'query' is required • lib/modules/points/view_models
    info • Don't invoke 'print' in production code • lib/modules/points/view_models/points_cubit/points_provider.dart:420:7 • avoid_print
 warning • The value of the field '_isLoading' isn't used • lib/modules/points/view_models/prize_cubit/prize_provider.dart:27:8 • unused_field
   error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:10:8 • uri_does_not_exist
-  error • The method 'PointsProvider' isn't defined for the type 'AddFriendBottomSheet' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:18:51 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/add_friend_bottom_sheet.dart:23:25 • non_type_as_type_argument
+  error • The method 'PointsController' isn't defined for the type 'AddFriendBottomSheet' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:18:51 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/add_friend_bottom_sheet.dart:23:25 • non_type_as_type_argument
   error • The property 'isAddFriendSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:25:22 • unchecked_use_of_nullable_value
   error • The property 'isAddFriendSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:29:21 • unchecked_use_of_nullable_value
   error • The property 'friendNameController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:86:49 • unchecked_use_of_nullable_value
@@ -827,9 +827,9 @@ warning • The value of the field '_isLoading' isn't used • lib/modules/point
   error • The property 'isAddFriendLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:94:37 • unchecked_use_of_nullable_value
   error • The method 'addFriend' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/add_friend_bottom_sheet.dart:96:37 • unchecked_use_of_nullable_value
   error • Target of URI doesn't exist: '../logic/condition_cubit/condition_provider.dart' • lib/modules/points/widgets/condition_section.dart:5:8 • uri_does_not_exist
-  error • The name 'ConditionProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/condition_section.dart:12:43 • non_type_as_type_argument
+  error • The name 'ConditionController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/condition_section.dart:12:43 • non_type_as_type_argument
   error • Target of URI doesn't exist: '../logic/prize_cubit/prize_provider.dart' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:9:8 • uri_does_not_exist
-  error • The name 'PrizeProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:24:27 • non_type_as_type_argument
+  error • The name 'PrizeController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:24:27 • non_type_as_type_argument
   error • The property 'isLoading' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:34:28 • unchecked_use_of_nullable_value
   error • The property 'prizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:40:30 • unchecked_use_of_nullable_value
   error • The property 'prize' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:44:41 • unchecked_use_of_nullable_value
@@ -842,7 +842,7 @@ warning • The value of the field '_isLoading' isn't used • lib/modules/point
   error • The property 'status' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:68:35 • unchecked_use_of_nullable_value
   error • Undefined name 'RedeemPrizeStatus' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:68:45 • undefined_identifier
   error • The method 'redeemPrize' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:70:36 • unchecked_use_of_nullable_value
-  error • The name 'PrizeProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:70:71 • non_type_as_type_argument
+  error • The name 'PrizeController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:70:71 • non_type_as_type_argument
   error • The property 'redeemPrizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:71:42 • unchecked_use_of_nullable_value
   error • The property 'redeemPrizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:73:49 • unchecked_use_of_nullable_value
   error • The property 'redeemPrizeModel' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/drop_down_and_button_bottom_sheet.dart:84:49 • unchecked_use_of_nullable_value
@@ -850,7 +850,7 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/history_drop_down_widget.dart:12:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/history_drop_down_widget.dart:13:7 • prefer_typing_uninitialized_variables
   error • Target of URI doesn't exist: '../logic/history_cubit/history_provider.dart' • lib/modules/points/widgets/history_item.dart:7:8 • uri_does_not_exist
-  error • The name 'HistoryProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/history_item.dart:17:21 • non_type_as_type_argument
+  error • The name 'HistoryController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/history_item.dart:17:21 • non_type_as_type_argument
   error • The property 'state' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:19:22 • unchecked_use_of_nullable_value
   error • Undefined name 'HistoryState' • lib/modules/points/widgets/history_item.dart:19:31 • undefined_identifier
   error • The property 'state' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/history_item.dart:21:29 • unchecked_use_of_nullable_value
@@ -870,8 +870,8 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:13:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:14:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:16:7 • prefer_typing_uninitialized_variables
-  error • The method 'PointsProvider' isn't defined for the type 'RayaAddDataBottomsheet' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:24:56 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:25:25 • non_type_as_type_argument
+  error • The method 'PointsController' isn't defined for the type 'RayaAddDataBottomsheet' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:24:56 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:25:25 • non_type_as_type_argument
   error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:26:20 • unchecked_use_of_nullable_value
   error • The property 'redeemCode' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:28:24 • unchecked_use_of_nullable_value
   error • The property 'redeemCode' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/raya_add_data_bottomsheet.dart:30:103 • unchecked_use_of_nullable_value
@@ -895,8 +895,8 @@ warning • This class (or a class that this class inherits from) is marked as '
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:12:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:13:7 • prefer_typing_uninitialized_variables
    info • An uninitialized field should have an explicit type annotation • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:14:7 • prefer_typing_uninitialized_variables
-  error • The method 'PointsProvider' isn't defined for the type 'SendPointConfirmBottomsheet' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:20:28 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:23:27 • non_type_as_type_argument
+  error • The method 'PointsController' isn't defined for the type 'SendPointConfirmBottomsheet' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:20:28 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:23:27 • non_type_as_type_argument
   error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:25:24 • unchecked_use_of_nullable_value
   error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:54:23 • unchecked_use_of_nullable_value
    info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:84:36 • deprecated_member_use
@@ -906,8 +906,8 @@ warning • This class (or a class that this class inherits from) is marked as '
   error • The method 'postTransferPoints' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/send_point_confirm_bottomsheet.dart:149:45 • unchecked_use_of_nullable_value
   error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:10:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SendPointFriendBottomSheet.pointsFocusNode • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:12:7 • must_be_immutable
-  error • The method 'PointsProvider' isn't defined for the type 'SendPointFriendBottomSheet' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:17:56 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:20:25 • non_type_as_type_argument
+  error • The method 'PointsController' isn't defined for the type 'SendPointFriendBottomSheet' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:17:56 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:20:25 • non_type_as_type_argument
   error • The property 'isRedeemSuccess' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:21:20 • unchecked_use_of_nullable_value
   error • The property 'pointsController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:27:70 • unchecked_use_of_nullable_value
   error • The property 'countryCodeController' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:28:35 • unchecked_use_of_nullable_value
@@ -924,26 +924,26 @@ warning • This class (or a class that this class inherits from) is marked as '
   error • The method 'postTransferPoints' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/send_point_friend_bottomsheet.dart:99:37 • unchecked_use_of_nullable_value
   error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/sliver_app_bar_points.dart:12:8 • uri_does_not_exist
 warning • This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: SliverAppBarPoints.arrow • lib/modules/points/widgets/sliver_app_bar_points.dart:14:7 • must_be_immutable
-  error • The method 'PointsProvider' isn't defined for the type 'SliverAppBarPoints' • lib/modules/points/widgets/sliver_app_bar_points.dart:21:28 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_app_bar_points.dart:22:23 • non_type_as_type_argument
+  error • The method 'PointsController' isn't defined for the type 'SliverAppBarPoints' • lib/modules/points/widgets/sliver_app_bar_points.dart:21:28 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_app_bar_points.dart:22:23 • non_type_as_type_argument
    info • Don't invoke 'print' in production code • lib/modules/points/widgets/sliver_app_bar_points.dart:31:17 • avoid_print
   error • Target of URI doesn't exist: '../logic/condition_cubit/condition_provider.dart' • lib/modules/points/widgets/sliver_list_points.dart:13:8 • uri_does_not_exist
   error • Target of URI doesn't exist: '../logic/history_cubit/history_provider.dart' • lib/modules/points/widgets/sliver_list_points.dart:14:8 • uri_does_not_exist
   error • Target of URI doesn't exist: '../logic/points_cubit/points_provider.dart' • lib/modules/points/widgets/sliver_list_points.dart:15:8 • uri_does_not_exist
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_list_points.dart:22:21 • non_type_as_type_argument
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_list_points.dart:22:21 • non_type_as_type_argument
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:49:36 • unchecked_use_of_nullable_value
-  error • The method 'ConditionProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:51:46 • undefined_method
+  error • The method 'ConditionController' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:51:46 • undefined_method
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:53:41 • unchecked_use_of_nullable_value
-  error • The method 'HistoryProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:55:52 • undefined_method
+  error • The method 'HistoryController' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:55:52 • undefined_method
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:65:44 • unchecked_use_of_nullable_value
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:74:50 • unchecked_use_of_nullable_value
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:75:50 • unchecked_use_of_nullable_value
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:84:50 • unchecked_use_of_nullable_value
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:96:40 • unchecked_use_of_nullable_value
-  error • The method 'ConditionProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:98:50 • undefined_method
+  error • The method 'ConditionController' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:98:50 • undefined_method
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:100:45 • unchecked_use_of_nullable_value
-  error • The method 'HistoryProvider' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:102:56 • undefined_method
-  error • The name 'PointsProvider' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_list_points.dart:127:19 • non_type_as_type_argument
+  error • The method 'HistoryController' isn't defined for the type 'SliverListPoints' • lib/modules/points/widgets/sliver_list_points.dart:102:56 • undefined_method
+  error • The name 'PointsController' isn't a type, so it can't be used as a type argument • lib/modules/points/widgets/sliver_list_points.dart:127:19 • non_type_as_type_argument
   error • The method 'changeIndex' can't be unconditionally invoked because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:152:26 • unchecked_use_of_nullable_value
   error • The property 'selectedIndex' can't be unconditionally accessed because the receiver can be 'null' • lib/modules/points/widgets/sliver_list_points.dart:166:36 • unchecked_use_of_nullable_value
    info • Don't invoke 'print' in production code • lib/modules/splash_and_onboarding/view_models/splash_onboarding.viewmodel.dart:58:7 • avoid_print

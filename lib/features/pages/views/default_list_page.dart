@@ -25,26 +25,26 @@ class DefaultListPage extends StatefulWidget {
 
 class _DefaultListPageState extends State<DefaultListPage> {
   final ScrollController _scrollController = ScrollController();
-  late BlogProviderModel pointsProvider;
+  late BlogProviderModel PointsController;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      pointsProvider = Provider.of<BlogProviderModel>(context, listen: false);
-      pointsProvider.getBlog(context,"${widget.type}" ,page: 1);
+      PointsController = Provider.of<BlogProviderModel>(context, listen: false);
+      PointsController.getBlog(context,"${widget.type}" ,page: 1);
     });
     _scrollController.addListener(() {
       debugPrint("Current scroll position: ${_scrollController.position.pixels}");
       debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !pointsProvider.isGetBlogLoading &&
-          pointsProvider.hasMore) {
+          !PointsController.isGetBlogLoading &&
+          PointsController.hasMore) {
         debugPrint("BOTTOM BOTTOM");
-        if(pointsProvider.hasMore == true) {
-          pointsProvider.getBlog(
-              context, "${widget.type}",page: pointsProvider.currentPage);
+        if(PointsController.hasMore == true) {
+          PointsController.getBlog(
+              context, "${widget.type}",page: PointsController.currentPage);
         }else{
           debugPrint("NO DATA MORE");
         }

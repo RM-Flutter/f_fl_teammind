@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_test/features/points/controllers/fawry_controller/fawry_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:app_test/features/points/views/fawry/widgets/charge_phone/widgets/pay_bill_screen.dart';
 import 'package:app_test/features/points/views/fawry/widgets/charge_phone/widgets/charge_phone_bottom_bar.dart';
@@ -15,7 +16,6 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
-import '../../../../controllers/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneScreen extends StatefulWidget {
   var service;
@@ -25,7 +25,7 @@ class ChargePhoneScreen extends StatefulWidget {
 }
 
 class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
-  late FawryProviderModel fawryProviderModel;
+  late FawryController fawryController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int? selectIndex;
 
@@ -39,7 +39,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
   bool? inquiry;
   @override
   void initState() {
-    fawryProviderModel = FawryProviderModel();
+    fawryController = FawryController();
     if (widget.service['services'].isNotEmpty &&
         widget.service['services'][0]['inquiry'] != null) {
       inquiry = widget.service['services'][0]['inquiry'];
@@ -52,8 +52,8 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
       pointsPerOne = widget.service['services'][0]['points_per_one'] ?? "0";
       for (var input in inputs) {
         String key = input['key'];
-        fawryProviderModel.controllers[key] = TextEditingController();
-        fawryProviderModel.focusNodes[key] = FocusNode();
+        fawryController.controllers[key] = TextEditingController();
+        fawryController.focusNodes[key] = FocusNode();
       }
     }
     if(inquiry != null && inputs.isNotEmpty &&
@@ -71,15 +71,15 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
       _didCalculateFee = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return; // ✅ الحماية هنا
-        fawryProviderModel.updateFee(
+        fawryController.updateFee(
           serviceObject,
           double.parse(
-            fawryProviderModel.rechargeAmountController.text.isNotEmpty
-                ? fawryProviderModel.rechargeAmountController.text
+            fawryController.rechargeAmountController.text.isNotEmpty
+                ? fawryController.rechargeAmountController.text
                 : "0",
           ),
         );
-        debugPrint("FFES IS --> ${fawryProviderModel.cachedFee}");
+        debugPrint("FFES IS --> ${fawryController.cachedFee}");
       });
     }
   }
@@ -87,8 +87,8 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: fawryProviderModel,
-      child: Consumer<FawryProviderModel>(
+      value: fawryController,
+      child: Consumer<FawryController>(
         builder: (context, value, child) {
           if(singlePrice != null && singlePrice != "noPrice"){
             value.rechargeAmountController.text = singlePrice.toString();

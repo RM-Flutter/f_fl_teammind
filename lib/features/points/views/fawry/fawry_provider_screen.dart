@@ -10,7 +10,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
-import '../../controllers/fawry_cubit/fawry_provider.dart';
+import '../../controllers/fawry_controller/fawry_controller.dart';
 
 class FawryProviderScreen extends StatelessWidget {
   const FawryProviderScreen({super.key});
@@ -18,8 +18,8 @@ class FawryProviderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => FawryProviderModel()..getFawryCategory(context),
-      child: Consumer<FawryProviderModel>(
+      create: (context) => FawryController()..getFawryCategory(context),
+      child: Consumer<FawryController>(
           builder: (context, value, child) {
             return Scaffold( resizeToAvoidBottomInset: true,
               appBar: AppBar(

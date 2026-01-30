@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts.service.dart';
-import 'package:app_test/features/points/data/remote_data/points_repo.dart';
+import 'package:app_test/features/points/data/repositories/history_repository/points_repo.dart';
 import 'package:dio/dio.dart';
 
-class PointsProvider extends ChangeNotifier {
+class PointsController extends ChangeNotifier {
   int selectedIndex = 0;
   bool isLoading  = false;
   bool isSuccess = false;

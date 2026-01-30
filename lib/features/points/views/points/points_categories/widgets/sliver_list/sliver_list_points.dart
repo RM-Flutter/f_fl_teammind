@@ -8,18 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
  
+import '../../../../../controllers/condition_controller/condition_controller.dart';
+import '../../../../../controllers/history_controller/history_controller.dart';
+import '../../../../../controllers/points_controller/points_controller.dart';
 import '../../../../../data/repositories/condition_repository/condition_repository_implementation.dart';
 import '../../../../../data/repositories/history_repository/get_history_repository_implementation.dart';
-import '../../../../../controllers/condition_cubit/condition_provider.dart';
-import '../../../../../controllers/history_cubit/history_provider.dart';
-import '../../../../../controllers/points_cubit/points_provider.dart';
 
 class SliverListPoints extends StatelessWidget {
   const SliverListPoints({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PointsProvider>(
+    return Consumer<PointsController>(
       builder: (context, provider, child) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -48,11 +48,11 @@ class SliverListPoints extends StatelessWidget {
                           const SizedBox(height: 29,),
                           provider.selectedIndex == 1?
                           ChangeNotifierProvider(
-                              create: (_) => ConditionProvider(GetConditionRepositoryImplementation(context))..getCondition(),
+                              create: (_) => ConditionController(GetConditionRepositoryImplementation(context))..getCondition(),
                               child: const ConditionSection())
                               :provider.selectedIndex == 2?
                           ChangeNotifierProvider(
-                              create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(context))..getHistory(),
+                              create: (context) => HistoryController(GetHistoryRepositoryImplementation(context))..getHistory(),
                               child: const HistoryItem()): const ReferralSection()
                           ,
                         ],
@@ -95,11 +95,11 @@ class SliverListPoints extends StatelessWidget {
                               const SizedBox(height: 29,),
                               provider.selectedIndex == 1?
                               ChangeNotifierProvider(
-                                  create: (_) => ConditionProvider(GetConditionRepositoryImplementation(context))..getCondition(),
+                                  create: (_) => ConditionController(GetConditionRepositoryImplementation(context))..getCondition(),
                                   child: const ConditionSection())
                                   :provider.selectedIndex == 2?
                               ChangeNotifierProvider(
-                                  create: (context) => HistoryProvider(GetHistoryRepositoryImplementation(context))..getHistory(),
+                                  create: (context) => HistoryController(GetHistoryRepositoryImplementation(context))..getHistory(),
                                   child: const HistoryItem()): const ReferralSection()
                               ,
                             ],
@@ -124,7 +124,7 @@ Widget defaultTap2BarItem({
   final Function? onTapItem,
   double? tapBarItemsWidth,
 }) {
-  return Consumer<PointsProvider>(
+  return Consumer<PointsController>(
     builder: (context, provider, child) {
       bool isWeb = kIsWeb;
 

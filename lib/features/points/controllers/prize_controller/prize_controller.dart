@@ -10,10 +10,10 @@ import '../../data/repositories/prize_repository/prize_repository.dart';
 import '../../data/repositories/redeem_prize_repository/redeem_prize_repository.dart';
 enum RedeemPrizeStatus { initial, loading, success, failure }
 
-class PrizeProvider with ChangeNotifier {
+class PrizeController with ChangeNotifier {
   final GetPrizeRepository getPrizeRepository;
 
-  PrizeProvider(this.getPrizeRepository ,this.redeemPrizeRepository);
+  PrizeController(this.getPrizeRepository ,this.redeemPrizeRepository);
   bool successSend = false;
   bool radeemPrize = false;
   // Define loading and error state variables

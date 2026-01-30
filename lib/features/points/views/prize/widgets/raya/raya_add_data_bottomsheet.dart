@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 import '../../../../../authentication/shared/widgets/phone_number_field.dart';
-import '../../../../controllers/points_cubit/points_provider.dart';
+import '../../../../controllers/points_controller/points_controller.dart';
 import 'widgets/bottom_sheet_external_success.dart';
 
 class RayaAddDataBottomsheet extends StatelessWidget {
@@ -21,8 +21,8 @@ class RayaAddDataBottomsheet extends StatelessWidget {
   FocusNode dataNameFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => PointsProvider(),
-        child: Consumer<PointsProvider>(builder: (context, value, child) {
+    return ChangeNotifierProvider(create: (context) => PointsController(),
+        child: Consumer<PointsController>(builder: (context, value, child) {
           if(value.isRedeemSuccess == true){
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if(value.redeemCode != null){

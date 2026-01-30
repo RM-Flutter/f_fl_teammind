@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:app_test/features/points/controllers/points_cubit/points_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -19,6 +18,7 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 
 import '../../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import '../../../controllers/points_controller/points_controller.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;
@@ -30,7 +30,7 @@ class PointsCategoriesScreen extends StatefulWidget {
 
 class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
   final ScrollController _scrollController = ScrollController();
-  late PointsProvider pointsProvider;
+  late PointsController pointsController;
 
   @override
   void initState() {
@@ -40,12 +40,12 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
       debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !pointsProvider.isLoading &&
-          pointsProvider.hasMore) {
+          !pointsController.isLoading &&
+          pointsController.hasMore) {
         debugPrint("BOTTOM BOTTOM");
-       if(pointsProvider.hasMore == true) {
-         pointsProvider.getCategoriesPrize(
-             context, page: pointsProvider.currentPage);
+       if(pointsController.hasMore == true) {
+         pointsController.getCategoriesPrize(
+             context, page: pointsController.currentPage);
        }else{
          debugPrint("NO DATA MORE");
        }
@@ -56,10 +56,10 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => PointsProvider()..getCategoriesPrize(context, page: 1),
+    return ChangeNotifierProvider(create: (context) => PointsController()..getCategoriesPrize(context, page: 1),
     child: Consumer<HomeController>(
       builder: (context, value, child) {
-        return Consumer<PointsProvider>(
+        return Consumer<PointsController>(
           builder: (context, points, child) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (points.isLoading == false) {

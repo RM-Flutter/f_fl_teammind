@@ -9,7 +9,8 @@ import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import 'package:app_test/features/home/controllers/home_controller.dart';
 
-import '../../../../../../../../controllers/points_cubit/points_provider.dart';
+import '../../../../../../../../controllers/points_controller/points_controller.dart';
+
 
 class ContactSelectionScreen extends StatefulWidget {
   const ContactSelectionScreen({super.key});
@@ -89,12 +90,12 @@ class _ContactSelectionScreenState extends State<ContactSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => PointsProvider(),),
+      ChangeNotifierProvider(create: (context) => PointsController(),),
       ChangeNotifierProvider(create: (context) => HomeController(),),
     ],
     child: Consumer<HomeController>(
       builder: (context, values, child) {
-        return Consumer<PointsProvider>(
+        return Consumer<PointsController>(
           builder: (context, value, child) {
             if(value.isAddFriendContactSuccess == true){
               WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -1,9 +1,9 @@
+import 'package:app_test/features/points/controllers/fawry_controller/fawry_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
-import '../../../../../controllers/fawry_cubit/fawry_provider.dart';
 
 class ChargePhoneBottomBar extends StatelessWidget {
   var serviceId;
@@ -11,7 +11,7 @@ class ChargePhoneBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FawryProviderModel>(
+    return Consumer<FawryController>(
       builder: (context, value, child) {
         return Container(
           height: 136,

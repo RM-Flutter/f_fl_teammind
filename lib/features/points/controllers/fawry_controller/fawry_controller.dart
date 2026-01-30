@@ -20,7 +20,7 @@ import 'package:app_test/core/services/app_theme.service.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 
 
-class FawryProviderModel extends ChangeNotifier {
+class FawryController extends ChangeNotifier {
   bool isGetFawryCategoryLoading = false;
   bool isPostPayLoading = false;
   bool isGetInquerySuccess = false;

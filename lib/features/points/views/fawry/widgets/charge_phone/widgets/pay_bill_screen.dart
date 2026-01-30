@@ -1,3 +1,4 @@
+import 'package:app_test/features/points/controllers/fawry_controller/fawry_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +11,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../../../../../controllers/fawry_cubit/fawry_provider.dart';
 
 class PayBillScreen extends StatefulWidget {
   var title;
@@ -34,14 +34,14 @@ class _PayBillScreenState extends State<PayBillScreen> {
   TextEditingController numberOfPointsController = TextEditingController();
   TextEditingController withdrawalAmountController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  FawryProviderModel? fawryProviderModel;
+  FawryController? fawryController;
   var inquiryId;
   var payAmount;
   @override
   Widget build(BuildContext context) {
     amountController.text = widget.phone;
-    return ChangeNotifierProvider(create: (context) => FawryProviderModel(),
-    child: Consumer<FawryProviderModel>(
+    return ChangeNotifierProvider(create: (context) => FawryController(),
+    child: Consumer<FawryController>(
         builder: (context, value, child) {
           return Form(
             key: formKey,

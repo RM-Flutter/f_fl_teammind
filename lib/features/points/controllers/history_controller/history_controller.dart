@@ -7,9 +7,9 @@ import '../../data/repositories/history_repository/get_history_repository.dart';
 
 enum HistoryState { initial, loading, success, failure }
 
-class HistoryProvider with ChangeNotifier {
+class HistoryController with ChangeNotifier {
   final GetHistoryRepository getHistoryRepository;
-  HistoryProvider(this.getHistoryRepository);
+  HistoryController(this.getHistoryRepository);
 
   HistoryState _state = HistoryState.initial;
   HistoryState get state => _state;

@@ -1,4 +1,3 @@
-import 'package:app_test/features/points/controllers/points_cubit/points_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:app_test/features/points/views/prize/widgets/raya/widgets/bottom_sheet_external_success.dart';
 import 'package:app_test/features/points/views/prize/widgets/raya/raya_add_data_bottomsheet.dart';
@@ -17,6 +16,7 @@ import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
 import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import '../../controllers/points_controller/points_controller.dart';
 
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;
@@ -29,26 +29,26 @@ class PrizeScreen extends StatefulWidget {
 
 class _PrizeScreenState extends State<PrizeScreen> {
   final ScrollController _scrollController = ScrollController();
-  late PointsProvider pointsProvider;
+  late PointsController pointsController;
   FocusNode fieldFocusNode = FocusNode();
   FocusNode fieldFocusNode2 = FocusNode();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      pointsProvider = Provider.of<PointsProvider>(context, listen: false);
-      pointsProvider.getPrize(context,widget.id, page: 1);
+      pointsController = Provider.of<PointsController>(context, listen: false);
+      pointsController.getPrize(context,widget.id, page: 1);
     });
     _scrollController.addListener(() {
       debugPrint("Current scroll position: ${_scrollController.position.pixels}");
       debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !pointsProvider.isLoading &&
-          pointsProvider.hasMorePrizes) {
+          !pointsController.isLoading &&
+          pointsController.hasMorePrizes) {
         debugPrint("BOTTOM BOTTOM");
-        if(pointsProvider.hasMorePrizes == true){
-          pointsProvider.getPrize(context,widget.id, page: pointsProvider.currentPage);
+        if(pointsController.hasMorePrizes == true){
+          pointsController.getPrize(context,widget.id, page: pointsController.currentPage);
         }else{
           debugPrint("NO PRIZE GET");
         }
@@ -71,7 +71,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
   Widget build(BuildContext context) {
     return Consumer<HomeController>(
       builder: (context, value, child) {
-        return Consumer<PointsProvider>(
+        return Consumer<PointsController>(
           builder: (context, points, child) {
             if(points.isRedeemSuccess == true){
               debugPrint("points.type --> ${points.type}");

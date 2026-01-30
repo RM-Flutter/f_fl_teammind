@@ -9,7 +9,8 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
-import '../../../../../controllers/points_cubit/points_provider.dart';
+
+import '../../../../../controllers/points_controller/points_controller.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;
@@ -18,9 +19,9 @@ class SliverAppBarPoints extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PointsProvider(),
-      child: Consumer<PointsProvider>(
-        builder: (context, pointsProvider, child) {
+      create: (context) => PointsController(),
+      child: Consumer<PointsController>(
+        builder: (context, PointsController, child) {
           return Consumer<HomeController>(
             builder: (context, value, child) {
               final json2String = CacheHelper.getString("US2");
