@@ -12,7 +12,7 @@ import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/general_listener.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/app_info.service.dart';
-import 'package:app_test/core/services/backend_services/get_endpoint.service.dart';
+import 'package:app_test/core/services/backend_services/get_endpoint_service.dart';
 import 'package:app_test/core/services/device_info.service.dart';
 import 'package:app_test/core/services/notification_service/notification.service.dart';
 import 'package:app_test/core/models/endpoint.model.dart';

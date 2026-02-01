@@ -9,7 +9,7 @@ import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/location.service.dart';
-import 'package:app_test/core/services/settings.service.dart';
+import 'package:app_test/core/services/settings_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/features/offline/data/local_data/offline_local_data_source.dart';

@@ -8,10 +8,10 @@ import 'package:app_test/core/models/settings/app_settings_model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
-import 'alert_service/alerts.service.dart';
+import 'alert_service/alerts_service.dart';
 import 'backend_services/api_service/dio_api_service/dio.dart';
 import 'backend_services/api_service/dio_api_service/shared.dart';
-import 'settings.service.dart';
+import 'settings_service.dart';
 
 class AppConfigService extends ChangeNotifier {
   AppConfigService() {

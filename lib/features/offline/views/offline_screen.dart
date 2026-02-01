@@ -10,7 +10,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/internet_check.dart';
 import 'package:app_test/core/services/restart_app.dart';
-import 'package:app_test/core/services/offline_overlay.service.dart';
+import 'package:app_test/core/services/offline_overlay_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/offline/controller/offline_controller.dart';
 

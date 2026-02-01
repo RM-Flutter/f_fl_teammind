@@ -7,7 +7,7 @@ import 'package:app_test/features/more/user_device/data/remote_data/user_device_
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 
 class DeviceControllerProvider extends ChangeNotifier {
   bool isLoading = false;

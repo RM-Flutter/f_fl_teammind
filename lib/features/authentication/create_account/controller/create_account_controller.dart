@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 

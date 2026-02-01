@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/features/points/data/repositories/history_repository/points_repo.dart';
 import 'package:dio/dio.dart';
 

@@ -11,7 +11,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 import 'package:app_test/core/services/layout.service.dart';
 import 'package:app_test/core/services/validation_service.dart';

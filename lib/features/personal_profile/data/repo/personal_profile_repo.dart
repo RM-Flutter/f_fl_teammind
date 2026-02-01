@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart';
-import 'package:app_test/core/services/backend_services/get_endpoint.service.dart';
+import 'package:app_test/core/services/backend_services/get_endpoint_service.dart';
 import 'package:app_test/core/models/endpoint.model.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 

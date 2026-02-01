@@ -19,7 +19,7 @@ import 'package:app_test/core/models/settings/app_settings_model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'app_config.service.dart';
 import 'backend_services/api_service/dio_api_service/dio_api.service.dart';
-import 'backend_services/get_endpoint.service.dart';
+import 'backend_services/get_endpoint_service.dart';
 
 enum SettingsType {
   generalSettings,

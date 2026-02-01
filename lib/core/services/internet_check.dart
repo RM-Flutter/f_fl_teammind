@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'offline_overlay.service.dart';
+import 'offline_overlay_service.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
 class ConnectionService extends ChangeNotifier {

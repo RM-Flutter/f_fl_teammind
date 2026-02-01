@@ -7,7 +7,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'package:app_test/core/services/alert_service/alerts.service.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config.service.dart';
 
 class WebViewStackMainData extends StatefulWidget {
