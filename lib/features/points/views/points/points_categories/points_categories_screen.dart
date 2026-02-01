@@ -9,7 +9,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';

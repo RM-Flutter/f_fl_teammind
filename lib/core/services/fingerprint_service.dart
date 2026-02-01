@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api.service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'package:app_test/core/services/backend_services/get_endpoint_service.dart';
-import 'package:app_test/core/services/connections.service.dart';
-import 'package:app_test/core/services/db_hive.service.dart';
+import 'package:app_test/core/services/connections_service.dart';
+import 'package:app_test/core/services/db_hive_service.dart';
 import 'package:app_test/core/models/endpoint.model.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 

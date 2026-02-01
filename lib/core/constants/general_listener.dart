@@ -9,7 +9,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:url_launcher/url_launcher.dart';
 import 'app_colors.dart';
 import 'app_strings.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import '../routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';

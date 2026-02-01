@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_test/core/constants/app_images.dart';
-import 'timeout_message.service.dart';
+import 'timeout_message_service.dart';
 
 ///  A service to handle push notifications using Firebase Messaging.
 ///  This class manages initialization, token handling, and notification reception.

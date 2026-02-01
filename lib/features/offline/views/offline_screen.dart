@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
-import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.service.dart';
+import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab_service.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/internet_check.dart';

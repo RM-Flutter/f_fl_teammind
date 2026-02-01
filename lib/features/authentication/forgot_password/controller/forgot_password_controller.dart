@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
 import '../data/repo/forgot_password_repo.dart';
 
 class ForgotPasswordController extends ChangeNotifier {

@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 
 abstract class DateService {
   /// Method to convert ISO 8601 date-time string to a specific format

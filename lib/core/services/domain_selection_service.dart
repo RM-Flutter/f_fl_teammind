@@ -7,7 +7,7 @@ import 'package:app_test/core/widgets/main_app_fab_widget/widgets/qrcode_Scanner
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
 

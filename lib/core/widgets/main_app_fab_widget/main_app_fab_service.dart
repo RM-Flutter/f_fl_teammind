@@ -26,7 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 // import 'package:wifi_scan/wifi_scan.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/core/services/image_file_picker.service.dart';
+import 'package:app_test/core/services/image_file_picker_service.dart';
 import 'package:app_test/core/services/settings_service.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/services/fingerprint_service.dart';

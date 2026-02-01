@@ -21,7 +21,7 @@ import 'package:app_test/core/widgets/dynamic_image_widget.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';

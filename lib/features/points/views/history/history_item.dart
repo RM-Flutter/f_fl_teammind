@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/history_controller/history_controller.dart';
 import 'widget/history_drop_down_widget.dart';

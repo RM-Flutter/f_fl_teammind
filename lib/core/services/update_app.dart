@@ -9,7 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 
 class UpdateApp{
   static checkForForceUpdate(BuildContext context) async {

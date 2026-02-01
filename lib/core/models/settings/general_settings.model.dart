@@ -1,4 +1,4 @@
-import 'package:app_test/core/services/model_helpers.service.dart';
+import 'package:app_test/core/services/model_helpers_service.dart';
 import 'app_settings_model.dart';
 
 class GeneralSettingsModel extends AppSettingsModel {

@@ -4,7 +4,7 @@ import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/models/color_palette.model.dart';
 import 'package:app_test/core/models/color_value.model.dart';
-import 'localization.service.dart';
+import 'localization_service.dart';
 
 abstract class AppThemeService {
   static final ColorPalette colorPalette = ColorPalette(

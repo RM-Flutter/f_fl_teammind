@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:app_test/core/models/device_information.model.dart';
 import 'package:app_test/core/platform/platform_is.dart';
-import 'app_config.service.dart';
+import 'app_config_service.dart';
 
 abstract class DeviceInformationService {
   static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();

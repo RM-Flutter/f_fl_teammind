@@ -14,10 +14,10 @@ import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/update_app.dart';
-import 'package:app_test/core/services/device_info.service.dart';
+import 'package:app_test/core/services/device_info_service.dart';
 import 'package:app_test/core/services/internet_check.dart';
-import 'package:app_test/core/services/localization.service.dart';
-import 'package:app_test/core/services/domain_selection.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/services/domain_selection_service.dart';
 import 'package:app_test/features/splash_and_onboarding/controller/splash_onboarding_controller.dart';
 
 import '../../../core/utils/overlay_gradient_widget.dart';

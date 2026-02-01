@@ -12,7 +12,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/check_values.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/features/personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/constants/app_sizes.dart';

@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/services/date.service.dart';
+import 'package:app_test/core/services/date_service.dart';
 
 class FingerprintCardOffiline extends StatelessWidget {
   List? fingerprint = [];

@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/widgets/webview_offers.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';

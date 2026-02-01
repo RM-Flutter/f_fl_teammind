@@ -8,8 +8,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/more/user_device/controllers/user_device_controller.dart';
-import 'package:app_test/core/services/app_config.service.dart';
-import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
+import 'package:app_test/core/services/layout_service.dart';
 
 class UserDeviceScreen extends StatefulWidget {
   const UserDeviceScreen({super.key});

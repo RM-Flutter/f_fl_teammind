@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/notification_service.dart';
-import 'core/services/app_theme.service.dart';
+import 'core/services/app_theme_service.dart';
 import 'core/platform/platform_is.dart';
 import 'core/routing/app_router.dart';
 import 'package:flutter/gestures.dart';

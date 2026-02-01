@@ -12,7 +12,7 @@ import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'app.dart';
 import 'features/more/user_device/controllers/user_device_controller.dart';
-import 'core/services/app_config.service.dart';
+import 'core/services/app_config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';

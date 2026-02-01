@@ -2,7 +2,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/features/points/data/repositories/prize_repository/prize_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

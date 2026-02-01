@@ -14,7 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 
 class AppbarProfileContainer extends StatelessWidget {

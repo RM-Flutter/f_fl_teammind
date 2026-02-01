@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/services/layout.service.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import '../../controllers/personal_profile_controller.dart';
 import 'personal_profile_header.widget.dart';
 

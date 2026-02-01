@@ -14,7 +14,7 @@ import 'package:path/path.dart' as path;
 import 'package:app_test/core/routing/app_router.dart';
 
 import 'package:app_test/core/models/operation_result.model.dart';
-import '../../../app_config.service.dart';
+import '../../../app_config_service.dart';
 import '../../../telegram_error_service.dart';
 import '../../api_service_helpers.dart';
 import '../../backend_services_interface.dart';

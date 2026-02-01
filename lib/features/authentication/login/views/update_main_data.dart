@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
 
 class WebViewStackMainData extends StatefulWidget {
   const WebViewStackMainData({super.key});

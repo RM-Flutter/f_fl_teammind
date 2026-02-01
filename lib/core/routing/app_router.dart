@@ -9,7 +9,7 @@ import 'package:app_test/features/more/notifications/views/notification_screen.d
 import 'package:app_test/features/complaints/views/add_complaints/add_complain_screen.dart';
 import 'package:app_test/features/more/update_profile/views/update_password_screen.dart';
 import 'package:app_test/features/pages/views/default_list_page.dart';
-import 'package:app_test/core/services/app_config.service.dart';
+import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/features/authentication/login/views/login_screen.dart';
 import 'package:app_test/features/authentication/login/views/update_main_data.dart';
 import 'package:app_test/features/home/views/home_screen.dart';

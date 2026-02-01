@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/services/app_theme.service.dart';
-import 'package:app_test/core/services/localization.service.dart';
+import 'package:app_test/core/services/app_theme_service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
 
