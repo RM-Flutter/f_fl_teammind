@@ -1,0 +1,650 @@
+import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:rmemp/common_modules_widgets/custom_elevated_button.widget.dart';
+import 'package:rmemp/constants/app_colors.dart';
+import 'package:rmemp/constants/app_strings.dart';
+import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:rmemp/general_services/localization.service.dart';
+import 'package:rmemp/modules/more/views/contactus/controller/controller.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:rmemp/common_modules_widgets/app_bar_with_bookmark.widget.dart';
+import 'package:rmemp/routing/app_router.dart';
+
+class ContactScreen extends StatefulWidget {
+  @override
+  State<ContactScreen> createState() => _ContactScreenState();
+}
+
+class _ContactScreenState extends State<ContactScreen> {
+  int selectIndex = 0;
+  var gCache;
+  Future<void> openGoogleMaps({double? latitude, double? longitude}) async {
+    final googleMapsUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+
+    if (await canLaunch(googleMapsUrl)) {
+      await launch(googleMapsUrl);
+    } else {
+      throw 'Could not open Google Maps.';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => ContactUsController(),
+      child: Consumer<ContactUsController>(
+        builder: (context, values, child) {
+          final jsonString = CacheHelper.getString("USG");
+          if (jsonString != null) {
+            gCache = json.decode(jsonString)
+                as Map<String, dynamic>; // Convert String back to JSON
+          }
+          print("gCache['company_contacts'] --> ${gCache['company_contacts']}");
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: Image.asset(
+                  kIsWeb?"assets/images/png/about_web.jpg": "assets/images/png/contact_back.png",
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: Scaffold( resizeToAvoidBottomInset: false,
+                  backgroundColor: Colors.transparent,
+                  appBar: AppBarWithBookmark(
+                    backgroundColor: Colors.transparent,
+                    surfaceTintColor: Colors.transparent,
+                    leading: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                    title: AppStrings.contactUs.tr().toUpperCase(),
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                    routeName: AppRoutes.contactUs.name,
+                  ),
+                  body: SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+                    physics: ClampingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: kIsWeb ? 1100 : double.infinity,
+                        ),
+                        child: SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 30),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(height: 50,),
+                                if (gCache != null &&
+                                    gCache['company_contacts'] != null &&
+                                    (gCache['company_contacts']['phone'] != null &&
+                                        (gCache['company_contacts']['phone'].toString().trim().isNotEmpty)) ||
+                                    (gCache['company_contacts']['otherphones'] != null &&
+                                        (gCache['company_contacts']['otherphones'] as List).isNotEmpty))
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/images/svg/contact-phone.svg", height: 20, width: 20,),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: (gCache['company_contacts']['phone'] != null &&
+                                                gCache['company_contacts']['phone'].toString().trim().isNotEmpty) ? 10 : 0,
+                                          ),
+                                          if (gCache['company_contacts']['phone'] != null &&
+                                              gCache['company_contacts']['phone'].toString().trim().isNotEmpty)
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 6.0),
+                                              child: Text(
+                                                AppStrings.hotline.tr().toUpperCase(),
+                                                style: TextStyle(
+                                                    color: Color(AppColors.white),
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 18),
+                                              ),
+                                            ),
+                                          if (gCache['company_contacts']['phone'] != null &&
+                                              gCache['company_contacts']['phone'].toString().trim().isNotEmpty)
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  final String phoneNumber =
+                                                      'tel:${gCache['company_contacts']['phone']}';
+                                                  if (await canLaunch(phoneNumber)) {
+                                                    await launch(phoneNumber);
+                                                  } else {
+                                                    throw 'Could not launch $phoneNumber';
+                                                  }
+                                                },
+                                                child: Text(
+                                                  "${gCache['company_contacts']['phone']}",
+                                                  style: TextStyle(
+                                                      color: Color(AppColors.white),
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 14),
+                                                )),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          if (gCache['company_contacts']['otherphones'] != null &&
+                                              (gCache['company_contacts']['otherphones'] as List).isNotEmpty)
+                                            Padding(
+                                              padding: (gCache['company_contacts']['phone'] != null &&
+                                                  gCache['company_contacts']['phone'].toString().trim().isNotEmpty)
+                                                  ? const EdgeInsets.only(top: 10.0, bottom: 6.0)
+                                                  : const EdgeInsets.only(bottom: 6.0),
+                                              child: Text(
+                                                AppStrings.phone.tr().toUpperCase(),
+                                                style: TextStyle(
+                                                    color: Color(AppColors.white),
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 18),
+                                              ),
+                                            ),
+                                          if (gCache['company_contacts']['otherphones'] != null &&
+                                              (gCache['company_contacts']['otherphones'] as List).isNotEmpty)
+                                            SizedBox(
+                                              width:
+                                              !kIsWeb? MediaQuery.sizeOf(context).width *
+                                                  0.6:MediaQuery.sizeOf(context).width *
+                                                  0.4,
+                                              child: ListView.separated(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                  NeverScrollableScrollPhysics(),
+                                                  reverse: false,
+                                                  scrollDirection: Axis.vertical,
+                                                  itemBuilder: (context, index) =>
+                                                      GestureDetector(
+                                                          onTap: () async {
+                                                            final String phoneNumber =
+                                                                'tel:${gCache['company_contacts']['otherphones'][index]}';
+                                                            if (await canLaunch(
+                                                                phoneNumber)) {
+                                                              await launch(
+                                                                  phoneNumber);
+                                                            } else {
+                                                              throw 'Could not launch $phoneNumber';
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            "${gCache['company_contacts']['otherphones'][index]}",
+                                                            style: TextStyle(
+                                                                color: const Color(
+                                                                    0xffFFFFFF),
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                                fontSize: 14),
+                                                          )),
+                                                  separatorBuilder:
+                                                      (context, index) => SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  itemCount:
+                                                  gCache['company_contacts']
+                                                  ['otherphones']
+                                                      .length),
+                                            )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                if ((gCache != null &&
+                                    gCache['company_contacts'] != null) &&
+                                    ((gCache['company_contacts']['phone'] != null &&
+                                        gCache['company_contacts']['phone'].toString().trim().isNotEmpty) ||
+                                        (gCache['company_contacts']['otherphones'] != null &&
+                                            (gCache['company_contacts']['otherphones'] as List).isNotEmpty)))
+                                  const SizedBox(
+                                  height: 20,
+                                ),
+                                if(gCache['company_contacts']['branches'] != null && gCache['company_contacts']['branches'].isNotEmpty) Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/images/svg/contact-address.svg", height: 20, width: 20,),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    SizedBox(
+                                      width:  !kIsWeb? MediaQuery.sizeOf(context).width *
+                                          0.6:MediaQuery.sizeOf(context).width *
+                                          0.4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            AppStrings.address.tr().toUpperCase(),
+                                            style: TextStyle(
+                                                color: Color(AppColors.white),
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          ListView.separated(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.vertical,
+                                              physics:
+                                              const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) =>
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        LocalizationService
+                                                            .isArabic(
+                                                            context:
+                                                            context)
+                                                            ? gCache['company_contacts']['branches']
+                                                        [index]
+                                                        ['title']['ar']
+                                                            : gCache['company_contacts']['branches'][index]['title']['en'],
+                                                        style: TextStyle(
+                                                            color:
+                                                            Color(AppColors.white),
+                                                            fontWeight:
+                                                            FontWeight.w700,
+                                                            fontSize: 14),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      SizedBox(
+                                                          width:  !kIsWeb? MediaQuery.sizeOf(context).width *
+                                                              0.6:MediaQuery.sizeOf(context).width *
+                                                              0.4,
+                                                          child: Text(
+                                                            LocalizationService.isArabic(context: context)
+                                                                ? "${gCache['company_contacts']['branches'][index]['co_info_address']['ar']}"
+                                                                : "${gCache['company_contacts']['branches'][index]['co_info_address']['en']}",
+                                                            style: const TextStyle(
+                                                                color: Color(
+                                                                    0xffFFFFFF),
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w400,
+                                                                fontSize: 14),
+                                                          )),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          await openGoogleMaps(
+                                                            latitude: double.parse(
+                                                                gCache['company_contacts']['branches'][index]['lat']),
+                                                            longitude: double.parse(
+                                                                gCache['company_contacts']['branches'][index]['lng']),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          height: 17,
+                                                          width: 78,
+                                                          alignment:
+                                                          Alignment.center,
+                                                          decoration: BoxDecoration(
+                                                              color: const Color(
+                                                                  0xffFFFFFF)
+                                                                  .withOpacity(
+                                                                  0.2),
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  50)),
+                                                          child: Text(
+                                                            AppStrings.showMap
+                                                                .tr(),
+                                                            style: TextStyle(
+                                                                color: const Color(
+                                                                    0xffFFFFFF),
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                              separatorBuilder:
+                                                  (context, index) => SizedBox(
+                                                height: 10,
+                                              ),
+                                              itemCount:
+                                              gCache['company_contacts']
+                                              ['branches']
+                                                  .length),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                if(gCache['company_contacts']['branches'] != null && gCache['company_contacts']['branches'].isNotEmpty) const SizedBox(
+                                  height: 20,
+                                ),
+                                if(gCache['company_contacts']['otheremails'] != null && gCache['company_contacts']['otheremails'].isNotEmpty) Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/images/svg/contact-email.svg", height: 20, width: 20,),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    SizedBox(
+                                      width:   !kIsWeb? MediaQuery.sizeOf(context).width *
+                                          0.6:MediaQuery.sizeOf(context).width *
+                                          0.4,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            AppStrings.email.tr().toUpperCase(),
+                                            style: TextStyle(
+                                                color: Color(AppColors.white),
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          //whatsAppConversationStarterMessage en/ar
+                                          ListView.separated(
+                                              padding: EdgeInsets.zero,
+                                              physics: NeverScrollableScrollPhysics(),
+                                              reverse: false,
+                                              shrinkWrap: true,
+                                              itemBuilder: (context, index) => GestureDetector(
+                                                onTap: () async {
+                                                  values.sendMailToCompany(
+                                                      context: context,
+                                                      email: gCache['company_contacts']['otheremails'][index],
+                                                      subject: null,
+                                                      body: null);
+                                                },
+                                                child: SizedBox(
+                                                    width:  !kIsWeb? MediaQuery.sizeOf(context).width *
+                                                        0.6:MediaQuery.sizeOf(context).width *
+                                                        0.4,
+                                                    child: Text(
+                                                      gCache['company_contacts']['otheremails'][index]??"",
+                                                      style: TextStyle(
+                                                          color: Color(AppColors.white),
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 14),
+                                                    )),
+                                              ),
+                                              separatorBuilder: (context, index) => SizedBox(height: 5,),
+                                              itemCount: gCache['company_contacts']['otheremails'].length)
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                if(gCache['company_contacts']['otheremails'] != null && gCache['company_contacts']['otheremails'].isNotEmpty)const SizedBox(
+                                  height: 50,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppStrings.followUs.tr().toUpperCase(),
+                                        style: TextStyle(
+                                            color: Color(AppColors.white),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        height: 60,
+                                        child: Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          children: [
+                                            if (gCache['company_contacts']['whatsapp'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['whatsapp'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/whatsapp.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['whatsapp']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']['linkedin'] != null && gCache['company_contacts']['linkedin'] != "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/linkedin.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['linkedin']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']
+                                            ['youtube'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['youtube'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/youtube.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['youtube']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']
+                                            ['instagram'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['instagram'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/instagram.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['instagram']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']
+                                            ['facebook'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['facebook'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/facebook.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['facebook']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']
+                                            ['tiktok'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['tiktok'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/tiktok.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['tiktok']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']
+                                            ['twitter'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['twitter'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/twitter.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['twitter']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                            if (gCache['company_contacts']
+                                            ['messenger'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['messenger'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/messenger.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['messenger']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),if (gCache['company_contacts']
+                                            ['snapchat'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['snapchat'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/snapchat.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['snapchat']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),if (gCache['company_contacts']
+                                            ['telegram'] !=
+                                                null &&
+                                                gCache['company_contacts']
+                                                ['telegram'] !=
+                                                    "")
+                                              defaultCircularSocial(
+                                                  src:
+                                                  "assets/images/svg/telegram.svg",
+                                                  onTap: () async {
+                                                    await launchUrl(
+                                                        Uri.parse(gCache[
+                                                        'company_contacts']
+                                                        ['telegram']),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  }),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      if (gCache['company_contacts']['email'] != null)
+                                        CustomElevatedButton(
+                                          title: AppStrings.sendEmail.tr(),
+                                          onPressed: () async {
+                                            values.sendMailToCompany(
+                                                context: context,
+                                                email: gCache['company_contacts']['email'],
+                                                subject: null,
+                                                body: null);
+                                          },
+                                          isPrimaryBackground: false,
+                                        ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget defaultCircularSocial({onTap, src}) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.all(5),
+      height: 30,
+      width: 30,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle, color: Color(AppColors.primary)),
+      child: SvgPicture.asset(src, color: Colors.white),
+    ),
+  );
+}

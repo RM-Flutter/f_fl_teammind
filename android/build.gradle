@@ -1,0 +1,39 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:-options'
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("com.android.application") ||
+            project.plugins.hasPlugin("com.android.library")) {
+            project.android {
+                // Ensure all subprojects use compileSdk 35 to match app and satisfy dependencies
+                // This works for both old (compileSdkVersion) and new (compileSdk) syntax
+                compileSdkVersion 35
+            }
+            // Add Material Components to all Android projects
+            project.dependencies {
+                implementation 'com.google.android.material:material:1.11.0'
+            }
+        }
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

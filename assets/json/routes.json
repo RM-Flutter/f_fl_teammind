@@ -1,0 +1,310 @@
+[
+    {
+        "frontendRoute": "/",
+        "backendRoute": "home"
+    },
+    {
+        "frontendRoute": "personal-profile",
+        "backendRoute": "update-profile"
+    },
+    {
+        "frontendRoute": "userDevices-screen",
+        "backendRoute": "my-devices"
+    },
+    {
+        "frontendRoute": "more/update-password",
+        "backendRoute": "update-password"
+    },
+    {
+        "frontendRoute": "more/contact-us",
+        "backendRoute": "contact-us"
+    },
+    {
+        "frontendRoute": "more/about-us-screen",
+        "backendRoute": "about"
+    },
+    {
+        "frontendRoute": "points",
+        "backendRoute": "points"
+    },
+    {
+        "frontendRoute": "notification-screen",
+        "backendRoute": "notifications"
+    },
+    {
+        "frontendRoute": "notification-details-screen/{id}",
+        "backendRoute": "notifications/{id}"
+    },
+    {
+        "frontendRoute": "default-page/blogs",
+        "backendRoute": "blogs"
+    },
+    {
+        "frontendRoute": "default-single-page/blogs/{id}",
+        "backendRoute": "blogs/{id}"
+    },
+    {
+        "frontendRoute": "default-page/news",
+        "backendRoute": "news"
+    },
+    {
+        "frontendRoute": "default-single-page/news/{id}",
+        "backendRoute": "news/{id}"
+    },
+    {
+        "frontendRoute": "more/complainScreen",
+        "backendRoute": "csrequests"
+    },
+    {
+        "frontendRoute": "more/complainScreen/complainDetailsScreen/{id}/mine",
+        "backendRoute": "csrequests/{id}"
+    },
+    {
+        "frontendRoute": "default-single-page/{entity}/{id}",
+        "backendRoute": "page-1-title-content/{entity}/{id}"
+    },
+    {
+        "frontendRoute": "default-list-page/{entity}",
+        "backendRoute": "page-2-list/{entity}"
+    },
+    {
+        "frontendRoute": "default-single-page/{entity}/{id}",
+        "backendRoute": "page-2-single/{entity}/{id}"
+    },
+    {
+        "frontendRoute": "default-page/{entity}",
+        "backendRoute": "page-1/{entity}/{id}"
+    },
+    {
+        "frontendRoute": "more/faq-screen",
+        "backendRoute": "faqs"
+    },
+    {
+        "frontendRoute": "cart",
+        "backendRoute": "cart"
+    },
+    {
+        "frontendRoute": "orders",
+        "backendRoute": "orders"
+    },
+    {
+        "frontendRoute": "ec-products",
+        "backendRoute": "ec-products"
+    },
+    {
+        "frontendRoute": "ec-products/{id}",
+        "backendRoute": "ec-products/{id}"
+    },
+    {
+        "frontendRoute": "my-stores",
+        "backendRoute": "my-stores"
+    },
+    {
+        "frontendRoute": "my-stores/{id}",
+        "backendRoute": "my-stores/{id}"
+    },
+    {
+        "frontendRoute": "groups",
+        "backendRoute": "groups"
+    },
+    {
+        "frontendRoute": "groups/{id}",
+        "backendRoute": "groups/{id}"
+    },
+    {
+        "frontendRoute": "teams",
+        "backendRoute": "teams"
+    },
+    {
+        "frontendRoute": "teams/{id}",
+        "backendRoute": "teams/{id}"
+    },
+    {
+        "frontendRoute": "prizes",
+        "backendRoute": "prizes"
+    },
+    {
+        "frontendRoute": "prizes/{category_id}",
+        "backendRoute": "prizes?{category_id}"
+    },
+    {
+        "frontendRoute": "offers",
+        "backendRoute": "offers"
+    },
+    {
+        "frontendRoute": "offers/{id}",
+        "backendRoute": "offers/{id}"
+    },
+    {
+        "frontendRoute": "posts-screen",
+        "backendRoute": "req-job-posts"
+    },
+    {
+        "frontendRoute": "posts-screen/{id}",
+        "backendRoute": "req-job-posts/{id}"
+    },
+    {
+        "frontendRoute": "offer-screen",
+        "backendRoute": "job-offer"
+    },
+    {
+        "frontendRoute": "offer-screen/{id}",
+        "backendRoute": "job-offer/{id}"
+    },
+    {
+        "frontendRoute": "responded-screen",
+        "backendRoute": "dirpersons"
+    },
+    {
+        "frontendRoute": "responded-screen/{id}",
+        "backendRoute": "dirpersons/{id}"
+    },
+    {
+        "frontendRoute": "meetings",
+        "backendRoute": "meetings"
+    },
+    {
+        "frontendRoute": "meetings/{id}/{type}",
+        "backendRoute": "meetings/{id}"
+    },
+    {
+        "frontendRoute": "projects",
+        "backendRoute": "projects"
+    },
+    {
+        "frontendRoute": "projects/{id}",
+        "backendRoute": "projects/{id}"
+    },
+    {
+        "frontendRoute": "perv-project",
+        "backendRoute": "perv-project"
+    },
+    {
+        "frontendRoute": "perv-project/{id}",
+        "backendRoute": "perv-project/{id}"
+    },
+    {
+        "frontendRoute": "myUnits/{id}",
+        "backendRoute": "myUnits/{id}"
+    },
+    {
+        "frontendRoute": "installments/{unit_id}",
+        "backendRoute": "installments/{unit_id}"
+    },
+    {
+        "frontendRoute": "aqar-create-meeting",
+        "backendRoute": "aqar-create-meeting"
+    },
+    {
+        "frontendRoute": "aqar-meetings",
+        "backendRoute": "aqar-meetings"
+    },
+    {
+        "frontendRoute": "aqar-meetings/{id}",
+        "backendRoute": "aqar-meetings/{id}"
+    },
+    {
+        "frontendRoute": "mediacenter",
+        "backendRoute": "mediacenter"
+    },
+    {
+        "frontendRoute": "employees-list/employee-details/{id}",
+        "backendRoute": "my-emp-profile"
+    },
+    {
+        "frontendRoute": "employees-list",
+        "backendRoute": "emp-profiles"
+    },
+    {
+        "frontendRoute": "employees-list/employee-details/",
+        "backendRoute": "emp-profile/{id}"
+    },
+    {
+        "frontendRoute": "requests/mine",
+        "backendRoute": "emp-requests"
+    },
+    {
+        "frontendRoute": "requests/{type}/request-details/{id}",
+        "backendRoute": "emp-requests/{id}"
+    },
+    {
+        "frontendRoute": "fingerprint",
+        "backendRoute": "emp-fingerprints"
+    },
+    {
+        "frontendRoute": "employee-fingerprint/{id}",
+        "backendRoute": "emp-fingerprints/{id}"
+    },
+    {
+        "frontendRoute": "payrolls-screen",
+        "backendRoute": "emp-payroll"
+    },
+    {
+        "frontendRoute": "employees-list/employee-details/{id}",
+        "backendRoute": "emp-payroll/{id}"
+    },
+    {
+        "frontendRoute": "more/task-screen",
+        "backendRoute": "tasks"
+    },
+    {
+        "frontendRoute": "more/task-screen/task-details/{id}",
+        "backendRoute": "tasks/{id}"
+    },
+    {
+        "frontendRoute": "more/evaluation-screen",
+        "backendRoute": "evaluations"
+    },
+    {
+        "frontendRoute": "more/evaluations-screen/{id}",
+        "backendRoute": "evaluations/{id}"
+    },
+    {
+        "frontendRoute": "more/rewards-and-penalties-screen",
+        "backendRoute": "rewards-and-penlites"
+    },
+    {
+        "frontendRoute": "more/rewards-and-penalties-screen",
+        "backendRoute": "rewards-and-penlites/{id}"
+    },
+    {
+        "frontendRoute": "choose-domain-screen",
+        "backendRoute": "cp-domain"
+    },
+    {
+        "frontendRoute": "choose-domain-screen/{id}",
+        "backendRoute": "cp-domain/{domain_id}"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/emails",
+        "backendRoute": "cp-domain/{domain_id}/emails"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/email_forwards",
+        "backendRoute": "cp-domain/{domain_id}/email_forwards"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/email_auto_responder",
+        "backendRoute": "cp-domain/{domain_id}/email_auto_responder"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/email_filters",
+        "backendRoute": "cp-domain/{domain_id}/email_filters"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/ftp",
+        "backendRoute": "cp-domain/{domain_id}/ftp"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id/{domin_name}/database",
+        "backendRoute": "cp-domain/{domain_id}/database"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/dns",
+        "backendRoute": "cp-domain/{domain_id}/dns"
+    },
+    {
+        "frontendRoute": "cp-domain/{domain_id}/{domin_name}/ssl",
+        "backendRoute": "cp-domain/{domain_id}/ssl"
+    }
+]

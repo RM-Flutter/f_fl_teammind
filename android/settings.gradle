@@ -1,0 +1,46 @@
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }
+    settings.ext.flutterSdkPath = flutterSdkPath()
+
+    includeBuild("${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "com.android.application" version "8.6.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.9.23" apply false
+    id "com.google.gms.google-services" version "4.4.1" apply false
+}
+
+include ":app"
+
+// Fix namespace for old plugins that don't have it defined
+gradle.beforeProject { project ->
+    project.afterEvaluate {
+        if (project.plugins.hasPlugin('com.android.library')) {
+            def android = project.extensions.findByName('android')
+            if (android != null && (android.namespace == null || android.namespace.isEmpty())) {
+                def manifest = new File(project.projectDir, 'src/main/AndroidManifest.xml')
+                if (manifest.exists()) {
+                    def content = manifest.text
+                    def matcher = content =~ /package="([^"]+)"/
+                    if (matcher.find()) {
+                        android.namespace = matcher.group(1)
+                    }
+                }
+            }
+        }
+    }
+}
