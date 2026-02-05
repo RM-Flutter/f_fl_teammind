@@ -1,29 +1,29 @@
+import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
 
-class AddNewTaskListWidget extends StatefulWidget {
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_strings.dart';
+
+class EditNewTaskListWidget extends StatefulWidget {
   var subTasks;
-  AddNewTaskListWidget({this.subTasks});
+  EditNewTaskListWidget({super.key, this.subTasks});
   @override
-  _AddNewTaskListWidgetState createState() => _AddNewTaskListWidgetState();
+  _EditNewTaskListWidgetState createState() => _EditNewTaskListWidgetState();
 }
 
-class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
+class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
   List<TextEditingController> _controllers = [];
-  late TaskViewModel values;
+
   @override
   void initState() {
     super.initState();
 
-    // This will be called after the first frame.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final tasks = Provider.of<TaskViewModel>(context, listen: false).tasksList;
+      final tasksController = Provider.of<TasksController>(context, listen: false);
+      final tasks = tasksController.tasksList;
 
-      // Only initialize _controllers if tasksList isn't empty
       if (tasks.isNotEmpty && _controllers.isEmpty) {
         _controllers = List.generate(
           tasks.length,
@@ -31,60 +31,47 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
         );
       }
 
-      // Initialize TaskViewModel only once
-      values = TaskViewModel();
-
-      // Ensure that tasksList is updated only once, and data isn't overwritten
       if (widget.subTasks != null && widget.subTasks!.isNotEmpty) {
-        // Add new subtasks to tasksList2 without overwriting it
-        values.tasksList2.addAll(widget.subTasks!);
+        tasksController.tasksList2.addAll(widget.subTasks!);
 
-        // Only update tasksList if it's empty
-        if (values.tasksList.isEmpty) {
-          values.tasksList = widget.subTasks!
-              .map((e) => e.name ?? '') // Mapping SubTasks to String
+        if (tasksController.tasksList.isEmpty) {
+          tasksController.tasksList = widget.subTasks!
+              .map((e) => e['name'] ?? '')
               .toList()
               .cast<String>();
         } else {
-          // Ensure we preserve existing tasks and don't overwrite them
-          values.tasksList.addAll(widget.subTasks!
-              .map((e) => e.name ?? '') // Mapping SubTasks to String
+          tasksController.tasksList.addAll(widget.subTasks!
+              .map((e) => e['name'] ?? '')
               .toList());
         }
 
-        // Log the valuess for debugging
-        debugPrint("widget.subTasks is --> ${widget.subTasks}");
-        debugPrint("value.tasksList2 is --> ${values.tasksList2}");
-        debugPrint("values.tasksList is --> ${values.tasksList}");
-
-        // Trigger a rebuild after the state change
         setState(() {});
       }
     });
   }
 
-  void _syncControllersWithTasks(List<String> tasks) {
+  void _syncControllersWithTasks(List? tasks) {
     // Sync controllers only if the length of tasks is different from _controllers
-    if (_controllers.length != tasks.length) {
+    if (_controllers.length != tasks!.length) {
       _controllers = List.generate(
         tasks.length,
-            (index) => TextEditingController(text: tasks[index]),
+            (index) => TextEditingController(text: tasks![index]['name']),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskViewModel>(
-      builder: (context, value, child) {
+    return Consumer<TasksController>(
+      builder: (context, tasksController, child) {
         // Only sync controllers if tasksList is not empty
-        if (value.tasksList.isNotEmpty) {
-          debugPrint("value.tasksList is --> ${value.tasksList}");
-          _syncControllersWithTasks(value.tasksList);
+        if (tasksController.tasksList2.isNotEmpty) {
+          debugPrint("tasksController.tasksList is --> ${tasksController.tasksList}");
+          _syncControllersWithTasks(tasksController.tasksList2);
         }
 
-        // Log the updated value.tasksList
-        debugPrint("Updated value.tasksList is --> ${value.tasksList}");
+        // Log the updated tasksController.tasksList
+        debugPrint("Updated tasksController.tasksList is --> ${tasksController.tasksList2}");
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -98,7 +85,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
             ),
             const SizedBox(height: 16),
 
-            ...value.tasksList2.asMap().entries.map((entry) {
+            ...tasksController.tasksList2.asMap().entries.map((entry) {
               final index = entry.key;
               final task = entry.value['name'];
 
@@ -114,8 +101,8 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                     title: TextField(
                       controller: _controllers[index],
                       onChanged: (text) {
-                        value.tasksList2[index]['name'] = text;
-                        debugPrint("Updated index $index: ${value.tasksList2[index]}");
+                        tasksController.tasksList2[index]['name'] = text;
+                        debugPrint("Updated index $index: ${tasksController.tasksList2[index]}");
                         setState(() {}); // if you want to reflect changes immediately
                       },
                       onTap: (){
@@ -136,17 +123,37 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                         focusedErrorBorder: InputBorder.none,
                       ),
                     ),
-                    trailing: GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                        value.tasksList2.removeAt(index);
-                        _controllers.removeAt(index);
-                        setState(() {});
-                      },
-                      child: const Icon(
-                        Icons.delete,
-                        color: Color(AppColors.red),
-                      ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            tasksController.tasksList2.removeAt(index);
+                            _controllers.removeAt(index);
+                            setState(() {});
+                          },
+                          child: const Icon(
+                            Icons.delete,
+                            color: Color(AppColors.red),
+                          ),
+                        ),
+                        SizedBox(width: 15,),
+                        GestureDetector(
+                          onTap: () {
+                            tasksController.tasksList2[index]['status'] = !tasksController.tasksList2[index]['status'];
+                            debugPrint("TASK LIST ONE --> ${tasksController.tasksList}");
+                            debugPrint("TASK LIST TWO --> ${tasksController.tasksList2}");
+                            setState(() {});
+                          },
+                          child: Icon(
+                            tasksController.tasksList2[index]["status"] == true
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_unchecked,
+                            color: Color(AppColors.primary),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -165,8 +172,8 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
               ),
               onPressed: () {
                 setState(() {
-                  int nextIndex = value.tasksList.length + 1;
-                  value.tasksList2.add({
+                  int nextIndex = tasksController.tasksList.length + 1;
+                  tasksController.tasksList2.add({
                     "name" : AppStrings.taskName.tr(),
                     "status" : false
                   });

@@ -1,11 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
 import 'package:provider/provider.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
+import '../../../controllers/tasks_controller.dart';
 
 class HorizontalCalendar extends StatefulWidget {
   @override
@@ -29,7 +28,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskViewModel>(
+    return Consumer<TasksController>(
       builder: (context, viewModel, child){
         return Row(
           children: [

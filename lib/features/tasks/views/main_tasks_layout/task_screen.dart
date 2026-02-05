@@ -1,26 +1,27 @@
 import 'dart:convert';
-import 'package:easy_localization/easy_localization.dart';
+
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/app_theme_service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/loading_page.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
+import 'package:app_test/features/tasks/views/main_tasks_layout/widgets/task_calender_widget.dart';
+import 'package:app_test/features/tasks/views/main_tasks_layout/widgets/task_list_tile_widget.dart';
+import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
-import 'package:rmemp/general_services/app_theme.service.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
-import 'package:rmemp/modules/tasks/widget/task_calender_widget.dart';
-import 'package:rmemp/modules/tasks/widget/task_list_tile_widget.dart';
-import '../../../common_modules_widgets/loading_page.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../general_services/layout.service.dart';
-import '../../../routing/app_router.dart';
-import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../../constants/user_consts.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -30,13 +31,13 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  late final TaskViewModel viewModel;
+  late final TasksController viewModel;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    viewModel = TaskViewModel();
+    viewModel = TasksController();
     viewModel.getTask(context, date: null);
 
     _scrollController.addListener(() {
@@ -64,7 +65,7 @@ class _TaskScreenState extends State<TaskScreen> {
           as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    return ChangeNotifierProvider<TaskViewModel>(
+    return ChangeNotifierProvider<TasksController>(
       create: (_) => viewModel,
       child: TemplatePage(
           backgroundColor: Colors.white,
@@ -136,7 +137,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                    child: Consumer<TaskViewModel>(
+                    child: Consumer<TasksController>(
                         builder: (context, viewModel, child) => viewModel.isLoading
                             ? const LoadingPageWidget(
                                 reverse: true,
@@ -149,14 +150,12 @@ class _TaskScreenState extends State<TaskScreen> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    if (viewModel.tasks == null ||
-                                        viewModel.tasks?.isEmpty == true)
+                                    if (viewModel.tasks.isEmpty == true)
                                       NoExistingPlaceholderScreen(
                                           height: LayoutService.getHeight(context) *
                                               0.6,
                                           title: AppStrings.thereIsNoTasks.tr()),
-                                    if (viewModel.tasks != null &&
-                                        viewModel.tasks?.isEmpty == false)
+                                    if (viewModel.tasks.isEmpty == false)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 15),

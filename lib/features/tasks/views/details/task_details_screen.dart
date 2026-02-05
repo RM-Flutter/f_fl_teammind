@@ -1,30 +1,29 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/app_theme_service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/widgets/comments/comments_widget.dart';
+import 'package:app_test/core/widgets/comments/logic/controller.dart';
+import 'package:app_test/features/profiles/views/widgets/employee_details_loading.widget.dart';
+import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
+import 'package:app_test/features/tasks/views/details/widgets/task_details_header_widget.dart';
+import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/common_modules_widgets/comments/logic/view_model.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_sizes.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
-import 'package:rmemp/general_services/app_theme.service.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
-import 'package:rmemp/modules/profiles/views/widgets/employee_details_loading.widget.dart';
-import 'package:rmemp/modules/tasks/widget/task_details_header_widget.dart';
-import 'package:rmemp/routing/app_router.dart';
-import '../../common_modules_widgets/comments/comments_widget.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   var id;
-  TaskDetailsScreen({this.id,});
+  TaskDetailsScreen({super.key, this.id,});
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -43,10 +42,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => TaskViewModel()..getOneTask(context, widget.id),),
+        ChangeNotifierProvider(create: (context) => TasksController()..getOneTask(context, widget.id),),
         ChangeNotifierProvider(create: (context) => CommentProvider()..getComment(context, "tasks",widget.id),)
       ],
-      child: Consumer<TaskViewModel>(
+      child: Consumer<TasksController>(
         builder: (context, value, child) {
           if(value.getOneTaskModel != null){
             if(value.getOneTaskModel!.task != null){

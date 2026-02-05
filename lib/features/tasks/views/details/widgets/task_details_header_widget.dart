@@ -2,18 +2,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rmemp/constants/app_sizes.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/layout.service.dart';
-import '../../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
-import '../../../../routing/app_router.dart';
+
+import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/routing/app_router.dart';
+import '../../../../../core/services/layout_service.dart';
+import '../../../../../core/widgets/app_bar_with_bookmark.widget.dart';
+
 
 class TaskDetailsHeaderWidget extends StatelessWidget {
   var taskName;
   var taskDate;
   var assets;
   var taskCreatedAt;
-  TaskDetailsHeaderWidget({this.taskDate, this.taskName, this.assets, this.taskCreatedAt});
+  TaskDetailsHeaderWidget({super.key, this.taskDate, this.taskName, this.assets, this.taskCreatedAt});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
           AppBarWithBookmark(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: AppStrings.tasksInfo.tr() ?? '',
+            title: AppStrings.tasksInfo.tr(),
             titleStyle: Theme.of(context)
                 .textTheme
                 .displayLarge

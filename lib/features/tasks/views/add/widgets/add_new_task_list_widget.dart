@@ -1,28 +1,30 @@
+import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
 
-class EditNewTaskListWidget extends StatefulWidget {
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_strings.dart';
+
+class AddNewTaskListWidget extends StatefulWidget {
   var subTasks;
-  EditNewTaskListWidget({this.subTasks});
+  AddNewTaskListWidget({super.key, this.subTasks});
   @override
-  _EditNewTaskListWidgetState createState() => _EditNewTaskListWidgetState();
+  _AddNewTaskListWidgetState createState() => _AddNewTaskListWidgetState();
 }
 
-class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
+class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
   List<TextEditingController> _controllers = [];
-
+  late TasksController values;
   @override
   void initState() {
     super.initState();
 
+    // This will be called after the first frame.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final taskViewModel = Provider.of<TaskViewModel>(context, listen: false);
-      final tasks = taskViewModel.tasksList;
+      final tasks = Provider.of<TasksController>(context, listen: false).tasksList;
 
+      // Only initialize _controllers if tasksList isn't empty
       if (tasks.isNotEmpty && _controllers.isEmpty) {
         _controllers = List.generate(
           tasks.length,
@@ -30,47 +32,60 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
         );
       }
 
-      if (widget.subTasks != null && widget.subTasks!.isNotEmpty) {
-        taskViewModel.tasksList2.addAll(widget.subTasks!);
+      // Initialize TasksController only once
+      values = TasksController();
 
-        if (taskViewModel.tasksList.isEmpty) {
-          taskViewModel.tasksList = widget.subTasks!
-              .map((e) => e['name'] ?? '')
+      // Ensure that tasksList is updated only once, and data isn't overwritten
+      if (widget.subTasks != null && widget.subTasks!.isNotEmpty) {
+        // Add new subtasks to tasksList2 without overwriting it
+        values.tasksList2.addAll(widget.subTasks!);
+
+        // Only update tasksList if it's empty
+        if (values.tasksList.isEmpty) {
+          values.tasksList = widget.subTasks!
+              .map((e) => e.name ?? '') // Mapping SubTasks to String
               .toList()
               .cast<String>();
         } else {
-          taskViewModel.tasksList.addAll(widget.subTasks!
-              .map((e) => e['name'] ?? '')
+          // Ensure we preserve existing tasks and don't overwrite them
+          values.tasksList.addAll(widget.subTasks!
+              .map((e) => e.name ?? '') // Mapping SubTasks to String
               .toList());
         }
 
+        // Log the valuess for debugging
+        debugPrint("widget.subTasks is --> ${widget.subTasks}");
+        debugPrint("value.tasksList2 is --> ${values.tasksList2}");
+        debugPrint("values.tasksList is --> ${values.tasksList}");
+
+        // Trigger a rebuild after the state change
         setState(() {});
       }
     });
   }
 
-  void _syncControllersWithTasks(List? tasks) {
+  void _syncControllersWithTasks(List<String> tasks) {
     // Sync controllers only if the length of tasks is different from _controllers
-    if (_controllers.length != tasks!.length) {
+    if (_controllers.length != tasks.length) {
       _controllers = List.generate(
         tasks.length,
-            (index) => TextEditingController(text: tasks![index]['name']),
+            (index) => TextEditingController(text: tasks[index]),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskViewModel>(
-      builder: (context, taskViewModel, child) {
+    return Consumer<TasksController>(
+      builder: (context, value, child) {
         // Only sync controllers if tasksList is not empty
-        if (taskViewModel.tasksList2.isNotEmpty) {
-          debugPrint("taskViewModel.tasksList is --> ${taskViewModel.tasksList}");
-          _syncControllersWithTasks(taskViewModel.tasksList2);
+        if (value.tasksList.isNotEmpty) {
+          debugPrint("value.tasksList is --> ${value.tasksList}");
+          _syncControllersWithTasks(value.tasksList);
         }
 
-        // Log the updated taskViewModel.tasksList
-        debugPrint("Updated taskViewModel.tasksList is --> ${taskViewModel.tasksList2}");
+        // Log the updated value.tasksList
+        debugPrint("Updated value.tasksList is --> ${value.tasksList}");
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,7 +99,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
             ),
             const SizedBox(height: 16),
 
-            ...taskViewModel.tasksList2.asMap().entries.map((entry) {
+            ...value.tasksList2.asMap().entries.map((entry) {
               final index = entry.key;
               final task = entry.value['name'];
 
@@ -100,8 +115,8 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                     title: TextField(
                       controller: _controllers[index],
                       onChanged: (text) {
-                        taskViewModel.tasksList2[index]['name'] = text;
-                        debugPrint("Updated index $index: ${taskViewModel.tasksList2[index]}");
+                        value.tasksList2[index]['name'] = text;
+                        debugPrint("Updated index $index: ${value.tasksList2[index]}");
                         setState(() {}); // if you want to reflect changes immediately
                       },
                       onTap: (){
@@ -122,37 +137,17 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                         focusedErrorBorder: InputBorder.none,
                       ),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            taskViewModel.tasksList2.removeAt(index);
-                            _controllers.removeAt(index);
-                            setState(() {});
-                          },
-                          child: const Icon(
-                            Icons.delete,
-                            color: Color(AppColors.red),
-                          ),
-                        ),
-                        SizedBox(width: 15,),
-                        GestureDetector(
-                          onTap: () {
-                            taskViewModel.tasksList2[index]['status'] = !taskViewModel.tasksList2[index]['status'];
-                            debugPrint("TASK LIST ONE --> ${taskViewModel.tasksList}");
-                            debugPrint("TASK LIST TWO --> ${taskViewModel.tasksList2}");
-                            setState(() {});
-                          },
-                          child: Icon(
-                            taskViewModel.tasksList2[index]["status"] == true
-                                ? Icons.radio_button_checked
-                                : Icons.radio_button_unchecked,
-                            color: Color(AppColors.primary),
-                          ),
-                        ),
-                      ],
+                    trailing: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        value.tasksList2.removeAt(index);
+                        _controllers.removeAt(index);
+                        setState(() {});
+                      },
+                      child: const Icon(
+                        Icons.delete,
+                        color: Color(AppColors.red),
+                      ),
                     ),
                   ),
                 ),
@@ -171,8 +166,8 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
               ),
               onPressed: () {
                 setState(() {
-                  int nextIndex = taskViewModel.tasksList.length + 1;
-                  taskViewModel.tasksList2.add({
+                  int nextIndex = value.tasksList.length + 1;
+                  value.tasksList2.add({
                     "name" : AppStrings.taskName.tr(),
                     "status" : false
                   });

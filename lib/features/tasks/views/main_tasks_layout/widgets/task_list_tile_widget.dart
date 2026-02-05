@@ -2,13 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/routing/app_router.dart';
-
-import '../../../constants/app_sizes.dart';
-import '../../../general_services/localization.service.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/services/localization_service.dart';
 
 class TaskListTileWidget extends StatelessWidget {
   final String title;

@@ -54,10 +54,10 @@ import '../../features/rewards_and_penalties/views/add_rewards_and_penalties_scr
 import '../../features/rewards_and_penalties/views/rewards_and_penalties_screen.dart';
 import '../../features/splash_and_onboarding/views/onboarding_screen.dart';
 import '../../features/splash_and_onboarding/views/splash_screen.dart';
-import '../../features/tasks/add_task_screen.dart';
-import '../../features/tasks/edit_task_screen.dart';
-import '../../features/tasks/task_details_screen.dart';
-import '../../features/tasks/task_screen.dart';
+import '../../features/tasks/views/add/add_task_screen.dart';
+import '../../features/tasks/views/edit/edit_task_screen.dart';
+import '../../features/tasks/views/details/task_details_screen.dart';
+import '../../features/tasks/views/main_tasks_layout/task_screen.dart';
 import '../models/settings/user_settings.model.dart';
 import '../platform/platform_is.dart';
 import '../routing/app_router_transitions.dart';

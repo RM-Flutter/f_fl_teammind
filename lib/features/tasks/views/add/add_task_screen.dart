@@ -1,18 +1,17 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
+import 'package:app_test/features/tasks/views/add/widgets/add_new_task_list_widget.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
-import 'package:rmemp/modules/tasks/widget/add_new_task_list_widget.dart';
-import 'package:rmemp/utils/widgets/text_form_widget.dart';
-import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
-import '../../../general_services/localization.service.dart';
-import '../../../utils/animated_custom_dropdown/custom_dropdown.dart';
+
+import '../../../../core/widgets/text_form_widget.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -23,18 +22,18 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  late final TaskViewModel viewModel;
+  late final TasksController viewModel;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    viewModel = TaskViewModel();
+    viewModel = TasksController();
     viewModel.initializeAddTaskScreen(context: context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TaskViewModel>(
+    return ChangeNotifierProvider<TasksController>(
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
@@ -43,13 +42,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             body: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     maxWidth: kIsWeb ? 1100 : double.infinity,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: AppSizes.s16, horizontal: AppSizes.s12),
-                    child: Consumer<TaskViewModel>(
+                    child: Consumer<TasksController>(
                       builder: (context, viewModel, child) => Form(
                         key: formKey,
                         child: Column(
@@ -101,7 +100,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               onTap: (){
                                 showModalBottomSheet(
                                   context: context,
-                                  shape: RoundedRectangleBorder(
+                                  shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                                   ),
                                   builder: (context) {
@@ -111,10 +110,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                              Padding(
-                                              padding: EdgeInsets.all(16.0),
+                                              padding: const EdgeInsets.all(16.0),
                                               child: Text(
                                                 AppStrings.employeeName.tr(),
-                                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                               ),
                                             ),
                                             Expanded(
@@ -147,7 +146,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                   Navigator.pop(context);
                                                   setState(() {});
                                                 },
-                                                child: Text(AppStrings.send.tr(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                                                child: Text(AppStrings.send.tr(), style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
                                               ),
                                             )
                                           ],

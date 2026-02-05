@@ -1,19 +1,17 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
+import 'package:app_test/features/tasks/views/edit/widgets/edit_new_task_list_widget.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/controller/task_controller/task_view_model.dart';
-import 'package:rmemp/modules/tasks/widget/add_new_task_list_widget.dart';
-import 'package:rmemp/utils/widgets/text_form_widget.dart';
-import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
-import '../../../general_services/localization.service.dart';
-import '../../../utils/animated_custom_dropdown/custom_dropdown.dart';
-import 'widget/edit_new_task_list_widget.dart';
+
+import '../../../../core/widgets/text_form_widget.dart';
 
 class EditTaskScreen extends StatefulWidget {
   var id;
@@ -25,11 +23,11 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
-  late final TaskViewModel viewModel;
+  late final TasksController viewModel;
   @override
   void initState() {
     super.initState();
-    viewModel = TaskViewModel();
+    viewModel = TasksController();
     viewModel.getEmployees(context: context);
     viewModel.getOneTask(context, widget.id).then((_) {
       if (viewModel.getOneTaskModel != null) {
@@ -53,7 +51,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TaskViewModel>(
+    return ChangeNotifierProvider<TasksController>(
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
@@ -68,7 +66,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: AppSizes.s16, horizontal: AppSizes.s12),
-                    child: Consumer<TaskViewModel>(
+                    child: Consumer<TasksController>(
                       builder: (context, viewModel, child) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
