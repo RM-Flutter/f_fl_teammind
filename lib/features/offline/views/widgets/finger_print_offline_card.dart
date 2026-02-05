@@ -6,9 +6,9 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/date_service.dart';
 
-class FingerprintCardOffiline extends StatelessWidget {
+class FingerprintCardOffline extends StatelessWidget {
   List? fingerprint = [];
-   FingerprintCardOffiline({super.key, this.fingerprint});
+   FingerprintCardOffline({super.key, this.fingerprint});
 
   @override
   Widget build(BuildContext context) {

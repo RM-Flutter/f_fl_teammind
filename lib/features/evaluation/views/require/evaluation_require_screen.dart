@@ -57,7 +57,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
           onRefresh: () async => await viewModel.getEvaluationRequired(context),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(

@@ -299,7 +299,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                 else
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    child: FingerprintCardOffiline(
+                                    child: FingerprintCardOffline(
                                       fingerprint: viewModel.savedFingerprints,
                                     ),
                                   ),

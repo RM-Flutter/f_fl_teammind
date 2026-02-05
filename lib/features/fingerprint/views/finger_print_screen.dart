@@ -1,29 +1,28 @@
 import 'dart:convert';
 
+import 'package:app_test/core/constants/app_constants.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/widgets/finger_print/card/fingerprint_card_widget.dart';
+import 'package:app_test/features/fingerprint/data/models/fingerprint_model.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_constants.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
-import 'package:rmemp/routing/app_router.dart';
-import '../../../common_modules_widgets/main_app_fab_widget/main_app_fab.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
-import '../../../general_services/layout.service.dart';
-import '../../../utils/general_screen_message_widget.dart';
-import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../view_models/fingerprint.viewmodel.dart';
-import 'widgets/fingerprint_card.widget.dart';
-import 'widgets/fingerprint_loading_screen.dart';
+import '../../../core/constants/app_sizes.dart' show AppSizes, gapH12;
+import '../controller/fingerprint_controller.dart';
+import '../../../core/widgets/finger_print/loading/fingerprint_loading_screen.dart';
 
 class FingerprintScreen extends StatefulWidget {
   final String? empId;
@@ -138,7 +137,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                                 )),
                             if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)   const SizedBox(height: 15,),
                                 if(viewModel.fingerprints != null)  ...viewModel.fingerprints!.map(
-                                    (fingerprint) => Column(
+                                    (FingerPrintModel fingerprint) => Column(
                                       children: [
                                         FingerprintCard(
                                           fingerprint: fingerprint,

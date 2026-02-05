@@ -1,16 +1,16 @@
 import 'dart:convert';
+import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/features/fingerprint/data/models/fingerprint_model.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:geocoding/geocoding.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import '../../../../constants/app_images.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../general_services/layout.service.dart';
-import '../../../../models/fingerprint.model.dart';
 
 class FingerprintDetailsModalSheet extends StatelessWidget {
   final FingerPrintModel fingerprint;

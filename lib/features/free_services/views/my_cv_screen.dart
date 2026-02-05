@@ -1,15 +1,10 @@
+import 'package:app_test/features/free_services/view_models/my_cv.viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../constants/app_strings.dart';
-import '../../../utils/tab_bar_widget.dart';
-import '../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
-import '../../../routing/app_router.dart';
-import '../view_models/my_cv.viewmodel.dart';
+
 import 'widgets/cv_tabs/cv_contact_tab.dart';
 import 'widgets/cv_tabs/cv_education_tab.dart';
 import 'widgets/cv_tabs/cv_job_info_tab.dart';
