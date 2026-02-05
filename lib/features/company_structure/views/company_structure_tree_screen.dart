@@ -1,15 +1,15 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/features/company_structure/controller/company_structure_tree.viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_sizes.dart';
-import '../viewmodels/company_structure_tree.viewmodel.dart';
 import 'widgets/company_tree_node.widget.dart';
-import '../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
-import '../../../routing/app_router.dart';
 
 class CompanyStructureTreeScreen extends StatefulWidget {
   const CompanyStructureTreeScreen({super.key});
@@ -80,7 +80,7 @@ class _CompanyStructureTreeScreenState
                   builder: (Node node) {
                     int nodeId = node.key!.value;
                     var nodeData = viewModel.companyStructureTree
-                        ?.firstWhere((element) => element.id == nodeId);
+                        ?.firstWhere((element) => element!.id == nodeId);
                     return CompanyStructureNode(
                       data: nodeData!,
                       onTap: viewModel.onNodeTap,

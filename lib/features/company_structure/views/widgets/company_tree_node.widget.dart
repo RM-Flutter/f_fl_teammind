@@ -1,8 +1,8 @@
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/features/company_structure/data/models/company_tree_node.model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../models/company_tree_node.model.dart';
 
 class CompanyStructureNode extends StatelessWidget {
   final CompanyTreeNodeModel data;

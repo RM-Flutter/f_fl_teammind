@@ -1,10 +1,10 @@
+import 'package:app_test/core/models/endpoint.model.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api_service.dart';
+import 'package:app_test/core/services/backend_services/get_endpoint_service.dart';
 import 'package:flutter/material.dart';
-import '../../../general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
-import '../../../general_services/backend_services/get_endpoint.service.dart';
-import '../../../models/endpoint.model.dart';
-import '../../../models/operation_result.model.dart';
 
-abstract class GeneralService {
+abstract class CompanyStructureRepo {
   static Future<OperationResult<Map<String, dynamic>>> getCompanyTreeStructure({
     required BuildContext context,
   }) async {

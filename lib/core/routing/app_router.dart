@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_test/features/company_structure/views/company_structure_tree_screen.dart';
 import 'package:app_test/features/complaints/views/add_complaints/add_complain_screen.dart';
 import 'package:app_test/features/home/views/home_screen.dart';
 import 'package:app_test/features/more/notifications/views/notification_screen.dart';
@@ -25,7 +26,6 @@ import '../../features/free_services/views/select_template/select_template_scree
 import '../../features/free_services/views/smart_card/smart_card_screen.dart';
 import '../../features/free_services/views/update_my_info/update_my_info_screen.dart';
 import '../../features/free_services/views/vacation_calc/vacation_calc_screen.dart';
-import '../../features/general/views/company_structure_tree_screen.dart';
 import '../../features/main_layout/views/main_layout_screen.dart';
 import '../../features/more/about_us/views/about_us_screen.dart';
 import '../../features/more/company_structure/company_structure_screen.dart';

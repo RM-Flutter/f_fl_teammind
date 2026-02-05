@@ -1,7 +1,7 @@
+import 'package:app_test/features/company_structure/data/models/company_tree_node.model.dart';
+import 'package:app_test/features/company_structure/data/repos/company_structure_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
-import '../models/company_tree_node.model.dart';
-import '../services/general.service.dart';
 
 class CompanyStructureTreeViewModel extends ChangeNotifier {
   List<CompanyTreeNodeModel>? companyStructureTree;
@@ -47,7 +47,7 @@ class CompanyStructureTreeViewModel extends ChangeNotifier {
   Future<void> getCompanyTreeStructure({required BuildContext context}) async {
     try {
       final result =
-          await GeneralService.getCompanyTreeStructure(context: context);
+          await CompanyStructureRepo.getCompanyTreeStructure(context: context);
       if (result.success && result.data != null) {
         companyStructureTree = (result.data?['data'] as List<dynamic>)
             .map((item) => CompanyTreeNodeModel.fromJson(item))
