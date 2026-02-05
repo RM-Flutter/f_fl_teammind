@@ -5,9 +5,9 @@ import 'package:app_test/core/constants/string_convert.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/tasks/data/models/get_one_task_model.dart';
+import 'package:app_test/features/tasks/data/repos/tasks_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +103,10 @@ class TasksController extends ChangeNotifier {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
 
+  final TasksRepo _repo;
+
+  TasksController({TasksRepo? repo}) : _repo = repo ?? TasksRepoImpl();
+
   void initializeAddTaskScreen({required BuildContext context}) {
     getEmployees(context: context);
     _resetValues();
@@ -131,12 +135,11 @@ class TasksController extends ChangeNotifier {
     }
     isLoading = true;
     notifyListeners();
-    DioHelper.getData(
-      url: "/emp_requests/v1/employees",
+    _repo.getEmployees(
+      context: context,
       query: {
         "under_my_management" : true
       },
-      context: context,
     ).then((value){
       isLoading = false;
       employees = [];
@@ -168,13 +171,12 @@ class TasksController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await DioHelper.getData(
-        url: "/emp_requests/v1/task",
+      final response = await _repo.getTasks(
+        context: context,
         query: {
           "page": currentPage,
           if (date != null) "date": StringConvert.sanitizeDateString(date),
         },
-        context: context,
       );
 
       final List<dynamic> newTasks = response.data['tasks'] ?? [];
@@ -205,9 +207,9 @@ class TasksController extends ChangeNotifier {
   Future<void> getOneTask(BuildContext context, id) {
     isLoading = true;
     notifyListeners();
-    return DioHelper.getData(
-      url: "/emp_requests/v1/task/$id",
+    return _repo.getOneTask(
       context: context,
+      id: id.toString(),
     ).then((value) {
       getOneTaskModel = GetOneTaskModel.fromJson(value.data);
       subTasks = value.data['task']['subTasks'];
@@ -236,8 +238,7 @@ class TasksController extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isLoading = true;
     notifyListeners();
-    DioHelper.postData(
-        url: "/emp_requests/v1/task",
+    _repo.addTask(
         context: context,
         data: {
           "title" : titleController.text,
@@ -282,9 +283,9 @@ class TasksController extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isLoading = true;
     notifyListeners();
-    DioHelper.putData(
-        url: "/emp_requests/v1/task/$id",
+    _repo.updateTask(
         context: context,
+        id: id.toString(),
         data: {
           "title" : titleController.text,
           "content" : contentController.text,
@@ -336,9 +337,9 @@ class TasksController extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isUpdateLoading = true;
     notifyListeners();
-    DioHelper.putData(
-        url: "/emp_requests/v1/task/$id",
+    _repo.updateTask(
         context: context,
+        id: id.toString(),
         data: {
           "title" : title,
           "content" : content,
@@ -380,9 +381,9 @@ class TasksController extends ChangeNotifier {
   updateStatusTask(BuildContext context, id) async{
     isLoading = true;
     notifyListeners();
-    DioHelper.patchData(
-        url: "/emp_requests/v1/task/$id/status",
+    _repo.updateStatusTask(
         context: context,
+        id: id.toString(),
         data: {
           "status" : "completed"
         }
