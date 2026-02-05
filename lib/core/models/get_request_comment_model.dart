@@ -121,7 +121,7 @@ class Images {
         this.alt,
         this.file,
         this.thumbnail,
-        });
+      });
 
   Images.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -159,7 +159,7 @@ class Sounds {
         this.alt,
         this.file,
         this.thumbnail,
-        });
+      });
 
   Sounds.fromJson(Map<String, dynamic> json) {
     id = json['id'];

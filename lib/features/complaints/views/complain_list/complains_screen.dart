@@ -36,6 +36,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
     complaintsController = ComplaintsController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       complaintsController = Provider.of<ComplaintsController>(context, listen: false);
+      // ComplaintsController.getRequestMine(context, page: 1,);
       complaintsController.getRequest(context, page: 1,);
     });
     _scrollController.addListener(() {
@@ -56,7 +57,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
     return Consumer<ComplaintsController>(
       builder: (context, value, child) {
         var jsonString;
-        Map<String, dynamic> gCache = {};
+        var gCache;
         jsonString = CacheHelper.getString("US1");
         if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
           gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -66,50 +67,54 @@ class _ComplainScreenState extends State<ComplainScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             title: Text(
-              AppStrings.ticketSystem.tr().toUpperCase(),
-              style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
+              AppStrings.requests.tr().toUpperCase(),
+              style:  TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
             ),
             centerTitle: true,
-            backgroundColor: const Color(0xffFFFFFF),
+            backgroundColor: Color(0xffFFFFFF),
             elevation: 0,
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async{
-             await context.pushNamed(AppRoutes.newComplainScreen.name,
-                  pathParameters: {'lang': context.locale.languageCode,});
-             await complaintsController.getRequest(context, page: 1, );
+              await context.pushNamed(AppRoutes.newRequestScreen.name,
+                  pathParameters: {'lang': context.locale.languageCode,
+                    "type" : "no",
+                    "details" : "no",
+                    "subject" : "no",
+                  });
+              await complaintsController.getRequest(context, page: 1, );
             },
-            backgroundColor: Color(AppColors.primary),
-            child:  const Icon(Icons.add, color: Colors.white),
+            backgroundColor:  Color(AppColors.primary),
+            child: const Icon(Icons.add, color: Colors.white),
           ),
           body: (value.isGetRequestLoading == true && value.currentPage == 1)
               ? ListView.builder(
             padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              reverse: false,
-              itemCount: 7,
-              itemBuilder:(context, index) => Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                  padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(AppSizes.s15),
-                  ),
-                  height: 100,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            reverse: false,
+            itemCount: 7,
+            itemBuilder:(context, index) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppSizes.s15),
                 ),
-              ), ):
+                height: 100,
+              ),
+            ), ):
           GradientBgImage(
-            padding: const EdgeInsets.all(0),
-                 child: SafeArea(
-                             child: RefreshIndicator.adaptive(
-                               onRefresh: ()async{
+            padding: EdgeInsets.all(0),
+            child: SafeArea(
+              child: RefreshIndicator.adaptive(
+                onRefresh: ()async{
                   await complaintsController.getRequest(context, page: 1, );
-                               },
-                               child: SingleChildScrollView(
+                },
+                child: SingleChildScrollView(
                   controller: _scrollController,
                   child: (value.requests.isNotEmpty)? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -119,14 +124,14 @@ class _ComplainScreenState extends State<ComplainScreen> {
                         const SizedBox(height: 10,),
                         Center(
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(
+                            constraints: BoxConstraints(
                               maxWidth: kIsWeb ? 1100 : double.infinity,
                             ),
                             child: ListView.builder(
                               itemCount: value.requests.length,
                               reverse: false,
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
                                 var request = value.requests[index];
@@ -142,27 +147,26 @@ class _ComplainScreenState extends State<ComplainScreen> {
                                           .format(DateTime.parse(request['created_at'].toString()))
                                           .toString(),
                                       status: request['pstatus']['key'].toString().tr(),
-                                      statusColor: const Color(0xffFFFFFF)
+                                      statusColor: Color(0xffFFFFFF)
                                   );
                                 }else{
-                                 return defaultRequestContainer(
+                                  return defaultRequestContainer(
                                       context,
-                                     "mine",
+                                      "mine",
                                       id: request['id'],
-                                      containerColor: const Color(0xffFFFFFF),
+                                      containerColor: Color(0xffFFFFFF),
                                       title: request['title'],
                                       date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
                                           .format(DateTime.parse(request['created_at'].toString()))
                                           .toString(),
                                       status: request['pstatus']['key'].toString().tr(),
                                       titleColor: Color(AppColors.primary),
-                                      dateColor: const Color(0xff5E5E5E),
+                                      dateColor: Color(0xff5E5E5E),
                                       statusColor: statusKey == "closed"
-                                          ? const Color(AppColors.red)
+                                          ? Color(AppColors.red)
                                           : Color(AppColors.primary)
                                   );
                                 }
-                                return const SizedBox.shrink();  // Return nothing for non-hold items in this section
                               },
                             ),
                           ),
@@ -175,12 +179,12 @@ class _ComplainScreenState extends State<ComplainScreen> {
                   ) : Center(
                     child: NoExistingPlaceholderScreen(
                         height: LayoutService.getHeight(context) * 0.6,
-                        title: AppStrings.thereIsNoComplains.tr()),
+                        title: AppStrings.thereIsNoRequests.tr()),
                   ),
-                               ),
-                             ),
-                           ),
-               ),
+                ),
+              ),
+            ),
+          ),
         );
       } ,
     );
@@ -189,60 +193,60 @@ class _ComplainScreenState extends State<ComplainScreen> {
   Widget defaultRequestContainer(BuildContext parentContext,type,{title, containerColor, statusColor, status, date, titleColor, dateColor , id})=>
       GestureDetector(
         onTap: (){
-         parentContext.pushNamed(AppRoutes.complainDetails.name,
+          parentContext.pushNamed(AppRoutes.requestDetails.name,
               pathParameters: {'lang': parentContext.locale.languageCode,
-              'id' : "$id",
+                'id' : "${id}",
               });
 
         },
         child: Container(
-            padding: const EdgeInsets.all(12),
-            margin: const EdgeInsets.only(bottom: 16),
+          padding: EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 16),
 
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: AppSizes.s8,
-                  spreadRadius: 1,
-                )
-              ],
-        color: containerColor,
-        borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "$title".toUpperCase(),
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: titleColor??const Color(0xffFFFFFF),
-            ),
+          decoration: BoxDecoration(
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: AppSizes.s8,
+                spreadRadius: 1,
+              )
+            ],
+            color: containerColor,
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(height: 8),
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.circle, color: statusColor, size: 10),
-              const SizedBox(width: 6),
               Text(
-                "$status".toUpperCase(),
+                "$title".toUpperCase(),
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: titleColor??const Color(0xffFFFFFF),
+                  color: titleColor??Color(0xffFFFFFF),
                 ),
               ),
-              const SizedBox(width: 30,),
-              Text(
-                "$date".toUpperCase(),
-                style: TextStyle(color: dateColor??Color(AppColors.grey50), fontWeight: FontWeight.w500, fontSize: 12),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.circle, color: statusColor, size: 10),
+                  SizedBox(width: 6),
+                  Text(
+                    "$status".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: titleColor??Color(0xffFFFFFF),
+                    ),
+                  ),
+                  SizedBox(width: 30,),
+                  Text(
+                    "$date".toUpperCase(),
+                    style: TextStyle(color: dateColor??Color(AppColors.grey50), fontWeight: FontWeight.w500, fontSize: 12),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-            ),
-          ),
+        ),
       );
 }

@@ -1,8 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -16,7 +12,7 @@ class FullScreenImageViewer extends StatelessWidget {
   var image;
   final int initialIndex;
 
-  FullScreenImageViewer({super.key, required this.imageUrls,
+  FullScreenImageViewer({required this.imageUrls,
     this.one,
     this.image,
     required this.initialIndex,required this.url, this.file, this.thum});
@@ -44,8 +40,8 @@ class FullScreenImageViewer extends StatelessWidget {
             maxScale: PhotoViewComputedScale.covered * 2,
           );
         },
-        scrollPhysics: const BouncingScrollPhysics(),
-        backgroundDecoration: const BoxDecoration(color: Colors.black),
+        scrollPhysics: BouncingScrollPhysics(),
+        backgroundDecoration: BoxDecoration(color: Colors.black),
         pageController: PageController(initialPage: initialIndex),
       ),
     );

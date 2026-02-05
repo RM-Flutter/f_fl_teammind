@@ -258,17 +258,18 @@
 
 import 'dart:io';
 
+import 'package:app_test/features/complaints/controller/complaints_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../constants/app_colors.dart';
-import '../../constants/app_strings.dart';
-import '../../controller/request_controller/request_controller.dart';
-import '../../utils/gradient_bg_image.dart';
-import '../../utils/widgets/text_form_widget.dart';
+
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/gradient_bg_image.dart';
+import '../../../../core/widgets/all_text_field.dart';
+import '../../../../core/widgets/custom_elevated_button.widget.dart';
 
 class NewComplainScreen extends StatefulWidget {
   // type, subject, details
@@ -297,8 +298,8 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => RequestController()..getRequestType(context),
-      child: Consumer<RequestController>(
+    return ChangeNotifierProvider(create: (context) => ComplaintsController()..getRequestType(context),
+      child: Consumer<ComplaintsController>(
         builder: (context, value, child) {
           return Scaffold(
             appBar: AppBar(
@@ -343,7 +344,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                             ),
                             ).toList(),
                             onChanged: (String? values) {
-                              debugPrint(values);
+                              print(values);
                               setState(() {
                                 value.selectDepartment = values;
                               });
@@ -478,7 +479,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                           if(value.isAddRequestLoading == true) Center(child: CircularProgressIndicator(),),
                           if(value.isAddRequestLoading == false) CustomElevatedButton(
                               onPressed: () async {
-                                debugPrint("value.listXAttachmentPersonalImage ${value.listXAttachmentPersonalImage}");
+                                print("value.listXAttachmentPersonalImage ${value.listXAttachmentPersonalImage}");
                                 if(formKey.currentState!.validate()){
                                   value.addRequest(context, images: value.listXAttachmentPersonalImage);
                                 }

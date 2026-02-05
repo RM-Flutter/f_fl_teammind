@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:app_test/core/models/get_request_comment_model.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:app_test/features/complaints/data/remote_data/complaints_repo.da
 class ComplaintsController extends ChangeNotifier {
   bool isGetRequestLoading = false;
   bool empty = false;
+  bool isAddCommentLoading = false;
   bool getMore = false;
   bool isAddRequestLoading = false;
   bool isGetRequestCommentLoading = false;
@@ -24,7 +26,9 @@ class ComplaintsController extends ChangeNotifier {
   bool isGetRequestSuccess = false;
   bool isAddCommentSuccess = false;
   bool isAddRequestSuccess = false;
+  bool isGetRequestCommentSuccess = false;
   bool isGetRequestTypeSuccess = false;
+  TextEditingController contentController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
   TextEditingController detailsController = TextEditingController();
   bool hasMoreRequests = true;
@@ -35,21 +39,49 @@ class ComplaintsController extends ChangeNotifier {
   String? errorAddCommentMessage;
   String? errorAddRequestMessage;
   final picker = ImagePicker();
+  bool hasMore = true;
+  bool loading = true;
+  final ScrollController controller = ScrollController();
+  final int expectedPageSize = 9;
+  int pageNumber = 1;
+  int count = 0;
   Set<int> requestsIds = {};
   XFile? XImageFileAttachmentPersonal;
   File? attachmentPersonalImage;
   List listAttachmentPersonalImage = [];
   List<XFile> listXAttachmentPersonalImage = [];
+  GetRequestCommentModel? getRequestCommentModel;
   GetOneRequestModel? getOneRequestModel;
   List requests = [];
+  List requestsTeam = [];
+  List newRequestsTeam = [];
   List requestTypes = [];
+  List newComments = [];
+  List comments = [];
+  List newRequests = [];
   int currentPage = 1;
   final int itemsCount = 9;
+  bool hasMoreData(int length) {
+    if (length < expectedPageSize) {
+      return false;
+    } else {
+      currentPage += 1;
+      return true;
+    }
+  }
+
+  Future<void> refreshPaints(context) async{
+    currentPage = 1;
+    hasMore = true;
+  }
   Future<void> getRequestType(BuildContext context) async {
     isGetRequestTypeLoading = true;
     notifyListeners();
     try {
-    final response = await ComplaintsRepo.getRequestTypes(context);
+      final response = await DioHelper.getData(
+        url: "/csrequests-type/entities-operations",
+        context: context,
+      );
       if(response.data['status'] == false){
         Fluttertoast.showToast(
             msg: response.data['message'],
@@ -67,7 +99,7 @@ class ComplaintsController extends ChangeNotifier {
       isGetRequestTypeLoading = false;
       notifyListeners();
     } catch (error) {
-      getRequestTypeErrorMessage = error is DioException
+      getRequestTypeErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -84,19 +116,108 @@ class ComplaintsController extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> addComment(BuildContext context, {required String id, List<XFile>? images, String? voicePath, slug}) async {
+    if(images == null  && voicePath == null && contentController.text.isEmpty){
+      print("NULL COMMENT");
+      return;
+    }
+    isAddCommentLoading = true;
+    notifyListeners();
+
+    try {
+      var response;
+      print("Voice Path: $voicePath");
+
+      // Check if we have either images or a voice file to send
+      if (images != null || voicePath != null) {
+        print("Uploading media...");
+
+        FormData formData = FormData.fromMap({
+          if (contentController.text.isNotEmpty) "content": contentController.text,
+          if (images != null && images.isNotEmpty)
+            "images[]": await Future.wait(images.map(
+                  (file) async => await MultipartFile.fromFile(file.path, filename: file.name),
+            ).toList()),
+          if (voicePath != null && File(voicePath).existsSync())
+            "sounds": await MultipartFile.fromFile(voicePath, filename: "recorded_audio.m4a"),
+        });
+
+        response = await DioHelper.postFormData(
+          url: "/$slug/entities-operations/$id/comments",
+          context: context,
+          formdata: formData,
+        );
+      } else {
+        response = await DioHelper.postData(
+          url: "/$slug/entities-operations/$id/comments",
+          context: context,
+          data: {
+            if (contentController.text.isNotEmpty) "content": contentController.text,
+          },
+        );
+      }
+
+      if (response.data['status'] == false) {
+        Fluttertoast.showToast(
+          msg: response.data['message'],
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        isAddCommentSuccess = true;
+        Fluttertoast.showToast(
+          msg: response.data['message'],
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        contentController.clear();
+        // Refresh comments after successful upload
+        getRequestCommentModel = null;
+        // getRequestComment(context, id);
+      }
+    } catch (error) {
+      errorAddCommentMessage = error is DioError
+          ? error.response?.data['message'] ?? 'Something went wrong'
+          : error.toString();
+
+      Fluttertoast.showToast(
+        msg: errorAddCommentMessage!,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      isAddCommentLoading = false;
+      notifyListeners();
+    }
+  }
   Future<void> getRequest(BuildContext context, {int? page}) async {
     if (page != null) currentPage = page;
 
-    debugPrint("currentPage is --> $currentPage");
+    print("currentPage is --> $currentPage");
     isGetRequestLoading = true;
     notifyListeners();
 
     try {
-    final response = await ComplaintsRepo.getRequests(
-      context,
-      itemsCount: itemsCount,
-      page: page ?? currentPage,
-    );
+      final response = await DioHelper.getData(
+        url: "/csrequests/entities-operations",
+        context: context,
+        query: {
+          "itemsCount": itemsCount,
+          "page": page ?? currentPage,
+        },
+      );
 
       if (response.data['status'] == false) {
         Fluttertoast.showToast(
@@ -140,7 +261,7 @@ class ComplaintsController extends ChangeNotifier {
       isGetRequestLoading = false;
       notifyListeners();
     } catch (error) {
-      getRequestErrorMessage = error is DioException
+      getRequestErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -157,11 +278,76 @@ class ComplaintsController extends ChangeNotifier {
       notifyListeners();
     }
   }
+  // Future<void> getRequestMine(BuildContext context, {int? page}) async {
+  //   if(page != null){currentPage = page;}
+  //   print("currentPage is --> $currentPage}");
+  //   isGetRequestLoading = true;
+  //   notifyListeners();
+  //   try {
+  //     final response = await DioHelper.getData(
+  //       url: "/emp_requests/v1/complain?type=mine",
+  //       context: context, // Pass this explicitly only if necessary
+  //       query: {
+  //         "itemsCount": itemsCount,
+  //         "page": page ?? currentPage,
+  //       },
+  //     );
+  //     if(response.data['status'] == false){
+  //       Fluttertoast.showToast(
+  //           msg: response.data['message'],
+  //           toastLength: Toast.LENGTH_LONG,
+  //           gravity: ToastGravity.BOTTOM,
+  //           timeInSecForIosWeb: 5,
+  //           backgroundColor: Colors.red,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0
+  //       );
+  //     }else{
+  //       newRequests = response.data['complains'] ?? [];
+  //       if (page == 1) {
+  //         requests.clear(); // Clear only when loading the first page
+  //       }
+  //       if (newRequests.isNotEmpty) {
+  //         requests.addAll(newRequests);
+  //         print("LENGTH IS --> ${newRequests.length}");
+  //         if (hasMore) currentPage++;
+  //       } else {
+  //         hasMoreRequests = false; // No more data to fetch
+  //       }
+  //
+  //       isGetRequestSuccess = true;
+  //     }
+  //     isGetRequestLoading = false;
+  //     notifyListeners();
+  //   } catch (error) {
+  //     getRequestErrorMessage = error is DioError
+  //         ? error.response?.data['message'] ?? 'Something went wrong'
+  //         : error.toString();
+  //     Fluttertoast.showToast(
+  //         msg: getRequestErrorMessage!,
+  //         toastLength: Toast.LENGTH_LONG,
+  //         gravity: ToastGravity.BOTTOM,
+  //         timeInSecForIosWeb: 5,
+  //         backgroundColor: Colors.red,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0
+  //     );
+  //   } finally {
+  //     isGetRequestLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
   Future<void> getOneRequest(BuildContext context, id) async {
     isGetRequestLoading = true;
     notifyListeners();
     try {
-      final response = await ComplaintsRepo.getOneRequest(context, id);
+      final response = await DioHelper.getData(
+        url: "/csrequests/entities-operations/$id",
+        query: {
+          "with" : "ptype_id"
+        },
+        context: context,
+      );
       if(response.data['status'] == false){
         Fluttertoast.showToast(
             msg: response.data['message'],
@@ -178,7 +364,7 @@ class ComplaintsController extends ChangeNotifier {
       isGetRequestLoading = false;
       notifyListeners();
     } catch (error) {
-      getRequestErrorMessage = error is DioException
+      getRequestErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -196,20 +382,40 @@ class ComplaintsController extends ChangeNotifier {
     }
   }
   Future<void> addRequest(BuildContext context, {List<XFile>? images}) async {
-    // images = listAttachmentPersonalImage
-    //      .map((e) => XFile(e["upload"].path)) // تحويل File → XFile
-    //      .toList();
+    images = listAttachmentPersonalImage
+        .map((e) => XFile(e["upload"].path)) // تحويل File → XFile
+        .toList();
     isAddRequestLoading = true;
     notifyListeners();
-    Response response;
+    var response;
+    FormData formData = FormData.fromMap({
+      if(subjectController.text != null && subjectController.text.isNotEmpty)"title" : subjectController.text,
+      if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
+      "type_id" : selectDepartment.toString(),
+      "main_thumbnail[]": images != null
+          ? await Future.wait(
+          images.map((file) async => await MultipartFile.fromFile(file.path, filename: file.name))
+      )
+          : [],
+    });
     try {
-      response = await ComplaintsRepo.addRequest(
-      context,
-      title: subjectController.text.isNotEmpty ? subjectController.text : null,
-      content: detailsController.text.isNotEmpty ? detailsController.text : null,
-      typeId: selectDepartment.toString(),
-      images: images,
-    );
+      if(images != null && images.isNotEmpty){
+        response = await DioHelper.postData(
+            url: "/rm_postcontrol/v1/add_request",
+            context: context,
+            data: formData
+        );
+      }else{
+        response = await DioHelper.postData(
+            url: "/rm_postcontrol/v1/add_request",
+            context: context,
+            data: {
+              if(subjectController.text != null && subjectController.text.isNotEmpty) "title" : subjectController.text,
+              if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
+              "type_id" : selectDepartment.toString(),
+            }
+        );
+      }
       if(response.data['status']== false){
         Fluttertoast.showToast(
             msg: response.data['message'],
@@ -227,14 +433,14 @@ class ComplaintsController extends ChangeNotifier {
           isScrollControlled: true,
           backgroundColor: Colors.white,
           builder: (context) {
-            return const SuccessfulSendRequestBottomsheet();
+            return SuccessfulSendRequestBottomsheet(response.data['message']);
           },
         );
       }
       isAddRequestLoading = false;
       notifyListeners();
     } catch (error) {
-      errorAddRequestMessage = error is DioException
+      errorAddRequestMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -271,7 +477,7 @@ class ComplaintsController extends ChangeNotifier {
 
     if (kIsWeb) {
       Uint8List bytes = await imageFileProfile.readAsBytes();
-      listXAttachmentPersonalImage.add(imageFileProfile);
+
       listAttachmentPersonalImage.add({
         "preview": bytes,     // 🖥️ للعرض
         "upload": bytes,      // 🖥️ للرفع برضه
@@ -298,7 +504,7 @@ class ComplaintsController extends ChangeNotifier {
 
     if (kIsWeb) {
       Uint8List bytes = await imageFileProfile.readAsBytes();
-      listXAttachmentPersonalImage.add(imageFileProfile);
+
       listAttachmentPersonalImage.add({
         "preview": bytes,     // 🖥️ للعرض
         "upload": bytes,      // 🖥️ للرفع برضه
@@ -321,7 +527,7 @@ class ComplaintsController extends ChangeNotifier {
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -339,10 +545,10 @@ class ComplaintsController extends ChangeNotifier {
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -359,7 +565,7 @@ class ComplaintsController extends ChangeNotifier {
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -370,26 +576,25 @@ class ComplaintsController extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                debugPrint(image1);
-                                debugPrint(image2);
+                                print(image1);
+                                print(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -400,9 +605,10 @@ class ComplaintsController extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: const TextStyle(fontSize: 18, color: Colors.black),
+                              style: TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),

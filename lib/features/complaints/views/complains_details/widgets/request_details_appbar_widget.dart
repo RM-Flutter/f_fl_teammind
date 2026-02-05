@@ -7,6 +7,8 @@ import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/complaints/data/models/get_one_request_model.dart';
 
+import '../../../../../core/constants/app_colors.dart';
+
 
 class RequestDetailsAppbarWidget extends StatelessWidget {
   GetOneRequestModel? getOneRequestModel;
@@ -25,130 +27,123 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
             image: AssetImage("assets/images/png/home_back.png"),
             fit: BoxFit.cover,
             opacity: 0.4),
-        color: Theme.of(context).colorScheme.secondary,
+        color: Color(AppColors.dark),
         borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s28),
             bottomRight: Radius.circular(AppSizes.s28)),
       ),
       child: Center(
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                     GestureDetector(
-                          onTap: (){Navigator.pop(context);},
-                          child: const Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
-                      const Spacer(),
-                      Text(
-                        AppStrings.myRequests.tr().toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: kIsWeb ? 1100 : double.infinity,
+          ),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 50,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                            onTap: (){Navigator.pop(context);},
+                            child: Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
+                        Spacer(),
+                        Text(
+                          AppStrings.myRequest.tr().toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
+                        Spacer(),
+                        Container(width: 20,),
+                      ],
+                    ),
+                    SizedBox(height: 16,),
+                    Text(
+                      getOneRequestModel!.item!.title!.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
-                      const Spacer(),
-                      Container(width: 20,),
-                    ],
-                  ),
-                  const SizedBox(height: 16,),
-                  Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: kIsWeb ? 1100 : double.infinity,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            getOneRequestModel!.item!.title!.toUpperCase(),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 25,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: kIsWeb? MediaQuery.sizeOf(context).width * 0.1:MediaQuery.sizeOf(context).width * 0.25,
+                          child: Text(
+                            DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(getOneRequestModel!.item!.createdAt.toString())).toString(),
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 12,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 25,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: kIsWeb? MediaQuery.sizeOf(context).width * 0.1:MediaQuery.sizeOf(context).width * 0.25,
-                                child: Text(
-                                  DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(getOneRequestModel!.item!.createdAt.toString())).toString(),
-                                  textAlign: TextAlign.center,
-                                  style:  const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.folder_open_outlined, color: Colors.white,),
+                            SizedBox(width: 5,),
+                            SizedBox(
+                              width: kIsWeb? MediaQuery.sizeOf(context).width * 0.1:MediaQuery.sizeOf(context).width * 0.25,
+                              child: Text( getOneRequestModel!.item!.pType!.title.toString().tr(),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  const Icon(Icons.folder_open_outlined, color: Colors.white,),
-                                  const SizedBox(width: 5,),
-                                  SizedBox(
-                                    width: kIsWeb? MediaQuery.sizeOf(context).width * 0.1:MediaQuery.sizeOf(context).width * 0.25,
-                                    child: Text( getOneRequestModel!.item!.pType!.title.toString().tr(),
-                                      textAlign: TextAlign.center,
-                                      style:  const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle
-                                    ),
-                                  ),
-                                  const SizedBox(width: 5,),
-                                  SizedBox(
-                                    width:kIsWeb? MediaQuery.sizeOf(context).width * 0.1: MediaQuery.sizeOf(context).width * 0.25,
-                                    child: Text(
-                                      getOneRequestModel!.item!.pstatus!.key!.toString().tr().toUpperCase() ?? "",
-                                      textAlign: TextAlign.center,
-                                      style:  const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            ),
+                            SizedBox(width: 5,),
+                            SizedBox(
+                              width:kIsWeb? MediaQuery.sizeOf(context).width * 0.1: MediaQuery.sizeOf(context).width * 0.25,
+                              child: Text(
+                                getOneRequestModel!.item!.pstatus!.key!.toString().tr().toUpperCase() ?? "",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 16,),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  )
+                    SizedBox(height: 16,),
 
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

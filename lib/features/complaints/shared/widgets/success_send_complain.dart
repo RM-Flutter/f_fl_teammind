@@ -7,38 +7,37 @@ import 'package:app_test/core/constants/app_strings.dart';
 
 
 class SuccessfulSendRequestBottomsheet extends StatelessWidget {
-  const SuccessfulSendRequestBottomsheet({super.key});
-
-
+  var message;
+  SuccessfulSendRequestBottomsheet(this.message, {super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.5,
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 30),
-          SvgPicture.asset("assets/images/svg/success.svg"),
-          const SizedBox(height: 15,),
+          SizedBox(height: 30),
+          SvgPicture.asset("assets/images/svg/success_meeting.svg"),
+          SizedBox(height: 15,),
           Text(AppStrings.success.tr().toUpperCase(), style: TextStyle(fontSize: 24,
               fontWeight: FontWeight.w700, color: Color(AppColors.primary))),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(15.0),
             child: Text(
-              AppStrings.youWillBeRepliedSoonThankYouForChoosingOurApp.tr().toUpperCase(),
+              message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Color(0xff1B1B1B),
                   fontWeight: FontWeight.w500,
                   fontSize: 14
               ),
             ),
           ),
-          const Spacer(),
+          Spacer(),
           CustomElevatedButton(
               onPressed: () async {
                 Navigator.pop(context);
@@ -47,7 +46,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
               title: AppStrings.backToMyRequests.tr().toUpperCase(),
               isPrimaryBackground: true,
               isFuture: false),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );

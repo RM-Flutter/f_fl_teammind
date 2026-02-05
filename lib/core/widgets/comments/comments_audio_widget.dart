@@ -4,7 +4,7 @@ import 'package:just_audio/just_audio.dart';
 class VoiceMessageWidget extends StatefulWidget {
   final String audioUrl;
 
-  const VoiceMessageWidget({super.key, required this.audioUrl});
+  const VoiceMessageWidget({Key? key, required this.audioUrl}) : super(key: key);
 
   @override
   _VoiceMessageWidgetState createState() => _VoiceMessageWidgetState();
@@ -85,7 +85,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
           ),
           Text(
             "${_position.inSeconds}/${_duration.inSeconds}s",
-            style:  const TextStyle(fontSize: 12, color: Colors.black),
+            style: const TextStyle(fontSize: 12, color: Colors.black),
           ),
         ],
       ),
@@ -114,5 +114,3 @@ class AudioPlaybackManager {
     }
   }
 }
-
-
