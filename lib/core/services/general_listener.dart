@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -59,7 +60,7 @@ class GeneralListener {
           interval = Duration(days: count);
           break;
         default:
-          interval = const Duration(minutes: 5);
+          interval = Duration(minutes: 5);
       }
 
       String key = 'last_seen_${popup['title']['en']}';
@@ -78,84 +79,135 @@ class GeneralListener {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        titlePadding: EdgeInsets.zero,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (popup['images'] != null && popup['images'].isNotEmpty)
-              GestureDetector(
-                onTap: () async {
-                  await linksAction(popup: popup['go_to']);
+      useRootNavigator: true,
+      builder: (ctx) {
+        final isWeb = kIsWeb;
+        final screenHeight = MediaQuery.of(ctx).size.height;
+        final screenWidth = MediaQuery.of(ctx).size.width;
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          // ✅ تحديد أقصى عرض في الويب علشان الشكل مايبقاش عريض أوي
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: isWeb ? screenWidth * 0.25 : 20,
+            vertical: isWeb ? 40 : 20,
+          ),
+          titlePadding: EdgeInsets.zero,
+          contentPadding: const EdgeInsets.all(16),
+
+          content: ConstrainedBox(
+            // ✅ تحديد أقصى ارتفاع للـ dialog
+            constraints: BoxConstraints(
+              maxHeight: isWeb ? screenHeight * 0.8 : screenHeight * 0.9,
+            ),
+
+            child: SingleChildScrollView( // ✅ علشان يمنع أي Overflow
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // ✅ الصورة (بأقصى ارتفاع)
+                  if (popup['images'] != null && popup['images'].isNotEmpty)
+                    GestureDetector(
+                      onTap: () async {
+                        await linksAction(popup: popup['go_to'], out: false);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          popup['images'][0]['file'],
+                          fit: BoxFit.contain,
+                          height: isWeb ? 300 : 250, // Responsive height
+                        ),
+                      ),
+                    ),
+
+                  const SizedBox(height: 16),
+
+                  // ✅ العنوان
+                  if (popup['title']['ar'] != null || popup['title']['en'] != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        LocalizationService.isArabic(context: context)
+                            ? popup['title']['ar']
+                            : popup['title']['en'] ?? "",
+                        style: TextStyle(
+                          color: Color(AppColors.dark),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+
+                  // ✅ المحتوى
+                  if (popup['content']['ar'] != null || popup['content']['en'] != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        LocalizationService.isArabic(context: context)
+                            ? popup['content']['ar']
+                            : popup['content']['en'] ?? "",
+                        style: TextStyle(
+                          color: Color(AppColors.dark),
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            if (popup['go_to'] != null && popup['go_to'].toString().isNotEmpty)
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(ctx).pop();
+                  await linksAction(popup: popup['go_to'], out: false);
                 },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    popup['images'][0]['file'],
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            const SizedBox(
-              height: 15,
-            ),
-            if (popup['title']['ar'] != null || popup['title']['en'] != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
                 child: Text(
-                  LocalizationService.isArabic(context: context)
-                      ? popup['title']['ar']
-                      : popup['title']['en'] ?? "",
-                  style:  TextStyle(
-                    color: Color(AppColors.primary),
-                    fontWeight: FontWeight.bold,
-                  ),
+                  AppStrings.go.tr(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-          ],
-        ),
-        content:
-        popup['content']['ar'] != null || popup['content']['en'] != null
-            ? Padding(
-          padding: const EdgeInsetsGeometry.symmetric(vertical: 8),
-          child: Text(
-            LocalizationService.isArabic(context: context)
-                ? popup['content']['ar']
-                : popup['content']['en'] ?? "",
-            style: TextStyle(color: Color(AppColors.primary)),
-          ),
-        )
-            : null,
-        actions: [
-          if ((popup['go_to'] != null && popup['go_to'].toString().isNotEmpty))
             TextButton(
-              onPressed: () async {
-                Navigator.of(ctx).pop(); // اقفل قبل ما تروح لللينك
-                await linksAction(popup: popup['go_to']);
-              },
-              child: Text(AppStrings.go.tr()),
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(
+                AppStrings.cancel.tr(),
+                style: TextStyle(color: Color(AppColors.failureRed)),
+              ),
             ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(AppStrings.cancel.tr()),
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 
   void listenToNotifications(BuildContext context) async {
-    final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-    await analytics.logEvent(
-      name: 'open_home_screen',
-      parameters: {'timestamp': DateTime.now().toIso8601String()},
-    );
+    try {
+      final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+      await _analytics.logEvent(
+        name: 'open_home_screen',
+        parameters: {'timestamp': DateTime.now().toIso8601String()},
+      );
+    } catch (e) {
+      // Ignore Firebase Analytics errors (e.g., HTTP request aborted)
+      // These are non-critical and shouldn't affect app functionality
+      debugPrint('Firebase Analytics error (ignored): $e');
+    }
   }
 
-  static linksAction({popup}) async {
+  static linksAction({popup, bool? out = false}) async {
+    while (Navigator.canPop(rootNavigatorKey.currentContext!)) {
+      Navigator.pop(rootNavigatorKey.currentContext!);
+    }
+
     if (popup.startsWith("rm_browser:")) {
       final String link = popup.replaceFirst("rm_browser:", "");
       final Uri url = Uri.parse(link);
@@ -168,27 +220,28 @@ class GeneralListener {
         throw '${AppStrings.failed.tr()}: $link';
       }
     } else if (popup.startsWith("rm_webview:")) {
-      Navigator.push(
-          rootNavigatorKey.currentContext!,
-          MaterialPageRoute(
-            builder: (context) => WebViewStackOffers(
-                popup.replaceFirst("rm_webview:", "").toString()),
-          ));
+      final link = popup.replaceFirst("rm_webview:", "");
+      final lang = CacheHelper.getString("lang");
+      rootNavigatorKey.currentContext!.push('/$lang/webview', extra: link);
     } else {
       var result = await routeCompile(popup);
       if (result != null) {
         var route = result['key'];
         var params = result['values'];
-
-        // استبدل الـ placeholders بالقيم
         params.forEach((key, value) {
           route = route.replaceFirst('{$key}', value);
         });
 
-        // push بالمسار النهائي
-        GoRouter.of(rootNavigatorKey.currentContext!).push(
-          '/${CacheHelper.getString("lang")}/$route',
+        final lang = CacheHelper.getString("lang");
+        rootNavigatorKey.currentContext!.goNamed(
+          AppRoutes.home.name,
+          pathParameters: {'lang': lang},
         );
+        Future.delayed(const Duration(milliseconds: 500), () {
+          rootNavigatorKey.currentContext!.push(
+            '/$lang/$route',
+          );
+        });
       }
     }
   }

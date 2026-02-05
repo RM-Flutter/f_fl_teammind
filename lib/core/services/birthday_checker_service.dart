@@ -13,7 +13,7 @@ abstract class BirthdayChecker {
 
     // Check if today is the user's birthday and the message was not shown today
     if (DateFormat('MM-dd').format(DateTime.now()) ==
-            DateFormat('MM-dd').format(birthDate) &&
+        DateFormat('MM-dd').format(birthDate) &&
         today != lastShownDate) {
       showDialog(
         context: context,

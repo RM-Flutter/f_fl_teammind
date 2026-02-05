@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
+import '../../../../core/constants/app_colors.dart';
 import 'custom_switch_button.dart';
 
 class SwitchRow extends StatelessWidget {
@@ -10,14 +11,14 @@ class SwitchRow extends StatelessWidget {
   final ValueChanged<bool> onChanged;
   final String? rightText;
   final String? leftText;
-  final bool? viewPhone;
+  bool? viewPhone = true;
   final bool? isLoginPageStyle;
-  final MainAxisAlignment? axis;
-  const SwitchRow({
+  MainAxisAlignment? axis;
+  SwitchRow({
     super.key,
     required this.value,
     required this.onChanged,
-    this.viewPhone = true,
+    this.viewPhone,
     this.rightText,
     this.leftText,
     this.axis,
@@ -28,9 +29,9 @@ class SwitchRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = isLoginPageStyle == true
         ? Theme.of(context)
-            .textTheme
-            .labelLarge
-            ?.copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
+        .textTheme
+        .labelLarge
+        ?.copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
         : Theme.of(context).textTheme.displaySmall;
 
     return Directionality(
@@ -48,10 +49,11 @@ class SwitchRow extends StatelessWidget {
             height: AppSizes.s20,
             padding: AppSizes.s3,
             value: value,
-            inactiveColor: const Color(0xff2C376C),
+            inactiveColor: const Color(AppColors.black),
+            activeColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
-        if(viewPhone == true)  gapW8,
+          if(viewPhone == true)  gapW8,
           if(viewPhone == true)  Text(
             rightText ?? AppStrings.byPhone.tr(),
             style: textStyle,

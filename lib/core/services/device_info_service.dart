@@ -3,10 +3,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:app_test/core/models/device_information.model.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'app_config_service.dart';
+import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
+
 
 abstract class DeviceInformationService {
   static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -16,21 +17,36 @@ abstract class DeviceInformationService {
       String? androidId;
       if (PlatformIs.android) {
         AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
-        const platform = MethodChannel('com.rightminddev.inv/secure');
+        const platform = MethodChannel('com.rightminddev.rmemp/secure');
         try {
-           androidId = await platform.invokeMethod('getAndroidId');
+          androidId = await platform.invokeMethod('getAndroidId');
 
         } catch (e) {
           debugPrint("Error fetching Android ID: $e");
         }
         deviceIdentifier = "$androidId";
-        debugPrint("androidId -> $androidId");
+        debugPrint("androidId -> ${androidId}");
       } else if (PlatformIs.iOS) {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";
       } else if (PlatformIs.web) {
         WebBrowserInfo webInfo = await _deviceInfo.webBrowserInfo;
-        deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}";
+        // Generate a more stable unique ID for web using localStorage
+        try {
+          // Try to get or create a persistent device ID from localStorage
+          final existingId = html.window.localStorage['web_device_unique_id'];
+          if (existingId != null && existingId.isNotEmpty) {
+            deviceIdentifier = existingId;
+          } else {
+            // Generate a new ID based on browser fingerprint
+            deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}_${DateTime.now().millisecondsSinceEpoch}";
+            // Store it in localStorage for persistence
+            html.window.localStorage['web_device_unique_id'] = deviceIdentifier;
+          }
+        } catch (e) {
+          // Fallback if localStorage is not available
+          deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}";
+        }
       } else if (PlatformIs.linux) {
         LinuxDeviceInfo linuxInfo = await _deviceInfo.linuxInfo;
         deviceIdentifier = linuxInfo.machineId;
@@ -88,7 +104,7 @@ abstract class DeviceInformationService {
   static Future<void> initializeAndSetDeviceInfo(
       {required BuildContext context}) async {
     final appConfigServiceProvider =
-        Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(context, listen: false);
     Map<String, dynamic> deviceInfoMap = {
       'operating_system': await getOperatingSystem(),
       'operating_system_version': await getOperatingSystemVersion(),

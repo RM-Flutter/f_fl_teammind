@@ -63,7 +63,7 @@ abstract class EndpointServices {
             url: '${AppConstants.baseUrl}/rm_users/v1/update_notification');
       case EndpointsNames.home:
         return EndPoint(
-            name: name, url: '${AppConstants.baseUrl}/rm_screens/v1/home');
+            name: name, url: '${AppConstants.baseUrl}/rm_page/v1/show');
       case EndpointsNames.pointsHistory:
         return EndPoint(
             name: name, url: '${AppConstants.baseUrl}/rm_pointsys/v1/history');
@@ -71,7 +71,7 @@ abstract class EndpointServices {
         return EndPoint(
             name: name,
             url:
-                '${AppConstants.baseUrl}/rm_taxonomy/v1/get?key=projects_location');
+            '${AppConstants.baseUrl}/rm_taxonomy/v1/get?key=projects_location');
       case EndpointsNames.addNew:
         return EndPoint(
             name: name, url: '${AppConstants.baseUrl}/rm_pointsys/v1/add_new');
@@ -229,12 +229,12 @@ abstract class EndpointServices {
       case EndpointsNames.myStores:
         return EndPoint(
             name: name, url: '${AppConstants.baseUrl}/rm_ecommarce/v1/stores');
-        case EndpointsNames.myOrdersOdoo:
+      case EndpointsNames.myOrdersOdoo:
         return EndPoint(
             name: name, url: '${AppConstants.baseUrl}/rm_ecommarce/v1/stores');
       case EndpointsNames.myOrders:
         return EndPoint(name: name, url: 'orders');
-        case EndpointsNames.myOrders:
+      case EndpointsNames.myOrders:
         return EndPoint(name: name, url: 'stock/orders');
       case EndpointsNames.avaialbleProducts:
         return EndPoint(name: name, url: '/stock/availability');
@@ -266,7 +266,7 @@ abstract class EndpointServices {
         return EndPoint(
             name: name,
             url: '${AppConstants.baseUrl}/rm_social/v1/team/delete-member');
-        case EndpointsNames.getDeviceToken:
+      case EndpointsNames.getDeviceToken:
         return EndPoint(
             name: name,
             url: '${AppConstants.baseUrl}/rm_users/v1/get_device_token');

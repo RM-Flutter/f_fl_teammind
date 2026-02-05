@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_test/core/constants/app_colors.dart';
-
-import 'package:app_test/core/constants/app_sizes.dart';
+import '../constants/app_colors.dart';
+import '../constants/app_sizes.dart';
+import 'app_bar_with_bookmark.widget.dart';
 
 class TemplatePage extends StatelessWidget {
   final String title;
@@ -12,6 +12,7 @@ class TemplatePage extends StatelessWidget {
   final Widget? floatingActionButton;
   final Color? backgroundColor;
   final PreferredSizeWidget? bottomAppbarWidget;
+  final String? routeName;
 
   /// used if you want to active [PULLTOREFRESH] option to page.
   final Future<void> Function()? onRefresh;
@@ -24,26 +25,27 @@ class TemplatePage extends StatelessWidget {
       required this.title,
       required this.body,
       this.floatingActionButton,
-      this.onRefresh});
+      this.onRefresh,
+      this.routeName});
 
   @override
   Widget build(context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       floatingActionButton: floatingActionButton,
-      appBar: AppBar(
+      appBar: AppBarWithBookmark(
         actions: actions,
         backgroundColor:
             backgroundColor ?? Theme.of(pageContext).scaffoldBackgroundColor,
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: Color(AppColors.c2)
-          ),
+        title: title,
+        titleStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: Color(AppColors.dark)
         ),
         bottom: bottomAppbarWidget,
+        routeName: routeName,
+        defaultTitle: title,
         leading: context.canPop()
             ? Padding(
                 padding: const EdgeInsets.all(AppSizes.s10),
@@ -53,7 +55,7 @@ class TemplatePage extends StatelessWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Color(AppColors.dark)),
-                    child:  const Icon(
+                    child: const Icon(
                       Icons.arrow_back_sharp,
                       color: Colors.white,
                       size: AppSizes.s18,

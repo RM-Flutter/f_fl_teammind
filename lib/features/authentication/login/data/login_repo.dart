@@ -12,7 +12,7 @@ abstract class LoginRepo {
         required String password,
         required Map<String, dynamic> deviceInformation,
         required BuildContext context}) async {
-    debugPrint("deviceInformation --> $deviceInformation");
+    debugPrint("deviceInformation --> ${deviceInformation}");
     Map<String, dynamic> body = {
       "username": username, // may be phone number or email
       "password": password,
@@ -55,7 +55,8 @@ abstract class LoginRepo {
     return response;
   }
 
-  static Future<OperationResult<Map<String, dynamic>>> validateAccoutnVerificationCode(
+  static Future<OperationResult<Map<String, dynamic>>>
+  validateAccoutnVerificationCode(
       {required String uuid,
         required String code,
         required String method,
@@ -75,7 +76,6 @@ abstract class LoginRepo {
         allData: true);
     return response;
   }
-
 
   static Future<OperationResult<Map<String, dynamic>>> send2FAVerificationCode(
       {required String uuid,

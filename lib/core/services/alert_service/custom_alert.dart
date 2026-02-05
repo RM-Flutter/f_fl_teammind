@@ -5,6 +5,8 @@ import 'dart:ui' as ui;
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 
+import '../../constants/app_colors.dart';
+
 class AlertType {
   /// message is `required` parameter
   final String message;
@@ -14,27 +16,27 @@ class AlertType {
 
   const AlertType(this.message, [this.color]);
 
-  static const AlertType help = AlertType('help', DefaultColors.helpBlue);
-  static const AlertType failure =
-      AlertType('failure', DefaultColors.failureRed);
-  static const AlertType success =
-      AlertType('success', DefaultColors.successGreen);
-  static const AlertType warning =
-      AlertType('warning', DefaultColors.warningYellow);
+  static final AlertType help = AlertType('help', DefaultColors.helpBlue);
+  static final AlertType failure =
+  AlertType('failure', DefaultColors.failureRed);
+  static final AlertType success =
+  AlertType('success', DefaultColors.successGreen);
+  static final AlertType warning =
+  AlertType('warning', DefaultColors.warningYellow);
 }
 
 class DefaultColors {
   /// help
-  static const Color helpBlue = Color(0xff3282B8);
+  static Color get helpBlue => Color(AppColors.helpBlue);
 
   /// failure
-  static const Color failureRed = Color(0xffc72c41);
+  static Color get failureRed => Color(AppColors.failureRed);
 
   /// success
-  static const Color successGreen = Color(0xff2D6A4F);
+  static Color get successGreen => Color(AppColors.successGreen);
 
   /// warning
-  static const Color warningYellow = Color(0xffFCA652);
+  static Color get warningYellow => Color(AppColors.warningYellow);
 }
 
 class CustomAlert extends StatelessWidget {
@@ -140,7 +142,7 @@ class CustomAlert extends StatelessWidget {
                 height: size.height * 0.06,
                 width: size.width * 0.05,
                 colorFilter:
-                    _getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                _getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
               ),
             ),
           ),
@@ -150,13 +152,13 @@ class CustomAlert extends StatelessWidget {
             top: -size.height * 0.01,
             left: !isRTL
                 ? leftSpace -
-                    8 -
-                    (isMobile ? size.width * 0.075 : size.width * 0.035)
+                8 -
+                (isMobile ? size.width * 0.075 : size.width * 0.035)
                 : null,
             right: isRTL
                 ? rightSpace -
-                    8 -
-                    (isMobile ? size.width * 0.075 : size.width * 0.035)
+                8 -
+                (isMobile ? size.width * 0.075 : size.width * 0.035)
                 : null,
             child: Stack(
               alignment: Alignment.center,
@@ -165,7 +167,7 @@ class CustomAlert extends StatelessWidget {
                   AppImages.alertsBack,
                   height: size.height * 0.06,
                   colorFilter:
-                      _getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
+                  _getColorFilter(hslDark.toColor(), ui.BlendMode.srcIn),
                 ),
                 Positioned(
                   top: size.height * 0.015,
@@ -205,7 +207,7 @@ class CustomAlert extends StatelessWidget {
                                     ? size.height * 0.03
                                     : size.height * 0.025),
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: Color(AppColors.white),
                           ),
                         ),
                       ),
@@ -236,7 +238,7 @@ class CustomAlert extends StatelessWidget {
                       message,
                       style: TextStyle(
                         fontSize: messageFontSize ?? size.height * 0.016,
-                        color: Colors.white,
+                        color: Color(AppColors.white),
                       ),
                     ),
                   ),
@@ -254,29 +256,24 @@ class CustomAlert extends StatelessWidget {
 
   /// Reflecting proper icon based on the contentType
   String assetSVG(AlertType contentType) {
-    switch (contentType) {
-      case AlertType.failure:
-
-        /// failure will show `CROSS`
-        return AppImages.alertsFailure;
-      case AlertType.success:
-
-        /// success will show `CHECK`
-        return AppImages.alertsSuccess;
-      case AlertType.warning:
-
-        /// warning will show `EXCLAMATION`
-        return AppImages.alertsWarning;
-      case AlertType.help:
-
-        /// help will show `QUESTION MARK`
-        return AppImages.alertsHelp;
-      default:
-        return AppImages.alertsFailure;
+    if (contentType == AlertType.failure) {
+      /// failure will show `CROSS`
+      return AppImages.alertsFailure;
+    } else if (contentType == AlertType.success) {
+      /// success will show `CHECK`
+      return AppImages.alertsSuccess;
+    } else if (contentType == AlertType.warning) {
+      /// warning will show `EXCLAMATION`
+      return AppImages.alertsWarning;
+    } else if (contentType == AlertType.help) {
+      /// help will show `QUESTION MARK`
+      return AppImages.alertsHelp;
+    } else {
+      return AppImages.alertsFailure;
     }
   }
 
   static ColorFilter? _getColorFilter(
-          ui.Color? color, ui.BlendMode colorBlendMode) =>
+      ui.Color? color, ui.BlendMode colorBlendMode) =>
       color == null ? null : ui.ColorFilter.mode(color, colorBlendMode);
 }

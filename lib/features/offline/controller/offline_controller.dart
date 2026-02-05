@@ -21,6 +21,7 @@ class OfflineController with ChangeNotifier {
 
   List<String> get usersFingerprints => _usersFingerprints;
 
+
   void initialize({required BuildContext ctx}) async {
     final appConfigServiceProvider = Provider.of<AppConfigService>(ctx, listen: false);
     final settings = appConfigServiceProvider.getSettings(type: SettingsType.userSettings);

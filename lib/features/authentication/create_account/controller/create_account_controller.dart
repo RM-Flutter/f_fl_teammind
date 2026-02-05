@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -70,10 +71,14 @@ class CreateAccountController extends ChangeNotifier {
 
         }
       } else {
-        AlertsService.warning(
-            context: context,
-            message: AppStrings.formIsInvalid.tr(),
-            title: AppStrings.formValidation.tr());
+        showToast(
+          AppStrings.formIsInvalid.tr(),
+          context: context,
+          backgroundColor: Colors.red,
+          textStyle: const TextStyle(color: Colors.white),
+          duration: const Duration(seconds: 5),
+          position: StyledToastPosition.bottom,
+        );
       }
       return;
     } catch (err, t) {

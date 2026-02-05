@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +16,7 @@ abstract class FileAndImagePickerService {
         source: type == 'camera' ? ImageSource.camera : ImageSource.gallery,
         imageQuality: quality,
         preferredCameraDevice:
-            cameraDevice == 'front' ? CameraDevice.front : CameraDevice.rear,
+        cameraDevice == 'front' ? CameraDevice.front : CameraDevice.rear,
       );
       if (image == null) return null;
 
@@ -41,23 +42,42 @@ abstract class FileAndImagePickerService {
 
   static List<FilePickerResult> convertMapListToFilePickerResults(List<Map<String, dynamic>> imageMaps) {
     return imageMaps.map((imageData) {
-      final path = imageData["image"] as String?;
-      final name = imageData["fileName"] as String?;
+      final String? path = imageData["image"] as String?;
+      final String fileName = (imageData["fileName"] as String?) ??
+          'image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final dynamic bytesValue = imageData["bytes"] ?? imageData["imageBytes"];
 
-      if (path != null && name != null) {
-        final file = File(path);
+      Uint8List? resolvedBytes;
 
-        final platformFile = PlatformFile(
-          path: path,
-          name: name,
-          size: file.lengthSync(),
-          bytes: file.readAsBytesSync(),
-        );
-
-        return FilePickerResult([platformFile]);
-      } else {
-        throw Exception("Invalid image data format.");
+      if (bytesValue is Uint8List && bytesValue.isNotEmpty) {
+        resolvedBytes = bytesValue;
+      } else if (bytesValue is String && bytesValue.isNotEmpty) {
+        try {
+          resolvedBytes = base64Decode(bytesValue);
+        } catch (error) {
+          debugPrint('Failed to decode base64 image bytes: $error');
+        }
       }
+
+      if (resolvedBytes == null && path != null) {
+        final file = File(path);
+        if (file.existsSync()) {
+          resolvedBytes = file.readAsBytesSync();
+        }
+      }
+
+      if (resolvedBytes == null) {
+        throw Exception("Unable to resolve image bytes for $fileName.");
+      }
+
+      final platformFile = PlatformFile(
+        path: (path != null && File(path).existsSync()) ? path : null,
+        name: fileName,
+        size: resolvedBytes.length,
+        bytes: resolvedBytes,
+      );
+
+      return FilePickerResult([platformFile]);
     }).toList();
   }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/core/constants/app_colors.dart';
+import '../constants/app_colors.dart';
+import '../routing/app_router.dart';
 
-import 'package:app_test/core/constants/app_sizes.dart';
+import '../constants/app_sizes.dart';
 import 'custom_elevated_button.widget.dart';
 
 Future<void> customAlertDialogWithTwoButtons(
@@ -17,11 +19,19 @@ Future<void> customAlertDialogWithTwoButtons(
   Color? actionRightColor,
   Color? actionLeftColor,
 }) async {
+  // Use rootNavigatorKey.currentContext if context is not mounted
+  final dialogContext = rootNavigatorKey.currentContext ?? context;
+  if (!dialogContext.mounted) {
+    debugPrint("❌ Dialog context not mounted");
+    return;
+  }
+  
   return showDialog<void>(
-    context: context,
+    context: dialogContext,
+    useRootNavigator: true, // Use root navigator to ensure it works in offline screen
     barrierDismissible: false,
-    barrierColor: Theme.of(context).dialogTheme.barrierColor,
-    builder: (BuildContext context) {
+    barrierColor: Theme.of(dialogContext).dialogTheme.barrierColor,
+    builder: (BuildContext builderContext) {
       return AlertDialog(
         iconPadding:
             const EdgeInsets.only(right: 24, left: 24, bottom: 32, top: 32),
@@ -29,12 +39,12 @@ Future<void> customAlertDialogWithTwoButtons(
             const EdgeInsets.only(top: 24, right: 24, left: 24, bottom: 24),
         contentPadding: const EdgeInsets.only(bottom: 32, right: 24, left: 24),
         actionsPadding: const EdgeInsets.only(bottom: 18, right: 8, left: 8),
-        contentTextStyle: Theme.of(context).dialogTheme.contentTextStyle,
+        contentTextStyle: Theme.of(builderContext).dialogTheme.contentTextStyle,
         icon: icon != null ? SvgPicture.asset(icon) : null,
         title: Text(
           title,
           textAlign: TextAlign.center,
-          style:  TextStyle(
+          style: TextStyle(
               color: Color(AppColors.dark),
               fontWeight: FontWeight.w700,
               fontSize: 18),
@@ -42,7 +52,7 @@ Future<void> customAlertDialogWithTwoButtons(
         content: Text(
           content,
           textAlign: TextAlign.center,
-          style: Theme.of(context).dialogTheme.contentTextStyle,
+          style: Theme.of(builderContext).dialogTheme.contentTextStyle,
         ),
         actions: <Widget>[
           Row(
@@ -53,7 +63,9 @@ Future<void> customAlertDialogWithTwoButtons(
                 titleSize: AppSizes.s12,
                 title: actionLeftText,
                 onPressed: () async {
-                  Navigator.pop(context);
+                  if (builderContext.mounted) {
+                    Navigator.of(builderContext, rootNavigator: true).pop();
+                  }
                 },
               )),
               const SizedBox(width: 8),
@@ -64,7 +76,9 @@ Future<void> customAlertDialogWithTwoButtons(
                 title: actionRightText,
                 onPressed: () async {
                   await onRightActionPressed();
-                  Navigator.pop(context);
+                  if (builderContext.mounted) {
+                    Navigator.of(builderContext, rootNavigator: true).pop();
+                  }
                 },
               )),
             ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -96,11 +97,11 @@ class NotificationService {
   bool _shouldShowNotification(RemoteMessage message) {
     final title = message.data['title'] ?? message.notification?.title ?? '';
     final body = message.data['body'] ?? message.notification?.body ?? '';
-    
+
     // Don't show if title or body is empty, null, or equals "No Title"/"No Body"
-    if (title.isEmpty || 
-        title == 'No Title' || 
-        body.isEmpty || 
+    if (title.isEmpty ||
+        title == 'No Title' ||
+        body.isEmpty ||
         body == 'No Body') {
       return false;
     }
@@ -122,7 +123,23 @@ class NotificationService {
   void _showNotification(RemoteMessage message) async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    const androidDetails = AndroidNotificationDetails(
+    // Get title and body (should already be validated by _shouldShowNotification)
+    final title = message.data['title'] ?? message.notification?.title ?? '';
+    final body = message.data['body'] ?? message.notification?.body ?? '';
+
+    // For web, use app icon path; for mobile, use drawable resource
+    // Note: Icon-192.png is in web/icons/ folder (used in manifest.json)
+    // If you want to use your app logo, copy it to web/icons/ and update the path here
+    const androidDetails = kIsWeb
+        ? const AndroidNotificationDetails(
+      'channel_id',
+      'High Importance Notifications',
+      importance: Importance.high,
+      priority: Priority.high,
+      playSound: true,
+      icon: 'icons/Icon-192.png', // Use app icon from web/icons/ instead of Chrome logo
+    )
+        : const AndroidNotificationDetails(
       'channel_id',
       'High Importance Notifications',
       importance: Importance.high,
@@ -130,12 +147,9 @@ class NotificationService {
       playSound: true,
       icon: '@drawable/notif_icon',
     );
-    const iOSDetails = DarwinNotificationDetails();
-    const details = NotificationDetails(android: androidDetails, iOS: iOSDetails);
 
-    // Get title and body (should already be validated by _shouldShowNotification)
-    final title = message.data['title'] ?? message.notification?.title ?? '';
-    final body = message.data['body'] ?? message.notification?.body ?? '';
+    const iOSDetails = DarwinNotificationDetails();
+    final details = NotificationDetails(android: androidDetails, iOS: iOSDetails);
 
     try {
       await flutterLocalNotificationsPlugin.show(

@@ -1,10 +1,10 @@
-import 'package:app_test/core/services/dynamic_app_config_service.dart';
+import '../services/dynamic_app_config_service.dart';
 
 abstract class AppColors {
 
   static int get buttonColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('buttonColor'),
-    0xFF3389EE,
+    0xFF263E4E,
   );
   static int get buttonSecondaryColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('buttonSecondaryColor'),
@@ -170,7 +170,7 @@ abstract class AppColors {
   // ============================================
   // الألوان القديمة (Legacy Aliases - للتوافق)
   // ============================================
-  
+
   static const int oC2Color = 0xffAE702B;
   static int get primary => buttonColor;
   static int get blue => buttonSecondaryColor;
@@ -200,7 +200,7 @@ abstract class AppColors {
   static const int green = 0xff09814D;
   static const int veryDarkBlue = 0xff0D3B6F;
   static const int darkRed = 0xff851919;
-  static const int navyBlue = 0xff2C376C;
+  static const int navyBlue = 0xff555C60;
   static const int lightGreyE5 = 0xffE5E5E5;
   static const int grey47 = 0xFF474747;
   static const int grey40 = 0xff404040;
@@ -220,10 +220,11 @@ abstract class AppColors {
   static const int lightBlue = 0xff3AC0E5;
   static const int purple = 0xff9C4995;
 
+
   // ============================================
   // Legacy Colors (للتوافق مع الكود القديم)
   // ============================================
-  
+
   // application colors (legacy)
   static int get c1 => primary;
   static int get c2 => dark;

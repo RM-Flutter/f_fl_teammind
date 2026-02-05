@@ -10,16 +10,16 @@ class GetOneBlogModel {
     status = json['status'];
     message = json['message'];
     create = json['create'];
-    item = json['item'] != null ? Item.fromJson(json['item']) : null;
+    item = json['item'] != null ? new Item.fromJson(json['item']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
-    data['create'] = create;
-    if (item != null) {
-      data['item'] = item!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['create'] = this.create;
+    if (this.item != null) {
+      data['item'] = this.item!.toJson();
     }
     return data;
   }
@@ -62,48 +62,48 @@ class Item {
     if (json['main_gallery'] != null) {
       mainGallery = <MainGallery>[];
       json['main_gallery'].forEach((v) {
-        mainGallery!.add(MainGallery.fromJson(v));
+        mainGallery!.add(new MainGallery.fromJson(v));
       });
     }
     if (json['main_thumbnail'] != null) {
       mainThumbnail = <MainThumbnail>[];
       json['main_thumbnail'].forEach((v) {
-        mainThumbnail!.add(MainThumbnail.fromJson(v));
+        mainThumbnail!.add(new MainThumbnail.fromJson(v));
       });
     }
     category = json['category'] != null
-        ? Category.fromJson(json['category'])
+        ? new Category.fromJson(json['category'])
         : null;
     categoryId = json['category_id'];
     createdAt = json['created_at'];
     status =
-    json['status'] != null ? Status.fromJson(json['status']) : null;
+    json['status'] != null ? new Status.fromJson(json['status']) : null;
     createdDate = json['created_date'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['slug'] = slug;
-    data['title'] = title;
-    data['short_description'] = shortDescription;
-    data['content'] = content;
-    if (mainGallery != null) {
-      data['main_gallery'] = mainGallery!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['slug'] = this.slug;
+    data['title'] = this.title;
+    data['short_description'] = this.shortDescription;
+    data['content'] = this.content;
+    if (this.mainGallery != null) {
+      data['main_gallery'] = this.mainGallery!.map((v) => v.toJson()).toList();
     }
-    if (mainThumbnail != null) {
+    if (this.mainThumbnail != null) {
       data['main_thumbnail'] =
-          mainThumbnail!.map((v) => v.toJson()).toList();
+          this.mainThumbnail!.map((v) => v.toJson()).toList();
     }
-    if (category != null) {
-      data['category'] = category!.toJson();
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
     }
-    data['category_id'] = categoryId;
-    data['created_at'] = createdAt;
-    if (status != null) {
-      data['status'] = status!.toJson();
+    data['category_id'] = this.categoryId;
+    data['created_at'] = this.createdAt;
+    if (this.status != null) {
+      data['status'] = this.status!.toJson();
     }
-    data['created_date'] = createdDate;
+    data['created_date'] = this.createdDate;
     return data;
   }
 }
@@ -133,19 +133,19 @@ class MainGallery {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['type'] = type;
-    data['title'] = title;
-    data['alt'] = alt;
-    data['file'] = file;
-    data['thumbnail'] = thumbnail;
-    if (sizes != null) {
-      data['sizes'] = sizes!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['title'] = this.title;
+    data['alt'] = this.alt;
+    data['file'] = this.file;
+    data['thumbnail'] = this.thumbnail;
+    if (this.sizes != null) {
+      data['sizes'] = this.sizes!.toJson();
     }
     return data;
   }
@@ -175,19 +175,19 @@ class MainThumbnailCategory {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['type'] = type;
-    data['title'] = title;
-    data['alt'] = alt;
-    data['file'] = file;
-    data['thumbnail'] = thumbnail;
-    if (sizes != null) {
-      data['sizes'] = sizes!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['title'] = this.title;
+    data['alt'] = this.alt;
+    data['file'] = this.file;
+    data['thumbnail'] = this.thumbnail;
+    if (this.sizes != null) {
+      data['sizes'] = this.sizes!.toJson();
     }
     return data;
   }
@@ -217,19 +217,19 @@ class MainThumbnail {
     alt = json['alt'];
     file = json['file'];
     thumbnail = json['thumbnail'];
-    sizes = json['sizes'] != null ? Sizes.fromJson(json['sizes']) : null;
+    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['type'] = type;
-    data['title'] = title;
-    data['alt'] = alt;
-    data['file'] = file;
-    data['thumbnail'] = thumbnail;
-    if (sizes != null) {
-      data['sizes'] = sizes!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['title'] = this.title;
+    data['alt'] = this.alt;
+    data['file'] = this.file;
+    data['thumbnail'] = this.thumbnail;
+    if (this.sizes != null) {
+      data['sizes'] = this.sizes!.toJson();
     }
     return data;
   }
@@ -264,14 +264,14 @@ class Sizes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['thumbnail'] = thumbnail;
-    data['medium'] = medium;
-    data['large'] = large;
-    data['1200_800'] = s1200800;
-    data['800_1200'] = s8001200;
-    data['1200_300'] = s1200300;
-    data['300_1200'] = s3001200;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['thumbnail'] = this.thumbnail;
+    data['medium'] = this.medium;
+    data['large'] = this.large;
+    data['1200_800'] = this.s1200800;
+    data['800_1200'] = this.s8001200;
+    data['1200_300'] = this.s1200300;
+    data['300_1200'] = this.s3001200;
     return data;
   }
 }
@@ -289,18 +289,18 @@ class Category {
     if (json['main_thumbnail'] != null) {
       mainThumbnail = <MainThumbnailCategory>[];
       json['main_thumbnail'].forEach((v) {
-        mainThumbnail!.add(MainThumbnailCategory.fromJson(v));
+        mainThumbnail!.add(new MainThumbnailCategory.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    if (mainThumbnail != null) {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['title'] = this.title;
+    if (this.mainThumbnail != null) {
       data['main_thumbnail'] =
-          mainThumbnail!.map((v) => v.toJson()).toList();
+          this.mainThumbnail!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -318,9 +318,9 @@ class Status {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['key'] = key;
-    data['value'] = value;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['key'] = this.key;
+    data['value'] = this.value;
     return data;
   }
 }

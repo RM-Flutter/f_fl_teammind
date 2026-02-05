@@ -3,9 +3,10 @@ library animated_custom_dropdown;
 export 'custom_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/core/constants/app_strings.dart';
 
-import 'package:app_test/core/constants/app_sizes.dart';
+import '../../constants/app_colors.dart';
+import '../../constants/app_sizes.dart';
+import '../../constants/app_strings.dart';
 part 'animated_section.dart';
 part 'dropdown_field.dart';
 part 'dropdown_overlay.dart';
@@ -153,7 +154,7 @@ class CustomDropdownState extends State<CustomDropdown> {
     // hint style :: if provided then merge with default
     final hintStyle = const TextStyle(
       fontSize: 16,
-      color: Color(0xFFA7A7A7),
+      color: Color(AppColors.greyA7),
       fontWeight: FontWeight.w400,
     ).merge(widget.hintStyle);
 

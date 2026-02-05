@@ -55,7 +55,7 @@ class NotificationSingleModel {
       // sendType: (json['send_type'] as List<dynamic>?)
       //     ?.map((item) => SendType.fromJson(item))
       //     .toList(),
-       ptype: json['ptype'] != null ? PType.fromJson(json['ptype']) : null,
+      ptype: json['ptype'] != null ? PType.fromJson(json['ptype']) : null,
       // pfor: json['pfor'] != null ? PFor.fromJson(json['pfor']) : null,
       // pforValue: (json['pfor_value'] as List<dynamic>?)
       //     ?.map((item) => PForValue.fromJson(item))

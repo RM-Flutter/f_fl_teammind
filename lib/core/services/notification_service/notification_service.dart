@@ -40,12 +40,12 @@ abstract class PushNotificationService {
   /// Sets up listeners for different states of the application.
   static Future<void> init(
       {required String apiUrlThatReciveUserToken,
-      required BuildContext context,
-      Future<void> Function({required dynamic payload})?
-          methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen,
-      Future<void> Function({required dynamic payload})?
-          callbackWhenHandelOnNotificationCliked,
-      Map<String, dynamic>? requestBody}) async {
+        required BuildContext context,
+        Future<void> Function({required dynamic payload})?
+        methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen,
+        Future<void> Function({required dynamic payload})?
+        callbackWhenHandelOnNotificationCliked,
+        Map<String, dynamic>? requestBody}) async {
     try {
       if (_isInitialized) {
         // await _sendToken(
@@ -71,9 +71,9 @@ abstract class PushNotificationService {
             message: message,
             isForeground: true,
             methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen:
-                methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen,
+            methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen,
             callbackWhenHandelOnNotificationCliked:
-                callbackWhenHandelOnNotificationCliked);
+            callbackWhenHandelOnNotificationCliked);
       });
 
       // Listener for messages received when the app is opened from the background
@@ -83,7 +83,7 @@ abstract class PushNotificationService {
             message: message,
             isForeground: false,
             methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen:
-                null,
+            null,
             callbackWhenHandelOnNotificationCliked: null);
       });
 
@@ -182,11 +182,11 @@ abstract class PushNotificationService {
   //.   }
   static void handleOnNotificationReceived(
       {required RemoteMessage message,
-      Future<void> Function({required dynamic payload})?
-          methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen,
-      bool isForeground = false,
-      Future<void> Function({required dynamic payload})?
-          callbackWhenHandelOnNotificationCliked}) async {
+        Future<void> Function({required dynamic payload})?
+        methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen,
+        bool isForeground = false,
+        Future<void> Function({required dynamic payload})?
+        callbackWhenHandelOnNotificationCliked}) async {
     if (isForeground) {
       RemoteNotification? notification = message.notification;
       dynamic payload;
@@ -194,7 +194,7 @@ abstract class PushNotificationService {
         payload = jsonDecode(message.data['payload']);
       }
       if (methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen !=
-              null &&
+          null &&
           payload != null) {
         //callback function
         await methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen
@@ -206,11 +206,11 @@ abstract class PushNotificationService {
       if (notification != null) {
         final title = notification.title ?? '';
         final body = notification.body ?? '';
-        
+
         // Don't show if title or body is empty, null, or equals "No Title"/"No Body"
-        if (title.isNotEmpty && 
-            title != 'No Title' && 
-            body.isNotEmpty && 
+        if (title.isNotEmpty &&
+            title != 'No Title' &&
+            body.isNotEmpty &&
             body != 'No Body') {
           TimeoutMessage.show(
               title: title,
@@ -219,7 +219,7 @@ abstract class PushNotificationService {
               onClick: () => handleOnNotificationClicked(
                   payload: payload,
                   callbackWhenHandelOnNotificationCliked:
-                      callbackWhenHandelOnNotificationCliked));
+                  callbackWhenHandelOnNotificationCliked));
         } else {
           debugPrint("⚠️ Skipping notification: No valid title or body");
         }
@@ -248,8 +248,8 @@ abstract class PushNotificationService {
   /// }
   static void handleOnNotificationClicked(
       {required dynamic payload,
-      Future<void> Function({required dynamic payload})?
-          callbackWhenHandelOnNotificationCliked}) async {
+        Future<void> Function({required dynamic payload})?
+        callbackWhenHandelOnNotificationCliked}) async {
     try {
       await callbackWhenHandelOnNotificationCliked?.call(payload: payload);
     } catch (e) {
@@ -260,14 +260,14 @@ abstract class PushNotificationService {
   /// Checks for notifications if the app was killed and then opened.
   static void checkNotificationOnKilledApp(
       {Future<void> Function({required dynamic payload})?
-          callbackWhenHandelOnNotificationCliked}) async {
+      callbackWhenHandelOnNotificationCliked}) async {
     RemoteMessage? message =
-        await FirebaseMessaging.instance.getInitialMessage();
+    await FirebaseMessaging.instance.getInitialMessage();
     if (message != null) {
       handleOnNotificationReceived(
           message: message,
           callbackWhenHandelOnNotificationCliked:
-              callbackWhenHandelOnNotificationCliked);
+          callbackWhenHandelOnNotificationCliked);
     }
   }
 }

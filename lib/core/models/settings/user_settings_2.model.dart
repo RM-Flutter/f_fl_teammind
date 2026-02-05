@@ -48,7 +48,7 @@ class UserSettings2Model extends AppSettingsModel {
     //       (key, value) => MapEntry(key, Balance.fromJson(value)),
     // )
     //     : {},
-      canUseHolidays: json['can_use_holidays'] == "1",
+      canUseHolidays: json['can_use_holidays'],
       weekend: (json['weekend'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),

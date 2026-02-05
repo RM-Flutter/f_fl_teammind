@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/services/app_theme_service.dart';
-import 'package:app_test/core/services/localization_service.dart';
 
-import 'package:app_test/core/constants/app_colors.dart';
+import '../constants/app_sizes.dart';
+
 
 class ButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -19,13 +17,10 @@ class ButtonWidget extends StatelessWidget {
   final Color? fontColor;
   final FontWeight? fontWeight;
   final double? fontSize;
-  final double? buttonHeight;
-  final double? buttonWidth;
   const ButtonWidget({
     super.key,
     required this.onPressed,
     this.backgroundColor,
-    this.buttonHeight,
     this.borderRadius = 50,
     this.borderSide = BorderSide.none,
     this.padding,
@@ -36,117 +31,92 @@ class ButtonWidget extends StatelessWidget {
     this.fontColor,
     this.fontWeight,
     this.fontSize,
-    this.buttonWidth,
   });
+
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading == false ? onPressed : null,
-      style: ButtonStyle(
-        elevation: WidgetStateProperty.all(0),
-        padding: WidgetStateProperty.all(
-          padding ??
-              const EdgeInsets.symmetric(
-                  horizontal: AppSizes.s18, vertical: AppSizes.s12),
-        ),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-            side: borderSide,
-          ),
-        ),
-        backgroundColor: isLoading == false ?WidgetStateProperty.all(
-          backgroundColor ?? Color(AppColors.primary),
-        ): WidgetStateProperty.all(
-          Colors.transparent,
-        ),
-      ),
-      // child: Container(
-      //padding: padding ?? EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      // decoration: ShapeDecoration(
-      //   color: backgroundColor ?? AppColors.whiteBackground,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(borderRadius ?? 6),
-      //     side: borderSide,
-      //   ),
-      // ),
-      child: (padding == EdgeInsets.zero)
-          ? SizedBox(
-              height: buttonHeight ?? 50,
-              width: buttonWidth ?? 225,
-              child: isLoading == false
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        svgIcon != null
-                            ? Padding(
-                                padding: LocalizationService.isArabic(context: context)?const EdgeInsets.only(left: AppSizes.s12) :const EdgeInsets.only(right: AppSizes.s12),
-                                child: SvgPicture.asset(
-                                  svgIcon!,
-                                  colorFilter: ColorFilter.mode(
-                                      svgIconColor ??
-                                          AppThemeService
-                                              .colorPalette.fabIconColor.color,
-                                      BlendMode.srcIn),
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                        Text(
-                          title,
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: fontWeight ?? FontWeight.w500,
-                                    height: 0.08,
-                                    color: fontColor ??
-                                        AppThemeService.colorPalette
-                                            .quinaryTextColor.color,
-                                    fontSize: fontSize,
-                                  ),
-                        ),
-                      ],
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
+    return isLoading == false
+        ? ElevatedButton(
+            onPressed: isLoading == false ? onPressed : null,
+            style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+                  elevation: WidgetStateProperty.all(0),
+                  padding: WidgetStateProperty.all(padding),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(borderRadius),
+                      side: borderSide,
                     ),
-            )
-          : isLoading == false
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    svgIcon != null
-                        ? Padding(
-                      padding: LocalizationService.isArabic(context: context)?const EdgeInsets.only(left: AppSizes.s12) :const EdgeInsets.only(right: AppSizes.s12),
-                            child: SvgPicture.asset(
-                              svgIcon!,
-                              colorFilter: ColorFilter.mode(
-                                  svgIconColor ??
-                                      AppThemeService
-                                          .colorPalette.fabIconColor.color,
-                                  BlendMode.srcIn),
-                              fit: BoxFit.scaleDown,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: fontWeight ?? FontWeight.w500,
-                            height: 0.08,
-                            color: fontColor ??
-                                AppThemeService
-                                    .colorPalette.quinaryTextColor.color,
-                            fontSize: fontSize,
-                          ),
-                    ),
-                  ],
-                )
-              : const Center(
-                  child: CircularProgressIndicator(),
+                  ),
+                  backgroundColor: WidgetStateProperty.all(
+                    backgroundColor,
+                  ),
+                  textStyle: WidgetStateProperty.resolveWith((_) {
+                    return TextStyle(
+                      fontWeight: fontWeight,
+                      // height: 0.08,
+
+                      color:
+                          fontColor ?? Theme.of(context).colorScheme.onPrimary,
+                      fontSize: fontSize,
+                    );
+                  }),
                 ),
-      // ),
-    );
+            // child: Container(
+            //padding: padding ?? EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            // decoration: ShapeDecoration(
+            //   color: backgroundColor ?? AppColors.whiteBackground,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(borderRadius ?? 6),
+            //     side: borderSide,
+            //   ),
+            // ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                svgIcon != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: AppSizes.s12),
+                        child: SvgPicture.asset(
+                          svgIcon!,
+                          fit: BoxFit.scaleDown,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                Text(
+                  title,
+                  style: Theme.of(context)
+                      .elevatedButtonTheme
+                      .style
+                      ?.textStyle
+                      ?.resolve({WidgetState.focused})?.copyWith(
+                    fontWeight: fontWeight,
+                    // height: 0.08,
+
+                    color: fontColor ?? Theme.of(context).colorScheme.onPrimary,
+                    fontSize: fontSize,
+                  ),
+                  // textStyle: AppTextStyle.textStyle(
+                  //   color: childColor ?? AppColors.white,
+                  //   fontSize: AppFontSize.text16,
+                  //   fontWeight: AppFontWeight.bold,
+                  //   height: 0.10,
+                  // ),
+                ),
+              ],
+            )
+
+            // ),
+            )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Theme.of(context).progressIndicatorTheme.color,
+              ),
+            ],
+          );
   }
 }

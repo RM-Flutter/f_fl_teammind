@@ -14,7 +14,9 @@ import 'package:path/path.dart' as path;
 import 'package:app_test/core/routing/app_router.dart';
 
 import 'package:app_test/core/models/operation_result.model.dart';
+import '../../../../platform/platform_is.dart';
 import '../../../app_config_service.dart';
+import '../../../sentry_serivce.dart';
 import '../../../telegram_error_service.dart';
 import '../../api_service_helpers.dart';
 import '../../backend_services_interface.dart';
@@ -83,7 +85,7 @@ class DioApiService implements BackEndServicesInterface {
                 success: true, message: reply["message"], data: reply);
           } else {
             return OperationResult<T>(
-                success: false, message: reply["message"] ?? "", errors:reply["errors"] );
+                success: false, message: reply["message"] ?? "");
           }
         }
         return ApiServiceHelpers.parseResponse<T>(
@@ -96,13 +98,13 @@ class DioApiService implements BackEndServicesInterface {
 
       case 401:
         respond = 'Unauthorized';
-        debugPrint("Unauthorized is $respond");
+        debugPrint("Unauthorized is ${respond}");
         // _toast.toastMethod(LocaleKeys.respond_401.tr());
         final appConfigService = Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true).then((v){
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v){
           if (context.mounted) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
           }
         }).catchError((e) {
           if (context.mounted) {
@@ -218,7 +220,7 @@ class DioApiService implements BackEndServicesInterface {
         queryParameters: queryParameters,
         options: Options(
             sendTimeout: const Duration(minutes: 2),
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
                 additionalHeaders: header, context: context)),
       );
       return await _handleResponse<T>(
@@ -226,17 +228,41 @@ class DioApiService implements BackEndServicesInterface {
           applyTokenLogic: checkOnTokenExpiration!,
           dataKey: dataKey,
           context: context);
-    } on DioException catch (e) {
+    } on DioError catch (e) {
       final statusCode = e.response?.statusCode;
       debugPrint("Caught DioError with status code: $statusCode");
+
+      // Handle CORS errors on web
+      if (kIsWeb || PlatformIs.web) {
+        final errorMessage = e.message?.toLowerCase() ?? '';
+        // التحقق من أخطاء CORS من خلال رسالة الخطأ أو عدم وجود response
+        if (errorMessage.contains('cors') ||
+            errorMessage.contains('access-control-allow-origin') ||
+            errorMessage.contains('blocked by cors policy') ||
+            (e.response == null && errorMessage.isNotEmpty)) {
+          debugPrint('⚠️ CORS Error in get(): ${e.message}');
+          debugPrint('⚠️ Request URL: ${e.requestOptions.uri}');
+          return OperationResult<T>(
+            success: false,
+            message: 'CORS Error: The server does not allow requests from this origin. Please contact the server administrator.',
+          );
+        }
+      }
 
       if (statusCode == 401) {
         debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false).then((v) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
+        }).catchError((e) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
         });
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
@@ -249,9 +275,9 @@ class DioApiService implements BackEndServicesInterface {
       debugPrint(
         '--------- Failed get() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}',
       );
-      // Send to Telegram
-      final screenName = TelegramErrorService.getCurrentScreenName(context);
-      TelegramErrorService.captureException(
+      // Send to Sentry
+      final screenName = SentryService.getCurrentScreenName(context);
+      SentryService.captureException(
         err,
         stackTrace: t,
         screenName: screenName,
@@ -280,7 +306,7 @@ class DioApiService implements BackEndServicesInterface {
         url,
         data: jsonEncode(data),
         options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
                 additionalHeaders: header, context: context)),
       );
       return _handleResponse(
@@ -288,7 +314,7 @@ class DioApiService implements BackEndServicesInterface {
           applyTokenLogic: checkOnTokenExpiration!,
           dataKey: dataKey,
           context: context);
-    } on DioException catch (e) {
+    } on DioError catch (e) {
       final statusCode = e.response?.statusCode;
       debugPrint("Caught DioError with status code: $statusCode");
 
@@ -296,9 +322,20 @@ class DioApiService implements BackEndServicesInterface {
         debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false).then((v) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+          if (context.mounted) {
+            context.goNamed(
+              AppRoutes.splash.name,
+              pathParameters: {'lang': context.locale.languageCode,},
+            );
+          }
+        }).catchError((e) {
+          if (context.mounted) {
+            context.goNamed(
+              AppRoutes.splash.name,
+              pathParameters: {'lang': context.locale.languageCode,},
+            );
+          }
         });
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
@@ -310,9 +347,9 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed post() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      // Send to Telegram
-      final screenName = TelegramErrorService.getCurrentScreenName(context);
-      TelegramErrorService.captureException(
+      // Send to Sentry
+      final screenName = SentryService.getCurrentScreenName(context);
+      SentryService.captureException(
         err,
         stackTrace: t,
         screenName: screenName,
@@ -370,9 +407,9 @@ class DioApiService implements BackEndServicesInterface {
       final response = await _dio.post(
         _getUri(url).toString(),
         data: formData,
-       options: Options(
-      headers: ApiServiceHelpers.buildHeaders(
-      additionalHeaders: header, context: context)),
+        options: Options(
+            headers: await ApiServiceHelpers.buildHeaders(
+                additionalHeaders: header, context: context)),
       );
 
       if (response.statusCode == 200) {
@@ -388,7 +425,7 @@ class DioApiService implements BackEndServicesInterface {
           message: 'Result code = ${response.statusCode}',
         );
       }
-    } on DioException catch (e) {
+    } on DioError catch (e) {
       final statusCode = e.response?.statusCode;
       debugPrint("Caught DioError with status code: $statusCode");
 
@@ -396,9 +433,16 @@ class DioApiService implements BackEndServicesInterface {
         debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false).then((v) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
+        }).catchError((e) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
         });
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
@@ -410,9 +454,9 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, stackTrace) {
       debugPrint(
           'Failed postWithFormData() ❌ \n error ${err.toString()} - in Line :- ${stackTrace.toString()}');
-      // Send to Telegram
-      final screenName = TelegramErrorService.getCurrentScreenName(context);
-      TelegramErrorService.captureException(
+      // Send to Sentry
+      final screenName = SentryService.getCurrentScreenName(context);
+      SentryService.captureException(
         err,
         stackTrace: stackTrace,
         screenName: screenName,
@@ -503,7 +547,7 @@ class DioApiService implements BackEndServicesInterface {
         url,
         data: jsonEncode(data),
         options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
                 additionalHeaders: header, context: context)),
       );
       return _handleResponse(
@@ -512,7 +556,7 @@ class DioApiService implements BackEndServicesInterface {
           context: context,
           allData: allData,
           dataKey: dataKey);
-    }on DioException catch (e) {
+    }on DioError catch (e) {
       final statusCode = e.response?.statusCode;
       debugPrint("Caught DioError with status code: $statusCode");
 
@@ -520,9 +564,16 @@ class DioApiService implements BackEndServicesInterface {
         debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false).then((v) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
+        }).catchError((e) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
         });
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
@@ -534,18 +585,6 @@ class DioApiService implements BackEndServicesInterface {
     }  catch (err, t) {
       debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      // Send to Telegram
-      final screenName = TelegramErrorService.getCurrentScreenName(context);
-      TelegramErrorService.captureException(
-        err,
-        stackTrace: t,
-        screenName: screenName,
-        extra: {
-          'url': url,
-          'method': 'PUT',
-          'dataKey': dataKey,
-        },
-      );
       return OperationResult(success: false, message: err.toString());
     }
   }
@@ -562,7 +601,7 @@ class DioApiService implements BackEndServicesInterface {
         url,
         data: jsonEncode(data),
         options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
                 additionalHeaders: header, context: context)),
       );
       return _handleResponse(
@@ -571,7 +610,7 @@ class DioApiService implements BackEndServicesInterface {
           dataKey: dataKey,
           allData: allData,
           context: context);
-    }on DioException catch (e) {
+    }on DioError catch (e) {
       final statusCode = e.response?.statusCode;
       debugPrint("Caught DioError with status code: $statusCode");
 
@@ -579,9 +618,16 @@ class DioApiService implements BackEndServicesInterface {
         debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false).then((v) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
+        }).catchError((e) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
         });
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
@@ -593,18 +639,6 @@ class DioApiService implements BackEndServicesInterface {
     }  catch (err, t) {
       debugPrint(
           '--------- Failed delete() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      // Send to Telegram
-      final screenName = TelegramErrorService.getCurrentScreenName(context);
-      TelegramErrorService.captureException(
-        err,
-        stackTrace: t,
-        screenName: screenName,
-        extra: {
-          'url': url,
-          'method': 'DELETE',
-          'dataKey': dataKey,
-        },
-      );
       return OperationResult(success: false, message: err.toString());
     }
   }
@@ -638,7 +672,7 @@ class DioApiService implements BackEndServicesInterface {
         url,
         data: formData,
         options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
                 additionalHeaders: header, context: context)),
       );
 
@@ -655,7 +689,7 @@ class DioApiService implements BackEndServicesInterface {
           message: 'Result code = ${response.statusCode}',
         );
       }
-    }on DioException catch (e) {
+    }on DioError catch (e) {
       final statusCode = e.response?.statusCode;
       debugPrint("Caught DioError with status code: $statusCode");
 
@@ -663,9 +697,16 @@ class DioApiService implements BackEndServicesInterface {
         debugPrint("Unauthorized (caught in DioError catch block)");
         final appConfigService =
         Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false).then((v) {
-          context.goNamed(AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode});
+        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
+        }).catchError((e) {
+          if (context.mounted) {
+            context.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': context.locale.languageCode});
+          }
         });
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
@@ -677,19 +718,6 @@ class DioApiService implements BackEndServicesInterface {
     }  catch (err, t) {
       debugPrint(
           'Failed postFileWith_dio ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      // Send to Telegram
-      final screenName = TelegramErrorService.getCurrentScreenName(context);
-      TelegramErrorService.captureException(
-        err,
-        stackTrace: t,
-        screenName: screenName,
-        extra: {
-          'url': url,
-          'method': 'POST_FILE',
-          'dataKey': dataKey,
-          'fileName': name,
-        },
-      );
       return OperationResult<T>(
         success: false,
         message: err.toString(),
@@ -709,7 +737,7 @@ class DioApiService implements BackEndServicesInterface {
         url,
         data: jsonEncode(data),
         options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
                 additionalHeaders: header, context: context)),
       );
       return _handleResponse(
@@ -789,7 +817,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await client.post(url,
           data: utf8.encode(body),
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -836,7 +864,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await client.post(url,
           data: json.encode(data, toEncodable: ApiServiceHelpers.customEncode),
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -965,7 +993,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await client.post(url,
           data: json.encode(data, toEncodable: ApiServiceHelpers.customEncode),
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -1012,7 +1040,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await client.put(url,
           data: json.encode(data, toEncodable: ApiServiceHelpers.customEncode),
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -1059,7 +1087,7 @@ class DioApiService implements BackEndServicesInterface {
       var client = Dio();
       var response = await client.get(url,
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -1116,7 +1144,7 @@ class DioApiService implements BackEndServicesInterface {
       var client = Dio();
       var response = await client.get(url,
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -1166,7 +1194,7 @@ class DioApiService implements BackEndServicesInterface {
       var client = Dio();
       var response = await client.delete(url,
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -1216,7 +1244,7 @@ class DioApiService implements BackEndServicesInterface {
       var client = Dio();
       var response = await client.delete(url,
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),
@@ -1263,7 +1291,7 @@ class DioApiService implements BackEndServicesInterface {
       var client = Dio();
       var response = await client.get(url,
           options: Options(
-            headers: ApiServiceHelpers.buildHeaders(
+            headers: await ApiServiceHelpers.buildHeaders(
               additionalHeaders: header,
               context: context,
             ),

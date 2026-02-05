@@ -1,19 +1,33 @@
+
 abstract class AppConstants {
   static  List<Map<String, dynamic>>? requestsTypess;
   static  List? fingerPrints = [];
-  static const String base = "https://lab.r-m.dev";
-  static const String baseUrl = "$base/api";
+  static const String _defaultBase = "https://lab.r-m.dev";
+
+  /// Get base URL from cache or use default
+  static String get base {
+    final cachedBase = "https://a4.r-m.dev";
+
+    // final cachedBase = CacheHelper.getString("custom_domain");
+    if (cachedBase != null && cachedBase.isNotEmpty) {
+      return cachedBase;
+    }
+    return _defaultBase;
+  }
+
+  static String get baseUrl => "$base/api";
   static const String refreshTokenBaseUrl = "http://refresh_token_test-api/";
-  static const String appPackageName = "com.rightmindtest.rmtest";
+  static const String appPackageName = "com.rightmindtest.leeds";
   static const String fontFamilyPoppins = 'Poppins';
   static const String fontFamilyIbrand = 'Ibrand';
   static const String country = 'EG';
   static const String countryCode = '+20';
+  static const String fontFamilyInter = 'Inter';
   static const String fontFamilyMontserratArabic = 'Montserrat-Arabic';
-  static const String socialLoginGoogle = '$base/auth/socialite/google/login?redirect_url=$base/front-end/social_login&device_unique_id=';
-  static const String socialLoginFacebook = '$base/auth/socialite/facebook/login?redirect_url=$base/front-end/social_login&device_unique_id=';
-  static const String socialLoginLinkedIn = '$base/auth/socialite/linkedin-openid/login?redirect_url=$base/front-end/social_login&device_unique_id=';
-  static const String socialLoginAppleStore = '$base/auth/socialite/apple/login?redirect_url=$base/front-end/social_login&device_unique_id=';
+  static String get socialLoginGoogle => '$base/auth/socialite/google/login?redirect_url=$base/front-end/social_login&device_unique_id=';
+  static String get socialLoginFacebook => '$base/auth/socialite/facebook/login?redirect_url=$base/front-end/social_login&device_unique_id=';
+  static String get socialLoginLinkedIn => '$base/auth/socialite/linkedin-openid/login?redirect_url=$base/front-end/social_login&device_unique_id=';
+  static String get socialLoginAppleStore => '$base/auth/socialite/apple/login?redirect_url=$base/front-end/social_login&device_unique_id=';
   static const Map<String, String> countryDialCodes = {
     'AF': '+93', // أفغانستان
     'AL': '+355', // ألبانيا

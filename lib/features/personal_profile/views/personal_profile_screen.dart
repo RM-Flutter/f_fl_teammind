@@ -13,7 +13,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import '../../../core/utils/base_page/mobile.header.dart';
+import '../../../core/utils/base_page/mobile_header.dart';
 import '../../../core/utils/base_page/mobile.scaffold.dart';
 import '../../authentication/shared/widgets/phone_number_field.dart';
 import '../controllers/personal_profile_controller.dart';

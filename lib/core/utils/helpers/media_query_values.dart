@@ -8,10 +8,10 @@ extension MediaQueryValues on BuildContext {
   double get toPadding => MediaQuery.of(this).viewPadding.top;
   double get bottom => MediaQuery.of(this).viewInsets.bottom;
   double get devicePixelRatio => MediaQuery.of(this).devicePixelRatio;
-  // double get authScreenPadding => MediaQuery.of(this).size.width*.04;
-  // double get screenPadding => MediaQuery.of(this).size.width*.02;
+// double get authScreenPadding => MediaQuery.of(this).size.width*.04;
+// double get screenPadding => MediaQuery.of(this).size.width*.02;
 
-  // double pixelTodb(double pixel)=> pixel/devicePixelRatio;
-  // double h(double height)=> height*this.height/designSize.height;
-  // double w(double width)=>  width*this.width/designSize.width;
+// double pixelTodb(double pixel)=> pixel/devicePixelRatio;
+// double h(double height)=> height*this.height/designSize.height;
+// double w(double width)=>  width*this.width/designSize.width;
 }

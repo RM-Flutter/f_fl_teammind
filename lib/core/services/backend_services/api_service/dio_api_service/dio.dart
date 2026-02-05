@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -10,20 +9,41 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../platform/platform_is.dart';
+import '../../../device_info_service.dart';
+
 class DioHelper{
   static Dio? dio;
   static initail(BuildContext context){
+    // Prepare headers with CORS support for web
+    Map<String, dynamic> headers = {
+      'Accept':'application/json',
+      "lang" : "${CacheHelper.getString("lang")}",
+      'Content-Type':"application/json",
+    };
+
+    // Add CORS headers for web platform
+    if (kIsWeb || PlatformIs.web) {
+      headers.addAll({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization, lang, device-unique-id',
+      });
+    }
+
     dio = Dio(
         BaseOptions(
-            baseUrl: AppConstants.baseUrl,
-            receiveDataWhenStatusError: true,
-            headers: {
-              'Accept':'application/json',
-              "lang" : "${CacheHelper.getString("lang")}",
-              // 'Content-Type' : 'multipart/form-data'
-              'Content-Type':"application/json",
-
-            }
+          baseUrl: AppConstants.baseUrl,
+          receiveDataWhenStatusError: true,
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+          sendTimeout: const Duration(seconds: 30),
+          headers: headers,
+          // For web, set followRedirects and validateStatus
+          followRedirects: true,
+          validateStatus: (status) {
+            return status != null && status < 500;
+          },
         )
     );
     dio!.interceptors.add(PrettyDioLogger(
@@ -40,25 +60,26 @@ class DioHelper{
           debugPrint("response.statusCode == ${response.statusCode}");
           return handler.next(response);
         },
-        onError: (DioException error, handler) {
+        onError: (DioError error, handler) {
           debugPrint("error.response?.statusCode ==z ${error.response?.statusCode}");
-          if (error.response?.statusCode == 401) {
-            final appConfigService =
-            Provider.of<AppConfigService>(context, listen: false);
-            // Skip server logout to avoid infinite loop (token is already invalid)
-            appConfigService.logout(context, viewAlert: false, skipServerLogout: true).then((v){
-              if (context.mounted) {
-                context.goNamed(AppRoutes.splash.name,
-                    pathParameters: {'lang': context.locale.languageCode});
-              }
-            }).catchError((e) {
-              // If logout fails, still try to navigate
-              if (context.mounted) {
-              context.goNamed(AppRoutes.splash.name,
-                  pathParameters: {'lang': context.locale.languageCode});
-              }
-            });
+
+          // Handle CORS errors on web
+          if (kIsWeb || PlatformIs.web) {
+            final errorMessage = error.message?.toLowerCase() ?? '';
+            // التحقق من أخطاء CORS من خلال رسالة الخطأ أو عدم وجود response
+            if (errorMessage.contains('cors') ||
+                errorMessage.contains('access-control-allow-origin') ||
+                errorMessage.contains('blocked by cors policy') ||
+                (error.response == null && errorMessage.isNotEmpty)) {
+              debugPrint('⚠️ CORS Error detected: ${error.message}');
+              debugPrint('⚠️ Request URL: ${error.requestOptions.uri}');
+              debugPrint('⚠️ This error usually means the server does not allow requests from this origin.');
+              // Continue with the error to let the app handle it gracefully
+            }
           }
+
+          // Note: 401 handling is done in dio_api.service.dart where context is available
+          // Don't handle 401 here as context is not accessible in this interceptor
           return handler.next(error);
         },
       ),
@@ -66,26 +87,63 @@ class DioHelper{
   }
   static Future<Response> downloadData({context,@required url,savePath})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     dio!.options.headers = {
       'Accept':'application/json',
-      'device-unique-id' : appConfigServiceProvider.deviceInformation.deviceUniqueId,
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       "lang" : "${CacheHelper.getString("lang")}",
     };
     debugPrint("Headers: ${dio!.options.headers}");
     return await dio!.download(url, savePath );
   }
+
+  static Future<String?> _getDeviceUniqueId(BuildContext? context, AppConfigService appConfigServiceProvider) async {
+    try {
+      final deviceInfo = appConfigServiceProvider.deviceInformation;
+      var deviceUniqueId = deviceInfo.deviceUniqueId;
+
+      // If deviceUniqueId is valid, return it
+      if (deviceUniqueId.isNotEmpty && deviceUniqueId != 'Unknown Device') {
+        return deviceUniqueId;
+      }
+
+      // If not valid and we have context, try to initialize device info
+      if (context != null) {
+        await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
+        final updatedDeviceInfo = appConfigServiceProvider.deviceInformation;
+        deviceUniqueId = updatedDeviceInfo.deviceUniqueId;
+        if (deviceUniqueId.isNotEmpty && deviceUniqueId != 'Unknown Device') {
+          return deviceUniqueId;
+        }
+      }
+
+      return null;
+    } catch (e) {
+      debugPrint('Error getting device unique ID: $e');
+      return null;
+    }
+  }
   static Future<Response> getData({@required url, @required Map<String, dynamic>? query,context,lang,  token,bool sendLang = false, Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
+
+    // Remove trailing slash from URL for better web compatibility
+    String cleanUrl = url.toString().endsWith('/') ? url.toString().substring(0, url.toString().length - 1) : url.toString();
+
     dio!.options.headers = {
       'Accept':'application/json',
       if(sendLang == true)"Accept-Language" : CacheHelper.getString("lang") ?? "en",
-      'device-unique-id' : appConfigServiceProvider.deviceInformation.deviceUniqueId,
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-       "lang" : "${CacheHelper.getString("lang")}",
+      "lang" : "${CacheHelper.getString("lang")}",
     };
     debugPrint("Headers: ${dio!.options.headers}");
-    return await dio!.get(url, queryParameters: query );
+    debugPrint("Request URL: $cleanUrl");
+    debugPrint("Query Parameters: $query");
+    return await dio!.get(cleanUrl, queryParameters: query );
   }
   static Future<Response> deleteData({@required url, @required Map<String, dynamic>? query, token, data})async{
     dio!.options.headers = {
@@ -93,49 +151,57 @@ class DioHelper{
       'Authorization': 'Bearer $token',
     };
 
-    return await dio!.delete(url, queryParameters: query, data: data);
+    return await dio!.delete(url, queryParameters: query, data: data??null);
   }
   static Future<Response> postData({ context ,@required url,@required Map<String, dynamic>? query, token, @required data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     dio!.options.headers = {
       'Accept':'application/json',
       'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
-      'device-unique-id' : appConfigServiceProvider.deviceInformation.deviceUniqueId,
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
 
     };
-    return await dio!.post(url, queryParameters: query, data: data);
+    return await dio!.post(url, queryParameters: query, data: data??null);
   }
   static Future<Response> putData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     dio!.options.headers = {
       'Accept':'application/json',
       'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
-      'device-unique-id' : appConfigServiceProvider.deviceInformation.deviceUniqueId,
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
     };
-    return await dio!.put(url, queryParameters: query, data: data);
+    return await dio!.put(url, queryParameters: query, data: data??null);
   }
   static Future<Response> patchData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     dio!.options.headers = {
       'Accept':'application/json',
       'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
-      'device-unique-id' : appConfigServiceProvider.deviceInformation.deviceUniqueId,
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
     };
-    return await dio!.patch(url, queryParameters: query, data: data);
+    return await dio!.patch(url, queryParameters: query, data: data??null);
   }
   static Future<Response> postFormData({@required url, context, formdata,@required Map<String, dynamic>? query, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     dio!.options.headers = {
       'Accept':'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       'Content-Type': 'multipart/form-data',
-      'device-unique-id' : appConfigServiceProvider.deviceInformation.deviceUniqueId,
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
     };
     return await dio!.post(url, queryParameters: query, data: formdata);
@@ -144,10 +210,10 @@ class DioHelper{
   static Future<Response> postDataSocket({@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
     dio!.options.headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer $token',
+      'Authorization': 'Bearer ${token}',
     };
 
-    return await dio!.post(url, queryParameters: query, data: data);
+    return await dio!.post(url, queryParameters: query, data: data??null);
   }
 
   static Future<Response> updateData({@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
@@ -157,7 +223,7 @@ class DioHelper{
       'Authorization': 'Bearer $token',
     };
 
-    return await dio!.put(url, queryParameters: query, data: data);
+    return await dio!.put(url, queryParameters: query, data: data??null);
   }
   static Future<dynamic> uploadImage({File? file, url, token}) async {
     dio!.options.headers = {

@@ -15,14 +15,13 @@ class UpdateApp{
   static checkForForceUpdate(BuildContext context) async {
     final packageInfo = await PackageInfo.fromPlatform();
     final jsonString = CacheHelper.getString("USG");
-    Map<String, dynamic> gCache = {};
+    var gCache;
     if (jsonString != null) {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
     try {
       if (gCache['mandatory_updates_alert_build'] != null || gCache['mandatory_updates_end_build'] != null) {
-        if(gCache['mandatory_updates_end_build'] != null &&
-            (int.parse(packageInfo.buildNumber.toString())< int.parse(gCache['mandatory_updates_end_build'].toString()))){
+        if(gCache['mandatory_updates_end_build'] != null && (int.parse(packageInfo.buildNumber.toString())< int.parse(gCache['mandatory_updates_end_build'].toString()))){
           await showDialog(
             context: context,
             barrierDismissible: false,
@@ -30,10 +29,26 @@ class UpdateApp{
               return WillPopScope(
                 onWillPop: () async => false,
                 child: AlertDialog(
-                  backgroundColor: const Color(0xffFFFFFF),
-                  title: Text(
-                    LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update", style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),),
-                  content: Text(AppStrings.youMustUpdateTheAppToContinue.tr(), style:  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
+                  backgroundColor: Color(AppColors.white),
+                  title: Center(
+                    child: Text(
+                      LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update",
+                      style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(AppStrings.youMustUpdateTheAppToContinue.tr(),
+                        style:  TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black)),
+                        textAlign: TextAlign.center,
+
+                      ),
+                    ],
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
                   actions: [
                     CustomElevatedButton(
                       title: AppStrings.updateNow.tr(),
@@ -59,16 +74,30 @@ class UpdateApp{
           );
         }
         if(gCache['mandatory_updates_alert_build'] != null && (int.parse(packageInfo.buildNumber.toString())< int.parse(gCache['mandatory_updates_alert_build'].toString()))){
-          showDialog(
+          debugPrint("YOU MUST SHOW");
+          await showDialog(
             context: context,
             barrierDismissible: true,
             builder: (context) {
               return WillPopScope(
                 onWillPop: () async => true,
                 child: AlertDialog(
-                  backgroundColor: const Color(0xffFFFFFF),
-                  title: Text(AppStrings.available_update.tr(), style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),),
-                  content: Text(AppStrings.youMustUpdateTheAppToContinue.tr(), style:  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
+                  backgroundColor: Color(AppColors.white),
+                  title: Center(
+                      child: Text(AppStrings.available_update.tr(),
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),
+                        textAlign: TextAlign.center,)
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(AppStrings.youMustUpdateTheAppToContinue.tr(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Color(AppColors.black))),
+                    ],
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
                   actions: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

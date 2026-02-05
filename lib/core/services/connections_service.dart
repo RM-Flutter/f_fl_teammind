@@ -60,7 +60,7 @@ abstract class ConnectionsService {
   }
 
   static Future<void> init() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 5));
     final initialResults = await getAvailableConnections();
     handleConnectionType(initialResults);
   }

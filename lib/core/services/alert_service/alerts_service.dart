@@ -5,6 +5,7 @@ import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import '../../constants/app_colors.dart';
 import 'custom_alert.dart';
 
 enum DialogAnimationTypes { none, feedIn, open, opacity }
@@ -58,7 +59,7 @@ abstract class AlertsService {
           context: context,
           title: title,
           message: message,
-          color: Colors.grey,
+          color: Color(AppColors.lightGrey),
           type: AlertType.warning,
         );
       }
@@ -169,7 +170,7 @@ abstract class AlertsService {
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0)),
-            color: Colors.white,
+            color: Color(AppColors.white),
             child: SizedBox(
               width: PlatformIs.mobile ? AppSizes.s320 : AppSizes.s600,
               child: Column(
@@ -191,8 +192,8 @@ abstract class AlertsService {
                   if (imageAssert != null) const SizedBox(height: AppSizes.s25),
                   Text(
                     title,
-                    style:  const TextStyle(
-                        fontSize: AppSizes.s25, color: Colors.black),
+                    style: const TextStyle(
+                        fontSize: AppSizes.s25, color: Color(AppColors.black)),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSizes.s20),
@@ -202,8 +203,8 @@ abstract class AlertsService {
                         horizontal: AppSizes.s30),
                     child: Text(
                       message,
-                      style:  const TextStyle(
-                          fontSize: AppSizes.s18, color: Colors.black45),
+                      style: TextStyle(
+                          fontSize: AppSizes.s18, color: Color(AppColors.darkGrey)),
                       textAlign: TextAlign.center,
                       softWrap: true,
                       maxLines: 4,
@@ -265,14 +266,14 @@ abstract class AlertsService {
                         child: MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50.0)),
-                          color: Colors.white,
+                          color: Color(AppColors.white),
                           onPressed: () {
                             Navigator.of(dialogContext).pop(false);
                             return;
                           },
                           child: Text(AppStrings.no.tr(),
                               style:
-                              const TextStyle(color: Color(0xff0ff3389ee))),
+                              TextStyle(color: Color(AppColors.primary))),
                         ),
                       ),
                     ],

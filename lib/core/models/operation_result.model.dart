@@ -7,9 +7,9 @@ class OperationResult<T> {
   var errors;
   OperationResult(
       {this.success = false,
-      this.data,
-      this.errors,
-      this.message,
-      this.errorCodeString,
-      this.checkAuth});
+        this.data,
+        this.errors,
+        this.message,
+        this.errorCodeString,
+        this.checkAuth});
 }

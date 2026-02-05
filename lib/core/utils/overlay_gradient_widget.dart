@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/app_colors.dart';
+
 class OverlayGradientWidget extends StatelessWidget {
   const OverlayGradientWidget({super.key});
 
@@ -12,8 +14,8 @@ class OverlayGradientWidget extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            const Color(0xff224982).withOpacity(0.5),
-            const Color(0xff224982),
+            Color(AppColors.dark).withOpacity(0.5),
+            Color(AppColors.dark),
           ],
         ),
       ),

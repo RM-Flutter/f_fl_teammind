@@ -12,7 +12,7 @@ class LayoutService {
   /// check if the device is tabled
   static bool isTablet(BuildContext context) {
     return (MediaQuery.of(context).size.width >= 900 &&
-            MediaQuery.of(context).size.width < 1200) ||
+        MediaQuery.of(context).size.width < 1200) ||
         (MediaQuery.of(context).orientation == Orientation.landscape &&
             MediaQuery.of(context).size.width < 1200);
   }
@@ -40,15 +40,15 @@ class LayoutService {
   /// bind the widget depond on screen size
   static Widget bindWidget(BuildContext context,
       {Widget Function()? mobileWidget,
-      Widget Function()? tabletWidget,
-      Widget Function()? descktopWidget}) //: assert(context != null)
+        Widget Function()? tabletWidget,
+        Widget Function()? descktopWidget}) //: assert(context != null)
   {
     //return descktopWidget;
     if (MediaQuery.of(context).size.width > 1200) {
       var c = descktopWidget ??
           tabletWidget ??
           mobileWidget ??
-          () => const SizedBox();
+              () => const SizedBox();
       return c();
     }
     if (MediaQuery.of(context).size.width > 650 ||
@@ -56,14 +56,14 @@ class LayoutService {
       var c = tabletWidget ??
           descktopWidget ??
           mobileWidget ??
-          () => const SizedBox();
+              () => const SizedBox();
       return c();
     }
 
     var c = mobileWidget ??
         tabletWidget ??
         descktopWidget ??
-        () => const SizedBox();
+            () => const SizedBox();
     return c();
   }
 

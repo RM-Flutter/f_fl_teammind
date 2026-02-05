@@ -1,4 +1,4 @@
-import 'package:app_test/core/services/dynamic_app_config_service.dart';
+import '../services/dynamic_app_config_service.dart';
 
 abstract class AppImages {
   // base images directories
@@ -47,6 +47,8 @@ abstract class AppImages {
   // splash screen images
   static const String splashScreenBackground =
       '$_splashImagesDirectory/splash_screen_background.png';
+  static const String splashScreenBackgroundWeb =
+      '$_splashImagesDirectory/splash-bg.jpg';
   // onboarding screen images
   static const String onboardingBackground1 =
       '$_onboardingImagesDirectory/onboarding_1.png';
@@ -55,8 +57,22 @@ abstract class AppImages {
   static const String onboardingBackground3 =
       '$_onboardingImagesDirectory/onboarding_3.png';
   // login images
-  static const String loginBackground =
-      '$_loginImagesDirectory/login_background.png';
+  static String get loginBackground {
+    final url = DynamicAppConfigService.getLoginBackgroundUrl();
+    // Return default if url is null or empty
+    if (url == null || url.isEmpty) {
+      return '$_loginImagesDirectory/login_background.png';
+    }
+    return url;
+  }
+  static String get loginBackgroundWeb {
+    final url = DynamicAppConfigService.getLoginBackgroundUrl();
+    // Return default if url is null or empty
+    if (url == null || url.isEmpty) {
+      return '$_loginImagesDirectory/login-bg.jpg';
+    }
+    return url;
+  }
   // home images
   // --> App bar images
   static const String appbarBackground =

@@ -6,6 +6,8 @@ import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/app_colors.dart';
+
 /// used when getting requests ( my requests - my team requests - other Departments requests)
 enum GetRequestsTypes { mine, myTeam, otherDepartment, allCompany }
 
@@ -27,7 +29,7 @@ abstract class RequestsServices {
     switch (status) {
       case RequestStatus.waitingCancel:
         return 'waiting_cancel';
-        case RequestStatus.waiting:
+      case RequestStatus.waiting:
         return 'waiting';
       case RequestStatus.waitingSeen:
         return 'waiting_seen';
@@ -89,9 +91,9 @@ abstract class RequestsServices {
       case 'seen':
         return Icon(Icons.access_time,
             color: iconColor ?? Colors.blue, size: iconSize ?? AppSizes.s24);
-        case 'waiting_seen' || 'waiting_cancel'|| 'waiting':
+      case 'waiting_seen' || 'waiting_cancel'|| 'waiting':
         return Icon(Icons.access_time,
-            color: iconColor ?? const Color(0xff606060), size: iconSize ?? AppSizes.s24);
+            color: iconColor ?? Color(AppColors.darkGrey), size: iconSize ?? AppSizes.s24);
       default:
         return Icon(
           Icons.more_horiz,
@@ -146,7 +148,7 @@ abstract class RequestsServices {
     String baseUrl;
     if (reqType == null) {
       baseUrl =
-      EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url;
+          EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url;
     } else {
       baseUrl =
       '${EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url}?type=${getRequestsTypeStr(type: reqType)}';
@@ -162,7 +164,7 @@ abstract class RequestsServices {
       page: page,
       type: type,
     );
-    debugPrint("queryParams is --> $queryParams");
+    debugPrint("queryParams is --> ${queryParams}");
     final url = queryParams.isEmpty ? baseUrl : '$baseUrl&$queryParams';
 
     final response = await DioApiService().get<Map<String, dynamic>>(url,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:app_test/core/constants/app_sizes.dart';
 
+import '../constants/app_colors.dart';
+
 class GradientBgImage extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
@@ -15,8 +17,8 @@ class GradientBgImage extends StatelessWidget {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: [
-            const Color(0xFFFF007A).withOpacity(0.03),
-            const Color(0xFF00A1FF).withOpacity(0.03)
+            const Color(AppColors.pinkLight).withOpacity(0.03),
+            const Color(AppColors.blueLight).withOpacity(0.03)
           ],
         ),
       ),

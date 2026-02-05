@@ -41,7 +41,6 @@ class AuthenticationController extends ChangeNotifier {
   final passwordController =  TextEditingController();
   AnimationController? animationController;
   Animation<double>? animation;
-  bool _isDisposed = false;
   final otpController = TextEditingController();
   final countryCodeController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -50,19 +49,7 @@ class AuthenticationController extends ChangeNotifier {
   // Triggered Automatically when the view model not used !!
   @override
   void dispose() {
-    if (_isDisposed) return;
-    _isDisposed = true;
-    
-    try {
-      if (animationController != null) {
-        animationController!.dispose();
-        animationController = null;
-      }
-    } catch (e) {
-      // Ignore if animationController is not initialized or already disposed
-      debugPrint('Warning: animationController dispose error: $e');
-    }
-    
+    animationController?.dispose();
     phoneController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -128,10 +115,40 @@ class AuthenticationController extends ChangeNotifier {
   }
   Future<void> login({required BuildContext context, phones, cCode, email, password, loginType, bool noti = true}) async {
     if (email == null && phones == null && formKey.currentState?.validate() == true) {
+      // التحقق من صحة رقم الهاتف قبل الإرسال
+      if (isPhoneLogin) {
+        final phoneText = phoneController.text.trim();
+        if (phoneText.isEmpty) {
+          Fluttertoast.showToast(
+              msg: AppStrings.phoneNumberIsRequired.tr(),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 5,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          return;
+        }
+        // التحقق من أن الرقم يحتوي على أرقام فقط
+        if (!RegExp(r'^[0-9]+$').hasMatch(phoneText)) {
+          Fluttertoast.showToast(
+              msg: AppStrings.pleaseEnterValidPhoneNumber.tr(),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 5,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          return;
+        }
+      }
+
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
       final completePhoneNumber = (countryCodeController.text.isEmpty
-          ? phoneController.text
+          ? '${phoneController.text}'
           : countryCodeController.text + phoneController.text)
           .trim();
       OperationResult<Map<String, dynamic>> result =
@@ -169,7 +186,28 @@ class AuthenticationController extends ChangeNotifier {
         );
       }
     } else {
-      debugPrint("request login REG");
+      print("request login REG");
+
+      // التحقق من صحة رقم الهاتف قبل الإرسال
+      if (isPhoneLogin && phones != null) {
+        final phoneText = phones.text.trim();
+        if (phoneText.isEmpty) {
+          AlertsService.error(
+              title: AppStrings.failed.tr(),
+              context: context,
+              message: AppStrings.phoneNumberIsRequired.tr());
+          return;
+        }
+        // التحقق من أن الرقم يحتوي على أرقام فقط
+        if (!RegExp(r'^[0-9]+$').hasMatch(phoneText)) {
+          AlertsService.error(
+              title: AppStrings.failed.tr(),
+              context: context,
+              message: AppStrings.pleaseEnterValidPhoneNumber.tr());
+          return;
+        }
+      }
+
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
       final completePhoneNumber =
@@ -177,7 +215,7 @@ class AuthenticationController extends ChangeNotifier {
           ? '${phones.text}'
           : cCode + phones.text ?? "")
           .trim();
-      debugPrint("request login /////");
+      print("request login /////");
       OperationResult<Map<String, dynamic>> result =
       await LoginRepo.login(
           context: context,
@@ -186,7 +224,7 @@ class AuthenticationController extends ChangeNotifier {
           deviceInformation:
           appConfigServiceProvider.deviceInformation.toMap());
 
-      debugPrint("response login /////");
+      print("response login /////");
 
       if (result.success &&
           result.data != null &&
@@ -221,19 +259,23 @@ class AuthenticationController extends ChangeNotifier {
         ),
         height: LayoutService.getHeight(context) * 0.45,
         title: AppStrings.forgetPassword.tr(), viewProfile: false);
-    if (result?.success ?? false) {
+    // إذا كان result null، يعني المستخدم أغلق الـ modal فقط، لا نعرض أي رسالة
+    if (result == null) {
+      return;
+    }
+    if (result.success) {
       Future.delayed(const Duration(seconds: 1));
       AlertsService.success(
           title: AppStrings.success.tr(),
           context: context,
           message:
-          result?.message ?? AppStrings.passwordResetedPleaseLogin.tr());
-    }else{
-      AlertsService.error(
-          title: AppStrings.failed.tr(),
-          context: context,
-          message:
-          result?.message ?? AppStrings.passwordResetedPleaseLogin.tr());
+          result.message ?? AppStrings.passwordResetedPleaseLogin.tr());
+    } else {
+      // AlertsService.error(
+      //     title: AppStrings.failed.tr(),
+      //     context: context,
+      //     message:
+      //     result.message ?? AppStrings.passwordResetedPleaseLogin.tr());
     }
   }
   Future<void> showCreateAccountModal({required BuildContext context}) async {
@@ -269,7 +311,7 @@ class AuthenticationController extends ChangeNotifier {
       builder: (BuildContext context) {
         return Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
+            constraints: BoxConstraints(
                 maxWidth: kIsWeb ? 800 : double.infinity
             ),
             child: AlertDialog(
@@ -289,7 +331,7 @@ class AuthenticationController extends ChangeNotifier {
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon:  const Icon(
+                      icon: const Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
                         color: Colors.red,
@@ -330,7 +372,7 @@ class AuthenticationController extends ChangeNotifier {
                                   onSelected: () async {
                                     AlertsService.showLoading(context);
                                     final result =
-                                      await LoginRepo.send2FAVerificationCode(
+                                    await LoginRepo.send2FAVerificationCode(
                                         context: context,
                                         uuid: uuid,
                                         sendType: method.keys.first);
@@ -415,7 +457,7 @@ class AuthenticationController extends ChangeNotifier {
                                 if (codeFormKey.currentState?.validate() == false) {
                                   return;
                                 }
-                                  final result = await LoginRepo
+                                final result = await LoginRepo
                                     .validate2FAVerificationCode(
                                     uuid: uuid,
                                     context: context,
@@ -468,7 +510,7 @@ class AuthenticationController extends ChangeNotifier {
                               ),
                               onPressed: () async {
                                 AlertsService.showLoading(context);
-                                  final result = await LoginRepo
+                                final result = await LoginRepo
                                     .send2FAVerificationCode(
                                     context: context,
                                     uuid: uuid,
@@ -516,9 +558,9 @@ class AuthenticationController extends ChangeNotifier {
       builder: (BuildContext context) {
         return Center(
           child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: kIsWeb ? 800 : double.infinity
-              ),
+            constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 800 : double.infinity
+            ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.s12),
@@ -536,7 +578,7 @@ class AuthenticationController extends ChangeNotifier {
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon:  const Icon(
+                      icon: const Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
                         color: Colors.red,
@@ -771,8 +813,16 @@ class AuthenticationController extends ChangeNotifier {
       // if(result['update_url'] != null){
       //   // CacheHelper.setString(key: "update_url", value:result['update_url'] );
       // }
-      return await appConfigServiceProvider.setAuthenticationStatusWithToken(
+      await appConfigServiceProvider.setAuthenticationStatusWithToken(
           isLogin: true, token: result['token']);
+      // Navigate to splash screen after successful login
+      if (context.mounted) {
+        context.goNamed(
+          AppRoutes.splash.name,
+          pathParameters: {'lang': context.locale.languageCode},
+        );
+      }
+      return;
     }
     //check on Account Activation
     if (result['status'] == true &&
@@ -824,9 +874,13 @@ class AuthenticationController extends ChangeNotifier {
     _getAuthStatusFromString(status: result['login_status']);
     switch (authStatus) {
       case AuthStatus.active:
-        appConfigServiceProvider.setAuthenticationStatusWithToken(
+        await appConfigServiceProvider.setAuthenticationStatusWithToken(
             isLogin: true, token: result['token']);
-        context.goNamed(AppRoutes.home.name);
+        // Navigate to splash screen (same as mobile) - splash will handle navigation to home
+        context.goNamed(
+          AppRoutes.splash.name,
+          pathParameters: {'lang': context.locale.languageCode},
+        );
         return;
       case AuthStatus.deactivated:
         AlertsService.info(
@@ -848,7 +902,11 @@ class AuthenticationController extends ChangeNotifier {
           message: AppStrings.thisAccountHasBeenScheduledForDeletion.tr(),
           title: AppStrings.warning.tr(),
         );
-        context.goNamed(AppRoutes.home.name);
+        // Navigate to splash screen (same as mobile) - splash will handle navigation to home
+        context.goNamed(
+          AppRoutes.splash.name,
+          pathParameters: {'lang': context.locale.languageCode},
+        );
         return;
       default:
         return AlertsService.error(

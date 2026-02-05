@@ -1,7 +1,4 @@
 abstract class AppIcons {
-  static const String checkMarkDashed = 'assets/icons/check-mark-dashed.svg';
-  static const String star = 'assets/icons/star.svg';
-
   static const String google = "assets/icons/google.svg";
   static const String apple = "assets/icons/apple.svg";
   static const String massanger = "assets/icons/massanger.svg";

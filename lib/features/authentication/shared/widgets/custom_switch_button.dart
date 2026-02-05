@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_colors.dart';
+
 class CustomSwitchButton extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
@@ -15,7 +17,7 @@ class CustomSwitchButton extends StatefulWidget {
     super.key,
     required this.value,
     required this.onChanged,
-    this.activeColor = const Color(0xff3AC0E5),
+    this.activeColor = const Color(AppColors.lightBlue),
     this.inactiveColor = Colors.grey,
     this.animationDuration = const Duration(milliseconds: 300),
     this.width = 45.0,

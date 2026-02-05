@@ -1,13 +1,13 @@
+import 'package:app_test/features/authentication/create_account/controller/create_account_controller.dart';
+import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/validation_service.dart';
-import '../controller/create_account_controller.dart';
 import '../../shared/widgets/phone_number_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,7 +36,7 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
             create: (_) => CreateAccountController(),),
         ],
         child: Consumer<AuthenticationController>(
-            builder:(context, authenticationController, child){
+            builder:(context, AuthenticationController, child){
               return Consumer<CreateAccountController>(
                   builder: (context, viewModel, child) {
                     return Form(
@@ -65,7 +65,7 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
                               hintText: AppStrings.yourEmail.tr(),
                               errorText: viewModel.emailError,
                             ),
-                             validator: (val) => ValidationService.validateEmail(val),
+                            validator: (val) => ValidationService.validateEmail(val),
                           ),
                           gapH20,
                           TextFormField(
@@ -97,6 +97,45 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
                             ),
                             validator: (val) => ValidationService.validateRequired(val, AppStrings.yourName.tr()),
                           ),
+                          // const SizedBox(height: 10,),
+                          // Container(
+                          //   height: 55,
+                          //   alignment: LocalizationService.isArabic(context: context)
+                          //       ?Alignment.centerRight : Alignment.centerLeft,
+                          //   margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
+                          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          //   decoration: ShapeDecoration(
+                          //     color: AppThemeService.colorPalette.tertiaryColorBackground.color,
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(AppSizes.s8),
+                          //       side: BorderSide(
+                          //         color: Color(AppColors.whiteGrey),
+                          //         width: 1.0,
+                          //       ),
+                          //     ),
+                          //     shadows: const [
+                          //       BoxShadow(
+                          //         color: AppColors.black,
+                          //         blurRadius: 10,
+                          //         offset: Offset(0, 1),
+                          //         spreadRadius: 0,
+                          //       )
+                          //     ],
+                          //   ),
+                          //   child: Directionality(
+                          //     textDirection: LocalizationService.isArabic(context: context)
+                          //         ? TextDirection.rtl
+                          //         : TextDirection.ltr,
+                          //     child: Text(
+                          //          "${CacheHelper.getString("role")}".tr(),
+                          //       style: TextStyle(
+                          //           fontSize: 16,
+                          //           fontWeight: FontWeight.w400,
+                          //           color:const Color(0xff000000)
+                          //               .withOpacity(0.74)),
+                          //     ),
+                          //   ),
+                          // ),
                           gapH28,
                           Center(
                               child: viewModel.isEmailRegister == false ?CustomElevatedButton(
@@ -118,16 +157,16 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
                                     if(viewModel.formKey.currentState!.validate()){
                                       viewModel.createAccount(context: context,
                                           making: (){
-                                            if(viewModel.phoneController.text.isEmpty){
+                                            if(viewModel.phoneController.text.isEmpty || viewModel.phoneController.text == null){
                                               setState(() {
-                                                authenticationController.isPhoneLogin = false;
+                                                AuthenticationController.isPhoneLogin = false;
                                               });
                                             }else{
                                               setState(() {
-                                                authenticationController.isPhoneLogin = true;
+                                                AuthenticationController.isPhoneLogin = true;
                                               });
                                             }
-                                            authenticationController.login(
+                                            AuthenticationController.login(
                                                 context: context,
                                                 password: viewModel.passwordController.text,
                                                 email: viewModel.emailController.text,
@@ -138,7 +177,7 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
                                       );
                                     }
                                   }
-                                      ): const CircularProgressIndicator()
+                              ): const CircularProgressIndicator()
                           ),
                           gapH32,
                         ],

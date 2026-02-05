@@ -9,19 +9,19 @@ import 'backend_services/api_service/dio_api_service/shared.dart';
 class DynamicAppConfigService {
   // Cache for gCache data
   static Map<String, dynamic>? _cachedGCache;
-  
+
   // Cache for teammind profile
   static Map<String, dynamic>? _cachedTeammindProfile;
-  
+
   // Cache for logo URL
   static String? _cachedLogoUrl;
-  
+
   // Cache for login background URL
   static String? _cachedLoginBackgroundUrl;
-  
+
   // Cache for colors map
   static Map<String, String>? _cachedColors;
-  
+
   // Flag to track if we've attempted to load cache (prevents multiple attempts)
   static bool _hasAttemptedLoad = false;
 
@@ -62,7 +62,7 @@ class DynamicAppConfigService {
         return null;
       }
     }
-    
+
     debugPrint('🎨 DynamicAppConfig: ⚠️ USG cache is null or empty');
     return null;
   }
@@ -87,7 +87,7 @@ class DynamicAppConfigService {
       if (coloringProfiles == null) {
         return null;
       }
-      
+
       for (var profile in coloringProfiles) {
         if (profile is Map && profile['system'] == 'teammind') {
           _cachedTeammindProfile = Map<String, dynamic>.from(profile);
@@ -118,7 +118,7 @@ class DynamicAppConfigService {
       final colors = profile['colors'] as Map?;
       if (colors != null) {
         _cachedColors = Map<String, String>.from(
-          colors.map((key, value) => MapEntry(key.toString(), value.toString()))
+            colors.map((key, value) => MapEntry(key.toString(), value.toString()))
         );
         return _cachedColors;
       }
@@ -198,7 +198,7 @@ class DynamicAppConfigService {
     if (hexColor == null || hexColor.isEmpty) {
       return defaultValue;
     }
-    
+
     try {
       // Remove # if present
       String cleanHex = hexColor.replaceAll('#', '');

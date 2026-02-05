@@ -30,15 +30,15 @@ class TimeoutMessage {
 
   static Future show(
       {required String title,
-      required String logoWithWihteText,
-      String? soundFilePath,
-      String? message,
-      double top = 30,
-      double left = 20,
-      double width = 200,
-      bool showSilent = false,
-      int timeoutMiniseconds = 5000,
-      onClick}) async {
+        required String logoWithWihteText,
+        String? soundFilePath,
+        String? message,
+        double top = 30,
+        double left = 20,
+        double width = 200,
+        bool showSilent = false,
+        int timeoutMiniseconds = 5000,
+        onClick}) async {
     // if (showSilent == true && soundFilePath != null) {
     //   SoundService.init(soundFilePath: soundFilePath);
     //   SoundService.play();
@@ -81,14 +81,14 @@ class TimeoutMessageDialog extends StatefulWidget {
   final String logoWithWihteText;
   const TimeoutMessageDialog(
       {required this.title,
-      super.key,
-      this.message,
-      required this.logoWithWihteText,
-      this.parentContext,
-      this.top,
-      this.width,
-      this.left,
-      this.onCLick});
+        super.key,
+        this.message,
+        required this.logoWithWihteText,
+        this.parentContext,
+        this.top,
+        this.width,
+        this.left,
+        this.onCLick});
   @override
   TimeoutMessageDialogState createState() => TimeoutMessageDialogState();
 }
@@ -121,11 +121,11 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
 
     _offsetFloat =
         Tween(begin: const Offset(0.0, -0.9), end: Offset.zero).animate(
-      CurvedAnimation(
-        parent: controller!,
-        curve: Curves.fastOutSlowIn,
-      ),
-    );
+          CurvedAnimation(
+            parent: controller!,
+            curve: Curves.fastOutSlowIn,
+          ),
+        );
 
     controller!.addListener(() {
       setState(() {});
@@ -138,7 +138,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
   Widget build(BuildContext context) {
     if (widget.parentContext != null) {
       RenderBox? renderBox =
-          widget.parentContext!.findRenderObject() as RenderBox;
+      widget.parentContext!.findRenderObject() as RenderBox;
       var size = renderBox.size;
       var offset = renderBox.localToGlobal(Offset.zero);
       top = widget.top ?? offset.dy + size.height + 5.0;
@@ -183,10 +183,10 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                       widget.message == null
                           ? Container()
                           : Text(widget.message!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color:
-                                      Theme.of(context).colorScheme.tertiary))
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color:
+                              Theme.of(context).colorScheme.tertiary))
                     ],
                   ),
                 ),

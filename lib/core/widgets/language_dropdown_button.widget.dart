@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/constants/user_consts.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/services/localization_service.dart';
-import 'package:app_test/core/models/settings/general_settings.model.dart';
+import '../constants/app_sizes.dart';
+import '../constants/user_consts.dart';
+import '../models/settings/general_settings.model.dart';
+import '../services/backend_services/api_service/dio_api_service/shared.dart';
+import '../services/localization_service.dart';
 
 class LanguageDropdownButton extends StatelessWidget {
   const LanguageDropdownButton({super.key});
@@ -15,7 +15,7 @@ class LanguageDropdownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var jsonString;
     GeneralSettingsModel generalSettingsModel;
-    Map<String, dynamic> gCache = {};
+    var gCache;
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -39,7 +39,7 @@ class LanguageDropdownButton extends StatelessWidget {
             return PopupMenuItem<String>(
               value: locale,
               child: Text(
-                locale,
+                locale == "ar" ? "عربي" : "English",
                 style: TextStyle(
                     color: context.locale.languageCode == locale
                         ? Theme.of(context).colorScheme.secondary

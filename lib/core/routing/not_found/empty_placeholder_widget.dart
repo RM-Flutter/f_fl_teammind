@@ -34,3 +34,4 @@ class EmptyPlaceholderWidget extends StatelessWidget {
     );
   }
 }
+

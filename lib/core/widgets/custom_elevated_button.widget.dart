@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
+import '../constants/app_colors.dart';
+import '../constants/app_sizes.dart';
 
 class CustomElevatedButton extends StatefulWidget {
   final Future<void> Function() onPressed;
@@ -59,15 +59,43 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
   }
 
   void _handlePressed() async {
+    if (!mounted) return;
+    
     setState(() {
       _isLoading = true;
     });
-    await _controller.forward();
+    
+    if (!mounted) return;
+    try {
+      await _controller.forward();
+    } catch (e) {
+      // Controller might be disposed
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      return;
+    }
+    
     await widget.onPressed();
-    await _controller.reverse();
-    setState(() {
-      _isLoading = false;
-    });
+    
+    // Check if widget is still mounted and controller is not disposed before using controller
+    if (mounted) {
+      try {
+        if (_controller.isAnimating || _controller.value > 0) {
+          await _controller.reverse();
+        }
+      } catch (e) {
+        // Controller might be disposed, ignore
+      }
+      
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -112,13 +140,18 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
             )
                 : Center(
               child: widget.titleWidget ??
-                  Text(
-                    widget.title,
-                    style: widget.titleSize == null ?
-                    widget.titleColor != null ? Theme.of(context).textTheme.headlineSmall!.copyWith(color:widget.titleColor):
-                    Theme.of(context).textTheme.headlineSmall!
-                        : Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: widget.titleSize, color: widget.titleColor ),
-                    textAlign: TextAlign.center,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      widget.title,
+                      style: widget.titleSize == null ?
+                      widget.titleColor != null ? Theme.of(context).textTheme.headlineSmall!.copyWith(color:widget.titleColor):
+                      Theme.of(context).textTheme.headlineSmall!
+                          : Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: widget.titleSize, color: widget.titleColor ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
             ),
           ),
@@ -127,4 +160,3 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
     );
   }
 }
-

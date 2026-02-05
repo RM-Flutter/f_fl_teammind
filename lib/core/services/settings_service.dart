@@ -17,9 +17,11 @@ import 'package:app_test/core/models/endpoint.model.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/models/settings/app_settings_model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
+import '../constants/user_consts.dart';
 import 'app_config_service.dart';
 import 'backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'backend_services/get_endpoint_service.dart';
+import 'localization_service.dart';
 
 enum SettingsType {
   generalSettings,
@@ -85,9 +87,7 @@ abstract class AppSettingsService {
     }
   }
 
-  /// method to initialize the general settings and check if there is updates or not.
-  /// setting type [general_settings] || [user_settings] || [user2_settings]
-  static updateToken(context, token)async{
+  static Future<void> updateToken(context, token)async{
     await DioHelper.postData(
         url: "/rm_users/v1/devices/update_token",
         context: context,
@@ -104,12 +104,12 @@ abstract class AppSettingsService {
         }
       }
     }).catchError((error){
-      if (error is DioException) {
+    }).catchError((error){
+      if (error is DioError) {
         debugPrint(error.response?.data['message'] ?? 'Something went wrong');
       }
     });
   }
-
 
   static Future<Map<String, String>?> getIpCountryInfo() async {
     try {
@@ -135,17 +135,28 @@ abstract class AppSettingsService {
   static String getDialCode(String countryCode) {
     return AppConstants.countryDialCodes[countryCode] ?? '';
   }
-  static printCountryInfo() async {
+  static Future<void> printCountryInfo() async {
     final info = await getIpCountryInfo();
     if (info != null) {
       String countryCode = info['countryCode'] ?? AppConstants.country; // رمز الدولة، مثل EG
       String dialCode = info['dialCode'] ?? AppConstants.countryCode;       // كود الاتصال الدولي، مثل +20
+
+      // إذا كانت الدولة افغانستان (AF)، تغييرها إلى مصر (EG)
+      if (countryCode == 'AF' || countryCode == 'af') {
+        countryCode = AppConstants.country; // EG
+        dialCode = AppConstants.countryCode; // +20
+        debugPrint('⚠️ تم اكتشاف افغانستان من IP، تم تغييرها إلى مصر');
+      }
+
       CacheHelper.setString(key: "flag", value: countryCode);
       CacheHelper.setString(key: "flagCode", value: dialCode);
       debugPrint('Country Code: $countryCode');
       debugPrint('Dial Code: $dialCode');
     } else {
-      debugPrint('لم يتم الحصول على معلومات الدولة.');
+      // إذا فشل الحصول على معلومات الدولة، استخدم مصر كقيمة افتراضية
+      CacheHelper.setString(key: "flag", value: AppConstants.country); // EG
+      CacheHelper.setString(key: "flagCode", value: AppConstants.countryCode); // +20
+      debugPrint('⚠️ لم يتم الحصول على معلومات الدولة، تم استخدام مصر كقيمة افتراضية');
     }
   }
 
@@ -161,25 +172,25 @@ abstract class AppSettingsService {
     var settingsData = appConfigServiceProvider.getSettings(type: settingType);
     var lastUpdateDate = settingsData?.lastUpdateDate ?? "";
     OperationResult<Map<String, dynamic>> result;
-    Map<String, dynamic> s1Cache = {};
-    Map<String, dynamic> s2Cache = {};
+    var s1Cache;
+    var s2Cache;
     var gCache;
     debugPrint("FAAAAAAAAAAAAAAAILD");
-    String? fcmToken;
+    String? fcm_token;
 
     try {
-      fcmToken = await FirebaseMessaging.instance.getToken();
+      fcm_token = await FirebaseMessaging.instance.getToken();
     } catch (e) {
       debugPrint("🔥 Error while requesting permission or token: $e");
     }
 
     debugPrint("FAAAAAAAAAAAAAAAILD 2");
 
-    fcmToken ??= CacheHelper.getString("fcm_token"); // fallback
+    fcm_token ??= CacheHelper.getString("fcm_token"); // fallback
 
     if (settingType == SettingsType.startupSettings) {
       Map<String, dynamic> body = {
-        if(CacheHelper.getString("fcm_token") != fcmToken.toString()) "notification_token" : fcmToken,
+        if(CacheHelper.getString("fcm_token") != fcm_token.toString()) "notification_token" : fcm_token,
         if (CacheHelper.getString("gDate")!= null )"last_update_date_general": CacheHelper.getString("gDate"),
         if (CacheHelper.getString("s1Date")!= null)"last_update_date_user": CacheHelper.getString("s1Date"),
         if (CacheHelper.getString("s2Date") != null) "last_update_date_user2": CacheHelper.getString("s2Date"),
@@ -205,7 +216,7 @@ abstract class AppSettingsService {
           : 'user2_settings';
       Map<String, dynamic> body = {
         "type": settingTypeName,
-        if(CacheHelper.getString("fcm_token") != fcmToken.toString()) "notification_token" : fcmToken,
+        if(CacheHelper.getString("fcm_token") != fcm_token.toString()) "notification_token" : fcm_token,
         "last_update_date": lastUpdateDate
       };
       result = await DioApiService().post<Map<String, dynamic>>(
@@ -218,7 +229,7 @@ abstract class AppSettingsService {
           allData: allData);
     }
     if (result.success && result.data != null && (result.data?.isNotEmpty ?? false)) {
-      CacheHelper.setString(key: "fcm_token", value: fcmToken.toString());
+      CacheHelper.setString(key: "fcm_token", value: fcm_token.toString());
       CacheHelper.setString(key: "update_url", value: result.data!['update_url'] ?? "" );
       if(result.data!['token'] != null){
         if(appConfigServiceProvider.token.isNotEmpty && appConfigServiceProvider.token != result.data!['token']){
@@ -290,12 +301,24 @@ abstract class AppSettingsService {
       debugPrint("ERROR DIO IS  --> ${result.errorCodeString}");
       // if error happened , then check if i have cached version of settings or not , if i have cached version i will use it , if not , i will store the default settings version into local storage.
       if (appConfigServiceProvider.getSettings(type: settingType) == null) {
-        appConfigServiceProvider.setSettings(
-          type: settingType,
-          data: getSettings(settingsType: settingType, context: context)?.toJson()??gCache,
-          dataS1: getSettings(settingsType: settingType, context: context)?.toJson()??s1Cache,
-          dataS2: getSettings(settingsType: settingType, context: context)?.toJson()??s2Cache,
-        );
+        try {
+          final defaultSettings = getSettings(settingsType: settingType, context: context);
+          appConfigServiceProvider.setSettings(
+            type: settingType,
+            data: defaultSettings?.toJson() ?? gCache,
+            dataS1: defaultSettings?.toJson() ?? s1Cache,
+            dataS2: defaultSettings?.toJson() ?? s2Cache,
+          );
+        } catch (e) {
+          debugPrint("❌ Error setting default settings, using cached data: $e");
+          // If default settings fail, use cached data or null
+          appConfigServiceProvider.setSettings(
+            type: settingType,
+            data: gCache,
+            dataS1: s1Cache,
+            dataS2: s2Cache,
+          );
+        }
       }
     }
   }
@@ -308,5 +331,23 @@ abstract class AppSettingsService {
         allData: allData,
         need: need,
         context: context);
+    // await initializeGeneralSettings(
+    //     settingType: SettingsType.user2Settings,
+    //     allData: allData,
+    //     context: context);
+  }
+
+  /// used to get request title
+  static String? getRequestTitleFromGenenralSettings(
+      {String? requestId, required BuildContext context}) {
+    GeneralSettingsModel? generalSettingss;
+    if (UserSettingConst.generalSettingsModel != null && UserSettingConst.generalSettingsModel!.requestTypes!.keys.contains(requestId) ?? false) {
+      if(LocalizationService.isArabic(context: context)){
+        return UserSettingConst.generalSettingsModel!.requestTypes?[requestId]?.title!.ar;
+      }else{
+        return UserSettingConst.generalSettingsModel!.requestTypes?[requestId]?.title!.en;
+      }
+    }
+    return null;
   }
 }

@@ -8,8 +8,8 @@ abstract class ForgotPasswordRepo {
   /// [FIRST] call [prepareForgetPassword] to get uuid and forget password options.
   static Future<OperationResult<Map<String, dynamic>>> prepareForgetPassword(
       {required String username,
-      required String deviceUniqueId,
-      required BuildContext context}) async {
+        required String deviceUniqueId,
+        required BuildContext context}) async {
     Map<String, dynamic> body = {
       "type": 'prepare',
       "username": username, // may be email or phone number
@@ -27,11 +27,10 @@ abstract class ForgotPasswordRepo {
   /// [SECOND] call [forgetPassword] to send uuid and forget password option to get code.
   static Future<OperationResult<Map<String, dynamic>>> forgetPassword(
       {required String username,
-
-      required String sendType,
-      required String uuid,
-      required BuildContext context,
-      required String deviceUniqueId}) async {
+        required String sendType,
+        required String uuid,
+        required BuildContext context,
+        required String deviceUniqueId}) async {
     Map<String, dynamic> body = {
       "send_type": sendType,
       "uuid": uuid,
@@ -51,12 +50,12 @@ abstract class ForgotPasswordRepo {
   /// [FINALLY] call [codeNewPassword] to send code and new password.
   static Future<OperationResult<Map<String, dynamic>>> codeNewPassword(
       {required String code,
-      required String newPassword,
-      required String username,
-      required String sendType,
-      required String uuid,
-      required BuildContext context,
-      required String deviceUniqueId}) async {
+        required String newPassword,
+        required String username,
+        required String sendType,
+        required String uuid,
+        required BuildContext context,
+        required String deviceUniqueId}) async {
     Map<String, dynamic> body = {
       "username": username, // may be email or phone number
       "send_type": sendType,

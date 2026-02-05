@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/models/device_information.model.dart';
@@ -8,17 +11,40 @@ import 'package:app_test/core/models/settings/app_settings_model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import '../routing/app_router.dart';
 import 'alert_service/alerts_service.dart';
 import 'backend_services/api_service/dio_api_service/dio.dart';
 import 'backend_services/api_service/dio_api_service/shared.dart';
+import 'domain_selection_service.dart';
 import 'settings_service.dart';
 
-class AppConfigService extends ChangeNotifier {
+class   AppConfigService extends ChangeNotifier {
   AppConfigService() {
     //intialize application services
+    _initializeConnectionListener();
+
     init();
   }
+  bool isConnected = true;
+  bool isInitialized = false;
 
+  StreamSubscription<InternetConnectionStatus>? _listener;
+  void _initializeConnectionListener() {
+    // في الويب، لا نستخدم InternetConnectionChecker لأنه يسبب refresh مستمر
+    // نعتمد على ConnectionService بدلاً منه
+    if (kIsWeb) {
+      isConnected = true; // افتراض أن الويب متصل دائماً
+      return;
+    }
+    _listener = InternetConnectionChecker.instance.onStatusChange.listen((status) {
+      final connected = status == InternetConnectionStatus.connected;
+      if (connected != isConnected) {
+        isConnected = connected;
+        // لا نستخدم notifyListeners هنا لأننا لا نريد refresh في GoRouter
+        // ConnectionService يتولى ذلك
+      }
+    });
+  }
   /// api url
   String? apiURL;
 
@@ -57,10 +83,11 @@ class AppConfigService extends ChangeNotifier {
   /// setter method to set the access token status with optional parameter [notify] set it true if you wanna to notify all application and route system.
   Future<void> setToken(v, {bool? notify = false}) async {
     if (_prefs == null) {
-      await init().then((_) => setValueString('token', v));
-    } else {
-      setValueString('token', v);
+      await init();
     }
+    // Always use await to ensure token is saved before proceeding
+    await setValueString('token', v);
+    debugPrint('Token saved: ${v != null && v.toString().isNotEmpty ? v.toString().substring(0, v.toString().length > 20 ? 20 : v.toString().length) + "..." : "empty"}');
     if (notify == true) {
       notifyListeners();
     }
@@ -81,13 +108,60 @@ class AppConfigService extends ChangeNotifier {
   /// getter to get the current user login status
   bool get isLogin => getValueBool('is_login');
 
+  /// getter to check if fingerprint should be blocked when developer mode is enabled
+  /// Default: true (block fingerprint when developer mode is enabled)
+  ///
+  /// ═══════════════════════════════════════════════════════════════
+  /// 📝 لتغيير هذه القيمة:
+  ///
+  /// 1. من الكود مباشرة (في أي مكان في التطبيق):
+  ///    final appConfigService = Provider.of<AppConfigService>(context, listen: false);
+  ///    await appConfigService.setBlockFingerprintOnDeveloperMode(false); // false = السماح بالبصمة مع Developer Mode
+  ///
+  /// 2. من SharedPreferences مباشرة:
+  ///    final prefs = await SharedPreferences.getInstance();
+  ///    await prefs.setBool('block_fingerprint_on_dev_mode', false);
+  ///
+  /// 3. القيمة الافتراضية يمكن تغييرها هنا في defaultValue:
+  ///    bool get blockFingerprintOnDeveloperMode => getValueBool('block_fingerprint_on_dev_mode', defaultValue: false);
+  /// ═══════════════════════════════════════════════════════════════
+  bool get blockFingerprintOnDeveloperMode => getValueBool('block_fingerprint_on_dev_mode', defaultValue: true);
+
+  /// setter to control if fingerprint should be blocked when developer mode is enabled
+  ///
+  /// Usage:
+  ///   await appConfigService.setBlockFingerprintOnDeveloperMode(false); // Allow fingerprint with Dev Mode
+  ///   await appConfigService.setBlockFingerprintOnDeveloperMode(true);  // Block fingerprint with Dev Mode
+  Future<void> setBlockFingerprintOnDeveloperMode(bool value, {bool? notify = false}) async {
+    if (_prefs == null) {
+      await init().then((_) => setValueBool('block_fingerprint_on_dev_mode', value));
+    } else {
+      await setValueBool('block_fingerprint_on_dev_mode', value);
+    }
+    if (notify == true) {
+      notifyListeners();
+    }
+  }
+
   /// Used When Login to set and notify listeners for token and authentication status
   Future<void> setAuthenticationStatusWithToken(
-      {required bool isLogin, required String? token, updateUrl}) async {
+      {required bool isLogin, required String? token}) async {
     await setIsLogin(isLogin);
-    await setToken(token);
+    await setToken(token, notify: true);
     debugPrint(
-        '----- Authentication status set to $isLogin with token :- $token');
+        '----- Authentication status set to $isLogin with token :- ${token?.substring(0, token.length > 20 ? 20 : token.length)}...');
+
+    // Clear Dio headers to force refresh with new token
+    try {
+      if (DioHelper.dio != null) {
+        // Remove old authorization header
+        DioHelper.dio!.options.headers.remove('Authorization');
+        debugPrint('Dio headers cleared, will be refreshed on next request');
+      }
+    } catch (e) {
+      debugPrint('Error clearing Dio headers after login: $e');
+    }
+
     notifyListeners();
   }
 
@@ -299,6 +373,8 @@ class AppConfigService extends ChangeNotifier {
     try {
       if (_prefs != null) return;
       _prefs = await SharedPreferences.getInstance();
+      isInitialized = true;
+      notifyListeners();
       debugPrint('--------- Config Service is Initialized Successfully ✔️');
       return;
     } catch (err, t) {
@@ -336,11 +412,16 @@ class AppConfigService extends ChangeNotifier {
 
   /// save data localy
   Future<bool> setValueString(dynamic key, String? v) async {
-    if (_prefs == null) return false;
+    if (_prefs == null) {
+      await init();
+      if (_prefs == null) return false;
+    }
     if (v == null) {
-      _prefs?.remove(key.toString());
+      await _prefs?.remove(key.toString());
     } else {
       await _prefs?.setString(key.toString(), v);
+      // Force a reload to ensure the value is persisted (especially important on web)
+      await _prefs?.reload();
     }
     return true;
   }
@@ -382,42 +463,96 @@ class AppConfigService extends ChangeNotifier {
   }
 
   /// get data localy
-  bool getValueBool(dynamic key) {
-    return _prefs?.getBool(key.toString()) ?? false;
+  bool getValueBool(dynamic key, {bool defaultValue = false}) {
+    return _prefs?.getBool(key.toString()) ?? defaultValue;
   }
   Future<void> clearToken({bool? notify = true}) async {
     if (_prefs == null) await init();
+    // Remove token from SharedPreferences
     await _prefs?.remove('token');
+    // Also clear from memory to ensure it's not cached
+    // Force a reload by ensuring _prefs is initialized
     if (notify == true) {
       notifyListeners();
     }
+    debugPrint('Token cleared from storage');
   }
-  Future<void> logout(context, {bool viewAlert = false, bool skipServerLogout = false}) async {
+  Future<void> logout(context, {bool viewAlert = false, bool skipServerLogout = false, bool skipNavigation = false}) async {
     if(viewAlert == true){
       bool isLogout = await AlertsService.confirmMessage(context, AppStrings.logout.tr(),
           message: AppStrings.areYouSureYouWantToLogout.tr());
       if (isLogout == false) return;
     }
-    
-    // Clear local data first
-      clearToken();
-      CacheHelper.deleteData(key: "US1");
-      CacheHelper.deleteData(key: "US2");
-      //  CacheHelper.deleteData(key: "USG");
-      CacheHelper.deleteData(key: "gDate");
-      CacheHelper.deleteData(key: "s1Date");
-      CacheHelper.deleteData(key: "s2Date");
-      CacheHelper.deleteData(key: "fcmToken");
-      setIsLogin(false);
-      debugPrint('User has been logged out, and token is cleared.');
-    
+
+    // Clear local data first - use await to ensure completion
+    await clearToken(notify: true);
+    await setIsLogin(false, notify: true);
+
+    // Clear refresh token and expiration dates
+    if (_prefs != null) {
+      await _prefs?.remove('refreshToken');
+      await _prefs?.remove('accessTokenExpDate');
+      await _prefs?.remove('refreshTokenExpDate');
+    }
+
+    // Clear cache data
+    await CacheHelper.deleteData(key: "US1");
+    await CacheHelper.deleteData(key: "US2");
+    //  CacheHelper.deleteData(key: "USG");
+    await CacheHelper.deleteData(key: "gDate");
+    await CacheHelper.deleteData(key: "s1Date");
+    await CacheHelper.deleteData(key: "s2Date");
+    await CacheHelper.deleteData(key: "fcmToken");
+
+    // Clear domain selection on logout (but keep domains list)
+    try {
+      await DomainSelectionService.clearDomainSelectionOnLogout();
+    } catch (e) {
+      debugPrint('Error clearing domain selection: $e');
+    }
+
+    // Clear device information if needed (optional)
+    // await _prefs?.remove('DeviceInformationMap');
+
+    debugPrint('User has been logged out, and token is cleared.');
+
+    // Clear Dio headers to ensure token is not cached
+    try {
+      if (DioHelper.dio != null) {
+        DioHelper.dio!.options.headers.remove('Authorization');
+        DioHelper.dio!.options.headers.remove('device-unique-id');
+      }
+    } catch (e) {
+      debugPrint('Error clearing Dio headers: $e');
+    }
+
     // Try to notify server, but don't fail if it doesn't work (e.g., 401)
     if (!skipServerLogout) {
       try {
-        await DioHelper.postData(url: "/rm_users/v1/log_out", context: context);
+        await DioHelper.postData(
+          url: "/rm_users/v1/log_out",
+          context: context,
+          query: null,
+          data: {},
+        );
       } catch (e) {
         // Ignore errors when logging out (especially 401)
         debugPrint('Logout API call failed (this is OK): $e');
+      }
+    }
+
+    // Notify listeners after all cleanup is done
+    notifyListeners();
+
+    // Navigate to login screen after logout (unless skipNavigation is true)
+    if (!skipNavigation && context.mounted) {
+      try {
+        context.goNamed(
+          AppRoutes.login.name,
+          pathParameters: {'lang': context.locale.languageCode},
+        );
+      } catch (e) {
+        debugPrint('Error navigating to login after logout: $e');
       }
     }
   }

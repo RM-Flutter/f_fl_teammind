@@ -14,7 +14,7 @@ abstract class UniversalPlatform {
   static bool get windows => _nav.appVersion.contains('Win');
   static bool get linux =>
       (_nav.appVersion.contains('Linux') || _nav.appVersion.contains('x11')) &&
-      !android;
+          !android;
   static bool get android => _nav.appVersion.contains('Android ');
   static bool get iOS {
     return _hasMatch(_nav.platform, '/iPad|iPhone|iPod/') ||

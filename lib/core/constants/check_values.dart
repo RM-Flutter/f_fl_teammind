@@ -5,4 +5,12 @@ class CheckValuesFromApi{
     }
     return [];
   }
+  static String getTitle(dynamic value, {required String langCode}) {
+    if (value is Map<String, dynamic>) {
+      return value[langCode] ?? value['en'] ?? "";
+    } else if (value is String) {
+      return value;
+    }
+    return "";
+  }
 }

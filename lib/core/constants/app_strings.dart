@@ -26,36 +26,40 @@ abstract class AppStrings {
   static const referralLinkDescripe = "referralLinkDescripe";
   static const searchingInContacts = "searchingInContacts";
   static const recommendFriends = "recommendFriends";
-  static const areYouSureThatPointsWillBeSentTo = "areYouSureThatPointsWillBeSentTo";
+  static const areYouSureThatPointsWillBeSentTo =
+      "areYouSureThatPointsWillBeSentTo";
   static const enterTheNumberOfPoints = "enterTheNumberOfPoints";
   static const conditions = "conditions";
   static const aboutPointsProgram = "aboutPointsProgram";
   static const sendToFriends = "sendToFriends";
+
   static const updatedSuccessfully = "updatedSuccessfully";
-  static const two_factor_auth = "two_factor_auth";
-  static const verifiedPurchase = "verifiedPurchase";
-  static const enableAndDisable2fa = "enableAndDisable2fa";
+  static const noDepartment = "noDepartment";
+  static const jopInfo = "jopInfo";
   static const management = "management";
-  static const points = "points";
-  static const noPrizesAvailable = "noPrizesAvailable";
-  static const chooseThePrize = "chooseThePrize";
-  static const yourRequestHasBeenSuccessfully = "yourRequestHasBeenSuccessfully";
-  static const yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon = "yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon";
-  static const textCopiedToClipboard = "textCopiedToClipboard";
-  static const areYouSureYouWantToMakeTransferPoints = "areYouSureYouWantToMakeTransferPoints";
-  static const invitation = "invitation";
-  static const yourRequestHasBeenSuccessfullyExecutedCopyTheFollowingCode = "yourRequestHasBeenSuccessfullyExecutedCopyTheFollowingCode";
-  static const updateNow = "updateNow";
-  static const friendName = "Friend Name";
-  static const pointsCondationAbout = "pointsCondationAbout";
   static const myRequest = "myRequest";
-  static const registerYourFriendData = "registerYourFriendData";
+
+  static const addCompany = "addCompany";
+  static const voiceMessage = "voiceMessage";
+  static const faceVerification = "faceVerification";
+  static const faceVerificationSuccess = "faceVerificationSuccess";
+  static const faceVerificationError = "faceVerificationError";
+  static const faceVerificationFailure = "faceVerificationFailure";
+  static const updateNow = "updateNow";
+  static const rewardsOrPenalties = "rewardsOrPenalties";
+  static const companyPolicy = "companyPolicy";
+  static const two_factor_auth = "two_factor_auth";
+  static const thereIsStillNoResponseFromTheManager =
+      "thereIsStillNoResponseFromTheManager";
   static const delete_account = "delete_account";
-  static const noCategoriesAvailable = "noCategoriesAvailable";
+  static const theAssignToFieldIsRequired = "theAssignToFieldIsRequired";
+  static const theSelectedStatusIsInvalid = "theSelectedStatusIsInvalid";
   static const noDataFounded = "noDataFounded";
+  static const thereIsNoComments = "thereIsNoComments";
   static const comments = "comments";
-  static const point = "point";
   static const update = "update";
+  static const enableAndDisable2fa = "enableAndDisable2fa";
+  static const passwordIsRequired = "passwordIsRequired";
   static const youMustUpdateTheAppToContinue = "youMustUpdateTheAppToContinue";
   static const available_update = "available_update";
   static const email_not_verified = "email_not_verified";
@@ -75,13 +79,15 @@ abstract class AppStrings {
   static const evaluationRequests = "evaluationRequests";
   static const salaryDate = "salaryDate";
   static const visitor = "visitor";
+  static const welcomeToFreeServices = "welcomeToFreeServices";
   static const dueDate = "dueDate";
   static const logoutFromAllDevices = "logoutFromAllDevices";
   static const assets = "assets";
   static const activeNow = "activeNow";
   static const sendAnEmail = "sendAnEmail";
   static const userDevices = "userDevices";
-  static const mustBeAtLeastSixCharactersLong = "mustBeAtLeastSixCharactersLong";
+  static const mustBeAtLeastSixCharactersLong =
+      "mustBeAtLeastSixCharactersLong";
   static const cleaningWork = "cleaningWork";
   static const calls = "calls";
   static const attendAMeeting = "attendAMeeting";
@@ -95,7 +101,8 @@ abstract class AppStrings {
   static const myEvaluations = "myEvaluations";
   static const pleaseEnterAValidEmailAddress = "pleaseEnterAValidEmailAddress";
   static const isRequired = "isRequired";
-  static const pleaseEnterOnlyNumericCharacters = "pleaseEnterOnlyNumericCharacters";
+  static const pleaseEnterOnlyNumericCharacters =
+      "pleaseEnterOnlyNumericCharacters";
   static const pleaseEnterAPhoneNumber = "pleaseEnterAPhoneNumber";
   static const at = "at";
   static const noExistingEvaluation = "noExistingEvaluation";
@@ -106,31 +113,15 @@ abstract class AppStrings {
   static const downloaded = "downloaded";
   static const viewEvaluations = "viewEvaluations";
   static const totalEvalutaions = "totalEvalutaions";
-  static const copy = "copy";
-  static const fawry = "fawry";
-  static const chooseTheCategory = "chooseTheCategory";
-  static const proceedToPayment = "proceedToPayment";
-  static const numberOfPoints = "numberOfPoints";
-  static const rechargeAmount = "rechargeAmount";
-  static const withdrawalAmount = "withdrawalAmount";
-  static const fees = "fees";
-  static const noInquiriesAvailable = "noInquiriesAvailable";
-  static const dataIsRequired = "dataIsRequired";
-  static const enterPhoneNumber = "enterPhoneNumber";
-  static const chooseFromFawryServices = "chooseFromFawryServices";
-  static const availablePointsAfterWithdrawal = "availablePointsAfterWithdrawal";
-  static const total = "total";
-  static const yourAvailablePoints = "yourAvailablePoints";
   static const allowedDelayMinutes = "allowedDelayMinutes";
   static const doYouWantToAddThisFingerprint = "doYouWantToAddThisFingerprint";
   static const noEmployeesFounded = "noEmployeesFounded";
   static const approved = "approved";
-  static const pay = "pay";
-  static const selectServiceProvider = "selectServiceProvider";
   static const hoursDailyCount = "hoursDailyCount";
   static const noWiFiNetworksFound = "noWiFiNetworksFound";
   static const wiFiScanPermissionIsRequired = "wiFiScanPermissionIsRequired";
-  static const pleaseTakePhotoBeforeAddingFingerprint = "pleaseTakePhotoBeforeAddingFingerprint";
+  static const pleaseTakePhotoBeforeAddingFingerprint =
+      "pleaseTakePhotoBeforeAddingFingerprint";
   static const photoRequired = "photoRequired";
   static const bluetoothWasNotEnabledInTime = "bluetoothWasNotEnabledInTime";
   static const cannotProceed = "cannotProceed";
@@ -139,7 +130,8 @@ abstract class AppStrings {
   static const publicHolidays = "publicHolidays";
   static const to = "to";
   static const bluetoothRequired = "bluetoothRequired";
-  static const bluetoothIsOffPleaseEnableItToContinue = "bluetoothIsOffPleaseEnableItToContinue";
+  static const bluetoothIsOffPleaseEnableItToContinue =
+      "bluetoothIsOffPleaseEnableItToContinue";
   static const resend = "resend";
   static const goToComplain = "goToComplain";
   static const egp = "egp";
@@ -149,7 +141,8 @@ abstract class AppStrings {
   static const ins = "in";
   static const out = "out";
   static const youAreOffline = "youAreOffline";
-  static const pleaseConnectToTheInternetAndTryAgain = "pleaseConnectToTheInternetAndTryAgain";
+  static const pleaseConnectToTheInternetAndTryAgain =
+      "pleaseConnectToTheInternetAndTryAgain";
   static const showOfflineFingerprints = "showOfflineFingerprints";
   static const refused = "refused";
   static const downloadSuccessfully = "downloadSuccessfully";
@@ -223,7 +216,8 @@ abstract class AppStrings {
   static const pleaseSelectRequestDate = "pleaseSelectRequestDate";
   static const penalty = "penalty";
   static const noExistingPenaltiesAndRewards = "noExistingPenaltiesAndRewards";
-  static const pleaseEnterReasonWithAtLeastCharacters = "pleaseEnterReasonWithAtLeastCharacters";
+  static const pleaseEnterReasonWithAtLeastCharacters =
+      "pleaseEnterReasonWithAtLeastCharacters";
   static const complains = "complains";
   static const myRewardsAndPenalties = "myRewardsAndPenalties";
   static const thereIsNoTasks = "thereIsNoTasks";
@@ -235,7 +229,8 @@ abstract class AppStrings {
   static const minutes = "minutes";
   static const employeeName = "employeeName";
   static const successful = "successful";
-  static const theCommentOnThisRequestHasBeenClosedByTheAdmin = "theCommentOnThisRequestHasBeenClosedByTheAdmin";
+  static const theCommentOnThisRequestHasBeenClosedByTheAdmin =
+      "theCommentOnThisRequestHasBeenClosedByTheAdmin";
   static const noCommentsFound = "noCommentsFound";
   static const lastedComments = "lastedComments";
   static const otherRequests = "otherRequests";
@@ -246,7 +241,8 @@ abstract class AppStrings {
   static const all = "all";
   static const applyFilter = "applyFilter";
   static const clear = "clear";
-  static const askingToRememberSendingSuccessfully = "askingToRememberSendingSuccessfully";
+  static const askingToRememberSendingSuccessfully =
+      "askingToRememberSendingSuccessfully";
   static const errorPleaseTryAgain = "errorPleaseTryAgain";
   static const blogDetails = "blogDetails";
   static const uploadImage = "uploadImage";
@@ -255,7 +251,8 @@ abstract class AppStrings {
   static const specifyTheTypeOfRequest = "specifyTheTypeOfRequest";
   static const details = "details";
   static const backToMyRequests = "backToMyRequests";
-  static const youWillBeRepliedSoonThankYouForChoosingOurApp = "youWillBeRepliedSoonThankYouForChoosingOurApp";
+  static const youWillBeRepliedSoonThankYouForChoosingOurApp =
+      "youWillBeRepliedSoonThankYouForChoosingOurApp";
   static const addImageSuccessful = "addImageSuccessful";
   static const viewProfile = "viewProfile";
   static const downloadFile = "downloadFile";
@@ -274,7 +271,8 @@ abstract class AppStrings {
   static const netSalary = "netSalary";
   static const goToHome = "goToHome";
   static const goToRequest = "goToRequest";
-  static const yourRequestHasBeenSubmittedSuccessfully = "yourRequestHasBeenSubmittedSuccessfully";
+  static const yourRequestHasBeenSubmittedSuccessfully =
+      "yourRequestHasBeenSubmittedSuccessfully";
   static const date = "date";
   static const basicSalary = "basicSalary";
   static const payrolls = "payrolls";
@@ -314,12 +312,15 @@ abstract class AppStrings {
   static const timelineMonth = "timelineMonth";
   static const viewOnCalendar = "viewOnCalendar";
   static const remaining = "remaining";
-  static const doYouWantToResendYourRequestWithTheCorrectDurationis = "doYouWantToResendYourRequestWithTheCorrectDurationis";
+  static const doYouWantToResendYourRequestWithTheCorrectDurationis =
+      "doYouWantToResendYourRequestWithTheCorrectDurationis";
   static const newRequestCreatedSuccessfully = "newRequestCreatedSuccessfully";
-  static const pleaseEnterTheReasonForTheRequest = "pleaseEnterTheReasonForTheRequest";
+  static const pleaseEnterTheReasonForTheRequest =
+      "pleaseEnterTheReasonForTheRequest";
   static const pleaseSelectRequestDuration = "pleaseSelectRequestDuration";
   static const pleaseSelectRequestType = "pleaseSelectRequestType";
-  static const thereIsNoRequestsAndNotifications = "thereIsNoRequestsAndNotifications";
+  static const thereIsNoRequestsAndNotifications =
+      "thereIsNoRequestsAndNotifications";
   static const blogCenter = "blogCenter";
   static const notificationsCenter = "notificationsCenter";
   static const customizeNotifications = "customizeNotifications";
@@ -332,34 +333,48 @@ abstract class AppStrings {
   static const camera = "camera";
   static const deactivate = "deactivate";
   static const activation = "activation";
-  static const areYouSureYouWantToUpdateYourProfile = "areYouSureYouWantToUpdateYourProfile";
+  static const areYouSureYouWantToUpdateYourProfile =
+      "areYouSureYouWantToUpdateYourProfile";
   static const updateProfile = "updateProfile";
   static const information = "information";
-  static const noChangesDetectedProfileIsAlreadyUpToDate = "noChangesDetectedProfileIsAlreadyUpToDate";
-  static const areYouSureYouWantToUpdateYourEmail = "areYouSureYouWantToUpdateYourEmail";
+  static const noChangesDetectedProfileIsAlreadyUpToDate =
+      "noChangesDetectedProfileIsAlreadyUpToDate";
+  static const areYouSureYouWantToUpdateYourEmail =
+      "areYouSureYouWantToUpdateYourEmail";
   static const updateEmail = "updateEmail";
-  static const noChangesDetectedEmailIsAlreadyUpToDate = "noChangesDetectedEmailIsAlreadyUpToDate";
-  static const failedToUpdateProfilePleaseTryLater = "failedToUpdateProfilePleaseTryLater";
+  static const noChangesDetectedEmailIsAlreadyUpToDate =
+      "noChangesDetectedEmailIsAlreadyUpToDate";
+  static const failedToUpdateProfilePleaseTryLater =
+      "failedToUpdateProfilePleaseTryLater";
   static const profileUpdatedSuccessfully = "profileUpdatedSuccessfully";
-  static const failedToUpdatePhonePleaseTryLater = "failedToUpdatePhonePleaseTryLater";
-  static const areYouSureYouWantToUpdateYourPhone = "areYouSureYouWantToUpdateYourPhone";
+  static const failedToUpdatePhonePleaseTryLater =
+      "failedToUpdatePhonePleaseTryLater";
+  static const areYouSureYouWantToUpdateYourPhone =
+      "areYouSureYouWantToUpdateYourPhone";
   static const updatePhoneNumber = "updatePhoneNumber";
   static const pleaseProvideValidPhoneNumber = "pleaseProvideValidPhoneNumber";
-  static const noChangesDetectedPhoneIsAlreadyUpToDate = "noChangesDetectedPhoneIsAlreadyUpToDate";
-  static const failedToUpdateEmailPleaseTryLater = "failedToUpdateEmailPleaseTryLater";
-  static const failedToDeleteAccountPleaseTryLater = "failedToDeleteAccountPleaseTryLater";
-  static const areYouSureYouWantToDeleteAccount = "areYouSureYouWantToDeleteAccount";
+  static const noChangesDetectedPhoneIsAlreadyUpToDate =
+      "noChangesDetectedPhoneIsAlreadyUpToDate";
+  static const failedToUpdateEmailPleaseTryLater =
+      "failedToUpdateEmailPleaseTryLater";
+  static const failedToDeleteAccountPleaseTryLater =
+      "failedToDeleteAccountPleaseTryLater";
+  static const areYouSureYouWantToDeleteAccount =
+      "areYouSureYouWantToDeleteAccount";
   static const deleteAccount = "deleteAccount";
   static const failedToLogoutPleaseTryLater = "failedToLogoutPleaseTryLater";
   static const noProductsFounded = "noProductsFounded";
   static const logout = "logout";
   static const areYouSureYouWantToLog = "areYouSureYouWantToLog";
   static const emailUpdatedSuccessfully = "emailUpdatedSuccessfully";
-  static const failedVerificationCodePleaseTryLater = "failedVerificationCodePleaseTryLater";
+  static const failedVerificationCodePleaseTryLater =
+      "failedVerificationCodePleaseTryLater";
   static const emailVerification = "emailVerification";
   static const phoneVerification = "phoneVerification";
-  static const aVerificationCodeHasBeenSentToYourEmail = "aVerificationCodeHasBeenSentToYourEmail";
-  static const aVerificationCodeHasBeenSentToYourPhoneNumber = "aVerificationCodeHasBeenSentToYourPhoneNumber";
+  static const aVerificationCodeHasBeenSentToYourEmail =
+      "aVerificationCodeHasBeenSentToYourEmail";
+  static const aVerificationCodeHasBeenSentToYourPhoneNumber =
+      "aVerificationCodeHasBeenSentToYourPhoneNumber";
   static const otpVerification = "otpVerification";
   static const accountAndSettings = "accountAndSettings";
   static const deleteYourAccount = "deleteYourAccount";
@@ -476,6 +491,41 @@ abstract class AppStrings {
   static const areYouSureYouWantToLogout = 'areYouSureYouWantToLogout';
   static const yes = 'yes';
   static const no = 'no';
+  static const doYouHaveDomain = 'doYouHaveDomain';
+  static const enterYourDomain = 'enterYourDomain';
+  static const domainExample = 'domainExample';
+  static const domainNotFound = 'domainNotFound';
+  static const useDefault = 'useDefault';
+  static const tryAgain = 'tryAgain';
+  static const savedDomains = 'savedDomains';
+  static const addBookmark = 'addBookmark';
+  static const editBookmark = 'editBookmark';
+  static const deleteBookmark = 'deleteBookmark';
+  static const bookmarkNameHint = 'bookmarkNameHint';
+  static const bookmarkSaved = 'bookmarkSaved';
+  static const bookmarkDeleted = 'bookmarkDeleted';
+  static const bookmarkSaveError = 'bookmarkSaveError';
+  static const myBookmarks = 'myBookmarks';
+  static const areYouSureDeleteBookmark = 'areYouSureDeleteBookmark';
+  static const conditionsForSubmission = 'conditionsForSubmission';
+  static const mustSubmitBeforeHours = 'mustSubmitBeforeHours';
+  static const mustSubmitAfterHours = 'mustSubmitAfterHours';
+  static const mustAttachFile = 'mustAttachFile';
+  static const preferAttachFile = 'preferAttachFile';
+  static const mustAttachMoneyValue = 'mustAttachMoneyValue';
+  static const preferAttachMoneyValue = 'preferAttachMoneyValue';
+  static const approvalSpecialist = 'approvalSpecialist';
+  static const approvalSpecialistDescription = 'approvalSpecialistDescription';
+  static const multiLevelApprovalRequired = 'multiLevelApprovalRequired';
+  static const additionalInformation = 'additionalInformation';
+  static const balanceCalculationMethod = 'balanceCalculationMethod';
+  static const requestUnit = 'requestUnit';
+  static const rulesMessage = 'rulesMessage';
+  static const daily = 'daily';
+  static const monthly = 'monthly';
+  static const annual = 'annual';
+  static const noMaximumDuration = 'noMaximumDuration';
+  static const autoCancelMessage = 'autoCancelMessage';
   static const payroll = 'payroll';
   static const tasks = 'tasks';
   static const otherDepartmentsRequests = 'otherDepartmentsRequests';
@@ -489,10 +539,139 @@ abstract class AppStrings {
   static const atLeastOneNumber = "atLeastOneNumber";
   static const atLeastOneLowercaseLetter = "atLeastOneLowercaseLetter";
   static const atLeastOneUppercaseLetter = "atLeastOneUppercaseLetter";
-  static const enterYourDomain = 'enterYourDomain';
-  static const domainExample = 'domainExample';
-  static const domainNotFound = 'domainNotFound';
-  static const useDefault = 'useDefault';
-  static const savedDomains = 'savedDomains';
-  static const tryAgain = "tryAgain";
+  static const fakeGPSDetected = "fakeGPSDetected";
+  static const mockLocationDetected = "mockLocationDetected";
+  static const fingerprintBlockedFakeGPS = "fingerprintBlockedFakeGPS";
+  static const lowGPSAccuracy = "lowGPSAccuracy";
+  static const suspiciousGPSData = "suspiciousGPSData";
+  static const requestTerms = "requestTerms";
+  static const noRequestTypes = "noRequestTypes";
+
+  // Free Services Screens
+  static const cvGenerator = "cvGenerator";
+  static const cvGenerator2 = "cvGenerator2";
+  static const cvGeneratorDescription = "cvGeneratorDescription";
+  static const updateInfo = "updateInfo";
+  static const selectCvTemplate = "selectCvTemplate";
+  static const smartCard = "smartCard";
+  static const smartCard2 = "smartCard2";
+  static const updateCompanyInfo = "updateCompanyInfo";
+  static const selectTemplate = "selectTemplate";
+  static const downloadQrCode = "downloadQrCode";
+  static const copyProfileLink = "copyProfileLink";
+  static const employeeProfiles = "employeeProfiles";
+  static const profileLinkCopied = "profileLinkCopied";
+  static const updateMyInfo = "updateMyInfo";
+  static const personal = "personal";
+  static const jobInfo = "jobInfo";
+  static const education = "education";
+  static const templateImage = "templateImage";
+  static const templateDescription = "templateDescription";
+  static const premiumTemplates = "premiumTemplates";
+  static const premiumTemplates2 = "premiumTemplates2";
+  static const fileType = "fileType";
+  static const vacationCalc = "vacationCalc";
+  static const vacationCalc2 = "vacationCalc2";
+  static const dateOfCommencement = "dateOfCommencement";
+  static const todaysDateLeave = "todaysDateLeave";
+  static const typeOfLeave = "typeOfLeave";
+  static const annualLeave = "annualLeave";
+  static const sickLeave = "sickLeave";
+  static const emergencyLeave = "emergencyLeave";
+  static const unpaidLeave = "unpaidLeave";
+  static const casualLeave = "casualLeave";
+  static const otherLeave = "otherLeave";
+  static const numberOfDaysAnnually = "numberOfDaysAnnually";
+  static const calculateDays = "calculateDays";
+  static const holidayBalance = "holidayBalance";
+  static const vacationCalcNote = "vacationCalcNote";
+  static const personalityTest = "personalityTest";
+  static const personalityTest2 = "personalityTest2";
+  static const questionOf = "questionOf";
+  static const yourPersonalityType = "yourPersonalityType";
+  static const takeTestAgain = "takeTestAgain";
+  static const analyticalThinker = "analyticalThinker";
+  static const socialConnector = "socialConnector";
+  static const actionOriented = "actionOriented";
+  static const thoughtfulObserver = "thoughtfulObserver";
+  static const personalityResultDescription = "personalityResultDescription";
+  static const aboutTeamMind = "aboutTeamMind";
+  static const aboutTeamMind2 = "aboutTeamMind2";
+  static const teamMindDescription = "teamMindDescription";
+  static const downloadProfile = "downloadProfile";
+  static const downloadStarted = "downloadStarted";
+  static const pleaseSelectBothDates = "pleaseSelectBothDates";
+  static const templateSelected = "templateSelected";
+  static const freeTime = "freeTime";
+  static const readingLearning = "readingLearning";
+  static const socializingFriends = "socializingFriends";
+  static const workingProjects = "workingProjects";
+  static const relaxingHome = "relaxingHome";
+  static const facingProblem = "facingProblem";
+  static const analyzeLogically = "analyzeLogically";
+  static const discussOthers = "discussOthers";
+  static const immediateAction = "immediateAction";
+  static const thinkQuietly = "thinkQuietly";
+  static const teamSetting = "teamSetting";
+  static const leadTeam = "leadTeam";
+  static const supportOthers = "supportOthers";
+  static const workIndependently = "workIndependently";
+  static const coordinateMembers = "coordinateMembers";
+  static const idealWorkEnvironment = "idealWorkEnvironment";
+  static const structuredOrganized = "structuredOrganized";
+  static const flexibleCreative = "flexibleCreative";
+  static const fastPacedChallenging = "fastPacedChallenging";
+  static const calmStable = "calmStable";
+  static const makingDecisions = "makingDecisions";
+  static const logicFacts = "logicFacts";
+  static const feelingsValues = "feelingsValues";
+  static const pastExperiences = "pastExperiences";
+  static const futurePossibilities = "futurePossibilities";
+
+  // Free Services Home Screen
+  static const freeServices = "freeServices";
+  static const myCV = "myCV";
+  static const myCV2 = "myCV2";
+  static const salaryCalc = "salaryCalc";
+  static const getTeamMindSystem = "getTeamMindSystem";
+  static const adForApplication = "adForApplication";
+  static const adSubtitle = "adSubtitle";
+
+  static const copy = "copy";
+  static const fawry = "fawry";
+  static const chooseTheCategory = "chooseTheCategory";
+  static const proceedToPayment = "proceedToPayment";
+  static const numberOfPoints = "numberOfPoints";
+  static const rechargeAmount = "rechargeAmount";
+  static const withdrawalAmount = "withdrawalAmount";
+  static const fees = "fees";
+  static const noInquiriesAvailable = "noInquiriesAvailable";
+  static const dataIsRequired = "dataIsRequired";
+  static const enterPhoneNumber = "enterPhoneNumber";
+  static const chooseFromFawryServices = "chooseFromFawryServices";
+  static const availablePointsAfterWithdrawal =
+      "availablePointsAfterWithdrawal";
+  static const total = "total";
+  static const yourAvailablePoints = "yourAvailablePoints";
+  static const pay = "pay";
+  static const selectServiceProvider = "selectServiceProvider";
+
+  static const points = "points";
+  static const noPrizesAvailable = "noPrizesAvailable";
+  static const chooseThePrize = "chooseThePrize";
+  static const yourRequestHasBeenSuccessfully =
+      "yourRequestHasBeenSuccessfully";
+  static const yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon =
+      "yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon";
+  static const textCopiedToClipboard = "textCopiedToClipboard";
+  static const areYouSureYouWantToMakeTransferPoints =
+      "areYouSureYouWantToMakeTransferPoints";
+  static const invitation = "invitation";
+  static const yourRequestHasBeenSuccessfullyExecutedCopyTheFollowingCode =
+      "yourRequestHasBeenSuccessfullyExecutedCopyTheFollowingCode";
+  static const friendName = "Friend Name";
+  static const pointsCondationAbout = "pointsCondationAbout";
+  static const registerYourFriendData = "registerYourFriendData";
+  static const noCategoriesAvailable = "noCategoriesAvailable";
+  static const point = "point";
 }

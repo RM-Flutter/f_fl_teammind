@@ -15,14 +15,14 @@ class OfflineOverlayService {
       _isTemporarilyHidden = false;
       return;
     }
-    
+
     if (_offlineOverlay == null && !temporarily) {
       // Overlay entry is null, just reset state
       _isShowing = false;
       _isTemporarilyHidden = false;
       return;
     }
-    
+
     try {
       final overlay = _offlineOverlay;
       if (temporarily && overlay != null) {
@@ -54,7 +54,7 @@ class OfflineOverlayService {
 
   static bool get isShowing => _isShowing;
   static bool get isTemporarilyHidden => _isTemporarilyHidden;
-  
+
   static void showOfflineOverlay({bool restoreFromTemporary = false}) {
     if (restoreFromTemporary && _isTemporarilyHidden) {
       _isTemporarilyHidden = false;
@@ -79,17 +79,17 @@ class OfflineOverlayService {
       }
       return;
     }
-    
+
     // Call the original showOfflineOverlay logic
     if (_isShowing) {
       debugPrint('Offline overlay already showing');
       return;
     }
-    
+
     // Wait a bit to ensure navigator is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_isShowing) return; // Double check after delay
-      
+
       try {
         _isShowing = true;
         _isTemporarilyHidden = false;
@@ -97,7 +97,7 @@ class OfflineOverlayService {
           builder: (context) => const OfflineScreen(),
           opaque: true,
         );
-        
+
         // Use rootNavigatorKey from app_router.dart (GoRouter's navigator)
         if (rootNavigatorKey.currentState?.overlay != null) {
           rootNavigatorKey.currentState!.overlay!.insert(_offlineOverlay!);

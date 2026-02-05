@@ -7,11 +7,11 @@ class ShimmerAnimatedLoading extends StatefulWidget {
 
   const ShimmerAnimatedLoading(
       {super.key,
-      this.height,
-      this.width,
-      this.circularRaduis,
-      this.maxHeight,
-      this.maxWidth});
+        this.height,
+        this.width,
+        this.circularRaduis,
+        this.maxHeight,
+        this.maxWidth});
 
   @override
   State<ShimmerAnimatedLoading> createState() => _ShimmerAnimatedLoadingState();
@@ -29,8 +29,8 @@ class _ShimmerAnimatedLoadingState extends State<ShimmerAnimatedLoading>
       vsync: this,
     )..repeat(reverse: true);
     _color = ColorTween(
-            begin: Colors.black.withOpacity(.02),
-            end: Colors.black.withOpacity(.09))
+        begin: Colors.black.withOpacity(.02),
+        end: Colors.black.withOpacity(.09))
         .animate(_animationController);
     super.initState();
   }

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -75,10 +76,13 @@ class ForgotPasswordController extends ChangeNotifier {
         return;
       }
     } else {
-      AlertsService.warning(
+      showToast(
+        AppStrings.formIsInvalid.tr(),
         context: context,
-        message: AppStrings.formIsInvalid.tr(),
-        title: AppStrings.formValidation.tr(),
+        backgroundColor: Colors.red,
+        textStyle: const TextStyle(color: Colors.white),
+        duration: const Duration(seconds: 5),
+        position: StyledToastPosition.bottom,
       );
       return;
     }
@@ -102,7 +106,7 @@ class ForgotPasswordController extends ChangeNotifier {
     }
     AlertsService.showLoading(context);
     final completePhoneNumber = (countryCodeController.text.isEmpty
-        ? '+02'
+        ? '+20${phoneController.text}'
         : countryCodeController.text + phoneController.text)
         .trim();
     final result = await ForgotPasswordRepo.forgetPassword(
@@ -140,7 +144,7 @@ class ForgotPasswordController extends ChangeNotifier {
     Provider.of<AppConfigService>(context, listen: false);
     if (codeFormKey.currentState?.validate() == true) {
       final completePhoneNumber = (countryCodeController.text.isEmpty
-          ? '+02'
+          ? '+20${phoneController.text}'
           : countryCodeController.text + phoneController.text)
           .trim();
       final result = await ForgotPasswordRepo.codeNewPassword(

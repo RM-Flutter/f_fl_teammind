@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_constants.dart';
@@ -13,67 +14,67 @@ abstract class AppThemeService {
     primaryColor: ColorValue(
         light: Color(AppColors.primary), dark: Color(AppColors.primary)),
     secondaryColor: ColorValue(
-        light: Color(AppColors.c2), dark: Color(AppColors.c2)),
+        light: Color(AppColors.dark), dark: Color(AppColors.dark)),
     tertiaryColor: ColorValue(
-        light: Color(AppColors.c3), dark: Color(AppColors.c3)),
+        light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     // application background colors
     primaryColorBackground: ColorValue(
-        light: Color(AppColors.bgC1), dark: Color(AppColors.bgC1)),
+        light: Color(AppColors.dark), dark: Color(AppColors.dark)),
     secondaryColorBackground: ColorValue(
-        light: Color(AppColors.bgC2), dark: Color(AppColors.bgC2)),
+        light: const Color(AppColors.pink), dark: const Color(AppColors.pink)),
     tertiaryColorBackground: ColorValue(
-        light: Color(AppColors.bgC3), dark: Color(AppColors.bgC3)),
+        light: Color(AppColors.white), dark: Color(AppColors.white)),
     // application texts colors
     primaryTextColor: ColorValue(
-        light: Color(AppColors.textC1),
-        dark: Color(AppColors.textC1)),
+        light: Color(AppColors.dark),
+        dark: Color(AppColors.dark)),
     secondaryTextColor: ColorValue(
-        light: Color(AppColors.c2),
-        dark: Color(AppColors.c2)),
+        light: Color(AppColors.dark),
+        dark: Color(AppColors.dark)),
     tertiaryTextColor: ColorValue(
-        light: Color(AppColors.textC3),
-        dark: Color(AppColors.textC3)),
+        light: const Color(AppColors.black),
+        dark: const Color(AppColors.black)),
     quaternaryTextColor: ColorValue(
-        light: Color(AppColors.textC4),
-        dark: Color(AppColors.textC4)),
+        light: Color(AppColors.darkGrey),
+        dark: Color(AppColors.darkGrey)),
     quinaryTextColor: ColorValue(
-        light: Color(AppColors.textC5),
-        dark: Color(AppColors.textC5)),
+        light: Color(AppColors.white),
+        dark: Color(AppColors.white)),
     //scaffold colors
     appBarBackgroundColor: ColorValue(
-        light: Color(AppColors.appBarBackgroundColor),
-        dark: Color(AppColors.appBarBackgroundColor)),
+        light: const Color(AppColors.black),
+        dark: const Color(AppColors.black)),
     bodyBackgroundColor: ColorValue(
-        light: Color(AppColors.bodyBackgroundColor),
-        dark: Color(AppColors.bodyBackgroundColor)),
+        light: Color(AppColors.white),
+        dark: Color(AppColors.white)),
     btmAppBarBackgroundColor: ColorValue(
-        light: Color(AppColors.btmAppBarBackgroundColor),
-        dark: Color(AppColors.btmAppBarBackgroundColor)),
+        light: Color(AppColors.white),
+        dark: Color(AppColors.white)),
     fabBackgroundColor: ColorValue(
-        light: Color(AppColors.fabBackgroundColor),
-        dark: Color(AppColors.fabBackgroundColor)),
+        light: const Color(AppColors.pink),
+        dark: const Color(AppColors.pink)),
     fabIconColor: ColorValue(
-        light: Color(AppColors.fabIconColor),
-        dark: Color(AppColors.fabIconColor)),
+        light: Color(AppColors.white),
+        dark: Color(AppColors.white)),
     // input colors
     inputBorderColor: ColorValue(
-        light: Color(AppColors.inputBorderColor),
-        dark: Color(AppColors.inputBorderColor)),
+        light: Color(AppColors.grey50),
+        dark: Color(AppColors.grey50)),
     inputFillColor: ColorValue(
-        light: Color(AppColors.inputFillColor),
-        dark: Color(AppColors.inputFillColor)),
+        light: Color(AppColors.white),
+        dark: Color(AppColors.white)),
     inputHintColor: ColorValue(
-        light: Color(AppColors.inputHintColor),
-        dark: Color(AppColors.inputHintColor)),
+        light: Color(AppColors.blackWithObacity),
+        dark: Color(AppColors.blackWithObacity)),
     inputLabelColor: ColorValue(
-        light: Color(AppColors.inputLabelColor),
-        dark: Color(AppColors.inputLabelColor)),
+        light: Color(AppColors.grey50),
+        dark: Color(AppColors.grey50)),
     inputTextColor: ColorValue(
-        light: Color(AppColors.inputTextColor),
-        dark: Color(AppColors.inputTextColor)),
+        light: Color(AppColors.blackWithObacity),
+        dark: Color(AppColors.blackWithObacity)),
   );
   static TextTheme _textTheme(
-          {required bool isDark, required BuildContext context}) =>
+      {required bool isDark, required BuildContext context}) =>
       TextTheme(
         displayLarge: TextStyle(
           // --> used
@@ -82,7 +83,7 @@ abstract class AppThemeService {
           color: colorPalette.secondaryTextColor.get(isDark),
         ),
         displayMedium: TextStyle(
-            // --> used
+          // --> used
             letterSpacing: LocalizationService.isArabic(context: context)
                 ? null
                 : AppSizes.s12,
@@ -96,37 +97,41 @@ abstract class AppThemeService {
           fontWeight: FontWeight.w400,
           color: colorPalette.quaternaryTextColor.get(isDark),
         ),
-        labelLarge: const TextStyle(
-            // --> used
+        labelLarge: TextStyle(
+          // --> used
             fontWeight: FontWeight.w700,
             fontSize: AppSizes.s24,
-            color: Colors.white),
+            color: Colors.white,
+            // تحسين الخطوط في الويب
+            letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.3 : null),
         headlineMedium: TextStyle(
-            // --> used
+          // --> used
             letterSpacing:
-                LocalizationService.isArabic(context: context) ? null : 1.2,
+            LocalizationService.isArabic(context: context) ? null : 1.2,
             color: Colors.white,
             fontWeight: FontWeight.w500,
             fontSize: AppSizes.s13),
         headlineSmall: TextStyle(
-            // --> used
+          // --> used
             fontWeight: FontWeight.w600,
             color: colorPalette.quinaryTextColor.color,
             fontSize: AppSizes.s16,
             letterSpacing:
-                LocalizationService.isArabic(context: context) ? null : 1.6),
+            LocalizationService.isArabic(context: context) ? null : 1.6),
         headlineLarge: TextStyle(
-            // --> used for the title of modal sheet
+          // --> used for the title of modal sheet
             fontWeight: FontWeight.bold,
             fontSize: AppSizes.s20,
-            color: colorPalette.secondaryTextColor.color),
+            color: Color(AppColors.dark),
+            // تحسين الخطوط في الويب
+            letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.5 : null),
         bodySmall: TextStyle(
           // --> used
           fontWeight: FontWeight.w400,
           fontSize: AppSizes.s10,
           letterSpacing:
-              LocalizationService.isArabic(context: context) ? null : 1,
-          color: const Color(0xFF474747),
+          LocalizationService.isArabic(context: context) ? null : 1,
+          color: const Color(AppColors.grey47),
         ),
         bodyMedium: TextStyle(
           // -> used
@@ -135,15 +140,15 @@ abstract class AppThemeService {
           color: colorPalette.secondaryTextColor.get(isDark),
         ),
         bodyLarge: TextStyle(
-            // -> used for style of the input text
+          // -> used for style of the input text
             color: colorPalette.inputTextColor.color),
         labelSmall: TextStyle(
           //-> used
           fontWeight: FontWeight.w400,
           fontSize: AppSizes.s12,
           letterSpacing:
-              LocalizationService.isArabic(context: context) ? null : 0.5,
-          color: const Color(0xFF3B3B3B),
+          LocalizationService.isArabic(context: context) ? null : 0.5,
+          color: const Color(AppColors.grey3B),
         ),
         titleLarge: const TextStyle(
           // --> used
@@ -163,7 +168,7 @@ abstract class AppThemeService {
           fontSize: AppSizes.s14,
           fontWeight: FontWeight.w500,
           letterSpacing:
-              LocalizationService.isArabic(context: context) ? null : 0.75,
+          LocalizationService.isArabic(context: context) ? null : 0.75,
           height: 1.1,
           color: colorPalette.primaryTextColor.get(isDark).withOpacity(.75),
         ),
@@ -175,7 +180,7 @@ abstract class AppThemeService {
       );
 
   static ThemeData getTheme(
-          {required bool isDark, required BuildContext context}) =>
+      {required bool isDark, required BuildContext context}) =>
       ThemeData(
         // application font family
         fontFamily: LocalizationService.isArabic(context: context)
@@ -245,16 +250,16 @@ abstract class AppThemeService {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-          foregroundColor: colorPalette.quinaryTextColor.color,
-          backgroundColor: colorPalette.primaryColorBackground.color,
-        )),
+              foregroundColor: colorPalette.quinaryTextColor.color,
+              backgroundColor: colorPalette.primaryColorBackground.color,
+            )),
         textButtonTheme: TextButtonThemeData(
             style: ElevatedButton.styleFrom(
-          fixedSize: const Size(double.infinity, double.infinity),
-          backgroundColor: Colors.transparent,
-          foregroundColor: colorPalette.secondaryColor.color,
-          elevation: 0,
-        )),
+              fixedSize: const Size(double.infinity, double.infinity),
+              backgroundColor: Colors.transparent,
+              foregroundColor: colorPalette.secondaryColor.color,
+              elevation: 0,
+            )),
 
         tabBarTheme: TabBarThemeData(
           dividerHeight: 0,

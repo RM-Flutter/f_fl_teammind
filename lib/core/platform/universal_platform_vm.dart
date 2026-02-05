@@ -17,3 +17,4 @@ abstract class UniversalPlatform {
   static bool get iOS => Platform.isIOS;
   static bool get fuchsia => Platform.isFuchsia;
 }
+

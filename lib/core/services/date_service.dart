@@ -54,7 +54,7 @@ abstract class DateService {
   static String? getWeekdayName(String? dateString, context) {
     try {
       if (dateString == null || dateString.isEmpty) return null;
-      
+
       DateTime? date = _parseDateWithMultipleFormats(dateString);
       if (date == null) return null;
 
@@ -70,19 +70,18 @@ abstract class DateService {
   static int? getDaysInMonth(String? dateString) {
     try {
       if (dateString == null || dateString.isEmpty) return null;
-      
+
       DateTime? date = _parseDateWithMultipleFormats(dateString);
       if (date == null) return null;
-      
+
       return date.day;
     } catch (ex) {
       return null;
     }
   }
 
+  /// Helper method to parse date string with multiple formats
   static DateTime? _parseDateWithMultipleFormats(String dateString) {
-    if (dateString.isEmpty) return null;
-    
     // Try different date formats
     List<String> formats = [
       'yyyy-MM-dd HH:mm:ss',
@@ -92,7 +91,7 @@ abstract class DateService {
       'dd/MM/yyyy HH:mm:ss',
       'dd/MM/yyyy',
     ];
-    
+
     for (String format in formats) {
       try {
         return DateFormat(format).parse(dateString);
@@ -100,7 +99,7 @@ abstract class DateService {
         continue;
       }
     }
-    
+
     // If all formats fail, try DateTime.parse as last resort
     try {
       return DateTime.parse(dateString);

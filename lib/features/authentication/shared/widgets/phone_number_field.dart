@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart' as intl_phone_field;
@@ -7,6 +8,9 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization_service.dart';
+
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/platform/platform_is.dart';
 
 class PhoneNumberField extends StatefulWidget {
   final TextEditingController controller;
@@ -32,17 +36,53 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
   int maxLength = 14;
   int minLength = 7;
   String? detectedCountryCode = CacheHelper.getString("flag");
+  bool _isFiltering = false; // لمنع loop في listener
 
   @override
   void initState() {
     super.initState();
     widget.countryCodeController.text = CacheHelper.getString("flagCode");
+
+    if (kIsWeb || PlatformIs.web) {
+      widget.controller.addListener(_filterNonNumericOnWeb);
+    }
+  }
+
+  @override
+  void dispose() {
+    // إزالة listener عند التخلص من الـ widget
+    if (kIsWeb || PlatformIs.web) {
+      widget.controller.removeListener(_filterNonNumericOnWeb);
+    }
+    super.dispose();
+  }
+
+  // دالة لتصفية الحروف على الويب
+  void _filterNonNumericOnWeb() {
+    if ((kIsWeb || PlatformIs.web) && !_isFiltering) {
+      final text = widget.controller.text;
+      final filteredText = text.replaceAll(RegExp(r'[^0-9]'), '');
+      if (text != filteredText) {
+        _isFiltering = true;
+        // إذا كان هناك حروف، تحديث النص بدون الحروف
+        final selectionOffset = widget.controller.selection.baseOffset;
+        widget.controller.value = TextEditingValue(
+          text: filteredText,
+          selection: TextSelection.collapsed(
+            offset: selectionOffset > filteredText.length
+                ? filteredText.length
+                : selectionOffset,
+          ),
+        );
+        _isFiltering = false;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("detectedCountryCode is --> ${CacheHelper.getString("flag")}");
-    debugPrint("detectedCountryCode is --> ${CacheHelper.getString("flagCode")}");
+    print("detectedCountryCode is --> ${CacheHelper.getString("flag")}");
+    print("detectedCountryCode is --> ${CacheHelper.getString("flagCode")}");
     return Directionality(
       textDirection: LocalizationService.isArabic(context: context)
           ? TextDirection.rtl
@@ -56,8 +96,26 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           hintText: AppStrings.yourPhone.tr(),
           counter: const SizedBox.shrink(),
         ),
-        initialCountryCode: detectedCountryCode ?? widget.initialCountry ?? "US",
+        initialCountryCode: detectedCountryCode ?? widget.initialCountry ?? "EG",
         onChanged: (value) {
+          // على الويب، التأكد من أن الرقم يحتوي على أرقام فقط
+          if ((kIsWeb || PlatformIs.web) && !_isFiltering) {
+            final phoneNumber = value.number.replaceAll(RegExp(r'[^0-9]'), '');
+            if (phoneNumber != value.number) {
+              _isFiltering = true;
+              // إذا كان هناك حروف، تحديث الـ controller
+              final currentText = widget.controller.text;
+              final filteredText = currentText.replaceAll(RegExp(r'[^0-9]'), '');
+              if (currentText != filteredText) {
+                widget.controller.value = TextEditingValue(
+                  text: filteredText,
+                  selection: TextSelection.collapsed(offset: filteredText.length),
+                );
+              }
+              _isFiltering = false;
+            }
+          }
+
           if (value.number.length >= minLength && value.number.length <= maxLength) {
             widget.triggerFunction?.call();
           }
@@ -66,7 +124,12 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           if (val == null || val.number.isEmpty) {
             return AppStrings.pleaseEnterValidPhoneNumber.tr();
           }
-          if (val.number.length < minLength || val.number.length > maxLength) {
+          // التحقق من أن الرقم يحتوي على أرقام فقط
+          final phoneNumber = val.number.trim();
+          if (!RegExp(r'^[0-9]+$').hasMatch(phoneNumber)) {
+            return AppStrings.pleaseEnterValidPhoneNumber.tr();
+          }
+          if (phoneNumber.length < minLength || phoneNumber.length > maxLength) {
             return AppStrings.pleaseEnterValidPhoneNumber.tr();
           }
           return null;
@@ -85,20 +148,20 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           horizontal: AppSizes.s12,
           vertical: AppSizes.s8,
         ),
-        dropdownIcon:  const Icon(
+        dropdownIcon: const Icon(
           Icons.arrow_drop_down,
         ),
         dropdownTextStyle:
-            const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         dropdownIconPosition: intl_phone_field.IconPosition.trailing,
         showCursor: true,
         dropdownDecoration: BoxDecoration(
           border: LocalizationService.isArabic(context: context)
-              ? const Border(
-                  left: BorderSide(color: Color(0xffDFDFDF), width: 1.4))
-              : const Border(
-                  right: BorderSide(color: Color(0xffDFDFDF), width: 1.4),
-                ),
+              ? Border(
+              left: BorderSide(color: Color(AppColors.grey50), width: 1.4))
+              : Border(
+            right: BorderSide(color: Color(AppColors.grey50), width: 1.4),
+          ),
         ),
         pickerDialogStyle: PickerDialogStyle(
           backgroundColor: Colors.white,
