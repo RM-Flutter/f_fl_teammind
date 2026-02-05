@@ -7,7 +7,7 @@ import '../../../../../common_modules_widgets/custom_elevated_button.widget.dart
 import '../../../../../constants/app_sizes.dart';
 import '../../../../../routing/app_router.dart';
 import '../../../models/employee_profile.model.dart';
-import '../profile_tile.widget.dart';
+import '../../../../evaluation/views/require/widget/profile_tile_widget.dart';
 
 class AccountsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;

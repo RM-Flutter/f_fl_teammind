@@ -1,13 +1,12 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:rmemp/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/localization.service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../constants/app_sizes.dart';
 
 class ProfileTile extends StatelessWidget {
   final String title;
@@ -41,7 +40,7 @@ class ProfileTile extends StatelessWidget {
       child: isTitleOnly == true
           ? Center(
               child: Text(title.toString(),
-              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Color(AppColors.black)),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Color(AppColors.black)),
               ),
             )
           : icon != null && trailingTitle != null

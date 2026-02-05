@@ -1,25 +1,23 @@
 import 'dart:convert';
 
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/evaluation/controller/evaluation_controller.dart';
+import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
+import 'package:app_test/features/evaluation/shared/widgets/profile_tile_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/controller/evaluation_controller/evaluation_controller.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
-import 'package:rmemp/modules/profiles/views/widgets/profile_tile.widget.dart';
-import '../../../common_modules_widgets/main_app_fab_widget/main_app_fab.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../general_services/layout.service.dart';
-import '../../../utils/general_screen_message_widget.dart';
-import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../../../common_modules_widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
+
+import '../../../../core/constants/app_sizes.dart' show AppSizes;
+import '../../../../core/services/layout_service.dart' show LayoutService;
 
 class EvaluationScreen extends StatefulWidget {
   final String? empId;
@@ -30,12 +28,12 @@ class EvaluationScreen extends StatefulWidget {
 }
 
 class _FingerprintScreenState extends State<EvaluationScreen> {
-  late final EvaluationViewModel viewModel;
+  late final EvaluationController viewModel;
 
   @override
   void initState() {
     super.initState();
-    viewModel = EvaluationViewModel();
+    viewModel = EvaluationController();
     viewModel.getEvaluation(context, widget.empId);
   }
 
@@ -48,7 +46,7 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    return ChangeNotifierProvider<EvaluationViewModel>(
+    return ChangeNotifierProvider<EvaluationController>(
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
@@ -62,7 +60,7 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
-                  child: Consumer<EvaluationViewModel>(
+                  child: Consumer<EvaluationController>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
                           : viewModel.evaluations?.isEmpty == true ||

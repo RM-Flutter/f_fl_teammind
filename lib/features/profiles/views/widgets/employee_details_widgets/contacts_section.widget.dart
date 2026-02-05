@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../../constants/app_sizes.dart';
 import '../../../models/employee_profile.model.dart';
 import '../employee_social_icons.widget.dart';
-import '../profile_tile.widget.dart';
+import '../../../../evaluation/views/require/widget/profile_tile_widget.dart';
 
 class ContactsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
