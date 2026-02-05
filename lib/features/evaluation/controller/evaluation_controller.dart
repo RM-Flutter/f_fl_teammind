@@ -1,71 +1,68 @@
 import 'dart:convert';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:dio/dio.dart';
+import '../data/repo/evaluation_repo.dart';
 import 'package:flutter/cupertino.dart';
 
-class EvaluationController extends ChangeNotifier{
+class EvaluationController extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
   List evaluations = [];
-  getEvaluation(context, empId){
+
+  Future<void> getEvaluation(context, empId) async {
     isLoading = true;
     notifyListeners();
     var jsonString;
     var gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      gCache = json.decode(jsonString) as Map<String, dynamic>;
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    DioHelper.getData(
-        context: context,
-        url: (gCache['employee_profile_id'].toString() == empId.toString())? "/rm_evaluation/v1/evaluation/emp_evaluations":"/rm_evaluation/v1/evaluation/emp_evaluations",
-        query: (gCache['employee_profile_id'].toString() != empId.toString())?{
-          "emp_id" : empId
-        }: null
-    ).then((v){
-      if(v.data['status'] == true){
-        evaluations = v.data['evaluations'];
-      }else{
+
+
+    int? queryEmpId;
+    if (gCache != null && gCache['employee_profile_id'].toString() != empId.toString()) {
+      queryEmpId = int.tryParse(empId.toString());
+    }
+
+    final result = await EvaluationRepo.getEvaluations(
+      context: context,
+      empId: queryEmpId,
+    );
+    if (result.success && result.data != null) {
+      if (result.data!['status'] == true) {
+        evaluations = result.data!['evaluations'];
+      } else {
         debugPrint('false');
       }
-      isLoading = false;
-      notifyListeners();
-    }).catchError((error){
-      isLoading = false;
-      notifyListeners();
-      if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
-      } else {
-        errorMessage = error.toString();
-      }
-    });
+    }
+    else {
+      errorMessage = result.message ?? 'Something went wrong';
+    }
+    isLoading = false;
+    notifyListeners();
   }
-  getEvaluationRequired(context){
+
+  Future<void> getEvaluationRequired(context) async {
     isLoading = true;
     notifyListeners();
-    DioHelper.getData(
+
+    final result = await EvaluationRepo.getRequiredEvaluations(
       context: context,
-      url: "/rm_evaluation/v1/evaluation/required_evaluations",
-    ).then((v){
-      if(v.data['status'] == true){
-        evaluations = v.data['evaluations'];
-      }else{
+    );
+
+    if (result.success && result.data != null) {
+      if (result.data!['status'] == true) {
+        evaluations = result.data!['evaluations'];
+      } else {
         debugPrint('false');
       }
-      isLoading = false;
-      notifyListeners();
-    }).catchError((error){
-      isLoading = false;
-      notifyListeners();
-      if (error is DioException) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
-      } else {
-        errorMessage = error.toString();
-      }
-    });
+    } else {
+      errorMessage = result.message ?? 'Something went wrong';
+    }
+    isLoading = false;
+    notifyListeners();
   }
 }
