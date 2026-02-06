@@ -1,19 +1,24 @@
+import 'package:app_test/core/platform/platform_is.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/features/payrolls/payroll_details/views/widgets/view_pdf_screen.dart';
+import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/common_modules_widgets/custom_elevated_button.widget.dart';
-import 'package:rmemp/constants/app_sizes.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/modules/payrolls/views/view_pdf_screen.dart';
-import 'package:rmemp/platform/platform_is.dart';
-import 'package:rmemp/routing/app_router.dart';
-import '../models/payroll.model.dart';
-import '../view_models/payroll_details.viewmodel.dart';
-import 'widgets/payroll_details_body.widget.dart';
-import 'widgets/payroll_details_header.widget.dart';
+import '../controller/payroll_details_controller.dart';
+import 'widgets/payroll_details_body_widget.dart';
+import 'widgets/payroll_details_header_widget.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PayrollDetailsScreen extends StatefulWidget {
   final PayrollModel? payroll;
@@ -172,7 +177,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                       Expanded(
                           child:
                               Center(child: ConstrainedBox(
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     maxWidth: kIsWeb ? 1100 : double.infinity,
                                   ),
                                   child: PayrollDetailsBodyWidget(payroll: widget.payroll)))),
@@ -192,13 +197,6 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                                         builder: (_) => PdfViewerScreen(viewModel.localFilePath)));
                                   }
                                 }
-                              // await context
-                              //     .pushNamed(AppRoutes.payrollsList.name, extra: {
-                              //   'employeeName': employee?.name,
-                              //   'employeeId': employee?.id?.toString()
-                              // }, pathParameters: {
-                              //   'lang': context.locale.languageCode
-                              // })
                             )),
                       ),
                     ],

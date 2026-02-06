@@ -1,17 +1,16 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rmemp/common_modules_widgets/app_bar_with_bookmark.widget.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import '../../../../constants/app_colors.dart';
-import '../../../../constants/app_images.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../general_services/layout.service.dart';
-import '../../../../routing/app_router.dart';
-import '../../models/payroll.model.dart';
-import '../../services/payroll.service.dart';
+import '../../../shared/repos/payroll_service.dart';
 
 class PayrollDetailsHeaderWidget extends StatelessWidget {
   final PayrollModel? payroll;
@@ -39,7 +38,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
           AppBarWithBookmark(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: "${AppStrings.payroll.tr()} - ${PayrollService.formatDate(payroll?.dateTo, context)}" ?? '',
+            title: "${AppStrings.payroll.tr()} - ${PayrollRepo.formatDate(payroll?.dateTo, context)}",
             titleStyle: Theme.of(context)
                 .textTheme
                 .displayLarge
@@ -97,7 +96,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
                       PayrollHeaderTileWidget(
                           title: AppStrings.date.tr(),
                           subTitle:
-                              PayrollService.formatDate(payroll?.dateTo, context) ?? '',
+                              PayrollRepo.formatDate(payroll?.dateTo, context) ?? '',
                           icon: Icons.calendar_month_outlined)
                   ],
                 ),

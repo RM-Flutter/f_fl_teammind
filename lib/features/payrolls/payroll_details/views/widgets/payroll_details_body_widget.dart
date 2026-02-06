@@ -1,11 +1,11 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../models/payroll.model.dart';
 
 class PayrollDetailsBodyWidget extends StatelessWidget {
   final PayrollModel? payroll;
@@ -51,12 +51,12 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
             if (payroll?.basicSalary != null)
               PayrollDetailsBodyTileWidget(
                   title: AppStrings.basicSalary.tr(),
-                  subtitle: double.parse(payroll!.basicSalary.toString()).toStringAsFixed(2) ?? ''),
+                  subtitle: double.parse(payroll!.basicSalary.toString()).toStringAsFixed(2)),
 
             if (payroll?.salaryAdvance != null)
               PayrollDetailsBodyTileWidget(
                   title: AppStrings.salaryAdvance.tr(),
-                  subtitle:double.parse(payroll!.salaryAdvance.toString()).toStringAsFixed(2) ?? '',
+                  subtitle:double.parse(payroll!.salaryAdvance.toString()).toStringAsFixed(2),
                   subtitleColor: Colors.red),
             // display all deductions
             if (payroll?.payrollDeductions?.isNotEmpty ?? false)

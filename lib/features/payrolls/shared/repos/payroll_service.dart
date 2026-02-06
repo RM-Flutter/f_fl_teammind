@@ -1,10 +1,10 @@
+import 'package:app_test/core/models/operation_result.model.dart';
+import 'package:app_test/core/services/crud_operation.dart';
+import 'package:app_test/core/services/localization_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import '../../../models/operation_result.model.dart';
-import '../../../services/crud_operation.service.dart';
 
-abstract class PayrollService {
+abstract class PayrollRepo {
   static String? formatDate(String? dateString, context) {
     if (dateString == null) return null;
 
@@ -88,13 +88,6 @@ abstract class PayrollService {
     String? fromDate,
     String? toDate,
   }) async {
-    // final url = EndpointServices.getApiEndpoint(EndpointsNames.payGetPosts).url;
-    // return await DioApiService().get<Map<String, dynamic>>(
-    //   url,
-    //   dataKey: 'data',
-    //   context: context,
-    //   allData: true,
-    // );
     Map<String, dynamic> queryParameters = {
       'page': 1,
     };

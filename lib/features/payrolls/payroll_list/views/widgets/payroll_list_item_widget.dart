@@ -1,10 +1,10 @@
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../routing/app_router.dart';
-import '../../models/payroll.model.dart';
-import '../../services/payroll.service.dart';
+import '../../../shared/repos/payroll_service.dart';
 
 class PayrollListItemWidget extends StatelessWidget {
   final PayrollModel payroll;
@@ -45,7 +45,7 @@ class PayrollListItemWidget extends StatelessWidget {
                 gapW8,
                 Expanded(
                   child: Text(
-                    PayrollService.formatDate(payroll.dateTo, context) ?? '',
+                    PayrollRepo.formatDate(payroll.dateTo, context) ?? '',
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.s14,

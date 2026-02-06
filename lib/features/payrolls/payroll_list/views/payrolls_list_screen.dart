@@ -1,25 +1,23 @@
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
-import '../../../common_modules_widgets/main_app_fab_widget/main_app_fab.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../general_services/layout.service.dart';
-import '../../../utils/general_screen_message_widget.dart';
-import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../view_models/payrolls_list.viewmodel.dart';
-import 'widgets/payroll_list_item.widget.dart';
-import '../../../common_modules_widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
+import '../controller/payrolls_list_controller.dart';
+import 'widgets/payroll_list_item_widget.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
+import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
+
 
 class PayrollsListScreen extends StatefulWidget {
   final String? empId;
@@ -53,10 +51,6 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
     return ChangeNotifierProvider<PayrollsListViewModel>(
       create: (_) => viewModel,
       child: TemplatePage(
-          // floatingActionButton: Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35: 0),
-          //   child: MainAppFabWidget(requests: false,),
-          // ),
           pageContext: context,
           bottomAppbarWidget: widget.empId != null &&
                   widget.empId?.isNotEmpty == true &&
@@ -117,7 +111,7 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                                   /// general screen message widget for other requests types
                                   // GeneralScreenMessageWidget(
                                   //     screenId: '/payrolls'),
-                                  ...viewModel.payrolls!.map((payroll) =>
+                                  ...viewModel.payrolls!.map((PayrollModel payroll) =>
                                       PayrollListItemWidget(payroll: payroll))
                                 ])),
                 ),

@@ -11,7 +11,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/comments/comments_widget.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
-import 'package:app_test/features/profiles/views/widgets/employee_details_loading.widget.dart';
+import 'package:app_test/features/employee_profiles/views/widgets/employee_details_loading.widget.dart';
 import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
 import 'package:app_test/features/tasks/views/details/widgets/task_details_header_widget.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;

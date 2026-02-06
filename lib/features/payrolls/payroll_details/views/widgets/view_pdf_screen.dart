@@ -1,7 +1,7 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 

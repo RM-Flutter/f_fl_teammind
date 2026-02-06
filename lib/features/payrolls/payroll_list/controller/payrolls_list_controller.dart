@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/user_consts.dart';
-import '../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
-import '../../../general_services/settings.service.dart';
-import '../../../models/settings/user_settings.model.dart';
-import '../models/payroll.model.dart';
-import '../services/payroll.service.dart';
+import '../../shared/repos/payroll_service.dart';
 
 class PayrollsListViewModel extends ChangeNotifier {
   List<PayrollModel>? payrolls;
@@ -39,7 +38,7 @@ class PayrollsListViewModel extends ChangeNotifier {
       {required BuildContext context, String? empId}) async {
     // get user Payrolls
     try {
-      final result = await PayrollService.getPayrollsList(
+      final result = await PayrollRepo.getPayrollsList(
           context: context, empId: empId, withValues: ['user_id']);
       if (result.success && result.data != null) {
         var payrollsListData = result.data?['data'] as List<dynamic>?;
