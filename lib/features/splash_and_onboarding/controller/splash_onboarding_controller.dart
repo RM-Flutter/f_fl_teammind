@@ -14,7 +14,7 @@ import 'package:app_test/core/services/app_info_service.dart';
 import 'package:app_test/core/services/backend_services/get_endpoint_service.dart';
 import 'package:app_test/core/services/device_info_service.dart';
 import 'package:app_test/core/services/notification_service/notification_service.dart';
-import 'package:app_test/core/models/endpoint.model.dart';
+import 'package:app_test/core/models/endpoint_model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
 class OnboardingController extends ChangeNotifier {

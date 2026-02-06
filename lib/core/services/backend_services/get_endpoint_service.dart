@@ -1,5 +1,5 @@
 import 'package:app_test/core/constants/app_constants.dart';
-import 'package:app_test/core/models/endpoint.model.dart';
+import 'package:app_test/core/models/endpoint_model.dart';
 
 abstract class EndpointServices {
   static EndPoint getApiEndpoint(EndpointsNames name) {

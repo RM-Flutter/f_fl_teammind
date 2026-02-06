@@ -1,11 +1,6 @@
-import 'dart:convert';
-
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
 
 class TeamFingerPrintViewModel extends ChangeNotifier{
   bool isLoading = false;
@@ -27,7 +22,7 @@ class TeamFingerPrintViewModel extends ChangeNotifier{
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();

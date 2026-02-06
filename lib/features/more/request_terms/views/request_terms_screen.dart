@@ -1,14 +1,14 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_sizes.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import '../../../../common_modules_widgets/template_page.widget.dart';
-import '../../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import 'request_terms.viewmodel.dart';
+import '../controller/request_terms_controller.dart';
 
 class RequestTermsScreen extends StatefulWidget {
   const RequestTermsScreen({super.key});

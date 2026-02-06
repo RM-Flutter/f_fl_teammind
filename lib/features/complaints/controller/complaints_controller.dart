@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:app_test/core/models/get_request_comment_model.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,7 @@ class ComplaintsController extends ChangeNotifier {
   File? attachmentPersonalImage;
   List listAttachmentPersonalImage = [];
   List<XFile> listXAttachmentPersonalImage = [];
-  GetRequestCommentModel? getRequestCommentModel;
+  // GetRequestCommentModel? getRequestCommentModel;
   GetOneRequestModel? getOneRequestModel;
   List requests = [];
   List requestsTeam = [];
@@ -180,7 +179,7 @@ class ComplaintsController extends ChangeNotifier {
         );
         contentController.clear();
         // Refresh comments after successful upload
-        getRequestCommentModel = null;
+        // getRequestCommentModel = null;
         // getRequestComment(context, id);
       }
     } catch (error) {

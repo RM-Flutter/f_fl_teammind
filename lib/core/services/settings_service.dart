@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_test/core/constants/settings/default_general_settings.dart';
 import 'package:app_test/core/constants/settings/default_user_settings.dart';
 import 'package:app_test/core/constants/settings/default_user_settings_2.dart';
-import 'package:app_test/core/models/endpoint.model.dart';
+import 'package:app_test/core/models/endpoint_model.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/models/settings/app_settings_model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';

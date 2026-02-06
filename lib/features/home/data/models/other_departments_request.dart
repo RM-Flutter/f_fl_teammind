@@ -1,6 +1,5 @@
-import 'department.model.dart';
 
-class MyTeamRequestModel {
+class OtherDepartmentRequestModel {
   var id;
   var departmentId;
   var departmentName;
@@ -16,20 +15,20 @@ class MyTeamRequestModel {
   var to;
   var status;
   var level;
-  bool? waitingCancel;
   List<ManagerReply>? managerReply;
+  List<SeenBy>? seenBy;
   List<Files>? files;
   var createdAt;
   var seenAt;
+  bool? waitingCancel;
   var statusUpdate;
   var notes;
   var reason;
-  var seenBy;
 
-  MyTeamRequestModel({
+  OtherDepartmentRequestModel({
     required this.id,
-    required this.notes,
     required this.rulesMessage,
+    required this.notes,
     required this.reason,
     required this.seenAt,
     required this.statusUpdate,
@@ -45,26 +44,20 @@ class MyTeamRequestModel {
     required this.moneyValue,
     required this.from,
     required this.to,
-    required this.waitingCancel,
     required this.status,
     required this.level,
     this.managerReply,
     this.files,
+    this.waitingCancel,
     this.seenBy,
   });
 
-  factory MyTeamRequestModel.fromJson(Map<String, dynamic> json) {
-    return MyTeamRequestModel(
+  factory OtherDepartmentRequestModel.fromJson(Map<String, dynamic> json) {
+    return OtherDepartmentRequestModel(
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
-        waitingCancel: json['waiting_cancel'] ?? false,
-        files: json['files'] != null
-          ? List<Files>.from(json['files'].map((file) => Files.fromJson(file)))
-          : [],
-      seenBy: json['seen_by'] != null
-          ? List<SeenBy>.from(json['seen_by'].map((file) => SeenBy.fromJson(file)))
-          : [],
       notes: json['notes'] ?? "",
+      waitingCancel: json['waiting_cancel'] ?? false,
       createdAt: json['created_at'] ?? "",
       statusUpdate: json['status_update_at'] ?? "",
       seenAt: json['seen_at'] ?? "",
@@ -84,6 +77,12 @@ class MyTeamRequestModel {
       level: json['level'] ?? "",
       managerReply: json['manager_reply'] != null
           ? List<ManagerReply>.from(json['manager_reply'].map((file) => ManagerReply.fromJson(file)))
+          : [],
+      seenBy: json['seen_by'] != null
+          ? List<SeenBy>.from(json['seen_by'].map((file) => SeenBy.fromJson(file)))
+          : [],
+      files: json['files'] != null
+          ? List<Files>.from(json['files'].map((file) => Files.fromJson(file)))
           : [],
     );
   }

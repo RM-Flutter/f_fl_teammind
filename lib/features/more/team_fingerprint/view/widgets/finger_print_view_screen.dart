@@ -8,10 +8,9 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/finger_print/card/fingerprint_card_widget.dart';
 import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
-import 'package:app_test/features/fingerprint/views/shared_ui/finger_print_card/fingerprint_card_widget.dart';
-import 'package:app_test/features/fingerprint/views/widgets/fingerprint_card_widget.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

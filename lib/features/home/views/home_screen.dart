@@ -1,16 +1,31 @@
+import 'dart:async';
 import 'dart:convert';
-import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/cache_constants.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/models/settings/user_settings.model.dart';
-import 'package:app_test/features/home/views/widgets/appbar_profile_container.dart';
-import 'package:app_test/features/home/views/widgets/home_grid/home_grid_view.dart';
-import 'package:app_test/features/personal_profile/views/personal_profile_screen.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/services/requests_services.dart';
+import 'package:app_test/core/utils/base_page/mobile.scaffold.dart';
+import 'package:app_test/core/utils/base_page/mobile_header.dart';
+import 'package:app_test/core/utils/general_screen_message_widget.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.widget.dart';
+import 'package:app_test/features/home/data/models/home_widget_type.dart';
+import 'package:app_test/features/home/views/widgets/bookmark_list_widget.dart';
+import 'package:app_test/features/home/views/widgets/loading/home_appbar_loading.dart';
+import 'package:app_test/features/home/views/widgets/loading/home_body_loading.dart';
+import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/my_requests_widget.dart';
+import 'package:app_test/features/home/views/widgets/page_body_widgets/notifications_section.dart';
+import 'package:app_test/features/home/views/widgets/page_header_widgets/home_appbar.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/services/general_listener.dart';
-import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
+
+import '../../../core/constants/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,115 +35,403 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final generalListener = GeneralListener();
+  late final HomeController viewModel;
+  final generalListener = GeneralListener(); // instance
+  List<HomeWidgetType> _widgetOrder = [];
+  List<HomeWidgetType> _availableWidgets = [];
+  Timer? _autoScrollTimer;
+  bool _isDragging = false;
+
+  static const String _widgetOrderCacheKey = "home_widget_order";
+
   @override
   void initState() {
-    var jsonString;
-    Map<String, dynamic> gCache = {};
+    super.initState();
+    viewModel = HomeController();
+    viewModel.getHome(context);
+    CacheConsts.initUSG();
+    String? jsonString;
+    Map<String, dynamic>? gCache;
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
     }
-    final popups = gCache['popups'];
+    final popups = gCache?['popups'];
     if (popups != null && popups.isNotEmpty) {
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      //   if (context.mounted) {
-      //     generalListener.startAll(context, "home", popups);
-      //   }
-      // });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        generalListener.startAll(context, "home", popups);
+      });
     }
 
-    super.initState();
+    // Load widget order from cache
+    _loadWidgetOrder();
   }
+
+  void _loadWidgetOrder() {
+    final orderJson = CacheHelper.getString(_widgetOrderCacheKey);
+    if (orderJson.isNotEmpty) {
+      try {
+        final List<dynamic> orderList = jsonDecode(orderJson);
+        _widgetOrder = orderList
+            .map((e) => HomeWidgetType.fromJson(e as String))
+            .whereType<HomeWidgetType>()
+            .toList();
+      } catch (e) {
+        debugPrint('Error loading widget order: $e');
+        _widgetOrder = HomeWidgetType.getDefaultOrder();
+      }
+    } else {
+      _widgetOrder = HomeWidgetType.getDefaultOrder();
+    }
+  }
+
+  Future<void> _saveWidgetOrder(List<HomeWidgetType> order) async {
+    try {
+      final orderJson = jsonEncode(order.map((e) => e.toJson()).toList());
+      await CacheHelper.setString(key: _widgetOrderCacheKey, value: orderJson);
+    } catch (e) {
+      debugPrint('Error saving widget order: $e');
+    }
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    _isDragging = false;
+    _autoScrollTimer?.cancel();
+    setState(() {
+      // Reorder the available widgets list
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final item = _availableWidgets.removeAt(oldIndex);
+      _availableWidgets.insert(newIndex, item);
+
+      // Update _widgetOrder to match the new order
+      // Create a new order list: available widgets first (in new order), then others
+      final newOrder = <HomeWidgetType>[];
+
+      // Add reordered available widgets first
+      newOrder.addAll(_availableWidgets);
+
+      // Add widgets that are not available (preserve their order)
+      for (final widgetType in _widgetOrder) {
+        if (!_availableWidgets.contains(widgetType)) {
+          newOrder.add(widgetType);
+        }
+      }
+
+      _widgetOrder = newOrder;
+      _saveWidgetOrder(_widgetOrder);
+    });
+  }
+
+  void _handlePointerMove(PointerMoveEvent event) {
+    if (!_isDragging || !viewModel.homeScrollController.hasClients) return;
+
+    final scrollController = viewModel.homeScrollController;
+    final position = scrollController.position;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Get pointer position
+    final pointerY = event.position.dy;
+
+    // Calculate distance from top and bottom of screen
+    final distanceFromTop = pointerY;
+    final distanceFromBottom = screenHeight - pointerY;
+
+    // Auto-scroll threshold (150 pixels from edges)
+    const scrollThreshold = 150.0;
+    const scrollSpeed = 10.0;
+
+    _autoScrollTimer?.cancel();
+
+    if (distanceFromTop < scrollThreshold && position.pixels > position.minScrollExtent) {
+      // Scroll up
+      _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+        if (!scrollController.hasClients || !mounted || !_isDragging) {
+          timer.cancel();
+          return;
+        }
+
+        final newPosition = (scrollController.position.pixels - scrollSpeed)
+            .clamp(position.minScrollExtent, position.maxScrollExtent);
+
+        if (newPosition <= position.minScrollExtent) {
+          timer.cancel();
+          return;
+        }
+
+        scrollController.jumpTo(newPosition);
+      });
+    } else if (distanceFromBottom < scrollThreshold && position.pixels < position.maxScrollExtent) {
+      // Scroll down
+      _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+        if (!scrollController.hasClients || !mounted || !_isDragging) {
+          timer.cancel();
+          return;
+        }
+
+        final newPosition = (scrollController.position.pixels + scrollSpeed)
+            .clamp(position.minScrollExtent, position.maxScrollExtent);
+
+        if (newPosition >= position.maxScrollExtent) {
+          timer.cancel();
+          return;
+        }
+
+        scrollController.jumpTo(newPosition);
+      });
+    } else {
+      _autoScrollTimer?.cancel();
+    }
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    viewModel.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
-    final json2String = CacheHelper.getString("US2");
-    Map<String, dynamic> us2Cache;
-    if (json2String != null && json2String != "") {
-      us2Cache = json.decode(json2String) as Map<String, dynamic>;// Convert String back to JSON
-    }
-    final json1String = CacheHelper.getString("US1");
-    Map<String, dynamic> us1Cache = {};
-    if (json1String != null && json1String != "") {
-      us1Cache = json.decode(json1String) as Map<String, dynamic>;// Convert String back to JSON
-
-      UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
-    }
-    return ChangeNotifierProvider(create: (context) => HomeController()..initializeHomeScreen(context, [   "general_settings",
-      "user_settings",
-      "user2_settings",]),
-    child: Consumer<HomeController>(
-      builder: (context, value, child) {
-      return Scaffold(
-        backgroundColor: const Color(0xffFFFFFF),
-        body: GradientBgImage(
-          padding: const EdgeInsets.all(0),
-          child: RefreshIndicator.adaptive(
-            onRefresh: () async {
-            },
-            child: SafeArea(
-              child: CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    expandedHeight: height * 0.2,
-                    pinned: true,
-                    backgroundColor: Colors.transparent,
-                    flexibleSpace: LayoutBuilder(builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      var top = constraints.biggest.height;
-                      return Stack(
-                        clipBehavior: Clip.none,
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          FlexibleSpaceBar(
-                            background: Container(
-                              decoration:  const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30)),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage(
-                                      "assets/images/home_images/appbar_images/home_top_background.png",
-                                    ),
-                                  )),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap:(){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PersonalProfileScreen(),));
-                                      },
-                                      child: AppbarProfileContainer(
-                                        imageUrl:(us1Cache['photo'] != null)?
-                                        "${us1Cache['photo']}" : '',
-                                        userName:(us1Cache['name'] != null)?
-                                        "${us1Cache['name']}" : "",
-                                        userRole:(us1Cache['role'] != null)?(us1Cache['role'].isNotEmpty)?
-                                        "${us1Cache['role'][0]}".tr() : "" : "",
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                  const HomeGridView(),
-                ],
-              ),
+    return ChangeNotifierProvider<HomeController>.value(
+      value: viewModel,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          try {
+            await viewModel.getHome(context);
+          } catch (_) {}
+          await Future.delayed(const Duration(milliseconds: 200));
+        },
+        child: CoreMobileScaffold(
+          backgroundColor: Colors.white,
+          controller: viewModel.homeScrollController,
+          headers: [
+            CoreHeader.transform(
+              pinned: true,
+              color: Colors.white,
+              shrinkHeight: AppSizes.s140,
+              expandedHeight: AppSizes.s300,
+              shrinkChild: Consumer<HomeController>(
+                  builder: (context, viewModel, child) => HomeAppbarWidget(
+                    requests: viewModel.myRequests,
+                    isExpanded: false,
+                  )),
+              child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Consumer<HomeController>(
+                      builder: (context, viewModel, child) => viewModel.isLoading
+                          ? const HomeAppbarLoading()
+                          : HomeAppbarWidget(
+                        requests: viewModel.myRequests,
+                      ))),
+            )
+          ],
+          floatingActionButton: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal:
+                LocalizationService.isArabic(context: context) ? 35 : 0),
+            child: MainAppFabWidget(
+                requests: false,
+                viewRequest: true
             ),
           ),
+          children: [
+            Consumer<HomeController>(
+              builder: (context, viewModel, child) => viewModel.isLoading
+                  ? const HomeLoadingPage()
+                  : Padding(
+                padding: const EdgeInsets.only(top: AppSizes.s12),
+                child: _buildReorderableWidgets(viewModel),
+              ),
+            )
+          ],
         ),
-      );
-    },),
+      ),
+    );
+  }
+
+  Widget _buildReorderableWidgets(HomeController viewModel) {
+    // Check if all data is null
+    if ((viewModel.myRequests == null) &&
+        (viewModel.myTeamRequests == null) &&
+        (viewModel.otherDepartmentRequests == null) &&
+        (viewModel.allCompanyRequests == null) &&
+        (viewModel.notifications == null)) {
+      return NoExistingPlaceholderScreen(
+          height: LayoutService.getHeight(context) * 0.4,
+          title: AppStrings.thereIsNoRequestsAndNotifications.tr());
+    }
+
+    // Build list of available widgets based on data
+    _availableWidgets = <HomeWidgetType>[];
+    final widgetsWithData = <HomeWidgetType>[];
+
+    // First, collect all widgets that have data
+    if (viewModel.myRequests != null &&
+        viewModel.myRequests?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.myRequests);
+    }
+    if (viewModel.myTeamRequests != null &&
+        viewModel.myTeamRequests?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.myTeamRequests);
+    }
+    if (viewModel.otherDepartmentRequests != null &&
+        viewModel.otherDepartmentRequests?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.otherDepartmentRequests);
+    }
+    if (viewModel.allCompanyRequests != null &&
+        viewModel.allCompanyRequests?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.allCompanyRequests);
+    }
+    if (viewModel.notifications != null &&
+        viewModel.notifications?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.notifications);
+    }
+
+    // Add widgets that have data, following the saved order
+    for (final widgetType in _widgetOrder) {
+      if (widgetsWithData.contains(widgetType)) {
+        _availableWidgets.add(widgetType);
+      }
+    }
+
+    // Add any widgets with data that weren't in the saved order (new widgets or missing from cache)
+    for (final widgetType in widgetsWithData) {
+      if (!_availableWidgets.contains(widgetType)) {
+        _availableWidgets.add(widgetType);
+      }
+    }
+
+    if (_availableWidgets.isEmpty) {
+      return NoExistingPlaceholderScreen(
+          height: LayoutService.getHeight(context) * 0.4,
+          title: AppStrings.thereIsNoRequestsAndNotifications.tr());
+    }
+
+    return Column(
+      children: [
+        // General Screen Message Widget (always at top, not reorderable)
+        GeneralScreenMessageWidget(screenId: '/'),
+        const SizedBox(height: AppSizes.s12),
+        // Bookmarks List (always at top, not reorderable)
+        const BookmarkListWidget(),
+        // Reorderable widgets
+        Listener(
+          onPointerMove: (event) {
+            if (_isDragging) {
+              _handlePointerMove(event);
+            }
+          },
+          onPointerUp: (event) {
+            _isDragging = false;
+            _autoScrollTimer?.cancel();
+          },
+          onPointerCancel: (event) {
+            _isDragging = false;
+            _autoScrollTimer?.cancel();
+          },
+          child: ReorderableListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            onReorder: _onReorder,
+            padding: EdgeInsets.zero,
+            buildDefaultDragHandles: false,
+            proxyDecorator: (child, index, animation) {
+              _isDragging = true;
+              return Material(
+                elevation: 8,
+                shadowColor: Colors.black.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(AppSizes.s12),
+                child: child,
+              );
+            },
+            children: List.generate(_availableWidgets.length, (index) {
+              final widgetType = _availableWidgets[index];
+              return _buildReorderableWidgetItem(widgetType, viewModel, index);
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReorderableWidgetItem(
+      HomeWidgetType widgetType, HomeController viewModel, int index) {
+    Widget content;
+    switch (widgetType) {
+      case HomeWidgetType.myRequests:
+        content = RequestsWidget(
+          requests: viewModel.myRequests!,
+          requestType: GetRequestsTypes.mine,
+        );
+        break;
+      case HomeWidgetType.myTeamRequests:
+        content = RequestsWidget(
+          requests: viewModel.myTeamRequests!,
+          requestType: GetRequestsTypes.myTeam,
+        );
+        break;
+      case HomeWidgetType.otherDepartmentRequests:
+        content = RequestsWidget(
+          requests: viewModel.otherDepartmentRequests!,
+          requestType: GetRequestsTypes.otherDepartment,
+        );
+        break;
+      case HomeWidgetType.allCompanyRequests:
+        content = RequestsWidget(
+          requests: viewModel.allCompanyRequests!,
+          requestType: GetRequestsTypes.allCompany,
+        );
+        break;
+      case HomeWidgetType.notifications:
+        content = NotificationsSection(
+          notifications: viewModel.notifications!,
+        );
+        break;
+    }
+
+    return Container(
+      key: ValueKey(widgetType.id),
+      margin: const EdgeInsets.only(
+        bottom: AppSizes.s12,
+        top: AppSizes.s8,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            content,
+            // Drag handle - only this can be used to drag
+            Positioned(
+              top: 8,
+              right: 8,
+              child: ReorderableDragStartListener(
+                index: index,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.15),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.drag_handle,
+                    color: Color(AppColors.dark),
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/models/settings/general_settings.model.dart';
 
 class RequestTermsViewModel extends ChangeNotifier {
   List<RequestTypeOrList>? requestTypes;

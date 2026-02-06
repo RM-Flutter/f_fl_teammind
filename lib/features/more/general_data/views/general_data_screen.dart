@@ -1,13 +1,13 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/styles.dart';
+import 'package:app_test/features/more/general_data/controller/general_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../constants/app_colors.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../../../utils/styles.dart';
-import '../../view_models/general_controller.dart';
 
 class GeneralDataScreen extends StatelessWidget {
   GeneralDataScreen({super.key});

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -58,12 +59,12 @@ class MainLayoutScreen extends StatelessWidget {
         selectedLabelStyle: Theme.of(context)
             .navigationBarTheme
             .labelTextStyle
-            ?.resolve({WidgetState.selected}),
+            ?.resolve({WidgetState.selected})?.copyWith(color: Color(AppColors.dark)),
         unselectedLabelStyle: Theme.of(context)
             .navigationBarTheme
             .labelTextStyle
             ?.resolve({WidgetState.dragged}),
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Color(AppColors.dark),
         elevation: 0,
         type: BottomNavigationBarType.fixed,
         items: bottomNavigationBarItems.map((element) {
@@ -82,7 +83,7 @@ class MainLayoutScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8, bottom: 12),
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.secondary,
+                  Color(AppColors.dark),
                   BlendMode.srcIn,
                 ),
                 child: SvgPicture.asset(element.icon),
@@ -97,7 +98,14 @@ class MainLayoutScreen extends StatelessWidget {
               context: context, page: NavbarPages.values[index]);
         },
       ),
-      body: SafeArea(child: child),
+      body: SafeArea(
+        child: Builder(
+          builder: (context) {
+            return child;
+          },
+        ),
+      ),
+
     );
   }
 }

@@ -1,21 +1,21 @@
 import 'dart:convert';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
+import 'package:app_test/features/more/team_fingerprint/controller/team_finger_print_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/common_modules_widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
-import 'package:rmemp/common_modules_widgets/template_page.widget.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_sizes.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/constants/user_consts.dart';
-import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:rmemp/general_services/layout.service.dart';
-import 'package:rmemp/models/settings/user_settings.model.dart';
-import 'package:rmemp/modules/more/views/team_fingerprint/viewmodel/model.dart';
-import 'package:rmemp/routing/app_router.dart';
-import 'package:rmemp/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 
 class TeamFingerprintScreen extends StatefulWidget {
@@ -63,8 +63,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                   child: Consumer<TeamFingerPrintViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                          : viewModel.employees?.isEmpty == true ||
-                          viewModel.employees == null
+                          : viewModel.employees.isEmpty == true
                           ? NoExistingPlaceholderScreen(
                           height: LayoutService.getHeight(context) * 0.6,
                           title: AppStrings.noEmployeesFounded.tr())
@@ -77,14 +76,12 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                 physics: const ClampingScrollPhysics(),
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
-                                  final totalPoints = viewModel.employees![index]['totalPoints'];
-                                  final gainedPoints = viewModel.employees![index]['gainedPoints'];
+                                  final totalPoints = viewModel.employees[index]['totalPoints'];
+                                  final gainedPoints = viewModel.employees[index]['gainedPoints'];
 
-                                  String percentage;
                                   if (totalPoints != null && gainedPoints != null && gainedPoints != 0) {
-                                    percentage = "${((gainedPoints / totalPoints) * 100).toStringAsFixed(1)}%";
                                   } else {
-                                    percentage = "0%"; // or any fallback value like "0", "Error", etc.
+// or any fallback value like "0", "Error", etc.
                                   }
                                   return defaultTeamEmp(
                                     context,
@@ -106,7 +103,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                   );
                                 },
                                 separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                                itemCount: viewModel.employees!.length)
+                                itemCount: viewModel.employees.length)
                           ])),
                 ),
               ),
