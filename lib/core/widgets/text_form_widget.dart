@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/services/app_theme_service.dart';
+
+import '../constants/app_colors.dart';
+import '../constants/app_sizes.dart';
+import '../services/app_theme_service.dart';
 
 class TextFormWidget extends StatelessWidget {
   final TextStyle? textStyle;
@@ -116,17 +117,17 @@ class TextFormWidget extends StatelessWidget {
         border: border ?? Theme.of(context).inputDecorationTheme.border,
 
         enabledBorder:
-            border ?? Theme.of(context).inputDecorationTheme.enabledBorder,
+        border ?? Theme.of(context).inputDecorationTheme.enabledBorder,
         focusedBorder:
-            border ?? Theme.of(context).inputDecorationTheme.focusedBorder,
+        border ?? Theme.of(context).inputDecorationTheme.focusedBorder,
 
         errorBorder:
-            border ?? Theme.of(context).inputDecorationTheme.errorBorder,
+        border ?? Theme.of(context).inputDecorationTheme.errorBorder,
         focusedErrorBorder:
-            border ?? Theme.of(context).inputDecorationTheme.focusedErrorBorder,
+        border ?? Theme.of(context).inputDecorationTheme.focusedErrorBorder,
 
         disabledBorder:
-            border ?? Theme.of(context).inputDecorationTheme.disabledBorder,
+        border ?? Theme.of(context).inputDecorationTheme.disabledBorder,
       ),
     );
   }
@@ -136,6 +137,7 @@ Widget defaultDropdownField(
       String? title,
       bool? isExpanded,
       Color? borderColor,
+      bool? hasShadows = false,
       required items,
       required void Function(String?)? onChanged}) {
   return Container(
@@ -147,22 +149,24 @@ Widget defaultDropdownField(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.s10),
         side: BorderSide(
-          color: borderColor ?? const Color(0xffE3E5E5),
+          color: borderColor ?? Color(AppColors.whiteGrey),
           width: 1.0,
         ),
       ),
-      shadows: const [
+      shadows: (hasShadows == true)
+          ? const [
         BoxShadow(
-          color: Color(0x0C000000),
+          color: Color(AppColors.black),
           blurRadius: 10,
           offset: Offset(0, 1),
           spreadRadius: 0,
         )
-      ],
+      ]
+          : null,
     ),
     child: DropdownButton<String>(
         dropdownColor: Colors.white,
-        icon:  const Icon(
+        icon: const Icon(
           Icons.keyboard_arrow_down,
           color: Color(AppColors.black),
         ),
@@ -170,10 +174,10 @@ Widget defaultDropdownField(
         value: value,
         hint: Text(
           title!,
-          style:  const TextStyle(
+          style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Color(0xff191C1F)),
+              color: Color(AppColors.almostBlack)),
         ),
         items: items,
         underline: const SizedBox.shrink(),
@@ -184,7 +188,7 @@ Widget defaultTextFormField({
   TextEditingController? controller,
   String? hintText,
   Widget? suffixIcon,
-  bool? hasShadows = true,
+  bool? hasShadows = false,
   Widget? prefixIcon,
   String? Function(String?)? validator,
   TextInputType? keyboardType,
@@ -203,20 +207,20 @@ Widget defaultTextFormField({
     alignment: Alignment.center,
     margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
     padding: EdgeInsets.symmetric(
-        horizontal: 16, vertical: (maxLines > 1) ? 16 : 0),
+        horizontal: 16, vertical: (maxLines! > 1) ? 16 : 0),
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.s8),
         side: BorderSide(
-          color: borderColor ?? const Color(0xffE3E5E5),
+          color: borderColor ?? Color(AppColors.whiteGrey),
           width: 1.0,
         ),
       ),
       shadows: (hasShadows == true)
           ? const [
         BoxShadow(
-          color: Color(0x0C000000),
+          color: Color(AppColors.black),
           blurRadius: 10,
           offset: Offset(0, 1),
           spreadRadius: 0,
@@ -232,16 +236,16 @@ Widget defaultTextFormField({
       textInputAction: textInputAction,
       decoration: InputDecoration(
         labelText: hintText ?? "Input",
-        labelStyle: const TextStyle(
+        labelStyle: TextStyle(
 
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            color: Color(0xff191C1F)),
+            color: Color(AppColors.almostBlack)),
         hintStyle: const TextStyle(
 
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            color: Color(0xff464646)),
+            color: Color(AppColors.grey46)),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         border: InputBorder.none,
