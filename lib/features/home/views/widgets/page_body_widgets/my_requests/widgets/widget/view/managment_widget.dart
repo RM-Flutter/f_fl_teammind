@@ -1,6 +1,13 @@
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/widget/controller/management_response_controller.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../../../../core/widgets/text_form_widget.dart';
 
 class ManagementModule extends StatefulWidget {
   final String requestId;
