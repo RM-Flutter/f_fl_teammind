@@ -1,5 +1,5 @@
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/features/services/views/cvs/data/models/cv_data_model.dart';
+import 'package:app_test/features/services/cvs/data/models/cv_data_model.dart';
 import 'package:flutter/material.dart';
 import 'widgets/cv_info_item_widget.dart';
 

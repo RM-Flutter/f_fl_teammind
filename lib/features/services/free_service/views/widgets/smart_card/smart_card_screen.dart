@@ -2,7 +2,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
-import 'package:app_test/features/services/views/free_service/views/widgets/smart_card/widgets/select_template_screen.dart';
+import 'package:app_test/features/services/free_service/views/widgets/smart_card/widgets/select_template_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

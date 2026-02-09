@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
-import 'package:app_test/features/services/views/cvs/data/models/cv_data_model.dart';
+import 'package:app_test/features/services/cvs/data/models/cv_data_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';

@@ -4,7 +4,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/tab_bar_widget.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
-import 'package:app_test/features/services/views/cvs/views/taps/cv_personal_tab.dart';
+import 'package:app_test/features/services/cvs/views/taps/cv_personal_tab.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';

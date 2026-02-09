@@ -6,13 +6,13 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/utils/base_page/mobile.scaffold.dart';
 import 'package:app_test/core/utils/base_page/mobile_header.dart';
-import 'package:app_test/features/services/views/free_service/views/widgets/free_services_header_widget.dart';
-import 'package:app_test/features/services/views/free_service/views/widgets/service_grid_view/services_grid_widget.dart';
+import 'package:app_test/features/services/free_service/views/widgets/free_services_header_widget.dart';
+import 'package:app_test/features/services/free_service/views/widgets/service_grid_view/services_grid_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../home/views/widgets/page_body_widgets/notifications_section.dart';
+import '../../../home/views/widgets/page_body_widgets/notifications_section.dart';
 import '../controller/free_services_controller.dart';
 
 class FreeServicesHomeScreen extends StatefulWidget {
