@@ -25,15 +25,6 @@ import '../../features/evaluation/views/main_evaluation_layout/evaluation_screen
 import '../../features/fingerprint/views/widgets/offline/finger_print_offline.dart';
 import '../../features/more/team_fingerprint/view/widgets/finger_print_view_screen.dart';
 import '../../features/fingerprint/views/finger_print_screen.dart';
-import '../../features/free_services/views/about_team_mind/about_team_mind_screen.dart';
-import '../../features/free_services/views/cv_generator/cv_generator_screen.dart';
-import '../../features/free_services/views/my_cv_screen.dart';
-import '../../features/free_services/views/personality_test/personality_test_screen.dart';
-import '../../features/free_services/views/premium_templates/premium_templates_screen.dart';
-import '../../features/free_services/views/select_template/select_template_screen.dart';
-import '../../features/free_services/views/smart_card/smart_card_screen.dart';
-import '../../features/free_services/views/update_my_info/update_my_info_screen.dart';
-import '../../features/free_services/views/vacation_calc/vacation_calc_screen.dart';
 import '../../features/main_layout/views/main_layout_screen.dart';
 import '../../features/more/about_us/views/about_us_screen.dart';
 import '../../features/more/company_structure/company_structure_screen.dart';
@@ -57,6 +48,15 @@ import '../../features/payrolls/payroll_list/views/payrolls_list_screen.dart';
 import '../../features/personal_profile/views/personal_profile_screen.dart';
 import '../../features/rewards_and_penalties/add_rewards/views/add_rewards_and_penalties_screen.dart';
 import '../../features/rewards_and_penalties/view_rewards/views/rewards_and_penalties_screen.dart';
+import '../../features/services/views/free_service/views/widgets/about_team_mind_screen.dart';
+import '../../features/services/views/free_service/views/widgets/cv_generator_screen.dart';
+import '../../features/services/views/cvs/views/my_cv_screen.dart';
+import '../../features/services/views/free_service/views/widgets/personality_test_screen.dart';
+import '../../features/services/views/free_service/views/widgets/premium_templates_screen.dart';
+import '../../features/services/views/free_service/views/widgets/smart_card/widgets/select_template_screen.dart';
+import '../../features/services/views/smart_card/smart_card_screen.dart';
+import '../../features/services/views/shared/ui_widgets/update_my_info_screen.dart';
+import '../../features/services/views/free_service/views/widgets/vacation_calc_screen.dart';
 import '../../features/splash_and_onboarding/views/onboarding_screen.dart';
 import '../../features/splash_and_onboarding/views/splash_screen.dart';
 import '../../features/tasks/views/add/add_task_screen.dart';
@@ -143,13 +143,13 @@ enum AppRoutes {
   personalityTestScreen,
   aboutTeamMindScreen,
   newRequestScreen
-
 }
 
 const TestVSync ticker = TestVSync();
 
 class TestVSync implements TickerProvider {
   const TestVSync();
+
   @override
   Ticker createTicker(TickerCallback onTick) => Ticker(onTick);
 }
@@ -181,15 +181,18 @@ GoRouter goRouter(BuildContext context) {
   // Offline handling is done via overlay, not navigation
   final refreshListenable = kIsWeb
       ? Listenable.merge([]) // Listenable فارغ في الويب
-      : Listenable.merge([]); // ConnectionService removed to prevent router refresh
+      : Listenable.merge(
+      []); // ConnectionService removed to prevent router refresh
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/${context.locale.languageCode}/splash-screen',
     refreshListenable: refreshListenable,
     redirect: (context, state) {
-      final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
-      final isLoggedIn = appConfigServiceProvider.isLogin && appConfigServiceProvider.token.isNotEmpty;
+      final appConfigServiceProvider = Provider.of<AppConfigService>(
+          context, listen: false);
+      final isLoggedIn = appConfigServiceProvider.isLogin &&
+          appConfigServiceProvider.token.isNotEmpty;
       final lang = state.pathParameters['lang'] ?? 'en';
       context.setLocale(Locale(lang));
 
@@ -236,13 +239,14 @@ GoRouter goRouter(BuildContext context) {
     routes: [
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
-        builder: (context, state, child) => MainLayoutScreen(
-          key: UniqueKey(),
-          currentNavPage: state.fullPath == null
-              ? NavbarPages.home
-              : getNavbarPage(currentLocationRoute: state.fullPath!),
-          child: child,
-        ),
+        builder: (context, state, child) =>
+            MainLayoutScreen(
+              key: UniqueKey(),
+              currentNavPage: state.fullPath == null
+                  ? NavbarPages.home
+                  : getNavbarPage(currentLocationRoute: state.fullPath!),
+              child: child,
+            ),
         routes: [
           GoRoute(
             path: '/:lang',
@@ -250,7 +254,9 @@ GoRouter goRouter(BuildContext context) {
             name: AppRoutes.home.name,
             pageBuilder: (context, state) {
               // Track screen navigation for Sentry
-              final screenName = state.uri.path.split('/').last;
+              final screenName = state.uri.path
+                  .split('/')
+                  .last;
               SentryService.setCurrentScreen(screenName, context: context);
 
               Offset? begin = state.extra as Offset?;
@@ -375,7 +381,8 @@ GoRouter goRouter(BuildContext context) {
                   GetRequestsTypes? requestType =
                   RequestsServices.getRequestTypeFromString(
                       reqTypeString: state.pathParameters['type']);
-                  List requests = state.extra != null ? state.extra as List : [];
+                  List requests = state.extra != null ? state.extra as List : [
+                  ];
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -404,7 +411,8 @@ GoRouter goRouter(BuildContext context) {
                   GetRequestsTypes? requestType =
                   RequestsServices.getRequestTypeFromString(
                       reqTypeString: state.pathParameters['type']);
-                  List requests = state.extra != null ? state.extra as List : [];
+                  List requests = state.extra != null ? state.extra as List : [
+                  ];
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -454,7 +462,8 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.requestsById.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = (state.extra as Map<String, dynamic>)['offset'] as Offset?;
+                  Offset? begin = (state.extra as Map<String,
+                      dynamic>)['offset'] as Offset?;
                   String? userId = (state.extra
                   as Map<String, dynamic>)['userId'] as String?;
                   String? id = state.pathParameters['id'];
@@ -682,7 +691,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: FingerPrintViewScreen(empId: id,empName: name,),
+                    child: FingerPrintViewScreen(empId: id, empName: name,),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
@@ -880,7 +889,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child:  const ContactScreen(),
+                    child: const ContactScreen(),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
@@ -1188,13 +1197,18 @@ GoRouter goRouter(BuildContext context) {
                   var jsonString;
                   var gCache;
                   jsonString = CacheHelper.getString("US1");
-                  if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-                    gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+                  if (jsonString != null && jsonString.isNotEmpty &&
+                      jsonString != "") {
+                    gCache = json.decode(jsonString) as Map<String,
+                        dynamic>; // Convert String back to JSON
                   }
-                  debugPrint("ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
+                  debugPrint(
+                      "ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
                   final extra = state.extra as Map<String, dynamic>?;
-                  final empId = extra?["empId"] ?? gCache['employee_profile_id'].toString();
-                  final begin = extra?["begin"] as Offset? ?? const Offset(1.0, 0.0);
+                  final empId = extra?["empId"] ??
+                      gCache['employee_profile_id'].toString();
+                  final begin = extra?["begin"] as Offset? ??
+                      const Offset(1.0, 0.0);
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1207,7 +1221,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: EvaluationScreen( empId: empId,),
+                    child: EvaluationScreen(empId: empId,),
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
                   );
@@ -1444,7 +1458,7 @@ GoRouter goRouter(BuildContext context) {
                         });
                         return AppRouterTransitions.slideTransition(
                           key: state.pageKey,
-                          child: ComplainDetailsScreen(id : id),
+                          child: ComplainDetailsScreen(id: id),
                           animation: animationController,
                           begin: begin ?? const Offset(1.0, 0.0),
                         );
@@ -1458,8 +1472,10 @@ GoRouter goRouter(BuildContext context) {
                         Offset? begin = state.extra as Offset?;
                         final lang = state.uri.queryParameters['lang'];
                         final type = state.uri.queryParameters['type'] ?? '';
-                        final details = state.uri.queryParameters['details'] ?? '';
-                        final subject = state.uri.queryParameters['subject'] ?? '';
+                        final details = state.uri.queryParameters['details'] ??
+                            '';
+                        final subject = state.uri.queryParameters['subject'] ??
+                            '';
                         if (lang != null) {
                           final locale = Locale(lang);
                           context.setLocale(locale);
@@ -1981,7 +1997,9 @@ GoRouter goRouter(BuildContext context) {
     debugLogDiagnostics: true,
     errorBuilder: (context, state) {
       // Track error screen for Sentry
-      final screenName = state.uri.path.split('/').last;
+      final screenName = state.uri.path
+          .split('/')
+          .last;
       SentryService.setCurrentScreen(screenName);
 
       // على الويب، عند حدوث خطأ 404، إعادة توجيه إلى splash screen
@@ -1989,7 +2007,8 @@ GoRouter goRouter(BuildContext context) {
         try {
           final lang = state.pathParameters['lang'] ??
               ((state.uri.pathSegments.isNotEmpty &&
-                  (state.uri.pathSegments.first == 'ar' || state.uri.pathSegments.first == 'en'))
+                  (state.uri.pathSegments.first == 'ar' ||
+                      state.uri.pathSegments.first == 'en'))
                   ? state.uri.pathSegments.first
                   : context.locale.languageCode);
           // إعادة التوجيه إلى splash screen
