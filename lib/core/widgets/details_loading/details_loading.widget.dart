@@ -1,9 +1,9 @@
+import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
-import '../../../../constants/app_sizes.dart';
-import '../../../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
-class EmployeeDetailsLoadingWidget extends StatelessWidget {
-  const EmployeeDetailsLoadingWidget({super.key});
+class DetailsLoadingWidget extends StatelessWidget {
+  const DetailsLoadingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

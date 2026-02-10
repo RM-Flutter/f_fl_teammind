@@ -1,4 +1,5 @@
-import '../../../models/settings/user_settings_2.model.dart';
+
+import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 
 class EmployeeProfileModel {
   var id;

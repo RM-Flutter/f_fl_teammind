@@ -1,16 +1,17 @@
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:easy_localization/easy_localization.dart' as local;
 import 'package:flutter/material.dart';
-import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import '../../../common_modules_widgets/custom_elevated_button.widget.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../general_services/localization.service.dart';
-import '../../../models/department.model.dart';
-import '../../../services/crud_operation.service.dart';
-import '../../../utils/animated_custom_dropdown/custom_dropdown.dart';
-import '../../../utils/modal_sheet_helper.dart';
-import '../models/employee_profile.model.dart';
-import '../services/employee.service.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/services/crud_operation.dart';
+import '../../../../../core/services/localization_service.dart';
+import '../../../../../core/utils/animated_custom_dropdown/custom_dropdown.dart';
+import '../../../../../core/utils/modal_sheet_helper.dart';
+import '../../../../../core/widgets/custom_elevated_button.widget.dart';
+import '../../shared/models/employee_profile_model.dart';
+import '../../shared/repos/employee_repo.dart';
+import '../data/models/department_model.dart';
 
 class EmployeesListViewModel extends ChangeNotifier {
   List<EmployeeProfileModel>? employees;
@@ -142,7 +143,10 @@ class EmployeesListViewModel extends ChangeNotifier {
                   ?.borderSide,
               hintText: AppStrings.department.tr(),
               hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
-              items: departments?.map((dep) => dep.toJson()).toList(),
+              items: departments
+                  ?.whereType<Department>()
+                  .map((dep) => dep.toJson())
+                  .toList(),
               nameKey: "title",
               onChanged: (value) => selectedDepartment = DepartmentModel.fromJson(value),
               onRemoveClicked: () => selectedDepartment = null,

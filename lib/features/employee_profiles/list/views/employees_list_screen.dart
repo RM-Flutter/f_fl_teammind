@@ -4,18 +4,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rmemp/constants/app_strings.dart';
-import 'package:rmemp/general_services/localization.service.dart';
-import '../../../common_modules_widgets/loading_page.widget.dart';
-import '../../../common_modules_widgets/template_page.widget.dart';
-import '../../../constants/app_images.dart';
-import '../../../constants/app_sizes.dart';
-import '../../../general_services/layout.service.dart';
-import '../../../routing/app_router.dart';
-import '../../../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import '../../../utils/general_screen_message_widget.dart';
-import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../viewmodels/employees_list.viewmodel.dart';
+import '../../../../../core/constants/app_images.dart';
+import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/routing/app_router.dart';
+import '../../../../../core/services/layout_service.dart';
+import '../../../../../core/services/localization_service.dart';
+import '../../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import '../../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import '../../../../../core/widgets/loading_page.widget.dart';
+import '../../../../../core/widgets/template_page.widget.dart';
+import '../controller/employees_list_controller.dart';
 
 class EmployeesListScreen extends StatefulWidget {
   const EmployeesListScreen({super.key});
@@ -44,7 +43,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             preferredSize: const Size.fromHeight(AppSizes.s70),
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
+                constraints: const BoxConstraints(
                     maxWidth: kIsWeb ? 1100 : double.infinity
                 ),
                 child: Padding(

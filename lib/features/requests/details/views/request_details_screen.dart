@@ -9,7 +9,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
-import 'package:app_test/features/employee_profiles/views/widgets/employee_details_loading.widget.dart';
+import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
 import 'package:app_test/features/requests/details/controller/request_details_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -171,7 +171,7 @@ class RequestDetailsScreen extends StatelessWidget {
             ],
                       );
           } else {
-            return const EmployeeDetailsLoadingWidget();
+            return const DetailsLoadingWidget();
           }
         },
       ),

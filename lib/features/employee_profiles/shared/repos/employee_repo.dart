@@ -1,7 +1,7 @@
+import 'package:app_test/core/constants/app_constants.dart';
+import 'package:app_test/core/models/operation_result.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/app_constants.dart';
-import '../../../general_services/backend_services/api_service/dio_api_service/dio_api.service.dart';
-import '../../../models/operation_result.model.dart';
 
 abstract class EmployeeService {
   /// Get all employees with an optional department ID
