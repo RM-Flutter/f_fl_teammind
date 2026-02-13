@@ -16,7 +16,27 @@ import '../services/cv_reference_data.service.dart';
 
 enum ImageSourceType { profile, newImage, none }
 
+/// مقارنة آمنة للـ id (int أو string من الـ API) عشان الدروب داون يلاقي العنصر المحدد
+int? _parseId(dynamic v) {
+  if (v == null) return null;
+  if (v is int) return v;
+  if (v is String) return int.tryParse(v);
+  return null;
+}
+
+bool _idMatch(dynamic itemId, int? targetId) {
+  if (targetId == null) return false;
+  final id = _parseId(itemId);
+  return id != null && id == targetId;
+}
+
 class CreateCVViewModel extends ChangeNotifier {
+  /// للاستخدام من الـ UI (الدروب داون) لمقارنة id عنصر مع targetId (يدعم int و string)
+  static bool idMatch(dynamic itemId, int? targetId) {
+    if (targetId == null) return false;
+    final id = _parseId(itemId);
+    return id != null && id == targetId;
+  }
   bool isLoading = false;
   bool isSubmitting = false;
   String? errorMessage;
@@ -53,12 +73,18 @@ class CreateCVViewModel extends ChangeNotifier {
   final TextEditingController currentJobTitleController = TextEditingController();
   int? jobId;
   final TextEditingController aboutMeController = TextEditingController();
+  // Smart Card only – company_name for employee profile (لا تُستخدم في CV)
+  final TextEditingController companyNameController = TextEditingController();
+  // Smart Card only – media galleries for employee profile. List<dynamic>: Map{id, file} أو String base64 (نفس أسلوب company)
+  List<dynamic> worksGallery = [];
+  List<dynamic> videoGallery = [];
   final TextEditingController moreSkillsController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController linkedinController = TextEditingController();
   final TextEditingController behanceController = TextEditingController();
+  final TextEditingController websiteController = TextEditingController();
   final TextEditingController whatsappController = TextEditingController();
-  
+
   List<int> selectedSkills = [];
   List<CVExperience> experiences = [];
   List<CVEducation> educations = [];
@@ -82,10 +108,12 @@ class CreateCVViewModel extends ChangeNotifier {
     addressController.dispose();
     currentJobTitleController.dispose();
     aboutMeController.dispose();
+    companyNameController.dispose();
     moreSkillsController.dispose();
     emailController.dispose();
     linkedinController.dispose();
     behanceController.dispose();
+    websiteController.dispose();
     whatsappController.dispose();
     super.dispose();
   }
@@ -105,6 +133,44 @@ class CreateCVViewModel extends ChangeNotifier {
   void setSubmitting(bool value) {
     isSubmitting = value;
     notifyListeners();
+  }
+
+  /// Extract readable error messages from API response when `status == false`.
+  /// Supports both:
+  /// - `{ field: [msg] }`  →  `field: msg`
+  /// - `[msg1, msg2]`      →  each message in a new line.
+  String _extractApiErrors(Map<String, dynamic> responseData, {String fallback = 'Failed to submit data'}) {
+    final errors = responseData['errors'];
+
+    if (errors == null) {
+      return responseData['message']?.toString() ?? fallback;
+    }
+
+    final List<String> messages = [];
+
+    if (errors is Map) {
+      errors.forEach((key, value) {
+        // ex: "current_job_title": ["this field is required"]
+        if (value is List && value.isNotEmpty) {
+          for (final v in value) {
+            messages.add('$key: ${v.toString()}');
+          }
+        } else if (value != null) {
+          messages.add('$key: ${value.toString()}');
+        }
+      });
+    } else if (errors is List) {
+      messages.addAll(errors.map((e) => e.toString()));
+    } else {
+      messages.add(errors.toString());
+    }
+
+    if (messages.isEmpty) {
+      return responseData['message']?.toString() ?? fallback;
+    }
+
+    // Join all messages in separate lines for the user.
+    return messages.join('\n');
   }
 
   void setError(String? error) {
@@ -264,10 +330,18 @@ class CreateCVViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Load states when country is selected
-  Future<void> loadStates(BuildContext context, int countryId) async {
+  /// Load states when country is selected.
+  /// [clearStateAndCity] when true (default) clears state/city selection (e.g. when user changes country).
+  /// Set to false when loading existing CV data so state/city remain and can be used to load cities.
+  Future<void> loadStates(BuildContext context, int countryId, {bool clearStateAndCity = true}) async {
     this.countryId = countryId;
-    selectedCountry = countries.firstWhere((c) => c['id'] == countryId, orElse: () => {});
+    selectedCountry = countries.isNotEmpty
+        ? countries.firstWhere(
+            (c) => _idMatch(c['id'], countryId),
+            orElse: () => <String, dynamic>{},
+          )
+        : null;
+    if (selectedCountry != null && selectedCountry!.isEmpty) selectedCountry = null;
     // Set country_key from country phone_code
     if (selectedCountry != null && selectedCountry!.isNotEmpty) {
       final phoneCode = selectedCountry!['phone_code'];
@@ -276,21 +350,38 @@ class CreateCVViewModel extends ChangeNotifier {
       }
     }
     states = await CVReferenceDataService.getStates(context, countryId);
-    stateId = null;
-    selectedState = null;
-    cityId = null;
-    selectedCity = null;
-    cities = [];
+    if (clearStateAndCity) {
+      stateId = null;
+      selectedState = null;
+      cityId = null;
+      selectedCity = null;
+      cities = [];
+    }
     notifyListeners();
   }
 
   /// Load cities when state is selected
   Future<void> loadCities(BuildContext context, int stateId) async {
     this.stateId = stateId;
-    selectedState = states.firstWhere((s) => s['id'] == stateId, orElse: () => {});
+    selectedState = states.isNotEmpty
+        ? states.firstWhere(
+            (s) => _idMatch(s['id'], stateId),
+            orElse: () => <String, dynamic>{},
+          )
+        : null;
+    if (selectedState != null && selectedState!.isEmpty) selectedState = null;
     cities = await CVReferenceDataService.getCities(context, stateId);
-    cityId = null;
-    selectedCity = null;
+
+    // لو كان فيه مدينة متخزنة (مثلاً جاية من الـ API)، نختارها تلقائياً
+    if (cityId != null && cities.isNotEmpty) {
+      selectedCity = cities.firstWhere(
+        (c) => _idMatch(c['id'], cityId),
+        orElse: () => <String, dynamic>{},
+      );
+      if (selectedCity != null && selectedCity!.isEmpty) selectedCity = null;
+    } else {
+      selectedCity = null;
+    }
     notifyListeners();
   }
 
@@ -423,6 +514,31 @@ class CreateCVViewModel extends ChangeNotifier {
     }
   }
 
+  // ─── Smart Card Employee Media Helpers (works_gallery / video_gallery) ───
+  void addWorksGalleryItems(List<String> items) {
+    if (items.isEmpty) return;
+    worksGallery.addAll(items); // base64 strings for new uploads
+    notifyListeners();
+  }
+
+  void removeWorksGalleryAt(int index) {
+    if (index < 0 || index >= worksGallery.length) return;
+    worksGallery.removeAt(index);
+    notifyListeners();
+  }
+
+  void addVideoGalleryItems(List<String> items) {
+    if (items.isEmpty) return;
+    videoGallery.addAll(items); // base64 strings for new uploads
+    notifyListeners();
+  }
+
+  void removeVideoGalleryAt(int index) {
+    if (index < 0 || index >= videoGallery.length) return;
+    videoGallery.removeAt(index);
+    notifyListeners();
+  }
+
   /// Submit CV Data
   Future<bool> submitCV(BuildContext context) async {
     setSubmitting(true);
@@ -504,11 +620,11 @@ class CreateCVViewModel extends ChangeNotifier {
         // Send JSON data normally
         // If using profile photo, we might need to send the URL or let backend handle it
         final jsonData = requestModel.toJson();
-        if (useProfilePhoto) {
-          jsonData['use_profile_photo'] = true;
-        } else if (imageSourceType == ImageSourceType.none) {
-          jsonData['use_default_photo'] = true;
-        }
+        // if (useProfilePhoto) {
+        //   jsonData['use_profile_photo'] = true;
+        // } else if (imageSourceType == ImageSourceType.none) {
+        //   jsonData['use_default_photo'] = true;
+        // }
         
         response = await DioHelper.postData(
           url: "/emp_requests/v1/cv",
@@ -522,7 +638,10 @@ class CreateCVViewModel extends ChangeNotifier {
         setSubmitting(false);
         return true;
       } else {
-        setError(response.data['message'] ?? 'Failed to create CV');
+        setError(_extractApiErrors(
+          response.data as Map<String, dynamic>,
+          fallback: 'Failed to create CV',
+        ));
         setSubmitting(false);
         return false;
       }
@@ -595,13 +714,21 @@ class CreateCVViewModel extends ChangeNotifier {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  /// Load existing CV data into form fields
-  Future<void> loadExistingCVData(BuildContext context, CVDataModel cvData) async {
+  /// Load existing CV data into form fields.
+  /// [skipFullReferenceData] true = من شاشة Update Employee: مبنستدعيش loadReferenceData تاني، بنستدعي فقط loadStates و loadCities.
+  /// [responseState] و [responseCity] = من ريسبونس الـ API (مثلاً employee['state']) عشان نضيفهم للقائمة لو مش موجودين فالدروب داون يعرض القيمة.
+  Future<void> loadExistingCVData(BuildContext context, CVDataModel cvData, {bool skipFullReferenceData = false, Map<String, dynamic>? responseState, Map<String, dynamic>? responseCity}) async {
     setLoading(true);
     try {
-      // Load reference data first
-      await loadReferenceData(context);
-      
+      if (!skipFullReferenceData) {
+        await loadReferenceData(context);
+      } else {
+        // تحميل الدول فقط ثم المحافظات والمدن (لشاشة Update Employee — بدون استدعاء كل الـ endpoints)
+        if (countries.isEmpty) {
+          await _loadCountries(context);
+        }
+      }
+
       // Load personal data
       final personal = cvData.personal;
       if (personal != null) {
@@ -620,12 +747,20 @@ class CreateCVViewModel extends ChangeNotifier {
         stateId = personal.stateId;
         cityId = personal.cityId;
         addressController.text = personal.address ?? '';
-        
-        // Load states and cities if country/state selected
+
+        // استدعاء endpoints الـ state والـ city عشان الدروب داون يعرض القيم من الريسبونس
         if (countryId != null) {
-          await loadStates(context, countryId!);
+          await loadStates(context, countryId!, clearStateAndCity: false);
+          if (responseState != null && stateId != null && states.every((s) => !_idMatch(s['id'], stateId))) {
+            states = [...states, {'id': stateId, 'title': responseState['title']?.toString() ?? responseState['name']?.toString() ?? ''}];
+            notifyListeners();
+          }
           if (stateId != null) {
             await loadCities(context, stateId!);
+            if (responseCity != null && cityId != null && cities.every((c) => !_idMatch(c['id'], cityId))) {
+              cities = [...cities, {'id': cityId, 'title': responseCity['title']?.toString() ?? responseCity['name']?.toString() ?? ''}];
+              notifyListeners();
+            }
           }
         }
       }
@@ -756,11 +891,11 @@ class CreateCVViewModel extends ChangeNotifier {
       } else {
         // Send JSON data with PUT
         final jsonData = requestModel.toJson();
-        if (useProfilePhoto) {
-          jsonData['use_profile_photo'] = true;
-        } else if (imageSourceType == ImageSourceType.none) {
-          jsonData['use_default_photo'] = true;
-        }
+        // if (useProfilePhoto) {
+        //   jsonData['use_profile_photo'] = true;
+        // } else if (imageSourceType == ImageSourceType.none) {
+        //   jsonData['use_default_photo'] = true;
+        // }
         
         response = await DioHelper.putData(
           url: "/emp_requests/v1/cv",
@@ -774,7 +909,10 @@ class CreateCVViewModel extends ChangeNotifier {
         setSubmitting(false);
         return true;
       } else {
-        setError(response.data['message'] ?? 'Failed to update CV');
+        setError(_extractApiErrors(
+          response.data as Map<String, dynamic>,
+          fallback: 'Failed to update CV',
+        ));
         setSubmitting(false);
         return false;
       }

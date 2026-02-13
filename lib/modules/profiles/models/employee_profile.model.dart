@@ -137,48 +137,48 @@ class EmployeeProfileModel {
             ? Map<String, String>.from(json['action'])
             : null,
         jobTitle: json['job_title'],
-        additionalPhoneNumbers: json['additional_phone_numbers'] != null
+        additionalPhoneNumbers: json['additional_phone_numbers'] is List
             ? List<AdditionalPhoneNumbers>.from(
-            json['additional_phone_numbers'].map((item) => AdditionalPhoneNumbers.fromJson(item)))
+            (json['additional_phone_numbers'] as List).map((item) => AdditionalPhoneNumbers.fromJson(item)))
             : null,
         social: json['social'] != null
             ? EmpSocialMedia.fromJson(json['social'])
             : null,
         jobDescription: json['job_description'],
         hireDate: json['hire_date'],
-        balance: json['balance'] != null
+        balance: json['balance'] is List
             ? List<Balance>.from(
-                json['balance'].map((item) => Balance.fromJson(item)))
+                (json['balance'] as List).map((item) => Balance.fromJson(item)))
             : null,
-        weekends: (json['weekend'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList(),
+        weekends: json['weekend'] is List
+            ? (json['weekend'] as List).map((e) => e.toString()).toList()
+            : null,
         workingHours: json['working_hours'] != null
             ? EmpWorkingHours.fromJson(json['working_hours'])
             : null,
-        assets:json['aassets'] != null
-            ? List<Assets>.from(json['aassets']
+        assets: json['aassets'] is List
+            ? List<Assets>.from((json['aassets'] as List)
             .map((item) => Assets.fromJson(item)))
             : null,
-        empCustomData:json['emp_custom_data'] != null
-            ? List<EmpCustomData>.from(json['emp_custom_data']
+        empCustomData: json['emp_custom_data'] is List
+            ? List<EmpCustomData>.from((json['emp_custom_data'] as List)
             .map((item) => EmpCustomData.fromJson(item)))
-            : null,
+            : [],
         basicSalary: json['basic_salary'],
         // json['basic_salary'] is num?
         //     ? (json['basic_salary'] as num?)?.toDouble()
         //     : num.tryParse(json['basic_salary'])?.toDouble(),
-        payrollDeductions: json['payroll_deductions'] != null
-            ? List<EmpPayrollDeduction>.from(json['payroll_deductions']
+        payrollDeductions: json['payroll_deductions'] is List
+            ? List<EmpPayrollDeduction>.from((json['payroll_deductions'] as List)
                 .map((item) => EmpPayrollDeduction.fromJson(item)))
             : null,
-        payrollSpecialBonus: json['payroll_special_bonus'] != null
-            ? List<EmpPayrollBonus>.from(json['payroll_special_bonus']
+        payrollSpecialBonus: json['payroll_special_bonus'] is List
+            ? List<EmpPayrollBonus>.from((json['payroll_special_bonus'] as List)
                 .map((item) => EmpPayrollBonus.fromJson(item)))
             : null,
-        payrolls: json['payrolls'] != null
+        payrolls: json['payrolls'] is List
             ? List<EmpPayroll>.from(
-                json['payrolls'].map((item) => EmpPayroll.fromJson(item)))
+                (json['payrolls'] as List).map((item) => EmpPayroll.fromJson(item)))
             : null);
   }
 

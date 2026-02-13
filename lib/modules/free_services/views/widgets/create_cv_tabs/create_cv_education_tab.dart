@@ -49,9 +49,8 @@ class CreateCVEducationTab extends StatelessWidget {
     );
   }
 
-  Widget _buildEducationItem(BuildContext context, int index, CVEducation education) {
-    final institutionController = TextEditingController(text: education.institutionName);
-    final certificateController = TextEditingController(text: education.certificateName);
+  Widget _buildEducationItem(
+      BuildContext context, int index, CVEducation education) {
     DateTime? dateFrom = education.dateFrom != null ? DateTime.tryParse(education.dateFrom!) : null;
     DateTime? dateTo = education.dateTo != null ? DateTime.tryParse(education.dateTo!) : null;
     
@@ -97,12 +96,13 @@ class CreateCVEducationTab extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextFormField(
-              controller: institutionController,
+              initialValue: education.institutionName ?? '',
               decoration: InputDecoration(
                 labelText: AppStrings.institutionName.tr(),
                 hintText: AppStrings.enterInstitutionName.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
               onChanged: (value) {
@@ -119,12 +119,13 @@ class CreateCVEducationTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: certificateController,
+              initialValue: education.certificateName ?? '',
               decoration: InputDecoration(
                 labelText: AppStrings.certificateName.tr(),
                 hintText: AppStrings.enterCertificateName.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
               onChanged: (value) {
@@ -146,7 +147,7 @@ class CreateCVEducationTab extends StatelessWidget {
               nameKey: 'title',
               hintText: AppStrings.selectCountry.tr(),
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedEdu = CVEducation(
@@ -170,7 +171,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 nameKey: 'title',
                 hintText: AppStrings.selectStateProvince.tr(),
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: const BorderSide(color: Colors.black),
                 onChanged: (value) {
                   if (value.isNotEmpty && value['id'] != null) {
                     final updatedEdu = CVEducation(
@@ -213,7 +214,7 @@ class CreateCVEducationTab extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -258,7 +259,7 @@ class CreateCVEducationTab extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(

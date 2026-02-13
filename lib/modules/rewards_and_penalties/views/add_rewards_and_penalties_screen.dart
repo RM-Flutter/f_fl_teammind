@@ -177,7 +177,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                   .map((e) => DropdownMenuItem<String>(
                                 value: e.toString(),
                                 child: Text(
-                                  e.toString(),
+                                  e.toString().tr(),
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,

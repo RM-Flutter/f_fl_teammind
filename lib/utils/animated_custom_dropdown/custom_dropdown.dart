@@ -43,6 +43,9 @@ class CustomDropdown extends StatefulWidget {
 
   final void Function()? onRemoveClicked;
 
+  /// إظهار أيقونة الـ X الحمراء لمسح الاختيار (في .search لا تُظهر)
+  final bool showClearButton;
+
   const CustomDropdown({
     super.key,
     this.nameKey,
@@ -66,6 +69,7 @@ class CustomDropdown extends StatefulWidget {
     this.customOverRelayWidth,
     this.excludeSelected = true,
     this.fillColor = Colors.white,
+    this.showClearButton = true,
   })  : searchType = null,
         canCloseOutsideBounds = true;
 
@@ -93,6 +97,7 @@ class CustomDropdown extends StatefulWidget {
     this.excludeSelected = false,
     this.canCloseOutsideBounds = true,
     this.fillColor = Colors.white,
+    this.showClearButton = false,
   }) : searchType = SearchType.onListData;
 
   @override

@@ -19,6 +19,7 @@ import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
 import '../../../constants/general_listener.dart';
 import '../../../constants/update_app.dart';
+import '../../../constants/cache_consts.dart';
 import '../../../constants/internet_check.dart';
 import '../../../general_services/app_config.service.dart';
 import '../../../general_services/device_info.service.dart';
@@ -167,11 +168,25 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 200));
     await connectionService.checkConnection();
     
-    // If offline, skip API calls and use cached data only
+    // إذا ظهر أوفلاين: إعادة فحص بعد تأخير (قد يكون التطبيق جاء من شاشة أوفلاين والاتصال لم يُحدَّث بعد)
     if (!connectionService.isConnected) {
-      debugPrint("⚠️ Offline detected: Skipping ALL API calls, using cached data only");
-      debugPrint("⚠️ Connection status: ${connectionService.isConnected}");
-      
+      debugPrint("⚠️ Offline detected - re-checking after 1.5s (may have just left offline screen)");
+      await Future.delayed(const Duration(milliseconds: 1500));
+      if (!mounted) {
+        _isInitializing = false;
+        return;
+      }
+      await connectionService.checkConnection();
+      if (connectionService.isConnected) {
+        debugPrint("✅ Re-check: now online, proceeding with normal initialization");
+        _isInitializing = false;
+        await initializeHomeAndSplash();
+        return;
+      }
+      debugPrint("⚠️ Still offline after re-check - using cached data only");
+    }
+
+    if (!connectionService.isConnected) {
       // Check and select domain (may require network, but try anyway)
       try {
         final domainSelected = await DomainSelectionService.checkAndSelectDomain(context);
@@ -182,18 +197,46 @@ class _SplashScreenState extends State<SplashScreen> {
       } catch (e) {
         debugPrint("❌ Error in checkAndSelectDomain (offline), continuing anyway: $e");
       }
-      
+
+      if (!mounted) {
+        _isInitializing = false;
+        return;
+      }
+      // إعادة فحص الاتصال بعد إدخال الدومين — أحياناً يصبح النت متاحاً
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (!mounted) {
+        _isInitializing = false;
+        return;
+      }
+      await connectionService.checkConnection();
+      if (connectionService.isConnected) {
+        debugPrint("✅ Connection available after domain - proceeding with online flow");
+        _isInitializing = false;
+        await initializeHomeAndSplash();
+        return;
+      }
+
       // Only initialize device info (doesn't require network)
       try {
         await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
       } catch (e) {
         debugPrint("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
       }
-      
-      // Skip initializeHomeScreen which makes API calls
-      // The overlay will be shown automatically by ConnectionService
-      debugPrint("⚠️ Exiting initializeHomeAndSplash early - no API calls will be made");
+
+      // Load USG from cache and apply fingerprint security
+      try {
+        await CacheConsts.initUSG();
+        debugPrint("✅ USG loaded from cache, fingerprint checks updated");
+      } catch (e) {
+        debugPrint("❌ Error in initUSG (offline), continuing anyway: $e");
+      }
+
       _isInitializing = false;
+      if (mounted) {
+        final lang = context.locale.languageCode;
+        context.goNamed(AppRoutes.offlineScreen.name, pathParameters: {'lang': lang});
+        debugPrint("✅ Navigated to offline screen (lang: $lang)");
+      }
       return;
     }
     

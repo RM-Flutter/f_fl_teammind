@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
+import '../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../utils/tab_bar_widget.dart';
 import '../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
 import '../../../routing/app_router.dart';
@@ -115,85 +118,20 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildHeaderSection(MyCVViewModel viewModel) {
+    final jsonString = CacheHelper.getString("USG");
+    var gCache;
+    if (jsonString != null && jsonString != "") {
+      gCache = json.decode(jsonString) as Map<String, dynamic>;
+    }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         children: [
-          // // User Avatar
-          // Stack(
-          //   alignment: Alignment.center,
-          //   children: [
-          //     Container(
-          //       width: 80,
-          //       height: 80,
-          //       decoration: BoxDecoration(
-          //         shape: BoxShape.circle,
-          //         border: Border.all(
-          //           color: Color(AppColors.primary),
-          //           width: 3,
-          //         ),
-          //       ),
-          //       child: ClipOval(
-          //         child: viewModel.getUserPhoto() != null
-          //             ? CachedNetworkImage(
-          //                 imageUrl: viewModel.getUserPhoto()!,
-          //                 fit: BoxFit.cover,
-          //                 width: 74,
-          //                 height: 74,
-          //                 placeholder: (context, url) => const CircularProgressIndicator(),
-          //                 errorWidget: (context, url, error) => Container(
-          //                   color: Color(AppColors.primary),
-          //                   child: const Icon(
-          //                     Icons.person,
-          //                     color: Colors.white,
-          //                     size: 40,
-          //                   ),
-          //                 ),
-          //               )
-          //             : Container(
-          //                 color: Color(AppColors.primary),
-          //                 child: const Icon(
-          //                   Icons.person,
-          //                   color: Colors.white,
-          //                   size: 40,
-          //                 ),
-          //               ),
-          //       ),
-          //     ),
-          //     // M Badge (like in design)
-          //     Positioned(
-          //       bottom: 0,
-          //       right: 0,
-          //       child: Container(
-          //         width: 28,
-          //         height: 28,
-          //         decoration: const BoxDecoration(
-          //           color: Color(0xFFFFD700),
-          //           shape: BoxShape.circle,
-          //         ),
-          //         child: const Center(
-          //           child: Text(
-          //             'M',
-          //             style: TextStyle(
-          //               color: Colors.black,
-          //               fontWeight: FontWeight.bold,
-          //               fontSize: 14,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          //
-          // gapH16,
-          
-          // Description Text
-          Text(
-            'Your CV Will Be Displayed For Free In Hundreds Of Egyptian And Saudi Companies Directly Within Their System',
+         Text(
+            AppStrings.cvDisplayedFreeCompanies.tr(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.grey[600],
+              color: Colors.black,
               fontSize: 13,
               height: 1.4,
             ),
@@ -204,23 +142,29 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
           // Learn More Link
           GestureDetector(
             onTap: () {
-              // TODO: Navigate to opportunities page
+              context.pushNamed(
+                AppRoutes.mediaCenterYoutubeScreenView.name,
+                pathParameters: {
+                  'lang': context.locale.languageCode,
+                  'url': gCache['cvVideoUrl'].toString(),
+                },
+              );
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Learn More About The Opportunities',
+                  AppStrings.learnMoreAboutOpportunities.tr(),
                   style: TextStyle(
-                    color: Colors.grey[700],
+                    color: Colors.black,
                     fontSize: 13,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(width: 4),
                 Icon(
                   Icons.arrow_forward,
-                  color: Colors.grey[700],
+                  color: Colors.black,
                   size: 16,
                 ),
               ],

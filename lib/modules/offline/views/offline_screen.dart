@@ -11,6 +11,7 @@ import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/constants/internet_check.dart';
 import 'package:rmemp/constants/restart_app.dart';
 import 'package:rmemp/general_services/offline_overlay.service.dart';
+import 'package:rmemp/routing/app_router.dart';
 import 'package:rmemp/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
 import '../../../constants/app_sizes.dart';
 import '../view_models/offline_viewmodel.dart';
@@ -170,10 +171,13 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                           topRight: Radius.circular(15),
                           topLeft: Radius.circular(15),
                         )),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                         SvgPicture.asset("assets/images/svg/wifi.svg",),
                         const SizedBox(height: 25,),
                         Text(AppStrings.youAreOffline.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
@@ -201,7 +205,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                           },
                         ),
                         const SizedBox(height: 40,),
-                        Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
+                          if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
                         const SizedBox(height: 15,),
                         if (viewModel.usersFingerprints.isNotEmpty)
                           Container(
@@ -221,8 +225,10 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.qr_code;
                                     function = () async{
                                       debugPrint("👆 QR Code fingerprint button pressed");
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                        context: context,
+                                        context: navContext,
                                         fingerprintMethod: 'fp_scan',
                                       );
                                     };
@@ -233,8 +239,10 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     hero = 'wifi';
                                     function = ()async {
                                       debugPrint("👆 WiFi fingerprint button pressed");
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                        context: context,
+                                        context: navContext,
                                         fingerprintMethod: 'fp_wifi',
                                       );
                                     };
@@ -244,8 +252,10 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.gps_fixed;
                                     function = () async{
                                       debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                        context: context,
+                                        context: navContext,
                                         fingerprintMethod: fingerprintType,
                                       );
                                     };
@@ -255,8 +265,11 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.bluetooth;
                                     function = ()async{
                                       debugPrint("👆 Bluetooth fingerprint button pressed");
+                                      // لما نفتح بصمة أوفلاين، نشيل overlay ونستخدم سياق الـ root navigator
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                        context: context,
+                                        context: navContext,
                                         fingerprintMethod: 'fp_bluetooth',
                                       );
                                     };
@@ -272,42 +285,47 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                               },
                             ),
                           ),
-                        const SizedBox(height: 30,),
-                        // Show saved fingerprints
-                        if (viewModel.savedFingerprints != null && 
-                            viewModel.savedFingerprints!.isNotEmpty)
-                          Padding(
-                            padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppStrings.fingerprintsTitle.tr(),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(AppColors.dark),
-                                  ),
-                                ),
-                                const SizedBox(height: 15,),
-                                if (viewModel.isLoadingFingerprints)
-                                  const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(20.0),
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  )
-                                else
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    child: FingerprintCardOffiline(
-                                      fingerprint: viewModel.savedFingerprints,
+                          const SizedBox(height: 30,),
+                          // Show saved fingerprints
+                          if (viewModel.savedFingerprints != null && 
+                              viewModel.savedFingerprints!.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppStrings.fingerprintsTitle.tr(),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(AppColors.dark),
                                     ),
                                   ),
-                              ],
+                                  const SizedBox(height: 15,),
+                                  if (viewModel.isLoadingFingerprints)
+                                    const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  else
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                      child: FingerprintCardOffiline(
+                                        fingerprint: viewModel.savedFingerprints,
+                                        onDelete: (index) async {
+                                          await viewModel.deleteOfflineFingerprintAt(index);
+                                        },
+                                        deletingIndexes: viewModel.deletingOfflineIndexes,
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 )

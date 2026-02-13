@@ -1,8 +1,86 @@
+import 'dart:convert';
+
 import '../general_services/backend_services/api_service/dio_api_service/shared.dart';
 
 abstract class AppConstants {
   static  List<Map<String, dynamic>>? requestsTypess;
   static  List? fingerPrints = [];
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // مفاتيح أمان البصمة (11) — عند false: لا يظهر للعميل، ولا يؤثر على البصمة، ولا يُرسل للباك اند.
+  // يتم تحديثها من كاش USG → array اسمه fingerprintChecks: المفتاح داخل الـ array = true، غير موجود = false.
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// أسماء المفاتيح الـ 11 (بنفس أسماء الباك اند).
+  static const List<String> fingerprintSecurityKeyNames = [
+    'fingerprint_face_challenge_enabled',
+    'fingerprint_upload_face_image_to_backend',
+    'block_fingerprint_on_developer_mode',
+    'fingerprint_liveness_challenges_enabled',
+    'fingerprint_send_note_report_to_api',
+    'fingerprint_face_profile_verification_enabled',
+    'fingerprint_block_on_fake_gps',
+    'fingerprint_verify_gps_network_comparison',
+    'fingerprint_verify_gps_timestamp_offline',
+    'fingerprint_block_on_root_or_jailbreak',
+    'fp_scan_steps',
+  ];
+
+  /// فتح الكاميرا وأخذ صورة للوجه فقط — لا تتحكم في التحقق من البروفايل ولا في رفع الصورة. عند false لا تظهر خطوة الوجه نهائياً.
+  static bool fingerprintFaceChallengeEnabled = true;
+  /// أخذ الصورة الملتقطة ورفعها للباك اند مع طلب البصمة (files). مستقل عن فتح الكاميرا وعن التحقق من البروفايل.
+  static bool fingerprintUploadFaceImageToBackend = true;
+  /// منع البصمة عند تفعيل Developer Mode على الجهاز.
+  static bool blockFingerprintOnDeveloperMode = true;
+  /// تشغيل التحديات الحية (liveness) أمام الكاميرا. عند false يُستخدم التقاط صورة بسيط بدون تحديات.
+  static bool fingerprintLivenessChallengesEnabled = true;
+  /// إرسال تقرير التحديات والـ GPS في حقل note مع طلب البصمة.
+  static bool fingerprintSendNoteReportToApi = true;
+  /// التحقق من مطابقة الصورة الملتقطة مع صورة البروفايل (US1). المسؤولة الوحيدة عن تحقق الصورة بصورة البروفايل.
+  static bool fingerprintFaceProfileVerificationEnabled = true;
+  /// منع البصمة عند اكتشاف Fake GPS / Mock Location.
+  static bool fingerprintBlockOnFakeGps = true;
+  /// مقارنة موقع GPS مع Network Location وإضافتها للـ note.
+  static bool fingerprintVerifyGpsNetworkComparison = true;
+  /// التحقق من توقيت GPS في وضع Offline وإضافته للـ note.
+  static bool fingerprintVerifyGpsTimestampOffline = true;
+  /// منع البصمة على أجهزة Root / Jailbreak.
+  static bool fingerprintBlockOnRootOrJailbreak = false;
+  /// عرض بوب أب التقرير (الريبورت) للعميل بعد انتهاء البصمة فقط. عند false لا يظهر البوب أب.
+  static bool fpScanSteps = false;
+
+  /// تحديث مفاتيح أمان البصمة من كاش USG → array اسمه fingerprintChecks.
+  /// أي اسم مفتاح موجود داخل الـ array = قيمته true، أي اسم غير موجود = false.
+  /// الـ array مش ثابت: الباك اند ممكن يرجع كل المفاتيح أو جزء منهم حسب احتياج العميل.
+  static void updateFingerprintSecurityFromUsgFingerprintChecks() {
+    final jsonString = CacheHelper.getString("USG");
+    List<dynamic> list = [];
+    if (jsonString != null && jsonString.isNotEmpty) {
+      try {
+        final gCache = json.decode(jsonString) as Map<String, dynamic>?;
+        if (gCache != null && gCache['fingerprintChecks'] is List) {
+          print("KEYS CASES -> ${gCache['fingerprintChecks']}");
+          list = gCache['fingerprintChecks'] as List<dynamic>;
+        }
+      } catch (_) {}
+    }
+    final contains = (String key) => list.any((e) => e?.toString() == key);
+    fingerprintFaceChallengeEnabled = contains('fingerprint_face_challenge_enabled');
+    fingerprintUploadFaceImageToBackend = contains('fingerprint_upload_face_image_to_backend');
+    blockFingerprintOnDeveloperMode = contains('block_fingerprint_on_developer_mode');
+    fingerprintLivenessChallengesEnabled = contains('fingerprint_liveness_challenges_enabled');
+    fingerprintSendNoteReportToApi = contains('fingerprint_send_note_report_to_api');
+    fingerprintFaceProfileVerificationEnabled = contains('fingerprint_face_profile_verification_enabled');
+    fingerprintBlockOnFakeGps = contains('fingerprint_block_on_fake_gps');
+    fingerprintVerifyGpsNetworkComparison = contains('fingerprint_verify_gps_network_comparison');
+    fingerprintVerifyGpsTimestampOffline = contains('fingerprint_verify_gps_timestamp_offline');
+    fingerprintBlockOnRootOrJailbreak = contains('fingerprint_block_on_root_or_jailbreak');
+    fpScanSteps = contains('fp_scan_steps');
+  }
+
+  /// للتوافق مع الكود القديم: نفس fingerprintFaceChallengeEnabled.
+  static bool get showFaceVerifyForFingerprint => fingerprintFaceChallengeEnabled;
+
   // static const String _defaultBase = "https://emplive.r-m.dev";
   static const String _defaultBase = "https://lab.r-m.dev";
 

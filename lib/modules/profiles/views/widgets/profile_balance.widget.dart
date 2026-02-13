@@ -16,6 +16,7 @@ class ProfileBalanceWidget extends StatelessWidget {
   final double? paddingBetweenVocations;
   final double? sectionPadding;
   final List<Balance>? balance;
+  final List<String>? requestTypeIds;
   final String? employeeId;
   final String? empDepartmentId;
   const ProfileBalanceWidget(
@@ -24,7 +25,8 @@ class ProfileBalanceWidget extends StatelessWidget {
       this.sectionPadding = AppSizes.s32,
       required this.employeeId,
       required this.empDepartmentId,
-      required this.balance});
+      required this.balance,
+      this.requestTypeIds});
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +35,11 @@ class ProfileBalanceWidget extends StatelessWidget {
     }
 
     List<Widget> balanceWidgets = balance!.asMap().entries.map((entry) {
-      final index = entry.key + 1;
+      final index = entry.key;
       final bal = entry.value;
+      final requestTypeId = (requestTypeIds != null && index < requestTypeIds!.length)
+          ? requestTypeIds![index]
+          : (index + 1).toString();
 
       return Padding(
         padding: EdgeInsets.only(right: paddingBetweenVocations!),
@@ -44,7 +49,7 @@ class ProfileBalanceWidget extends StatelessWidget {
           sectionPadding: sectionPadding,
           paddingBetweenVocations: paddingBetweenVocations,
           employeeId: employeeId,
-          requestTypeId: index.toString(), // 👈 Pass index as the key
+          requestTypeId: requestTypeId,
         ),
       );
     }).toList();
@@ -136,7 +141,8 @@ class BalanceCard extends StatelessWidget {
               title: AppStrings.requests.tr(),
               modalContent: RequestsByBalanceAndEmployeeIdModal(
                 empDepartmentId: empDepartmentId!,
-                  employeeId: employeeId!, requestTypeId: requestTypeId),
+                employeeId: employeeId!,
+                requestTypeId: requestTypeId),
               height: LayoutService.getHeight(context) * 0.7)
           : null,
       child: Container(
@@ -168,13 +174,20 @@ class BalanceCard extends StatelessWidget {
                   AutoSizeText(isTaken ? AppStrings.taken.tr() : AppStrings.remaining.tr(),
                       textAlign: TextAlign.center, style: mainTextStyle),
                   gapH4,
-                  AutoSizeText(
-                      '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}',
-                      textAlign: TextAlign.center,
-                      style: mainTextStyle.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppSizes.s20,
-                      )),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: AutoSizeText(
+                          '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}',
+                          textAlign: TextAlign.center,
+                          style: mainTextStyle.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.s20,
+                          ),
+                          minFontSize: 10,
+                          maxLines: 2),
+                    ),
+                  ),
                   gapH4,
                   if (balance.max != -1 && balance.available != -1)
                     AutoSizeText(
@@ -186,6 +199,8 @@ class BalanceCard extends StatelessWidget {
                         height: 1.0,
                         color: Colors.white,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                 ],
               ),

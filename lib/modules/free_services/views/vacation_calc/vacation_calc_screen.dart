@@ -29,7 +29,9 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
 
   // الحصول على اسم النوع حسب اللغة
   String _getLeaveTypeName(Map<String, dynamic> type) {
-    return type['key'].tr();
+    // type['key'] نوعه dynamic، فلازم نحوله String عشان امتداد tr يشتغل عليه بشكل ثابت
+    final String key = type['key'] as String;
+    return key.tr();
   }
 
   // الحصول على عدد الأيام الافتراضي للنوع المحدد

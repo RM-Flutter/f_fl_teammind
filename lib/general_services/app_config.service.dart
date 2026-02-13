@@ -20,10 +20,9 @@ import '../routing/app_router.dart';
 
 class   AppConfigService extends ChangeNotifier {
   AppConfigService() {
-    //intialize application services
     _initializeConnectionListener();
-
-    init();
+    // لا نستدعي init() هنا — يتم استدعاؤه وانتظاره في main() فقط لتجنب race
+    // حيث كان يفتح اللوجين أحياناً رغم وجود token لأن القراءة تحدث قبل اكتمال التهيئة
   }
   bool isConnected = true;
   bool isInitialized = false;
@@ -484,18 +483,33 @@ class   AppConfigService extends ChangeNotifier {
           message: AppStrings.areYouSureYouWantToLogout.tr());
       if (isLogout == false) return;
     }
-    
-    // Clear local data first - use await to ensure completion
+
+    // Call logout API first while token is still present (backend expects the token)
+    if (!skipServerLogout) {
+      try {
+        await DioHelper.postData(
+          url: "/rm_users/v1/log_out",
+          context: context,
+          query: null,
+          data: {},
+        );
+      } catch (e) {
+        // Continue with local logout even if API fails (e.g., network, 401)
+        debugPrint('Logout API call failed (continuing with local logout): $e');
+      }
+    }
+
+    // Clear local data after API call
     await clearToken(notify: true);
     await setIsLogin(false, notify: true);
-    
+
     // Clear refresh token and expiration dates
     if (_prefs != null) {
       await _prefs?.remove('refreshToken');
       await _prefs?.remove('accessTokenExpDate');
       await _prefs?.remove('refreshTokenExpDate');
     }
-    
+
     // Clear cache data
     await CacheHelper.deleteData(key: "US1");
     await CacheHelper.deleteData(key: "US2");
@@ -503,21 +517,20 @@ class   AppConfigService extends ChangeNotifier {
     await CacheHelper.deleteData(key: "gDate");
     await CacheHelper.deleteData(key: "s1Date");
     await CacheHelper.deleteData(key: "s2Date");
-    await CacheHelper.deleteData(key: "fcmToken");
-    
+    // لا تحذف fcm_token حتى start_app التالي (بعد اختيار الدومين) يبعته. احذف last_sent فقط.
+    await CacheHelper.deleteData(key: "last_sent_fcm_token");
+
     // Clear domain selection on logout (but keep domains list)
     try {
       await DomainSelectionService.clearDomainSelectionOnLogout();
+      if (context.mounted) DioHelper.initail(context);
     } catch (e) {
       debugPrint('Error clearing domain selection: $e');
     }
-    
-    // Clear device information if needed (optional)
-    // await _prefs?.remove('DeviceInformationMap');
-    
+
     debugPrint('User has been logged out, and token is cleared.');
-    
-    // Clear Dio headers to ensure token is not cached
+
+    // Clear Dio headers after API call
     try {
       if (DioHelper.dio != null) {
         DioHelper.dio!.options.headers.remove('Authorization');
@@ -526,25 +539,9 @@ class   AppConfigService extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error clearing Dio headers: $e');
     }
-    
-    // Try to notify server, but don't fail if it doesn't work (e.g., 401)
-    if (!skipServerLogout) {
-      try {
-        await DioHelper.postData(
-          url: "/rm_users/v1/log_out", 
-          context: context,
-          query: null,
-          data: {},
-        );
-      } catch (e) {
-        // Ignore errors when logging out (especially 401)
-        debugPrint('Logout API call failed (this is OK): $e');
-      }
-    }
-    
-    // Notify listeners after all cleanup is done
+
     notifyListeners();
-    
+
     // Navigate to login screen after logout (unless skipNavigation is true)
     if (!skipNavigation && context.mounted) {
       try {

@@ -32,6 +32,8 @@ class DomainSelectionService {
     if (domain == null || domain.isEmpty) {
       // User cancelled or entered empty domain, use default
       await CacheHelper.setBool(_domainSelectedKey, true);
+      await CacheHelper.deleteData(key: _domainCacheKey);
+      if (context.mounted) DioHelper.initail(context);
       return true;
     }
 
@@ -55,7 +57,8 @@ class DomainSelectionService {
       } else {
         // User wants to use default domain
         await CacheHelper.setBool(_domainSelectedKey, true);
-        // Don't save invalid domain to cache
+        await CacheHelper.deleteData(key: _domainCacheKey);
+        if (context.mounted) DioHelper.initail(context);
         return true;
       }
     }
@@ -63,17 +66,18 @@ class DomainSelectionService {
     // Domain is valid, save it and add to list
     await _saveDomain(formattedDomain);
     await CacheHelper.setBool(_domainSelectedKey, true);
+    await CacheHelper.setBool('from_domain_selection', true);
     print("🌐 Domain saved successfully: $formattedDomain");
-    
+
     // Reinitialize DioHelper with the new domain
     if (context.mounted) {
       DioHelper.initail(context);
     }
-    
+
     return true;
   }
 
-  /// Clean domain: remove http://, https://, www., empapp., empapp, all subdomains, trailing slash
+  /// Clean domain: remove http://, https://, www., webapp., webapp, all subdomains, trailing slash
   /// Returns only domain + TLD (e.g., google.com)
   static String _cleanDomain(String domain) {
     String cleaned = domain.trim();
@@ -95,12 +99,12 @@ class DomainSelectionService {
       cleaned = cleaned.substring(4);
     }
     
-    // Remove empapp. or empapp from the beginning (can appear multiple times)
-    while (cleaned.startsWith('empapp.')) {
+    // Remove webapp. or webapp from the beginning (can appear multiple times)
+    while (cleaned.startsWith('webapp.')) {
       cleaned = cleaned.substring(7);
     }
-    if (cleaned.startsWith('empapp')) {
-      // Check if it's exactly "empapp" followed by nothing, dot, or slash
+    if (cleaned.startsWith('webapp')) {
+      // Check if it's exactly "webapp" followed by nothing, dot, or slash
       if (cleaned.length == 6 || (cleaned.length > 6 && (cleaned[6] == '.' || cleaned[6] == '/'))) {
         cleaned = cleaned.substring(6);
         // Remove leading dot or slash if exists
@@ -110,21 +114,27 @@ class DomainSelectionService {
       }
     }
     
-    // Remove all subdomains - keep only domain + TLD (last two parts)
-    // Example: amr.google.com -> google.com
-    // Example: empapp.amr.google.com -> google.com
+    // Remove subdomains but keep domain + TLD correctly.
+    // For two-part TLDs (e.g. .com.sa, .co.uk) keep 3 parts: psmarketing.com.sa
+    // For single TLD (e.g. .com) keep 2 parts: google.com
     final parts = cleaned.split('.');
-    if (parts.length > 2) {
-      // Take only the last two parts (domain + TLD)
-      cleaned = '${parts[parts.length - 2]}.${parts[parts.length - 1]}';
+    if (parts.length <= 2) {
+      return cleaned;
     }
-    
+    // Known second-level TLDs (when last two parts form these, keep 3 parts)
+    const twoPartTlds = ['com.sa', 'co.sa', 'com.eg', 'co.eg', 'com.uk', 'co.uk', 'org.uk', 'net.uk', 'com.au', 'co.au', 'com.br', 'co.nz', 'com.mx', 'com.ar', 'co.za', 'com.sg', 'com.my', 'com.ph', 'com.pk', 'com.bd', 'co.in', 'com.ua', 'co.il'];
+    final lastTwo = '${parts[parts.length - 2]}.${parts[parts.length - 1]}';
+    if (twoPartTlds.contains(lastTwo) && parts.length >= 3) {
+      cleaned = '${parts[parts.length - 3]}.$lastTwo';
+    } else if (parts.length > 2) {
+      cleaned = lastTwo;
+    }
     return cleaned;
   }
 
-  /// Format domain: add https://empapp. prefix
+  /// Format domain: add https://webapp. prefix
   static String _formatDomain(String cleanedDomain) {
-    return 'https://empapp.$cleanedDomain';
+    return 'https://webapp.$cleanedDomain';
   }
 
   /// Save domain to cache and add to domains list
@@ -248,8 +258,8 @@ class DomainSelectionService {
                           itemCount: savedDomains.length,
                           itemBuilder: (context, index) {
                             final domain = savedDomains[index];
-                            // Extract subdomain from full domain (remove https://empapp.)
-                            final displayDomain = domain.replaceFirst('https://empapp.', '');
+                            // Extract subdomain from full domain (remove https://webapp.)
+                            final displayDomain = domain.replaceFirst('https://webapp.', '');
                             
                             return ListTile(
                               title: Text(

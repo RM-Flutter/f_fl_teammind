@@ -18,6 +18,9 @@ class GeneralSettingsModel extends AppSettingsModel {
   final WorktimeOrInt? worktime;
   final Map<String, RequestTypeOrList>? requestTypes;
   final bool? fingerprintMustUploadImage;
+  /// عند true (الافتراضي) يظهر للعميل خطوة التحقق من الوجه (face verify) عند إضافة بصمة.
+  /// عند false لا تظهر خطوة face verify للعميل.
+  final bool? showFaceVerificationForFingerprint;
   final bool? fpScanSteps;
   final bool? canNewRegister;
   final bool? canVisit;
@@ -42,6 +45,7 @@ class GeneralSettingsModel extends AppSettingsModel {
       this.worktime,
       this.requestTypes,
       this.fingerprintMustUploadImage,
+      this.showFaceVerificationForFingerprint,
       this.fpScanSteps,
       this.canNewRegister,
       this.payrollScreenProtection,
@@ -91,6 +95,9 @@ class GeneralSettingsModel extends AppSettingsModel {
           : null,
       fingerprintMustUploadImage: ModelHelpersService.getBoolValue(
           json['fingerprint_must_upload_image']),
+      showFaceVerificationForFingerprint: ModelHelpersService.getBoolValue(
+              json['show_face_verification_for_fingerprint']) ??
+          true,
       fpScanSteps: ModelHelpersService.getBoolValue(json['fp_scan_steps']),
       canVisit: ModelHelpersService.getBoolValue(json['can_visit']),
       canNewRegister:
@@ -133,6 +140,7 @@ class GeneralSettingsModel extends AppSettingsModel {
               .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())))
           : null,
       'fingerprint_must_upload_image': fingerprintMustUploadImage,
+      'show_face_verification_for_fingerprint': showFaceVerificationForFingerprint,
       'fp_scan_steps': fpScanSteps,
       'can_new_register': canNewRegister,
       'payroll_screen_protection': payrollScreenProtection,

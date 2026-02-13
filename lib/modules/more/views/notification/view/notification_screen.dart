@@ -105,6 +105,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               width: double.infinity,
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
+                heroTag: 'notification_screen_add',
                 onPressed: () async => await context.pushNamed(
                     AppRoutes.addNotification.name,
                     pathParameters: {
@@ -147,7 +148,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   child: ListView(
                     controller: _scrollController,
                     children: [
-                      SwitchRowNotification(
+                     if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5,)
+                     else  SwitchRowNotification(
                     isLoginPageStyle: false,
                     value: CacheHelper.getBool("value") ??value!,
                     onChanged: (newValue){

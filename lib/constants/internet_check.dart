@@ -97,10 +97,49 @@ class ConnectionService extends ChangeNotifier {
           if (!isOnOfflineScreen) {
             OfflineOverlayService.hideOfflineOverlay();
           }
-          
-          // NEVER call onConnectionRestored if we're on offline screen or overlay is temporarily hidden
-          if (isOnOfflineScreen || OfflineOverlayService.isTemporarilyHidden) {
-            debugPrint("🔄 Connection restored, but user is on offline screen or overlay is temporarily hidden - NOT calling onConnectionRestored");
+
+          // حالة خاصة: النت رجع والمستخدم مازال على شاشة الأوفلاين
+          if (isOnOfflineScreen) {
+            debugPrint("🔄 Connection restored while on offline screen - scheduling app restart in 3 seconds");
+            // انتظر 5 ثواني، لو لسه على شاشة الأوفلاين ولسه فيه نت → اعتبره فتح التطبيق من الأول
+            Future.delayed(const Duration(seconds: 3), () async {
+              if (!_isConnected) {
+                debugPrint("🔄 Delayed restart cancelled: connection lost again");
+                return;
+              }
+              final ctx = rootNavigatorKey.currentContext;
+              if (ctx == null) return;
+              try {
+                final router = GoRouter.of(ctx);
+                final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
+                final stillOnOfflineScreen = currentLocation.contains('offline-screen') ||
+                                             currentLocation.contains('offline') ||
+                                             currentLocation.contains('fingerPrintOffline');
+                if (!stillOnOfflineScreen) {
+                  debugPrint("🔄 Delayed splash navigation cancelled: user left offline screen ($currentLocation)");
+                  return;
+                }
+                // استخرج لغة المسار الحالي: /en/offline-screen → en
+                String lang = 'en';
+                final segments = currentLocation.split('/');
+                if (segments.length > 1 && segments[1].isNotEmpty) {
+                  lang = segments[1];
+                }
+                debugPrint("🔄 Connection restored & still on offline screen after delay - navigating to splash (lang: $lang)");
+                ctx.goNamed(
+                  AppRoutes.splash.name,
+                  pathParameters: {'lang': lang},
+                );
+              } catch (e) {
+                debugPrint("⚠️ Error during delayed restart check: $e");
+              }
+            });
+            return;
+          }
+
+          // لو الأوفرلاي متخفي مؤقتًا (أثناء بصمة أوفلاين مثلاً) ما نكمّلاش
+          if (OfflineOverlayService.isTemporarilyHidden) {
+            debugPrint("🔄 Connection restored, but offline overlay is temporarily hidden - NOT calling onConnectionRestored");
             return;
           }
           

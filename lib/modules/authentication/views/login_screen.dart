@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-
+import '../../../general_services/domain_selection.service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_constants.dart';
+import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:rmemp/platform/platform_is.dart';
 import 'package:rmemp/utils/helpers/media_query_values.dart';
@@ -303,6 +304,24 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                 
                                 // إذا تم التحقق بنجاح، إرسال الطلب
                                 await viewModel.login(context: context);
+                              },
+                              isPrimaryBackground: false,
+                            ),
+                            gapH16,
+                            // LOGIN BUTTON
+                            CustomElevatedButton(
+                              title: AppStrings.addCompany.tr(),
+                              onPressed: () async {
+                                // لا تحذف fcm_token حتى start_app بعد اختيار الدومين يبعته. احذف last_sent فقط.
+                                await CacheHelper.deleteData(key: "last_sent_fcm_token");
+                                await DomainSelectionService.resetDomainSelection();
+                                if (context.mounted) {
+                                  DioHelper.initail(context);
+                                  context.goNamed(
+                                    AppRoutes.splash.name,
+                                    pathParameters: {'lang': context.locale.languageCode},
+                                  );
+                                }
                               },
                               isPrimaryBackground: false,
                             ),

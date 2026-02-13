@@ -121,15 +121,22 @@ class TelegramErrorService {
     String? hint,
   }) async {
     final screen = screenName ?? _currentScreenName ?? getCurrentScreenName(_currentContext) ?? 'unknown';
-    
-    debugPrint('🚨 Telegram Error [Screen: $screen]: ${exception.toString()}');
+    final msg = exception.toString();
+
+    debugPrint('🚨 Telegram Error [Screen: $screen]: $msg');
     if (stackTrace != null) {
       debugPrint('   StackTrace: ${stackTrace.toString()}');
     }
     if (extra != null) {
       debugPrint('   Extra: $extra');
     }
-    
+
+    // لا نرسل لـ Telegram أخطاء صورة/كاش بسبب رابط فارغ أو غير صالح (تقليل الضجيج)
+    if (msg.contains('No host specified in URI') ||
+        msg.contains('Invalid argument(s): No host specified')) {
+      return;
+    }
+
     try {
       final message = _formatErrorMessage(
         exception: exception,

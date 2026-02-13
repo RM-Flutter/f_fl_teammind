@@ -102,6 +102,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   FloatingActionButton(
+                    heroTag: 'requests_add',
                     onPressed: () async {
                       await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
                         'type': 'mine',
@@ -121,10 +122,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   ),
                   const SizedBox(height: 10,),
                   FloatingActionButton(
+                    heroTag: 'requests_calendar',
                     onPressed: ()async {
+                      final Map<String, String?>? filterResult;
                       if (kIsWeb) {
                         // Use showDialog for web to ensure it's fully visible
-                        await showDialog(
+                        filterResult = await showDialog<Map<String, String?>>(
                           context: context,
                           barrierDismissible: true,
                           builder: (BuildContext dialogContext) {
@@ -155,7 +158,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         );
                       } else {
                         // Use showModalBottomSheet for mobile
-                        await showModalBottomSheet(
+                        filterResult = await showModalBottomSheet<Map<String, String?>>(
                           context: context,
                           isScrollControlled: true,
                           enableDrag: false,
@@ -175,16 +178,44 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           },
                         );
                       }
-                      viewModel.initializeRequestsScreen(
+                      if (filterResult != null) {
+                        final _v = (String? s) => (s == null || s.isEmpty) ? null : s;
+                        viewModel.initializeRequestsScreen(
                           context: context,
                           requestsType: widget.requestsType!,
-                        requestTypeId: CacheHelper.getString("reqId"),
-                        empIds: CacheHelper.getString("empId"),
-                        from: CacheHelper.getString("from"),
-                        to: CacheHelper.getString("to"),
-                        depId:CacheHelper.getString("depId"),
-                        status: CacheHelper.getString("selectStatus")
-                      );
+                          requestTypeId: _v(filterResult['reqId']),
+                          empIds: _v(filterResult['empId']),
+                          from: _v(filterResult['from']),
+                          to: _v(filterResult['to']),
+                          depId: _v(filterResult['depId']),
+                          status: _v(filterResult['selectStatus']),
+                        );
+                        // مزامنة الكاش مع نتيجة الفلتر حتى لا يرسل التمرير/التحديث الـ id من قيمة قديمة
+                        final _sync = (String key, String? value) async {
+                          if (value == null || value.isEmpty) {
+                            await CacheHelper.deleteData(key: key);
+                          } else {
+                            await CacheHelper.setString(key: key, value: value);
+                          }
+                        };
+                        await _sync("reqId", filterResult['reqId']);
+                        await _sync("empId", filterResult['empId']);
+                        await _sync("depId", filterResult['depId']);
+                        await _sync("selectStatus", filterResult['selectStatus']);
+                        await _sync("from", filterResult['from']);
+                        await _sync("to", filterResult['to']);
+                      } else {
+                        viewModel.initializeRequestsScreen(
+                          context: context,
+                          requestsType: widget.requestsType!,
+                          requestTypeId: CacheHelper.getString("reqId").isEmpty ? null : CacheHelper.getString("reqId"),
+                          empIds: CacheHelper.getString("empId"),
+                          from: CacheHelper.getString("from"),
+                          to: CacheHelper.getString("to"),
+                          depId: CacheHelper.getString("depId"),
+                          status: CacheHelper.getString("selectStatus"),
+                        );
+                      }
                     },
                     backgroundColor: Color(AppColors.primary), // Optional: change color
                     tooltip: 'Filter',

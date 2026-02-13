@@ -24,10 +24,30 @@ class CachedNetWorkImageWidget extends StatelessWidget {
   //final bool? isShadowed;
   final BoxFit? boxFit;
   final Widget? errorWidget;
+
+  static bool _isValidImageUrl(String? value) {
+    if (value == null || value.trim().isEmpty) return false;
+    final u = value.trim().toLowerCase();
+    if (!u.startsWith('http://') && !u.startsWith('https://')) return false;
+    try {
+      final uri = Uri.parse(value.trim());
+      return uri.host.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!_isValidImageUrl(url)) {
+      return SizedBox(
+        width: width,
+        height: height,
+        child: errorWidget ?? const Icon(Icons.image_not_supported_outlined),
+      );
+    }
     return CachedNetworkImage(
-      imageUrl: url ?? '',
+      imageUrl: url!,
       width: width,
       height: height,
       cacheKey: cacheKey ?? url,

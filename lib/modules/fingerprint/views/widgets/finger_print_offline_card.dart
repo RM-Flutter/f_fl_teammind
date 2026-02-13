@@ -11,8 +11,16 @@ import '../../../../utils/modal_sheet_helper.dart';
 import 'fingerprint_details_modal_sheet.widget.dart';
 
 class FingerprintCardOffiline extends StatelessWidget {
-  List? fingerprint = [];
-   FingerprintCardOffiline({super.key, this.fingerprint});
+  final List? fingerprint;
+  final void Function(int index)? onDelete;
+  final Set<int>? deletingIndexes;
+
+  const FingerprintCardOffiline({
+    super.key,
+    this.fingerprint,
+    this.onDelete,
+    this.deletingIndexes,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +49,7 @@ class FingerprintCardOffiline extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (fingerprint![index]['finger_day'] != null)Container(
+                if (fingerprint![index]['finger_day'] != null) Container(
                     width: AppSizes.s50,
                     padding: const EdgeInsets.all(AppSizes.s4),
                     decoration: BoxDecoration(
@@ -75,23 +83,111 @@ class FingerprintCardOffiline extends StatelessWidget {
                       ],
                     ),
                   ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
-                  child: AutoSizeText(
-                    _formatFingerprintDate(fingerprint![index]['finger_day'].toString(), context),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: AppSizes.s14,
-                      color: Theme.of(context).colorScheme.secondary,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AutoSizeText(
+                          _formatFingerprintDate(
+                              fingerprint![index]['finger_day'].toString(),
+                              context),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: AppSizes.s14,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              _getFingerprintTypeIcon(fingerprint![index]['type']),
+                              size: 16,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                _getFingerprintTypeLabel(fingerprint![index]['type']),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                if (onDelete != null) ...[
+                  const Spacer(),
+                  IconButton(
+                    icon: deletingIndexes != null &&
+                            deletingIndexes!.contains(index)
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Icon(Icons.delete, color: Colors.red),
+                    onPressed: (deletingIndexes != null &&
+                            deletingIndexes!.contains(index))
+                        ? null
+                        : () {
+                            onDelete!(index);
+                          },
+                  ),
+                ],
               ],
             ),
           ),
         ),
         separatorBuilder: (context, index) => const SizedBox(height: 15,),
         itemCount: fingerprint!.length);
+  }
+
+  IconData _getFingerprintTypeIcon(dynamic type) {
+    final t = type?.toString().toLowerCase() ?? '';
+    switch (t) {
+      case 'fp_scan':
+        return Icons.qr_code;
+      case 'fp_wifi':
+        return Icons.wifi;
+      case 'fp_navigate':
+      case 'custom_fp_navigate':
+        return Icons.gps_fixed;
+      case 'fp_bluetooth':
+        return Icons.bluetooth;
+      default:
+        return Icons.fingerprint;
+    }
+  }
+
+  String _getFingerprintTypeLabel(dynamic type) {
+    final t = type?.toString().toLowerCase() ?? '';
+    switch (t) {
+      case 'fp_scan':
+        return AppStrings.qrCode.tr();
+      case 'fp_wifi':
+        return AppStrings.wifi.tr();
+      case 'fp_navigate':
+      case 'custom_fp_navigate':
+        return AppStrings.gps.tr();
+      case 'fp_bluetooth':
+        return AppStrings.bluetooth.tr();
+      default:
+        return t.isNotEmpty ? t : '—';
+    }
   }
 
   String _formatFingerprintDate(String dateString, BuildContext context) {

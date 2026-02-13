@@ -242,50 +242,70 @@ class VacationCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             if(vocation.value.max != -1) gapH18,
-             Column(
-               mainAxisAlignment: MainAxisAlignment.center,
-               crossAxisAlignment: CrossAxisAlignment.center,
-               children: [
-                if(vocation.value.max != -1) AutoSizeText(
-                    AppStrings.remaining.tr(),
-                   textAlign: TextAlign.center,
-                   style: Theme.of(context).textTheme.titleSmall,
-                 ),
-                if(isTaken) AutoSizeText(
-                  AppStrings.taken.tr(),
-                   textAlign: TextAlign.center,
-                   style: Theme.of(context).textTheme.titleSmall,
-                 ),
-                 gapH4,
-                 if(isTaken) AutoSizeText(
-                     '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
-                     textAlign: TextAlign.center,
-                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                           fontWeight: FontWeight.bold,
-                           fontSize: AppSizes.s20,
-                         )),
-                 if(!isTaken && vocation.value.max != -1)AutoSizeText(
-                     '${(vocation.value.available?.toString() ?? '0') } ${(vocation.value.type?.toString().tr() ?? '')}',
-                     textAlign: TextAlign.center,
-                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                           fontWeight: FontWeight.bold,
-                           fontSize: AppSizes.s20,
-                         )),
-                 gapH4,
-                 if (vocation.value.max != -1 &&
-                     vocation.value.available != -1)
-                   AutoSizeText(
-                     '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
-                     textAlign: TextAlign.center,
-                     style: const TextStyle(
-                       fontWeight: FontWeight.bold,
-                       fontSize: 12,
-                       height: 1.0,
-                       color: Colors.white,
-                     ),
-                   ),
-               ],
-             )
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if(vocation.value.max != -1) AutoSizeText(
+                      AppStrings.remaining.tr(),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  if(isTaken) AutoSizeText(
+                    AppStrings.taken.tr(),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  gapH4,
+                  if(isTaken)
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: AutoSizeText(
+                            '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppSizes.s20,
+                                ),
+                            minFontSize: 10,
+                            maxLines: 2),
+                      ),
+                    ),
+                  if(!isTaken && vocation.value.max != -1)
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: AutoSizeText(
+                            '${(vocation.value.available?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppSizes.s20,
+                                ),
+                            minFontSize: 10,
+                            maxLines: 2),
+                      ),
+                    ),
+                  gapH4,
+                  if (vocation.value.max != -1 &&
+                      vocation.value.available != -1)
+                    AutoSizeText(
+                      '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        height: 1.0,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

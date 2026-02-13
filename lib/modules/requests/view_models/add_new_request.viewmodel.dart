@@ -428,6 +428,9 @@ class AddNewRequestViewModel extends ChangeNotifier {
     notifyListeners();
     DioHelper.getData(
       url: "/departments/entities-operations",
+      query: {
+        "itemsCount" : 200,
+      },
       context: context,
     ).then((value){
       isLoading = false;
@@ -536,26 +539,24 @@ class AddNewRequestViewModel extends ChangeNotifier {
     final selectedDates = selectedDateOrDatetimeRange!.end;
     final now = DateTime.now();
 
-    // Check if start date equals end date AND both equal today
     final isStartEndSame = isSameDate(selectedDate, selectedDates);
     final isStartToday = isSameDate(selectedDate, now);
     final isEndToday = isSameDate(selectedDates, now);
-    final isSameDay = isStartEndSame && isStartToday && isEndToday;
-    
-    // If it's a days type request with halfDay enabled and start/end are the same day and it's today, calculate as half day
-    print("isSameDay --> ${isSameDay}");
-    print("halfDay --> ${halfDay}");
-    print("type --> ${type?.toLowerCase().trim()}");
-    if(type?.toLowerCase().trim() == 'days' && halfDay == true && isSameDay){
-      checkHalfDate(context, selectedDate.toString());
-    }
-    else if(type?.toLowerCase().trim() == 'days' && halfDay == true && !isSameDay){
-      print("I AM HERE");
-      formattedDuration = null; // Clear formatted duration before calculating days
+    final isTodayAndSameDay = isStartEndSame && isStartToday && isEndToday;
+
+    print('الريكويست تايب بيقبل نص يوم؟ ${halfDay == true ? "آه" : "لا"}');
+    // halfDay من نوع الطلب (half_day_leave): لو النوع مش بيقبل نصف يوم → حتى لو انهاردا المدة = 1
+    if (type?.toLowerCase().trim() == 'days' && halfDay == true && isTodayAndSameDay) {
+      final isWeekendOrHoliday = isWeekendOrHolidayDateFromString(context, selectedDate.toString());
+      duration = isWeekendOrHoliday ? 1 : 0.5;
+      formattedDuration = '${duration} ${AppStrings.days.tr()}';
+      notifyListeners();
+    } else if (type?.toLowerCase().trim() == 'days' && halfDay == true && !isTodayAndSameDay) {
+      formattedDuration = null;
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
-    }
-   else if (type?.toLowerCase().trim() == 'days' && halfDay == false) {
-      formattedDuration = null; // Clear formatted duration before calculating days
+    } else if (type?.toLowerCase().trim() == 'days' && halfDay == false) {
+      // النوع مش بيقبل نصف يوم: انهاردا أو أي فترة → حساب الأيام العادي (انهاردا = 1)
+      formattedDuration = null;
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
       return;
     }
@@ -618,9 +619,10 @@ class AddNewRequestViewModel extends ChangeNotifier {
     // Check weekend
     final defaultWeekendDays = ['saturday', 'sunday'];
     final weekendDays = user2Settings?.weekend ?? defaultWeekendDays;
+    final isVariable = weekendDays.any((e) => e.toString().trim().toLowerCase() == 'variable');
 
     // If weekend is 'variable', treat as no weekend (custom handling)
-    if (!weekendDays.contains('variable')) {
+    if (!isVariable) {
       final dayName = weekdaysMap[date.weekday];
       if (dayName != null && weekendDays.contains(dayName)) {
         return true; // It's a weekend
@@ -639,13 +641,15 @@ class AddNewRequestViewModel extends ChangeNotifier {
       print("weekdaysMap[date.weekday] is --> ${weekdaysMap[date.weekday]}");
       print("weekendDays.contains(weekdaysMap[date.weekday]) is --> ${weekendDays.contains(weekdaysMap[date.weekday])}");
       print("weekendDays.contains(weekdaysMap[date.weekday]) is --> ${weekendDays.contains(weekdaysMap[date.weekday])}");
+      // Compare by date only (no time) to avoid timezone/DST issues
+      final dateOnly = DateTime(date.year, date.month, date.day);
       for (var holidayOrString in holidays) {
         if (holidayOrString.holiday != null) {
           final holidayStart = DateTime.parse(holidayOrString.holiday!.from!);
           final holidayEnd = DateTime.parse(holidayOrString.holiday!.to!);
-          // Check if date falls within holiday range (inclusive)
-          if (!date.isBefore(holidayStart) && !date.isAfter(holidayEnd)) {
-            // Also ensure date is not weekend to avoid double counting (optional)
+          final holidayStartOnly = DateTime(holidayStart.year, holidayStart.month, holidayStart.day);
+          final holidayEndOnly = DateTime(holidayEnd.year, holidayEnd.month, holidayEnd.day);
+          if (!dateOnly.isBefore(holidayStartOnly) && !dateOnly.isAfter(holidayEndOnly)) {
             if (!weekendDays.contains(weekdaysMap[date.weekday])) {
               return true; // It's an official holiday
             }
@@ -706,12 +710,21 @@ class AddNewRequestViewModel extends ChangeNotifier {
       7: 'sunday',
     };
 
+    // Normalize to date-only (no time) so calendar-day count is correct.
+    // Use UTC for day count so DST doesn't change the result (e.g. April 1–30 was 29 because .inDays uses full 24h periods and DST shifts one day).
+    final startDate = DateTime(selectedDateOrDatetimeRange!.start.year, selectedDateOrDatetimeRange!.start.month, selectedDateOrDatetimeRange!.start.day);
+    final endDate = DateTime(selectedDateOrDatetimeRange!.end.year, selectedDateOrDatetimeRange!.end.month, selectedDateOrDatetimeRange!.end.day);
+    final startUtc = DateTime.utc(startDate.year, startDate.month, startDate.day);
+    final endUtc = DateTime.utc(endDate.year, endDate.month, endDate.day);
+    final totalCalendarDays = endUtc.difference(startUtc).inDays + 1;
+    debugPrint('DEBUG date range: start=${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')} end=${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')} → total calendar days (inclusive)=$totalCalendarDays');
+    print('DEBUG: totalCalendarDays=$totalCalendarDays (لو شهر 4 كامل يبقى 30، لو 29 يبقى التاريخ النهائي كان 29 مش 30)');
+
     // First: Subtracting Weekends if the Current user not Variable [means that the current user follows the weekend system]
    print("WEEK HOLIDAY IS --->${user2Settigns!.weekend}");
-    if (user2Settigns!.weekend?.contains('variable') == false) {
-      DateTime currentDay = selectedDateOrDatetimeRange!.start;
-      while (currentDay.isBefore(
-          selectedDateOrDatetimeRange!.end.add(const Duration(days: 1)))) {
+    if (user2Settigns!.weekend?.contains('variable') == false || user2Settigns!.weekend?.contains('variable') == true) {
+      DateTime currentDay = startDate;
+      while (currentDay.isBefore(endDate.add(const Duration(days: 1)))) {
         int dayOfWeek = currentDay.weekday;
 
         // Check if the current day is a weekend day
@@ -724,9 +737,14 @@ class AddNewRequestViewModel extends ChangeNotifier {
         currentDay = currentDay.add(const Duration(days: 1));
       }
 
-      // Calculate the duration after subtracting weekends
-      duration =
-          ((selectedDateOrDatetimeRange?.duration.inDays ?? 0) + 1) - nbDays;
+      // Calculate the duration after subtracting weekends (use date-only count so Apr 1–30 = 30 days).
+      print('DEBUG: nbDays (عدد أيام العطلة في النطاق)=$nbDays (شهر 4 فيه 4 جمع فقط، لو طلع 5 يبقى في حساب غلط)');
+      if(user2Settigns!.weekend?.contains('variable') == false){
+        duration = totalCalendarDays - nbDays;
+      }else{
+        duration = totalCalendarDays;
+      }
+
 
       // Convert weekend days from integer to week day names
       for (var element in weekendDays) {
@@ -744,10 +762,16 @@ class AddNewRequestViewModel extends ChangeNotifier {
         '1- duration after subtracting weekends |||||||||||||||||| $duration');
 
     // Second: Subtracting Holidays if the Current user can use holidays
-      print("holidays is --> $holidays");
-      print("canUseHolidays is --> ${user2Settigns.canUseHolidays}");
+    if (holidays != null && holidays.isNotEmpty) {
+      print("holidays is --> ${holidays[0].holiday?.name?.en}");
+    } else {
+      print("holidays is --> (empty or null)");
+    }
+    print("canUseHolidays is --> ${user2Settigns.canUseHolidays}");
     if (user2Settigns.canUseHolidays == true && holidays != null) {
       int holidayDays = 0;
+      // طالما الـ weekend يحتوي على 'variable' (ولو المصفوفة = [variable] فقط) نخصم الإجازة الرسمية كاملة.
+      final hasVariableWeekend = (user2Settigns.weekend ?? []).contains('variable');
 
       for (var holidayOrString in holidays) {
         if (holidayOrString.holiday != null) {
@@ -755,20 +779,20 @@ class AddNewRequestViewModel extends ChangeNotifier {
               DateTime.parse(holidayOrString.holiday!.from!);
           DateTime holidayEnd = DateTime.parse(holidayOrString.holiday!.to!);
 
-          DateTime currentDay = selectedDateOrDatetimeRange!.start;
-          while (currentDay.isBefore(
-              selectedDateOrDatetimeRange!.end.add(const Duration(days: 1)))) {
-            if (currentDay
+          DateTime currentDay = startDate;
+          while (currentDay.isBefore(endDate.add(const Duration(days: 1)))) {
+            final isInHolidayRange = currentDay
                     .isAfter(holidayStart.subtract(const Duration(days: 1))) &&
-                currentDay.isBefore(holidayEnd.add(const Duration(days: 1))) &&
-                !weekendDays.contains(currentDay.weekday)) {
+                currentDay.isBefore(holidayEnd.add(const Duration(days: 1)));
+            final skipAsAlreadyWeekend = !hasVariableWeekend && weekendDays.contains(currentDay.weekday);
+            if (isInHolidayRange && !skipAsAlreadyWeekend) {
               holidayDays++;
             }
             currentDay = currentDay.add(const Duration(days: 1));
           }
         }
       }
-
+          print("holidayDays --> ${holidayDays}");
       duration = (duration ?? 0) - holidayDays;
       if ((duration ?? 0) < 0) duration = 0;
       if (holidayDays != 0) {
@@ -875,12 +899,11 @@ class AddNewRequestViewModel extends ChangeNotifier {
       }
 
       final OperationResult<Map<String, dynamic>> result;
-      // using form data request to the server
+      // using form data request to the server (send file whenever user attached one, required or optional)
       result = await RequestsServices.createNewRequestWithFile(
           context: context,
           requestData: _filterNonNullValues(requestMainData),
-          files:
-              (isAttachingFile && attachedFile != null) ? [attachedFile!] : []);
+          files: attachedFile != null ? [attachedFile!] : []);
 
       if (result.success) {
         _resetValues();
@@ -939,9 +962,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
                 await RequestsServices.createNewRequestWithFile(
                     context: context,
                     requestData: _filterNonNullValues(requestMainData),
-                    files: (isAttachingFile && attachedFile != null)
-                        ? [attachedFile!]
-                        : []);
+                    files: attachedFile != null ? [attachedFile!] : []);
             if (resendRequestResult.success) {
               _resetValues();
               notifyListeners();
@@ -1135,6 +1156,13 @@ class AddNewRequestViewModel extends ChangeNotifier {
           "preview": compressedFile,   // 📱 للعرض
           "upload": compressedFile,    // 📱 للرفع
         });
+        listXAttachmentPersonalImage.add(XFile(compressedFile.path));
+      } else {
+        listAttachmentPersonalImage.add({
+          "preview": originalFile,
+          "upload": originalFile,
+        });
+        listXAttachmentPersonalImage.add(imageFileProfile);
       }
     }
 
@@ -1161,6 +1189,13 @@ class AddNewRequestViewModel extends ChangeNotifier {
           "preview": compressedFile,   // 📱 للعرض
           "upload": compressedFile,    // 📱 للرفع
         });
+        listXAttachmentPersonalImage.add(XFile(compressedFile.path));
+      } else {
+        listAttachmentPersonalImage.add({
+          "preview": originalFile,
+          "upload": originalFile,
+        });
+        listXAttachmentPersonalImage.add(imageFileProfile);
       }
     }
 

@@ -26,7 +26,7 @@ class NotificationService {
     _setupForegroundMessages();
     _setupBackgroundMessages(context);
     await _checkInitialMessage();
-    await _safeRetrieveFcmToken();
+    // FCM token is obtained once at app start by FcmTokenService (retry + onTokenRefresh)
   }
 
   Future<void> _requestPermissions(BuildContext? context) async {
@@ -53,16 +53,6 @@ class NotificationService {
         fontSize: 16.0);
   }
 
-  Future<void> _safeRetrieveFcmToken() async {
-
-    try {
-      String? token = await _messaging.getToken();
-      debugPrint("🔑 FCM Token: $token");
-    } catch (e) {
-      debugPrint("⚠️ Failed to get FCM token: $e");
-    }
-  }
-
   void _initializeLocalNotifications(BuildContext? context) {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -70,7 +60,7 @@ class NotificationService {
     const settings = InitializationSettings(android: androidSettings, iOS: iOSSettings);
 
     flutterLocalNotificationsPlugin.initialize(
-      settings,
+      settings: settings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
         if (response.payload != null) {
           _handleMessage(response.payload!, context);
@@ -159,10 +149,10 @@ class NotificationService {
 
     try {
       await flutterLocalNotificationsPlugin.show(
-        0,
-        title,
-        body,
-        details,
+        id: 0,
+        title: title,
+        body: body,
+        notificationDetails: details,
         payload: message.data['endpoint'],
       );
     } catch (e) {

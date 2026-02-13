@@ -143,6 +143,10 @@ class _FingerprintOfflineScreenState extends State<FingerprintOfflineScreen> {
                           //     screenId: '/fingerprints'),
                           FingerprintCardOffiline(
                             fingerprint: AppConstants.fingerPrints,
+                            onDelete: (index) async {
+                              await viewModel.deleteOfflineFingerprintAt(index);
+                            },
+                            deletingIndexes: viewModel.deletingOfflineIndexes,
                           ),
                           // ...AppConstants.fingerPrints!.map(
                           //       (fingerprint) => Column(

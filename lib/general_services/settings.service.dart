@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -178,22 +177,34 @@ abstract class AppSettingsService {
     var s1Cache;
     var s2Cache;
     var gCache;
-    print("FAAAAAAAAAAAAAAAILD");
-    String? fcm_token;
+    // FCM token: use cache only. Send in start_app when token changed أو بعد اختيار الدومين عشان يروح للدومين اللي اختاره.
+    String? fcm_token = CacheHelper.getString("fcm_token");
+    final String? lastSentFcmToken = CacheHelper.getString("last_sent_fcm_token");
 
-    try {
-      fcm_token = await FirebaseMessaging.instance.getToken();
-    } catch (e) {
-      print("🔥 Error while requesting permission or token: $e");
+    final fromDomainSelection = CacheHelper.getBool("from_domain_selection") == true;
+    if (fromDomainSelection) {
+      await CacheHelper.deleteData(key: "from_domain_selection");
+      // لو جاي من اختيار الدومين والتوكن لسه مش في الكاش، استنى FcmTokenService (retry من الكاش كل 1.5 ثانية)
+      if (settingType == SettingsType.startupSettings &&
+          (fcm_token == null || fcm_token.isEmpty)) {
+        for (int i = 0; i < 4; i++) {
+          await Future.delayed(const Duration(milliseconds: 1500));
+          fcm_token = CacheHelper.getString("fcm_token");
+          if (fcm_token != null && fcm_token.isNotEmpty) break;
+        }
+      }
     }
 
-    print("FAAAAAAAAAAAAAAAILD 2");
-
-    fcm_token ??= CacheHelper.getString("fcm_token"); // fallback
-
+    bool sendNotificationToken = false;
     if (settingType == SettingsType.startupSettings) {
+      final bool tokenChanged = fcm_token != null &&
+          fcm_token.isNotEmpty &&
+          fcm_token != lastSentFcmToken;
+      // بعد اختيار الدومين نبعث التوكن عشان يروح للدومين اللي اختاره
+      sendNotificationToken = tokenChanged ||
+          (fromDomainSelection && fcm_token != null && fcm_token.isNotEmpty);
       Map<String, dynamic> body = {
-        if(CacheHelper.getString("fcm_token") != fcm_token.toString()) "notification_token" : fcm_token,
+        if (sendNotificationToken) "notification_token": fcm_token,
         if (CacheHelper.getString("gDate")!= null )"last_update_date_general": CacheHelper.getString("gDate"),
         if (CacheHelper.getString("s1Date")!= null)"last_update_date_user": CacheHelper.getString("s1Date"),
         if (CacheHelper.getString("s2Date") != null) "last_update_date_user2": CacheHelper.getString("s2Date"),
@@ -219,7 +230,7 @@ abstract class AppSettingsService {
           : 'user2_settings';
       Map<String, dynamic> body = {
         "type": settingTypeName,
-        if(CacheHelper.getString("fcm_token") != fcm_token.toString()) "notification_token" : fcm_token,
+        if (fcm_token != null && fcm_token.isNotEmpty) "notification_token": fcm_token,
         "last_update_date": lastUpdateDate
       };
       result = await DioApiService().post<Map<String, dynamic>>(
@@ -232,7 +243,12 @@ abstract class AppSettingsService {
           allData: allData);
     }
     if (result.success && result.data != null && (result.data?.isNotEmpty ?? false)) {
-      CacheHelper.setString(key: "fcm_token", value: fcm_token.toString());
+      if (settingType == SettingsType.startupSettings &&
+          sendNotificationToken &&
+          fcm_token != null &&
+          fcm_token.isNotEmpty) {
+        CacheHelper.setString(key: "last_sent_fcm_token", value: fcm_token);
+      }
       CacheHelper.setString(key: "update_url", value: result.data!['update_url'] ?? "" );
       if(result.data!['token'] != null){
         if(appConfigServiceProvider.token.isNotEmpty && appConfigServiceProvider.token != result.data!['token']){
@@ -266,6 +282,7 @@ abstract class AppSettingsService {
         prefs = await SharedPreferences.getInstance();
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
+        AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null){
         if ((need == null || need.contains('user2_settings')) &&result.data!['user2_settings']['data'] != null){

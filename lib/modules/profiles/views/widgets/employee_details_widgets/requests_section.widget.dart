@@ -25,6 +25,18 @@ class RequestsSectionWidget extends StatelessWidget {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
+    // Use US2 balance keys as request type ids (same order as home) so requestTypeId is id not index
+    List<String>? requestTypeIds;
+    final us2String = CacheHelper.getString("US2");
+    if (us2String != null && us2String.isNotEmpty) {
+      try {
+        final us2 = json.decode(us2String) as Map<String, dynamic>?;
+        final balanceMap = us2?['balance'];
+        if (balanceMap is Map) {
+          requestTypeIds = balanceMap.keys.map((e) => e.toString()).toList();
+        }
+      } catch (_) {}
+    }
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -33,6 +45,7 @@ class RequestsSectionWidget extends StatelessWidget {
           gapH12,
           ProfileBalanceWidget(
             balance: employee?.balance,
+            requestTypeIds: requestTypeIds,
             empDepartmentId: employee?.departmentId?.toString(),
             employeeId: employee?.id?.toString(),
           ),

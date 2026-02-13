@@ -21,6 +21,7 @@ import 'constants/internet_check.dart';
 import 'controller/device_sys/device_controller.dart';
 import 'firebase_options.dart';
 import 'general_services/app_config.service.dart';
+import 'general_services/fcm_token.service.dart';
 import 'general_services/conditional_imports/mock_file.dart'
     if (dart.library.js_util) 'general_services/conditional_imports/change_url_strategy.service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -108,6 +109,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Single place for FCM token: retry + onTokenRefresh; no cached fallback when getToken() is null
+  FcmTokenService.initAtAppStart();
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
   if (await Permission.notification.isDenied) {
@@ -135,7 +140,8 @@ void main() async {
     android: androidSettings,
     iOS: iOSSettings,
   );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  await flutterLocalNotificationsPlugin.initialize(
+    settings: initializationSettings,
     // onDidReceiveNotificationResponse: (NotificationResponse response) {
     //   if (response.payload != null) {
     //     final data = jsonDecode(response.payload!);
@@ -161,6 +167,11 @@ void main() async {
   } catch (ex, t) {
     debugPrint('Failed to initialize Hive Database $ex $t');
   }
+
+  // تهيئة حالة اللوجين قبل تشغيل الواجهة حتى لا يُوجّه المستخدم لصفحة اللوجين قبل قراءة الـ token من التخزين
+  final appConfigService = AppConfigService();
+  await appConfigService.init();
+
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/json/lang',
@@ -170,8 +181,8 @@ void main() async {
       child: MultiProvider(
         // inject all providers to make it accessable intire all application via context.
         providers: [
-          ChangeNotifierProvider<AppConfigService>(
-            create: (_) => AppConfigService(),
+          ChangeNotifierProvider<AppConfigService>.value(
+            value: appConfigService,
           ),
           ChangeNotifierProvider<MainScreenViewModel>(
             create: (_) => MainScreenViewModel(),

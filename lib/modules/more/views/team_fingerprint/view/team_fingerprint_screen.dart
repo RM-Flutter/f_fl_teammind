@@ -98,10 +98,9 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                     },
                                     viewModel.employees[index]['name'],
                                     viewModel.employees[index]['department'],
-                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")?
-                                    "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
-                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
-                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
+                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")? "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
+                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from_start'] != null || viewModel.employees[index]['working_hours']['working_hours_from_end'] != null|| viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
+                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_start']?.toString() ?? viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_end']?.toString()??viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
 
                                   );
                                 },

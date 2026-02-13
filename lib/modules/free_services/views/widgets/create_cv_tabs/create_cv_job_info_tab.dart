@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../../constants/app_colors.dart';
@@ -9,57 +12,101 @@ import '../../../models/cv_data.model.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
+  /// When false, hides CV-only sections (job dropdown, skills, languages/skills levels)
+  /// so the tab can be reused for Smart Card update screens without extra fields.
+  final bool showCvOnlySections;
+  /// When true, we are in Smart Card Employee Update (not CV),
+  /// so we show "Company Name" instead of "About Me" and
+  /// we may hide Experiences/Portfolios based on premium flag.
+  final bool isSmartCardEmployee;
+  /// Smart Card premium flag for employee profile; when false
+  /// we hide Experience & Portfolio sections in Smart Card mode.
+  final bool isPremium;
 
-  const CreateCVJobInfoTab({super.key, required this.viewModel});
+  const CreateCVJobInfoTab({
+    super.key,
+    required this.viewModel,
+    this.showCvOnlySections = true,
+    this.isSmartCardEmployee = false,
+    this.isPremium = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTextField(
-            controller: viewModel.currentJobTitleController,
-            label: AppStrings.currentJobTitle.tr(),
-            isRequired: true,
-            hint: AppStrings.enterYourCurrentJobTitle.tr(),
-          ),
-          const SizedBox(height: 16),
-          
-          _buildJobDropdown(),
-          const SizedBox(height: 16),
-          
-          _buildTextField(
-            controller: viewModel.aboutMeController,
-            label: AppStrings.aboutMe.tr(),
-            hint: AppStrings.addYourJobDescription.tr(),
-            maxLines: 5,
-          ),
-          const SizedBox(height: 16),
-          
-          _buildSkillsMultiSelect(),
-          const SizedBox(height: 16),
-          
-          _buildTextField(
-            controller: viewModel.moreSkillsController,
-            label: AppStrings.moreSkills.tr(),
-            hint: AppStrings.enterAdditionalSkills.tr(),
-            maxLines: 3,
-          ),
-          const SizedBox(height: 24),
-          
-          _buildExperiencesSection(context),
-          const SizedBox(height: 24),
-          
-          _buildPortfoliosSection(),
-          const SizedBox(height: 24),
-          
-          _buildLanguagesLevelsSection(),
-          const SizedBox(height: 24),
-          
-          _buildSkillsLevelsSection(),
-        ],
+      child: Container(
+        width: MediaQuery.sizeOf(context).width * 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTextField(
+              controller: viewModel.currentJobTitleController,
+              label: AppStrings.currentJobTitle.tr(),
+              isRequired: true,
+              hint: AppStrings.enterYourCurrentJobTitle.tr(),
+            ),
+            const SizedBox(height: 16),
+
+            if (showCvOnlySections) ...[
+              _buildJobDropdown(),
+              const SizedBox(height: 16),
+            ],
+
+            // In Smart Card Employee update: replace "About Me" with "Company Name"
+            if (!isSmartCardEmployee)
+              _buildTextField(
+                controller: viewModel.aboutMeController,
+                label: AppStrings.aboutMe.tr(),
+                hint: AppStrings.addYourJobDescription.tr(),
+                maxLines: 5,
+              )
+            else
+              _buildTextField(
+                controller: viewModel.companyNameController,
+                label: AppStrings.companyName.tr(),
+                hint: AppStrings.companyName.tr(),
+              ),
+            const SizedBox(height: 16),
+
+            if (showCvOnlySections) ...[
+              _buildSkillsMultiSelect(),
+              const SizedBox(height: 16),
+
+              _buildTextField(
+                controller: viewModel.moreSkillsController,
+                label: AppStrings.moreSkills.tr(),
+                hint: AppStrings.enterAdditionalSkills.tr(),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 24),
+            ],
+
+            // In Smart Card Employee, hide Experience/Portfolio completely when not premium.
+            if (!isSmartCardEmployee ) ...[
+              _buildExperiencesSection(context),
+              const SizedBox(height: 24),
+              _buildPortfoliosSection(),
+            ],
+            if(isSmartCardEmployee && isPremium)...[
+              _buildExperiencesSection(context),
+              const SizedBox(height: 24),
+              _buildPortfoliosSection(),
+            ],
+
+            if (isSmartCardEmployee && isPremium == true) ...[
+              const SizedBox(height: 24),
+              _buildMediaGalleriesSection(context),
+            ],
+            if (showCvOnlySections) ...[
+              const SizedBox(height: 24),
+              _buildLanguagesLevelsSection(),
+              const SizedBox(height: 24),
+              _buildSkillsLevelsSection(),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -99,6 +146,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             hintText: hint,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
@@ -135,16 +183,17 @@ class CreateCVJobInfoTab extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.grey.shade600),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
-          style: TextStyle(color: Color(AppColors.dark)),
+          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           items: viewModel.jobs
               .map((job) => DropdownMenuItem(
                     value: job['id'] as int?,
                     child: Text(
                       job['title'] ?? '',
-                      style: TextStyle(color: Color(AppColors.dark)),
+                      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ))
               .toList(),
@@ -194,6 +243,188 @@ class CreateCVJobInfoTab extends StatelessWidget {
     );
   }
 
+  /// عنصر الجاليري إما Map{id, file} أو String (base64) – نستخرج رابط/قيمة العرض
+  static String? _mediaDisplayUrl(dynamic item) {
+    if (item is Map) return (item['file'] ?? item['thumbnail'])?.toString();
+    if (item is String) return item;
+    return null;
+  }
+
+  Widget _buildMediaGalleriesSection(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppStrings.gallery.tr(),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(AppColors.dark),
+          ),
+        ),
+        const SizedBox(height: 8),
+        if (viewModel.worksGallery.isNotEmpty)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(viewModel.worksGallery.length, (i) {
+              final value = viewModel.worksGallery[i];
+              final urlOrBase64 = _mediaDisplayUrl(value);
+              ImageProvider? provider;
+              if (urlOrBase64 != null) {
+                if (urlOrBase64.startsWith('http') || urlOrBase64.startsWith('https')) {
+                  provider = NetworkImage(urlOrBase64);
+                } else {
+                  try {
+                    provider = MemoryImage(base64Decode(urlOrBase64));
+                  } catch (_) {}
+                }
+              }
+              return Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.black12),
+                      color: Colors.grey.shade200,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: provider != null
+                        ? Image(image: provider, fit: BoxFit.cover)
+                        : const Icon(Icons.image, size: 32),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
+                    onPressed: () {
+                      viewModel.removeWorksGalleryAt(i);
+                    },
+                  ),
+                ],
+              );
+            }),
+          ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: () async {
+            await _pickWorksImages(context);
+          },
+          icon: const Icon(Icons.photo_library),
+          label: Text(
+            AppStrings.gallery.tr(),
+            style: const TextStyle(fontSize: 16),
+          ),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.black),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          AppStrings.videos.tr(),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(AppColors.dark),
+          ),
+        ),
+        const SizedBox(height: 8),
+        if (viewModel.videoGallery.isNotEmpty)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(viewModel.videoGallery.length, (i) {
+              final value = viewModel.videoGallery[i];
+              final urlOrBase64 = _mediaDisplayUrl(value);
+              final isUrl = urlOrBase64 != null && urlOrBase64.startsWith('https');
+              return Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.black12),
+                      color: Colors.grey.shade200,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: isUrl
+                        ? Image.network(urlOrBase64, fit: BoxFit.cover)
+                        : const Icon(Icons.videocam, size: 32),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
+                    onPressed: () {
+                      viewModel.removeVideoGalleryAt(i);
+                    },
+                  ),
+                ],
+              );
+            }),
+          ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: () async {
+            await _pickVideos(context);
+          },
+          icon: const Icon(Icons.video_library),
+          label: const Text(
+            'Add video',
+            style: TextStyle(fontSize: 16),
+          ),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.black),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickWorksImages(BuildContext context) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.image,
+        withData: true,
+      );
+      if (result == null || result.files.isEmpty) return;
+      final List<String> files = [];
+      for (final file in result.files) {
+        if (file.bytes != null) {
+          files.add(base64Encode(file.bytes!));
+        }
+      }
+      if (files.isEmpty) return;
+      viewModel.addWorksGalleryItems(files);
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  Future<void> _pickVideos(BuildContext context) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.video,
+        withData: true,
+      );
+      if (result == null || result.files.isEmpty) return;
+      final List<String> files = [];
+      for (final file in result.files) {
+        if (file.bytes != null) {
+          files.add(base64Encode(file.bytes!));
+        }
+      }
+      if (files.isEmpty) return;
+      viewModel.addVideoGalleryItems(files);
+    } catch (_) {
+      // ignore
+    }
+  }
+
   Widget _buildExperiencesSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,8 +458,8 @@ class CreateCVJobInfoTab extends StatelessWidget {
     );
   }
 
-  Widget _buildExperienceItem(BuildContext context, int index, CVExperience experience) {
-    final jobTitleController = TextEditingController(text: experience.jobTitle);
+  Widget _buildExperienceItem(
+      BuildContext context, int index, CVExperience experience) {
     DateTime? dateFrom = experience.dateFrom != null ? DateTime.tryParse(experience.dateFrom!) : null;
     DateTime? dateTo = experience.dateTo != null ? DateTime.tryParse(experience.dateTo!) : null;
     
@@ -274,17 +505,43 @@ class CreateCVJobInfoTab extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
+            // Company Name (Smart Card / CV-compatible – stored فقط محلياً في CVExperience)
             TextFormField(
-              controller: jobTitleController,
+              initialValue: experience.companyName ?? '',
+              decoration: InputDecoration(
+                labelText: AppStrings.companyName.tr(),
+                hintText: AppStrings.companyName.tr(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+              ),
+              onChanged: (value) {
+                final updatedExp = CVExperience(
+                  companyName: value,
+                  countryId: experience.countryId,
+                  stateId: experience.stateId,
+                  dateFrom: experience.dateFrom,
+                  dateTo: experience.dateTo,
+                  jobTitle: experience.jobTitle,
+                );
+                viewModel.updateExperience(index, updatedExp);
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              initialValue: experience.jobTitle ?? '',
               decoration: InputDecoration(
                 labelText: AppStrings.jobTitle.tr(),
                 hintText: AppStrings.enterJobTitle.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
               onChanged: (value) {
                 final updatedExp = CVExperience(
+                  companyName: experience.companyName,
                   countryId: experience.countryId,
                   stateId: experience.stateId,
                   dateFrom: experience.dateFrom,
@@ -301,15 +558,16 @@ class CreateCVJobInfoTab extends StatelessWidget {
               nameKey: 'title',
               hintText: AppStrings.selectCountry.tr(),
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedExp = CVExperience(
+                      companyName: experience.companyName,
                     countryId: value['id'] as int,
                     stateId: null,
                     dateFrom: experience.dateFrom,
                     dateTo: experience.dateTo,
-                    jobTitle: jobTitleController.text,
+                    jobTitle: experience.jobTitle,
                   );
                   viewModel.updateExperience(index, updatedExp);
                   // Load states for selected country
@@ -325,15 +583,16 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 nameKey: 'title',
                 hintText: AppStrings.selectStateProvince.tr(),
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: const BorderSide(color: Colors.black),
                 onChanged: (value) {
                   if (value.isNotEmpty && value['id'] != null) {
                     final updatedExp = CVExperience(
+                      companyName: experience.companyName,
                       countryId: experience.countryId,
                       stateId: value['id'] as int,
                       dateFrom: experience.dateFrom,
                       dateTo: experience.dateTo,
-                      jobTitle: jobTitleController.text,
+                      jobTitle: experience.jobTitle,
                     );
                     viewModel.updateExperience(index, updatedExp);
                   }
@@ -354,11 +613,12 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       );
                       if (date != null) {
                         final updatedExp = CVExperience(
+                          companyName: experience.companyName,
                           countryId: experience.countryId,
                           stateId: experience.stateId,
                           dateFrom: DateFormat('yyyy-MM-dd').format(date),
                           dateTo: experience.dateTo,
-                          jobTitle: jobTitleController.text,
+                          jobTitle: experience.jobTitle,
                         );
                         viewModel.updateExperience(index, updatedExp);
                       }
@@ -366,7 +626,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -398,11 +658,12 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       );
                       if (date != null) {
                         final updatedExp = CVExperience(
+                          companyName: experience.companyName,
                           countryId: experience.countryId,
                           stateId: experience.stateId,
                           dateFrom: experience.dateFrom,
                           dateTo: DateFormat('yyyy-MM-dd').format(date),
-                          jobTitle: jobTitleController.text,
+                          jobTitle: experience.jobTitle,
                         );
                         viewModel.updateExperience(index, updatedExp);
                       }
@@ -410,7 +671,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -472,10 +733,6 @@ class CreateCVJobInfoTab extends StatelessWidget {
   }
 
   Widget _buildPortfolioItem(int index, CVPortfolio portfolio) {
-    final projectNameController = TextEditingController(text: portfolio.projectName);
-    final projectDescriptionController = TextEditingController(text: portfolio.projectDescription);
-    final projectLinkController = TextEditingController(text: portfolio.projectLink);
-
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
@@ -500,12 +757,13 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextFormField(
-              controller: projectNameController,
+              initialValue: portfolio.projectName ?? '',
               decoration: InputDecoration(
                 labelText: AppStrings.projectName.tr(),
                 hintText: AppStrings.enterProjectName.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
               onChanged: (value) {
@@ -520,12 +778,13 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: projectDescriptionController,
+              initialValue: portfolio.projectDescription ?? '',
               decoration: InputDecoration(
                 labelText: AppStrings.projectDescription.tr(),
                 hintText: AppStrings.enterProjectDescription.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
               maxLines: 3,
@@ -541,12 +800,13 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             TextFormField(
-              controller: projectLinkController,
+              initialValue: portfolio.projectLink ?? '',
               decoration: InputDecoration(
                 labelText: AppStrings.projectLink.tr(),
                 hintText: AppStrings.enterProjectLink.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
               onChanged: (value) {
@@ -642,7 +902,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               nameKey: 'name',
               hintText: AppStrings.selectLanguage.tr(),
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedLang = CVLanguageLevel(
@@ -660,7 +920,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               nameKey: 'title',
               hintText: AppStrings.selectLevel.tr(),
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedLang = CVLanguageLevel(
@@ -754,7 +1014,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               nameKey: 'title',
               hintText: AppStrings.selectSkill.tr(),
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedSkill = CVSkillLevel(
@@ -772,7 +1032,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               nameKey: 'title',
               hintText: AppStrings.selectLevel.tr(),
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedSkill = CVSkillLevel(

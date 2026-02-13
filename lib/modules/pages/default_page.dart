@@ -118,6 +118,7 @@ class _DefaultPageState extends State<DefaultPage> {
               width: double.infinity,
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
+                heroTag: 'default_page_add_notification',
                 onPressed: () async => await context.pushNamed(
                     AppRoutes.addNotification.name,
                     pathParameters: {

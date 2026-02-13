@@ -85,6 +85,9 @@ class EmployeesListViewModel extends ChangeNotifier {
     try {
       final result = await CrudOperationService.readEntities(
         context: context,
+        queryParams: {
+          "itemsCount" : 200,
+        },
         slug: 'departments',
       );
       if (result.success && result.data != null) {

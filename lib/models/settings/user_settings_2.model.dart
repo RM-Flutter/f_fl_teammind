@@ -24,6 +24,14 @@ class UserSettings2Model extends AppSettingsModel {
     this.requestTypes,
   });
 
+  static List<String>? _parseWeekend(dynamic value) {
+    if (value == null) return null;
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+    return [value.toString()];
+  }
+
   factory UserSettings2Model.fromJson(Map<String, dynamic> json) {
     DateTime? parsedLastLogin;
     if (json['last_login'] is String) {
@@ -49,9 +57,7 @@ class UserSettings2Model extends AppSettingsModel {
     // )
     //     : {},
       canUseHolidays: json['can_use_holidays'],
-      weekend: (json['weekend'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
+      weekend: _parseWeekend(json['weekend']),
       worktime:
           json['worktime'] != null ? Worktime.fromJson(json['worktime']) : null,
       requestTypes: (json['request_types'] as Map<String, dynamic>?)?.map(

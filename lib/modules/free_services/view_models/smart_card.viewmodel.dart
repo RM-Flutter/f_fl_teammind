@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/smart_card_profile_models.dart';
 import '../services/smart_card.service.dart';
 
 class SmartCardViewModel extends ChangeNotifier {
@@ -52,7 +53,7 @@ class SmartCardViewModel extends ChangeNotifier {
         myCompanies = [];
       }
     } catch (e) {
-      _setError(e.toString());
+      _setError(e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString());
       myCompanies = [];
     } finally {
       _setLoading(false);
@@ -71,6 +72,26 @@ class SmartCardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// استخدم في شاشة تفاصيل الشركة: تعيين شركة من خارج القائمة ثم تحميل موظفيها
+  Future<void> setCompanyAndLoadEmployees(
+      BuildContext context, Map<String, dynamic> company) async {
+    selectedCompany = company;
+    selectedCompanyId = company['id'] as int?;
+    companyEmployees = [];
+    notifyListeners();
+    if (selectedCompanyId != null) {
+      await loadCompanyEmployees(context);
+    }
+  }
+
+  /// هل الشركة "مجانية" حسب الـ API (للعرض التسويقي)
+  bool get isSelectedCompanyFree {
+    if (selectedCompany == null) return false;
+    return selectedCompany!['is_free'] == true ||
+        selectedCompany!['isFree'] == true ||
+        selectedCompany!['free'] == true;
+  }
+
   /// Load "Get Company Profile" for selected company
   Future<void> loadCompanyProfile(BuildContext context) async {
     if (selectedCompanyId == null) return;
@@ -82,7 +103,7 @@ class SmartCardViewModel extends ChangeNotifier {
         selectedCompany = Map<String, dynamic>.from(data);
       }
     } catch (e) {
-      _setError(e.toString());
+      _setError(e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString());
     } finally {
       _setLoading(false);
     }
@@ -101,7 +122,7 @@ class SmartCardViewModel extends ChangeNotifier {
         companyEmployees = [];
       }
     } catch (e) {
-      _setError(e.toString());
+      _setError(e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString());
       companyEmployees = [];
     } finally {
       _setLoading(false);
@@ -120,7 +141,7 @@ class SmartCardViewModel extends ChangeNotifier {
         templates = [];
       }
     } catch (e) {
-      _setError(e.toString());
+      _setError(e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString());
       templates = [];
     } finally {
       _setLoading(false);
@@ -139,7 +160,7 @@ class SmartCardViewModel extends ChangeNotifier {
         employeeProfile = null;
       }
     } catch (e) {
-      _setError(e.toString());
+      _setError(e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString());
       employeeProfile = null;
     } finally {
       _setLoading(false);
@@ -150,41 +171,51 @@ class SmartCardViewModel extends ChangeNotifier {
   Future<void> loadSmartCardScreen(BuildContext context) async {
     _setLoading(true);
     try {
+      // 1) تحميل الشركات (My Companies)
       final res = await SmartCardService.getMyCompanies(context);
       final data = res['data'];
       if (data is List) {
-        myCompanies = data.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        myCompanies =
+            data.map((e) => Map<String, dynamic>.from(e as Map)).toList();
         if (myCompanies.isNotEmpty) {
           selectedCompanyId = myCompanies.first['id'] as int?;
           selectedCompany = myCompanies.first;
-          await SmartCardService.getCompanyEmployees(context, companyId: selectedCompanyId!)
-              .then((r) {
-            final list = r['data'];
-            if (list is List) {
-              companyEmployees = list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
-            } else {
-              companyEmployees = [];
-            }
-          }).catchError((_) {
-            companyEmployees = [];
-          });
         } else {
           selectedCompanyId = null;
           selectedCompany = null;
-          companyEmployees = [];
         }
       } else {
         myCompanies = [];
         selectedCompanyId = null;
         selectedCompany = null;
-        companyEmployees = [];
+      }
+
+      // قائمة الموظفين الخاصين بالشركة مش جزء من أول شاشة الجديدة
+      // لكن نفضيها عشان ما تبقاش بيانات قديمة
+      companyEmployees = [];
+
+      // 2) تحميل بروفايل الموظف الشخصي (Personal QR Profile)
+      try {
+        final profileRes = await SmartCardService.getEmployeeProfile(context);
+        final profileData = profileRes['data'];
+        if (profileData is Map) {
+          employeeProfile =
+              Map<String, dynamic>.from(profileData);
+        } else {
+          employeeProfile = null;
+        }
+      } catch (e) {
+        // لو حصل خطأ في تحميل البروفايل، ما نكسرش الشاشة؛ نكتفي بعدم وجود بروفايل
+        debugPrint('SmartCardViewModel.loadSmartCardScreen profile error: $e');
+        employeeProfile = null;
       }
     } catch (e) {
-      _setError(e.toString());
+      _setError(e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString());
       myCompanies = [];
       selectedCompany = null;
       selectedCompanyId = null;
       companyEmployees = [];
+      employeeProfile = null;
     } finally {
       _setLoading(false);
     }
@@ -203,6 +234,29 @@ class SmartCardViewModel extends ChangeNotifier {
     return SmartCardService.getEmployeeProfilePublicUrl(slug.toString());
   }
 
+  /// Create personal employee profile (current user) – used from Smart Card bottom sheet
+  /// الـ API يتوقع الموديل كامل (كل المفاتيح، null لو مفيش)
+  Future<bool> createEmployeeProfile(BuildContext context,
+      {required String name}) async {
+    _setLoading(true);
+    try {
+      final fullModel = SmartCardEmployeeProfileModel(name: name);
+      await SmartCardService.createEmployee(
+        context,
+        body: fullModel.toFullJson(),
+      );
+      // بعد الإنشاء نعيد تحميل بيانات البروفايل
+      await loadEmployeeProfile(context);
+      return true;
+    } catch (e) {
+      final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
+      _setError(msg);
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   /// Add employee to company – "Add Employee to Company" (POST)
   Future<bool> addEmployeeToCompany(BuildContext context, {required String name}) async {
     if (selectedCompanyId == null) return false;
@@ -216,7 +270,8 @@ class SmartCardViewModel extends ChangeNotifier {
       await loadCompanyEmployees(context);
       return true;
     } catch (e) {
-      _setError(e.toString());
+      final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
+      _setError(msg);
       return false;
     } finally {
       _setLoading(false);
@@ -236,7 +291,8 @@ class SmartCardViewModel extends ChangeNotifier {
       await loadCompanyProfile(context);
       return true;
     } catch (e) {
-      _setError(e.toString());
+      final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
+      _setError(msg);
       return false;
     } finally {
       _setLoading(false);

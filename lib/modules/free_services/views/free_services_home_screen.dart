@@ -3,6 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:rmemp/constants/app_constants.dart';
+import 'package:rmemp/constants/app_constants.dart';
+import 'package:rmemp/constants/app_constants.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_sizes.dart';
@@ -80,7 +83,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => WebViewStackOffers(
-              'https://lab.r-m.dev/front-end/job-offer-calculator',
+              '${AppConstants.base}/front-end/job-offer-calculator',
             ),
           ),
         );
@@ -105,7 +108,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => WebViewStackOffers(
-              'https://lab.r-m.dev/frontend/personality-test',
+              '${AppConstants.base}/frontend/personality-test',
             ),
           ),
         );
@@ -127,7 +130,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => WebViewStackOffers(
-              'https://lab.r-m.dev/front-end/job-offer-calculator',
+              '${AppConstants.base}/front-end/job-offer-calculator',
             ),
           ),
         );

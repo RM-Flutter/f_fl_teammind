@@ -38,6 +38,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:provider/provider.dart';
 import '../../platform/platform_is.dart';
+import '../../general_services/connections.service.dart';
 import 'tflite_wrapper.dart';
 import '../../constants/app_colors.dart';
 import '../../general_services/alert_service/alerts.service.dart';
@@ -51,6 +52,7 @@ import '../../services/fingerprint_service.dart';
 import 'widgets/qrcode_Scanner_view.widget.dart';
 import 'widgets/liveness_challenge_camera.widget.dart';
 import 'package:location/location.dart' as location_package;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class _FaceAnalysisResult {
   const _FaceAnalysisResult({
@@ -140,9 +142,24 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isArabic =
-    context.locale.languageCode.toLowerCase().startsWith('ar');
-    final String message =
-    isArabic ? 'جارٍ التأكد من الفيديو...' : 'Verifying video...';
+        context.locale.languageCode.toLowerCase().startsWith('ar');
+
+    // لو مفيش لا liveness ولا profile verification ومفتاح face_challenge بس هو اللي شغال
+    // نعرض نفس الـ dialog بدون نص "Verifying video"
+    final bool livenessEnabled =
+        AppConstants.fingerprintLivenessChallengesEnabled;
+    final bool profileVerifyEnabled =
+        AppConstants.fingerprintFaceProfileVerificationEnabled;
+    final bool faceChallengeOnly =
+        AppConstants.fingerprintFaceChallengeEnabled &&
+        !livenessEnabled &&
+        !profileVerifyEnabled;
+
+    final String? message = faceChallengeOnly
+        ? null
+        : (isArabic
+            ? 'جارٍ التحقق ...'
+            : 'Verifying ...');
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -168,17 +185,18 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    decoration: TextDecoration.none,
+                if (message != null)  const SizedBox(height: 16),
+                if (message != null)
+                  Text(
+                    message,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.none,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
               ],
             ),
           ),
@@ -197,6 +215,29 @@ abstract class MainFabServices {
   static const int _cameraQuality = 85;
   static const MethodChannel _secureChannel =
       MethodChannel('com.rightminddev.rmemp/secure');
+
+  /// Compress image bytes if they look like an image and size >= 1KB.
+  static Future<Uint8List> _compressImageIfNeeded(
+    Uint8List bytes,
+    String mimeType,
+    String fileName,
+  ) async {
+    final isImage = mimeType.startsWith('image/') ||
+        RegExp(r'\.(jpg|jpeg|png|gif|webp|bmp)$', caseSensitive: false).hasMatch(fileName);
+    if (!isImage || bytes.lengthInBytes < 1024) return bytes;
+    try {
+      final compressed = await FlutterImageCompress.compressWithList(
+        bytes,
+        minHeight: 1200,
+        minWidth: 1200,
+        quality: 72,
+      );
+      return Uint8List.fromList(compressed);
+    } catch (e) {
+      debugPrint('⚠️ Image compression failed: $e');
+      return bytes;
+    }
+  }
 
   static Future<bool> _isDeveloperModeEnabled() async {
     if (PlatformIs.web) return false;
@@ -226,33 +267,54 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     BuildContext context) async {
   debugPrint("🔒 Checking device security for fingerprint...");
 
-  final appConfigService =
-      Provider.of<AppConfigService>(context, listen: false);
-  final blockOnDevMode = appConfigService.blockFingerprintOnDeveloperMode;
-  debugPrint("   Block on Dev Mode (from settings): $blockOnDevMode");
+  final blockOnDevMode = AppConstants.blockFingerprintOnDeveloperMode;
+  debugPrint("   Block on Dev Mode: $blockOnDevMode");
 
-  // لو الإعداد مفعّل → نمنع البصمة دايمًا ونظهر رسالة واضحة
   if (blockOnDevMode) {
-    final msg = _localized(
-      context,
-      en:
-          'Fingerprint is blocked because Developer Mode security is enabled.',
-      ar:
-          'تم إيقاف البصمة بسبب تفعيل أمان وضع المطوّر.',
-    );
-    final dialogContext = rootNavigatorKey.currentContext ?? context;
-    if (dialogContext.mounted) {
-      AlertsService.error(
-        context: dialogContext,
-        title: AppStrings.failed.tr(),
-        message: msg,
+    final bool devModeOnDevice = await _isDeveloperModeEnabled();
+    debugPrint("   Developer mode on device: $devModeOnDevice");
+    if (devModeOnDevice) {
+      final msg = _localized(
+        context,
+        en:
+            'Fingerprint is blocked because Developer Mode is enabled on this device.',
+        ar:
+            'تم إيقاف البصمة لأن وضع المطوّر مفعّل على هذا الجهاز.',
       );
+      final dialogContext = rootNavigatorKey.currentContext ?? context;
+      if (dialogContext.mounted) {
+        AlertsService.error(
+          context: dialogContext,
+          title: AppStrings.failed.tr(),
+          message: msg,
+        );
+      }
+      return false;
     }
-    return false;
   }
 
-  // لو الإعداد مقفول → لا تشيك Dev Mode ولا Root، واسمح بالبصمة
-  debugPrint("✅ Security check skipped (blockOnDevMode = false), fingerprint allowed");
+  if (AppConstants.fingerprintBlockOnRootOrJailbreak) {
+    final bool isRooted = await _isDeviceRootedOrJailbroken();
+    debugPrint("   Root/Jailbreak: $isRooted");
+    if (isRooted) {
+      final msg = _localized(
+        context,
+        en: 'Fingerprint is blocked on rooted or jailbroken devices.',
+        ar: 'البصمة غير متاحة على أجهزة الـ Root أو الـ Jailbreak.',
+      );
+      final dialogContext = rootNavigatorKey.currentContext ?? context;
+      if (dialogContext.mounted) {
+        AlertsService.error(
+          context: dialogContext,
+          title: AppStrings.failed.tr(),
+          message: msg,
+        );
+      }
+      return false;
+    }
+  }
+
+  debugPrint("✅ Device security OK, fingerprint allowed");
   return true;
 }
   static IconData getFingerprintMethodIcon(
@@ -1172,37 +1234,47 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       return null;
     }
 
-    debugPrint("📸 Showing instruction sheet...");
-    final bool introAccepted = await _showInstructionSheet(
-      context,
-      title: _localized(
-        context,
-        en: 'Face verification',
-        ar: 'التحقق من الوجه',
-      ),
-      message: _localized(
-        context,
-        en:
-        'You will be asked to perform a random challenge. Please follow the on-screen instructions.',
-        ar:
-        'سيُطلب منك تنفيذ تحدّي عشوائي. يرجى اتباع التعليمات المعروضة على الشاشة.',
-      ),
-      actionLabel: _localized(
-        context,
-        en: 'Start verification',
-        ar: 'بدء التحقق',
-      ),
-      cancelLabel: _localized(
-        context,
-        en: 'Cancel',
-        ar: 'إلغاء',
-      ),
-    );
+    // البوب أب "Start verification" تظهر فقط لو fingerprint_liveness_challenges_enabled مفعّل
+    // لو fingerprint_face_challenge_enabled أو fingerprint_face_profile_verification_enabled لوحدهم من غير liveness → لا تظهر
+    final bool requiresAdvancedVerification =
+        AppConstants.fingerprintLivenessChallengesEnabled;
 
-    debugPrint("📸 Instruction sheet result: $introAccepted");
-    if (!introAccepted) {
-      debugPrint("❌ User cancelled or instruction sheet failed");
-      return null;
+    if (requiresAdvancedVerification) {
+      debugPrint("📸 Showing instruction sheet (liveness challenges enabled)...");
+      final bool introAccepted = await _showInstructionSheet(
+        context,
+        title: _localized(
+          context,
+          en: 'Face verification',
+          ar: 'التحقق من الوجه',
+        ),
+        message: _localized(
+          context,
+          en:
+              'You will be asked to perform a random challenge. Please follow the on-screen instructions.',
+          ar:
+              'سيُطلب منك تنفيذ تحدّي عشوائي. يرجى اتباع التعليمات المعروضة على الشاشة.',
+        ),
+        actionLabel: _localized(
+          context,
+          en: 'Start verification',
+          ar: 'بدء التحقق',
+        ),
+        cancelLabel: _localized(
+          context,
+          en: 'Cancel',
+          ar: 'إلغاء',
+        ),
+      );
+
+      debugPrint("📸 Instruction sheet result: $introAccepted");
+      if (!introAccepted) {
+        debugPrint("❌ User cancelled or instruction sheet failed");
+        return null;
+      }
+    } else {
+      debugPrint(
+          "📸 Skipping instruction sheet (fingerprint_liveness_challenges_enabled is off; face challenge/profile verification alone do not show it).");
     }
 
     // Ensure camera permission before opening camera screen
@@ -1229,7 +1301,22 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     bool isRetry = false;
 
     List<LivenessChallengeReport>? allReportsFromScreen;
-    
+
+    if (!AppConstants.fingerprintLivenessChallengesEnabled) {
+      // تقاطيع صورة واحدة بدون تحديات (لا يظهر للعميل أي تحدي حي)
+      final picker = ImagePicker();
+      final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+      if (photo == null || !context.mounted) return null;
+      try {
+        capturedImageFile = File(photo.path);
+        capturedImageBytes = await capturedImageFile!.readAsBytes();
+        challengeCompleted = true;
+      } catch (e) {
+        debugPrint('Error reading captured photo: $e');
+        return null;
+      }
+    }
+
     while (!challengeCompleted) {
       final challenge = _getRandomChallenge();
       LivenessChallengeReport? report;
@@ -1335,6 +1422,11 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       if (report.success && capturedImageBytes != null) {
         challengeCompleted = true;
         try {
+          capturedImageBytes = await _compressImageIfNeeded(
+            capturedImageBytes!,
+            'image/jpeg',
+            'captured_face.jpg',
+          );
           final tempDir = await getTemporaryDirectory();
           final fileName = 'captured_face_${DateTime.now().millisecondsSinceEpoch}.jpg';
           capturedImageFile = File(p.join(tempDir.path, fileName));
@@ -1384,7 +1476,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         );
 
         if (retry != true) {
-          // await _showLivenessReport(context, reports);
+          if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
           return null;
         }
       }
@@ -1396,7 +1488,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         en: 'Failed to capture image. Please try again.',
         ar: 'فشل التقاط الصورة. يرجى المحاولة مرة أخرى.',
       );
-      await _showLivenessReport(context, reports);
+      if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
       return null;
     }
 
@@ -1442,61 +1534,73 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
 
       if (analysis == null || !analysis.hasFace || !analysis.hasEmbedding) {
         hideProcessingDialog();
-        _showWarning(
-          context,
-          en: 'Face not detected in captured image. Please try again.',
-          ar: 'لم يتم اكتشاف الوجه في الصورة الملتقطة. يرجى المحاولة مرة أخرى.',
-        );
-        await _showLivenessReport(context, reports);
-        await _deleteFileIfExists(capturedImageFile!);
-        return null;
+        if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+          _showWarning(
+            context,
+            en: 'Face not detected in captured image. Please try again.',
+            ar: 'لم يتم اكتشاف الوجه في الصورة الملتقطة. يرجى المحاولة مرة أخرى.',
+          );
+          if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+          await _deleteFileIfExists(capturedImageFile!);
+          return null;
+        }
+        embedding = List.filled(512, 0.0);
+      } else {
+        embedding = analysis.embedding!;
       }
-
-      embedding = analysis.embedding!;
-      similarity = await _calculateSimilarityWithProfile(context, embedding);
+      if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+        similarity = await _calculateSimilarityWithProfile(context, embedding);
+      } else {
+        similarity = 1.0;
+      }
     } finally {
       hideProcessingDialog();
     }
 
-    if (similarity == null) {
-      debugPrint('Similarity calculation returned null');
-      await _deleteFileIfExists(capturedImageFile!);
-      _showWarning(
-        context,
-        en: 'Face verification failed. Please try again.',
-        ar: 'فشل التحقق من الوجه. يرجى المحاولة مرة أخرى.',
-      );
-      await _showLivenessReport(context, reports);
-      return null;
+    if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+      if (similarity == null) {
+        debugPrint('Similarity calculation returned null');
+        await _deleteFileIfExists(capturedImageFile!);
+        _showWarning(
+          context,
+          en: 'Face verification failed. Please try again.',
+          ar: 'فشل التحقق من الوجه. يرجى المحاولة مرة أخرى.',
+        );
+        if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+        return null;
+      }
+      debugPrint('Face verification similarity score: ' + similarity.toString());
+      if (similarity < _minProfileSimilarity) {
+        await _deleteFileIfExists(capturedImageFile!);
+        _showWarning(
+          context,
+          en:
+          'Face verification failed. Please make sure the employee you are registering is standing in front of the camera.',
+          ar: 'لم يتم قبول التحقق من الوجه. تأكد أن الموظف صاحب البصمة واقف أمام الكاميرا.',
+          details: {
+            _localized(context, en: 'Similarity', ar: 'التشابه'):
+            similarity.toStringAsFixed(3),
+            _localized(context, en: 'Required', ar: 'المطلوب'):
+            _minProfileSimilarity.toStringAsFixed(2),
+          },
+        );
+        if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+        return null;
+      }
     }
 
-    debugPrint('Face verification similarity score: ' + similarity.toString());
-
-    if (similarity < _minProfileSimilarity) {
-      await _deleteFileIfExists(capturedImageFile!);
-      _showWarning(
-        context,
-        en:
-        'Face verification failed. Please make sure the employee you are registering is standing in front of the camera.',
-        ar: 'لم يتم قبول التحقق من الوجه. تأكد أن الموظف صاحب البصمة واقف أمام الكاميرا.',
-        details: {
-          _localized(context, en: 'Similarity', ar: 'التشابه'):
-          similarity.toStringAsFixed(3),
-          _localized(context, en: 'Required', ar: 'المطلوب'):
-          _minProfileSimilarity.toStringAsFixed(2),
-        },
+    // نظهر رسالة "identity / face verification successful" فقط
+    // لو اللّيفنس والتطابق مع صورة البروفايل مفعّلين معاً
+    if (AppConstants.fingerprintLivenessChallengesEnabled &&
+        AppConstants.fingerprintFaceProfileVerificationEnabled) {
+      AlertsService.success(
+        context: context,
+        title: AppStrings.success.tr(),
+        message: AppStrings.faceVerificationSuccess.tr(),
       );
-      await _showLivenessReport(context, reports);
-      return null;
     }
 
-    AlertsService.success(
-      context: context,
-      title: AppStrings.success.tr(),
-      message: AppStrings.faceVerificationSuccess.tr(),
-    );
-
-    // await _showLivenessReport(context, reports);
+    if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
 
     final imageMap = {
       'image': capturedImageFile!.path,
@@ -1532,18 +1636,25 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
             // Lookup the MIME type based on the file's name
             String mimeType = lookupMimeType(fileItem.name) ?? 'application/octet-stream';
 
+            // Compress image bytes to reduce cache size
+            Uint8List bytesToStore = await _compressImageIfNeeded(
+              fileItem.bytes!,
+              mimeType,
+              fileItem.name,
+            );
+
             // Create a MultipartFile from the file's bytes
             var multipartFile = MultipartFile.fromBytes(
-              fileItem.bytes!, // File bytes
-              filename: fileItem.name, // File name
-              contentType: MediaType.parse(mimeType), // Mime type
+              bytesToStore,
+              filename: fileItem.name,
+              contentType: MediaType.parse(mimeType.startsWith('image/') ? 'image/jpeg' : mimeType),
             );
 
             // Add the file metadata to the processedFiles list
             processedFiles.add({
               'fileName': fileItem.name,
               'path': fileItem.path,
-              'bytes': base64Encode(fileItem.bytes!), // Convert bytes to base64 for storage
+              'bytes': base64Encode(bytesToStore),
             });
 
             print("Processed file: ${fileItem.name}, MIME Type: $mimeType");
@@ -1586,10 +1697,15 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
 
       for (var fileResult in file) {
         for (var platformFile in fileResult.files) {
+          Uint8List? bytes = platformFile.bytes;
+          if (bytes != null) {
+            final mime = lookupMimeType(platformFile.name) ?? 'application/octet-stream';
+            bytes = await _compressImageIfNeeded(bytes, mime, platformFile.name);
+          }
           serializedFiless.add({
             'fileName': platformFile.name,
             'path': platformFile.path,
-            'bytes': platformFile.bytes != null ? base64Encode(platformFile.bytes!) : null,
+            'bytes': bytes != null ? base64Encode(bytes) : null,
           });
         }
       }
@@ -1619,12 +1735,17 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     print("Cached fingerprints under 'types': ${AppConstants.fingerPrints}");
   }
 
-  static Map<String, dynamic> filePickerResultToCacheableMap(FilePickerResult result) {
+  static Future<Map<String, dynamic>> filePickerResultToCacheableMap(FilePickerResult result) async {
     final file = result.files.first;
+    Uint8List? bytes = file.bytes;
+    if (bytes != null) {
+      final mime = lookupMimeType(file.name) ?? 'application/octet-stream';
+      bytes = await _compressImageIfNeeded(bytes, mime, file.name);
+    }
     return {
       'fileName': file.name,
       'path': file.path,
-      'bytes': file.bytes != null ? base64Encode(file.bytes!) : null,
+      'bytes': bytes != null ? base64Encode(bytes) : null,
     };
   }
   // Save the list of fingerprints to shared preferences
@@ -1651,22 +1772,22 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   static Future<void> addFingerprintUsingNFC(
       {required BuildContext context}) async {
     try {
-      final bool? fingerprintMustUploadImage = (AppSettingsService.getSettings(
-          settingsType: SettingsType.generalSettings,
-          context: context) as GeneralSettingsModel)
-          .fingerprintMustUploadImage;
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
 
-      final _CapturedFaceData? capturedFace =
-      await captureEmployeeFaceAndVerify(context);
-      if (capturedFace == null) {
-        return;
+      _CapturedFaceData? capturedFace;
+      if (showFaceVerify) {
+        capturedFace = await captureEmployeeFaceAndVerify(context);
+        if (capturedFace == null) {
+          return;
+        }
+        await _deleteFileIfExists(capturedFace.file);
       }
 
       final List<FilePickerResult> faceFiles =
-      fingerprintMustUploadImage == true
+      uploadFaceImage && capturedFace != null
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
-      await _deleteFileIfExists(capturedFace.file);
       // Check if the device supports NFC
       bool isAvailable = await NfcManager.instance.isAvailable();
       if (!isAvailable) {
@@ -1695,32 +1816,13 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           // Stop the session
           NfcManager.instance.stopSession();
 
-          // Show loading indicator immediately before sending
-          if (context.mounted) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              useRootNavigator: true,
-              builder: (context) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            );
-          }
-
           try {
             // Send the combined data to the server
             final result = await FingerprintService.addNFCFingerprint(
                 context: context,
                 data: nfcData,
                 files: faceFiles,
-                noteReport: capturedFace.noteReport);
-
-            // Close loading indicator
-            if (context.mounted) {
-              Navigator.of(context, rootNavigator: true).pop();
-            }
+                noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 
             // Handle the server response
             if (result.success) {
@@ -1773,22 +1875,24 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         debugPrint("❌ Context not mounted in addFingerprintUsingBluetooth");
         return;
       }
-      final bool? fingerprintMustUploadImage = (AppSettingsService.getSettings(
-          settingsType: SettingsType.generalSettings,
-          context: context) as GeneralSettingsModel)
-          .fingerprintMustUploadImage;
+      final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
 
-      debugPrint("📱 Starting face verification for Bluetooth fingerprint...");
-      final _CapturedFaceData? capturedFace =
-      await captureEmployeeFaceAndVerify(context);
-      if (capturedFace == null) {
-        return;
+      _CapturedFaceData? capturedFace;
+      DateTime? qrScanSuccessTime;
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+
+      if (showFaceVerify) {
+        debugPrint("📱 Starting face verification for Bluetooth fingerprint...");
+        capturedFace = await captureEmployeeFaceAndVerify(context);
+        if (capturedFace == null) {
+          return;
+        }
+        await _deleteFileIfExists(capturedFace.file);
       }
       final List<FilePickerResult> uploadFaceFiles =
-      fingerprintMustUploadImage == true
+      uploadFaceImage && capturedFace != null
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
-      await _deleteFileIfExists(capturedFace.file);
 
       // Uncomment this if photo upload is mandatory
       // if (fingerprintMustUploadImage == true) {
@@ -1895,53 +1999,13 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
             Navigator.pop(context);
           },
           onRightActionPressed: ()async{
-            // Close confirmation dialog first
-            try {
-              if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-            } catch (e) {
-              debugPrint('Error closing confirmation dialog: $e');
-            }
-            
-            // Show loading indicator immediately using post frame callback
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              try {
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    useRootNavigator: true,
-                    builder: (context) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                }
-              } catch (e) {
-                debugPrint('Error showing loading dialog: $e');
-              }
-            });
-            
             try {
               result = await FingerprintService.addBluetoothFingerprint(
                 context: context,
                 data: selectedDevice.device.remoteId.toString(),
                 files: uploadFaceFiles,
-                noteReport: capturedFace.noteReport,
+                noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null,
               );
-
-              // Close loading indicator
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                try {
-                  if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
-                } catch (e) {
-                  debugPrint('Error closing loading dialog: $e');
-                }
-              });
 
               // ✅ Show result
               if (result != null && result.success) {
@@ -1958,10 +2022,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
                 );
               }
             } catch (e) {
-              // Close loading indicator on error
-              if (context.mounted) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
               AlertsService.error(
                 context: context,
                 message: e.toString(),
@@ -1987,10 +2047,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   // Adding Fingerprint Using Wifi
   static Future<void> addFingerprintUsingWiFi({required BuildContext context,}) async {
     try {
-      final bool? fingerprintMustUploadImage = (AppSettingsService.getSettings(
-          settingsType: SettingsType.generalSettings,
-          context: context) as GeneralSettingsModel)
-          .fingerprintMustUploadImage;
+      final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       final status = await WiFiScan.instance.canStartScan();
       if (status != CanStartScan.yes) {
         AlertsService.warning(
@@ -2001,16 +2058,19 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         AppSettings.openAppSettings(type: AppSettingsType.wifi);
         return;
       }
-      final _CapturedFaceData? capturedFace =
-      await captureEmployeeFaceAndVerify(context);
-      if (capturedFace == null) {
-        return;
+      _CapturedFaceData? capturedFace;
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      if (showFaceVerify) {
+        capturedFace = await captureEmployeeFaceAndVerify(context);
+        if (capturedFace == null) {
+          return;
+        }
+        await _deleteFileIfExists(capturedFace.file);
       }
       final List<FilePickerResult> uploadFaceFiles =
-      fingerprintMustUploadImage == true
+      uploadFaceImage && capturedFace != null
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
-      await _deleteFileIfExists(capturedFace.file);
       // Check for Wi-Fi scan permissions
 
       // Start scanning for Wi-Fi networks
@@ -2053,6 +2113,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
 
       // Prepare the data to send to the server
       final wifiData = {'mac_address': selectedNetwork.bssid};
+      print( "mac_address -> ${selectedNetwork.bssid}");
       var result;
       customAlertDialogWithTwoButtons(
           context,
@@ -2064,52 +2125,12 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
             Navigator.pop(context);
           },
           onRightActionPressed: ()async{
-            // Close confirmation dialog first
-            try {
-              if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-            } catch (e) {
-              debugPrint('Error closing confirmation dialog: $e');
-            }
-            
-            // Show loading indicator immediately using post frame callback
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              try {
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    useRootNavigator: true,
-                    builder: (context) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                }
-              } catch (e) {
-                debugPrint('Error showing loading dialog: $e');
-              }
-            });
-            
             try {
               result = await FingerprintService.addWifiFingerprint(
                   context: context,
                   data: selectedNetwork.bssid.toString(),
                   files:  uploadFaceFiles,
-                  noteReport: capturedFace.noteReport);
-
-              // Close loading indicator
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                try {
-                  if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
-                } catch (e) {
-                  debugPrint('Error closing loading dialog: $e');
-                }
-              });
+                  noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 
               // Handle the server response
               if (result != null && result.success) {
@@ -2129,10 +2150,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
                 return;
               }
             } catch (e) {
-              // Close loading indicator on error
-              if (context.mounted) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
               AlertsService.error(
                 context: context,
                 message: e.toString(),
@@ -2182,9 +2199,10 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     }
 
     try {
-      // الحصول على الإحداثيات بدون إنترنت
+      // الحصول على الإحداثيات (مع حد أقصى ٢٥ ثانية عشان ما يعلقش لو الإشارة ضعيفة)
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low, // استخدم low علشان النت مش شغال
+        desiredAccuracy: LocationAccuracy.low,
+        timeLimit: const Duration(seconds: 25),
       );
 
       double lat = position.latitude;
@@ -2199,29 +2217,75 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   // Add Fingerprint Using GPS
   static Future<void> addFingerprintUsingGPS({required BuildContext context,}) async {
     debugPrint("📍 Starting GPS fingerprint process...");
+    OverlayEntry? loadingOverlay;
     try {
       if (!context.mounted) {
         debugPrint("❌ Context not mounted in addFingerprintUsingGPS");
         return;
       }
+      // لودينج في نص الشاشة عبر overlay الـ Navigator (Overlay.of قد يفشل مع go_router)
+      final overlayContext = rootNavigatorKey.currentContext ?? context;
+      if (overlayContext.mounted) {
+        loadingOverlay = OverlayEntry(
+          builder: (ctx) => Material(
+            color: Colors.black54,
+            child: Center(
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 32),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      Text(
+                        AppStrings.gettingCurrentLocationPleaseWait.tr(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(ctx).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        final overlay = Navigator.of(overlayContext).overlay;
+        if (overlay != null) {
+          overlay.insert(loadingOverlay!);
+        } else {
+          loadingOverlay = null;
+        }
+      }
       debugPrint("📍 Getting current location...");
       await getCurrentLocation(context);
       debugPrint("📍 Location obtained");
-      final bool? fingerprintMustUploadImage = (AppSettingsService.getSettings(
-          settingsType: SettingsType.generalSettings,
-          context: context) as GeneralSettingsModel)
-          .fingerprintMustUploadImage;
-      debugPrint("📍 Starting face verification for GPS fingerprint...");
-      final _CapturedFaceData? capturedFace =
-      await captureEmployeeFaceAndVerify(context);
-      if (capturedFace == null) {
-        return;
+      // إخفاء اللودينج
+      if (loadingOverlay != null) {
+        try {
+          loadingOverlay!.remove();
+        } catch (_) {}
+        loadingOverlay = null;
+      }
+      final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
+      _CapturedFaceData? capturedFace;
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      if (showFaceVerify) {
+        debugPrint("📍 Starting face verification for GPS fingerprint...");
+        capturedFace = await captureEmployeeFaceAndVerify(context);
+        if (capturedFace == null) {
+          return;
+        }
+        await _deleteFileIfExists(capturedFace.file);
       }
       final List<FilePickerResult> uploadFaceFiles =
-      fingerprintMustUploadImage == true
+      uploadFaceImage && capturedFace != null
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
-      await _deleteFileIfExists(capturedFace.file);
       var result;
       customAlertDialogWithTwoButtons(
           context,
@@ -2233,35 +2297,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
             Navigator.pop(context);
           },
           onRightActionPressed: ()async{
-            // Close confirmation dialog first
-            try {
-              if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-            } catch (e) {
-              debugPrint('Error closing confirmation dialog: $e');
-            }
-            
-            // Show loading indicator immediately using post frame callback
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              try {
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    useRootNavigator: true,
-                    builder: (context) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                }
-              } catch (e) {
-                debugPrint('Error showing loading dialog: $e');
-              }
-            });
-            
             try {
               result = await FingerprintService.addGPSFingerprint(
                   context: context,
@@ -2269,18 +2304,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
                   lat: double.parse(CacheHelper.getString('lat') ?? '0'),
                   long: double.parse(CacheHelper.getString('long') ?? '0'),
                   files: uploadFaceFiles,
-                  noteReport: capturedFace.noteReport);
-
-              // Close loading indicator
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                try {
-                  if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
-                } catch (e) {
-                  debugPrint('Error closing loading dialog: $e');
-                }
-              });
+                  noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 
               print("GPS DONE TWO");
               // Handle the server response
@@ -2299,10 +2323,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
                 return;
               }
             } catch (e) {
-              // Close loading indicator on error
-              if (context.mounted) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
               AlertsService.error(
                 context: context,
                 message: e.toString(),
@@ -2314,10 +2334,17 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
 
     } catch (e) {
       debugPrint('Error Adding GPS Fingerprint: $e');
-      AlertsService.error(
-          context: context,
-          message: AppStrings.noInternetConnection.tr(),
-          title: AppStrings.failed.tr());
+      if (loadingOverlay != null) {
+        try {
+          loadingOverlay!.remove();
+        } catch (_) {}
+      }
+      if (context.mounted) {
+        AlertsService.error(
+            context: context,
+            message: AppStrings.noInternetConnection.tr(),
+            title: AppStrings.failed.tr());
+      }
       return;
     }
   }
@@ -2331,42 +2358,46 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         debugPrint("❌ Context not mounted in addFingerprintUsingQrCode");
         return;
       }
-      var jsonString;
-      var gCache;
-      jsonString = CacheHelper.getString("US1");
+      final jsonString = CacheHelper.getString("US1");
       if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-        gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+        json.decode(jsonString) as Map<String, dynamic>;
       }
-      final bool? fingerprintMustUploadImage = (AppSettingsService.getSettings(
-          settingsType: SettingsType.generalSettings,
-          context: context) as GeneralSettingsModel)
-          .fingerprintMustUploadImage;
-      
-      // Verify face first - use rootNavigatorKey.currentContext if context is not mounted
-      debugPrint("📱 Starting face verification for QR Code fingerprint...");
-      final faceContext = rootNavigatorKey.currentContext ?? context;
-      final _CapturedFaceData? capturedFace =
-      await captureEmployeeFaceAndVerify(faceContext);
-      if (capturedFace == null) {
-        return;
+      final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
+
+      _CapturedFaceData? capturedFace;
+      DateTime? qrScanSuccessTime;
+      final bool isOnline = await ConnectionsService.isOnline();
+      // في كل أنواع البصمات الأخرى الكاميرا تفتح لو مفتاح الكاميرا مفعّل حتى في وضع الأوفلاين.
+      // هنا كانت مربوطة بوجود إنترنت، فتم فصلها عن isOnline عشان QR يتصرف نفس التصرف.
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      if (showFaceVerify) {
+        debugPrint("📱 Starting face verification for QR Code fingerprint...");
+        final faceContext = rootNavigatorKey.currentContext ?? context;
+        capturedFace = await captureEmployeeFaceAndVerify(faceContext);
+        if (capturedFace == null) {
+          return;
+        }
+        await _deleteFileIfExists(capturedFace.file);
       }
-      
-      // Then scan QR code - use rootNavigatorKey.currentContext if context is not mounted
+
       final qrContext = rootNavigatorKey.currentContext ?? context;
       final String? scanedQrCode =
       await _scanQrcodeToGetSecretKeyString(context: qrContext);
       if (scanedQrCode == null || scanedQrCode.isEmpty) {
-        // Delete the captured face file if QR scan was cancelled
-        await _deleteFileIfExists(capturedFace.file);
+        if (capturedFace != null) {
+          await _deleteFileIfExists(capturedFace.file);
+        }
         return;
       }
-      
+      // Save the exact time when QR scan succeeded
+      qrScanSuccessTime = DateTime.now();
+
       final List<FilePickerResult> uploadFaceFiles =
-      fingerprintMustUploadImage == true
+      uploadFaceImage && capturedFace != null
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
 
-      // if (fingerprintMustUploadImage == true &&
+      // if (uploadFaceImage &&
       //     (empPhoto == null || empPhoto.files.first.bytes == null)) {
       if (false) {
         AlertsService.error(
@@ -2425,8 +2456,9 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
               result = await FingerprintService.addQRCodeFingerprint(
                   context: context,
                   data: scanedQrCode,
+                  fingerDay: qrScanSuccessTime,
                   files: uploadFaceFiles,
-                  noteReport: capturedFace.noteReport);
+                  noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 
               // Close loading indicator
               WidgetsBinding.instance.addPostFrameCallback((_) {

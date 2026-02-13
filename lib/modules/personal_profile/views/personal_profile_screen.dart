@@ -37,6 +37,29 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
   late final PersonalProfileViewModel viewModel;
   bool fa = CacheHelper.getBool("twoFa") ?? false;
 
+  Widget _buildReloadingOverlay(BuildContext context) {
+    return Positioned.fill(
+      child: Container(
+        color: Colors.black26,
+        child: Center(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(AppStrings.loading.tr()),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,13 +114,19 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                     builder: (context, viewModel, child) {
                       if (viewModel.isSuccessUpdate == true ||
                           viewModel.isSuccessUpdateImage == true) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Future.delayed(Duration(seconds: 1), () {
-                            value.initializeHomeScreen(context, ['user_settings']);
-                          });
-                        });
                         viewModel.isSuccessUpdate = false;
                         viewModel.isSuccessUpdateImage = false;
+                        WidgetsBinding.instance.addPostFrameCallback((_) async {
+                          viewModel.setReloadingSettingsAfterUpdate(true);
+                          try {
+                            await Future.delayed(const Duration(seconds: 1));
+                            if (context.mounted) {
+                              await value.initializeHomeScreen(context, ['user_settings']);
+                            }
+                          } finally {
+                            viewModel.setReloadingSettingsAfterUpdate(false);
+                          }
+                        });
                       }
                       var jsonString;
                       var us1Cache;
@@ -105,12 +134,14 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                       if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
                         us1Cache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
                       }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: AppSizes.s12),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: AppSizes.s12, right: AppSizes.s12),
-                          child: !kIsWeb?Column(
+                      return Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSizes.s12),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: AppSizes.s12, right: AppSizes.s12),
+                              child: !kIsWeb?Column(
                             children: [
                               // CHANGE PHONE NUMBER
                               ...[
@@ -608,6 +639,10 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                             ),
                           ),
                         ),
+                      ),
+                      if (viewModel.isReloadingSettingsAfterUpdate)
+                        _buildReloadingOverlay(context),
+                    ],
                       );
                     });
               },

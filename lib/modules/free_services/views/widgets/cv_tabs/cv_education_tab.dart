@@ -26,8 +26,7 @@ class CVEducationTab extends StatelessWidget {
           
           // Education Section
           _buildSectionTitle('EDUCATION'),
-          _buildAddNewItem('داتا جديد'),
-          
+
           if (educationList != null && educationList.isNotEmpty)
             ...educationList.map((edu) => _buildEducationItem(edu))
           else

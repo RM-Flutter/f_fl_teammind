@@ -21,7 +21,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.s200,
+      height: AppSizes.s220,
       clipBehavior: Clip.antiAlias,
       alignment: Alignment.center,
       width: LayoutService.getWidth(context),
@@ -41,10 +41,14 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 50,),
+              child: SizedBox(
+                height: AppSizes.s200,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 50,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -58,6 +62,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                             }
                           },
                           child: Icon(Icons.arrow_back, color: Color(AppColors.white),)),
+                      SizedBox(width: 20,),
                       Spacer(),
                       Text(
                         AppStrings.myRequests.tr().toUpperCase(),
@@ -119,7 +124,9 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                     child: Text(     (getOneRequestModel!.complain!.departmentName != null)?
                                     getOneRequestModel!.complain!.departmentName!.toUpperCase() : "",
                                       textAlign: TextAlign.center,
+                                      maxLines: 2,
                                       style: const TextStyle(
+                                        overflow: TextOverflow.ellipsis,
                                         fontSize: 12,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
@@ -141,7 +148,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                   ),
                                   SizedBox(width: 5,),
                                   SizedBox(
-                                    width:kIsWeb? MediaQuery.sizeOf(context).width * 0.1: MediaQuery.sizeOf(context).width * 0.25,
+                                    width:kIsWeb? MediaQuery.sizeOf(context).width * 0.1: MediaQuery.sizeOf(context).width * 0.2,
                                     child: Text(
                                       getOneRequestModel!.complain!.pstatus!.tr().toUpperCase() ?? "",
                                       textAlign: TextAlign.center,
@@ -160,9 +167,10 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                  )
-
-                ],
+                  ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],

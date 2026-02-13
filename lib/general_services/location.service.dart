@@ -100,14 +100,17 @@ abstract class LocationService {
       bool isMockLocation = position.isMocked;
 
       // التحقق من accuracy - إذا كانت accuracy سيئة جداً قد تكون fake
+      // 200م بدل 100م عشان أوفلاين/داخل مبنى الدقة غالباً أضعف
       double accuracy = position.accuracy;
-      bool isLowAccuracy = accuracy > 100; // أكثر من 100 متر يعتبر دقة منخفضة
+      bool isLowAccuracy = accuracy > 200;
 
-      // التحقق من speed - إذا كانت speed غير منطقية قد تكون fake
+      // التحقق من speed: القيم السالبة على أندرويد = "السرعة غير متوفرة" (المستخدم واقف)، فلا نعتبرها مشبوهة
+      // نعتبر مشبوهة فقط سرعة غير منطقية للإنسان (أعلى من ~360 كم/س)
       double speed = position.speed;
-      bool isSuspiciousSpeed = speed < 0;
+      const double maxReasonableSpeedMps = 100.0; // ~360 km/h
+      bool isSuspiciousSpeed = speed > maxReasonableSpeedMps;
 
-      // التحقق من altitude - إذا كانت altitude غير منطقية قد تكون fake
+      // التحقق من altitude - قيم غير واقعية فقط (تحت -500م أو فوق 10000م)
       double altitude = position.altitude;
       bool isSuspiciousAltitude = altitude < -500 || altitude > 10000;
 

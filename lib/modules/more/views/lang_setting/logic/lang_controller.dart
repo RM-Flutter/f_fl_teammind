@@ -5,14 +5,28 @@ import 'package:rmemp/general_services/app_config.service.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 
-class LangControllerProvider extends ChangeNotifier{
+class LangControllerProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isSuccess = true;
   String? errorMessage;
-  setDeviceSysLang({context, state, notiToken}) async {
+
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void _safeNotifyListeners() {
+    if (_disposed) return;
+    notifyListeners();
+  }
+
+  Future<void> setDeviceSysLang({required BuildContext context, required String state, String? notiToken}) async {
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     isLoading = true;
-    notifyListeners();
+    _safeNotifyListeners();
     try {
       final response = await DioHelper.postData(
         url: "/rm_users/v1/device_sys",
@@ -21,13 +35,14 @@ class LangControllerProvider extends ChangeNotifier{
           "action": "set",
           "key": "language",
           "value": state,
-          "default" : state,
-          "device_info" : {
-            "device_unique_id":appConfigServiceProvider.deviceInformation.deviceUniqueId,
-            "operating_system":"android",
-            "operating_system_version":"QSR1.190920.001",
-            "type":"phone",
-            "notification_token":notiToken}
+          "default": state,
+          "device_info": {
+            "device_unique_id": appConfigServiceProvider.deviceInformation.deviceUniqueId,
+            "operating_system": "android",
+            "operating_system_version": "QSR1.190920.001",
+            "type": "phone",
+            "notification_token": notiToken
+          }
         },
       );
       isLoading = false;
@@ -35,15 +50,15 @@ class LangControllerProvider extends ChangeNotifier{
       print("i will put lang 2");
       CacheHelper.setString(key: "lang", value: state);
       print(response.data);
-      notifyListeners();
+      _safeNotifyListeners();
     } catch (error) {
       isLoading = false;
-      notifyListeners();
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
       }
+      _safeNotifyListeners();
     }
   }
 }

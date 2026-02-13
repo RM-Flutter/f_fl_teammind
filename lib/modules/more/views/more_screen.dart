@@ -478,7 +478,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             });
                       },
                       child: CachedNetworkImage(
-                          imageUrl:(gCache != null)? gCache['photo'] : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
+                          imageUrl:(gCache != null)? gCache['photo']??"" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
                           fit: BoxFit.cover,
                           height: 124,
                           width: 124,
@@ -514,25 +514,30 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    gCache['job_title'] ?? "",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                      color: Color(AppColors.grey4F),
-                       fontSize: 11,
-                       fontWeight: FontWeight.w500,
-                      // height: 0,
-                    ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.sizeOf(context).width * 0.5,
+                    child: Text(
+                      gCache['job_title'] ?? "",
+                      maxLines: 2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(
+                        color: Color(AppColors.grey4F),
+                         fontSize: 11,
+                         fontWeight: FontWeight.w500,
+                        // height: 0,
+                      ),
 
-                    //      TextStyle(
-                    // color: Color(0xFF4F4F4F),
-                    // fontSize: 10,
-                    //   fontFamily: 'Bai Jamjuree',
-                    //   fontWeight: FontWeight.w500,
-                    //   height: 0,
-                    // ),
+                      //      TextStyle(
+                      // color: Color(0xFF4F4F4F),
+                      // fontSize: 10,
+                      //   fontFamily: 'Bai Jamjuree',
+                      //   fontWeight: FontWeight.w500,
+                      //   height: 0,
+                      // ),
+                    ),
                   )
                 ],
               ),

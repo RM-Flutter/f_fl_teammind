@@ -38,6 +38,12 @@ class PersonalProfileViewModel extends ChangeNotifier {
   bool isSuccessUpdate = false;
   bool deleteImage = false;
   bool isSuccessUpdateImage = false;
+  /// true while start app / getUserSettings is running after profile or photo update
+  bool isReloadingSettingsAfterUpdate = false;
+  void setReloadingSettingsAfterUpdate(bool value) {
+    isReloadingSettingsAfterUpdate = value;
+    notifyListeners();
+  }
   String? errorMessage;
   String? uuid;
   TextEditingController emailController = TextEditingController();

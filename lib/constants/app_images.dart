@@ -56,6 +56,10 @@ abstract class AppImages {
       '$_onboardingImagesDirectory/onboarding_2.png';
   static const String onboardingBackground3 =
       '$_onboardingImagesDirectory/onboarding_3.png';
+  /// Fallback onboarding images when API returns no images (assets/images/png/)
+  static const String onboardingFallback1 = 'assets/images/png/onboard1.png';
+  static const String onboardingFallback2 = 'assets/images/png/onboard2.png';
+  static const String onboardingFallback3 = 'assets/images/png/onboard3.png';
   // login images
   static String get loginBackground {
     final url = DynamicAppConfigService.getLoginBackgroundUrl();

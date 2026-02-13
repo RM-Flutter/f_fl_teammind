@@ -32,6 +32,23 @@ class OnboardingViewModel extends ChangeNotifier {
   int _currentIndex = 0;
 
   set currentIndex(int newIndex) => _currentIndex = newIndex;
+
+  /// من كاش US1: لو role = ["personal"] فقط → freeServicesHome، وإلا → home
+  static String getHomeRouteFromUs1Role() {
+    final jsonString = CacheHelper.getString("US1");
+    if (jsonString == null || jsonString.isEmpty) return AppRoutes.home.name;
+    try {
+      final us1 = json.decode(jsonString) as Map<String, dynamic>?;
+      final role = us1?['role'];
+      if (role != null && role is List && role.isNotEmpty && role.contains("personal")) {
+        return AppRoutes.freeServicesHome.name;
+      }
+      return AppRoutes.home.name;
+    } catch (_) {
+      return AppRoutes.home.name;
+    }
+  }
+
   @override
   void dispose() {
     pageController.dispose();
@@ -133,32 +150,90 @@ class OnboardingViewModel extends ChangeNotifier {
     }
   }
 
-    List? getAllOnboardingData({required BuildContext context}) {
-      final jsonString = CacheHelper.getString("USG");
-      if (jsonString != null && jsonString.isNotEmpty) {
-        final gCache = json.decode(jsonString) as Map<String,
-            dynamic>; // Convert String back to JSON
+  /// Default onboarding slides when API returns no images (3 local assets).
+  static List<Map<String, dynamic>> get _defaultOnboardingItems => [
+        {
+          'title': {'ar': 'مرحباً', 'en': 'Welcome'},
+          'info': {'ar': 'اكتشف الميزات', 'en': 'Discover the features'},
+          'image': [
+            {'id': 1, 'file': AppImages.onboardingFallback1}
+          ],
+          'web_image': [
+            {'id': 1, 'file': AppImages.onboardingFallback1}
+          ],
+        },
+        {
+          'title': {'ar': 'سهل وسريع', 'en': 'Easy & Fast'},
+          'info': {'ar': 'إدارة بسيطة', 'en': 'Simple management'},
+          'image': [
+            {'id': 1, 'file': AppImages.onboardingFallback2}
+          ],
+          'web_image': [
+            {'id': 1, 'file': AppImages.onboardingFallback2}
+          ],
+        },
+        {
+          'title': {'ar': 'ابدأ الآن', 'en': 'Get Started'},
+          'info': {'ar': 'انضم إلينا', 'en': 'Join us'},
+          'image': [
+            {'id': 1, 'file': AppImages.onboardingFallback3}
+          ],
+          'web_image': [
+            {'id': 1, 'file': AppImages.onboardingFallback3}
+          ],
+        },
+      ];
 
-        return gCache['features']['items'];
-      }
-    }
+  /// نفس مصدر _getOnboardingDataFromCache عشان الـ itemCount يطابق المحتوى (مع التحقق من title/info/image).
+  List? getAllOnboardingData({required BuildContext context}) {
+    return _getOnboardingDataFromCache();
+  }
+
+  /// قيمة غير فاضية: مش null ومش سترينج فاضي.
+  static bool _hasValue(dynamic v) =>
+      v != null && v.toString().trim().isNotEmpty;
+
+  /// الاسكرينه تتلغي (العنصر يتتجاهل) فقط في حالة واحدة:
+  /// title (عربي وانجليزي) كلهم null + info (عربي وانجليزي) كلهم null + الصور فاضية.
+  /// غير كده نعرض الشريحة: لو title فاضي نعرض الانفو أو الصور اللي راجعة.
+  static bool _isOnboardingItemValid(Map<String, dynamic> item) {
+    final title = item['title'];
+    final info = item['info'];
+    final imageList = item['image'];
+    final webImageList = item['web_image'];
+    final hasTitle = title is Map && (_hasValue(title['ar']) || _hasValue(title['en']));
+    final hasInfo = info is Map && (_hasValue(info['ar']) || _hasValue(info['en']));
+    final hasImage = kIsWeb
+        ? (webImageList is List && webImageList.isNotEmpty)
+        : (imageList is List && imageList.isNotEmpty);
+    final valid = hasTitle || hasInfo || hasImage;
+    return valid;
+  }
+
   List<Map<String, dynamic>>? _getOnboardingDataFromCache() {
     final jsonString = CacheHelper.getString("USG");
     if (jsonString == null || jsonString.isEmpty) {
-      debugPrint('⚠️ Cache empty');
-      return null;
+      debugPrint('⚠️ Onboarding cache empty, using default 3 images');
+      return _defaultOnboardingItems;
     }
 
     final gCache = json.decode(jsonString) as Map<String, dynamic>?;
-    if (gCache == null) return null;
+    if (gCache == null) return _defaultOnboardingItems;
 
     final features = gCache['features']?['items'];
     if (features == null || features is! List || features.isEmpty) {
-      debugPrint('⚠️ no features.items found');
-      return null;
+      debugPrint('⚠️ No features.items from API, using default 3 onboarding images');
+      return _defaultOnboardingItems;
     }
 
-    return features.cast<Map<String, dynamic>>();
+    final list = features.cast<Map<String, dynamic>>();
+    final validList = list.where(_isOnboardingItemValid).toList();
+    if (validList.isEmpty) {
+      debugPrint('⚠️ Onboarding: كل العناصر فاضية (title+info+image كلهم null/فاضي) → متعرضش الشاشة');
+      return [];
+    }
+    debugPrint('✅ Onboarding: ${validList.length} شريحة صالحة');
+    return validList;
   }
   Map<String, dynamic>? getOnboardingDataWithIndex(int index, BuildContext context) {
     final items = _getOnboardingDataFromCache();
@@ -347,9 +422,9 @@ class OnboardingViewModel extends ChangeNotifier {
             
             if (shouldShowOnboarding) {
               await _precacheImages(context);
-              if (context.mounted && gCache?['features'] != null &&
-                  gCache['features']['items'] != null &&
-                  (gCache['features']['items'] as List).isNotEmpty) {
+              final onboardingItems = getAllOnboardingData(context: context);
+              final hasValidSlides = onboardingItems != null && onboardingItems.isNotEmpty;
+              if (context.mounted && hasValidSlides) {
                 print("Navigating to onboarding (logged in)");
                 // Check if we're on offline screen before navigating
                 try {
@@ -368,7 +443,7 @@ class OnboardingViewModel extends ChangeNotifier {
                   // If we can't check route, don't navigate to avoid issues
                 }
               } else {
-                print("Navigating to home (logged in, no features)");
+                print("Navigating to home (logged in, no valid onboarding slides)");
                 // Check if we're on offline screen before navigating
                 if (context.mounted) {
                   try {
@@ -377,9 +452,10 @@ class OnboardingViewModel extends ChangeNotifier {
                     final isOnOfflineScreen = currentLocation.contains('offline-screen');
                     
                     if (!isOnOfflineScreen) {
-                      print("✅ Navigating to home: ${AppRoutes.home.name}");
+                      final route = getHomeRouteFromUs1Role();
+                      print("✅ Navigating to: $route");
                       context.goNamed(
-                        AppRoutes.home.name,
+                        route,
                         pathParameters: {'lang': context.locale.languageCode},
                       );
                     } else {
@@ -401,9 +477,10 @@ class OnboardingViewModel extends ChangeNotifier {
                   final isOnOfflineScreen = currentLocation.contains('offline-screen');
                   
                   if (!isOnOfflineScreen) {
-                    print("✅ Navigating to home: ${AppRoutes.home.name}");
+                    final route = getHomeRouteFromUs1Role();
+                    print("✅ Navigating to: $route");
                     context.goNamed(
-                      AppRoutes.home.name,
+                      route,
                       pathParameters: {'lang': context.locale.languageCode},
                     );
                   } else {
@@ -418,6 +495,17 @@ class OnboardingViewModel extends ChangeNotifier {
             return;
           }
           else {
+            // إعادة التأكد من اللوجين قبل التوجيه للوجين (تجنب فتح اللوجين بسبب race في التهيئة)
+            await appConfigService.init();
+            final recheckLoggedIn = appConfigService.isInitialized &&
+                appConfigService.isLogin &&
+                appConfigService.token.isNotEmpty;
+            if (recheckLoggedIn) {
+              if (!context.mounted) return;
+              final route = getHomeRouteFromUs1Role();
+              context.goNamed(route, pathParameters: {'lang': context.locale.languageCode});
+              return;
+            }
             // User is not logged in - navigate to login or onboarding
             print("WATCH 0 - User not logged in");
             final jsonString2 = CacheHelper.getString("USG");
@@ -500,24 +588,41 @@ class OnboardingViewModel extends ChangeNotifier {
             if (!context.mounted) return;
             
             if (shouldShowOnboarding) {
-              print("Navigating to onboarding");
-              await _precacheImages(context);
-              // Check if we're on offline screen before navigating
-              if (context.mounted) {
-                try {
-                  final router = GoRouter.of(context);
-                  final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
-                  final isOnOfflineScreen = currentLocation.contains('offline-screen');
-                  
-                  if (!isOnOfflineScreen) {
-                    context.goNamed(AppRoutes.onboarding.name,
-                        pathParameters: {'lang': context.locale.languageCode});
-                  } else {
-                    print("⚠️ User is on offline screen, skipping navigation to onboarding");
+              final onboardingItems = getAllOnboardingData(context: context);
+              final hasValidSlides = onboardingItems != null && onboardingItems.isNotEmpty;
+              if (hasValidSlides) {
+                print("Navigating to onboarding");
+                await _precacheImages(context);
+                if (context.mounted) {
+                  try {
+                    final router = GoRouter.of(context);
+                    final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
+                    final isOnOfflineScreen = currentLocation.contains('offline-screen');
+                    
+                    if (!isOnOfflineScreen) {
+                      context.goNamed(AppRoutes.onboarding.name,
+                          pathParameters: {'lang': context.locale.languageCode});
+                    } else {
+                      print("⚠️ User is on offline screen, skipping navigation to onboarding");
+                    }
+                  } catch (e) {
+                    debugPrint("⚠️ Error checking route before navigation: $e");
                   }
-                } catch (e) {
-                  debugPrint("⚠️ Error checking route before navigation: $e");
-                  // If we can't check route, don't navigate to avoid issues
+                }
+              } else {
+                print("No valid onboarding slides (كل العناصر فاضية), navigating to login");
+                if (context.mounted) {
+                  try {
+                    final router = GoRouter.of(context);
+                    final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
+                    final isOnOfflineScreen = currentLocation.contains('offline-screen');
+                    if (!isOnOfflineScreen) {
+                      context.goNamed(AppRoutes.login.name,
+                          pathParameters: {'lang': context.locale.languageCode});
+                    }
+                  } catch (e) {
+                    debugPrint("⚠️ Error checking route: $e");
+                  }
                 }
               }
             } else {
@@ -546,25 +651,47 @@ class OnboardingViewModel extends ChangeNotifier {
           }
         }
       } catch (err, t) {
-        print("login-5");
-        // Check if we're on offline screen before navigating
+        debugPrint("⚠️ initializeSplashScreen error: $err");
+        debugPrint("⚠️ initializeSplashScreen stack: $t");
+
+        // في حالة الخطأ، نحاول على الأقل نرجّع اليوزر على الهوم لو هو لسه لوجين
         try {
+          final appConfigService =
+              Provider.of<AppConfigService>(context, listen: false);
+          final isLoggedIn = appConfigService.isLogin &&
+              appConfigService.token.isNotEmpty;
+
           final router = GoRouter.of(context);
-          final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
-          final isOnOfflineScreen = currentLocation.contains('offline-screen');
-          
-          if (!isOnOfflineScreen) {
-            return context.goNamed(
-              AppRoutes.login.name,
-              pathParameters: {'lang': context.locale.languageCode},
-            );
-          } else {
-            print("⚠️ User is on offline screen, skipping navigation to login (error case)");
+          final currentLocation =
+              router.routerDelegate.currentConfiguration.uri.path;
+          final isOnOfflineScreen =
+              currentLocation.contains('offline-screen');
+
+          if (isOnOfflineScreen) {
+            print(
+                "⚠️ Error during splash init but user is on offline screen - skipping navigation");
             return;
           }
+
+          if (isLoggedIn) {
+            // لو اليوزر لسه لوجين، رجّعه للـ home بدل ما توديه للوجين
+            final route = getHomeRouteFromUs1Role();
+            print("✅ Recovering from error, navigating to: $route");
+            context.goNamed(
+              route,
+              pathParameters: {'lang': context.locale.languageCode},
+            );
+            return;
+          }
+
+          // لو مش لوجين فعلاً، نودّيه للوجين كـ fallback
+          context.goNamed(
+            AppRoutes.login.name,
+            pathParameters: {'lang': context.locale.languageCode},
+          );
         } catch (e) {
-          debugPrint("⚠️ Error checking route before navigation: $e");
-          // If we can't check route, don't navigate to avoid issues
+          debugPrint("⚠️ Error in error-handling navigation: $e");
+          // لو حصل خطأ هنا كمان، ما نحاولش نعمل Navigation زيادة
           return;
         }
       }
@@ -588,12 +715,10 @@ class OnboardingViewModel extends ChangeNotifier {
           Provider.of<AppConfigService>(context, listen: false);
           final jsonString = CacheHelper.getString("US1");
           var us1Cache;
-          var role;
-          if (jsonString != "") {
+          if (jsonString != null && jsonString != "") {
             us1Cache = json.decode(jsonString) as Map<String,
                 dynamic>; // Convert String back to JSON
             print("S2 IS --> $us1Cache");
-            role = us1Cache['role'];
           }
           if (appConfigService.isLogin && appConfigService.token.isNotEmpty) {
             // Check if we're on offline screen before navigating
@@ -603,9 +728,9 @@ class OnboardingViewModel extends ChangeNotifier {
               final isOnOfflineScreen = currentLocation.contains('offline-screen');
               
               if (!isOnOfflineScreen) {
+                final route = getHomeRouteFromUs1Role();
                 context.goNamed(
-                  // AppRoutes.home.name,
-                  AppRoutes.home.name,
+                  route,
                   pathParameters: {'lang': context.locale.languageCode,},
                 );
               } else {
@@ -658,9 +783,9 @@ class OnboardingViewModel extends ChangeNotifier {
         }
         
         if (appConfigService.isLogin && appConfigService.token.isNotEmpty) {
+          final route = getHomeRouteFromUs1Role();
           context.goNamed(
-            // AppRoutes.home.name,
-            AppRoutes.home.name,
+            route,
             pathParameters: {'lang': context.locale.languageCode,},
           );
         } else {

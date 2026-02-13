@@ -1,8 +1,6 @@
-import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
 import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/general_services/localization.service.dart';
 import 'package:rmemp/platform/platform_is.dart';
@@ -51,68 +48,20 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
   double _downloadProgress = 0.0;
   String? _downloadingFileName;
 
-  /// Request storage permission based on Android version
+  /// No permission needed: we save to app directory (getApplicationDocumentsDirectory).
   Future<bool> requestStoragePermission() async {
-    // Web doesn't need storage permissions
-    if (PlatformIs.web) {
-      return true;
-    }
-    
-    if (PlatformIs.android) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final sdkInt = androidInfo.version.sdkInt;
-
-      if (sdkInt >= 30) {
-        // Android 11+ needs MANAGE_EXTERNAL_STORAGE permission, user must enable manually
-        var status = await Permission.manageExternalStorage.status;
-        if (!status.isGranted) {
-          status = await Permission.manageExternalStorage.request();
-          if (!status.isGranted) {
-            await openAppSettings();
-            return false;
-          }
-        }
-        return true;
-      } else if (sdkInt >= 23) {
-        // Android 6 to 10: request storage permission normally
-        var status = await Permission.storage.status;
-        if (!status.isGranted) {
-          status = await Permission.storage.request();
-          if (!status.isGranted) return false;
-        }
-        return true;
-      } else {
-        // Android versions before 6 automatically grant permissions on install
-        return true;
-      }
-    }
-    return true; // iOS and others
+    return true;
   }
 
 
-  /// Get appropriate download directory (Android / iOS)
+  /// Get download directory. Uses app-specific directory so no storage permission needed.
   Future<dynamic> _getDownloadDirectory() async {
     if (kIsWeb || PlatformIs.web) {
       throw UnsupportedError("Download directory not available on web");
     }
-    
-    // Only use Directory on non-web platforms
     if (!kIsWeb) {
-      if (PlatformIs.android) {
-        // getExternalStoragePublicDirectory is deprecated in Android 29+,
-        // but still works for now, or you can manually build path:
-        final io.Directory directory = io.Directory('/storage/emulated/0/Download');
-        if (await directory.exists()) {
-          return directory;
-        } else {
-          throw Exception("Download directory not found");
-        }
-      } else if (PlatformIs.iOS) {
-        // iOS has no downloads folder, use Documents instead
-        return await getApplicationDocumentsDirectory();
-      } else {
-        throw UnsupportedError("Unsupported platform");
-      }
+      // App documents dir: no permission needed on Android/iOS, file can be opened with OpenFile
+      return await getApplicationDocumentsDirectory();
     }
     throw UnsupportedError("Download directory not available on web");
   }
@@ -194,6 +143,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
     // Mobile platforms: download to device storage
     final dio = Dio();
+    final progressNotifier = ValueNotifier<double>(0.0);
 
     try {
       final dir = await _getDownloadDirectory();
@@ -204,36 +154,56 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
         _downloadProgress = 0.0;
       });
 
+      if (mounted) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (ctx) => _DownloadProgressDialog(
+            fileName: fileName,
+            progressNotifier: progressNotifier,
+          ),
+        );
+      }
+
       await dio.download(
         url,
         filePath,
         onReceiveProgress: (received, total) {
-          if (total != -1) {
-            setState(() {
-              _downloadProgress = received / total;
-            });
+          if (total != -1 && total > 0) {
+            final p = received / total;
+            progressNotifier.value = p;
+            if (mounted) setState(() => _downloadProgress = p);
           }
         },
       );
+      if (mounted) Navigator.of(context).pop();
       await OpenFile.open(filePath);
-      Fluttertoast.showToast(
-        msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_LONG,
-      );
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: '$e',
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_LONG,
-      );
+      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: '$e',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
     } finally {
-      setState(() {
-        _downloadProgress = 0.0;
-        _downloadingFileName = null;
-      });
+      progressNotifier.dispose();
+      if (mounted) {
+        setState(() {
+          _downloadProgress = 0.0;
+          _downloadingFileName = null;
+        });
+      }
     }
   }
 
@@ -545,6 +515,80 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
   }
 
   /// Helper to format date range string
+}
+
+/// Dialog shown while a file is downloading (with progress).
+class _DownloadProgressDialog extends StatelessWidget {
+  final String fileName;
+  final ValueNotifier<double> progressNotifier;
+
+  const _DownloadProgressDialog({
+    required this.fileName,
+    required this.progressNotifier,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                AppStrings.downloadFile.tr(),
+                style: const TextStyle(fontSize: 18),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        content: ValueListenableBuilder<double>(
+          valueListenable: progressNotifier,
+          builder: (context, value, _) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  fileName,
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                const SizedBox(height: 16),
+                LinearProgressIndicator(
+                  value: value > 0 ? value : null,
+                  backgroundColor: Colors.grey.shade300,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.blue)),
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  value > 0 ? '${(value * 100).toStringAsFixed(0)}%' : '0%',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }
 
 class InfoTileWidget extends StatelessWidget {

@@ -17,7 +17,7 @@ import 'package:rmemp/modules/requests/view_models/add_new_request.viewmodel.dar
 import 'package:rmemp/modules/requests/view_models/filter_consts.dart';
 import 'package:rmemp/modules/requests/view_models/requests.viewmodel.dart';
 import 'package:rmemp/services/requests.services.dart';
-import 'package:rmemp/utils/animated_custom_dropdown/custom_dropdown.dart';
+import 'package:rmemp/utils/searchable_dropdown_sheet/searchable_dropdown_sheet.dart';
 import 'package:rmemp/utils/widgets/text_form_widget.dart';
 
 class SearchFilterWidget extends StatefulWidget {
@@ -34,11 +34,46 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   var selectIndex;
   int? selectId;
   bool _filtersLoaded = false;
-  
+
+  /// الحالة الحالية للفلتر (نستخدمها عند الإغلاق بدل الكاش لتجنب إرسال id بعد المسح)
+  static Map<String, String?> _buildFilterMap(AddNewRequestViewModel viewModels, FilterController viewModel) {
+    String? fromStr;
+    String? toStr;
+    if (viewModels.selectedDateOrDatetimeRange != null &&
+        viewModels.selectedDateOrDatetimeRange!.start != null &&
+        viewModels.selectedDateOrDatetimeRange!.end != null) {
+      final arabicToEnglish = {
+        '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+        '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9',
+      };
+      String normalize(String input) {
+        return input.split('').map((c) => arabicToEnglish[c] ?? c).join();
+      }
+      final from = DateService.formateDateTimeBeforeSendToServer(
+          dateTime: viewModels.selectedDateOrDatetimeRange!.start).toString();
+      final to = DateService.formateDateTimeBeforeSendToServer(
+          dateTime: viewModels.selectedDateOrDatetimeRange!.end).toString();
+      fromStr = normalize(from);
+      toStr = normalize(to);
+    }
+    return {
+      'reqId': viewModels.selectReqId,
+      'empId': viewModel.selectEmpId,
+      'depId': viewModel.selectDepId,
+      'selectStatus': viewModels.selectStatus,
+      'from': fromStr,
+      'to': toStr,
+    };
+  }
+
+  static Map<String, String?> _emptyFilterMap() => {
+    'reqId': null, 'empId': null, 'depId': null, 'selectStatus': null, 'from': null, 'to': null,
+  };
+
   void _loadSavedFilters(BuildContext context, AddNewRequestViewModel viewModels, FilterController viewModel) {
     if (_filtersLoaded) return;
     _filtersLoaded = true;
-    
+
     // Load saved request type
     final savedReqId = CacheHelper.getString("reqId");
     if (savedReqId != null && savedReqId.isNotEmpty && viewModel.requestsTypes != null) {
@@ -56,13 +91,13 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
         debugPrint('Error loading saved request type: $e');
       }
     }
-    
+
     // Load saved status
     final savedStatus = CacheHelper.getString("selectStatus");
     if (savedStatus != null && savedStatus.isNotEmpty) {
       viewModels.selectStatus = savedStatus;
     }
-    
+
     // Load saved department
     final savedDepId = CacheHelper.getString("depId");
     if (savedDepId != null && savedDepId.isNotEmpty && viewModel.departments.isNotEmpty) {
@@ -79,7 +114,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
         debugPrint('Error loading saved department: $e');
       }
     }
-    
+
     // Load saved employee
     final savedEmpId = CacheHelper.getString("empId");
     if (savedEmpId != null && savedEmpId.isNotEmpty && viewModel.employees.isNotEmpty) {
@@ -96,7 +131,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
         debugPrint('Error loading saved employee: $e');
       }
     }
-    
+
     // Load saved date range
     final savedFrom = CacheHelper.getString("from");
     final savedTo = CacheHelper.getString("to");
@@ -110,13 +145,13 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
         debugPrint('Error loading saved date range: $e');
       }
     }
-    
+
     // Update UI
     if (mounted) {
       setState(() {});
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -141,32 +176,40 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                   gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
                   UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
                 }
-                
+
                 // Load saved filters when data is ready
                 if (viewModel.requestsTypes != null && viewModel.departments.isNotEmpty && viewModel.employees.isNotEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _loadSavedFilters(context, viewModels, viewModel);
                   });
                 }
-                
+
                 final isWeb = widget.isWeb ?? false;
-                return SingleChildScrollView(
+                return PopScope(
+                  canPop: false,
+                  onPopInvokedWithResult: (didPop, result) {
+                    if (didPop) return;
+                    final vm = Provider.of<AddNewRequestViewModel>(context, listen: false);
+                    final fc = Provider.of<FilterController>(context, listen: false);
+                    Navigator.of(context).pop(_buildFilterMap(vm, fc));
+                  },
+                  child: SingleChildScrollView(
                   child: Padding(
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: isWeb 
+                          borderRadius: isWeb
                               ? BorderRadius.circular(35.0)
                               : const BorderRadius.vertical(top: Radius.circular(35.0)),
                           color: Color(AppColors.white)
                       ),
                       width: double.infinity,
-                      height: isWeb 
-                          ? null 
+                      height: isWeb
+                          ? null
                           : MediaQuery.sizeOf(context).height * 0.6,
-                      constraints: isWeb 
+                      constraints: isWeb
                           ? BoxConstraints(
                               maxHeight: MediaQuery.sizeOf(context).height * 0.8,
                             )
@@ -211,36 +254,41 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                     ],
                                   ),
                                   const SizedBox(height: 15),
-                                  CustomDropdown.search(
-                                      selectedValue: viewModels.selectedRequestType,
-                                      borderRadius: BorderRadius.circular(AppSizes.s15),
-                                      borderSide: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .enabledBorder
-                                          ?.borderSide,
-                                      hintText: AppStrings.requestType.tr(),
-                                      hintStyle: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .hintStyle,
+                                  SearchableDropdownSheet(
                                       items: viewModel.requestsTypes,
-                                      nameKey: "title",
+                                      selectedValue: viewModels.selectedRequestType,
+                                      nameKey: 'title',
+                                      hintText: AppStrings.requestType.tr(),
+                                      hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                      height: 65,
+                                      borderRadius: BorderRadius.circular(AppSizes.s10),
+                                      borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                      fieldSuffixIcon: InkWell(
+                                        onTap: () async {
+                                          viewModels.selectedRequestType = null;
+                                          viewModels.selectReqId = null;
+                                          viewModels.reqType = null;
+                                          await CacheHelper.deleteData(key: "reqId");
+                                          if (!context.mounted) return;
+                                          setState(() {});
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
+                                      ),
                                       onChanged: (value){
                                         viewModels.selectedRequestType = value;
-                                        viewModels.selectReqId = value['id'].toString();
-                                        viewModels.reqType = value['type'].toString();
-                                        CacheHelper.setString(key: "reqId", value: value['id'].toString());
-                                        viewModels.controller.clear();
-                                        setState(() {
-
-                                        });
+                                        viewModels.selectReqId = value['id']?.toString();
+                                        viewModels.reqType = value['type']?.toString();
+                                        if (viewModels.selectReqId != null && viewModels.selectReqId!.isNotEmpty) {
+                                          CacheHelper.setString(key: "reqId", value: viewModels.selectReqId!);
+                                        }
+                                        setState(() {});
                                       },
-                                      contentPadding: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .contentPadding
-                                          ?.resolve(LocalizationService.isArabic(
-                                          context: context)
-                                          ? TextDirection.rtl
-                                          : TextDirection.ltr)),
+                                    ),
                                   const SizedBox(height: 15),
                                   defaultDropdownField(
                                     value: viewModels.selectStatus,
@@ -265,88 +313,89 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                     }
                                   ),
                                   if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
-                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)CustomDropdown.search(
-                                      selectedValue: viewModel.selectedDepartment,
-                                      borderRadius: BorderRadius.circular(AppSizes.s15),
-                                      borderSide: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .enabledBorder
-                                          ?.borderSide,
-                                      hintText: AppStrings.department.tr(),
-                                      hintStyle: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .hintStyle,
+                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
+                                    SearchableDropdownSheet(
                                       items: viewModel.departments,
-                                      nameKey: "title",
+                                      selectedValue: viewModel.selectedDepartment,
+                                      nameKey: 'title',
+                                      fieldSuffixIcon: InkWell(
+                                        onTap: () async {
+                                          viewModel.selectedDepartment = null;
+                                          viewModel.selectDepId = null;
+                                          await CacheHelper.deleteData(key: "depId");
+                                          if (!context.mounted) return;
+                                          setState(() {});
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      hintText: AppStrings.department.tr(),
+                                      hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                      height: 65,
+                                      borderRadius: BorderRadius.circular(AppSizes.s10),
+                                      borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                       onChanged: (value){
                                         viewModel.selectedDepartment = value;
-                                        viewModel.selectDepId = value['id'].toString();
+                                        viewModel.selectDepId = value['id']?.toString();
                                         setState(() {});
                                       },
-                                      contentPadding: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .contentPadding
-                                          ?.resolve(LocalizationService.isArabic(
-                                          context: context)
-                                          ? TextDirection.rtl
-                                          : TextDirection.ltr)),
+                                    ),
                                   if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
-                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)  CustomDropdown.search(
-                                      selectedValue: viewModel.selectedEmployee,
-                                      borderRadius: BorderRadius.circular(AppSizes.s15),
-                                      borderSide: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .enabledBorder
-                                          ?.borderSide,
-                                      hintText: AppStrings.employeeName.tr(),
-                                      hintStyle: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .hintStyle,
+                                  if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
+                                    SearchableDropdownSheet(
                                       items: viewModel.employees,
-                                      nameKey: "name",
+                                      selectedValue: viewModel.selectedEmployee,
+                                      nameKey: 'name',
+                                    fieldSuffixIcon: InkWell(
+                                      onTap: () async {
+                                        viewModel.selectedEmployee = null;
+                                        viewModel.selectEmpId = null;
+                                        viewModel.selectedDatecontroller.clear();
+                                        await CacheHelper.deleteData(key: "empId");
+                                        if (!context.mounted) return;
+                                        setState(() {});
+                                      },
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                    ),
+                                      hintText: AppStrings.employeeName.tr(),
+                                      hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                      height: 65,
+                                      borderRadius: BorderRadius.circular(AppSizes.s10),
+                                      borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                       onChanged: (value){
                                         viewModel.selectedEmployee = value;
                                         viewModel.selectedDatecontroller.clear();
-                                        viewModel.selectEmpId = value['id'].toString();
-                                        print("Selected employee ID: ${value["id"]}");
-                                        setState(() {});
+                                        viewModel.selectEmpId = value['id']?.toString();
                                         setState(() {});
                                       },
-                                      contentPadding: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .contentPadding
-                                          ?.resolve(LocalizationService.isArabic(
-                                          context: context)
-                                          ? TextDirection.rtl
-                                          : TextDirection.ltr)),
+                                    ),
                                   const SizedBox(height: 15),
                                   viewModels.selectedRequestType?['type'] ==
                                       'instead_of_holidays'
-                                      ? CustomDropdown.search(
-                                      selectedValue: viewModels.selectedRequestType,
-                                      borderRadius:
-                                      BorderRadius.circular(AppSizes.s15),
-                                      borderSide: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .enabledBorder
-                                          ?.borderSide,
-                                      hintText: AppStrings.requestTime.tr(),
-                                      hintStyle: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .hintStyle,
+                                      ? SearchableDropdownSheet(
                                       items: viewModels.requestsTypes,
-                                      nameKey: "name",
+                                      selectedValue: viewModels.selectedRequestType,
+                                      nameKey: 'name',
+                                      hintText: AppStrings.requestTime.tr(),
+                                      hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                      height: 65,
+                                      borderRadius: BorderRadius.circular(AppSizes.s10),
+                                      borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                       onChanged: (value) =>
                                           viewModels.selectInsteadOfHolidays(context,
                                               startDateOrDatetime: value['from'],
                                               endDateOrDatetime: value['to']),
-                                      contentPadding: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .contentPadding
-                                          ?.resolve(LocalizationService.isArabic(
-                                          context: context)
-                                          ? TextDirection.rtl
-                                          : TextDirection.ltr))
+                                    )
                                       : TextField(
                                     controller: viewModels.controller,
                                     decoration: InputDecoration(
@@ -396,29 +445,41 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 "${date.day.toString().padLeft(2, '0')}";
                                           }
                                           
-                                          // Don't delete old filters, just update/add new ones
-                                          // Only update if new value is provided
-                                          if(viewModel.selectEmpId != null && viewModel.selectEmpId!.isNotEmpty){
-                                            CacheHelper.setString(key: "empId", value: viewModel.selectEmpId ?? "");
+                                          // امسح من الكاش أي فيلتر المستخدم شاله من الدروب داون، بعدين سجّل الباقي (await عشان الحذف يخلص قبل ما الـ API يقرأ)
+                                          bool _isEmpty(String? v) => v == null || v.isEmpty || v == "null";
+                                          if (_isEmpty(viewModel.selectEmpId)) {
+                                            await CacheHelper.deleteData(key: "empId");
+                                          } else {
+                                            await CacheHelper.setString(key: "empId", value: viewModel.selectEmpId ?? "");
                                           }
-                                          if(viewModel.selectDepId != null && viewModel.selectDepId!.isNotEmpty){
-                                            CacheHelper.setString(key: "depId", value: viewModel.selectDepId ?? "");
+                                          if (_isEmpty(viewModel.selectDepId)) {
+                                            await CacheHelper.deleteData(key: "depId");
+                                          } else {
+                                            await CacheHelper.setString(key: "depId", value: viewModel.selectDepId ?? "");
                                           }
-                                          if(viewModels.selectStatus != null && viewModels.selectStatus!.isNotEmpty){
-                                            CacheHelper.setString(key: "selectStatus", value: viewModels.selectStatus ?? "");
+                                          if (_isEmpty(viewModels.selectStatus)) {
+                                            await CacheHelper.deleteData(key: "selectStatus");
+                                          } else {
+                                            await CacheHelper.setString(key: "selectStatus", value: viewModels.selectStatus ?? "");
                                           }
-                                          if(viewModels.selectReqId != null && viewModels.selectReqId!.isNotEmpty){
-                                            CacheHelper.setString(key: "reqId", value: viewModels.selectReqId ?? "");
+                                          if (_isEmpty(viewModels.selectReqId)) {
+                                            await CacheHelper.deleteData(key: "reqId");
+                                          } else {
+                                            await CacheHelper.setString(key: "reqId", value: viewModels.selectReqId ?? "");
                                           }
-                                          if(viewModels.selectedDateOrDatetimeRange != null && viewModels.selectedDateOrDatetimeRange?.start != null){
-                                            CacheHelper.setString(key: "from", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
-                                                dateTime: viewModels.selectedDateOrDatetimeRange!.start)).toString() ?? "", );
+                                          if (viewModels.selectedDateOrDatetimeRange == null ||
+                                              viewModels.selectedDateOrDatetimeRange?.start == null ||
+                                              viewModels.selectedDateOrDatetimeRange?.end == null) {
+                                            await CacheHelper.deleteData(key: "from");
+                                            await CacheHelper.deleteData(key: "to");
+                                          } else {
+                                            await CacheHelper.setString(key: "from", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
+                                                dateTime: viewModels.selectedDateOrDatetimeRange!.start)).toString() ?? "");
+                                            await CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
+                                                dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "");
                                           }
-                                          if(viewModels.selectedDateOrDatetimeRange != null &&viewModels.selectedDateOrDatetimeRange?.end != null) {  
-                                            CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
-                                                dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "",);
-                                          }
-                                            Navigator.pop(context);
+                                          if (!context.mounted) return;
+                                          Navigator.pop(context, _buildFilterMap(viewModels, viewModel));
                                         },
                                         child: Container(
                                           height: 50,
@@ -439,19 +500,15 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                         ),
                                       ),
                                       GestureDetector(
-                                        onTap: ()async{
-                                         if(CacheHelper.getString( "empId") != "" && CacheHelper.getString( "empId") != null) {
-                                           CacheHelper.deleteData(key: "empId");
-                                         }if(CacheHelper.getString( "from") != "" && CacheHelper.getString( "from") != null) {
-                                           CacheHelper.deleteData(key: "from");
-                                         }if(CacheHelper.getString( "to") != "" && CacheHelper.getString( "to") != null) {
-                                           CacheHelper.deleteData(key: "to");
-                                         }if(CacheHelper.getString( "depId") != "" && CacheHelper.getString( "depId") != null) {
-                                           CacheHelper.deleteData(key: "depId");
-                                         }if(CacheHelper.getString( "reqId") != "" && CacheHelper.getString( "reqId") != null) {
-                                           CacheHelper.deleteData(key: "reqId");
-                                         }
-                                         Navigator.pop(context);
+                                        onTap: () async {
+                                          await CacheHelper.deleteData(key: "empId");
+                                          await CacheHelper.deleteData(key: "from");
+                                          await CacheHelper.deleteData(key: "to");
+                                          await CacheHelper.deleteData(key: "depId");
+                                          await CacheHelper.deleteData(key: "reqId");
+                                          await CacheHelper.deleteData(key: "selectStatus");
+                                          if (!context.mounted) return;
+                                          Navigator.pop(context, _emptyFilterMap());
                                         },
                                         child: Container(
                                           height: 50,
@@ -487,6 +544,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                       ),
                     ),
                   ),
+                ),
                 );
               },
             );

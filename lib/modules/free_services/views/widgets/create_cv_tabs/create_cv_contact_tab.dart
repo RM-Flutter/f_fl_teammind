@@ -17,6 +17,14 @@ class CreateCVContactTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField(
+            controller: viewModel.phoneController,
+            label: AppStrings.phone.tr(),
+            isRequired: true,
+            hint: AppStrings.enterYourPhoneNumber.tr(),
+            keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 16),
+          _buildTextField(
             controller: viewModel.emailController,
             label: AppStrings.email.tr(),
             isRequired: true,
@@ -87,6 +95,7 @@ class CreateCVContactTab extends StatelessWidget {
             hintText: hint,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),

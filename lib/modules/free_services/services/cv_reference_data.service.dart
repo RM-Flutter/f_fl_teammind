@@ -102,7 +102,8 @@ class CVReferenceDataService {
       );
 
       if (response.data['status'] == true && response.data['data'] != null) {
-        return List<Map<String, dynamic>>.from(response.data['data']);
+        final list = List<Map<String, dynamic>>.from(response.data['data']);
+        return _ensureTitleKey(list);
       }
       return [];
     } catch (e) {
@@ -124,13 +125,25 @@ class CVReferenceDataService {
       );
 
       if (response.data['status'] == true && response.data['data'] != null) {
-        return List<Map<String, dynamic>>.from(response.data['data']);
+        final list = List<Map<String, dynamic>>.from(response.data['data']);
+        return _ensureTitleKey(list);
       }
       return [];
     } catch (e) {
       debugPrint('Error fetching states: $e');
       return [];
     }
+  }
+
+  /// الدروب داون بتستخدم nameKey: 'title' — نتأكد إن كل عنصر عنده title (من name لو الـ API رجع name)
+  static List<Map<String, dynamic>> _ensureTitleKey(List<Map<String, dynamic>> list) {
+    return list.map((e) {
+      final m = Map<String, dynamic>.from(e);
+      if (!m.containsKey('title') || m['title'] == null) {
+        m['title'] = m['name']?.toString() ?? '';
+      }
+      return m;
+    }).toList();
   }
 
   /// Get Cities List by State ID
@@ -146,7 +159,8 @@ class CVReferenceDataService {
       );
 
       if (response.data['status'] == true && response.data['data'] != null) {
-        return List<Map<String, dynamic>>.from(response.data['data']);
+        final list = List<Map<String, dynamic>>.from(response.data['data']);
+        return _ensureTitleKey(list);
       }
       return [];
     } catch (e) {

@@ -99,6 +99,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   width: double.infinity,
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton(
+                    heroTag: 'tasks_add',
                     onPressed: () async {
                       await context.pushNamed(
                           AppRoutes.addTaskScreen.name,

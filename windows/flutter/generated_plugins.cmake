@@ -3,9 +3,12 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  clipboard
   connectivity_plus
   file_selector_windows
   firebase_core
+  flutter_inappwebview_windows
+  gal
   geolocator_windows
   local_auth_windows
   permission_handler_windows

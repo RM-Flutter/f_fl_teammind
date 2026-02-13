@@ -24,6 +24,16 @@ import '../../../routing/app_router.dart';
 import '../../../services/requests.services.dart';
 import '../view_models/requests_calendar.viewmodel.dart';
 
+/// يستخرج النص حسب اللغة: إن كان القيمة Map فيها en/ar يُرجع القيمة المناسبة للغة الحالية فقط.
+String _titleByLang(dynamic value, String lang) {
+  if (value == null) return '';
+  if (value is Map) {
+    final v = value[lang] ?? value['en'] ?? value['ar'];
+    return v?.toString() ?? '';
+  }
+  return value.toString();
+}
+
 class RequestsCalendarScreen extends StatelessWidget {
   final requests;
   final GetRequestsTypes requestType;
@@ -32,23 +42,22 @@ class RequestsCalendarScreen extends StatelessWidget {
 
   List _buildCalendarAppointments(BuildContext context, List sourceRequests, Map<String, dynamic>? gCache) {
     final List combined = [...sourceRequests];
+    final lang = context.locale.languageCode;
     // Append holidays as calendar items if present (from US2)
     try {
       final holidays = gCache?['holidays'] as List?;
       if (holidays != null && holidays.isNotEmpty) {
-        final lang = context.locale.languageCode;
         for (final h in holidays) {
           final String? from = h['from']?.toString();
           final String? to = h['to']?.toString();
           if (from == null || to == null) continue;
-          // In US2, name is a String, not a Map
-          final String holidayName = h['name']?.toString() ?? 'Holiday';
+          // name قد يكون String أو Map { en, ar } → نعرض ar فقط في العربي و en فقط في الإنجليزي
+          final String holidayName = _titleByLang(h['name'], lang).isEmpty ? 'Holiday' : _titleByLang(h['name'], lang);
           final String officialHolidayLabel =
               lang == 'ar' ? 'إجازة رسمية' : 'Official Holiday';
           combined.add({
             'from': from,
             'to': to,
-            // Keep the same subject style as requests, but mark as official holiday
             'typeName': '$holidayName - $officialHolidayLabel',
             'status': 'approved',
             '_isHoliday': true,
@@ -78,6 +87,7 @@ class RequestsCalendarScreen extends StatelessWidget {
           return TemplatePage(
               pageContext: context,
               floatingActionButton: FloatingActionButton(
+                heroTag: 'requests_calendar_add',
                 onPressed: () async => await context
                     .pushNamed(AppRoutes.addRequest.name, pathParameters: {
                   'type': 'mine',
@@ -145,7 +155,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                               backgroundColor: Color(AppColors.white),
                               key: UniqueKey(),
                               view: viewModel.calendarView ?? CalendarView.month,
-                              dataSource: RequestDataSource(_buildCalendarAppointments(context, requests, gCache)),
+                              dataSource: RequestDataSource(_buildCalendarAppointments(context, requests, gCache), context.locale.languageCode),
                               monthViewSettings: MonthViewSettings(
                                 appointmentDisplayMode:
                                     MonthAppointmentDisplayMode.appointment,
@@ -156,10 +166,10 @@ class RequestsCalendarScreen extends StatelessWidget {
                               showNavigationArrow: true,
                               appointmentBuilder: (context, details) {
                                 final appt = details.appointments.first;
-
                                 // Render holidays (Map) differently
                                 if (appt is Map && appt['_isHoliday'] == true) {
-                                  final title = appt['typeName']?.toString() ?? 'Holiday';
+                                  final title = _titleByLang(appt['typeName'], currentLang);
+                                  final displayTitle = title.isEmpty ? 'Holiday' : title;
                                   return Container(
                                     width: double.infinity,
                                     constraints: BoxConstraints(
@@ -174,7 +184,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                       color: Color(AppColors.green),
                                     ),
                                     child: Text(
-                                      title,
+                                      displayTitle,
                                       textAlign: TextAlign.center,
                                       maxLines: (kIsWeb || PlatformIs.web) ? 1 : 1,
                                   
@@ -228,7 +238,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                       color: backgroundColor,
                                     ),
                                     child: Text(
-                                      request?.typeName ?? '',
+                                      _titleByLang(request?.typeName, currentLang),
                                       textAlign: TextAlign.center,
                                       maxLines: (kIsWeb || PlatformIs.web) ? 2 : 1,
                           
@@ -264,14 +274,16 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 12),
                                   ...(gCache['holidays'] as List? ?? []).map(
-                                        (holiday) => ListTile(
+                                        (holiday) {
+                                      final name = _titleByLang(holiday['name'], context.locale.languageCode);
+                                      return ListTile(
                                       leading: Icon(Icons.event, color: Color(AppColors.green)),
-                                      title: Text(holiday['name']?.toString() ?? 'Holiday'),
+                                      title: Text(name.isEmpty ? 'Holiday' : name),
                                       subtitle: Text(
                                         "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr().toUpperCase()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
                                       ),
-                                    ),
-                                  )
+                                    );
+                                  }).toList(),
                                 ],
                               ),
                             ),
@@ -292,7 +304,8 @@ class RequestsCalendarScreen extends StatelessWidget {
 }
 
 class RequestDataSource extends CalendarDataSource {
-  RequestDataSource(List requests) {
+  final String _lang;
+  RequestDataSource(List requests, this._lang) {
     appointments = requests;
   }
 
@@ -318,9 +331,9 @@ class RequestDataSource extends CalendarDataSource {
   String getSubject(int index) {
     final item = appointments![index];
     if (item is Map) {
-      return item['typeName']?.toString() ?? '';
+      return _titleByLang(item['typeName'], _lang);
     }
-    return item?.typeName ?? '';
+    return _titleByLang(item?.typeName, _lang);
   }
 
   @override

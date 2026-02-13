@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:rmemp/modules/free_services/views/smart_card/widgets/build_action_card.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_sizes.dart';
 import '../../../../constants/app_strings.dart';
+import '../../../../general_services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../../routing/app_router.dart';
 import '../../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
 import '../../view_models/smart_card.viewmodel.dart';
+import '../../models/smart_card_profile_models.dart';
+import '../../services/smart_card.service.dart';
 import 'widgets/smart_card_loading.widget.dart';
 
 class SmartCardScreen extends StatefulWidget {
@@ -35,71 +43,104 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
     super.dispose();
   }
 
-  void _navigateTo(String routeName) {
-    try {
-      context.pushNamed(
-        routeName,
-        pathParameters: {'lang': context.locale.languageCode},
-      );
-    } catch (e) {
-      debugPrint('Navigation error: $e');
-      Navigator.of(context).pop();
+  void _showInfoBottomSheet(String messageKey, {bool isFromPremiumSmartCard = false, }) {
+    final jsonString = CacheHelper.getString("USG");
+    var gCache;
+    if (jsonString != null && jsonString != "") {
+      gCache = json.decode(jsonString) as Map<String, dynamic>;
     }
-  }
-
-  void _copyProfileLink() {
-    final url = viewModel.getCompanyPublicUrl();
-    if (url.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No company selected')),
-      );
-      return;
-    }
-    Clipboard.setData(ClipboardData(text: url));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppStrings.profileLinkCopied.tr())),
-    );
-  }
-
-  void _showAddEmployeeDialog() {
-    final nameController = TextEditingController();
-    showDialog<void>(
+    showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: Text(AppStrings.employeeProfiles.tr()),
-          content: TextField(
-            controller: nameController,
-            decoration: InputDecoration(
-              hintText: AppStrings.enterYourName.tr(),
-              border: const OutlineInputBorder(),
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        decoration: BoxDecoration(
+          color: Color(AppColors.modalBackgroundColor),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              messageKey.tr(),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(AppColors.black),
+                height: 1.4,
+              ),
             ),
-            autofocus: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
-            ),
-            FilledButton(
-              onPressed: () async {
-                final name = nameController.text.trim();
-                if (name.isEmpty) return;
-                Navigator.of(ctx).pop();
-                final ok = await viewModel.addEmployeeToCompany(context, name: name);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(ok ? 'OK' : (viewModel.errorMessage ?? 'Error')),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () async {
+                      Navigator.of(ctx).pop();
+                      if (isFromPremiumSmartCard) {
+                        final uri = Uri.parse('${gCache['premiumSmartCardLearnMoreUrl']}');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      }else{
+                        final uri = Uri.parse('${gCache['nfcCardsLearnMoreUrl']}');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      }
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Color(AppColors.primary),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  );
-                }
-              },
-              child: Text(MaterialLocalizations.of(ctx).okButtonLabel),
+                    child: Text(
+                      AppStrings.learnMore.tr(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () {
+                          context.pushNamed(
+                                  AppRoutes.contactUs.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                      // Contact - يمكن ربطه بشاشة تواصل أو رقم
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Color(AppColors.dark),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      AppStrings.contact.tr(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -138,17 +179,24 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           centerTitle: true,
           routeName: AppRoutes.smartCardScreen.name,
         ),
+        // في أول نسخة من شاشة الـ Smart Card: الفلوتينج بوتون هيكون مسئول عن إضافة بروفايل شخصي
         floatingActionButton: Consumer<SmartCardViewModel>(
           builder: (_, vm, __) {
-            if (vm.selectedCompanyId == null) return const SizedBox.shrink();
+            // لو فيه بروفايل بالفعل، لا نعرض زر الإضافة
+            if (vm.employeeProfile != null) return const SizedBox.shrink();
             return FloatingActionButton(
-              onPressed: vm.isLoading ? null : _showAddEmployeeDialog,
+              heroTag: 'smart_card_add_profile',
+              onPressed:
+                  vm.isLoading ? null : () => _showCreateProfileBottomSheet(vm),
               backgroundColor: Color(AppColors.primary),
               child: vm.isLoading
                   ? const SizedBox(
                       width: 24,
                       height: 24,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
                     )
                   : const Icon(Icons.add, color: Colors.white),
             );
@@ -156,10 +204,15 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
         ),
         body: Consumer<SmartCardViewModel>(
           builder: (_, vm, __) {
-            if (vm.isLoading && vm.myCompanies.isEmpty) {
+            final jsonString = CacheHelper.getString("USG");
+            var gCache;
+            if (jsonString != null && jsonString != "") {
+              gCache = json.decode(jsonString) as Map<String, dynamic>;
+            }
+            if (vm.isLoading && vm.myCompanies.isEmpty && vm.employeeProfile == null) {
               return const SmartCardLoadingWidget();
             }
-            if (vm.errorMessage != null && vm.myCompanies.isEmpty) {
+            if (vm.errorMessage != null && vm.myCompanies.isEmpty && vm.employeeProfile == null) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
@@ -170,7 +223,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       const SizedBox(height: 16),
                       FilledButton(
                         onPressed: () => vm.loadSmartCardScreen(context),
-                        child: const Text('Retry'),
+                        child: Text(AppStrings.retry.tr()),
                       ),
                     ],
                   ),
@@ -185,84 +238,210 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Company Name
-                    Center(
+                    Container(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
+                      width: double.infinity,
+                      alignment: Alignment.center,
                       child: Text(
-                        vm.selectedCompany?['name']?.toString() ?? '',
+                        AppStrings.smartCardDigitalProfileDesc.tr(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 13,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                    gapH12,
+                    GestureDetector(
+                      onTap: () {
+                        context.pushNamed(
+                          AppRoutes.youtubeVideoScreen.name,
+                          pathParameters: {
+                            'lang': context.locale.languageCode,
+                            'url': Uri.encodeComponent(gCache['smartCardVideoUrl'].toString()),
+                          },
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppStrings.learnMoreAboutOpportunities.tr(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30,),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.selectCompanyProfile.tr(),
                         style: const TextStyle(
-                          color: Color(AppColors.black),
+                          color: Color(AppColors.darkBlue),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    // Action Buttons Grid - First Row
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildActionCard(
-                            icon: Icons.business,
-                            label: AppStrings.updateCompanyInfo.tr(),
-                            onTap: () => _navigateTo(AppRoutes.updateMyInfoScreen.name),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildActionCard(
-                            icon: Icons.dashboard_customize,
-                            label: AppStrings.selectTemplate.tr(),
-                            onTap: () => _navigateTo(AppRoutes.selectTemplateScreen.name),
-                          ),
-                        ),
-                      ],
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildActionCard(
-                            icon: Icons.qr_code,
-                            label: AppStrings.downloadQrCode.tr(),
-                            onTap: () {
-                              // Download QR Code – يمكن ربطه لاحقاً بـ public URL
-                            },
-                          ),
+                    if (vm.myCompanies.isEmpty)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey[300]!),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildActionCard(
-                            icon: Icons.link,
-                            label: AppStrings.copyProfileLink.tr(),
-                            onTap: _copyProfileLink,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                    Center(
-                      child: Text(
-                        AppStrings.employeeProfiles.tr(),
-                        style: const TextStyle(
-                          color: Color(AppColors.black),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (vm.companyEmployees.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Center(
-                          child: Text(
-                            'No employees',
-                            style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                          ),
+                        child: Text(
+                          AppStrings.noCompaniesFound.tr(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey[700], fontSize: 14),
                         ),
                       )
                     else
-                      ...vm.companyEmployees.map((e) => _buildEmployeeCard(e)),
+                      Column(
+                        children: vm.myCompanies
+                            .map(
+                              (c) => _buildCompanyCard(
+                                company: c,
+                                isSelected: false,
+                                onTap: () {
+                                  context.pushNamed(
+                                    AppRoutes.smartCardCompanyDetailScreen.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode,
+                                    },
+                                    extra: c,
+                                  );
+                                },
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    const SizedBox(height: 12),
+                    Container(
+                      height: 40,
+                      width: 160,
+                      child: FilledButton(
+                        onPressed: vm.isLoading
+                            ? null
+                            : () => _showAddCompanyBottomSheet(vm),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Color(AppColors.darkBlue),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        child: Text(
+                          AppStrings.addNewCompany.tr(),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // 2) Personal QR Profile section
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.personalQrProfile.tr(),
+                        style: const TextStyle(
+                          color: Color(AppColors.darkBlue),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    if (vm.employeeProfile != null)
+                      InkWell(
+                        onTap: () async {
+                          final deleted = await context.pushNamed<bool>(
+                            AppRoutes.smartCardProfileDetailScreen.name,
+                            pathParameters: {
+                              'lang': context.locale.languageCode,
+                            },
+                            extra: {
+                              'employee': vm.employeeProfile!,
+                              'isPersonal': true,
+                              'companyId': null,
+                            },
+                          );
+                          if (deleted == true && context.mounted) {
+                            vm.loadSmartCardScreen(context);
+                          }
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: _buildProfileCard(vm.employeeProfile!),
+                      )
+                    else
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
+                        child: Text(
+                          AppStrings.noProfileYet.tr(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey[700], fontSize: 14),
+                        ),
+                      ),
+                    SizedBox(height: 30,),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.callUsFor.tr(),
+                        style: const TextStyle(
+                          color: Color(AppColors.black),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildActionCard(
+                            icon: "assets/images/svg/downloadQr.svg",
+                            label: AppStrings.premiumSmartCard.tr(),
+                            onTap: () => _showInfoBottomSheet(AppStrings.premiumSmartCardSheetMessage, isFromPremiumSmartCard: true),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: buildActionCard(
+                            icon: "assets/images/svg/updateInfo.svg",
+                            label: AppStrings.nfcCards.tr(),
+                            onTap: () => _showInfoBottomSheet(AppStrings.nfcCardsSheetMessage, isFromPremiumSmartCard: false),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -273,50 +452,298 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
     );
   }
 
-  Widget _buildActionCard({
-    required IconData icon,
-    required String label,
+  void _showCreateProfileBottomSheet(SmartCardViewModel vm) {
+    final nameController = TextEditingController();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        final bottomInset = MediaQuery.of(ctx).viewInsets.bottom;
+        return Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(AppColors.modalBackgroundColor),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: nameController,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: AppStrings.profileName.tr(),
+                    labelStyle: TextStyle(
+                      color: Color(AppColors.hintTextColor),
+                      fontSize: 12,
+                      letterSpacing: 0.5,
+                    ),
+                    filled: true,
+                    fillColor: Color(AppColors.cardBackgroundColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.black),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 16,
+                    ),
+                  ),
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) async {
+                    await _handleCreateProfile(ctx, vm, nameController.text);
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () async {
+                      await _handleCreateProfile(ctx, vm, nameController.text);
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Color(AppColors.primary),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    child: Text(
+                      'create'.tr(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _handleCreateProfile(
+    BuildContext bottomSheetContext,
+    SmartCardViewModel vm,
+    String rawName,
+  ) async {
+    final name = rawName.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(bottomSheetContext).showSnackBar(
+        SnackBar(content: Text(AppStrings.pleaseEnterProfileName.tr())),
+      );
+      return;
+    }
+    Navigator.of(bottomSheetContext).pop();
+    final ok = await vm.createEmployeeProfile(context, name: name);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(ok
+            ? AppStrings.profileCreatedSuccessfully.tr()
+            : (vm.errorMessage ?? AppStrings.errorCreatingProfile.tr())),
+      ),
+    );
+  }
+
+  void _showAddCompanyBottomSheet(SmartCardViewModel vm) {
+    final nameController = TextEditingController();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        final bottomInset = MediaQuery.of(ctx).viewInsets.bottom;
+        return Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(AppColors.modalBackgroundColor),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: nameController,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: AppStrings.companyName.tr(),
+                    labelStyle: TextStyle(
+                      color: Color(AppColors.hintTextColor),
+                      fontSize: 12,
+                      letterSpacing: 0.5,
+                    ),
+                    filled: true,
+                    fillColor: Color(AppColors.cardBackgroundColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.black),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 16,
+                    ),
+                  ),
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) async {
+                    await _handleCreateCompany(ctx, vm, nameController.text);
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () async {
+                      await _handleCreateCompany(ctx, vm, nameController.text);
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Color(AppColors.primary),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    child: Text(
+                      'create'.tr(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _handleCreateCompany(
+    BuildContext bottomSheetContext,
+    SmartCardViewModel vm,
+    String rawName,
+  ) async {
+    final name = rawName.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(bottomSheetContext).showSnackBar(
+        SnackBar(content: Text(AppStrings.pleaseEnterCompanyName.tr())),
+      );
+      return;
+    }
+    Navigator.of(bottomSheetContext).pop();
+    try {
+      // الـ API يتوقع الموديل كامل (كل المفاتيح، null لو مفيش)
+      final fullModel = SmartCardCompanyProfileModel(name: name);
+      await SmartCardService.createCompany(
+        context,
+        body: fullModel.toFullJson(),
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppStrings.companyCreatedSuccessfully.tr())),
+      );
+      vm.loadSmartCardScreen(context);
+    } catch (e) {
+      if (!mounted) return;
+      final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Widget _buildCompanyCard({
+    required Map<String, dynamic> company,
+    required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final name = company['name']?.toString() ?? '';
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        alignment: Alignment.center,
-        height: 120,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         decoration: BoxDecoration(
-          color: Color(AppColors.dark),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white, size: 28),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                height: 1.3,
-              ),
+          border: Border.all(
+            color: isSelected ? Color(AppColors.primary) : Colors.grey[300]!,
+            width: isSelected ? 1.5 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
           ],
+        ),
+        child: Text(
+          name,
+          style: const TextStyle(
+            color: Color(AppColors.black),
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildEmployeeCard(Map<String, dynamic> emp) {
-    final name = emp['name']?.toString() ?? emp['id']?.toString() ?? '';
+  Widget _buildProfileCard(Map<String, dynamic> profile) {
+    final displayName = profile['name']?.toString() ??
+        profile['full_name']?.toString() ??
+        profile['email']?.toString() ??
+        '';
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -330,7 +757,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
         ],
       ),
       child: Text(
-        name,
+        displayName.isEmpty ? AppStrings.notSet.tr() : displayName,
         style: const TextStyle(
           color: Color(AppColors.black),
           fontSize: 16,

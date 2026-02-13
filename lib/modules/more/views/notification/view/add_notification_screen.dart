@@ -156,78 +156,86 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   builder: (context) {
                                     return StatefulBuilder(
                                       builder: (context, setModalState) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                AppStrings.employeeName.tr(),
-                                                style: TextStyle(
-                                                    color: Color(AppColors.dark),
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              TextFormField(
-                                                decoration: InputDecoration(
-                                                  hintText: AppStrings.searchByName.tr(),
-                                                  prefixIcon: const Icon(Icons.search),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(8),
+                                        final maxHeight = MediaQuery.of(context).size.height * 0.7;
+                                        return ConstrainedBox(
+                                          constraints: BoxConstraints(maxHeight: maxHeight),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  AppStrings.employeeName.tr(),
+                                                  style: TextStyle(
+                                                      color: Color(AppColors.dark),
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 18),
+                                                ),
+                                                const SizedBox(height: 10),
+                                                TextFormField(
+                                                  decoration: InputDecoration(
+                                                    hintText: AppStrings.searchByName.tr(),
+                                                    prefixIcon: const Icon(Icons.search),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                  ),
+                                                  onChanged: (value) {
+                                                    setModalState(() {
+                                                      searchQuery = value.toLowerCase();
+                                                      filteredEmployees = viewModel.employees
+                                                          .where((e) => e['name']
+                                                          .toString()
+                                                          .toLowerCase()
+                                                          .contains(searchQuery))
+                                                          .toList();
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(height: 10),
+                                                ConstrainedBox(
+                                                  constraints: BoxConstraints(maxHeight: maxHeight * 0.6),
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: filteredEmployees.map((employee) {
+                                                        final isSelected =
+                                                            tempSelectedIds.contains(employee['id']);
+                                                        return CheckboxListTile(
+                                                          value: isSelected,
+                                                          title: Text(employee['name']),
+                                                          onChanged: (bool? value) {
+                                                            setModalState(() {
+                                                              if (value == true) {
+                                                                tempSelectedIds.add(employee['id']);
+                                                              } else {
+                                                                tempSelectedIds.remove(employee['id']);
+                                                              }
+                                                            });
+                                                          },
+                                                        );
+                                                      }).toList(),
+                                                    ),
                                                   ),
                                                 ),
-                                                onChanged: (value) {
-                                                  setModalState(() {
-                                                    searchQuery = value.toLowerCase();
-                                                    filteredEmployees = viewModel.employees
-                                                        .where((e) => e['name']
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(searchQuery))
-                                                        .toList();
-                                                  });
-                                                },
-                                              ),
-                                              const SizedBox(height: 10),
-                                              Expanded(
-                                                child: ListView(
-                                                  shrinkWrap: true,
-                                                  children: filteredEmployees.map((employee) {
-                                                    final isSelected =
-                                                    tempSelectedIds.contains(employee['id']);
-                                                    return CheckboxListTile(
-                                                      value: isSelected,
-                                                      title: Text(employee['name']),
-                                                      onChanged: (bool? value) {
-                                                        setModalState(() {
-                                                          if (value == true) {
-                                                            tempSelectedIds.add(employee['id']);
-                                                          } else {
-                                                            tempSelectedIds.remove(employee['id']);
-                                                          }
-                                                        });
-                                                      },
+                                                const SizedBox(height: 12),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                      context,
+                                                      viewModel.employees
+                                                          .where((e) => tempSelectedIds.contains(e['id']))
+                                                          .toList(),
                                                     );
-                                                  }).toList(),
+                                                  },
+                                                  child: Text(
+                                                    AppStrings.confirm.tr(),
+                                                    style: const TextStyle(
+                                                        fontSize: 16, fontWeight: FontWeight.w500),
+                                                  ),
                                                 ),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(
-                                                    context,
-                                                    viewModel.employees
-                                                        .where((e) => tempSelectedIds.contains(e['id']))
-                                                        .toList(),
-                                                  );
-                                                },
-                                                child: Text(
-                                                  AppStrings.confirm.tr(),
-                                                  style: const TextStyle(
-                                                      fontSize: 16, fontWeight: FontWeight.w500),
-                                                ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },
@@ -255,14 +263,14 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       width: 1.0,
                                     ),
                                   ),
-                                  shadows: const [
-                                    BoxShadow(
-                                      color: Color(AppColors.black),
-                                      blurRadius: 10,
-                                      offset: Offset(0, 1),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
+                                  // shadows: const [
+                                  //   BoxShadow(
+                                  //     color: Color(AppColors.black),
+                                  //     blurRadius: 10,
+                                  //     offset: Offset(0, 1),
+                                  //     spreadRadius: 0,
+                                  //   )
+                                  // ],
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -287,41 +295,55 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   builder: (context) {
                                     return StatefulBuilder(
                                       builder: (context, setModalState) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(AppStrings.departmentName.tr(), style:
-                                              TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.w700, fontSize: 18),),
-                                              ...viewModel.departments.map((department) {
-                                                final isSelected = tempDepSelectedIds.contains(department['id']);
-                                                return CheckboxListTile(
-                                                  value: isSelected,
-                                                  selectedTileColor: Color(AppColors.dark),
-                                                  title: Text(department['title']),
-                                                  onChanged: (bool? value) {
-                                                    setModalState(() {
-                                                      if (value == true) {
-                                                        tempDepSelectedIds.add(department['id']);
-                                                      } else {
-                                                        tempDepSelectedIds.remove(department['id']);
-                                                      }
-                                                    });
+                                        final maxHeight = MediaQuery.of(context).size.height * 0.7;
+                                        return ConstrainedBox(
+                                          constraints: BoxConstraints(maxHeight: maxHeight),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(AppStrings.departmentName.tr(), style:
+                                                TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.w700, fontSize: 18),),
+                                                const SizedBox(height: 12),
+                                                ConstrainedBox(
+                                                  constraints: BoxConstraints(maxHeight: maxHeight * 0.6),
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: viewModel.departments.map((department) {
+                                                        final isSelected = tempDepSelectedIds.contains(department['id']);
+                                                        return CheckboxListTile(
+                                                          value: isSelected,
+                                                          selectedTileColor: Color(AppColors.dark),
+                                                          title: Text(department['title']),
+                                                          onChanged: (bool? value) {
+                                                            setModalState(() {
+                                                              if (value == true) {
+                                                                tempDepSelectedIds.add(department['id']);
+                                                              } else {
+                                                                tempDepSelectedIds.remove(department['id']);
+                                                              }
+                                                            });
+                                                          },
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 12),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    print("tempDepSelectedIds --> ${tempDepSelectedIds}");
+                                                    print("listIds --> ${viewModel.listIdsDepartment}");
+                                                    Navigator.pop(context, viewModel.departments.where((e) => tempDepSelectedIds.contains(e['id'])).toList());
                                                   },
-                                                );
-                                              }).toList(),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  print("tempDepSelectedIds --> ${tempDepSelectedIds}");
-                                                  print("listIds --> ${viewModel.listIdsDepartment}");
-                                                  Navigator.pop(context, viewModel.departments.where((e) => tempDepSelectedIds.contains(e['id'])).toList());
-                                                },
-                                                child: Text(AppStrings.confirm.tr(), style: const TextStyle(
-                                                  fontSize: 16, fontWeight: FontWeight.w500
-                                                ),),
-                                              ),
-                                            ],
+                                                  child: Text(AppStrings.confirm.tr(), style: const TextStyle(
+                                                    fontSize: 16, fontWeight: FontWeight.w500
+                                                  ),),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },
@@ -348,14 +370,14 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       width: 1.0,
                                     ),
                                   ),
-                                  shadows: const [
-                                    BoxShadow(
-                                      color: Color(AppColors.black),
-                                      blurRadius: 10,
-                                      offset: Offset(0, 1),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
+                                  // shadows: const [
+                                  //   BoxShadow(
+                                  //     color: Color(AppColors.black),
+                                  //     blurRadius: 10,
+                                  //     offset: Offset(0, 1),
+                                  //     spreadRadius: 0,
+                                  //   )
+                                  // ],
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -406,14 +428,14 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       width: 1.0,
                                     ),
                                   ),
-                                  shadows: const [
-                                    BoxShadow(
-                                      color: Color(AppColors.black),
-                                      blurRadius: 10,
-                                      offset: Offset(0, 1),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
+                                  // shadows: const [
+                                  //   BoxShadow(
+                                  //     color: Color(AppColors.black),
+                                  //     blurRadius: 10,
+                                  //     offset: Offset(0, 1),
+                                  //     spreadRadius: 0,
+                                  //   )
+                                  // ],
                                 ),
                                 child:  Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -498,14 +520,14 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                     width: 1.0,
                                   ),
                                 ),
-                                shadows: const [
-                                  BoxShadow(
-                                    color: Color(AppColors.black),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 1),
-                                    spreadRadius: 0,
-                                  )
-                                ],
+                                // shadows: const [
+                                //   BoxShadow(
+                                //     color: Color(AppColors.black),
+                                //     blurRadius: 10,
+                                //     offset: Offset(0, 1),
+                                //     spreadRadius: 0,
+                                //   )
+                                // ],
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,

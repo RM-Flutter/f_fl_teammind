@@ -76,9 +76,9 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           builder: (context, setModalState) {
             // Build dropdown items using viewModel directly
             List<DropdownMenuItem<String>> items = [
-              const DropdownMenuItem(
+              DropdownMenuItem(
                 value: 'All',
-                child: Text('All', style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400)),
+                child: Text(AppStrings.all.tr(), style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400)),
               ),
             ];
             
@@ -693,7 +693,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
     final fileName = fileUrl.split('/').last;
     if (fileName.isEmpty) {
       Fluttertoast.showToast(
-        msg: 'Invalid file name',
+        msg: AppStrings.invalidFileName.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
@@ -759,7 +759,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           _downloadingFileNames.remove(fileId);
         });
         Fluttertoast.showToast(
-          msg: 'Error downloading file: $e',
+          msg: '${AppStrings.errorDownloadingFile.tr()}: $e',
           backgroundColor: Colors.red,
           textColor: Colors.white,
           toastLength: Toast.LENGTH_LONG,
@@ -776,7 +776,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
         _downloadingFileNames.remove(fileId);
       });
       Fluttertoast.showToast(
-        msg: 'Storage permission is required to download files.',
+        msg: AppStrings.storagePermissionRequiredForDownload.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
@@ -820,7 +820,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
         _downloadingFileNames.remove(fileId);
       });
       Fluttertoast.showToast(
-        msg: 'Error downloading file: $e',
+        msg: '${AppStrings.errorDownloadingFile.tr()}: $e',
         backgroundColor: Colors.red,
         textColor: Colors.white,
         toastLength: Toast.LENGTH_LONG,

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
@@ -17,11 +19,35 @@ import '../../../models/settings/user_settings.model.dart';
 import '../../../services/fingerprint_service.dart';
 
 class FingerprintViewModel extends ChangeNotifier {
+  /// ضغط بايتات الصورة لتقليل الحجم عند الإرسال (جودة 72)
+  static Future<Uint8List> _compressImageIfNeeded(
+    Uint8List bytes,
+    String mimeType,
+    String fileName,
+  ) async {
+    final isImage = mimeType.startsWith('image/') ||
+        RegExp(r'\.(jpg|jpeg|png|gif|webp|bmp)$', caseSensitive: false).hasMatch(fileName);
+    if (!isImage || bytes.length < 1024) return bytes;
+    try {
+      final compressed = await FlutterImageCompress.compressWithList(
+        bytes,
+        minHeight: 1200,
+        minWidth: 1200,
+        quality: 72,
+      );
+      return compressed.isNotEmpty ? compressed : bytes;
+    } catch (e) {
+      debugPrint('Fingerprint image compress error: $e');
+      return bytes;
+    }
+  }
+
   List<FingerPrintModel>? fingerprints;
   UserSettingsModel? userSettings;
   bool isLoading = true;
   String? errorMessage;
   List<int>? validIndexes;
+  final Set<int> _deletingOfflineIndexes = {};
   void updateLoadingStatus({required bool laodingValue}) {
     isLoading = laodingValue;
     notifyListeners();
@@ -61,6 +87,38 @@ class FingerprintViewModel extends ChangeNotifier {
       print("No fingerprints found in shared preferences");
     }
   }
+
+  /// حذف بصمة أوفلاين واحدة من الكاش (SharedPreferences + AppConstants)
+  Future<void> deleteOfflineFingerprintAt(int index) async {
+    if (AppConstants.fingerPrints == null ||
+        index < 0 ||
+        index >= AppConstants.fingerPrints!.length) {
+      return;
+    }
+
+    _deletingOfflineIndexes.add(index);
+    notifyListeners();
+
+    // إعطاء الفرصة لرسم اللودينج قبل تنفيذ الحذف
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    AppConstants.fingerPrints!.removeAt(index);
+
+    if (AppConstants.fingerPrints!.isEmpty) {
+      await prefs.remove('fingerPrints');
+    } else {
+      await prefs.setString(
+        'fingerPrints',
+        jsonEncode(AppConstants.fingerPrints),
+      );
+    }
+
+    _deletingOfflineIndexes.remove(index);
+    notifyListeners();
+  }
+  Set<int> get deletingOfflineIndexes => _deletingOfflineIndexes;
   Future<void> _getEmployeeFingerprints(
       {required BuildContext context, String? empId}) async {
     // get user fingerprints
@@ -111,29 +169,75 @@ class FingerprintViewModel extends ChangeNotifier {
         AppConstants.fingerPrints = [];
         Navigator.pop(context);
       } else {
-        // 👇 احفظ الإندكسات الصحيحة هنا
-        List<int> validIndexes = response.data['errors'].keys.map((k) {
-          return int.tryParse(k.replaceAll(".", ""));
-        }).whereType<int>().toList();
+        // 👇 errors من الـ API ممكن تيجي بأكثر من شكل:
+        // 1) Map فيه مفاتيح تمثل الإندكسات وقيمها رسائل أخطاء
+        //    "errors": { "0": "location is no founded", "1": "location is no founded" }
+        // 2) List من الرسائل فقط:
+        //    "errors": ["location is no founded", "location is no founded"]
+        // 3) أي شكل آخر قابل للتحويل لنص واحد
 
-        List<Map<String, dynamic>> filteredList = [];
-        for (int i = 0; i < AppConstants.fingerPrints!.length; i++) {
-          if (validIndexes.contains(i)) {
-            filteredList.add(AppConstants.fingerPrints![i]);
-          }
+        final dynamic errors = response.data['errors'];
+        List<int> validIndexes = [];
+        final List<String> errorMessages = [];
+
+        if (errors is Map) {
+          // نستخرج الإندكسات من الـ keys ونجمّع رسائل الأخطاء من الـ values
+          errors.forEach((key, value) {
+            final index =
+                int.tryParse(key.toString().replaceAll('.', ''));
+            if (index != null) {
+              validIndexes.add(index);
+            }
+
+            if (value is List) {
+              errorMessages.addAll(
+                  value.map((e) => e.toString()));
+            } else if (value != null) {
+              errorMessages.add(value.toString());
+            }
+          });
+        } else if (errors is List) {
+          // صيغة قائمة رسائل فقط
+          errorMessages
+              .addAll(errors.map((e) => e.toString()));
+        } else if (errors != null) {
+          // أي قيمة أخرى قابلة للتحويل لنص
+          errorMessages.add(errors.toString());
         }
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('fingerPrints', jsonEncode(filteredList));
-        AppConstants.fingerPrints = filteredList;
-        print("object --> ${AppConstants.fingerPrints}");
-        print("object --> ${filteredList}");
-        notifyListeners();
 
-        print(filteredList);
+        // لو عندنا إندكسات صحيحة، نحدّث قائمة البصمات المحفوظة
+        if (validIndexes.isNotEmpty &&
+            AppConstants.fingerPrints != null) {
+          List<Map<String, dynamic>> filteredList = [];
+          for (int i = 0;
+              i < AppConstants.fingerPrints!.length;
+              i++) {
+            if (validIndexes.contains(i)) {
+              filteredList.add(AppConstants.fingerPrints![i]);
+            }
+          }
+          final SharedPreferences prefs =
+              await SharedPreferences.getInstance();
+          await prefs.setString(
+              'fingerPrints', jsonEncode(filteredList));
+          AppConstants.fingerPrints = filteredList;
+          print("object --> ${AppConstants.fingerPrints}");
+          print("object --> ${filteredList}");
+          notifyListeners();
+          print(filteredList);
+        }
+
+        // نجهّز رسالة الخطأ للمستخدم (رسالة الـ API + كل رسائل errors)
+        String baseMessage = response.data['message']?.toString() ??
+            AppStrings.failed.tr();
+        if (errorMessages.isNotEmpty) {
+          baseMessage =
+              '$baseMessage\n${errorMessages.join('\n')}';
+        }
 
         AlertsService.error(
           context: context,
-          message: response.data['message'],
+          message: baseMessage,
           title: AppStrings.failed.tr(),
         );
       }
@@ -189,23 +293,24 @@ class FingerprintViewModel extends ChangeNotifier {
         }
       }
 
-      // Files
+      // Files — ضغط الصور قبل الإرسال (أونلاين وأوفلاين) لتقليل المساحة
       if (fingerprint['files'] != null) {
-        // Decode if it's a JSON string
         var filesList = fingerprint['files'];
         if (filesList is String) {
           filesList = jsonDecode(filesList);
         }
 
         for (var file in filesList) {
-          final fileBytes = base64Decode(file['bytes']);
-          final fileName = file['fileName'];
-          final mimeType = file['mimeType'] ?? 'application/octet-stream';
+          Uint8List fileBytes = Uint8List.fromList(base64Decode(file['bytes']) as List<int>);
+          final fileName = file['fileName'] as String? ?? 'image.jpg';
+          final mimeType = file['mimeType'] as String? ?? 'application/octet-stream';
+
+          fileBytes = await _compressImageIfNeeded(fileBytes, mimeType, fileName);
 
           final multipartFile = MultipartFile.fromBytes(
             fileBytes,
             filename: fileName,
-            contentType: MediaType.parse(mimeType),
+            contentType: MediaType.parse(mimeType.startsWith('image/') ? 'image/jpeg' : mimeType),
           );
 
           formData.files.add(MapEntry('fingerprints[$i][files][]', multipartFile));

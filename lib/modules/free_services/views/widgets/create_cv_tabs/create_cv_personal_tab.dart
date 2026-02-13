@@ -10,8 +10,15 @@ import '../../../view_models/create_cv.viewmodel.dart';
 
 class CreateCVPersonalTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
+  /// When false, hides CV-only demographics (family status, birthday, gender, nationality)
+  /// so the tab can be reused for Smart Card update screens without extra fields.
+  final bool showCvDemographics;
 
-  const CreateCVPersonalTab({super.key, required this.viewModel});
+  const CreateCVPersonalTab({
+    super.key,
+    required this.viewModel,
+    this.showCvDemographics = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +27,6 @@ class CreateCVPersonalTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Profile Image Section
-          _buildProfileImageSection(context),
-          const SizedBox(height: 24),
-          
           _buildTextField(
             controller: viewModel.nameController,
             label: AppStrings.name.tr(),
@@ -31,41 +34,36 @@ class CreateCVPersonalTab extends StatelessWidget {
             hint: AppStrings.enterYourName.tr(),
           ),
           const SizedBox(height: 16),
-          
-          _buildFamilyStatusDropdown(),
-          const SizedBox(height: 16),
-          
-          _buildBirthdayField(context),
-          const SizedBox(height: 16),
-          
-          _buildGenderDropdown(),
-          const SizedBox(height: 16),
-          
-          _buildTextField(
-            controller: viewModel.phoneController,
-            label: AppStrings.phone.tr(),
-            isRequired: true,
-            hint: AppStrings.enterYourPhoneNumber.tr(),
-            keyboardType: TextInputType.phone,
-          ),
-          const SizedBox(height: 16),
-          
-          _buildNationalityDropdown(),
-          const SizedBox(height: 16),
-          
+
+          if (showCvDemographics) ...[
+            _buildFamilyStatusDropdown(),
+            const SizedBox(height: 16),
+
+            _buildBirthdayField(context),
+            const SizedBox(height: 16),
+
+            _buildGenderDropdown(),
+            const SizedBox(height: 16),
+          ],
+
+          if (showCvDemographics) ...[
+            _buildNationalityDropdown(),
+            const SizedBox(height: 16),
+          ],
+
           _buildCountryDropdown(context),
           const SizedBox(height: 16),
-          
+
           if (viewModel.countryId != null) ...[
             _buildStateDropdown(context),
             const SizedBox(height: 16),
           ],
-          
+
           if (viewModel.stateId != null) ...[
             _buildCityDropdown(context),
             const SizedBox(height: 16),
           ],
-          
+
           _buildTextField(
             controller: viewModel.addressController,
             label: AppStrings.address.tr(),
@@ -114,6 +112,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             hintText: hint,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
@@ -142,18 +141,19 @@ class CreateCVPersonalTab extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.grey.shade600),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
-          style: TextStyle(color: Color(AppColors.dark)),
+          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           items: ['single', 'married', 'divorced', 'widowed']
               .map((status) => DropdownMenuItem(
-                    value: status,
-                    child: Text(
-                      status,
-                      style: TextStyle(color: Color(AppColors.dark)),
-                    ),
-                  ))
+            value: status,
+            child: Text(
+              status,
+              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ))
               .toList(),
           onChanged: (value) {
             viewModel.familyStatus = value;
@@ -201,7 +201,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: Colors.black),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -252,18 +252,19 @@ class CreateCVPersonalTab extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.grey.shade600),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
-          style: TextStyle(color: Color(AppColors.dark)),
+          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           items: ['male', 'female']
               .map((gender) => DropdownMenuItem(
-                    value: gender,
-                    child: Text(
-                      gender,
-                      style: TextStyle(color: Color(AppColors.dark)),
-                    ),
-                  ))
+            value: gender,
+            child: Text(
+              gender,
+              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ))
               .toList(),
           onChanged: (value) {
             viewModel.gender = value;
@@ -277,9 +278,9 @@ class CreateCVPersonalTab extends StatelessWidget {
   Widget _buildNationalityDropdown() {
     final selectedNationality = viewModel.nationalityId != null
         ? viewModel.nationalities.firstWhere(
-            (n) => n['id'] == viewModel.nationalityId,
-            orElse: () => {},
-          )
+          (n) => n['id'] == viewModel.nationalityId,
+      orElse: () => {},
+    )
         : null;
 
     return Column(
@@ -309,7 +310,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           hintText: AppStrings.selectNationality.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
@@ -323,26 +324,27 @@ class CreateCVPersonalTab extends StatelessWidget {
   }
 
   Widget _buildCountryDropdown(BuildContext context) {
-    final selectedCountry = viewModel.countryId != null
+    final selectedCountry = viewModel.countryId != null && viewModel.countries.isNotEmpty
         ? viewModel.countries.firstWhere(
-            (c) => c['id'] == viewModel.countryId,
-            orElse: () => {},
-          )
+          (c) => CreateCVViewModel.idMatch(c['id'], viewModel.countryId),
+      orElse: () => <String, dynamic>{},
+    )
         : null;
+    final countryValue = (selectedCountry != null && selectedCountry.isNotEmpty) ? selectedCountry : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-        Text(
-          AppStrings.country.tr(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
-          ),
-        ),
+            Text(
+              AppStrings.country.tr(),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(AppColors.dark),
+              ),
+            ),
             const Text(
               ' *',
               style: TextStyle(color: Colors.red),
@@ -352,12 +354,12 @@ class CreateCVPersonalTab extends StatelessWidget {
         const SizedBox(height: 8),
         CustomDropdown.search(
           items: viewModel.countries,
-          selectedValue: selectedCountry,
+          selectedValue: countryValue,
           nameKey: 'title',
           hintText: AppStrings.selectCountry.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
@@ -370,26 +372,27 @@ class CreateCVPersonalTab extends StatelessWidget {
   }
 
   Widget _buildStateDropdown(BuildContext context) {
-    final selectedState = viewModel.stateId != null
+    final selectedState = viewModel.stateId != null && viewModel.states.isNotEmpty
         ? viewModel.states.firstWhere(
-            (s) => s['id'] == viewModel.stateId,
-            orElse: () => {},
-          )
+          (s) => CreateCVViewModel.idMatch(s['id'], viewModel.stateId),
+      orElse: () => <String, dynamic>{},
+    )
         : null;
+    final stateValue = (selectedState != null && selectedState.isNotEmpty) ? selectedState : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-        Text(
-          AppStrings.stateProvince.tr(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
-          ),
-        ),
+            Text(
+              AppStrings.stateProvince.tr(),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(AppColors.dark),
+              ),
+            ),
             const Text(
               ' *',
               style: TextStyle(color: Colors.red),
@@ -399,12 +402,12 @@ class CreateCVPersonalTab extends StatelessWidget {
         const SizedBox(height: 8),
         CustomDropdown.search(
           items: viewModel.states,
-          selectedValue: selectedState,
+          selectedValue: stateValue,
           nameKey: 'title',
           hintText: AppStrings.selectStateProvince.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
@@ -417,12 +420,13 @@ class CreateCVPersonalTab extends StatelessWidget {
   }
 
   Widget _buildCityDropdown(BuildContext context) {
-    final selectedCity = viewModel.cityId != null
+    final selectedCity = viewModel.cityId != null && viewModel.cities.isNotEmpty
         ? viewModel.cities.firstWhere(
-            (c) => c['id'] == viewModel.cityId,
-            orElse: () => {},
-          )
+          (c) => CreateCVViewModel.idMatch(c['id'], viewModel.cityId),
+      orElse: () => <String, dynamic>{},
+    )
         : null;
+    final cityValue = (selectedCity != null && selectedCity.isNotEmpty) ? selectedCity : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,12 +442,12 @@ class CreateCVPersonalTab extends StatelessWidget {
         const SizedBox(height: 8),
         CustomDropdown.search(
           items: viewModel.cities,
-          selectedValue: selectedCity,
+          selectedValue: cityValue,
           nameKey: 'title',
           hintText: AppStrings.selectCity.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
@@ -458,62 +462,13 @@ class CreateCVPersonalTab extends StatelessWidget {
 
 
   Widget _buildProfileImageSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppStrings.profilePhoto.tr(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
-          ),
-        ),
-        const SizedBox(height: 12),
-        
-        // Image Preview
-        Center(
-          child: Stack(
-            children: [
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade300, width: 2),
-                ),
-                child: ClipOval(
-                  child: _buildImageWidget(),
-                ),
-              ),
-              if (viewModel.imageSourceType == ImageSourceType.newImage)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
-                    ),
-                    child: const Icon(Icons.check, color: Colors.white, size: 16),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        
-        // Image Source Options
-        _buildImageSourceOptions(context),
-      ],
-    );
+    // لم يعد يتم استخدام صورة البروفايل في هذه الشاشة
+    return const SizedBox.shrink();
   }
 
   Widget _buildImageWidget() {
     final imageUrl = viewModel.getCurrentImageUrl();
-    
+
     if (viewModel.imageSourceType == ImageSourceType.none) {
       // Show default image based on gender
       return Image.asset(
@@ -524,11 +479,11 @@ class CreateCVPersonalTab extends StatelessWidget {
         },
       );
     }
-    
+
     if (imageUrl == null) {
       return _buildDefaultAvatar();
     }
-    
+
     // If it's a file path (new image)
     if (imageUrl.startsWith('/') || imageUrl.contains('file://')) {
       return Image.file(
@@ -539,7 +494,7 @@ class CreateCVPersonalTab extends StatelessWidget {
         },
       );
     }
-    
+
     // If it's a network URL (profile photo)
     return CachedNetworkImage(
       imageUrl: imageUrl,
@@ -578,7 +533,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           dense: true,
         ),
-        
+
         // Add New Photo Option
         RadioListTile<ImageSourceType>(
           title: Text(AppStrings.addNewPhoto.tr()),
@@ -592,7 +547,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           dense: true,
         ),
-        
+
         // Show picker button if new image is selected
         if (viewModel.imageSourceType == ImageSourceType.newImage) ...[
           const SizedBox(height: 8),
@@ -616,7 +571,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ],
           ),
         ],
-        
+
         // No Photo Option
         RadioListTile<ImageSourceType>(
           title: Text(AppStrings.noPhotoUseDefault.tr()),

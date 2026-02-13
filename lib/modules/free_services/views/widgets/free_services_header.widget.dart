@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../general_services/app_config.service.dart';
 import '../../../../constants/app_sizes.dart';
 import '../../../../constants/app_strings.dart';
 import '../../../../constants/user_consts.dart';
@@ -179,7 +181,7 @@ class FreeServicesHeaderWidget extends StatelessWidget {
                                     isVisitor
                                         ? AppStrings.welcomeToFreeServices.tr()
                                         : AppStrings.niceToMeetYou.tr(),
-                                    maxLines: 1,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
@@ -191,6 +193,23 @@ class FreeServicesHeaderWidget extends StatelessWidget {
                               ),
                             ),
                             const Spacer(),
+                            // Logout icon for logged-in users (same logic as MoreScreen: logout then go to splash)
+                            GestureDetector(
+                              onTap: (){
+                                context.pushNamed(
+                                  AppRoutes.freeMoreScreen.name,
+                                  pathParameters: {'lang': context.locale.languageCode},
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsetsGeometry.all(3),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white)
+                                ),
+                                child: Icon(Icons.menu, color: Colors.white,),
+                              ),
+                            ),
                             // Login button for visitors
                             if (isVisitor)
                               TextButton.icon(

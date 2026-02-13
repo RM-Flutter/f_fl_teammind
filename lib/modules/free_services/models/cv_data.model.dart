@@ -1,3 +1,10 @@
+int? _parseInt(dynamic v) {
+  if (v == null) return null;
+  if (v is int) return v;
+  if (v is String) return int.tryParse(v);
+  return null;
+}
+
 /// Model for CV Personal Data
 class CVPersonalData {
   final String? name;
@@ -38,14 +45,14 @@ class CVPersonalData {
       familyStatus: json['family_status'] as String?,
       birthday: json['birthday'] as String?,
       gender: json['gender'] as String?,
-      nationalityId: json['nationality_id'] as int?,
+      nationalityId: _parseInt(json['nationality_id']),
       nationalityTitle: json['nationality_title'] as String?,
       countryKey: json['country_key'] as String?,
-      countryId: json['country_id'] as int?,
+      countryId: _parseInt(json['country_id']),
       countryTitle: json['country_title'] as String?,
-      stateId: json['state_id'] as int?,
+      stateId: _parseInt(json['state_id']),
       stateTitle: json['state_title'] as String?,
-      cityId: json['city_id'] as int?,
+      cityId: _parseInt(json['city_id']),
       cityTitle: json['city_title'] as String?,
       address: json['address'] as String?,
     );
@@ -106,6 +113,7 @@ class CVContactData {
 
 /// Model for CV Experience
 class CVExperience {
+  final String? companyName;
   final int? countryId;
   final int? stateId;
   final String? dateFrom;
@@ -113,6 +121,7 @@ class CVExperience {
   final String? jobTitle;
 
   CVExperience({
+    this.companyName,
     this.countryId,
     this.stateId,
     this.dateFrom,
@@ -122,8 +131,9 @@ class CVExperience {
 
   factory CVExperience.fromJson(Map<String, dynamic> json) {
     return CVExperience(
-      countryId: json['country_id'] as int?,
-      stateId: json['state_id'] as int?,
+      companyName: json['company_name'] as String?,
+      countryId: _parseInt(json['country_id']),
+      stateId: _parseInt(json['state_id']),
       dateFrom: json['date_from'] as String?,
       dateTo: json['date_to'] as String?,
       jobTitle: json['job_title'] as String?,
@@ -132,6 +142,7 @@ class CVExperience {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {};
+    if (companyName != null && companyName!.isNotEmpty) json['company_name'] = companyName;
     if (countryId != null) json['country_id'] = countryId;
     if (stateId != null) json['state_id'] = stateId;
     if (dateFrom != null && dateFrom!.isNotEmpty) json['date_from'] = dateFrom;
@@ -287,8 +298,8 @@ class CVEducation {
   factory CVEducation.fromJson(Map<String, dynamic> json) {
     return CVEducation(
       institutionName: json['institution_name'] as String?,
-      countryId: json['country_id'] as int?,
-      stateId: json['state_id'] as int?,
+      countryId: _parseInt(json['country_id']),
+      stateId: _parseInt(json['state_id']),
       dateFrom: json['date_from'] as String?,
       dateTo: json['date_to'] as String?,
       certificateName: json['certificate_name'] as String?,
@@ -514,6 +525,87 @@ class CVDataModel {
       if (educationList.isNotEmpty) json['education'] = educationList;
     }
     
+    return json;
+  }
+}
+
+/// Company update request – body as Map (same approach as CreateCVRequestModel / update CV)
+class UpdateCompanyRequestModel {
+  final String? name;
+  final String? about;
+  final String? business;
+  final int? countryId;
+  final int? stateId;
+  final int? cityId;
+  final String? address;
+  final String? countryKey;
+  final String? phone;
+  final String? email;
+  final List<Map<String, String>>? morePhones;
+  final String? linkedin;
+  final String? behance;
+  final String? website;
+  final String? whatsapp;
+  final List<Map<String, String>>? otherLinks;
+  final List<CVPortfolio>? portfolios;
+  final List<dynamic>? worksGallery;
+  final List<dynamic>? videoGallery;
+
+  UpdateCompanyRequestModel({
+    this.name,
+    this.about,
+    this.business,
+    this.countryId,
+    this.stateId,
+    this.cityId,
+    this.address,
+    this.countryKey,
+    this.phone,
+    this.email,
+    this.morePhones,
+    this.linkedin,
+    this.behance,
+    this.website,
+    this.whatsapp,
+    this.otherLinks,
+    this.portfolios,
+    this.worksGallery,
+    this.videoGallery,
+  });
+
+  /// Body for API: single Map, only non-empty fields, same style as update CV
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {};
+    if (name != null && name!.isNotEmpty) json['name'] = name;
+    if (about != null && about!.isNotEmpty) json['about'] = about;
+    if (business != null && business!.isNotEmpty) json['business'] = business;
+    if (countryId != null) json['country_id'] = countryId;
+    if (stateId != null) json['state_id'] = stateId;
+    if (cityId != null) json['city_id'] = cityId;
+    if (address != null && address!.isNotEmpty) json['address'] = address;
+    if (countryKey != null && countryKey!.isNotEmpty) json['country_key'] = countryKey;
+    if (phone != null && phone!.isNotEmpty) json['phone'] = phone;
+    if (email != null && email!.isNotEmpty) json['email'] = email;
+    if (morePhones != null && morePhones!.isNotEmpty) {
+      json['more_phones'] = morePhones;
+    }
+    if (linkedin != null && linkedin!.isNotEmpty) json['linkedin'] = linkedin;
+    if (behance != null && behance!.isNotEmpty) json['behance'] = behance;
+    if (website != null && website!.isNotEmpty) json['website'] = website;
+    if (whatsapp != null && whatsapp!.isNotEmpty) json['whatsapp'] = whatsapp;
+    if (otherLinks != null && otherLinks!.isNotEmpty) {
+      json['other_links'] = otherLinks;
+    }
+    if (portfolios != null && portfolios!.isNotEmpty) {
+      final list = portfolios!.map((e) => e.toJson()).where((j) => j.isNotEmpty).toList();
+      if (list.isNotEmpty) json['portfolios'] = list;
+    }
+    if (worksGallery != null && worksGallery!.isNotEmpty) {
+      json['works_gallery'] = worksGallery;
+    }
+    if (videoGallery != null && videoGallery!.isNotEmpty) {
+      json['video_gallery'] = videoGallery;
+    }
     return json;
   }
 }

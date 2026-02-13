@@ -103,6 +103,7 @@ class ExpandableFabState extends State<ExpandableFab>
         curve: Curves.easeInOut,
         duration: const Duration(milliseconds: 250),
         child: FloatingActionButton(
+          heroTag: 'expandable_fab_main',
           backgroundColor: Theme.of(context).colorScheme.primary,
           onPressed: _toggle,
           child: Center(

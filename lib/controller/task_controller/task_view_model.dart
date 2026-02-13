@@ -287,18 +287,20 @@ class TaskViewModel extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isLoading = true;
     notifyListeners();
+    final body = <String, dynamic>{
+      "title": titleController.text,
+      "content": contentController.text,
+      "due_date": selectedDatecontroller.text,
+      "assign_to": selectedEmployeeIds,
+      "sub_tasks": tasksList2,
+      "status": selectedStatus.toString(),
+      "icon": selectedIcon.toString(),
+    };
     DioHelper.putData(
       url: "/emp_requests/v1/task/$id",
       context: context,
-      data: {
-        "title" : titleController.text,
-        "content" : contentController.text,
-        "due_date" : selectedDatecontroller.text,
-        "assign_to" : selectedEmployeeIds,
-        "sub_tasks": tasksList2,
-        "status": selectedStatus.toString(),
-        "icon": selectedIcon.toString(),
-      }
+      query: null,
+      data: body,
     ).then((value){
       if(value.data['status'] == true){
         Navigator.pop(context);
@@ -341,18 +343,20 @@ class TaskViewModel extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isUpdateLoading = true;
     notifyListeners();
+    final body = <String, dynamic>{
+      "title": title,
+      "content": content,
+      if (due != null && due.toString().isNotEmpty) "due_date": due.toString(),
+      "assign_to": (assign as List<AssignTo>).map((e) => e.id).toList(),
+      "sub_tasks": (subTask as List<SubTasks>).map((e) => e.toJson()).toList(),
+      "status": status,
+      "icon": icon,
+    };
     DioHelper.putData(
       url: "/emp_requests/v1/task/$id",
       context: context,
-      data: {
-        "title" : title,
-        "content" : content,
-       if(due != null && due.toString().isNotEmpty) "due_date" : due.toString(),
-        "assign_to" : (assign as List<AssignTo>).map((e) => e.id).toList(),
-        "sub_tasks": (subTask as List<SubTasks>).map((e) => e.toJson()).toList(),
-        "status": status,
-        "icon": icon,
-      }
+      query: null,
+      data: body,
     ).then((value){
       if(value.data['status'] == true){
         AlertsService.success(
@@ -385,12 +389,12 @@ class TaskViewModel extends ChangeNotifier {
   updateStatusTask(BuildContext context, id) async{
     isLoading = true;
     notifyListeners();
+    final body = <String, dynamic>{"status": "completed"};
     DioHelper.patchData(
       url: "/emp_requests/v1/task/$id/status",
       context: context,
-      data: {
-        "status" : "completed"
-      }
+      query: null,
+      data: body,
     ).then((value){
       if(value.data['status'] == true){
         AlertsService.success(

@@ -114,18 +114,33 @@ class DeviceControllerProvider extends ChangeNotifier {
     }
   }
   Future<bool> requestNotificationPermission() async {
-    // 📱 Mobile
-    final settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    return settings.authorizationStatus == AuthorizationStatus.authorized;
+    try {
+      final settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      return settings.authorizationStatus == AuthorizationStatus.authorized;
+    } catch (e) {
+      debugPrint('Firebase requestPermission error: $e');
+      return false;
+    }
   }
+
+  static bool _isFcmServiceUnavailable(Object error) {
+    final msg = error.toString().toLowerCase();
+    return msg.contains('service_not_available') ||
+        msg.contains('firebase_messaging') ||
+        msg.contains('ioexception');
+  }
+
   getDeviceSysSet({context, required bool state}) async {
-    // 1️⃣ اطلب الإذن الأول
-    bool allowed = await requestNotificationPermission();
+    bool allowed = false;
+    try {
+      allowed = await requestNotificationPermission();
+    } catch (e) {
+      debugPrint('requestNotificationPermission: $e');
+    }
     if (!allowed) {
       Fluttertoast.showToast(
         msg: "الإشعارات غير مفعلة – برجاء السماح أولاً.",
@@ -139,7 +154,18 @@ class DeviceControllerProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      String? token = await FirebaseMessaging.instance.getToken();
+      // FCM token: cache only (generated at app start by FcmTokenService; do not call getToken here)
+      final String? token = CacheHelper.getString("fcm_token");
+      if (token == null || token.isEmpty) {
+        Fluttertoast.showToast(
+          msg: "جاري تجهيز الإشعارات. أعد فتح التطبيق أو انتظر قليلاً.",
+          backgroundColor: Colors.orange,
+          textColor: Colors.white,
+        );
+        isLoading2 = false;
+        notifyListeners();
+        return;
+      }
 
       final response = await DioHelper.postData(
         url: "/rm_users/v1/device_sys",
@@ -177,12 +203,14 @@ class DeviceControllerProvider extends ChangeNotifier {
 
       if (error is DioError) {
         errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
+      } else if (_isFcmServiceUnavailable(error)) {
+        errorMessage2 = "خدمة الإشعارات غير متاحة حالياً. تأكد من الاتصال بالإنترنت وخدمات Google.";
       } else {
         errorMessage2 = error.toString();
       }
 
       Fluttertoast.showToast(
-        msg: errorMessage2!,
+        msg: errorMessage2 ?? AppStrings.failed.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );

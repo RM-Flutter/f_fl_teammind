@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
 import 'package:rmemp/constants/user_consts.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
@@ -14,6 +15,7 @@ import '../../../../../common_modules_widgets/vocation_list.widget.dart';
 import '../../../../../constants/app_images.dart';
 import '../../../../../constants/app_sizes.dart';
 import '../../../../../constants/app_strings.dart';
+import '../../../../../general_services/app_config.service.dart';
 import '../../../../../general_services/app_theme.service.dart';
 import '../../../../../models/request.model.dart';
 import '../../../../../models/settings/user_settings.model.dart';
@@ -213,7 +215,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        AutoSizeText(formatName(us1Cache['name']) ?? '',
+                                        AutoSizeText(formatName(us1Cache['name']?.toString() ?? ''),
                                             minFontSize: 20,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -224,7 +226,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                                     color: AppThemeService.colorPalette
                                                         .quinaryTextColor.color)),
                                         Text(AppStrings.niceToMeetYou.tr(),
-                                            maxLines: 1,
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w300,
@@ -233,6 +235,21 @@ class HomeAppbarWidget extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                            // if (us1Cache != null)
+                            //   IconButton(
+                            //     icon: const Icon(Icons.logout_outlined, color: Colors.white, size: 22),
+                            //     tooltip: AppStrings.logout.tr(),
+                            //     padding: EdgeInsets.zero,
+                            //     constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                            //     onPressed: () async {
+                            //       final appConfigService = Provider.of<AppConfigService>(context, listen: false);
+                            //       await appConfigService.logout(context, viewAlert: true);
+                            //       if (context.mounted) {
+                            //         context.goNamed(AppRoutes.splash.name, pathParameters: {'lang': context.locale.languageCode});
+                            //       }
+                            //     },
+                            //   ),
+                            gapW8,
                             // const Spacer(),
                             // NotificationIcon(
                             //   hasNewNotifications: true,

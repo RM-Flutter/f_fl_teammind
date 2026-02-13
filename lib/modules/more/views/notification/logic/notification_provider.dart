@@ -140,7 +140,8 @@ class NotificationProviderModel extends ChangeNotifier {
     DioHelper.getData(
       url: "/departments/entities-operations",
       query: {
-        "under_my_management" : true
+        "itemsCount" : 200,
+        "under_my_management" : true,
       },
       context: context,
     ).then((value){
@@ -160,11 +161,18 @@ class NotificationProviderModel extends ChangeNotifier {
   Future<void> getNotification(BuildContext context, {int? page, forWho}) async {
     if(page != null){currentPage = page;}
     print("currentPage is --> $currentPage}");
+    var jsonString;
+    var gCache;
+    jsonString = CacheHelper.getString("US1");
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+    }
     isGetNotificationLoading = true;
     notifyListeners();
     try {
       final response = await DioHelper.getData(
-        url: "/emp_requests/v1/notifications/list",
+        url: (gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))?
+        "/rmnotifications/entities-operations":"/emp_requests/v1/notifications/list",
         context: context, // Pass this explicitly only if necessary
         query: {
           "itemsCount": itemsCount,
@@ -173,7 +181,8 @@ class NotificationProviderModel extends ChangeNotifier {
         },
       );
 
-       newNotifications = response.data['notifications'] ?? [];
+       newNotifications = (gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))?
+       response.data['data'] ?? []:response.data['notifications'] ?? [];
       if (page == 1) {
         notifications.clear(); // Clear only when loading the first page
       }

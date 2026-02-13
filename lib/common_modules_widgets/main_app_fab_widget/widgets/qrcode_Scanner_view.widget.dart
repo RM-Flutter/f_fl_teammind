@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -9,13 +11,35 @@ class QRScannerView extends StatefulWidget {
 }
 
 class QRScannerViewState extends State<QRScannerView> {
-  String? scannedText;
-  final MobileScannerController controller = MobileScannerController();
+  bool _hasPopped = false;
+  // Higher resolution + unrestricted detection + longer timeout for reliable QR reading
+  final MobileScannerController controller = MobileScannerController(
+    detectionSpeed: DetectionSpeed.unrestricted,
+    detectionTimeoutMs: 750,
+    cameraResolution: const Size(1280, 720),
+    formats: [BarcodeFormat.qrCode],
+    facing: CameraFacing.back,
+  );
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  void _onBarcodeDetected(BarcodeCapture capture) {
+    if (_hasPopped) return;
+    final List<Barcode> barcodes = capture.barcodes;
+    if (barcodes.isEmpty) return;
+    final Barcode barcode = barcodes.first;
+    // rawValue can be null for some QR codes; fallback to displayValue
+    final String? value = barcode.rawValue ?? barcode.displayValue;
+    final String trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return;
+    _hasPopped = true;
+    controller.stop();
+    if (!mounted) return;
+    Navigator.of(context).pop(trimmed);
   }
 
   @override
@@ -34,16 +58,7 @@ class QRScannerViewState extends State<QRScannerView> {
       ),
       body: MobileScanner(
         controller: controller,
-        onDetect: (BarcodeCapture capture) {
-          final List<Barcode> barcodes = capture.barcodes;
-          if (barcodes.isNotEmpty && scannedText == null) {
-            setState(() {
-              scannedText = barcodes.first.rawValue;
-            });
-            Navigator.of(context).pop(scannedText);
-            controller.stop();
-          }
-        },
+        onDetect: _onBarcodeDetected,
       ),
     );
   }

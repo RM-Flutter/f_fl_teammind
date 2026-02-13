@@ -20,6 +20,7 @@ class OfflineViewModel with ChangeNotifier {
   final List<String> _usersFingerprints = [];
   bool isLoadingFingerprints = true;
   List<Map<String, dynamic>>? savedFingerprints = [];
+  final Set<int> _deletingOfflineIndexes = {};
 
   List<String> get usersFingerprints => _usersFingerprints;
 
@@ -116,6 +117,40 @@ class OfflineViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// حذف بصمة أوفلاين واحدة من الكاش (SharedPreferences + الذاكرة)
+  Future<void> deleteOfflineFingerprintAt(int index) async {
+    if (savedFingerprints == null ||
+        index < 0 ||
+        index >= savedFingerprints!.length) {
+      return;
+    }
+
+    _deletingOfflineIndexes.add(index);
+    notifyListeners();
+
+    // إعطاء الفرصة لرسم اللودينج قبل تنفيذ الحذف
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    savedFingerprints!.removeAt(index);
+    AppConstants.fingerPrints = savedFingerprints;
+
+    if (savedFingerprints!.isEmpty) {
+      await prefs.remove('fingerPrints');
+    } else {
+      await prefs.setString(
+        'fingerPrints',
+        jsonEncode(savedFingerprints),
+      );
+    }
+
+    _deletingOfflineIndexes.remove(index);
+    notifyListeners();
+  }
+
+  Set<int> get deletingOfflineIndexes => _deletingOfflineIndexes;
 
 
   qrCode({required BuildContext ctx}) =>

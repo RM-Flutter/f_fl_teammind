@@ -74,6 +74,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     width: double.infinity,
                     alignment: Alignment.bottomRight,
                     child: FloatingActionButton(
+                      heroTag: 'task_details_edit',
                       onPressed: () async {
                         await context.pushNamed(AppRoutes.editTaskScreen.name, pathParameters: {
                           'lang': context.locale.languageCode,

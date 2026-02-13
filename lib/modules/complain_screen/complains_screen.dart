@@ -73,6 +73,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
             routeName: AppRoutes.complainScreen.name,
           ),
           floatingActionButton: FloatingActionButton(
+            heroTag: 'complains_new',
             onPressed: ()async {
              await context.pushNamed(AppRoutes.newComplainScreen.name,
                   pathParameters: {'lang': context.locale.languageCode,});

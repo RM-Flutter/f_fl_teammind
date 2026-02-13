@@ -284,11 +284,11 @@ class MyCVViewModel extends ChangeNotifier {
       } else {
         // Send JSON data normally
         final jsonData = updatedData.toJson();
-        if (useProfilePhoto) {
-          jsonData['use_profile_photo'] = true;
-        } else if (imageSourceType == ImageSourceType.none) {
-          jsonData['use_default_photo'] = true;
-        }
+        // if (useProfilePhoto) {
+        //   jsonData['use_profile_photo'] = true;
+        // } else if (imageSourceType == ImageSourceType.none) {
+        //   jsonData['use_default_photo'] = true;
+        // }
         
         response = await DioHelper.postData(
           url: "/emp_requests/v1/cv/update",

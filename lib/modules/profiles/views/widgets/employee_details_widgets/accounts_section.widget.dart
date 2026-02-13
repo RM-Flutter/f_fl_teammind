@@ -14,8 +14,18 @@ class AccountsSectionWidget extends StatelessWidget {
   List? salaryAdvance = [];
   AccountsSectionWidget({super.key, required this.employee, required this.salaryAdvance});
 
+  static bool _isNonZero(dynamic value) {
+    if (value == null) return false;
+    if (value is num) return value != 0;
+    final n = double.tryParse(value.toString().trim());
+    return n != null && n != 0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final showAdditions = _isNonZero(employee?.additions);
+    final showTotalDeductions = _isNonZero(employee?.totalDeductions);
+
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.sizeOf(context).height * 0.5,
@@ -26,11 +36,11 @@ class AccountsSectionWidget extends StatelessWidget {
             gapH12,
             if ((employee?.basicSalary != null ||
                     employee?.basicSalary?.isNotEmpty == true) ||
-                employee?.additions != null ||
-                employee?.totalDeductions != null ||
+                showAdditions ||
+                showTotalDeductions ||
                 employee?.netSalary != null) ...[
               //HIRE DATE
-              if (employee?.basicSalary != null)
+              if (employee?.basicSalary != null )
                 ProfileTile(
                   isTitleOnly: false,
                   isList: false,
@@ -38,16 +48,14 @@ class AccountsSectionWidget extends StatelessWidget {
                   trailingTitle: "${employee?.basicSalary.toString()} ${AppStrings.egp.tr()}",
                   icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
                 ),
-              //WORK HOURS TYPE
-              if (employee?.additions != null)
+              if (showAdditions)
                 ProfileTile(
                   isTitleOnly: false,isList: false,
                   title: AppStrings.additions.tr().toUpperCase(),
                   trailingTitle: "${employee?.additions.toString()} ${AppStrings.egp.tr()}",
                   icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
                 ),
-              // WORK HOURS
-              if (employee?.totalDeductions != null)
+              if (showTotalDeductions)
                 ProfileTile(
                   isTitleOnly: false,isList: false,
                   title: AppStrings.totalDeductions.tr().toUpperCase(),

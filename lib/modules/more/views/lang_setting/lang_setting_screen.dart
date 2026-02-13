@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rmemp/constants/app_colors.dart';
 import 'package:rmemp/constants/app_sizes.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:rmemp/general_services/fcm_token.service.dart';
 import 'package:rmemp/general_services/localization.service.dart';
 import 'package:rmemp/general_services/settings.service.dart';
 import 'package:rmemp/models/settings/general_settings.model.dart';
@@ -96,7 +96,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                   await value.setDeviceSysLang(
                                       state: (selectValue == "ar" || selectValue == "اللغه العربية")? "ar" : "en",
                                       context: context,
-                                      notiToken:await FirebaseMessaging.instance.getToken()
+                                      notiToken: FcmTokenService.getCachedToken(),
                                   );
                                 },
                                 child: Container(

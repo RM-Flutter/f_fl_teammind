@@ -58,7 +58,6 @@ class CVJobInfoTab extends StatelessWidget {
           if (jobInfo?.experiences != null && jobInfo!.experiences!.isNotEmpty)
             ...jobInfo.experiences!.map((exp) => _buildExperienceItem(exp))
           else
-            _buildAddNewItem('داتا جديد'),
           
           // Separator line
           _buildSeparator(),
@@ -127,6 +126,7 @@ class CVJobInfoTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          CVInfoItem(label: 'COMPANY NAME', value: exp.companyName),
           CVInfoItem(label: 'JOB TITLE', value: exp.jobTitle, isRequired: true),
           CVInfoItem(label: 'COUNTRY ID', value: exp.countryId?.toString()),
           CVInfoItem(label: 'GOVERNORATE/STATE ID', value: exp.stateId?.toString(), isRequired: true),
