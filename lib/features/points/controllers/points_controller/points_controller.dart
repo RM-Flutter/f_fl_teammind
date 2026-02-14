@@ -1,20 +1,17 @@
 
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/features/points/data/repositories/history_repository/points_repo.dart';
 import 'package:dio/dio.dart';
 
 class PointsController extends ChangeNotifier {
   int selectedIndex = 0;
   bool isLoading  = false;
   bool isSuccess = false;
-  bool isAddFriendContactSuccess  = false;
   bool isRedeemLoading  = false;
-  bool isAddFriendLoading  = false;
-  bool isAddFriendSuccess = false;
   bool isRedeemSuccess = false;
   Map<String, TextEditingController> controllers = {};
   List<String> fields = [];
@@ -23,12 +20,11 @@ class PointsController extends ChangeNotifier {
   TextEditingController pointsController = TextEditingController();
   TextEditingController dataNameController = TextEditingController();
   TextEditingController dataIdController = TextEditingController();
-  TextEditingController friendNameController = TextEditingController();
-  String? errorHistoryMessage;
   var type;
   var userName;
   var redeemCode;
   List prizes = [];
+  bool? status;
   List newPrizes = [];
   List categories = [];
   int currentPage = 1;
@@ -58,137 +54,19 @@ class PointsController extends ChangeNotifier {
     hasMore = true;
     await getCategoriesPrize(page : 1,context);
   }
-  Future<void> addFriend(BuildContext context) async {
-    isAddFriendLoading = true;
-    if(countryCodeController.text.isEmpty){
-      countryCodeController.text = "+20";
-    }
-    notifyListeners();
-    try {
-      final response = await PointsRepo.addFriend(
-        context: context,
-        items: [
-          {
-            "name": friendNameController.text,
-            "country_code": countryCodeController.text,
-            "phonesNumbers": [phoneController.text],
-          }
-        ],
-      );
-      if(response.data['status']== false){
-        Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-        );
-      }else{
-        isAddFriendSuccess = true;
-        countryCodeController.clear();
-        phoneController.clear();
-        friendNameController.clear();
-        Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0
-        );
-      }
-      isAddFriendLoading = false;
-      notifyListeners();
-    } catch (error) {
-      errorHistoryMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
-          : error.toString();
-      Fluttertoast.showToast(
-          msg:errorHistoryMessage!,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-    } finally {
-      isAddFriendLoading = false;
-      notifyListeners();
-
-    }
-  }
-  Future<void> addFriendContact(BuildContext context, {contact}) async {
-    isAddFriendLoading = true;
-    if(countryCodeController.text.isEmpty){
-      countryCodeController.text = "+20";
-    }
-    notifyListeners();
-    try {
-      final response = await PointsRepo.addFriend(
-        context: context,
-        items: List<Map<String, dynamic>>.from(contact["items"] ?? []),
-      );
-      if(response.data['status']== false){
-        Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-        );
-      }else{
-        isAddFriendContactSuccess = true;
-        countryCodeController.clear();
-        phoneController.clear();
-        friendNameController.clear();
-        Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0
-        );
-      }
-      isAddFriendLoading = false;
-      notifyListeners();
-    } catch (error) {
-      errorHistoryMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
-          : error.toString();
-      Fluttertoast.showToast(
-          msg:errorHistoryMessage!,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-    } finally {
-      isAddFriendLoading = false;
-      notifyListeners();
-
-    }
-  }
   Future<void> getPrize(BuildContext context,id, {int? page}) async {
     if(page != null){currentPage = page;}
-    debugPrint("currentPage is --> $currentPage}");
+    print("currentPage is --> $currentPage}");
     isLoading = true;
     notifyListeners();
     try {
-      final response = await PointsRepo.getPrizesByCategory(
-        context: context,
-        categoryId: id.toString(),
-        itemsCount: itemsCount,
-        page: page ?? currentPage,
+      final response = await DioHelper.getData(
+        url: "/prizes/entities-operations?category_id=$id",
+        context: context, // Pass this explicitly only if necessary
+        query: {
+          "itemsCount": itemsCount,
+          "page": page ?? currentPage,
+        },
       );
 
       if(response.data['data'] != null && response.data['data'].isNotEmpty){
@@ -213,16 +91,16 @@ class PointsController extends ChangeNotifier {
             fontSize: 16.0
         );
       }else{
-      if (newPrizes.isNotEmpty && response.data['data'] != null && response.data['data'].isNotEmpty) {
-        isLoading = false;
-        prizes.addAll(uniqueNotifications);
-        debugPrint("LENGTH IS --> ${newPrizes.length}");
-      } else {
-        hasMorePrizes = false;
-      }}
+        if (newPrizes.isNotEmpty && response.data['data'] != null && response.data['data'].isNotEmpty) {
+          isLoading = false;
+          prizes.addAll(uniqueNotifications);
+          print("LENGTH IS --> ${newPrizes.length}");
+        } else {
+          hasMorePrizes = false;
+        }}
       isLoading = true;
     } catch (error) {
-      getPrizeErrorMessage = error is DioException
+      getPrizeErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -241,19 +119,22 @@ class PointsController extends ChangeNotifier {
   }
   Future<void> getCategoriesPrize(BuildContext context, {int? page, bool? isNewPage,}) async {
     if(page != null){currentPage = page;}
-    debugPrint("currentPage is --> $currentPage}");
+    print("currentPage is --> $currentPage}");
     isLoading = true;
     notifyListeners();
     try {
-      final response = await PointsRepo.getPrizeCategories(
-        context: context,
-        itemsCount: itemsCount,
-        page: page ?? currentPage,
+      final response = await DioHelper.getData(
+        url: "/prize-categories/entities-operations",
+        context: context, // Pass this explicitly only if necessary
+        query: {
+          "itemsCount": itemsCount,
+          "page": page ?? currentPage,
+        },
       );
 
       if (response.data['data'] != null && response.data['data'].isNotEmpty) {
         hasMore = true;
-        debugPrint("MORE IS $hasMore");
+        print("MORE IS $hasMore");
         categories = response.data['data'];
 
         List cPrizeIds = response.data['data'];
@@ -262,7 +143,7 @@ class PointsController extends ChangeNotifier {
           categories.addAll(uniqueProducts);
         } else {
           categories = uniqueProducts;
-          debugPrint("PRODUCTS SUCCESS");
+          print("PRODUCTS SUCCESS");
         }
         cPrizeIds.addAll(uniqueProducts.map((p) => p['id']));
 
@@ -275,6 +156,7 @@ class PointsController extends ChangeNotifier {
         prizes.clear(); // Clear only when loading the first page
       }
       if(response.data['status'] == false){
+        status = false;
         Fluttertoast.showToast(
             msg:response.data['message'],
             toastLength: Toast.LENGTH_LONG,
@@ -285,17 +167,18 @@ class PointsController extends ChangeNotifier {
             fontSize: 16.0
         );
       }else{
-      if (categories.isNotEmpty) {
-        isLoading = false;
-        prizes.addAll(cuniqueNotifications);
-        debugPrint("LENGTH IS --> ${categories.length}");
-      } else {
-      }}
+        if (categories.isNotEmpty) {
+          isLoading = false;
+          status = true;
+          prizes.addAll(cuniqueNotifications);
+          print("LENGTH IS --> ${categories.length}");
+        } else {
+        }}
       isLoading = false;
-      debugPrint("GOODS");
+      print("GOODS");
       notifyListeners();
     } catch (error) {
-      getPrizeErrorMessage = error is DioException
+      getPrizeErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -315,16 +198,15 @@ class PointsController extends ChangeNotifier {
   Future<void> postRedeemPrize(context, {id, name, phone, nationalId}) async {
     isRedeemLoading = true;
     notifyListeners();
-    PointsRepo.redeemPrizeViaPointsys(
+    DioHelper.postData(
+      url: "/rm_pointsys/v1/prizes",
       context: context,
-      prizeId: id.toString(),
-      name: dataNameController.text.isNotEmpty ? dataNameController.text : null,
-      phone: phoneController.text.isNotEmpty
-          ? (countryCodeController.text.isNotEmpty
-              ? "${countryCodeController.text}${phoneController.text}"
-              : '+20${phoneController.text}')
-          : null,
-      nationalId: dataIdController.text.isNotEmpty ? dataIdController.text : null,
+      data: {
+        "prize_id" :id,
+        if(dataNameController.text.isNotEmpty) "name" : dataNameController.text,
+        if(phoneController.text.isNotEmpty) "phone" : countryCodeController.text.isNotEmpty?"${countryCodeController.text}${phoneController.text}" : '+20${phoneController.text}',
+        if(dataIdController.text.isNotEmpty) "national_id" : dataIdController.text,
+      },
     ).then((value){
       if(value.data["status"] == true){
         if(value.data['code'] != null){
@@ -358,12 +240,12 @@ class PointsController extends ChangeNotifier {
       isRedeemLoading = false;
       notifyListeners();
     }).catchError((error){
-      if (error is DioException) {
+      if (error is DioError) {
         postPrizeErrorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         postPrizeErrorMessage = error.toString();
       }
-      debugPrint("postPrizeErrorMessage --> $postPrizeErrorMessage");
+      print("postPrizeErrorMessage --> $postPrizeErrorMessage");
       AlertsService.error(
           context: context,
           message: postPrizeErrorMessage!,
@@ -375,19 +257,18 @@ class PointsController extends ChangeNotifier {
   Future<void> postTransferPoints(context, {confirmed = false, user, amount}) async {
     isRedeemLoading = true;
     notifyListeners();
-    PointsRepo.transferPoints(
+    DioHelper.postData(
+      url: "/rm_pointsys/v1/transfer-points",
       context: context,
-      user: (user != null && user.isNotEmpty)
-          ? user
-          : (countryCodeController.text.isEmpty
-              ? '+20${phoneController.text}'
-              : "${countryCodeController.text}${phoneController.text}"),
-      amount: (amount != null && amount.isNotEmpty) ? amount : pointsController.text,
-      confirmed: confirmed == true,
+      data: {
+        "user" : (user != null && user.isNotEmpty)? user : countryCodeController.text.isEmpty ? '+20${phoneController.text}' : "${countryCodeController.text}${phoneController.text}",
+        "amount" : (amount != null && amount.isNotEmpty)?amount : pointsController.text,
+        if(confirmed == true) "confirmed" : confirmed
+      },
     ).then((value){
       if(value.data["status"] == true){
         isRedeemSuccess = true;
-       if(value.data['data'] != null){ userName = value.data['data']['user_namme'];}
+        if(value.data['data'] != null){ userName = value.data['data']['user_namme'];}
       }else{
         Fluttertoast.showToast(
             msg: value.data['message'],
@@ -406,12 +287,12 @@ class PointsController extends ChangeNotifier {
       isRedeemLoading = false;
       notifyListeners();
     }).catchError((error){
-      if (error is DioException) {
+      if (error is DioError) {
         postPrizeErrorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         postPrizeErrorMessage = error.toString();
       }
-      debugPrint("postPrizeErrorMessage --> $postPrizeErrorMessage");
+      print("postPrizeErrorMessage --> $postPrizeErrorMessage");
       Fluttertoast.showToast(
           msg: postPrizeErrorMessage!,
           toastLength: Toast.LENGTH_LONG,

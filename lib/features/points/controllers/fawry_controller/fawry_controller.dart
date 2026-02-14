@@ -43,6 +43,8 @@ class FawryController extends ChangeNotifier {
   FocusNode fieldFocusNode = FocusNode();
   TextEditingController numberOfPointsController = TextEditingController();
   TextEditingController rechargeAmountController = TextEditingController();
+  TextEditingController nationalIdController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   void setInputValue(String key, dynamic value) {
     inputValues[key] = value;
     notifyListeners();
@@ -61,8 +63,8 @@ class FawryController extends ChangeNotifier {
     //   return;
     // }
     // initialize [userSettings] and [userSettings2] after chackings about token
-    await AppSettingsService.getUserSettingsAndUpdateTheStoredSettings(
-        allData: true, context: context,);
+    await AppSettingsService.getUserSettingsAndUpdateTheStoredSettingsPoint(
+        allData: true, context: context, closeDate: closeDate );
     if (!context.mounted) return;
     UserSettingConst.userSettings = AppSettingsService.getSettings(
         settingsType: SettingsType.userSettings,
@@ -101,7 +103,7 @@ class FawryController extends ChangeNotifier {
   }
 
   double calcFees(Map<String, dynamic> service, double amount) {
-    debugPrint("service is --> $service");
+    print("service is --> ${service}");
     List<dynamic> rules = [];
 
     try {
@@ -134,7 +136,7 @@ class FawryController extends ChangeNotifier {
         }
       }
     }
-    debugPrint("totalFee --> ${totalFee.toString()}");
+    print("totalFee --> ${totalFee.toString()}");
     return totalFee;
   }
 
@@ -157,7 +159,7 @@ class FawryController extends ChangeNotifier {
       isGetFawryCategoryLoading = true;
       notifyListeners();
     } catch (error) {
-      getNotificationErrorMessage = error is DioException
+      getNotificationErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -210,11 +212,12 @@ class FawryController extends ChangeNotifier {
             );
           }
         });
+
       }
       isGetFawryCategoryLoading = false;
       notifyListeners();
     } catch (error) {
-      getNotificationErrorMessage = error is DioException
+      getNotificationErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -222,17 +225,21 @@ class FawryController extends ChangeNotifier {
       notifyListeners();
     }
   }
-  Future<void> postPay(BuildContext context, {id, payAmount, inquiryId, inputsValues}) async {
+  Future<void> postPay(BuildContext context, {id, payAmount,bool withdraw = false, inquiryId, inputsValues}) async {
     isPostPayLoading = true;
     notifyListeners();
     try {
       final response = await DioHelper.postData(
-        url: "/rm_fawry/v1/transaction",
-        data: {
+        url: withdraw == false?"/rm_fawry/v1/transaction" : "/rm_fawry/v1/payout",
+        data:withdraw == false? {
           "service_id": id.toString(),
           if(inquiryId != null && inquiryId.toString().isNotEmpty)"inquiryId" : inquiryId.toString(),
           "payAmount" : payAmount.toString(),
           ...inputsValues
+        }:{
+          "phone": phoneController.text,
+          "national_id" : nationalIdController.text,
+          "amount" : rechargeAmountController.text,
         },
         context: context,
       );
@@ -240,8 +247,8 @@ class FawryController extends ChangeNotifier {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           initializeHomeScreen(context);
         });
-        defaultActionBottomSheet2(
-          fieldFocusNode: fieldFocusNode,
+        defaultActionBottomSheetPoints(
+            fieldFocusNode: fieldFocusNode,
             context: context,
             home: false,
             view : false , view2Button :false ,
@@ -271,8 +278,7 @@ class FawryController extends ChangeNotifier {
               ),
               child: Row(
                 children: [
-                  Text(response.data['code'].toString(), style: TextStyle(fontWeight: FontWeight.w400,
-                      fontSize: 12, color: Color(AppColors.grey50)),),
+                  Text(response.data['code'].toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.grey3B)),),
                   const Spacer(),
                   GestureDetector(
                     onTap: (){
@@ -286,13 +292,13 @@ class FawryController extends ChangeNotifier {
                           borderRadius: BorderRadius.circular(8),
                           color: const Color(0xffE8E8E8)
                       ),
-                      child: Text(AppStrings.copy.tr(), style:  const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
+                      child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
                     ),
                   )
                 ],
               ),
             ) : null,
-            buttonText: AppStrings.goToHome.tr(),
+            buttonText: "back".tr(),
             onTapButton: () {
               Navigator.pop(context);
               Navigator.pop(context);
@@ -323,7 +329,7 @@ class FawryController extends ChangeNotifier {
       isPostPayLoading = true;
       notifyListeners();
     } catch (error) {
-      getNotificationErrorMessage = error is DioException
+      getNotificationErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -349,7 +355,7 @@ class FawryController extends ChangeNotifier {
       inputValues[key] = outputDate;       // ✅ يخزن القيمة
 
       notifyListeners(); // ← لو بتستخدم Consumer أو Provider
-      debugPrint("📅 $key selected: $outputDate");
+      print("📅 $key selected: $outputDate");
     }
   }
 

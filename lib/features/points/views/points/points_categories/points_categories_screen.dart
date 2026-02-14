@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/features/points/views/fawry/widgets/withdraw_money_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -22,7 +24,7 @@ import '../../../controllers/points_controller/points_controller.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;
-  const PointsCategoriesScreen(this.viewArrow, {super.key});
+  PointsCategoriesScreen(this.viewArrow);
 
   @override
   _PointsCategoriesScreenState createState() => _PointsCategoriesScreenState();
@@ -30,25 +32,29 @@ class PointsCategoriesScreen extends StatefulWidget {
 
 class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
   final ScrollController _scrollController = ScrollController();
-  late PointsController pointsController;
-
+  late PointsController pointsProvider;
+  var payoutName;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      pointsProvider = Provider.of<PointsController>(context, listen: false);
+      pointsProvider.getCategoriesPrize(context, page: 1);
+    });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !pointsController.isLoading &&
-          pointsController.hasMore) {
-        debugPrint("BOTTOM BOTTOM");
-       if(pointsController.hasMore == true) {
-         pointsController.getCategoriesPrize(
-             context, page: pointsController.currentPage);
-       }else{
-         debugPrint("NO DATA MORE");
-       }
+          !pointsProvider.isLoading &&
+          pointsProvider.hasMore) {
+        print("BOTTOM BOTTOM");
+        if(pointsProvider.hasMore == true) {
+          pointsProvider.getCategoriesPrize(
+              context, page: pointsProvider.currentPage);
+        }else{
+          print("NO DATA MORE");
+        }
       }
     });
 
@@ -56,36 +62,50 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => PointsController()..getCategoriesPrize(context, page: 1),
-    child: Consumer<HomeController>(
+    return Consumer<HomeController>(
       builder: (context, value, child) {
         return Consumer<PointsController>(
           builder: (context, points, child) {
+            final jsonString = CacheHelper.getString("USG");
+            var gCache;
+            if (jsonString != null) {
+              gCache = json.decode(jsonString) as Map<String, dynamic>;
+            }
+            if(gCache["fawry_payout"]['active'] == true){
+              payoutName =LocalizationService.isArabic(context: context) ?
+              gCache["fawry_payout"]['title']['ar']:gCache["fawry_payout"]['title']['en'];
+            }
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (points.isLoading == false) {
+              if (points.isLoading == false && points.status == true) {
+                final hasPayout = points.categories.any((e) => e['title'] == payoutName);
                 final hasFawry = points.categories.any((e) => e['title'] == AppStrings.fawry.tr());
                 if (!hasFawry) {
-                  final jsonString = CacheHelper.getString("USG");
-                  if (jsonString != null) {
-                    final gCache = json.decode(jsonString) as Map<String, dynamic>;
-                    if (gCache["fawry"]['active'] == true) {
-                      points.categories.add({
-                        "id": 0,
-                        "title": AppStrings.fawry.tr(),
-                        "image": gCache["fawry"]['logo']
-                      });
-                      setState(() {});
-                    }
+                  if (gCache["fawry"]['active'] == true) {
+                    points.categories.add({
+                      "id": 0,
+                      "title": AppStrings.fawry.tr(),
+                      "image": gCache["fawry"]['logo']
+                    });
                   }
                 }
+                if (!hasPayout) {
+                  if (gCache["fawry_payout"]['active'] == true) {
+                    points.categories.add({
+                      "id": 0,
+                      "title": payoutName,
+                      "image": gCache["fawry_payout"]['logo']
+                    });
+                  }
+                }
+                setState(() {});
               }
             });
+
             return SafeArea(
-              child: Scaffold(
-                resizeToAvoidBottomInset: true,
+              child: Scaffold( resizeToAvoidBottomInset: false,
                 backgroundColor: const Color(0xffFFFFFF),
-                body: SingleChildScrollView(
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                body: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+
                   controller: _scrollController,
                   child: GradientBgImage(
                     padding: EdgeInsets.zero,
@@ -100,17 +120,15 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                icon:  const Icon(Icons.arrow_back, color:Color(0xff224982)),
-                                onPressed: !kIsWeb?() {
-                                  Navigator.pop(context);
-                                } : (){},
+                                icon: Icon(Icons.arrow_back, color: widget.viewArrow ? const Color(0xff224982) : Colors.transparent),
+                                onPressed: () => widget.viewArrow ? Navigator.pop(context) : null,
                               ),
                               Text(
                                 AppStrings.chooseTheCategory.tr().toUpperCase(),
-                                style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               IconButton(
-                                icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
+                                icon: const Icon(Icons.arrow_back, color: Colors.transparent),
                                 onPressed: () {},
                               ),
                             ],
@@ -124,70 +142,67 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                               height: LayoutService.getHeight(context) * 0.4,
                               title: AppStrings.noCategoriesAvailable.tr()),
                         ),
-                        Center(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxWidth: kIsWeb ? 1100 : double.infinity,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 15),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
-                                child: GridView.builder(
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: kIsWeb ? 4 : 2,
-                                    crossAxisSpacing: 12,
-                                    mainAxisSpacing: 12,
-                                    childAspectRatio: kIsWeb ? 1.0 : 1 / 1.3, // web أقصر شوية
-                                  ),
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: (points.isLoading && points.currentPage == 1)
-                                      ? 8
-                                      : points.categories.length,
-                                  itemBuilder: (context, index) {
-                                    if (points.isLoading && points.currentPage == 1) {
-                                      return Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return defaultProjectCard(
-                                        points.categories[index]['title'] ?? "",
-                                        (points.categories[index]['image'] != null &&
-                                            points.categories[index]['image'].isNotEmpty)
-                                            ? points.categories[index]['image'][0]['file']
-                                            : "",
-                                        onTap: () {
-                                          if (points.categories[index]['title'] == AppStrings.fawry.tr()) {
-                                            context.pushNamed(
-                                              AppRoutes.fawryProviderScreen.name,
-                                              pathParameters: {'lang': context.locale.languageCode},
-                                            );
-                                          } else {
-                                            context.pushNamed(
-                                              AppRoutes.prizePointsViewScreen.name,
-                                              pathParameters: {
-                                                'lang': context.locale.languageCode,
-                                                'id': points.categories[index]['id'].toString(),
-                                              },
-                                            );
-                                          }
-                                        },
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: GridView.count(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 1/1.3,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                children: List.generate((points.isLoading && points.currentPage == 1)?8 :
+                                points.categories.length, (index){
+                                  return (points.isLoading && points.currentPage == 1)?
+                                  Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 100, // Adjust height based on your UI
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8), // Adjust as needed
+                                      ),
+                                    ),
+                                  ):
+                                  defaultProjectCard(
+                                    points.categories[index]['title'] ??"",
+                                    (points.categories[index]['image'] != null && points.categories[index]['image'].isNotEmpty)?
+                                    points.categories[index]['image'][0]['file'] : "",
+                                    // onTap: (){
+                                    //   if(points.categories[index]['title'] == payoutName){
+                                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => WithdrawMoneyScreen(gCache['fawry_payout']['points_per_unit'].toString() ?? "0"),));
+                                    //   }
+                                    //   if(points.categories[index]['title'] == AppStrings.fawry.tr()){
+                                    //     context.pushNamed(
+                                    //         AppRoutes.fawryProviderScreen
+                                    //             .name,
+                                    //         pathParameters: {
+                                    //           'lang': context.locale
+                                    //               .languageCode,
+                                    //         });
+                                    //   }if(points.categories[index]['title'] != payoutName && points.categories[index]['title'] != AppStrings.fawry.tr()) {
+                                    //     context.pushNamed(
+                                    //         AppRoutes.prizePointsViewScreen
+                                    //             .name,
+                                    //         pathParameters: {
+                                    //           'lang': context.locale
+                                    //               .languageCode,
+                                    //           'id': points
+                                    //               .categories[index]['id']
+                                    //               .toString(),
+                                    //         });
+                                    //   }
+                                    // },
+                                    onTap: () {}
+                                  );
+                                })
                             ),
                           ),
                         ),
+                        SizedBox(height: 15,),
                         if (points.isLoading && points.currentPage != 1)
                           const Center(child: CircularProgressIndicator()),
                       ],
@@ -199,7 +214,6 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
           },
         );
       },
-    ),
     );
   }
   Widget defaultProjectCard(String? title1, src, {onTap}) {
@@ -222,7 +236,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
           child: Column(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                 child:  CachedNetworkImage(
                   height: 135,
                   fit: BoxFit.contain,
@@ -230,19 +244,19 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                   imageUrl: src,
                   placeholder: (context, url) =>
                   const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) =>  const Icon(
+                  errorWidget: (context, url, error) => const Icon(
                     Icons.image_not_supported_outlined,
                     size: AppSizes.s32,
                     color: Colors.white,
                   ),
                 ),), // Replace with project images
-              const SizedBox(height: 5,),
+              SizedBox(height: 5,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 10, color: Color(0xFF090B60))),],
+                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10, color: Color(0xFF090B60))),],
                 ),
               ),
             ],

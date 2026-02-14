@@ -255,4 +255,21 @@ abstract class AppColors {
   static int get inputHintColor => shadowColor;
   static int get inputLabelColor => dividerColor;
   static int get inputTextColor => bodyTextColor;
+
+  // design colors
+  static const int oc1 = 0xFF0D3B6F;
+  static const int oc2 = 0xFFE6007E;
+  static const int oc3 = 0xFFFEED00;
+  static const int black1 = 0xFF1B1B1B;
+  static const int red1 = 0xFFFF6B6B;
+  static const int gray1 = 0xFF464646;
+
+
+
+  //grideview background color
+  static const int oC1Color = 0xff0D3B6F;
+  static const int yellowColor = 0xffEFDF00;
+  static const int grey1Color = 0xff4A4A4A;
+  static const int black1Color = 0xff1B1B1B;
+  static const int red1Color = 0xffA60B0B;
 }

@@ -21,7 +21,7 @@ import '../../controllers/points_controller/points_controller.dart';
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;
   var id;
-  PrizeScreen(this.viewArrow,this.id, {super.key});
+  PrizeScreen(this.viewArrow,this.id);
 
   @override
   _PrizeScreenState createState() => _PrizeScreenState();
@@ -29,28 +29,28 @@ class PrizeScreen extends StatefulWidget {
 
 class _PrizeScreenState extends State<PrizeScreen> {
   final ScrollController _scrollController = ScrollController();
-  late PointsController pointsController;
+  late PointsController pointsProvider;
   FocusNode fieldFocusNode = FocusNode();
   FocusNode fieldFocusNode2 = FocusNode();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      pointsController = Provider.of<PointsController>(context, listen: false);
-      pointsController.getPrize(context,widget.id, page: 1);
+      pointsProvider = Provider.of<PointsController>(context, listen: false);
+      pointsProvider.getPrize(context,widget.id, page: 1);
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !pointsController.isLoading &&
-          pointsController.hasMorePrizes) {
-        debugPrint("BOTTOM BOTTOM");
-        if(pointsController.hasMorePrizes == true){
-          pointsController.getPrize(context,widget.id, page: pointsController.currentPage);
+          !pointsProvider.isLoading &&
+          pointsProvider.hasMorePrizes) {
+        print("BOTTOM BOTTOM");
+        if(pointsProvider.hasMorePrizes == true){
+          pointsProvider.getPrize(context,widget.id, page: pointsProvider.currentPage);
         }else{
-          debugPrint("NO PRIZE GET");
+          print("NO PRIZE GET");
         }
       }
     });
@@ -74,7 +74,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
         return Consumer<PointsController>(
           builder: (context, points, child) {
             if(points.isRedeemSuccess == true){
-              debugPrint("points.type --> ${points.type}");
+              print("points.type --> ${points.type}");
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 points.getPrize(context,widget.id, page: 1);
               });
@@ -97,9 +97,9 @@ class _PrizeScreenState extends State<PrizeScreen> {
               points.isRedeemSuccess = false;
             }
             return SafeArea(
-              child: Scaffold( resizeToAvoidBottomInset: true,
+              child: Scaffold( resizeToAvoidBottomInset: false,
                 backgroundColor: const Color(0xffFFFFFF),
-                body: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                body: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
                   controller: _scrollController,
                   child: GradientBgImage(
@@ -115,17 +115,15 @@ class _PrizeScreenState extends State<PrizeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                icon:  const Icon(Icons.arrow_back, color:Color(0xff224982)),
-                                onPressed: !kIsWeb?() {
-                                  Navigator.pop(context);
-                                } : (){},
+                                icon: Icon(Icons.arrow_back, color: widget.viewArrow ? const Color(0xff224982) : Colors.transparent),
+                                onPressed: () => widget.viewArrow ? Navigator.pop(context) : null,
                               ),
                               Text(
                                 AppStrings.chooseThePrize.tr().toUpperCase(),
-                                style:  const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               IconButton(
-                                icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
+                                icon: const Icon(Icons.arrow_back, color: Colors.transparent),
                                 onPressed: () {},
                               ),
                             ],
@@ -167,51 +165,57 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                 );
                               } else {
                                 return InkWell(
-                                  onTap: points.isRedeemLoading == false? () {
+                                  onTap: points.isRedeemLoading == false ?() {
                                     setState(() {
                                       points.selectIndex = index;
                                       points.type = points.prizes[index]['type']['key'];
                                     });
-                                   if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
-                                       (points.prizes[index]['needed_data'].isNotEmpty && points.prizes[index]['needed_data'] != [] && points.prizes[index]['needed_data'] != null)){
-                                     showModalBottomSheet(
-                                         context: context,
-                                         isScrollControlled: true, // Allow full screen interaction
-                                         builder: (BuildContext context) {
-                                           return RayaAddDataBottomsheet(points.prizes[index]['id'],
-                                               points.prizes[index]['needed_data']
-                                           );
-                                         }
-                                     );
-                                   }
-                                   else if((points.prizes[index]['type']['key'] != "external" && points.prizes[index]['type']['key'] != "internal") &&
-                                       (points.prizes[index]['needed_data'].isEmpty ||points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
-                                     PointsSuccessSheet.showConfirmationSheet(context, onTap: ()async{
-                                       Navigator.pop(context);
-                                       await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
-                                     });
-                                   }
-                                   else if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
-                                       (points.prizes[index]['needed_data'].isEmpty || points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
-                                     PointsSuccessSheet.showConfirmationSheet(context, onTap: ()async{
-                                       Navigator.pop(context);
-                                       await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
-                                     });
-                                   }
-                                   else if(points.prizes[index]['type']['key'] == null){
-                                     PointsSuccessSheet.showConfirmationSheet(context, onTap: ()async{
-                                       Navigator.pop(context);
-                                       await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
-                                     });
-                                   }else{
-                                     debugPrint("DATA --> ${points.prizes[index]['needed_data']}");
-                                   }
+                                    if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
+                                        (points.prizes[index]['needed_data'].isNotEmpty && points.prizes[index]['needed_data'] != [] && points.prizes[index]['needed_data'] != null)){
+                                      showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true, // Allow full screen interaction
+                                          builder: (BuildContext context) {
+                                            return RayaAddDataBottomsheet(points.prizes[index]['id'],
+                                                points.prizes[index]['needed_data']
+                                            );
+                                          }
+                                      );
+                                    }
+                                    else if((points.prizes[index]['type']['key'] != "external" && points.prizes[index]['type']['key'] != "internal") &&
+                                        (points.prizes[index]['needed_data'].isEmpty ||points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
+                                      PointsSuccessSheet.showConfirmationSheet(context,
+                                          onTap: ()async{
+                                            Navigator.pop(context);
+                                            await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
+                                          }
+                                      );
+                                    }
+                                    else if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
+                                        (points.prizes[index]['needed_data'].isEmpty || points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
+                                      PointsSuccessSheet.showConfirmationSheet(context,
+
+                                          onTap: ()async{
+                                            Navigator.pop(context);
+                                            await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
+                                          });
+                                    }
+                                    else if(points.prizes[index]['type']['key'] == null){
+                                      PointsSuccessSheet.showConfirmationSheet(context,
+
+                                          onTap: ()async{
+                                            Navigator.pop(context);
+                                            await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
+                                          });
+                                    }else{
+                                      print("DATA --> ${points.prizes[index]['needed_data']}");
+                                    }
                                   } : (){},
                                   child: Container(
                                     padding: const EdgeInsetsDirectional.symmetric(
                                         horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                     decoration: BoxDecoration(
-                                      color: Color(AppColors.textC5),
+                                      color:  Color(AppColors.textC5),
                                       borderRadius: BorderRadius.circular(AppSizes.s15),
                                       boxShadow: const [
                                         BoxShadow(
@@ -236,7 +240,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                                 height: 63,
                                                 circularRaduis: 63,
                                               ),
-                                              errorWidget: (context, url, error) =>  const Icon(
+                                              errorWidget: (context, url, error) => const Icon(
                                                 Icons.image_not_supported_outlined,
                                               )),
                                         ),
@@ -244,10 +248,10 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            if(!points.isRedeemLoading) const Icon(Icons.arrow_back_ios, size: 16,),
+                                            if(!points.isRedeemLoading) Icon(Icons.arrow_back_ios, size: 16,),
                                             if(!points.isRedeemLoading)  gapH4,
                                             if(!points.isRedeemLoading)  Text("${points.prizes[index]['points']} ${AppStrings.points.tr()}".toString(),
-                                              style:  const TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight:  FontWeight.w700,
                                                   color: Color(0xff0D3B6F)),

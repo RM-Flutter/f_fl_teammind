@@ -12,6 +12,8 @@ import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
+import '../../../../../../../core/services/validation_service.dart';
+
 class PayBillScreen extends StatefulWidget {
   var title;
   var phone;
@@ -22,7 +24,7 @@ class PayBillScreen extends StatefulWidget {
   List? fawryInqury = [];
   var inquiryId;
   var inputsValues;
-  PayBillScreen(this.title,this.phone,this.id, {super.key, 
+  PayBillScreen(this.title,this.phone,this.id, {
     this.pointsPerOne,this.fawryInqury,this.inputsValues,this.us2Cache,this.totalPoints,this.serviceObject,
   });
   @override
@@ -34,31 +36,31 @@ class _PayBillScreenState extends State<PayBillScreen> {
   TextEditingController numberOfPointsController = TextEditingController();
   TextEditingController withdrawalAmountController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  FawryController? fawryController;
+  FawryController? fawryProviderModel;
   var inquiryId;
   var payAmount;
   @override
   Widget build(BuildContext context) {
     amountController.text = widget.phone;
     return ChangeNotifierProvider(create: (context) => FawryController(),
-    child: Consumer<FawryController>(
+      child: Consumer<FawryController>(
         builder: (context, value, child) {
           return Form(
             key: formKey,
-            child: Scaffold( resizeToAvoidBottomInset: true,
+            child: Scaffold( resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 backgroundColor: const Color(0xffFFFFFF),
-                leading:GestureDetector(
+                leading: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child:  const Icon(
+                    child: const Icon(
                       Icons.arrow_back,
                       color: Color(0XFF224982),
                     )),
                 title: Text(
                   widget.title.toString().toUpperCase(),
-                  style:  const TextStyle(
+                  style: const TextStyle(
                       fontSize: AppSizes.s16,
                       fontWeight: FontWeight.w700,
                       color: Color(0XFF224982)),
@@ -76,10 +78,10 @@ class _PayBillScreenState extends State<PayBillScreen> {
                   ),
                 ),
               ),
-              body: SizedBox(
+              body: Container(
                 height: MediaQuery.sizeOf(context).height * 1,
                 child: GradientBgImage(padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                  child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
                     child: Column(
                       children: [
@@ -105,7 +107,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                               title: AppStrings.noInquiriesAvailable.tr()),
                         ),
                         if(widget.fawryInqury!.isNotEmpty)ListView.separated(
-                          padding: EdgeInsets.zero,
+                            padding: EdgeInsets.zero,
                             reverse: false,
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
@@ -158,25 +160,25 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                           padding: const EdgeInsets.all(2),
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            border: Border.all(color: Color(AppColors.primary)),
+                                            border: Border.all(color: const Color(AppColors.oc1)),
                                           ),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: value.selectIndix == index?Color(AppColors.primary) :Colors.transparent,
+                                              color: value.selectIndix == index?Color(AppColors.oc1) :Colors.transparent,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
                                         ),
                                       ),
                                       const SizedBox(width: 10,),
-                                      Text(widget.title ?? "", style: TextStyle(color: Color(AppColors.primary),fontSize: 14, fontWeight: FontWeight.w700),),
+                                      Text(widget.title ?? "", style: const TextStyle(color: Color(AppColors.oc1),fontSize: 14, fontWeight: FontWeight.w700),),
                                     ],
                                   ),
                                   const SizedBox(height: 15,),
                                   defaultTransferDetailsTexts(AppStrings.withdrawalAmount.tr(), "${widget.fawryInqury![index]['amount']} ج.م"),
                                   defaultTransferDetailsTexts(AppStrings.fees.tr(), "${value.calcFees(widget.serviceObject, double.parse(widget.fawryInqury![index]['amount'].toString()))} ج.م"),
                                   defaultTransferDetailsTexts(AppStrings.total.tr(), "${double.parse(value.calcFees(widget.serviceObject, double.parse(widget.fawryInqury![index]['amount'].toString())).toStringAsFixed(0)) + double.parse(widget.fawryInqury![index]['amount'].toString())} ج.م"),
-                                 ],
+                                ],
                               ),
                             ),
                             separatorBuilder: (context, index) => const SizedBox(height: 15,),
@@ -187,10 +189,10 @@ class _PayBillScreenState extends State<PayBillScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 25,horizontal: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: const Color(0xffFFFFFF),
+                            color: Color(0xffFFFFFF),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xffC9CFD2).withOpacity(0.5),
+                                color: Color(0xffC9CFD2).withOpacity(0.5),
                                 blurRadius: AppSizes.s5,
                                 spreadRadius: 1,
                               )
@@ -210,6 +212,9 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                       decoration: InputDecoration(
                                         hintText: AppStrings.withdrawalAmount.tr().toUpperCase(),
                                       ),
+                                      validator: (value) =>
+                                          ValidationService.validateRequiredAmount(
+                                              value),
                                       onChanged: (String? values){
                                         setState(() {
                                           value.numberOfPointsController.text = "${double.parse(value.rechargeAmountController.text.toString()) * double.parse(widget.totalPoints.toString())}";
@@ -218,9 +223,9 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                       },
                                     ),
                                   ),
-                                  const Spacer(),
+                                  Spacer(),
                                   SvgPicture.asset("assets/images/svg/transfer.svg"),
-                                  const Spacer(),
+                                  Spacer(),
                                   SizedBox(
                                     width: MediaQuery.sizeOf(context).width * 0.35,
                                     child: TextFormField(
@@ -245,9 +250,9 @@ class _PayBillScreenState extends State<PayBillScreen> {
                               // defaultTransferDetailsTexts(AppStrings.yourActualBalanceOnPhone.tr(), "345 ج.م"),
                               defaultTransferDetailsTexts(AppStrings.withdrawalAmount.tr(), "${value.rechargeAmountController.text.isNotEmpty? value.rechargeAmountController.text : 0} ج.م"),
                               defaultTransferDetailsTexts(AppStrings.fees.tr(), "${value.cachedFee} ج.م"),
-                              defaultTransferDetailsTexts(AppStrings.total.tr(), "${double.parse(value.rechargeAmountController.text.isNotEmpty? value.rechargeAmountController.text : "0") + double.parse(value.cachedFee.toStringAsFixed(0))} ج.م"),
+                              defaultTransferDetailsTexts(AppStrings.total.tr(), "${double.parse(value.rechargeAmountController.text.isNotEmpty? value.rechargeAmountController.text : "0") + double.parse(value.cachedFee != null ? value.cachedFee.toStringAsFixed(0): "0")} ج.م"),
                               SizedBox(width: MediaQuery.sizeOf(context).width * 0.6,
-                                child: Divider(color: Color(AppColors.primary),),
+                                child: const Divider(color: Color(AppColors.oc1),),
                               ),
                               const SizedBox(height: 10,),
                               defaultTransferDetailsTexts(AppStrings.yourAvailablePoints.tr(), "${widget.us2Cache['points']['available']} ج.م"),
@@ -262,7 +267,9 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                                     : "0"
                                             )
                                                 + double.parse(
-                                                value.cachedFee.toStringAsFixed(0)
+                                                value.cachedFee != null
+                                                    ? value.cachedFee.toStringAsFixed(0)
+                                                    : (0 * widget.pointsPerOne).toString()
                                             )
                                         )* double.parse(widget.pointsPerOne.toString())
                                     )
@@ -300,8 +307,8 @@ class _PayBillScreenState extends State<PayBillScreen> {
                   onPressed: () {
                     value.postPay(
                         context, id: widget.id,
-                      payAmount: payAmount,
-                      inquiryId: inquiryId,
+                        payAmount: payAmount,
+                        inquiryId: inquiryId,
                         inputsValues : widget.inputsValues
                     );
                   },
@@ -312,7 +319,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
             ),
           );
         },
-    ),
+      ),
     );
   }
 
@@ -320,9 +327,9 @@ class _PayBillScreenState extends State<PayBillScreen> {
     margin: const EdgeInsets.only(bottom: 10),
     child: Row(
       children: [
-        Text(t1, style: TextStyle(color: Color(AppColors.primary),fontSize: 12, fontWeight: FontWeight.w600),),
+        Text(t1, style: const TextStyle(color: Color(AppColors.oc1),fontSize: 12, fontWeight: FontWeight.w600),),
         const Spacer(),
-        Text(t2, style: TextStyle(color: Color(AppColors.c3),fontSize: 12, fontWeight: FontWeight.w500),)
+        Text(t2, style:  TextStyle(color: Color(AppColors.c3),fontSize: 12, fontWeight: FontWeight.w500),)
       ],
     ),
   );

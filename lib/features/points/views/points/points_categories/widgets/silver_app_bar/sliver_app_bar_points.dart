@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app_test/features/points/views/points/points_categories/widgets/silver_app_bar/widgets/redeem_now_button.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/silver_app_bar/widgets/send_points_friend/send_point_friend_bottomsheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,23 +15,27 @@ import '../../../../../controllers/points_controller/points_controller.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;
-  SliverAppBarPoints({super.key, required this.arrow});
+  SliverAppBarPoints({required this.arrow});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => PointsController(),
       child: Consumer<PointsController>(
-        builder: (context, PointsController, child) {
+        builder: (context, pointsProvider, child) {
           return Consumer<HomeController>(
             builder: (context, value, child) {
               final json2String = CacheHelper.getString("US2");
-              Map<String, dynamic> us2Cache = {};
+              var us2Cache;
               if (json2String != null && json2String != "") {
                 us2Cache = json.decode(json2String)
-                    as Map<String, dynamic>; // Convert String back to JSON
-                debugPrint("S111111 IS --> ${us2Cache['points']['available']}");
+                as Map<String, dynamic>; // Convert String back to JSON
+                print("S111111 IS --> ${us2Cache['points']['available']}");
               }
+              // value.userSettings2!.balance!.forEach((key, balance) {
+              //   balancePoints = balance.max;
+              //   availablePoints = balance.available;
+              // });
               return SliverAppBar(
                 elevation: 0,
                 pinned: true,
@@ -81,13 +86,23 @@ class SliverAppBarPoints extends StatelessWidget {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                                gapW8,
+                                const CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: Colors.white,
+                                  child: Icon(
+                                    Icons.question_mark_sharp,
+                                    color: Colors.black,
+                                    size: 14,
+                                  ),
+                                ),
                               ],
                             ),
                             gapH16,
                             Text.rich(TextSpan(children: [
                               TextSpan(
                                 text: us2Cache['points']['available'].toString(),
-                                style:  const TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -104,7 +119,7 @@ class SliverAppBarPoints extends StatelessWidget {
                             ])),
                             Text(
                               "${AppStrings.from.tr().toUpperCase()} ${us2Cache['points']['total'].toString()} ${AppStrings.myPoints.tr()}",
-                              style:  const TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -115,10 +130,26 @@ class SliverAppBarPoints extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                context.pushNamed(AppRoutes.CategoriesprizePointsViewScreen.name, pathParameters: {'lang': context.locale.languageCode,});
+                                // context.pushNamed(AppRoutes.CategoriesprizePointsViewScreen.name, pathParameters: {'lang': context.locale.languageCode,});
                               },
                               child: const RedeemNowButton(
                                 friends: false,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true, // Allow full screen interaction
+                                    builder: (BuildContext context) {
+                                      return SendPointFriendBottomSheet();
+                                    });
+                              },
+                              child: const RedeemNowButton(
+                                friends: true,
                               ),
                             ),
                             const Spacer(
@@ -153,7 +184,7 @@ Widget defaultFillImageAppbar({
             bottomRight: Radius.circular(30),
             bottomLeft: Radius.circular(30)),
         child: Image.asset(
-          "assets/images/png/points_back.png",
+          "assets/images/png/point_background.png",
           fit: BoxFit.cover,
         )),
   );

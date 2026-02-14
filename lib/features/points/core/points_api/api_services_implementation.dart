@@ -1,0 +1,79 @@
+import 'package:app_test/core/services/app_config_service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/features/points/core/end_points/end_points.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'api_services.dart';
+
+class ApiServicesImplementation implements ApiServices {
+  Dio? _dio;
+
+  ApiServicesImplementation() {
+    BaseOptions baseOptions = BaseOptions(
+      baseUrl: PointFeatureEndPoints.baseUrl,
+      receiveDataWhenStatusError: true,
+    );
+    _dio = Dio(baseOptions);
+  }
+
+  @override
+  Future<Response> get({
+    required String endPoint,
+    Map<String, dynamic>? queryParameters,
+    context
+  }) async {
+    final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    _dio!.options.headers = {
+      'Authorization': 'Bearer ${appConfigServiceProvider.token}' ?? '',
+      "lang" : "${CacheHelper.getString("lang")}",
+      'Accept': 'application/json',
+      'device-unique-id': appConfigServiceProvider.deviceInformation.deviceUniqueId,
+    };
+    debugPrint("TOKENS IS --> ${appConfigServiceProvider.token}");
+    debugPrint("TOKENS IS --> ${appConfigServiceProvider.deviceInformation.deviceUniqueId}");
+    Response data = await _dio!.get(endPoint, queryParameters: queryParameters,);
+    return data;
+  }
+
+  @override
+  Future<Response> post(
+      {required String endPoint,
+      Map<String, dynamic>? queryParameters,
+        context,
+      required Map<String, dynamic>? data}) async {
+    var gets = Provider.of<AppConfigService>(context, listen: false);
+    _dio!.options.headers = {
+      'Authorization': 'Bearer ${gets.token}' ?? '',
+      'Accept': 'application/json',
+      "lang" : "${CacheHelper.getString("lang")}",
+      'device-unique-id': gets.deviceInformation.deviceUniqueId,
+    };
+    return await _dio!.post(
+      endPoint,
+      queryParameters: queryParameters,
+      data: data,
+    );
+  }
+
+  @override
+  Future<Response> delete({
+    required String endPoint,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? data,
+    context,
+  }) async {
+    var gets = Provider.of<AppConfigService>(context, listen: false);
+    _dio!.options.headers = {
+      'Authorization': 'Bearer ${gets.token}' ?? '',
+      'Accept': 'application/json',
+    "lang" : "${CacheHelper.getString("lang")}",
+      'device-unique-id': gets.deviceInformation.deviceUniqueId,
+    };
+    return await _dio!.delete(
+      endPoint,
+      queryParameters: queryParameters,
+      data: data,
+    );
+  }
+}

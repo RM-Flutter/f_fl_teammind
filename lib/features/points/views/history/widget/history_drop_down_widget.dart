@@ -11,7 +11,7 @@ import 'package:app_test/core/services/localization_service.dart';
 class HistoryDropDownWidget extends StatelessWidget {
   var notes;
   var code;
-  HistoryDropDownWidget({super.key, this.code, this.notes});
+  HistoryDropDownWidget({this.code, this.notes});
   void copyToClipboard(BuildContext context, {text}) {
     Clipboard.setData(ClipboardData(text: text));
     Fluttertoast.showToast(
@@ -41,7 +41,7 @@ class HistoryDropDownWidget extends StatelessWidget {
       ),
       width: double.infinity,
       height: notes != null && notes != "" ? MediaQuery.sizeOf(context).height * 0.45 : 220,
-      child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
         child: Column(
           children: [
@@ -63,7 +63,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 if(code != null && code != "") Text(AppStrings.voucherCouponCode.tr().toUpperCase(), style: TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w400, fontSize: 12),),
+                  if(code != null && code != "") Text(AppStrings.voucherCouponCode.tr().toUpperCase(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(code != null && code != "")  const SizedBox(height: 15,),
                   if(code != null && code != "")   Container(
                     height: 50,
@@ -89,7 +89,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Text(code.toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.grey50)),),
+                        Text(code.toString(), style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.gray1)),),
                         const Spacer(),
                         GestureDetector(
                           onTap: (){
@@ -103,16 +103,16 @@ class HistoryDropDownWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 color: const Color(0xffE8E8E8)
                             ),
-                            child: Text(AppStrings.copy.tr(), style:  const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
+                            child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
                           ),
                         )
                       ],
                     ),
                   ),
                   if(notes != null && notes != "") const SizedBox(height: 30),
-                 if(notes != null && notes != "") Text(AppStrings.notes.tr().toUpperCase(), style: TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w400, fontSize: 12),),
+                  if(notes != null && notes != "") Text(AppStrings.notes.tr().toUpperCase(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(notes != null && notes != "")  const SizedBox(height: 15,),
-                  if(notes != null && notes != "")  Text(notes.toString(), style: TextStyle(color: Color(AppColors.grey50), fontWeight: FontWeight.w400, fontSize: 14)),
+                  if(notes != null && notes != "")  Text(notes.toString(), style: const TextStyle(color: Color(AppColors.gray1), fontWeight: FontWeight.w400, fontSize: 14)),
 
                 ],
               ),

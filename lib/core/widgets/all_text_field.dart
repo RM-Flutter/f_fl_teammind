@@ -131,3 +131,82 @@ Widget defaultDropdownField(
   );
 }
 
+Widget defaultTextFormFieldPoints( {
+  required focusNode,required onTap,
+  TextEditingController? controller,
+  String? hintText,
+  Widget? suffixIcon,
+  bool? hasShadows = true,
+  Widget? prefixIcon,
+  String? Function(String?)? validator,
+  TextInputType? keyboardType,
+  int maxLines = 1,
+  context,
+  List<BoxShadow>? boxShadow,
+  double? containerHeight,
+  Color? borderColor,
+  TextInputAction? textInputAction,
+  void Function(String)? onFieldSubmitted,
+  void Function(String)? onChanged,
+}) {
+  return Container(
+    height: containerHeight ?? 50,
+    alignment: Alignment.center,
+    margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
+    padding: EdgeInsets.symmetric(
+        horizontal: 16, vertical: (maxLines! > 1) ? 16 : 0),
+    decoration: ShapeDecoration(
+      color: AppThemeService.colorPalette.tertiaryColorBackground.color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.s8),
+        side: BorderSide(
+          color: borderColor ?? const Color(0xffE3E5E5),
+          width: 1.0,
+        ),
+      ),
+      shadows: (hasShadows == true)
+          ? const [
+        BoxShadow(
+          color: Color(0x0C000000),
+          blurRadius: 10,
+          offset: Offset(0, 1),
+          spreadRadius: 0,
+        )
+      ]
+          : null,
+    ),
+    child: TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      onChanged: onChanged,
+      textInputAction: textInputAction,
+      decoration: InputDecoration(
+        labelText: hintText ?? "Input",
+        labelStyle: const TextStyle(
+            fontFamily: "Poppins",
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff191C1F)),
+        hintStyle: const TextStyle(
+            fontFamily: "Poppins",
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff464646)),
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
+        border: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        contentPadding: const EdgeInsets.symmetric(vertical: 0.0),
+      ),
+      keyboardType: keyboardType ?? TextInputType.text,
+      validator: validator,
+      onFieldSubmitted: onFieldSubmitted,
+    ),
+  );
+}
+
+

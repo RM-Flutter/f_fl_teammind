@@ -323,6 +323,132 @@ abstract class AppSettingsService {
     }
   }
 
+  static Future<void> initializeGeneralSettingsPoints({required SettingsType settingType, bool closeDate = false, bool? allData = false, required BuildContext context}) async {
+    final appConfigServiceProvider =
+    Provider.of<AppConfigService>(context, listen: false);
+    var settingsData = appConfigServiceProvider.getSettings(type: settingType);
+    var lastUpdateDate = settingsData?.lastUpdateDate ?? "";
+    OperationResult<Map<String, dynamic>> result;
+    var s1Cache;
+    var s2Cache;
+    var gCache;
+    if (settingType == SettingsType.startupSettings) {
+      Map<String, dynamic> body = {
+        if(CacheHelper.getString("gDate")!= null )"last_update_date_general": CacheHelper.getString("gDate"),
+        if (CacheHelper.getString("s1Date")!= null && closeDate == false)"last_update_date_user": CacheHelper.getString("s1Date"),
+        if (CacheHelper.getString("s2Date") != null && closeDate == false) "last_update_date_user2": CacheHelper.getString("s2Date"),
+        "needed": [
+          "general_settings",
+          "user_settings",
+          "user2_settings",
+          "check_auth"
+        ],
+        if(appConfigServiceProvider.token.isNotEmpty) "token": appConfigServiceProvider.token,
+        "device_id": await appConfigServiceProvider.deviceInformation.deviceUniqueId
+      };
+      result = await DioApiService().post<Map<String, dynamic>>(
+          EndpointServices.getApiEndpoint(EndpointsNames.startApp).url.trim(),
+          body,
+          context: context,
+          dataKey: 'general_settings',
+          allData: allData);
+    }
+    else {
+      String settingTypeName = settingType == SettingsType.userSettings
+          ? 'user_settings'
+          : 'user2_settings';
+      Map<String, dynamic> body = {
+        "type": settingTypeName,
+        "last_update_date": lastUpdateDate
+      };
+      result = await DioApiService().post<Map<String, dynamic>>(
+          EndpointServices.getApiEndpoint(EndpointsNames.userSettings)
+              .url
+              .trim(),
+          body,
+          context: context,
+          dataKey: 'user_settings',
+          allData: allData);
+    }
+    if (result.success &&
+        result.data != null &&
+        (result.data?.isNotEmpty ?? false)) {
+      // Update Stored Setting with the new settings
+      if(result.data!['user_settings'] != null &&
+          result.data!['user_settings']['status']  != false &&
+          CacheHelper.getString("US1") != null && CacheHelper.getString("US1") != ""){CacheHelper.deleteData(key: "US1");}
+      if(result.data!['user2_settings'] != null &&
+          result.data!['user2_settings'] ['status']  != false  &&
+          CacheHelper.getString("US2") != null &&
+          CacheHelper.getString("US2") != ""){
+        CacheHelper.deleteData(key: "US2").then((v){
+          print("DELETED FROM CACHE SUCCESS");
+        });}
+      if(result.data!['general_settings'] != null &&result.data!['general_settings'] ['status']  != false && CacheHelper.getString("USG") != null && CacheHelper.getString("USG") != ""){CacheHelper.deleteData(key: "USG");}
+      var prefs = await SharedPreferences.getInstance();
+      if(result.data!['user_settings'] != null){
+        if (result.data!['user_settings']['data'] != null){
+          CacheHelper.setString(key: "s1Date", value: result.data!['user_settings']['data']['last_update_date']);
+          prefs = await SharedPreferences.getInstance();
+          final jsonString = json.encode(result.data!['user_settings']['data']); // Convert JSON to String
+          await prefs.setString("US1", jsonString);
+        }
+      }
+      if (result.data!['general_settings']['data'] != null){
+        CacheHelper.setString(key: "gDate", value: result.data!['general_settings']['data']['last_update_date']);
+        prefs = await SharedPreferences.getInstance();
+        final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
+        await prefs.setString("USG", jsonString);
+      }
+      if(result.data!['user2_settings'] != null){
+        if (result.data!['user2_settings']['data'] != null){
+          CacheHelper.setString(key: "s2Date", value: result.data!['user2_settings']['data']['last_update_date']);
+          prefs = await SharedPreferences.getInstance();
+          final jsonString = json.encode(result.data!['user2_settings']['data']); // Convert JSON to String
+          await prefs.setString("US2", jsonString);
+        }
+      }
+      print("settingType is $settingType");
+      if(result.data!['user_settings'] != null){
+        if(CacheHelper.getString("US1") != null && result.data!['user_settings']['status'] == false){
+          print("US1 FETCHING");
+          final prefs = await SharedPreferences.getInstance();
+          final jsonString = prefs.getString("US1");
+          if (jsonString != null) {
+            s1Cache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+            print("S1 IS --> $s1Cache");
+          }
+        }
+      }
+      if(result.data!['user2_settings'] != null){
+        if(CacheHelper.getString("US2") != null&& result.data!['user2_settings']['status'] == false){
+          print("US2 FETCHING");
+          final prefs = await SharedPreferences.getInstance();
+          final jsonString = prefs.getString("US2");
+          if (jsonString != null) {
+            s2Cache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
+          }
+        }
+      }
+      appConfigServiceProvider.setSettings(
+          type: settingType,
+          data:(result.data!['general_settings']['status'] == false)?gCache: result.data!['general_settings']['data'],
+          dataS1: (result.data!['user_settings'] != null)?(result.data!['user_settings']['status'] == false)? s1Cache: result.data!['user_settings']['data'] : null,
+          dataS2: (result.data!['user2_settings'] != null)?(result.data!['user2_settings']['status'] == false)? s2Cache : result.data!['user2_settings']['data'] : null
+      );
+    } else {
+      // if error happened , then check if i have cached version of settings or not , if i have cached version i will use it , if not , i will store the default settings version into local storage.
+      if (appConfigServiceProvider.getSettings(type: settingType) == null) {
+        appConfigServiceProvider.setSettings(
+          type: settingType,
+          data: getSettings(settingsType: settingType, context: context)?.toJson(),
+          dataS1: getSettings(settingsType: settingType, context: context)?.toJson(),
+          dataS2: getSettings(settingsType: settingType, context: context)?.toJson(),
+        );
+      }
+    }
+  }
+
   /// used to get user_settings and user_settings_2
   static Future<void> getUserSettingsAndUpdateTheStoredSettings(
       {required BuildContext context, bool? allData = false, List? need,}) async {
@@ -330,6 +456,19 @@ abstract class AppSettingsService {
         settingType: SettingsType.startupSettings,
         allData: allData,
         need: need,
+        context: context);
+    // await initializeGeneralSettings(
+    //     settingType: SettingsType.user2Settings,
+    //     allData: allData,
+    //     context: context);
+  }
+
+  static Future<void> getUserSettingsAndUpdateTheStoredSettingsPoint(
+      {required BuildContext context, bool? allData = false, bool closeDate = false}) async {
+    await initializeGeneralSettingsPoints(
+        settingType: SettingsType.startupSettings,
+        allData: allData,
+        closeDate: closeDate,
         context: context);
     // await initializeGeneralSettings(
     //     settingType: SettingsType.user2Settings,

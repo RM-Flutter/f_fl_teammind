@@ -1,29 +1,32 @@
-import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/core/services/app_config_service.dart';
+import 'package:app_test/features/points/core/end_points/end_points.dart';
+import 'package:app_test/features/points/core/end_points/end_points.dart';
+import 'package:app_test/features/points/core/errors/failures.dart';
+import 'package:app_test/features/points/core/points_api/api_services.dart';
+import 'package:app_test/features/points/data/models/copoun_model.dart';
 import 'package:app_test/features/points/data/repositories/prize_repository/prize_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:app_test/core/services/app_config_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import 'package:app_test/features/points/core/errors/failures.dart';
-import 'package:app_test/features/points/data/models/Prize_model.dart';
-import 'package:app_test/features/points/data/models/copoun_model.dart';
+import '../../models/prize_model.dart';
 
 class GetPrizeRepositoryImplementation extends GetPrizeRepository {
-  final BuildContext context;
-
-  GetPrizeRepositoryImplementation(this.context);
-
+  final ApiServices apiServices;
+  var context;
+  GetPrizeRepositoryImplementation(this.apiServices, this.context);
   @override
-  Future<Either<Failure, PrizeModel>> getPrize() async {
+  Future<Either<Failure, PrizeModel>> getPrize() async{
     var get = Provider.of<AppConfigService>(context, listen: false);
     try {
-      Response data = await DioHelper.getData(
-        url: "/prizes/entities-operations",
-        context: context,
+      Response data = await apiServices.get(
+          endPoint: PointFeatureEndPoints.getPrize,
+          context: context,
+          queryParameters: {
+            'device_unique_id': get.deviceInformation.deviceUniqueId
+          }
       );
-      debugPrint(data.data);
+      print(data.data);
       return Right(PrizeModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {
@@ -35,19 +38,18 @@ class GetPrizeRepositoryImplementation extends GetPrizeRepository {
   }
 
   @override
-  Future<Either<Failure, CopounModel>> sendCopoun(
-      {required String copounCode}) async {
+  Future<Either<Failure, CopounModel>> sendCopoun({required String copounCode}) async{
     var get = Provider.of<AppConfigService>(context, listen: false);
-    debugPrint("SERIAL IS ---> $copounCode");
+    print("SERIAL IS ---> ${copounCode}");
     try {
-      Response data = await DioHelper.postData(
-        url: "/rm_pointsys/v1/redeem_gift_card",
-        context: context,
-        data: {
-          'serial': copounCode.replaceAll('-', ''),
-        },
+      Response data = await apiServices.post(
+          endPoint: PointFeatureEndPoints.coupoun,
+          context: context,
+          data: {
+            'serial' : copounCode.replaceAll('-', ''),
+          }
       );
-      debugPrint(data.data);
+      print(data.data);
       return Right(CopounModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {

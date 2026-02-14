@@ -46,3 +46,4 @@ class HistoryController with ChangeNotifier {
     });
   }
 }
+

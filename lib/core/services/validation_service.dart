@@ -118,4 +118,12 @@ abstract class ValidationService {
     // Additional validation logic can be added to check if the date is valid
     return null;
   }
+
+  static String? validateRequiredAmount(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppStrings.amountIsRequired.tr();
+    }
+    return null;
+  }
+
 }

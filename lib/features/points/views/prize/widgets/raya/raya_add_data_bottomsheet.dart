@@ -12,7 +12,7 @@ import 'widgets/bottom_sheet_external_success.dart';
 class RayaAddDataBottomsheet extends StatelessWidget {
   var id;
   var needData;
-  RayaAddDataBottomsheet(this.id, this.needData, {super.key});
+  RayaAddDataBottomsheet(this.id, this.needData);
   var keys;
   List values = [];
   FocusNode fieldFocusNode = FocusNode();
@@ -37,11 +37,11 @@ class RayaAddDataBottomsheet extends StatelessWidget {
           }
           values.clear();
           needData.forEach((e){
-            debugPrint("e['value'] ---> ${e['value']}");
+            print("e['value'] ---> ${e['value']}");
             values.add(e['key']);
-            debugPrint("values --> $values");
+            print("values --> ${values}");
           });
-          debugPrint("values --> $values");
+          print("values --> ${values}");
           return Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom, // Push above keyboard
@@ -59,7 +59,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                 ),
                 width: double.infinity,
                 height: MediaQuery.sizeOf(context).height * 0.45,
-                child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
                   child: Column(
                     children: [
@@ -80,12 +80,13 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          if(values.contains("name"))  defaultTextFormField(
-                                    onTap: () {
-                                      if (!dataNameFocusNode.hasFocus) {
-                                        dataNameFocusNode.requestFocus();
-                                      }
-                                    },
+                            if(values.contains("name"))  defaultTextFormFieldPoints(
+                                focusNode: dataNameFocusNode,
+                                onTap: () {
+                                  if (!dataNameFocusNode.hasFocus) {
+                                    dataNameFocusNode.requestFocus();
+                                  }
+                                },
                                 context: context,
                                 keyboardType: TextInputType.text,
                                 hintText: AppStrings.yourName.tr().toUpperCase(),
@@ -94,12 +95,13 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                               controller: value.phoneController,
                               countryCodeController: value.countryCodeController,
                             ),
-                            if(values.contains("national_id"))   defaultTextFormField(
-                                    onTap: () {
-                                      if (!dataIdFocusNode.hasFocus) {
-                                        dataIdFocusNode.requestFocus();
-                                      }
-                                    },
+                            if(values.contains("national_id"))   defaultTextFormFieldPoints(
+                                focusNode: dataIdFocusNode,
+                                onTap: () {
+                                  if (!dataIdFocusNode.hasFocus) {
+                                    dataIdFocusNode.requestFocus();
+                                  }
+                                },
                                 context: context,
                                 keyboardType: TextInputType.number,
                                 hintText: AppStrings.nationalId.tr().toUpperCase(),
@@ -119,7 +121,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                                     color: const Color(0xff0D3B6F)),
                                 child: Text(
                                   AppStrings.send.tr().toUpperCase(),
-                                  style:  const TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       color: Color(0xffFFFFFF),

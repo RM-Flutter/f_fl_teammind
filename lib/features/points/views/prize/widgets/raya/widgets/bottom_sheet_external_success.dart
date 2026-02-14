@@ -11,7 +11,7 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 
 class PointsSuccessSheet{
- static void showConfirmationSheet(BuildContext context, {onTap}) {
+  static void showConfirmationSheet(BuildContext context, {onTap}) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -23,14 +23,14 @@ class PointsSuccessSheet{
           padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                     AppStrings.areYouSureYouWantToMakeTransferPoints.tr(),
-                    style:  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    AppStrings.areYouSureYouWantToMakeTransferPoints.tr(),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
@@ -102,9 +102,9 @@ class PointsSuccessSheet{
         fontSize: 16.0
     );
   }
- static externalSuccess(fieldFocusNode, {context, redeemCode}){
-    return  defaultActionBottomSheet2(
-      fieldFocusNode: fieldFocusNode,
+  static externalSuccess(fieldFocusNode, {context, redeemCode}){
+    return  defaultActionBottomSheetPoints(
+        fieldFocusNode: fieldFocusNode,
         context: context,
         home: false,
         view2Button: false,
@@ -138,7 +138,7 @@ class PointsSuccessSheet{
           ),
           child: Row(
             children: [
-              Text(redeemCode.toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.grey50)),),
+              Text(redeemCode.toString(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.grey3B)),),
               const Spacer(),
               GestureDetector(
                 onTap: (){
@@ -152,18 +152,18 @@ class PointsSuccessSheet{
                       borderRadius: BorderRadius.circular(8),
                       color: const Color(0xffE8E8E8)
                   ),
-                  child: Text(AppStrings.copy.tr(), style:  const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
+                  child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),
                 ),
               )
             ],
           ),
         ) : const SizedBox.shrink(),
-        headerIcon: Image.asset("assets/images/png/bill_success.png", height: 42, width: 40,)
+        headerIcon: Image.asset("assets/images/png/prize-success.png", height: 42, width: 40,)
     );
   }
- static manualSuccess(fieldFocusNode,{context}){
-    return defaultActionBottomSheet2(
-      fieldFocusNode: fieldFocusNode,
+  static manualSuccess(fieldFocusNode,{context}){
+    return defaultActionBottomSheetPoints(
+        fieldFocusNode: fieldFocusNode,
         context: context,
         home: false,
         view2Button: false,
@@ -172,7 +172,7 @@ class PointsSuccessSheet{
         title: "${AppStrings.successful.tr().toUpperCase()} !",
         subTitle: AppStrings.yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon.tr().toUpperCase(),
         viewCheckIcon: true,
-        headerIcon: Image.asset("assets/images/png/bill_success.png", height: 42, width: 40,)
+        headerIcon: Image.asset("assets/images/png/prize-success.png", height: 42, width: 40,)
     );
   }
 }

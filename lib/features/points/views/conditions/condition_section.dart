@@ -8,32 +8,36 @@ class ConditionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final conditionController = Provider.of<ConditionController>(context);
-
-    if (conditionController.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (conditionController.errorMessage != null) {
-      return Text(conditionController.errorMessage!);
-    } else if (conditionController.termsAndConditionsModel != null) {
+    final conditionProvider = Provider.of<ConditionController>(context);
+    if (conditionProvider.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (conditionProvider.errorMessage != null) {
+      return Text(conditionProvider.errorMessage!);
+    } else if (conditionProvider.termsAndConditionsModel != null) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 16),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: HtmlWidget(
-              conditionController.termsAndConditionsModel!.page!.content ?? "",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            HtmlWidget(
+              '''
+                  ${conditionProvider.termsAndConditionsModel!.page!.content}
+  ''',
               renderMode: RenderMode.column,
-              textStyle: const TextStyle(
-                fontSize: 14,
-                color: Color(0xff464646),
-                fontWeight: FontWeight.w400,
-              ),
+              textStyle: const TextStyle(fontSize: 14, color: Color(0xff464646), fontWeight: FontWeight.w400),
             ),
-          ),
+          ],
         ),
       );
-    } else {
-      return const Center(child: CircularProgressIndicator());
+    }else{
+      return Center(
+        child: CircularProgressIndicator(),
+      );
     }
+
+
+
   }
 }

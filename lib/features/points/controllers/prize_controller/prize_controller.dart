@@ -3,11 +3,12 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:app_test/features/points/core/errors/failures.dart';
-import 'package:app_test/features/points/data/models/Prize_model.dart';
 import 'package:app_test/features/points/data/models/copoun_model.dart';
 import 'package:app_test/features/points/data/models/redeem_prize_model.dart';
+import '../../data/models/prize_model.dart';
 import '../../data/repositories/prize_repository/prize_repository.dart';
 import '../../data/repositories/redeem_prize_repository/redeem_prize_repository.dart';
+
 enum RedeemPrizeStatus { initial, loading, success, failure }
 
 class PrizeController with ChangeNotifier {
@@ -51,18 +52,18 @@ class PrizeController with ChangeNotifier {
 
     result.fold(
           (failure) {
-            Fluttertoast.showToast(
-                msg: failure.error,
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 5,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            _setErrorState(failure.error);
-          },
-          (prizeModel) {
+        Fluttertoast.showToast(
+            msg: failure.error,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        _setErrorState(failure.error);
+      },
+          ( prizeModel) {
         this.prizeModel = prizeModel;
         _clearErrorState();
       },
@@ -77,17 +78,17 @@ class PrizeController with ChangeNotifier {
 
     result.fold(
           (failure){
-            Fluttertoast.showToast(
-                msg: failure.error,
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 5,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            _setErrorState(failure.error);
-          },
+        Fluttertoast.showToast(
+            msg: failure.error,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        _setErrorState(failure.error);
+      },
           (copounModel) {
         this.copounModel = copounModel;
         successSend = true;

@@ -525,5 +525,7 @@
   "domainNotFound": "Domain not found. Please check the domain and try again.",
   "useDefault": "Use Default",
   "savedDomains": "Saved Domains",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "referralCodeInviteFriend": "Referral code - Invite a friend",
+  "referralDescripe": "Invite your friends and get rewarded!,  Share your referral code and earn rewards when they sign up."
 }

@@ -25,6 +25,8 @@ abstract class AppImages {
       '$_baseImagesDirectory/fingerprints_images';
   static const String _penaltiesAndRewardsImagesDirectory =
       '$_baseImagesDirectory/reward_penalties_images';
+  static const String _painterMainScreenImagesDirectory =
+      '$_baseImagesDirectory/painter_main_screen_images';
 
   // general images
   static String get logo {
@@ -131,4 +133,6 @@ abstract class AppImages {
       '$_penaltiesAndRewardsImagesDirectory/penalty.png';
   static const String reward =
       '$_penaltiesAndRewardsImagesDirectory/reward.png';
+  static const String logoWhite =
+      '$_painterMainScreenImagesDirectory/logo_white.png';
 }

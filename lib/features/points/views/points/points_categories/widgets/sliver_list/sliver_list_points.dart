@@ -1,7 +1,9 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/features/points/core/points_api/api_services_implementation.dart';
 import 'package:app_test/features/points/views/conditions/condition_section.dart';
 import 'package:app_test/features/points/views/history/history_item.dart';
-import 'package:app_test/features/points/views/points/points_categories/widgets/sliver_list/widgets/referral/referral_section.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/sliver_list/widgets/copoun/copoun_section.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/sliver_list/widgets/referral_selection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,89 +26,37 @@ class SliverListPoints extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
                 (BuildContext context, index) {
-              return Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: kIsWeb ? 1200 : double.infinity,
-                  ),
-                  child: Container(
-                    padding: const EdgeInsetsGeometry.symmetric(vertical: 15),
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20)),
-                    ),
-                    child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                      child: !kIsWeb ?Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 22,),
-                          defaultTap2BarItem(items: [
-                            AppStrings.referral.tr(),
-                            AppStrings.conditions.tr(),AppStrings.history.tr()]),
-                          const SizedBox(height: 29,),
-                          provider.selectedIndex == 1?
-                          ChangeNotifierProvider(
-                              create: (_) => ConditionController(GetConditionRepositoryImplementation(context))..getCondition(),
-                              child: const ConditionSection())
-                              :provider.selectedIndex == 2?
-                          ChangeNotifierProvider(
-                              create: (context) => HistoryController(GetHistoryRepositoryImplementation(context))..getHistory(),
-                              child: const HistoryItem()): const ReferralSection()
-                          ,
-                        ],
-                      ):Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                      if(kIsWeb&& provider.selectedIndex == 0)Text(
-                        AppStrings.aboutPointsProgram.tr().toUpperCase(),
-                        style:  TextStyle(
-                          fontSize: 14,
-                          color: Color(AppColors.primary),
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                            if(kIsWeb&& provider.selectedIndex == 0) const SizedBox(height: 15,),
-                            if(kIsWeb&& provider.selectedIndex == 0) Text(
-                              AppStrings.pointsCondationAbout.tr(),
-                              style:  const TextStyle(
-                                fontSize: 12,
-                                color: Color(AppColors.black),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            if(kIsWeb&& provider.selectedIndex == 0) const SizedBox(height: 20,),
-                          ],),
-                          const SizedBox(height: 20,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 22,),
-                              defaultTap2BarItem(items: [
-                                AppStrings.referral.tr(),
-                                AppStrings.conditions.tr(),AppStrings.history.tr()]),
-                              const SizedBox(height: 29,),
-                              provider.selectedIndex == 1?
-                              ChangeNotifierProvider(
-                                  create: (_) => ConditionController(GetConditionRepositoryImplementation(context))..getCondition(),
-                                  child: const ConditionSection())
-                                  :provider.selectedIndex == 2?
-                              ChangeNotifierProvider(
-                                  create: (context) => HistoryController(GetHistoryRepositoryImplementation(context))..getHistory(),
-                                  child: const HistoryItem()): const ReferralSection()
-                              ,
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20)),
+                ),
+                child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 22,),
+                      defaultTap2BarItem(items: [
+                        AppStrings.coupon.tr(),AppStrings.referral.tr(),
+                        AppStrings.conditions.tr(),AppStrings.history.tr()]),
+                      const SizedBox(height: 29,),
+                      provider.selectedIndex == 0 ?
+                      CopounSection() :
+                      provider.selectedIndex == 2?
+                      ChangeNotifierProvider(
+                          create: (_) => ConditionController(GetConditionRepositoryImplementation(ApiServicesImplementation(), context))..getCondition(),
+                          child: const ConditionSection())
+                          :provider.selectedIndex == 3?
+                      ChangeNotifierProvider(
+                          create: (context) => HistoryController(GetHistoryRepositoryImplementation(ApiServicesImplementation(), context))..getHistory(),
+                          child: HistoryItem()): ReferralSection(
+
+                      )
+                      ,
+                    ],
                   ),
                 ),
               );

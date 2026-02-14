@@ -12,49 +12,52 @@ import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import '../../controllers/fawry_controller/fawry_controller.dart';
 
-class FawryProviderScreen extends StatelessWidget {
-  const FawryProviderScreen({super.key});
+class FawryProviderScreen extends StatefulWidget {
+  @override
+  State<FawryProviderScreen> createState() => _FawryProviderScreenState();
+}
 
+class _FawryProviderScreenState extends State<FawryProviderScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => FawryController()..getFawryCategory(context),
       child: Consumer<FawryController>(
-          builder: (context, value, child) {
-            return Scaffold( resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                backgroundColor: const Color(0xffFFFFFF),
-                leading: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child:  Icon(
-                      Icons.arrow_back,
-                      color: Color(AppColors.primary),
-                    )),
-                title: Text(
-                  AppStrings.chooseFromFawryServices.tr().toUpperCase(),
-                  style:  TextStyle(
-                      fontSize: AppSizes.s16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(AppColors.primary)),
-                ),
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        const Color(0xFFFF007A).withOpacity(0.03),
-                        const Color(0xFF00A1FF).withOpacity(0.03)
-                      ],
-                    ),
+        builder: (context, value, child) {
+          return Scaffold( resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              backgroundColor: const Color(0xffFFFFFF),
+              leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0XFF224982),
+                  )),
+              title: Text(
+                AppStrings.chooseFromFawryServices.tr().toUpperCase(),
+                style: const TextStyle(
+                    fontSize: AppSizes.s16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0XFF224982)),
+              ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      const Color(0xFFFF007A).withOpacity(0.03),
+                      const Color(0xFF00A1FF).withOpacity(0.03)
+                    ],
                   ),
                 ),
               ),
-              body: SizedBox(
-                height: MediaQuery.sizeOf(context).height * 1,
-                child: GradientBgImage(
+            ),
+            body: Container(
+              height: MediaQuery.sizeOf(context).height * 1,
+              child: GradientBgImage(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: GridView.count(
                       crossAxisCount: 2,
@@ -80,26 +83,27 @@ class FawryProviderScreen extends StatelessWidget {
                         ):
                         gridItem(
                             context,value.fawryCategory[index]['title'],
-                            value.fawryCategory[index]['icon'].isNotEmpty ?
-                            value.fawryCategory[index]['icon'][0]['file']:"",
+                            value.fawryCategory[index]['icon'] != null && value.fawryCategory[index]['icon'].isNotEmpty ? value.fawryCategory[index]['icon'][0]['file']:"",
                             value.fawryCategory[index]
-                           );
+                        );
                       })
                   )
 
-                ),
               ),
-            );
-          },
+            ),
+          );
+        },
       ),
     );
   }
+
   Widget gridItem(context,String title, src, service) {
     return GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ChargePhoneScreen(service, ),));
+
       },
-      child: SizedBox(
+      child: Container(
         height: 150,
         child: Stack(
           alignment: Alignment.topCenter,
@@ -117,7 +121,7 @@ class FawryProviderScreen extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.15),
                       blurRadius: 10,
                       spreadRadius: 2,
-                      offset: const Offset(0, 4),
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -126,9 +130,9 @@ class FawryProviderScreen extends StatelessWidget {
                   child: Text(
                     title,
                     textAlign: TextAlign.center,
-                    style:  TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
-                      color: Color(AppColors.primary),
+                      color: Color(AppColors.oc1),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -136,7 +140,7 @@ class FawryProviderScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(bottom: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: CachedNetworkImage(
@@ -146,7 +150,7 @@ class FawryProviderScreen extends StatelessWidget {
                   imageUrl: src,
                   placeholder: (context, url) =>
                   const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) =>  const Icon(
+                  errorWidget: (context, url, error) => const Icon(
                     Icons.image_not_supported_outlined,
                     size: AppSizes.s32,
                     color: Colors.black,

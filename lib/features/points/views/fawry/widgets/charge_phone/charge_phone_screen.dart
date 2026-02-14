@@ -17,15 +17,17 @@ import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
 
+import '../../../../../../core/services/validation_service.dart';
+
 class ChargePhoneScreen extends StatefulWidget {
   var service;
-  ChargePhoneScreen(this.service, {super.key});
+  ChargePhoneScreen(this.service);
   @override
   State<ChargePhoneScreen> createState() => _ChargePhoneScreenState();
 }
 
 class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
-  late FawryController fawryController;
+  late FawryController fawryProviderModel;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int? selectIndex;
 
@@ -39,7 +41,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
   bool? inquiry;
   @override
   void initState() {
-    fawryController = FawryController();
+    fawryProviderModel = FawryController();
     if (widget.service['services'].isNotEmpty &&
         widget.service['services'][0]['inquiry'] != null) {
       inquiry = widget.service['services'][0]['inquiry'];
@@ -52,11 +54,11 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
       pointsPerOne = widget.service['services'][0]['points_per_one'] ?? "0";
       for (var input in inputs) {
         String key = input['key'];
-        fawryController.controllers[key] = TextEditingController();
-        fawryController.focusNodes[key] = FocusNode();
+        fawryProviderModel.controllers[key] = TextEditingController();
+        fawryProviderModel.focusNodes[key] = FocusNode();
       }
     }
-    if(inquiry != null && inputs.isNotEmpty &&
+    if(inquiry != null && inputs != null && inputs.isNotEmpty &&
         serviceObject != null && totalPoints != null &&serviceId != null && serviceTitle != null
         &&singlePrice != null && pointsPerOne != null){
       selectIndex = 0;
@@ -71,15 +73,15 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
       _didCalculateFee = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return; // ✅ الحماية هنا
-        fawryController.updateFee(
+        fawryProviderModel!.updateFee(
           serviceObject,
           double.parse(
-            fawryController.rechargeAmountController.text.isNotEmpty
-                ? fawryController.rechargeAmountController.text
+            fawryProviderModel!.rechargeAmountController.text.isNotEmpty
+                ? fawryProviderModel!.rechargeAmountController.text
                 : "0",
           ),
         );
-        debugPrint("FFES IS --> ${fawryController.cachedFee}");
+        print("FFES IS --> ${fawryProviderModel!.cachedFee}");
       });
     }
   }
@@ -87,7 +89,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: fawryController,
+      value: fawryProviderModel,
       child: Consumer<FawryController>(
         builder: (context, value, child) {
           if(singlePrice != null && singlePrice != "noPrice"){
@@ -97,10 +99,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
             "${double.parse(value.rechargeAmountController.text.toString()) * double.parse(totalPoints.toString())}";
           }
           final json2String = CacheHelper.getString("US2");
-          Map<String, dynamic> us2Cache = {};
+          var us2Cache;
           if (json2String != null && json2String != "") {
             us2Cache = json.decode(json2String)
-                as Map<String, dynamic>; // Convert String back to JSON
+            as Map<String, dynamic>; // Convert String back to JSON
           }
           if(value.isGetInquerySuccess == true){
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -124,20 +126,20 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
             value.isGetInquerySuccess = false;
           }
           return Scaffold(
-            resizeToAvoidBottomInset: true,
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               backgroundColor: const Color(0xffFFFFFF),
-              leading:GestureDetector(
+              leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child:  const Icon(
+                  child: const Icon(
                     Icons.arrow_back,
                     color: Color(0XFF224982),
                   )),
               title: Text(
                 widget.service['title'].toString().toUpperCase(),
-                style:  const TextStyle(
+                style: const TextStyle(
                     fontSize: AppSizes.s16,
                     fontWeight: FontWeight.w700,
                     color: Color(0XFF224982)),
@@ -156,13 +158,13 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
               ),
             ),
             body: SafeArea(
-              child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
                 child: Form(
                   key: formKey,
                   child: GradientBgImage(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                     child: Column(
                       children: [
                         Container(
@@ -171,10 +173,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                 vertical: 10, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: const Color(0xffFFFFFF),
+                              color: Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xffC9CFD2).withOpacity(0.5),
+                                  color: Color(0xffC9CFD2).withOpacity(0.5),
                                   blurRadius: AppSizes.s5,
                                   spreadRadius: 1,
                                 )
@@ -187,7 +189,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                   AppStrings.selectServiceProvider
                                       .tr()
                                       .toUpperCase(),
-                                  style:  const TextStyle(
+                                  style: const TextStyle(
                                       fontSize: AppSizes.s14,
                                       fontWeight: FontWeight.w700,
                                       color: Color(0XFF224982)),
@@ -209,25 +211,25 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                               setState(() {
                                                 selectIndex = index;
                                                 inquiry =
-                                                    widget.service['services']
-                                                        [index]['inquiry'];
+                                                widget.service['services']
+                                                [index]['inquiry'];
                                                 singlePrice =
-                                                    widget.service['services']
-                                                        [index]['single_price'];
+                                                widget.service['services']
+                                                [index]['single_price'];
                                                 pointsPerOne =
-                                                    widget.service['services']
-                                                        [index]['points_per_one'];
+                                                widget.service['services']
+                                                [index]['points_per_one'];
                                                 inputs =
-                                                    widget.service['services']
-                                                        [index]['inputs'];
+                                                widget.service['services']
+                                                [index]['inputs'];
                                                 serviceObject = widget
                                                     .service['services'][index];
                                                 serviceId =
-                                                    widget.service['services']
-                                                        [index]['id'];
+                                                widget.service['services']
+                                                [index]['id'];
                                                 serviceTitle =
-                                                    widget.service['services']
-                                                        [index]['title'];
+                                                widget.service['services']
+                                                [index]['title'];
                                                 if(singlePrice != null){
                                                   value.rechargeAmountController.text = singlePrice.toString();
                                                   value.numberOfPointsController
@@ -244,7 +246,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                             },
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   height: 80,
@@ -253,40 +255,40 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                   decoration: BoxDecoration(
                                                       color: Colors.transparent,
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              13),
+                                                      BorderRadius.circular(
+                                                          13),
                                                       border: Border.all(
                                                           color: selectIndex ==
-                                                                  index
-                                                              ?  Color(
-                                                                  AppColors.primary)
+                                                              index
+                                                              ? const Color(
+                                                              AppColors.oc1)
                                                               : Colors
-                                                                  .transparent)),
+                                                              .transparent)),
                                                   child: ClipRRect(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
+                                                    BorderRadius.circular(
+                                                        14),
                                                     child: CachedNetworkImage(
                                                       height: 80,
                                                       width: 90,
                                                       fit: BoxFit.contain,
                                                       imageUrl: widget
-                                                              .service[
-                                                                  'services']
-                                                                  [index]
-                                                                  ['logo']
-                                                              .isNotEmpty
+                                                          .service[
+                                                      'services']
+                                                      [index]
+                                                      ['logo']
+                                                          .isNotEmpty
                                                           ? widget.service[
-                                                                      'services']
-                                                                  [index][
-                                                              'logo'][0]['file']
+                                                      'services']
+                                                      [index][
+                                                      'logo'][0]['file']
                                                           : "",
                                                       placeholder: (context,
-                                                              url) =>
-                                                          const ShimmerAnimatedLoading(),
+                                                          url) =>
+                                                      const ShimmerAnimatedLoading(),
                                                       errorWidget: (context,
-                                                              url, error) =>
-                                                          const Icon(
+                                                          url, error) =>
+                                                      const Icon(
                                                         Icons
                                                             .image_not_supported_outlined,
                                                         size: AppSizes.s50,
@@ -300,22 +302,22 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                 ),
                                                 Text(
                                                   widget.service['services']
-                                                      [index]['title'],
-                                                  style:  const TextStyle(
+                                                  [index]['title'],
+                                                  style: const TextStyle(
                                                       fontSize: AppSizes.s10,
                                                       fontWeight:
-                                                          FontWeight.w600,
+                                                      FontWeight.w600,
                                                       color: Color(0XFF224982)),
                                                 ),
                                               ],
                                             ),
                                           ),
                                       separatorBuilder: (context, index) =>
-                                          const SizedBox(
-                                            width: 15,
-                                          ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
                                       itemCount:
-                                          widget.service['services'].length),
+                                      widget.service['services'].length),
                                 )
                               ],
                             )),
@@ -333,7 +335,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                         if (inquiry == true && value.isGetFawryCategoryLoading == false)
                           ButtonWidget(
                             title:
-                                AppStrings.proceedToPayment.tr().toUpperCase(),
+                            AppStrings.proceedToPayment.tr().toUpperCase(),
                             svgIcon: "assets/images/svg/wallet.svg",
                             onPressed: () {
                               // if (inputs
@@ -355,7 +357,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                               if(formKey.currentState!.validate()){
                                 WidgetsBinding.instance.addPostFrameCallback((_) {
                                   value.getInquryCategory(context,
-                                      id: serviceId,
+                                    id: serviceId,
 
                                   );
                                 });
@@ -378,10 +380,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                 vertical: 25, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
-                              color: const Color(0xffFFFFFF),
+                              color: Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xffC9CFD2).withOpacity(0.5),
+                                  color: Color(0xffC9CFD2).withOpacity(0.5),
                                   blurRadius: AppSizes.s5,
                                   spreadRadius: 1,
                                 )
@@ -404,13 +406,15 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                         enabled: (singlePrice != null && singlePrice != "noPrice") ? false : true,
                                         readOnly: (singlePrice != null && singlePrice != "noPrice") ? true : false,
                                         controller:
-                                            value.rechargeAmountController,
+                                        value.rechargeAmountController,
                                         keyboardType: TextInputType.number,
                                         decoration: InputDecoration(
                                           hintText: AppStrings.rechargeAmount
                                               .tr()
                                               .toUpperCase(),
                                         ),
+                                        validator: (value) => ValidationService
+                                            .validateRequiredAmount(value),
                                         onChanged: (String? values) {
                                           if(values!.isEmpty){
                                             setState((){
@@ -439,10 +443,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                         },
                                       ),
                                     ),
-                                    const Spacer(),
+                                    Spacer(),
                                     SvgPicture.asset(
                                         "assets/images/svg/transfer.svg"),
-                                    const Spacer(),
+                                    Spacer(),
                                     SizedBox(
                                       width: MediaQuery.sizeOf(context).width *
                                           0.35,
@@ -457,7 +461,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                         enabled: (singlePrice != null && singlePrice != "noPrice") ? false : true,
                                         readOnly: (singlePrice != null && singlePrice != "noPrice") ? true : false,
                                         controller:
-                                            value.numberOfPointsController,
+                                        value.numberOfPointsController,
                                         decoration: InputDecoration(
                                           hintText: AppStrings.numberOfPoints
                                               .tr()
@@ -505,11 +509,11 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                     "${value.cachedFee} ج.م"),
                                 defaultTransferDetailsTexts(
                                     AppStrings.total.tr(),
-                                    "${double.parse(value.rechargeAmountController.text.isNotEmpty ? value.rechargeAmountController.text : "0") + double.parse(value.cachedFee.toStringAsFixed(0))} ج.م"),
+                                    "${double.parse(value.rechargeAmountController.text.isNotEmpty ? value.rechargeAmountController.text : "0") + double.parse(value.cachedFee != null ? value.cachedFee.toStringAsFixed(0) : "0")} ج.م"),
                                 SizedBox(
                                   width: MediaQuery.sizeOf(context).width * 0.6,
-                                  child: Divider(
-                                    color: Color(AppColors.primary),
+                                  child: const Divider(
+                                    color: Color(AppColors.oc1),
                                   ),
                                 ),
                                 const SizedBox(
@@ -521,10 +525,11 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                 defaultTransferDetailsTexts(
                                     AppStrings.availablePointsAfterWithdrawal
                                         .tr(),
-                                  "${double.parse(us2Cache['points']['available'].toString())-
-                                      ((double.parse(value.rechargeAmountController.text.isNotEmpty ?
-                                      value.rechargeAmountController.text : "0") +
-                                          double.parse(value.cachedFee.toStringAsFixed(0)))* double.parse(pointsPerOne.toString()))}")
+                                    "${double.parse(us2Cache['points']['available'].toString())-
+                                        ((double.parse(value.rechargeAmountController.text.isNotEmpty ?
+                                        value.rechargeAmountController.text : "0") +
+                                            double.parse(value.cachedFee != null ? value.cachedFee.toStringAsFixed(0)
+                                                : "0"))* double.parse(pointsPerOne.toString()))}")
                               ],
                             ),
                           ),
@@ -544,27 +549,27 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
 
   }
   Widget defaultTransferDetailsTexts(t1, t2) => Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        child: Row(
-          children: [
-            Text(
-              t1,
-              style:  TextStyle(
-                  color: Color(AppColors.primary),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600),
-            ),
-            const Spacer(),
-            Text(
-              t2,
-              style:  TextStyle(
-                  color: Color(AppColors.c3),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500),
-            )
-          ],
+    margin: const EdgeInsets.only(bottom: 10),
+    child: Row(
+      children: [
+        Text(
+          t1,
+          style: const TextStyle(
+              color: Color(AppColors.oc1),
+              fontSize: 12,
+              fontWeight: FontWeight.w600),
         ),
-      );
+        const Spacer(),
+        Text(
+          t2,
+          style:  TextStyle(
+              color: Color(AppColors.c3),
+              fontSize: 12,
+              fontWeight: FontWeight.w500),
+        )
+      ],
+    ),
+  );
   Widget buildInputWidget(Map<String, dynamic> input, value) {
     final String key = input['key'];
     final String type = input['type'];
@@ -583,7 +588,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
               child: Text(LocalizationService.isArabic(context: context)
                   ? e['title_ar']
                   : e['title_en'],
-                style:  const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
               ),
             );
           }).toList(),
@@ -621,7 +626,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
               value.controllers[key]?.text = outputDate; // ✅ ده اللي بيظهر في الفورم
               value.inputValues[key] = outputDate;       // ✅ ده اللي بيتبعت للسيرفر
 
-              debugPrint("✅ اخترت $key = $outputDate");
+              print("✅ اخترت $key = $outputDate");
             }
           },
           decoration: InputDecoration(hintText: title),
