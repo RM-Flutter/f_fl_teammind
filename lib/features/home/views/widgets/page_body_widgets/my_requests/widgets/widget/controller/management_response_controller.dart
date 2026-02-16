@@ -17,8 +17,8 @@ class ManagementResponseViewModal extends ChangeNotifier {
   }
 
   List availableActions = [
-     AppStrings.approved.tr(),
-     AppStrings.refused.tr(),
+    AppStrings.approved.tr(),
+    AppStrings.refused.tr(),
   ];
   String? selectedRequestStatus;
 

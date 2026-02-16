@@ -21,6 +21,8 @@ import 'features/home/controllers/home_controller.dart';
 import 'features/main_layout/controllers/main_controller.dart';
 import 'package:app_test/core/utils/error_handling/global_error_handler.dart';
 
+import 'firebase_options.dart';
+
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -49,7 +51,10 @@ void main() async {
     );
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
   } else {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform, // الأفضل
+    );
+
   }
 
   GoRouter.optionURLReflectsImperativeAPIs = true;

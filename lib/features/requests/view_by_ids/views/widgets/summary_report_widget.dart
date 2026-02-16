@@ -37,13 +37,13 @@ class SummaryReportsModal extends StatelessWidget {
                         const Icon(Icons.calendar_month, color: Colors.black,),
                         const SizedBox(width: 15,),
                         Text(
-                          '${report.month.toString().tr()} - ${LocalizationService.isArabic(context: context) ? StringConvert.sanitizeDateStringArabic(report.year.toString()) : StringConvert.sanitizeDateString(report.year.toString())}',
+                          '${report.month.toString().tr() ?? ''} - ${LocalizationService.isArabic(context: context) ? StringConvert.sanitizeDateStringArabic(report.year.toString()) : StringConvert.sanitizeDateString(report.year.toString())}',
                           style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                         ),
                       ],
                     ),
                     trailing:
-                        Text('${report.duration} ${AppStrings.days.tr()}',  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),),
+                    Text('${report.duration} ${AppStrings.days.tr()}',  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),),
                   ),
                 ),
               );

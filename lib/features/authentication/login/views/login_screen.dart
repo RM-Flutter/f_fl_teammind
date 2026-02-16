@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:app_test/core/utils/helpers/media_query_values.dart';
+import 'package:app_test/core/utils/overlay_gradient_widget.dart';
+import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -82,7 +84,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     viewModel = AuthenticationController();
     viewModel.initializeAnimation(this);
     WidgetsBinding.instance.addObserver(this);
-    debugPrint("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
+    print("ROLE FROM CACHE IS ---> ${CacheHelper.getString('role')}");
   }
 
   @override
@@ -131,7 +133,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     final jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
-    }debugPrint("Can Register is --> ${gCache['can_new_register']}");
+    }
+    print("Can Register is --> ${gCache['can_new_register']}");
     return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
       child: Scaffold(
@@ -141,9 +144,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
           child: Stack(
             children: [
               //const OverlayBackgroundGradientWidget(),
-              StaticBackgroundWidget(),
-              // const OverlayGradientWidget(),
-              // Positioned.fill(child: const OverlayGradientWidget()),
+              AnimatedBackgroundWidget(),
+              //const OverlayGradientWidget(),
+              Positioned.fill(child: const OverlayGradientWidget()),
 
               Container(
                 width: double.infinity,
@@ -185,7 +188,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                 viewPhone: true,
                                 isLoginPageStyle: true,
                                 value: viewModel.isPhoneLogin,
-                                onChanged: (newValue) => viewModel.toggleLoginMethod(),
+                                onChanged: (newValue) =>
+                                    viewModel.toggleLoginMethod(),
                               );
                             },
                           ),
@@ -232,7 +236,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                 ValidationService.validatePassword(value, login: true),
                             obscureText: hidePassword,
                           ),
-                          // gapH12,
+                          gapH12,
                           // FORGET PASSSORD BUTTON
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -254,7 +258,6 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                           // LOGIN BUTTON
                           CustomElevatedButton(
                             title: AppStrings.login.tr(),
-                            backgroundColor: Color(0xff555C60),
                             onPressed: () async {
                               // التحقق من صحة النموذج أولاً
                               if(!viewModel.formKey.currentState!.validate()){
@@ -297,17 +300,17 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             isPrimaryBackground: false,
                           ),
                           gapH16,
-                          // if(gCache != null && gCache['can_visit'] == true)
-                          // CustomElevatedButton(
-                          //   title: AppStrings.visitor.tr(),
-                          //   onPressed: () async {
-                          //     context.pushNamed(
-                          //       AppRoutes.freeServicesHome.name,
-                          //       pathParameters: {'lang': context.locale.languageCode,},
-                          //     );
-                          //   },
-                          //   isPrimaryBackground: false,
-                          // ),
+                          if(gCache != null && gCache['can_visit'] == true)
+                            CustomElevatedButton(
+                              title: AppStrings.visitor.tr(),
+                              onPressed: () async {
+                                // context.pushNamed(
+                                //   AppRoutes.freeServicesHome.name,
+                                //   pathParameters: {'lang': context.locale.languageCode,},
+                                // );
+                              },
+                              isPrimaryBackground: false,
+                            ),
                           SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
                           if(gCache != null && gCache != "") Container(
                             padding: EdgeInsets.symmetric(
@@ -332,7 +335,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                     src: AppIcons.google,
                                     onTap: () async {
                                       isLoginBySocial.value = true;
-                                      final deviceUniqueId = Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
+                                      final deviceUniqueId =
+                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
                                       final url = '${AppConstants.socialLoginGoogle}$deviceUniqueId';
                                       await viewModel.loginWithSocial(context, url);
                                     },
@@ -340,7 +344,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                         .colorScheme
                                         .primaryContainer,
                                   ),
-                                if ((gCache['login_types'] ?? []).contains('social_facebook'))
+                                if ((gCache['login_types'] ?? [])
+                                    .contains('social_facebook'))
                                   defaultCircularSocial(
                                     context: context,
                                     src: AppIcons.facebookColored,
@@ -403,7 +408,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                     width: AppSizes.s290,
                                     title: AppStrings.createNewAccount.tr(),
                                     isFuture: false,
-                                    onPressed: () => viewModel.showCreateAccountModal(context: context),
+                                    onPressed: () => viewModel.showCreateAccountModal(
+                                        context: context),
                                     buttonStyle: ElevatedButton.styleFrom(
                                       shadowColor: Colors.transparent,
                                       backgroundColor: Colors.transparent,
@@ -411,7 +417,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                       disabledForegroundColor: Colors.transparent,
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(AppSizes.s28),
+                                        borderRadius:
+                                        BorderRadius.circular(AppSizes.s28),
                                         side: const BorderSide(
                                           color: Colors.white,
                                         ),
@@ -433,7 +440,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               ),
                             ),
                           ],
-                          // Container(
+                          //  Container(
                           //   padding: EdgeInsets.only(
                           //     bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s48 : AppSizes.s16,
                           //   ),
@@ -452,8 +459,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                           //             final uri = Uri.parse(url);
                           //             if (await url_launcher.canLaunchUrl(uri)) {
                           //               await url_launcher.launchUrl(
-                          //                   uri,
-                          //                   mode: url_launcher.LaunchMode.externalApplication
+                          //                 uri,
+                          //                 mode: url_launcher.LaunchMode.externalApplication
                           //               );
                           //             } else {
                           //               if (mounted) {
@@ -498,7 +505,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                   ),
                 ),
               ),
-              // const LanguageDropdownButton()
+              const LanguageDropdownButton()
             ],
           ),
         ),
@@ -611,54 +618,6 @@ class _AnimatedBackgroundWidgetState extends State<AnimatedBackgroundWidget>
           ),
         );
       },
-    );
-  }
-}
-
-
-class StaticBackgroundWidget extends StatelessWidget {
-  const StaticBackgroundWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final bgUrl =
-    !kIsWeb ? "assets/images/login_view.jpg" : AppImages.loginBackgroundWeb;
-
-    final isNetworkImage =
-        bgUrl.startsWith('http://') || bgUrl.startsWith('https://');
-
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        /// Background Image
-        isNetworkImage
-            ? CachedNetworkImage(
-          imageUrl: bgUrl,
-          color: Color(0xFF263E4E),
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Image.asset(
-            !kIsWeb
-                ? 'assets/images/login_view.jpg'
-                : 'assets/images/login_view.jpg',
-            fit: BoxFit.cover,
-          ),
-          errorWidget: (context, url, error) => Image.asset(
-            !kIsWeb
-                ? 'assets/images/login_view.jpg'
-                : 'assets/images/login_view.jpg',
-            fit: BoxFit.cover,
-          ),
-        )
-            : Image.asset(
-          bgUrl,
-          fit: BoxFit.cover,
-        ),
-
-        /// Color Overlay
-        // Container(
-        //   color: const Color(0xFF263E4E).withOpacity(0.8),
-        // ),
-      ],
     );
   }
 }

@@ -21,7 +21,7 @@ import '../../controllers/points_controller/points_controller.dart';
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;
   var id;
-  PrizeScreen(this.viewArrow,this.id);
+  PrizeScreen(this.viewArrow,this.id, {super.key});
 
   @override
   _PrizeScreenState createState() => _PrizeScreenState();

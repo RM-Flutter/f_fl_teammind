@@ -9,6 +9,10 @@ import 'package:app_test/features/employee_profiles/list/views/employees_list_sc
 import 'package:app_test/features/home/views/home_screen.dart';
 import 'package:app_test/features/more/notifications/views/notification_screen.dart';
 import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
+import 'package:app_test/features/points/views/fawry/fawry_provider_screen.dart';
+import 'package:app_test/features/points/views/points/main_points_layout/points_screen.dart';
+import 'package:app_test/features/points/views/points/points_categories/points_categories_screen.dart';
+import 'package:app_test/features/points/views/prize/prize_screen.dart';
 import 'package:app_test/features/requests/add/views/add_request_screen.dart';
 import 'package:app_test/features/requests/details/views/request_details_screen.dart';
 import 'package:app_test/features/requests/view_by_ids/views/requests_by_id_screen.dart';
@@ -77,6 +81,12 @@ import '../services/sentry_serivce.dart';
 import '../widgets/webview_offers.dart';
 
 enum AppRoutes {
+  fawryProviderScreen,
+  CategoriesprizePointsViewScreen,
+  prizePointsViewScreen,
+  painterPointsViewScreen,
+
+
   home,
   splash,
   onboarding,
@@ -1437,7 +1447,7 @@ GoRouter goRouter(BuildContext context) {
                     GoRoute(
                       path: 'requestDetailsScreen/:id',
                       parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.requestDetails.name,
+                      name: AppRoutes.complainDetails.name,
                       pageBuilder: (context, state) {
                         Offset? begin = state.extra as Offset?;
                         final lang = state.uri.queryParameters['lang'];
@@ -1993,6 +2003,238 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
+      GoRoute(
+          path: 'painters-point-screen',
+          parentNavigatorKey: rootNavigatorKey,
+          name: AppRoutes.painterPointsViewScreen.name,
+          pageBuilder: (context, state) {
+            final lang = state.uri.queryParameters['lang'];
+            if (lang != null) {
+              final locale = Locale(lang);
+              context.setLocale(locale);
+            }
+            final animationController = AnimationController(
+              vsync: ticker,
+            );
+            animationController.addStatusListener((status) {
+              if (status == AnimationStatus.completed ||
+                  status == AnimationStatus.dismissed) {
+                animationController.dispose();
+              }
+            });
+            return AppRouterTransitions.slideTransition(
+              key: state.pageKey,
+              child: PointsScreen(arrow: true,),
+              animation: animationController,
+              begin: const Offset(1.0, 0.0),
+            );
+          },
+          routes: [
+            GoRoute(
+                path: 'prize-point-screen/:id',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.prizePointsViewScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  final id = state.pathParameters['id'] ?? '';
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: PrizeScreen(true,id),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                }
+            ),
+            GoRoute(
+                path: 'categories-prize-point-screen',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.CategoriesprizePointsViewScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: PointsCategoriesScreen(true,),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    path: 'fawryProviderScreen',
+                    parentNavigatorKey: rootNavigatorKey,
+                    name: AppRoutes.fawryProviderScreen.name,
+                    pageBuilder: (context, state) {
+                      //  Offset? begin = state.extra as Offset?;
+                      final lang = state.pathParameters['lang'];
+                      if (lang != null) {
+                        final locale = Locale(lang);
+                        context.setLocale(locale);
+                      }
+                      final animationController = AnimationController(
+                        vsync: ticker,
+                      );
+                      // Make sure to dispose the controller after the transition is complete
+                      animationController.addStatusListener((status) {
+                        if (status == AnimationStatus.completed ||
+                            status == AnimationStatus.dismissed) {
+                          animationController.dispose();
+                        }
+                      });
+                      return AppRouterTransitions.slideTransition(
+                        key: state.pageKey,
+                        child: FawryProviderScreen(),
+                        animation: animationController,
+                        begin: const Offset(1.0, 0.0),
+                      );
+                    },
+                  ),
+                  // GoRoute(
+                  //   path: 'billPaymentScreen',
+                  //   parentNavigatorKey: _rootNavigatorKey,
+                  //   name: AppRoutes.billPaymentScreen.name,
+                  //   pageBuilder: (context, state) {
+                  //     //  Offset? begin = state.extra as Offset?;
+                  //     final lang = state.pathParameters['lang'];
+                  //     if (lang != null) {
+                  //       final locale = Locale(lang);
+                  //       context.setLocale(locale);
+                  //     }
+                  //     final animationController = AnimationController(
+                  //       vsync: ticker,
+                  //     );
+                  //     // Make sure to dispose the controller after the transition is complete
+                  //     animationController.addStatusListener((status) {
+                  //       if (status == AnimationStatus.completed ||
+                  //           status == AnimationStatus.dismissed) {
+                  //         animationController.dispose();
+                  //       }
+                  //     });
+                  //     return AppRouterTransitions.slideTransition(
+                  //       key: state.pageKey,
+                  //       child: BillPaymentScreen(),
+                  //       animation: animationController,
+                  //       begin: const Offset(1.0, 0.0),
+                  //     );
+                  //   },
+                  // ),
+                  // GoRoute(
+                  //   path: 'chargePhoneScreen',
+                  //   parentNavigatorKey: _rootNavigatorKey,
+                  //   name: AppRoutes.chargePhoneScreen.name,
+                  //   pageBuilder: (context, state) {
+                  //     //  Offset? begin = state.extra as Offset?;
+                  //     final lang = state.pathParameters['lang'];
+                  //     if (lang != null) {
+                  //       final locale = Locale(lang);
+                  //       context.setLocale(locale);
+                  //     }
+                  //     final animationController = AnimationController(
+                  //       vsync: ticker,
+                  //     );
+                  //     // Make sure to dispose the controller after the transition is complete
+                  //     animationController.addStatusListener((status) {
+                  //       if (status == AnimationStatus.completed ||
+                  //           status == AnimationStatus.dismissed) {
+                  //         animationController.dispose();
+                  //       }
+                  //     });
+                  //     return AppRouterTransitions.slideTransition(
+                  //       key: state.pageKey,
+                  //       child: ChargePhoneScreen(),
+                  //       animation: animationController,
+                  //       begin: const Offset(1.0, 0.0),
+                  //     );
+                  //   },
+                  // ),
+                  // GoRoute(
+                  //   path: 'payBillScreen',
+                  //   parentNavigatorKey: _rootNavigatorKey,
+                  //   name: AppRoutes.payBillScreen.name,
+                  //   pageBuilder: (context, state) {
+                  //     //  Offset? begin = state.extra as Offset?;
+                  //     final lang = state.pathParameters['lang'];
+                  //     if (lang != null) {
+                  //       final locale = Locale(lang);
+                  //       context.setLocale(locale);
+                  //     }
+                  //     final animationController = AnimationController(
+                  //       vsync: ticker,
+                  //     );
+                  //     // Make sure to dispose the controller after the transition is complete
+                  //     animationController.addStatusListener((status) {
+                  //       if (status == AnimationStatus.completed ||
+                  //           status == AnimationStatus.dismissed) {
+                  //         animationController.dispose();
+                  //       }
+                  //     });
+                  //     return AppRouterTransitions.slideTransition(
+                  //       key: state.pageKey,
+                  //       child: PayBillScreen(),
+                  //       animation: animationController,
+                  //       begin: const Offset(1.0, 0.0),
+                  //     );
+                  //   },
+                  // ),
+                  // GoRoute(
+                  //   path: 'withdrawMoneyScreen',
+                  //   parentNavigatorKey: _rootNavigatorKey,
+                  //   name: AppRoutes.withdrawMoneyScreen.name,
+                  //   pageBuilder: (context, state) {
+                  //     //  Offset? begin = state.extra as Offset?;
+                  //     final lang = state.pathParameters['lang'];
+                  //     if (lang != null) {
+                  //       final locale = Locale(lang);
+                  //       context.setLocale(locale);
+                  //     }
+                  //     final animationController = AnimationController(
+                  //       vsync: ticker,
+                  //     );
+                  //     // Make sure to dispose the controller after the transition is complete
+                  //     animationController.addStatusListener((status) {
+                  //       if (status == AnimationStatus.completed ||
+                  //           status == AnimationStatus.dismissed) {
+                  //         animationController.dispose();
+                  //       }
+                  //     });
+                  //     return AppRouterTransitions.slideTransition(
+                  //       key: state.pageKey,
+                  //       child: WithdrawMoneyScreen(),
+                  //       animation: animationController,
+                  //       begin: const Offset(1.0, 0.0),
+                  //     );
+                  //   },
+                  // ),
+                ]
+            ),
+          ]
+      ),
+
     ],
     debugLogDiagnostics: true,
     errorBuilder: (context, state) {

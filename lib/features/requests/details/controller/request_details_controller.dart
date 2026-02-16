@@ -50,7 +50,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
       BuildContext context, String empId, {type}) async {
     // First get the employee balance
     List<MapEntry<String, Balance>>? empVocationBalance =
-        await getEmployeeVocationBalance(context: context, empId: empId,);
+    await getEmployeeVocationBalance(context: context, empId: empId,);
     if (empVocationBalance == null || empVocationBalance.isEmpty) {
       AlertsService.info(
           context: context,
@@ -60,10 +60,10 @@ class RequestDetailsViewModel extends ChangeNotifier {
     }
     // finally if the employee balance getten successfully , then show statistics modal and pass balance to it
     await ModalSheetHelper.showModalSheet(
-      id: empId,
+        id: empId,
         context: context,
         modalContent: StatisticsModal(
-            employeeId: empId, empVocationBalance: empVocationBalance, type: type, requests: requests,),
+          employeeId: empId, empVocationBalance: empVocationBalance, type: type, requests: requests,),
         title: AppStrings.statistics.tr(),
         viewProfile: true,
         height: 500);
@@ -114,8 +114,8 @@ class RequestDetailsViewModel extends ChangeNotifier {
     if (requestId == null) return;
     try {
       OperationResult<Map<String, dynamic>> result =
-          await RequestsServices.askIgnore(
-              requestId: requestId, context: context);
+      await RequestsServices.askIgnore(
+          requestId: requestId, context: context);
       if (result.success) {
         await AlertsService.success(
             title: AppStrings.success.tr(),
@@ -131,7 +131,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
             title: AppStrings.failed.tr(),
             context: context,
             message:
-                result.message ?? 'Failed Sending Ignore Request , try later!');
+            result.message ?? 'Failed Sending Ignore Request , try later!');
         return;
       }
     } catch (ex) {
@@ -146,8 +146,8 @@ class RequestDetailsViewModel extends ChangeNotifier {
     if (requestId == null) return;
     try {
       OperationResult<Map<String, dynamic>> result =
-          await RequestsServices.askRemember(
-              requestId: requestId, context: context);
+      await RequestsServices.askRemember(
+          requestId: requestId, context: context);
       if (result.success) {
         await AlertsService.success(
             title: AppStrings.success.tr(),
@@ -163,7 +163,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
             title: AppStrings.failed.tr(),
             context: context,
             message:
-                result.message ?? 'Failed Sending Ask to Remeber , try later!');
+            result.message ?? 'Failed Sending Ask to Remeber , try later!');
         return;
       }
     } catch (ex) {
@@ -190,7 +190,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    
+
     try {
       // Remove trailing slash for better web compatibility
       final response = await DioHelper.getData(
@@ -201,7 +201,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
           // if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && (gCache['id'].toString() != userId))'seen' : 1
         },
       );
-      
+
       print("Response data: ${response.data}");
       isLoading = false;
       if (response.data != null && response.data['request'] != null) {

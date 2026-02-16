@@ -36,19 +36,19 @@
         "backendRoute": "notifications/{id}"
     },
     {
-        "frontendRoute": "default-page/{type}",
+        "frontendRoute": "default-page/blogs",
         "backendRoute": "blogs"
     },
     {
-        "frontendRoute": "default-single-page/{id}/{type}",
+        "frontendRoute": "default-single-page/blogs/{id}",
         "backendRoute": "blogs/{id}"
     },
     {
-        "frontendRoute": "default-page/{type}",
+        "frontendRoute": "default-page/news",
         "backendRoute": "news"
     },
     {
-        "frontendRoute": "default-single-page/{id}/{type}",
+        "frontendRoute": "default-single-page/news/{id}",
         "backendRoute": "news/{id}"
     },
     {
@@ -56,11 +56,11 @@
         "backendRoute": "csrequests"
     },
     {
-        "frontendRoute": "more/complainScreen/complainDetailsScreen/{id}/{type}",
+        "frontendRoute": "more/complainScreen/complainDetailsScreen/{id}/mine",
         "backendRoute": "csrequests/{id}"
     },
     {
-        "frontendRoute": "default-page/{entity}",
+        "frontendRoute": "default-single-page/{entity}/{id}",
         "backendRoute": "page-1-title-content/{entity}/{id}"
     },
     {
@@ -224,7 +224,7 @@
         "backendRoute": "emp-requests"
     },
     {
-        "frontendRoute": "requests/mine/request-details/{id}/mine",
+        "frontendRoute": "requests/{type}/request-details/{id}",
         "backendRoute": "emp-requests/{id}"
     },
     {
@@ -244,7 +244,7 @@
         "backendRoute": "emp-payroll/{id}"
     },
     {
-        "frontendRoute": "tasks-screen",
+        "frontendRoute": "more/task-screen",
         "backendRoute": "tasks"
     },
     {

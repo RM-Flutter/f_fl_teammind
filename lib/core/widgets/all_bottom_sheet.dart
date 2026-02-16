@@ -663,13 +663,14 @@ Future<void> defaultActionBottomSheetPoints({
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {
-                  // print("close2");
+                  // debugPrint("close2");
                   // if (home == true) {
                   //   context.goNamed(AppRoutes.eCommerceHomeScreen.name,
                   //       pathParameters: {
                   //         'lang': context.locale.languageCode
                   //       });
-                  // } else {
+                  // }
+                  // else {
                   //   Navigator.pop(context);
                   // } // Close the bottom sheet when tapping outside
                 },
@@ -698,8 +699,7 @@ Future<void> defaultActionBottomSheetPoints({
                     ),
                     width: double.infinity,
                     height: bottomSheetHeight ?? (viewDropDownButton || (code != null && code != "")? MediaQuery
-                        .of(context)
-                        .size
+                        .of(context).size
                         .height * 0.56
                         : MediaQuery
                         .of(context)

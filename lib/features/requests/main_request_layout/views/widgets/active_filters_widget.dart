@@ -15,7 +15,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class ActiveFiltersWidget extends StatelessWidget {
   final GetRequestsTypes? requestsType;
   final RequestsViewModel viewModel;
@@ -307,4 +306,3 @@ class _FilterChip extends StatelessWidget {
     );
   }
 }
-

@@ -26,13 +26,13 @@ class AddRequestScreen extends StatefulWidget {
 }
 
 class _AddRequestScreenState extends State<AddRequestScreen> {
-  late final AddNewRequestViewModel viewModel;
+  late final AddNewRequestController viewModel;
   late final HomeController homeViewModel;
 
   @override
   void initState() {
     super.initState();
-    viewModel = AddNewRequestViewModel();
+    viewModel = AddNewRequestController();
     homeViewModel = HomeController();
     _initAsync();
     viewModel.initializeAddNewRequestScreen(context: context);
@@ -49,12 +49,12 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
       gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
     }
     final textStyle = TextStyle(
-      fontWeight: FontWeight.w400,
-      color: Theme.of(context).colorScheme.primary,
-      fontSize: AppSizes.s16,
-      fontFamily: "Ibrand"
+        fontWeight: FontWeight.w400,
+        color: Theme.of(context).colorScheme.primary,
+        fontSize: AppSizes.s16,
+        fontFamily: "Ibrand"
     );
-    return ChangeNotifierProvider<AddNewRequestViewModel>(
+    return ChangeNotifierProvider<AddNewRequestController>(
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
@@ -68,254 +68,254 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: AppSizes.s16, horizontal: !kIsWeb? AppSizes.s12 : 0),
-                  child: Consumer<AddNewRequestViewModel>(
-                    builder: (context, viewModel, child){
-                      // viewModel.requestsTypes = (json['request_types'] as Map<String, dynamic>?)?.values.map((e) {
-                      //   final map = e as Map<String, dynamic>;
-                      //   final titleMap = map['title'] as Map<String, dynamic>?;
-                      //   final titleEn = titleMap?['en'] ?? '';
-                      //   return {
-                      //     ...map,
-                      //     'titleEn': titleEn,
-                      //   };
-                      // }).toList();
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      AppStrings.mainData.tr().toUpperCase(),
-                                      style: textStyle,
-                                    ),
-                                    gapH14,
-                                    if(viewModel.requestsTypes != null && viewModel.requestsTypes!.isNotEmpty)
-                                      defaultDropdownField(
-                                      value: viewModel.selectReqType,
-                                      title: viewModel.selectReqType ?? AppStrings.requestType.tr(),
-                                      items: viewModel.requestsTypes!.map((e) => DropdownMenuItem(
-                                        value: e['id'].toString(),
-                                        child: Text(
-                                          e['title'][context.locale.languageCode].toString(),
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color: Color(AppColors.almostBlack)
-                                          ),),
+                  child: Consumer<AddNewRequestController>(
+                      builder: (context, viewModel, child){
+                        // viewModel.requestsTypes = (json['request_types'] as Map<String, dynamic>?)?.values.map((e) {
+                        //   final map = e as Map<String, dynamic>;
+                        //   final titleMap = map['title'] as Map<String, dynamic>?;
+                        //   final titleEn = titleMap?['en'] ?? '';
+                        //   return {
+                        //     ...map,
+                        //     'titleEn': titleEn,
+                        //   };
+                        // }).toList();
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppStrings.mainData.tr().toUpperCase(),
+                                        style: textStyle,
                                       ),
-                                      ).toList(),
-                                      onChanged: (String? values) {
-                                        print(values);
-                                        final selectedItems = gCache['request_types'].values.firstWhere(
-                                              (element) => element['id'].toString() == values,
-                                          orElse: () => null,
-                                        );
-                                        setState(() {
-                                         // viewModel.selectReqType = values;
-                                          viewModel.controller.clear();
-                                          viewModel.reasonController.clear();
-                                          viewModel.amountController.clear();
-                                          viewModel.duration = null;
-                                          viewModel.formattedDuration = null;
-                                          viewModel.selectReqType = values;
-                                          viewModel.reqType = selectedItems['type'];
-                                          viewModel.halfDay = selectedItems['half_day_leave'];
-                                          viewModel.reqTypeFile = selectedItems['fields']?['attaching_file'] ;
-                                          viewModel.reqTypeMoney = selectedItems['fields']?['money_value'] ;
-                                        });
+                                      gapH14,
+                                      if(viewModel.requestsTypes != null && viewModel.requestsTypes!.isNotEmpty)
+                                        defaultDropdownField(
+                                          value: viewModel.selectReqType,
+                                          title: viewModel.selectReqType ?? AppStrings.requestType.tr(),
+                                          items: viewModel.requestsTypes!.map((e) => DropdownMenuItem(
+                                            value: e['id'].toString(),
+                                            child: Text(
+                                              e['title'][context.locale.languageCode].toString(),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(AppColors.almostBlack)
+                                              ),),
+                                          ),
+                                          ).toList(),
+                                          onChanged: (String? values) {
+                                            print(values);
+                                            final selectedItems = gCache['request_types'].values.firstWhere(
+                                                  (element) => element['id'].toString() == values,
+                                              orElse: () => null,
+                                            );
+                                            setState(() {
+                                              // viewModel.selectReqType = values;
+                                              viewModel.controller.clear();
+                                              viewModel.reasonController.clear();
+                                              viewModel.amountController.clear();
+                                              viewModel.duration = null;
+                                              viewModel.formattedDuration = null;
+                                              viewModel.selectReqType = values;
+                                              viewModel.reqType = selectedItems['type'];
+                                              viewModel.halfDay = selectedItems['half_day_leave'];
+                                              viewModel.reqTypeFile = selectedItems['fields']?['attaching_file'] ;
+                                              viewModel.reqTypeMoney = selectedItems['fields']?['money_value'] ;
+                                            });
 
-                                      },
-                                    ),
-                                    if((viewModel.requestsTypes == null || viewModel.requestsTypes!.isEmpty)
-                                        && (AppConstants.requestsTypess != null &&
-                                            AppConstants.requestsTypess!.isNotEmpty))defaultDropdownField(
-                                      value: viewModel.selectReqType,
-                                      title: viewModel.selectReqType ?? AppStrings.requestType.tr(),
-                                      items: AppConstants.requestsTypess!.map((e) => DropdownMenuItem(
-                                        value: e['id'].toString(),
-                                        child: Text(
-                                          e['title'][context.locale.languageCode].toString(),
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color: Color(AppColors.almostBlack)
-                                          ),),
+                                          },
+                                        ),
+                                      if((viewModel.requestsTypes == null || viewModel.requestsTypes!.isEmpty)
+                                          && (AppConstants.requestsTypess != null &&
+                                              AppConstants.requestsTypess!.isNotEmpty))defaultDropdownField(
+                                        value: viewModel.selectReqType,
+                                        title: viewModel.selectReqType ?? AppStrings.requestType.tr(),
+                                        items: AppConstants.requestsTypess!.map((e) => DropdownMenuItem(
+                                          value: e['id'].toString(),
+                                          child: Text(
+                                            e['title'][context.locale.languageCode].toString(),
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                color: Color(AppColors.almostBlack)
+                                            ),),
+                                        ),
+                                        ).toList(),
+                                        onChanged: (String? values) {
+                                          print(values);
+                                          final selectedItem = gCache['request_types'].values.firstWhere(
+                                                (element) => element['id'].toString() == values,
+                                            orElse: () => null,
+                                          );
+                                          setState(() {
+                                            // viewModel.selectReqType = values;
+                                            viewModel.duration = null;
+                                            viewModel.formattedDuration = null;
+                                            viewModel.controller.clear();
+                                            viewModel.reasonController.clear();
+                                            viewModel.amountController.clear();
+                                            viewModel.selectReqType = values;
+                                            viewModel.reqType = selectedItem['type'];
+                                            viewModel.halfDay = selectedItem['half_day_leave'];
+                                            viewModel.reqTypeFile = selectedItem['fields']?['attaching_file'] ;
+                                            viewModel.reqTypeFile = selectedItem['fields']?['attaching_file'] ;
+                                            viewModel.reqTypeMoney = selectedItem['fields']?['money_value'] ;
+                                          });
+                                          print("selectedItem --> ${selectedItem}");
+                                          print("selectedItem --> ${AppConstants.requestsTypess}");
+                                          print("TYPE  IS --> ${viewModel.reqType}");
+                                          print("TYPE  IS --> ${viewModel.reqTypeFile}");
+                                        },
                                       ),
-                                      ).toList(),
-                                      onChanged: (String? values) {
-                                        print(values);
-                                        final selectedItem = gCache['request_types'].values.firstWhere(
-                                              (element) => element['id'].toString() == values,
-                                          orElse: () => null,
-                                        );
-                                        setState(() {
-                                         // viewModel.selectReqType = values;
-                                          viewModel.duration = null;
-                                          viewModel.formattedDuration = null;
-                                          viewModel.controller.clear();
-                                          viewModel.reasonController.clear();
-                                          viewModel.amountController.clear();
-                                          viewModel.selectReqType = values;
-                                          viewModel.reqType = selectedItem['type'];
-                                          viewModel.halfDay = selectedItem['half_day_leave'];
-                                          viewModel.reqTypeFile = selectedItem['fields']?['attaching_file'] ;
-                                          viewModel.reqTypeFile = selectedItem['fields']?['attaching_file'] ;
-                                          viewModel.reqTypeMoney = selectedItem['fields']?['money_value'] ;
-                                        });
-                                        print("selectedItem --> ${selectedItem}");
-                                        print("selectedItem --> ${AppConstants.requestsTypess}");
-                                        print("TYPE  IS --> ${viewModel.reqType}");
-                                        print("TYPE  IS --> ${viewModel.reqTypeFile}");
-                                      },
-                                    ),
-                                    gapH14,
-                                    viewModel.reqType ==
-                                        'instead_of_holidays'
-                                        ? CustomDropdown.search(
-                                        selectedValue: viewModel.selectedRequestType,
-                                        borderRadius:
-                                        BorderRadius.circular(AppSizes.s15),
-                                        borderSide: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .enabledBorder
-                                            ?.borderSide,
-                                        hintText: AppStrings.requestTime.tr(),
-                                        hintStyle: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .hintStyle,
-                                        items: viewModel.requestsTypes ?? AppConstants.requestsTypess!,
-                                        nameKey: "name",
-                                        onChanged: (value) =>
-                                            viewModel.selectInsteadOfHolidays(context,
-                                                startDateOrDatetime: value['from'],
-                                                endDateOrDatetime: value['to']),
-                                        contentPadding: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .contentPadding
-                                            ?.resolve(LocalizationService.isArabic(
-                                            context: context)
-                                            ? TextDirection.rtl
-                                            : TextDirection.ltr))
-                                        : TextField(
-                                      controller: viewModel.controller,
-                                      decoration: InputDecoration(
-                                        hintText: AppStrings.requestTime.tr(),
-                                        suffixIcon: IconButton(
-                                          icon: const Icon(Icons.calendar_today),
-                                          onPressed: () =>
-                                              viewModel.selectDate(context, filter: false),
+                                      gapH14,
+                                      viewModel.reqType ==
+                                          'instead_of_holidays'
+                                          ? CustomDropdown.search(
+                                          selectedValue: viewModel.selectedRequestType,
+                                          borderRadius:
+                                          BorderRadius.circular(AppSizes.s15),
+                                          borderSide: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .enabledBorder
+                                              ?.borderSide,
+                                          hintText: AppStrings.requestTime.tr(),
+                                          hintStyle: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .hintStyle,
+                                          items: viewModel.requestsTypes ?? AppConstants.requestsTypess!,
+                                          nameKey: "name",
+                                          onChanged: (value) =>
+                                              viewModel.selectInsteadOfHolidays(context,
+                                                  startDateOrDatetime: value['from'],
+                                                  endDateOrDatetime: value['to']),
+                                          contentPadding: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .contentPadding
+                                              ?.resolve(LocalizationService.isArabic(
+                                              context: context)
+                                              ? TextDirection.rtl
+                                              : TextDirection.ltr))
+                                          : TextField(
+                                        controller: viewModel.controller,
+                                        decoration: InputDecoration(
+                                          hintText: AppStrings.requestTime.tr(),
+                                          suffixIcon: IconButton(
+                                            icon: const Icon(Icons.calendar_today),
+                                            onPressed: () =>
+                                                viewModel.selectDate(context, filter: false),
+                                          ),
+                                        ),
+                                        readOnly: true,
+                                        onTap: () => viewModel.selectDate(context, filter: false),
+                                      ),
+                                      gapH14,
+                                      TextFormField(
+                                        controller: viewModel.reasonController,
+                                        maxLines: 5,
+                                        decoration: InputDecoration(
+                                          hintText: AppStrings.reason.tr(),
                                         ),
                                       ),
-                                      readOnly: true,
-                                      onTap: () => viewModel.selectDate(context, filter: false),
-                                    ),
-                                    gapH14,
-                                    TextFormField(
-                                      controller: viewModel.reasonController,
-                                      maxLines: 5,
-                                      decoration: InputDecoration(
-                                        hintText: AppStrings.reason.tr(),
-                                      ),
-                                    ),
-                                    gapH14,
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        if(viewModel.reqTypeFile == "required" || viewModel.reqTypeFile == "optional"
-                                        || viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional")  Text(
-                                          AppStrings.additionalData.tr().toUpperCase(),
-                                          style: textStyle,
-                                        ),
-                                        if(viewModel.reqTypeFile == "required" || viewModel.reqTypeFile == "optional") gapH14,
-                                        if(viewModel.reqTypeFile == "required"|| viewModel.reqTypeFile == "optional")TextFormField(
-                                          controller: viewModel.fileController,
-                                          decoration: InputDecoration(
-                                            hintText:
-                                            AppStrings.uploadFiles.tr(),
-                                            suffixIcon: IconButton(
-                                              icon:
-                                              const Icon(Icons.upload_file),
-                                              onPressed: () async =>
-                                                  viewModel.pickFile(),
+                                      gapH14,
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          if(viewModel.reqTypeFile == "required" || viewModel.reqTypeFile == "optional"
+                                              || viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional")  Text(
+                                            AppStrings.additionalData.tr().toUpperCase(),
+                                            style: textStyle,
+                                          ),
+                                          if(viewModel.reqTypeFile == "required" || viewModel.reqTypeFile == "optional") gapH14,
+                                          if(viewModel.reqTypeFile == "required"|| viewModel.reqTypeFile == "optional")TextFormField(
+                                            controller: viewModel.fileController,
+                                            decoration: InputDecoration(
+                                              hintText:
+                                              AppStrings.uploadFiles.tr(),
+                                              suffixIcon: IconButton(
+                                                icon:
+                                                const Icon(Icons.upload_file),
+                                                onPressed: () async =>
+                                                    viewModel.pickFile(),
+                                              ),
                                             ),
+                                            readOnly: true,
+                                            onTap: () async =>
+                                            await viewModel.pickFile(),
                                           ),
-                                          readOnly: true,
-                                          onTap: () async =>
-                                          await viewModel.pickFile(),
-                                        ),
-                                        if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional") gapH14,
-                                        if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional")  TextFormField(
-                                          controller:
-                                          viewModel.amountController,
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            hintText: AppStrings.amount.tr(),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    // Consumer<AddNewRequestViewModel>(
-                                    //     builder: (context, viewModel, child) {
-                                    //       print("FIELDS IS --> ${viewModel.selectedRequestType?['fields']}");
-                                    //   final attachingFile =
-                                    //       (viewModel.selectedRequestType?['fields']
-                                    //               ?['attaching_file'] as String?)
-                                    //           ?.toLowerCase()
-                                    //           .trim();
-                                    //   final moneyValue =
-                                    //       (viewModel.selectedRequestType?['fields']
-                                    //               ?['money_value'] as String?)
-                                    //           ?.toLowerCase()
-                                    //           .trim();
-                                    //   return (attachingFile == 'active' ||
-                                    //               attachingFile == 'required' ||
-                                    //               attachingFile == 'optional') ||
-                                    //           (moneyValue == 'active' ||
-                                    //               moneyValue == 'required' ||
-                                    //               moneyValue == 'optional')
-                                    //       ?
-                                    //       : const SizedBox.shrink();
-                                    // }),
-                                    gapH14,
-                                    // Text(viewModel.notes ?? ''),
-                                  ],
-                                ),
-                              )),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: AppSizes.s6, horizontal: AppSizes.s16),
-                            width: LayoutService.getWidth(context),
-                            decoration: BoxDecoration(
-                                color: Color(AppColors.dark),
-                                borderRadius: BorderRadius.circular(AppSizes.s50)),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  gapW12,
-                                  Expanded(
-                                      child: Text(
-                                        viewModel.formattedDuration != null?
-                                        "${viewModel.formattedDuration}" :
-                                        viewModel.duration != null?
-                                        '${viewModel.duration} ${AppStrings.days.tr()}' : "0",
-                                        style: textStyle.copyWith(color: Colors.white),
-                                      )),
-                                  gapW8,
-                                  CustomRequestDetailsButton(
-                                    title: AppStrings.sendRequest.tr(),
-                                    color: Color(AppColors.primary),
-                                    onPressed: () async =>
-                                        viewModel.createNewRequest(context: context),
-                                  )
-                                ]),
-                          )
-                        ],
-                      );
-                    }
+                                          if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional") gapH14,
+                                          if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional")  TextFormField(
+                                            controller:
+                                            viewModel.amountController,
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              hintText: AppStrings.amount.tr(),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      // Consumer<AddNewRequestController>(
+                                      //     builder: (context, viewModel, child) {
+                                      //       print("FIELDS IS --> ${viewModel.selectedRequestType?['fields']}");
+                                      //   final attachingFile =
+                                      //       (viewModel.selectedRequestType?['fields']
+                                      //               ?['attaching_file'] as String?)
+                                      //           ?.toLowerCase()
+                                      //           .trim();
+                                      //   final moneyValue =
+                                      //       (viewModel.selectedRequestType?['fields']
+                                      //               ?['money_value'] as String?)
+                                      //           ?.toLowerCase()
+                                      //           .trim();
+                                      //   return (attachingFile == 'active' ||
+                                      //               attachingFile == 'required' ||
+                                      //               attachingFile == 'optional') ||
+                                      //           (moneyValue == 'active' ||
+                                      //               moneyValue == 'required' ||
+                                      //               moneyValue == 'optional')
+                                      //       ?
+                                      //       : const SizedBox.shrink();
+                                      // }),
+                                      gapH14,
+                                      // Text(viewModel.notes ?? ''),
+                                    ],
+                                  ),
+                                )),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: AppSizes.s6, horizontal: AppSizes.s16),
+                              width: LayoutService.getWidth(context),
+                              decoration: BoxDecoration(
+                                  color: Color(AppColors.dark),
+                                  borderRadius: BorderRadius.circular(AppSizes.s50)),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    gapW12,
+                                    Expanded(
+                                        child: Text(
+                                          viewModel.formattedDuration != null?
+                                          "${viewModel.formattedDuration}" :
+                                          viewModel.duration != null?
+                                          '${viewModel.duration} ${AppStrings.days.tr()}' : "0",
+                                          style: textStyle.copyWith(color: Colors.white),
+                                        )),
+                                    gapW8,
+                                    CustomRequestDetailsButton(
+                                      title: AppStrings.sendRequest.tr(),
+                                      color: Color(AppColors.primary),
+                                      onPressed: () async =>
+                                          viewModel.createNewRequest(context: context),
+                                    )
+                                  ]),
+                            )
+                          ],
+                        );
+                      }
                   ),
                 ),
               ),

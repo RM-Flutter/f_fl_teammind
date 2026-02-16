@@ -18,9 +18,9 @@ class RequestsViewModel extends ChangeNotifier {
   var rulesMessage;
   Future<void> initializeRequestsScreen(
       {required BuildContext context,
-      required GetRequestsTypes requestsType,empIds,from,status, to, requestTypeId, depId,  bool loadMore = false}) async {
+        required GetRequestsTypes requestsType,empIds,from,status, to, requestTypeId, depId,  bool loadMore = false}) async {
     await _getAllUserRequests(context: context, requestType: requestsType, loadMore: loadMore,
-    to:to ,from:from, requestTypeId: requestTypeId,empIds: empIds, depId: depId, status: status
+        to:to ,from:from, requestTypeId: requestTypeId,empIds: empIds, depId: depId, status: status
     );
     updateLoadingStatus(laodingValue: false);
   }
@@ -42,8 +42,8 @@ class RequestsViewModel extends ChangeNotifier {
     bool loadMore = false,
   }) async {
     debugPrint("🟡 isLoading: $isLoading, isLoadingMore: $isLoadingMore, loadMore: $loadMore");
-    isLoading = isLoading;
-    isLoadingMore = isLoadingMore;
+    isLoading = isLoading ?? false;
+    isLoadingMore = isLoadingMore ?? false;
     if (isLoading || isLoadingMore) return;
 
     if (!loadMore) {

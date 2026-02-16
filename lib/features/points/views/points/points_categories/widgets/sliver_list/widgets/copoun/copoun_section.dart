@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/helpers/media_query_values.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
 import 'package:app_test/features/points/controllers/prize_controller/prize_controller.dart';
+import 'package:app_test/features/points/views/points/points_categories/widgets/sliver_list/widgets/copoun/widgets/qr_scanner/view/qr_scanner.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,7 +132,7 @@ class CopounSection extends StatelessWidget {
                                 suffixIcon:  GestureDetector(
                                   onTap: (){
                                     copounCodeController.clear();
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => QRScannerScreen(true)));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => QRScannerScreen(true)));
                                   },
                                   child: const Icon(Icons.qr_code_2, size: 28,),
                                 ),

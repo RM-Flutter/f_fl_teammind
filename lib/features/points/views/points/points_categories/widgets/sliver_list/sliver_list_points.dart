@@ -83,9 +83,9 @@ Widget defaultTap2BarItem({
       return Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7.5),
-          height: isWeb ? null : 45.0, // في الويب نخليها تاخد الطول الطبيعي
+          height: isWeb ? null : 45.0,
           width: isWeb
-              ? 200 // عرض ثابت للمنيو في الويب
+              ? 200
               : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9),
           decoration: BoxDecoration(
             color: Color(AppColors.dark),

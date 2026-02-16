@@ -43,6 +43,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
     super.initState();
     widget.countryCodeController.text = CacheHelper.getString("flagCode");
 
+    // على الويب، إضافة listener لمنع إدخال الحروف
     if (kIsWeb || PlatformIs.web) {
       widget.controller.addListener(_filterNonNumericOnWeb);
     }

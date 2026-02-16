@@ -13,8 +13,8 @@ class EvaluationController extends ChangeNotifier {
   Future<void> getEvaluation(context, empId) async {
     isLoading = true;
     notifyListeners();
-    var jsonString;
-    var gCache;
+    String? jsonString;
+    Map<String, dynamic>? gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;

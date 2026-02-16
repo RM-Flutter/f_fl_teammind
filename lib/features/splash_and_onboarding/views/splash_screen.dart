@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/features/splash_and_onboarding/views/onboarding_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -171,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // Check and select domain (may require network, but try anyway)
       try {
-        final domainSelected = await DomainSelectionService.checkAndSelectDomain(context, "https://a4.r-m.dev");
+        final domainSelected = await DomainSelectionService.checkAndSelectDomain(context);
         if (!domainSelected || !mounted) {
           _isInitializing = false;
           return;
@@ -200,7 +201,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Check and select domain before initializing app
     try {
-      final domainSelected = await DomainSelectionService.checkAndSelectDomain(context, "https://a4.r-m.devس");
+      final domainSelected = await DomainSelectionService.checkAndSelectDomain(context);
       if (!domainSelected || !mounted) return;
     } catch (e) {
       debugPrint("❌ Error in checkAndSelectDomain, continuing anyway: $e");
@@ -336,33 +337,33 @@ class _SplashScreenState extends State<SplashScreen> {
             body: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(!kIsWeb?"assets/images/login_view.jpg":AppImages.splashScreenBackgroundWeb, fit: BoxFit.cover),
-                Center(child: Image.asset(!kIsWeb?"assets/images/splash.png":AppImages.splashScreenBackgroundWeb, fit: BoxFit.cover)),
-                // const OverlayGradientWidget(),
-                // Positioned(
-                //   bottom: AppSizes.s48,
-                //   left: AppSizes.s0,
-                //   right: AppSizes.s0,
-                //   child: Column(
-                //     mainAxisSize: MainAxisSize.min,
-                //     children: [
-                //       DynamicImageWidget(
-                //         imageUrl: AppImages.logo,
-                //         height: AppSizes.s75,
-                //         width: AppSizes.s75,
-                //       ),
-                //       Text(
-                //         AppStrings.loading.tr(),
-                //         style: LocalizationService.isArabic(context: context)
-                //             ? Theme.of(context)
-                //                 .textTheme
-                //                 .displayMedium
-                //                 ?.copyWith(letterSpacing: 0)
-                //             : Theme.of(context).textTheme.displayMedium,
-                //       )
-                //     ],
-                //   ),
-                // ),
+                Image.asset(!kIsWeb?AppImages.splashScreenBackground:AppImages.splashScreenBackgroundWeb,
+                    fit: BoxFit.cover),
+                const OverlayGradientWidget(),
+                Positioned(
+                  bottom: AppSizes.s48,
+                  left: AppSizes.s0,
+                  right: AppSizes.s0,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DynamicImageWidget(
+                        imageUrl: AppImages.logo,
+                        height: AppSizes.s75,
+                        width: AppSizes.s75,
+                      ),
+                      Text(
+                        AppStrings.loading.tr(),
+                        style: LocalizationService.isArabic(context: context)
+                            ? Theme.of(context)
+                            .textTheme
+                            .displayMedium
+                            ?.copyWith(letterSpacing: 0)
+                            : Theme.of(context).textTheme.displayMedium,
+                      )
+                    ],
+                  ),
+                ),
               ],
             )));
   }

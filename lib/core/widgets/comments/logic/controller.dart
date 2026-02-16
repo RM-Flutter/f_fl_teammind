@@ -3,14 +3,18 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:app_test/core/widgets/comments/model/get_comment_model.dart';
 
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+
+import '../../../platform/platform_is.dart';
 
 class CommentProvider extends ChangeNotifier{
   bool isGetCommentLoading = false;
@@ -47,32 +51,113 @@ class CommentProvider extends ChangeNotifier{
     notifyListeners();
 
     try {
-      Response response;
-      debugPrint("Voice Path: $voicePath");
+      var response;
+      print("Voice Path: $voicePath");
 
       // Check if we have either images or a voice file to send
       if (images != null || voicePath != null) {
-        debugPrint("Uploading media...");
+        print("Uploading media...");
 
-        FormData formData = FormData.fromMap({
-          if (contentController.text.isNotEmpty) "content": contentController.text,
-          if (images != null && images.isNotEmpty)
-            "images[]": await Future.wait(images.map(
-                  (file) async => await MultipartFile.fromFile(file.path, filename: file.name),
-            ).toList()),
-          if (voicePath != null && File(voicePath).existsSync())
-            "sounds": await MultipartFile.fromFile(voicePath, filename: "recorded_audio.m4a"),
-        });
+        Map<String, dynamic> formDataMap = {
+          // إذا كان هناك صوت فقط بدون نص، أضف نص افتراضي
+          "content": contentController.text.isNotEmpty
+              ? contentController.text
+              : (voicePath != null ? "🎤 ${AppStrings.voiceMessage.tr()}" : ""),
+        };
+
+        if (images != null && images.isNotEmpty) {
+          formDataMap["images[]"] = await Future.wait(images.map(
+                (file) async {
+              // على الويب، استخدام readAsBytes بدلاً من path
+              if (kIsWeb || PlatformIs.web) {
+                try {
+                  final bytes = await file.readAsBytes();
+                  return MultipartFile.fromBytes(
+                    bytes,
+                    filename: file.name,
+                  );
+                } catch (e) {
+                  print("Error reading image bytes on web: $e");
+                  // محاولة استخدام path كبديل
+                  return await MultipartFile.fromFile(file.path, filename: file.name);
+                }
+              } else {
+                return await MultipartFile.fromFile(file.path, filename: file.name);
+              }
+            },
+          ).toList());
+        }
+
+        if (voicePath != null) {
+          // على الويب، voicePath قد يكون blob URL أو file path
+          if (kIsWeb || PlatformIs.web) {
+            try {
+              // على الويب، نحتاج إلى قراءة blob URL كـ bytes
+              if (voicePath.startsWith('blob:') || voicePath.startsWith('http://') || voicePath.startsWith('https://')) {
+                // إذا كان blob URL أو http URL، نحتاج إلى تحميله
+                try {
+                  final response = await http.get(Uri.parse(voicePath));
+                  if (response.statusCode == 200) {
+                    formDataMap["sounds"] = MultipartFile.fromBytes(
+                      response.bodyBytes,
+                      filename: "recorded_audio.m4a",
+                    );
+                  } else {
+                    throw Exception("Failed to load blob URL: ${response.statusCode}");
+                  }
+                } catch (e) {
+                  print("Error loading blob URL: $e");
+                  // محاولة استخدام path مباشرة كبديل
+                  try {
+                    formDataMap["sounds"] = await MultipartFile.fromFile(voicePath, filename: "recorded_audio.m4a");
+                  } catch (e2) {
+                    print("Error using voice path directly: $e2");
+                    throw e2;
+                  }
+                }
+              } else {
+                // إذا كان file path عادي، محاولة استخدامه مباشرة
+                try {
+                  formDataMap["sounds"] = await MultipartFile.fromFile(voicePath, filename: "recorded_audio.m4a");
+                } catch (e) {
+                  print("Error using voice path on web: $e");
+                  throw e;
+                }
+              }
+            } catch (e) {
+              print("Error handling voice file on web: $e");
+              // إذا فشل كل شيء، تخطي إرسال الصوت
+              Fluttertoast.showToast(
+                msg: "Error uploading voice message. Please try again.",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+              );
+              isAddCommentLoading = false;
+              notifyListeners();
+              return;
+            }
+          } else {
+            // على الموبايل، التحقق من وجود الملف
+            if (File(voicePath).existsSync()) {
+              formDataMap["sounds"] = await MultipartFile.fromFile(voicePath, filename: "recorded_audio.m4a");
+            }
+          }
+        }
+
+        FormData formData = FormData.fromMap(formDataMap);
 
         response = await DioHelper.postFormData(
-          url: "/tasks/entities-operations/$id/comments",
+          url: "/$slug/entities-operations/$id/comments",
           context: context,
           formdata: formData,
+          query: null,
+          data: {},
         );
       } else {
         response = await DioHelper.postData(
           url: "/$slug/entities-operations/$id/comments",
           context: context,
+          query: null,
           data: {
             if (contentController.text.isNotEmpty) "content": contentController.text,
           },
@@ -101,12 +186,17 @@ class CommentProvider extends ChangeNotifier{
           fontSize: 16.0,
         );
         contentController.clear();
+        // مسح الصور والصوت بعد الإرسال الناجح
+        listXAttachmentPersonalImage.clear();
+        listAttachmentPersonalImage.clear();
+        XImageFileAttachmentPersonal = null;
+        attachmentPersonalImage = null;
         // Refresh comments after successful upload
         getCommentModel = null;
         // getRequestComment(context, id);
       }
     } catch (error) {
-      errorAddCommentMessage = error is DioException
+      errorAddCommentMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
 
@@ -137,20 +227,42 @@ class CommentProvider extends ChangeNotifier{
           "order_dir" : "desc"
         },
       );
-      newComments = response.data['comments'] ?? [];
-      if (pages == 1) {
-        comments.clear(); // Clear only when loading the first page
+      final fetchedComments = (response.data['comments'] as List?) ?? [];
+
+      if (pages == 1 || isNewPage != true) {
+        comments.clear();
+        commentIds.clear();
       }
-      if (newComments.isNotEmpty) {
-        comments.addAll(newComments);
-        debugPrint("LENGTH IS --> ${newComments.length}");
-        if (hasMore) pageNumber++;
-      } else {
-        hasMore = false; // No more data to fetch
+
+      for (final comment in fetchedComments) {
+        final int? commentId = comment['id'] is int
+            ? comment['id'] as int
+            : int.tryParse('${comment['id']}');
+
+        if (commentId == null) continue;
+
+        if (!commentIds.contains(commentId)) {
+          commentIds.add(commentId);
+          comments.add(comment);
+        } else if (pages == 1) {
+          final index = comments.indexWhere(
+                  (existing) => existing['id'] == commentId);
+          if (index != -1) {
+            comments[index] = comment;
+          }
+        }
       }
+
+      hasMore = fetchedComments.isNotEmpty;
+      if (hasMore) {
+        pageNumber = (pages ?? pageNumber) + 1;
+      }
+
+      isGetCommentLoading = false;
       isGetCommentSuccess = true;
+      notifyListeners();
     } catch (error) {
-      getRequestCommentErrorMessage = error is DioException
+      getRequestCommentErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -173,45 +285,95 @@ class CommentProvider extends ChangeNotifier{
   }
 
   Future<void> getProfileImageByCam() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
-    if (imageFileProfile == null) return;
+    try {
+      final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
+      if (imageFileProfile == null) return;
 
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
+      // على الويب، لا نحتاج إلى ضغط الصورة
+      if (kIsWeb || PlatformIs.web) {
+        listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+        listAttachmentPersonalImage.add({
+          "original": imageFileProfile,  // XFile
+          "compressed": imageFileProfile   // على الويب، استخدم نفس الملف
+        });
+        notifyListeners();
+        print("Image added successfully on web. Total images: ${listXAttachmentPersonalImage.length}");
+      } else {
+        File originalFile = File(imageFileProfile.path);
+        File? compressedFile = await _compressImage(originalFile);
 
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
+        if (compressedFile != null) {
+          // احفظ اللي اتنين
+          listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+          listAttachmentPersonalImage.add({
+            "original": imageFileProfile,  // XFile
+            "compressed": compressedFile   // File
+          });
+          notifyListeners();
+          print("Image added successfully. Total images: ${listXAttachmentPersonalImage.length}");
+        } else {
+          print("Failed to compress image");
+        }
+      }
+    } catch (e) {
+      print("Error getting image from camera: $e");
+      if (kIsWeb || PlatformIs.web) {
+        Fluttertoast.showToast(
+          msg: "Error selecting image. Please try again.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
   Future<void> getProfileImageByGallery() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
-    if (imageFileProfile == null) return;
+    try {
+      final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
+      if (imageFileProfile == null) return;
 
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
+      // على الويب، لا نحتاج إلى ضغط الصورة
+      if (kIsWeb || PlatformIs.web) {
+        listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+        listAttachmentPersonalImage.add({
+          "original": imageFileProfile,  // XFile
+          "compressed": imageFileProfile   // على الويب، استخدم نفس الملف
+        });
+        notifyListeners();
+        print("Image added successfully on web. Total images: ${listXAttachmentPersonalImage.length}");
+      } else {
+        File originalFile = File(imageFileProfile.path);
+        File? compressedFile = await _compressImage(originalFile);
 
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
+        if (compressedFile != null) {
+          // احفظ اللي اتنين
+          listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+          listAttachmentPersonalImage.add({
+            "original": imageFileProfile,  // XFile
+            "compressed": compressedFile   // File
+          });
+          notifyListeners();
+          print("Image added successfully. Total images: ${listXAttachmentPersonalImage.length}");
+        } else {
+          print("Failed to compress image");
+        }
+      }
+    } catch (e) {
+      print("Error getting image from gallery: $e");
+      if (kIsWeb || PlatformIs.web) {
+        Fluttertoast.showToast(
+          msg: "Error selecting image. Please try again.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -229,10 +391,10 @@ class CommentProvider extends ChangeNotifier{
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -249,7 +411,7 @@ class CommentProvider extends ChangeNotifier{
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -260,26 +422,25 @@ class CommentProvider extends ChangeNotifier{
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                debugPrint(image1);
-                                debugPrint(image2);
+                                print(image1);
+                                print(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -290,9 +451,10 @@ class CommentProvider extends ChangeNotifier{
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: const TextStyle(fontSize: 18, color: Colors.black),
+                              style: TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),

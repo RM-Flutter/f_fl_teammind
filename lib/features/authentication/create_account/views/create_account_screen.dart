@@ -16,10 +16,10 @@ class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
 
   @override
-  State<CreateAccountScreen> createState() => _CreateAccountModalState();
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
-class _CreateAccountModalState extends State<CreateAccountScreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool _obscureText = true;
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
             create: (_) => CreateAccountController(),),
         ],
         child: Consumer<AuthenticationController>(
-            builder:(context, AuthenticationController, child){
+            builder:(context, authenticationViewModel, child){
               return Consumer<CreateAccountController>(
                   builder: (context, viewModel, child) {
                     return Form(
@@ -159,14 +159,14 @@ class _CreateAccountModalState extends State<CreateAccountScreen> {
                                           making: (){
                                             if(viewModel.phoneController.text.isEmpty || viewModel.phoneController.text == null){
                                               setState(() {
-                                                AuthenticationController.isPhoneLogin = false;
+                                                authenticationViewModel.isPhoneLogin = false;
                                               });
                                             }else{
                                               setState(() {
-                                                AuthenticationController.isPhoneLogin = true;
+                                                authenticationViewModel.isPhoneLogin = true;
                                               });
                                             }
-                                            AuthenticationController.login(
+                                            authenticationViewModel.login(
                                                 context: context,
                                                 password: viewModel.passwordController.text,
                                                 email: viewModel.emailController.text,

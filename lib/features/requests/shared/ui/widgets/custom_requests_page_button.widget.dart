@@ -21,7 +21,7 @@ class CustomRequestsPageButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             vertical: AppSizes.s14,
             horizontal: AppSizes.s12,
           ),

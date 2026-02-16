@@ -12,6 +12,7 @@ import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/settings_service.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/widget/view/managment_widget.dart';
+import 'package:app_test/features/requests/details/views/widgets/management_response_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class RequestCard extends StatelessWidget {
           await ModalSheetHelper.showModalSheet(
             context: context,
             viewProfile: false,
-            modalContent: ManagementModule(
+            modalContent: ManagementResponseModal(
               requestId: request.id.toString(),
             ),
             title: AppStrings.managementResponse.tr(),

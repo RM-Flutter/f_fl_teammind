@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:html' if (dart.library.io) '../../../general_services/dart_html_stub.dart' as html;
+import 'dart:html' if (dart.library.io) '../../../../../core/services/dart_html_stub.dart' as html;
 
 class PayrollDetailsViewModel extends ChangeNotifier {
   PayrollModel? payroll;

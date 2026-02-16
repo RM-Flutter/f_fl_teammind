@@ -16,7 +16,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
   SuccessfullAddRequestSheet({this.title, this.onTap});
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    const isWeb = kIsWeb;
     return Consumer<HomeController>(builder: (context, value, child) {
       return Container(
         height: isWeb ? MediaQuery.of(context).size.height * 0.4 : MediaQuery.of(context).size.height * 0.5,

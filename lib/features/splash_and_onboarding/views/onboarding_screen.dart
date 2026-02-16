@@ -1,4 +1,7 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +18,7 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CacheHelper.setString(key: "watchScreen", value: "yes");
-    CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now().toUtc()));
+    CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now()));
 
     return ChangeNotifierProvider<OnboardingController>(
         create: (context) => OnboardingController(),
@@ -86,137 +89,102 @@ class OnBoardingScreen extends StatelessWidget {
               // ),
 
               Positioned(
-                bottom: AppSizes.s32,
+                bottom: AppSizes.s48,
                 left: AppSizes.s0,
                 right: AppSizes.s0,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: kIsWeb ? 800 : double.infinity,
-                  ),
-                  child: Container(
-                    // تحديد ارتفاع ثابت للكونتينر الأساسي عشان الـ PageView ميعملش شاشة بيضا
-                    height: AppSizes.s300,
-                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s18),
-                    child: PageView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: viewModel.pageController2,
-                      itemCount: viewModel.getAllOnboardingData(context: context)?.length,
-                      itemBuilder: (context, index) {
-
-                        // حساب نسبة التحميل للدائرة
-                        int totalPages = viewModel.getAllOnboardingData(context: context)?.length ?? 1;
-                        double progress = (index + 1) / totalPages;
-
-                        return Row(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: kIsWeb?800: double.infinity,
+                    ),
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.s25),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.s18, vertical: AppSizes.s20),
+                        height: AppSizes.s300,
+                        child: Column(
                           children: [
-                            // 1. الجزء الأيسر: النصوص (العنوان والوصف)
                             Expanded(
-                              flex: 3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    LocalizationService.isArabic(context: context)
-                                        ? viewModel.getOnboardingDataWithIndex(index, context)!['title']!['ar']!.toUpperCase()
-                                        : viewModel.getOnboardingDataWithIndex(index, context)!['title']!['en']!.toUpperCase(),
-                                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 38, // حجم الخط مناسب للعرض
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 2,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    LocalizationService.isArabic(context: context)
-                                        ? viewModel.getOnboardingDataWithIndex(index, context)!["info"]["ar"]
-                                        : viewModel.getOnboardingDataWithIndex(index, context)!['info']!['en'],
-                                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                      color: Colors.white70,
-                                      fontSize: 18,
-                                    ),
-                                    maxLines: 3,
-                                  ),
-                                ],
+                              flex: 5,
+                              child: PageView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                controller: viewModel.pageController2,
+                                itemCount: viewModel
+                                    .getAllOnboardingData(context: context)
+                                    ?.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        LocalizationService.isArabic(context: context)? viewModel.getOnboardingDataWithIndex(index, context)!['title']!['ar']!.toUpperCase() :viewModel.getOnboardingDataWithIndex(index, context)!['title']!['en']!.toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      gapH20,
+                                      Text(
+                                        LocalizationService.isArabic(context: context)? viewModel.getOnboardingDataWithIndex(index, context)!["info"]["ar"] :viewModel.getOnboardingDataWithIndex(index, context)!['info']!['en'],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 4,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
-
-                            // 2. الجزء الأيمن: الزر الدائري والمؤشرات و Skip
                             Expanded(
-                              flex: 1,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              flex: 2,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  // الزر الدائري مع اللودينج
-                                  GestureDetector(
-                                    onTap: () => viewModel.goNext(context),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 65,
-                                          height: 65,
-                                          child: CircularProgressIndicator(
-                                            value: progress,
-                                            strokeWidth: 4,
-                                            backgroundColor: Colors.white24,
-                                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(Icons.chevron_right, color: Colors.black, size: 30),
-                                        ),
-                                      ],
+                                  CustomElevatedButton(
+                                      onPressed: () async =>
+                                          viewModel.goNext(context),
+                                      title: AppStrings.next.tr(),
+                                      width: AppSizes.s120,
+                                      isPrimaryBackground: true,
+                                      isFuture: false),
+                                  TextButton(
+                                    onPressed: () => viewModel.skip(context),
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize:
+                                      const Size(AppSizes.s150, AppSizes.s50),
                                     ),
-                                  ),
-                                  const SizedBox(height: 25),
-
-                                  // النقاط (Indicators)
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(totalPages, (i) {
-                                      return Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                                        width: i == index ? 12 : 6,
-                                        height: 6,
-                                        decoration: BoxDecoration(
-                                          color: i == index ? Colors.white : Colors.white38,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                      );
-                                    }),
-                                  ),
-                                  const SizedBox(height: 20),
-
-                                  // زر SKIP
-                                  InkWell(
-                                    onTap: () => viewModel.skip(context),
-                                    child: const Text(
-                                      "SKIP",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
+                                    child: Text(AppStrings.skip.tr(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall
+                                            ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary)),
                                   ),
                                 ],
                               ),
                             ),
                           ],
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
+              const LanguageDropdownButton()
             ],
           );
         })));

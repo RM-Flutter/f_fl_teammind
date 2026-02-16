@@ -8,7 +8,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
   var color;
   final Future<void> Function() onPressed;
   final double? width;
-   CustomRequestDetailsButton({
+  CustomRequestDetailsButton({
     super.key,
     this.width,
     this.color,

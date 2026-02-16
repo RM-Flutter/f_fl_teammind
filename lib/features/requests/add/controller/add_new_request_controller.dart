@@ -25,7 +25,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddNewRequestViewModel extends ChangeNotifier {
+class AddNewRequestController extends ChangeNotifier {
   Map<String, dynamic>? selectedRequestType;
   String? selectReqId;
   bool? isAddRequestLoading = false;
@@ -183,7 +183,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
   /// USED WHEN THE DURATION TYPE IN OFFICAIL HOLIDAYS
   Future<void> selectInsteadOfHolidays(BuildContext context,
       {required String? startDateOrDatetime,
-      required String? endDateOrDatetime}) async {
+        required String? endDateOrDatetime}) async {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
     final DateFormat dateTimeFormatter = DateFormat('yyyy-MM-dd HH:mm');
     if (startDateOrDatetime == null || endDateOrDatetime == null) {
@@ -536,7 +536,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
     final isStartToday = isSameDate(selectedDate, now);
     final isEndToday = isSameDate(selectedDates, now);
     final isSameDay = isStartEndSame && isStartToday && isEndToday;
-    
+
     // If it's a days type request with halfDay enabled and start/end are the same day and it's today, calculate as half day
     print("isSameDay --> ${isSameDay}");
     print("halfDay --> ${halfDay}");
@@ -549,7 +549,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
       formattedDuration = null; // Clear formatted duration before calculating days
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
     }
-   else if (type?.toLowerCase().trim() == 'days' && halfDay == false) {
+    else if (type?.toLowerCase().trim() == 'days' && halfDay == false) {
       formattedDuration = null; // Clear formatted duration before calculating days
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
       return;
@@ -621,8 +621,8 @@ class AddNewRequestViewModel extends ChangeNotifier {
         return true; // It's a weekend
       }
     }
-      print("holidays is --> $holidays");
-      print("canUseHolidays is --> ${user2Settings?.canUseHolidays}");
+    print("holidays is --> $holidays");
+    print("canUseHolidays is --> ${user2Settings?.canUseHolidays}");
     // Check holidays if user can use holidays
     if (user2Settings?.canUseHolidays == true && holidays != null && holidays.isNotEmpty) {
       print("holidays is --> $holidays");
@@ -702,7 +702,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
     };
 
     // First: Subtracting Weekends if the Current user not Variable [means that the current user follows the weekend system]
-   print("WEEK HOLIDAY IS --->${user2Settigns!.weekend}");
+    print("WEEK HOLIDAY IS --->${user2Settigns!.weekend}");
     if (user2Settigns!.weekend?.contains('variable') == false) {
       DateTime currentDay = selectedDateOrDatetimeRange!.start;
       while (currentDay.isBefore(
@@ -739,22 +739,22 @@ class AddNewRequestViewModel extends ChangeNotifier {
         '1- duration after subtracting weekends |||||||||||||||||| $duration');
 
     // Second: Subtracting Holidays if the Current user can use holidays
-      print("holidays is --> $holidays");
-      print("canUseHolidays is --> ${user2Settigns.canUseHolidays}");
+    print("holidays is --> $holidays");
+    print("canUseHolidays is --> ${user2Settigns.canUseHolidays}");
     if (user2Settigns.canUseHolidays == true && holidays != null) {
       int holidayDays = 0;
 
       for (var holidayOrString in holidays) {
         if (holidayOrString.holiday != null) {
           DateTime holidayStart =
-              DateTime.parse(holidayOrString.holiday!.from!);
+          DateTime.parse(holidayOrString.holiday!.from!);
           DateTime holidayEnd = DateTime.parse(holidayOrString.holiday!.to!);
 
           DateTime currentDay = selectedDateOrDatetimeRange!.start;
           while (currentDay.isBefore(
               selectedDateOrDatetimeRange!.end.add(const Duration(days: 1)))) {
             if (currentDay
-                    .isAfter(holidayStart.subtract(const Duration(days: 1))) &&
+                .isAfter(holidayStart.subtract(const Duration(days: 1))) &&
                 currentDay.isBefore(holidayEnd.add(const Duration(days: 1))) &&
                 !weekendDays.contains(currentDay.weekday)) {
               holidayDays++;
@@ -768,7 +768,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
       if ((duration ?? 0) < 0) duration = 0;
       if (holidayDays != 0) {
         notes =
-            '${notes ?? ''} \n New Request Subtracting $holidayDays as the Official Holidays';
+        '${notes ?? ''} \n New Request Subtracting $holidayDays as the Official Holidays';
       }
     }
 
@@ -781,7 +781,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
     print("HOUSRS US --> ${ (reqType as String?)?.trim().toLowerCase() }");
     if (selectedRequestType == null) return '';
     return (reqType as String?)?.trim().toLowerCase() ==
-            'days' ?  AppStrings.days.tr() : (reqType as String?)?.trim().toLowerCase() == 'hours'
+        'days' ?  AppStrings.days.tr() : (reqType as String?)?.trim().toLowerCase() == 'hours'
         ?  AppStrings.hours.tr() : AppStrings.minutes.tr();
   }
 
@@ -813,9 +813,9 @@ class AddNewRequestViewModel extends ChangeNotifier {
 
       // Second Validate on the optional data
       final attachingFile =
-          (reqTypeFile as String?)
-              ?.toLowerCase()
-              .trim();
+      (reqTypeFile as String?)
+          ?.toLowerCase()
+          .trim();
       final isAttachingFile =
           attachingFile == 'required';
       if (isAttachingFile && attachedFile == null) {
@@ -826,9 +826,9 @@ class AddNewRequestViewModel extends ChangeNotifier {
         return;
       }
       final moneyValue =
-          (selectedRequestType?['fields']?['money_value'] as String?)
-              ?.toLowerCase()
-              .trim();
+      (selectedRequestType?['fields']?['money_value'] as String?)
+          ?.toLowerCase()
+          .trim();
       final isMoneyValue =
           moneyValue == 'required';
       if (isMoneyValue && amountController.text.isEmpty) {
@@ -861,7 +861,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
         // 'date_to': normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
         //     dateTime: selectedDateOrDatetimeRange!.end)).toString(),
         'duration': (StringConvert.sanitizeDateString(dateTimeFormat.format(selectedDateOrDatetimeRange!.start)) == StringConvert.sanitizeDateString(dateTimeFormat.format(selectedDateOrDatetimeRange!.end)) &&
-        halfDay == true && isToday == true)? "0.5":duration.toString(),
+            halfDay == true && isToday == true)? "0.5":duration.toString(),
         'reason': reasonController.text,
         if(amountController.text.isNotEmpty)'money_value' : amountController.text,
       };
@@ -875,7 +875,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
           context: context,
           requestData: _filterNonNullValues(requestMainData),
           files:
-              (isAttachingFile && attachedFile != null) ? [attachedFile!] : []);
+          (isAttachingFile && attachedFile != null) ? [attachedFile!] : []);
 
       if (result.success) {
         _resetValues();
@@ -925,18 +925,18 @@ class AddNewRequestViewModel extends ChangeNotifier {
         if (result.data?['duration'] != null &&
             result.data?['duration'] != '') {
           bool resendRequestWithTheCorrectDuration =
-              await AlertsService.confirmMessage(context, '${result.message}',
-                  message:
-                      '${AppStrings.doYouWantToResendYourRequestWithTheCorrectDurationis.tr()} ${result.data?['duration']} ${getHoursOrDayesStringDependsOnRequestType()} ?');
+          await AlertsService.confirmMessage(context, '${result.message}',
+              message:
+              '${AppStrings.doYouWantToResendYourRequestWithTheCorrectDurationis.tr()} ${result.data?['duration']} ${getHoursOrDayesStringDependsOnRequestType()} ?');
           if (resendRequestWithTheCorrectDuration) {
             requestMainData['duration'] = result.data!['duration'].toString();
             final resendRequestResult =
-                await RequestsServices.createNewRequestWithFile(
-                    context: context,
-                    requestData: _filterNonNullValues(requestMainData),
-                    files: (isAttachingFile && attachedFile != null)
-                        ? [attachedFile!]
-                        : []);
+            await RequestsServices.createNewRequestWithFile(
+                context: context,
+                requestData: _filterNonNullValues(requestMainData),
+                files: (isAttachingFile && attachedFile != null)
+                    ? [attachedFile!]
+                    : []);
             if (resendRequestResult.success) {
               _resetValues();
               notifyListeners();

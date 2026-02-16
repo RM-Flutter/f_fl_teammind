@@ -8,9 +8,11 @@ import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/fingerprint/data/models/fingerprint_model.dart';
 import 'package:app_test/features/fingerprint/data/repo/fingerprint_repo.dart';
+import 'package:dio/dio.dart' as dio_multipart;
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FingerprintViewModel extends ChangeNotifier {
@@ -20,10 +22,9 @@ class FingerprintViewModel extends ChangeNotifier {
   String? errorMessage;
   List<int>? validIndexes;
 
-  final FingerprintRepo _repo;
+//   final FingerprintRepo _repo;
 
-  FingerprintViewModel({FingerprintRepo? repo})
-      : _repo = repo ?? FingerprintRepoImpl();
+  FingerprintViewModel();
 
   void updateLoadingStatus({required bool laodingValue}) {
     isLoading = laodingValue;
@@ -33,15 +34,15 @@ class FingerprintViewModel extends ChangeNotifier {
   Future<void> initializeFingerprintScreen(
       {required BuildContext context, String? empId}) async {
     updateLoadingStatus(laodingValue: true);
-    var jsonString;
+    String? jsonString;
     UserSettingsModel? userSettingsModel;
-    var gCache;
+    Map<String, dynamic>? gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    userSettingsModel = UserSettingsModel.fromJson(gCache);
+    userSettingsModel = gCache != null ? UserSettingsModel.fromJson(gCache) : null;
     userSettings = userSettingsModel;
     await _getEmployeeFingerprints(context: context, empId: empId);
     await loadFingerprintsFromPreferences();
@@ -70,7 +71,7 @@ class FingerprintViewModel extends ChangeNotifier {
       {required BuildContext context, String? empId}) async {
     // get user fingerprints
     try {
-      final result = await _repo.getFingerprints(context: context, empId: empId);
+      final result = await FingerprintRepo.getFingerprints(context: context, pfor: empId);
       if (result.success && result.data != null) {
         var fingerprintsData = result.data?['fingerprints'] as List<dynamic>?;
         fingerprints = fingerprintsData
@@ -86,20 +87,21 @@ class FingerprintViewModel extends ChangeNotifier {
 
 
   Future<void> addFingerPrints(BuildContext context, fingerprints) async {
-    debugPrint("object --> ${fingerprints}");
+    debugPrint("object --> $fingerprints");
     isLoading = true;
     notifyListeners();
 
     try {
       // Send the data using repo
-      final response = await _repo.addFingerPrints(
-          context: context, fingerprints: fingerprints);
+      FormData formData = await buildFormData(fingerprints);
+      final response = await FingerprintRepo.addFingerprints(
+          context: context, formData: formData);
 
       // Handle the response
-      if (response.data['status'] == true) {
+      if (response.data?['status'] == true) {
         AlertsService.success(
           context: context,
-          message: response.data['message'],
+          message: response.data?['message'],
           title: AppStrings.success.tr(),
         );
         // Reset the fingerprints after successful submission
@@ -109,35 +111,35 @@ class FingerprintViewModel extends ChangeNotifier {
         Navigator.pop(context);
       } else {
         // 👇 احفظ الإندكسات الصحيحة هنا
-        List<int> validIndexes = response.data['errors'].keys.map((k) {
+        List<int> validIndexes = response.data?['errors'].keys.map((k) {
           return int.tryParse(k.replaceAll(".", ""));
         }).whereType<int>().toList();
 
         List<Map<String, dynamic>> filteredList = [];
         for (int i = 0; i < AppConstants.fingerPrints!.length; i++) {
-          if (validIndexes.contains(i)) {
+          if (validIndexes.contains(i) == true) {
             filteredList.add(AppConstants.fingerPrints![i]);
           }
         }
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('fingerPrints', jsonEncode(filteredList));
         AppConstants.fingerPrints = filteredList;
-        debugPrint("object --> ${AppConstants.fingerPrints}");
-        debugPrint("object --> ${filteredList}");
+        debugPrint("object --> $AppConstants.fingerPrints");
+        debugPrint("object --> $filteredList");
         notifyListeners();
 
         debugPrint("$filteredList");
 
         AlertsService.error(
           context: context,
-          message: response.data['message'],
+          message: response.data?['message'],
           title: AppStrings.failed.tr(),
         );
       }
     } catch (error) {
       String errorMessage;
 
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage =
             error.response?.data['message'] ?? 'Something went wrong';
       } else {
@@ -153,6 +155,68 @@ class FingerprintViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<FormData> buildFormData(fingerprints) async {
+    FormData formData = FormData();
+
+    for (int i = 0; i < fingerprints.length; i++) {
+      var fingerprint = fingerprints[i];
+
+      // Basic fields
+      formData.fields.addAll([
+        MapEntry('fingerprints[$i][type]', fingerprint['type']),
+        MapEntry('fingerprints[$i][data]', fingerprint['data']),
+        MapEntry('fingerprints[$i][finger_day]', fingerprint['finger_day']),
+      ]);
+
+      // Add double_check_type and double_check_data if provided (for QR code fingerprints)
+      if (fingerprint['double_check_type'] != null) {
+        formData.fields.add(MapEntry('fingerprints[$i][double_check_type]',
+            fingerprint['double_check_type']));
+      }
+      if (fingerprint['double_check_data'] != null) {
+        formData.fields.add(MapEntry('fingerprints[$i][double_check_data]',
+            fingerprint['double_check_data']));
+      }
+
+      // Add note if provided
+      if (fingerprint['note'] != null || fingerprint['noteReport'] != null) {
+        final noteValue = fingerprint['note'] ?? fingerprint['noteReport'];
+        if (noteValue is String) {
+          formData.fields.add(MapEntry('fingerprints[$i][note]', noteValue));
+        } else {
+          formData.fields.add(
+              MapEntry('fingerprints[$i][note]', jsonEncode(noteValue)));
+        }
+      }
+
+      // Files
+      if (fingerprint['files'] != null) {
+        // Decode if it's a JSON string
+        var filesList = fingerprint['files'];
+        if (filesList is String) {
+          filesList = jsonDecode(filesList);
+        }
+
+        for (var file in filesList) {
+          final fileBytes = base64Decode(file['bytes']);
+          final fileName = file['fileName'];
+          final mimeType = file['mimeType'] ?? 'application/octet-stream';
+
+          final multipartFile = dio_multipart.MultipartFile.fromBytes(
+            fileBytes,
+            filename: fileName,
+            contentType: MediaType.parse(mimeType),
+          );
+
+          formData.files.add(
+              MapEntry('fingerprints[$i][files][]', multipartFile));
+        }
+      }
+    }
+
+    return formData;
   }
 
   Future<Map<String, dynamic>> prepareFingerprintData(List fingerprints) async {
@@ -184,5 +248,4 @@ class FingerprintViewModel extends ChangeNotifier {
 
     return {'fingerprints': processed};
   }
-
 }

@@ -41,9 +41,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     viewModel = RequestsViewModel();
-    
+
     // Read filter state from CacheHelper (may be restored from bookmark)
     final reqId = CacheHelper.getString("reqId");
     final empId = CacheHelper.getString("empId");
@@ -51,7 +51,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
     final to = CacheHelper.getString("to");
     final depId = CacheHelper.getString("depId");
     final selectStatus = CacheHelper.getString("selectStatus");
-    
+
     viewModel.initializeRequestsScreen(
         context: context,
         requestsType: widget.requestsType ?? GetRequestsTypes.mine,
@@ -69,7 +69,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
           viewModel.hasMore) {
         viewModel.initializeRequestsScreen(
             context: context,
-            requestsType:widget.requestsType??  GetRequestsTypes.mine, 
+            requestsType:widget.requestsType??  GetRequestsTypes.mine,
             loadMore: true,
             requestTypeId: CacheHelper.getString("reqId"),
             empIds: CacheHelper.getString("empId"),
@@ -88,314 +88,314 @@ class _RequestsScreenState extends State<RequestsScreen> {
         ChangeNotifierProvider(create: (context) => FilterController()..getDepartment(context: context)..getRequestTypes(context: context)..getEmployees(context: context)),
       ],
       child: TemplatePage(
-            pageContext: context,
-            routeName: AppRoutes.requests.name,
-            floatingActionButton: Container(
-              padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
-              width: double.infinity,
-              alignment: Alignment.bottomRight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () async {
-                      await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
-                        'type': 'mine',
-                        'lang': context.locale.languageCode
-                      });
-                    }, // Icon inside FAB
-                    backgroundColor: Color(AppColors.primary), // Optional: change color
-                    tooltip: 'Add',
-                    child: Center(
-                      child: Image.asset(
-                        AppImages.addFloatingActionButtonIcon,
-                        color: AppThemeService.colorPalette.fabIconColor.color,
-                        width: AppSizes.s16,
-                        height: AppSizes.s16,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  FloatingActionButton(
-                    onPressed: ()async {
-                      if (kIsWeb) {
-                        // Use showDialog for web to ensure it's fully visible
-                        await showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext dialogContext) {
-                            final screenHeight = MediaQuery.of(dialogContext).size.height;
-                            final screenWidth = MediaQuery.of(dialogContext).size.width;
-                            return Dialog(
-                              alignment: Alignment.center,
-                              insetPadding: EdgeInsets.symmetric(
-                                horizontal: screenWidth * 0.15,
-                                vertical: screenHeight * 0.1,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(35.0),
-                              ),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: screenHeight * 0.8,
-                                  maxWidth: 600,
-                                ),
-                                child: SearchFilterWidget(
-                                  contexts: dialogContext,
-                                  requestsType: widget.requestsType,
-                                  isWeb: true,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      } else {
-                        // Use showModalBottomSheet for mobile
-                        await showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          enableDrag: false,
-                          isDismissible: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.vertical(
-                                top: Radius.circular(
-                                    35.0)),
-                          ),
-                          builder: (BuildContext context) {
-                            return SearchFilterWidget(
-                              contexts: context,
-                              requestsType: widget.requestsType,
-                              isWeb: false,
-                            );
-                          },
-                        );
-                      }
-                      viewModel.initializeRequestsScreen(
-                          context: context,
-                          requestsType: widget.requestsType!,
-                        requestTypeId: CacheHelper.getString("reqId"),
-                        empIds: CacheHelper.getString("empId"),
-                        from: CacheHelper.getString("from"),
-                        to: CacheHelper.getString("to"),
-                        depId:CacheHelper.getString("depId"),
-                        status: CacheHelper.getString("selectStatus")
-                      );
-                    },
-                    backgroundColor: Color(AppColors.primary), // Optional: change color
-                    tooltip: 'Filter',
-                    child: Center(
-                      child: Image.asset(
-                        "assets/images/png/filter.png",
-                        color: AppThemeService.colorPalette.fabIconColor.color,
-                        width: AppSizes.s16,
-                        height: AppSizes.s16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          pageContext: context,
+          routeName: AppRoutes.requests.name,
+          floatingActionButton: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: LocalizationService.isArabic(context: context) ? 35 : 0,
             ),
-            bottomAppbarWidget: widget.requestsType == GetRequestsTypes.mine
-                ? PreferredSize(
-                    preferredSize: const Size.fromHeight(AppSizes.s170),
-                    child: Consumer<RequestsViewModel>(
-                        builder: (context, viewModel, child) => Padding(
-                              padding: const EdgeInsets.only(
-                                  left: AppSizes.s12,
-                                  right: AppSizes.s12,
-                                  top: AppSizes.s10),
-                              child: viewModel.isLoading
-                                  ? const RequestsAppbarLoading()
-                                  : VacationListWidget(
-                                      isInRequestsPage: true,
-                                      tap: true,
-                                      requests: viewModel.requests,
-                                    ),
-                            )),
-                  )
-                : null,
-            title: viewModel.getRequestsScreenTitleDependsOnRequestsType(
-                requestsType: widget.requestsType!),
-            onRefresh: () async {
-              viewModel.currentPage = 1;
-              viewModel.initializeRequestsScreen(
-                  context: context, 
-                  requestsType: widget.requestsType!,
-                  requestTypeId: CacheHelper.getString("reqId"),
-                  empIds: CacheHelper.getString("empId"),
-                  from: CacheHelper.getString("from"),
-                  to: CacheHelper.getString("to"),
-                  depId: CacheHelper.getString("depId"),
-                  status: CacheHelper.getString("selectStatus"));
-            },
-            body: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity
+            width: double.infinity,
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+
+                /// ➕ Add Request FAB
+                FloatingActionButton(
+                  heroTag: 'add_request_fab',
+                  onPressed: () async {
+                    await context.pushNamed(
+                      AppRoutes.addRequest.name,
+                      pathParameters: {
+                        'type': 'mine',
+                        'lang': context.locale.languageCode,
+                      },
+                    );
+                  },
+                  backgroundColor:  Color(AppColors.primary),
+                  tooltip: 'Add',
+                  child: Center(
+                    child: Image.asset(
+                      AppImages.addFloatingActionButtonIcon,
+                      color: AppThemeService.colorPalette.fabIconColor.color,
+                      width: AppSizes.s16,
+                      height: AppSizes.s16,
+                    ),
+                  ),
                 ),
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  height: MediaQuery.sizeOf(context).height * 1,
-                  child: Column(
-                    children: [
-                      // Active Filters Widget at the top - only show if there are active filters
-                      Consumer<RequestsViewModel>(
-                        builder: (context, viewModel, child) {
-                          if (ActiveFiltersWidget.hasActiveFilters()) {
-                            return ActiveFiltersWidget(
-                              requestsType: widget.requestsType,
-                              viewModel: viewModel,
-                            );
-                          }
-                          return const SizedBox.shrink();
+
+                const SizedBox(height: 10),
+
+                /// 🔍 Filter FAB
+                FloatingActionButton(
+                  heroTag: 'filter_request_fab',
+                  onPressed: () async {
+                    if (kIsWeb) {
+                      await showDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          final size = MediaQuery.of(dialogContext).size;
+                          return Dialog(
+                            insetPadding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.15,
+                              vertical: size.height * 0.1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                maxWidth: 600,
+                              ),
+                              child: SearchFilterWidget(
+                                contexts: dialogContext,
+                                requestsType: widget.requestsType,
+                                isWeb: true,
+                              ),
+                            ),
+                          );
                         },
-                      ),
-                      // Main content
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-                          child: Consumer<RequestsViewModel>(
-                            builder: (context, viewModel, child) {
-                              if (viewModel.isLoading) return const LoadingPageWidget();
+                      );
+                    } else {
+                      await showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                        ),
+                        builder: (_) => SearchFilterWidget(
+                          contexts: context,
+                          requestsType: widget.requestsType,
+                          isWeb: false,
+                        ),
+                      );
+                    }
 
-                              final hasRequests =
-                                  (viewModel.requests?.isNotEmpty == true) ||
-                                      (viewModel.myTeamRequests?.isNotEmpty == true) ||
-                                      (viewModel.otherDepartmentRequestModel?.isNotEmpty == true);
+                    viewModel.initializeRequestsScreen(
+                      context: context,
+                      requestsType: widget.requestsType!,
+                      requestTypeId: CacheHelper.getString("reqId"),
+                      empIds: CacheHelper.getString("empId"),
+                      from: CacheHelper.getString("from"),
+                      to: CacheHelper.getString("to"),
+                      depId: CacheHelper.getString("depId"),
+                      status: CacheHelper.getString("selectStatus"),
+                    );
+                  },
+                  backgroundColor:  Color(AppColors.primary),
+                  tooltip: 'Filter',
+                  child: Center(
+                    child: Image.asset(
+                      "assets/images/png/filter.png",
+                      color: AppThemeService.colorPalette.fabIconColor.color,
+                      width: AppSizes.s16,
+                      height: AppSizes.s16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          bottomAppbarWidget: widget.requestsType == GetRequestsTypes.mine
+              ? PreferredSize(
+            preferredSize: const Size.fromHeight(AppSizes.s170),
+            child: Consumer<RequestsViewModel>(
+                builder: (context, viewModel, child) => Padding(
+                  padding: const EdgeInsets.only(
+                      left: AppSizes.s12,
+                      right: AppSizes.s12,
+                      top: AppSizes.s10),
+                  child: viewModel.isLoading
+                      ? const RequestsAppbarLoading()
+                      : VacationListWidget(
+                    isInRequestsPage: true,
+                    tap: true,
+                    requests: viewModel.requests,
+                  ),
+                )),
+          )
+              : null,
+          title: viewModel.getRequestsScreenTitleDependsOnRequestsType(
+              requestsType: widget.requestsType!),
+          onRefresh: () async {
+            viewModel.currentPage = 1;
+            viewModel.initializeRequestsScreen(
+                context: context,
+                requestsType: widget.requestsType!,
+                requestTypeId: CacheHelper.getString("reqId"),
+                empIds: CacheHelper.getString("empId"),
+                from: CacheHelper.getString("from"),
+                to: CacheHelper.getString("to"),
+                depId: CacheHelper.getString("depId"),
+                status: CacheHelper.getString("selectStatus"));
+          },
+          body: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
+              child: Container(
+                alignment: Alignment.topCenter,
+                height: MediaQuery.sizeOf(context).height * 1,
+                child: Column(
+                  children: [
+                    // Active Filters Widget at the top - only show if there are active filters
+                    Consumer<RequestsViewModel>(
+                      builder: (context, viewModel, child) {
+                        if (ActiveFiltersWidget.hasActiveFilters()) {
+                          return ActiveFiltersWidget(
+                            requestsType: widget.requestsType,
+                            viewModel: viewModel,
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                    // Main content
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                        child: Consumer<RequestsViewModel>(
+                          builder: (context, viewModel, child) {
+                            if (viewModel.isLoading) return const LoadingPageWidget();
 
-                              if (!hasRequests) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                            final hasRequests =
+                                (viewModel.requests?.isNotEmpty == true) ||
+                                    (viewModel.myTeamRequests?.isNotEmpty == true) ||
+                                    (viewModel.otherDepartmentRequestModel?.isNotEmpty == true);
+
+                            if (!hasRequests) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  if (viewModel.rulesMessage != null)
+                                    AutoSizeText(
+                                      viewModel.rulesMessage ?? "",
+                                      style: const TextStyle(
+                                          color: Color(AppColors.grey40),
+                                          fontSize: AppSizes.s12,
+                                          fontWeight: FontWeight.w400),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 10,
+                                      textAlign: TextAlign.center,
+                                      softWrap: true,
+                                    ),
+                                  NoExistingPlaceholderScreen(
+                                    height: LayoutService.getHeight(context) * 0.6,
+                                    title: AppStrings.thereIsNoRequests.tr(),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return RefreshIndicator.adaptive(
+                              onRefresh: () async {
+                                viewModel.currentPage = 1;
+                                viewModel.initializeRequestsScreen(
+                                    context: context,
+                                    requestsType: widget.requestsType!,
+                                    requestTypeId: CacheHelper.getString("reqId"),
+                                    empIds: CacheHelper.getString("empId"),
+                                    from: CacheHelper.getString("from"),
+                                    to: CacheHelper.getString("to"),
+                                    depId: CacheHelper.getString("depId"),
+                                    status: CacheHelper.getString("selectStatus"));
+                              },
+                              child: Container(
+                                alignment: Alignment.topCenter,
+                                height: MediaQuery.sizeOf(context).height * 0.9,
+                                child: ListView(
+                                  controller: _scrollController,
+                                  shrinkWrap: true,
                                   children: [
-                                    if (viewModel.rulesMessage != null)
+                                    /// calendar button
+                                    if (widget.requestsType == GetRequestsTypes.myTeam ||
+                                        widget.requestsType == GetRequestsTypes.otherDepartment)
+                                      CustomRequestsPageButton(
+                                        onPressed: () async => await context.pushNamed(
+                                          AppRoutes.requestsCalendar.name,
+                                          pathParameters: {
+                                            'type': 'mine',
+                                            'lang': context.locale.languageCode,
+                                          },
+                                          extra: widget.requestsType == GetRequestsTypes.mine
+                                              ? viewModel.requests
+                                              : (widget.requestsType == GetRequestsTypes.myTeam)
+                                              ? viewModel.myTeamRequests
+                                              : viewModel.otherDepartmentRequestModel,
+                                        ),
+                                        title: AppStrings.viewTeamRequestsOnCalendar.tr(),
+                                        icon: Icons.calendar_month_outlined,
+                                      ),
+
+                                    const SizedBox(height: 10),
+
+                                    if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
                                       AutoSizeText(
                                         viewModel.rulesMessage ?? "",
+                                        maxLines: 10,
                                         style: const TextStyle(
                                             color: Color(AppColors.grey40),
                                             fontSize: AppSizes.s12,
                                             fontWeight: FontWeight.w400),
                                         overflow: TextOverflow.ellipsis,
-                                        maxLines: 10,
                                         textAlign: TextAlign.center,
                                         softWrap: true,
                                       ),
-                                    NoExistingPlaceholderScreen(
-                                      height: LayoutService.getHeight(context) * 0.6,
-                                      title: AppStrings.thereIsNoRequests.tr(),
-                                    ),
+
+                                    if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
+                                      const SizedBox(height: 15),
+
+                                    /// requests cards
+                                    if (viewModel.requests != null &&
+                                        viewModel.requests!.isNotEmpty &&
+                                        widget.requestsType == GetRequestsTypes.mine)
+                                      ...viewModel.requests!.map(
+                                            (req) => RequestCard(
+                                          reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                          request: req,
+                                        ),
+                                      ),
+
+                                    if (viewModel.otherDepartmentRequestModel != null &&
+                                        viewModel.otherDepartmentRequestModel!.isNotEmpty &&
+                                        widget.requestsType == GetRequestsTypes.otherDepartment)
+                                      ...viewModel.otherDepartmentRequestModel!.map(
+                                            (req) => RequestCard(
+                                          reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                          request: req,
+                                        ),
+                                      ),
+
+                                    if (viewModel.myTeamRequests != null &&
+                                        viewModel.myTeamRequests!.isNotEmpty &&
+                                        widget.requestsType == GetRequestsTypes.myTeam)
+                                      ...viewModel.myTeamRequests!.map(
+                                            (req) => RequestCard(
+                                          reqType: widget.requestsType ?? GetRequestsTypes.myTeam,
+                                          request: req,
+                                        ),
+                                      ),
+                                    if (viewModel.isLoadingMore)
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 16),
+                                        child: Center(child: CircularProgressIndicator()),
+                                      ),
                                   ],
-                                );
-                              }
-
-                              return RefreshIndicator.adaptive(
-                                onRefresh: () async {
-                                  viewModel.currentPage = 1;
-                                  viewModel.initializeRequestsScreen(
-                                      context: context,
-                                      requestsType: widget.requestsType!,
-                                      requestTypeId: CacheHelper.getString("reqId"),
-                                      empIds: CacheHelper.getString("empId"),
-                                      from: CacheHelper.getString("from"),
-                                      to: CacheHelper.getString("to"),
-                                      depId: CacheHelper.getString("depId"),
-                                      status: CacheHelper.getString("selectStatus"));
-                                },
-                                child: Container(
-                                  alignment: Alignment.topCenter,
-                                  height: MediaQuery.sizeOf(context).height * 0.9,
-                                  child: ListView(
-                                    controller: _scrollController,
-                                    shrinkWrap: true,
-                                    children: [
-                                      /// calendar button
-                                      if (widget.requestsType == GetRequestsTypes.myTeam ||
-                                          widget.requestsType == GetRequestsTypes.otherDepartment)
-                                        CustomRequestsPageButton(
-                                          onPressed: () async => await context.pushNamed(
-                                            AppRoutes.requestsCalendar.name,
-                                            pathParameters: {
-                                              'type': 'mine',
-                                              'lang': context.locale.languageCode,
-                                            },
-                                            extra: widget.requestsType == GetRequestsTypes.mine
-                                                ? viewModel.requests
-                                                : (widget.requestsType == GetRequestsTypes.myTeam)
-                                                ? viewModel.myTeamRequests
-                                                : viewModel.otherDepartmentRequestModel,
-                                          ),
-                                          title: AppStrings.viewTeamRequestsOnCalendar.tr(),
-                                          icon: Icons.calendar_month_outlined,
-                                        ),
-
-                                      const SizedBox(height: 10),
-
-                                                          if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
-                                                            AutoSizeText(
-                                                              viewModel.rulesMessage ?? "",
-                                                              maxLines: 10,
-                                                              style: const TextStyle(
-                                  color: Color(AppColors.grey40),
-                                  fontSize: AppSizes.s12,
-                                  fontWeight: FontWeight.w400),
-                                                              overflow: TextOverflow.ellipsis,
-                                                              textAlign: TextAlign.center,
-                                                              softWrap: true,
-                                                            ),
-
-                                                          if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
-                                                            const SizedBox(height: 15),
-
-                                      /// requests cards
-                                      if (viewModel.requests != null &&
-                                          viewModel.requests!.isNotEmpty &&
-                                          widget.requestsType == GetRequestsTypes.mine)
-                                        ...viewModel.requests!.map(
-                                              (req) => RequestCard(
-                                            reqType: widget.requestsType ?? GetRequestsTypes.mine,
-                                            request: req,
-                                          ),
-                                        ),
-
-                                      if (viewModel.otherDepartmentRequestModel != null &&
-                                          viewModel.otherDepartmentRequestModel!.isNotEmpty &&
-                                          widget.requestsType == GetRequestsTypes.otherDepartment)
-                                        ...viewModel.otherDepartmentRequestModel!.map(
-                                              (req) => RequestCard(
-                                            reqType: widget.requestsType ?? GetRequestsTypes.mine,
-                                            request: req,
-                                          ),
-                                        ),
-
-                                      if (viewModel.myTeamRequests != null &&
-                                          viewModel.myTeamRequests!.isNotEmpty &&
-                                          widget.requestsType == GetRequestsTypes.myTeam)
-                                        ...viewModel.myTeamRequests!.map(
-                                              (req) => RequestCard(
-                                            reqType: widget.requestsType ?? GetRequestsTypes.myTeam,
-                                            request: req,
-                                          ),
-                                        ),
-                                      if (viewModel.isLoadingMore)
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 16),
-                                          child: Center(child: CircularProgressIndicator()),
-                                        ),
-                                    ],
-                                  ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            )
             ),
+          )
+      ),
     );
   }
 }

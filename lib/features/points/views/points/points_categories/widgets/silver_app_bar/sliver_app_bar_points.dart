@@ -130,7 +130,7 @@ class SliverAppBarPoints extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                // context.pushNamed(AppRoutes.CategoriesprizePointsViewScreen.name, pathParameters: {'lang': context.locale.languageCode,});
+                                context.pushNamed(AppRoutes.CategoriesprizePointsViewScreen.name, pathParameters: {'lang': context.locale.languageCode,});
                               },
                               child: const RedeemNowButton(
                                 friends: false,

@@ -44,7 +44,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
             ? GetRequestsTypes.mine
             :widget.type == "team"? GetRequestsTypes.myTeam : GetRequestsTypes.allCompany ,
         requestTypeId:
-            (widget.requestTypeId != "no") ? widget.requestTypeId : "",
+        (widget.requestTypeId != "no") ? widget.requestTypeId : "",
         employeeId: widget.employeeId);
   }
 
@@ -66,7 +66,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
             width: AppSizes.s16,
           ),
           title: AppSettingsService.getRequestTitleFromGenenralSettings(
-                  context: context, requestId: widget.requestTypeId) ??
+              context: context, requestId: widget.requestTypeId) ??
               AppStrings.requestsC.tr(),
           onRefresh: () async =>
               viewModel.initializeRequestScreenByTypeIdgetRequestsByTypeId(
@@ -75,7 +75,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                       ? GetRequestsTypes.mine
                       :widget.type == "team"? GetRequestsTypes.myTeam : GetRequestsTypes.allCompany,
                   requestTypeId:
-                      (widget.requestTypeId != "no") ? widget.requestTypeId : "",
+                  (widget.requestTypeId != "no") ? widget.requestTypeId : "",
                   employeeId: widget.employeeId),
           body: Center(
             child: ConstrainedBox(
@@ -88,58 +88,58 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const LoadingPageWidget()
                           : viewModel.requestsById == null ||
-                                  viewModel.requestsById?.isEmpty == true
-                              ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                 if(viewModel.rulesMessage != null) AutoSizeText(
-                                    viewModel.rulesMessage ?? "",
-                                    style: const TextStyle(
-                                        color: Color(AppColors.grey40),
-                                        fontSize: AppSizes.s12,
-                                        fontWeight: FontWeight.w400),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 10,
-                                    textAlign: TextAlign.center,
-                                    softWrap: true,
-                                  ),
-                                  NoExistingPlaceholderScreen(
-                                      height: LayoutService.getHeight(context) * 0.6,
-                                      title: AppStrings.thereIsNoRequests.tr()),
-                                ],
-                              )
-                              : Column(children: [
-                                  /// general screen message widget for other requests types
-                                  // GeneralScreenMessageWidget(
-                                  //     screenId:
-                                  //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
-                                  if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
-                                      onPressed: () async => viewModel
-                                          .showSummaryReports(context: context),
-                                      title: AppStrings.summaryReports.tr(),
-                                      icon: Icons.folder_copy_outlined,
-                                    ),
+                          viewModel.requestsById?.isEmpty == true
+                          ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if(viewModel.rulesMessage != null) AutoSizeText(
+                            viewModel.rulesMessage ?? "",
+                            style: const TextStyle(
+                                color: Color(AppColors.grey40),
+                                fontSize: AppSizes.s12,
+                                fontWeight: FontWeight.w400),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 10,
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                          ),
+                          NoExistingPlaceholderScreen(
+                              height: LayoutService.getHeight(context) * 0.6,
+                              title: AppStrings.thereIsNoRequests.tr()),
+                        ],
+                      )
+                          : Column(children: [
+                        /// general screen message widget for other requests types
+                        // GeneralScreenMessageWidget(
+                        //     screenId:
+                        //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
+                        if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
+                          onPressed: () async => viewModel
+                              .showSummaryReports(context: context),
+                          title: AppStrings.summaryReports.tr(),
+                          icon: Icons.folder_copy_outlined,
+                        ),
                         if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH12,
-                                  if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
-                                    viewModel.rulesMessage ?? "",
-                                    maxLines: 10,
-                                    style: const TextStyle(
-                                        color: Color(AppColors.grey40),
-                                        fontSize: AppSizes.s12,
-                                        fontWeight: FontWeight.w400),
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    softWrap: true,
-                                  ),
+                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
+                          viewModel.rulesMessage ?? "",
+                          maxLines: 10,
+                          style: const TextStyle(
+                              color: Color(AppColors.grey40),
+                              fontSize: AppSizes.s12,
+                              fontWeight: FontWeight.w400),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          softWrap: true,
+                        ),
                         if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  gapH16,
-                                  if (viewModel.requestsById != null &&
-                                      viewModel.requestsById!.isNotEmpty)
-                                    ...viewModel.requestsById!.map(
-                                      (req) => RequestCard(
-                                        request: req,
-                                      ),
-                                    )
-                                ]))),
+                        if (viewModel.requestsById != null &&
+                            viewModel.requestsById!.isNotEmpty)
+                          ...viewModel.requestsById!.map(
+                                (req) => RequestCard(
+                              request: req,
+                            ),
+                          )
+                      ]))),
             ),
           )),
     );

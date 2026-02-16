@@ -16,9 +16,9 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
   var rulesMessage;
   Future<void> initializeRequestScreenByTypeIdgetRequestsByTypeId(
       {required BuildContext context,
-      required String requestTypeId,
+        required String requestTypeId,
         type,
-      String? employeeId}) async {
+        String? employeeId}) async {
     updateLoadingStatus(laodingValue: true);
     await _getRequestByTypeId(
         context: context, requestTypeId: requestTypeId, employeeId: employeeId, type: type);
@@ -43,11 +43,11 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
   }) async {
     try {
       DioHelper.getData(
-         url: "/emp_reports/v1/summary_report",
-         context: context,
-         query: {
-        "request_type_id" : requestTypeId.toString()
-      }
+          url: "/emp_reports/v1/summary_report",
+          context: context,
+          query: {
+            "request_type_id" : requestTypeId.toString()
+          }
       ).then((v){
         if (v.data['status'] == true&& v.data != null) {
           final data = v.data as Map<String, dynamic>;
@@ -74,17 +74,17 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
 
   Future<void> _getRequestByTypeId(
       {required BuildContext context,
-      required String requestTypeId,
+        required String requestTypeId,
         type,
-      String? employeeId}) async {
+        String? employeeId}) async {
     // get Request by type id
     try {
       final result =
-          await RequestsServices.getRequestsByTypeDependsOnUserPrivileges(
-              context: context,
-              reqType: type??GetRequestsTypes.mine,
-              requestTypeId: requestTypeId,
-              empIds: employeeId != null ? employeeId.toString() : null);
+      await RequestsServices.getRequestsByTypeDependsOnUserPrivileges(
+          context: context,
+          reqType: type??GetRequestsTypes.mine,
+          requestTypeId: requestTypeId,
+          empIds: employeeId != null ? employeeId.toString() : null);
       if (result.success && result.data != null) {
         var requestsData = result.data?['requests'] as List<dynamic>?;
         print("RULES IS --> ${result.data?['rules_message']}");

@@ -45,13 +45,13 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 tabs: [
                   Container(
                       margin:
-                          const EdgeInsets.symmetric(horizontal: AppSizes.s6),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s6),
                       child:  Tab(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                             AppStrings.reason.tr().toUpperCase(),
+                              AppStrings.reason.tr().toUpperCase(),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
@@ -77,7 +77,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                   ),
                   Container(
                       margin:
-                          const EdgeInsets.symmetric(horizontal: AppSizes.s6),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s6),
                       child: Tab(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -108,36 +108,36 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child:request.managerReply.isNotEmpty ? Container(
-                        height: MediaQuery.sizeOf(context).height * 0.4,
-                        child: ListView.separated(
-                            physics: const ClampingScrollPhysics(),
-                            itemBuilder: (context, index) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${request.managerReply[index].jobTitle ?? ""} : ${request.managerReply[index].name.toString()} (${request.managerReply[index].createAt.toString()})",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
-                                ),
-                                const SizedBox(height: 15,),
-                                Text(
-                                  "${request.managerReply[index].replay ?? ""}",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
+                        padding: const EdgeInsets.only(top: 20),
+                        child:request.managerReply.isNotEmpty ? Container(
+                          height: MediaQuery.sizeOf(context).height * 0.4,
+                          child: ListView.separated(
+                              physics: const ClampingScrollPhysics(),
+                              itemBuilder: (context, index) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${request.managerReply[index].jobTitle ?? ""} : ${request.managerReply[index].name.toString()} (${request.managerReply[index].createAt.toString()})",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
+                                  ),
+                                  const SizedBox(height: 15,),
+                                  Text(
+                                    "${request.managerReply[index].replay ?? ""}",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
 
-                                ),
-                              ],
-                            ), separatorBuilder: (context, index) => const SizedBox(height: 20, child: Divider(),),
-                            itemCount: request.managerReply.length),
-                      ):  Center(
-                        child: Text(AppStrings.thereIsStillNoResponseFromTheManager.tr(),
-                          style: const TextStyle(
-                              color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                  ),
+                                ],
+                              ), separatorBuilder: (context, index) => const SizedBox(height: 20, child: Divider(),),
+                              itemCount: request.managerReply.length),
+                        ):  Center(
+                          child: Text(AppStrings.thereIsStillNoResponseFromTheManager.tr(),
+                            style: const TextStyle(
+                                color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                            ),
                           ),
-                        ),
-                      )
+                        )
                     ),
                     SingleChildScrollView(
                       child: Column(
@@ -149,14 +149,14 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("${AppStrings.createdOn.tr()} : ",
-                              style: const TextStyle(
-                                color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
-                              ),
+                                style: const TextStyle(
+                                    color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                ),
                               ),
                               Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.createdAt.toString())),
-                              style: const TextStyle(
-                                color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
-                              ),
+                                style: const TextStyle(
+                                    color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                ),
                               ),
 
                             ],

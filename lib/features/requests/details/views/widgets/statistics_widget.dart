@@ -5,6 +5,7 @@ import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/widgets/vocation_list.widget.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/request_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 class StatisticsModal extends StatelessWidget {
   final String employeeId;
   var type;
@@ -12,10 +13,10 @@ class StatisticsModal extends StatelessWidget {
   final List<MapEntry<String, Balance>> empVocationBalance;
   StatisticsModal(
       {super.key,
-      required this.employeeId,
-      this.type,
-      required this.empVocationBalance,
-      this.requests});
+        required this.employeeId,
+        this.type,
+        required this.empVocationBalance,
+        this.requests});
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +33,18 @@ class StatisticsModal extends StatelessWidget {
           ...requests!
               .map(
                 (req) => RequestCard(
-                  reqType: type == "mine"
-                      ? GetRequestsTypes.mine
-                      : type == "myTeam"
-                          ? GetRequestsTypes.myTeam
-                          : type == "otherDepartment"
-                              ? GetRequestsTypes.otherDepartment
-                              : type == "allCompany"
-                                  ? GetRequestsTypes.allCompany
-                                  : GetRequestsTypes.myTeam,
-                  request: req,
-                ),
-              )
+              reqType: type == "mine"
+                  ? GetRequestsTypes.mine
+                  : type == "myTeam"
+                  ? GetRequestsTypes.myTeam
+                  : type == "otherDepartment"
+                  ? GetRequestsTypes.otherDepartment
+                  : type == "allCompany"
+                  ? GetRequestsTypes.allCompany
+                  : GetRequestsTypes.myTeam,
+              request: req,
+            ),
+          )
         ],
       ),
     );
@@ -70,26 +71,26 @@ class StatisticsBalanceList extends StatelessWidget {
     return vacationBalance == null || vacationBalance?.isEmpty == true
         ? const SizedBox.shrink()
         : Padding(
-            padding: const EdgeInsets.only(bottom: AppSizes.s32),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: vacationBalance!
-                    .map((entry) => Padding(
-                          padding:
-                              EdgeInsets.only(right: paddingBetweenVocations!),
-                          child: VacationCard(
-                            userId: employeeId,
-                            tap: false,
-                            type: type,
-                            vocation: entry,
-                            sectionPadding: sectionPadding,
-                            paddingBetweenVocations: paddingBetweenVocations,
-                          ),
-                        ))
-                    .toList(),
-              ),
+      padding: const EdgeInsets.only(bottom: AppSizes.s32),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: vacationBalance!
+              .map((entry) => Padding(
+            padding:
+            EdgeInsets.only(right: paddingBetweenVocations!),
+            child: VacationCard(
+              userId: employeeId,
+              tap: false,
+              type: type,
+              vocation: entry,
+              sectionPadding: sectionPadding,
+              paddingBetweenVocations: paddingBetweenVocations,
             ),
-          );
+          ))
+              .toList(),
+        ),
+      ),
+    );
   }
 }

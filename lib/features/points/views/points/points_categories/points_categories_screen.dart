@@ -24,7 +24,7 @@ import '../../../controllers/points_controller/points_controller.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;
-  PointsCategoriesScreen(this.viewArrow);
+  const PointsCategoriesScreen(this.viewArrow);
 
   @override
   _PointsCategoriesScreenState createState() => _PointsCategoriesScreenState();
@@ -171,32 +171,31 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                                     points.categories[index]['title'] ??"",
                                     (points.categories[index]['image'] != null && points.categories[index]['image'].isNotEmpty)?
                                     points.categories[index]['image'][0]['file'] : "",
-                                    // onTap: (){
-                                    //   if(points.categories[index]['title'] == payoutName){
-                                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => WithdrawMoneyScreen(gCache['fawry_payout']['points_per_unit'].toString() ?? "0"),));
-                                    //   }
-                                    //   if(points.categories[index]['title'] == AppStrings.fawry.tr()){
-                                    //     context.pushNamed(
-                                    //         AppRoutes.fawryProviderScreen
-                                    //             .name,
-                                    //         pathParameters: {
-                                    //           'lang': context.locale
-                                    //               .languageCode,
-                                    //         });
-                                    //   }if(points.categories[index]['title'] != payoutName && points.categories[index]['title'] != AppStrings.fawry.tr()) {
-                                    //     context.pushNamed(
-                                    //         AppRoutes.prizePointsViewScreen
-                                    //             .name,
-                                    //         pathParameters: {
-                                    //           'lang': context.locale
-                                    //               .languageCode,
-                                    //           'id': points
-                                    //               .categories[index]['id']
-                                    //               .toString(),
-                                    //         });
-                                    //   }
-                                    // },
-                                    onTap: () {}
+                                    onTap: (){
+                                      if(points.categories[index]['title'] == payoutName){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => WithdrawMoneyScreen(gCache['fawry_payout']['points_per_unit'].toString() ?? "0"),));
+                                      }
+                                      if(points.categories[index]['title'] == AppStrings.fawry.tr()){
+                                        context.pushNamed(
+                                            AppRoutes.fawryProviderScreen
+                                                .name,
+                                            pathParameters: {
+                                              'lang': context.locale
+                                                  .languageCode,
+                                            });
+                                      }if(points.categories[index]['title'] != payoutName && points.categories[index]['title'] != AppStrings.fawry.tr()) {
+                                        context.pushNamed(
+                                            AppRoutes.prizePointsViewScreen
+                                                .name,
+                                            pathParameters: {
+                                              'lang': context.locale
+                                                  .languageCode,
+                                              'id': points
+                                                  .categories[index]['id']
+                                                  .toString(),
+                                            });
+                                      }
+                                    },
                                   );
                                 })
                             ),

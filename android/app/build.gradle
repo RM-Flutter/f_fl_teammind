@@ -50,6 +50,12 @@ flutter {
     source = "../.."
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.protobuf:protobuf-javalite:3.25.3'
+    }
+}
+
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
     implementation 'org.bouncycastle:bcprov-jdk15to18:1.70'

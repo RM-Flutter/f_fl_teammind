@@ -30,11 +30,8 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                       fieldFocusNode: fieldFocusNode,
                       context: context,
                       home: false,
-                      title:
-                      "${AppStrings.pointsTransferredSuccessfully.tr().toUpperCase()}!",
-                      buttonText: AppStrings.goToHome
-                          .tr()
-                          .toUpperCase(),
+                      title: "${AppStrings.pointsTransferredSuccessfully.tr().toUpperCase()}!",
+                      buttonText: AppStrings.goToHome.tr().toUpperCase(),
                       subTitle: "",
                       viewCheckIcon: true,
                       onTapButton: () {

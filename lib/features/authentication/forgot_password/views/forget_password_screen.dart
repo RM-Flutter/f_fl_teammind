@@ -16,10 +16,10 @@ class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key, required this.isPhoneLogin});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordModalState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordModalState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordScreen> {
       ChangeNotifierProvider<AuthenticationController>(create: (_) => AuthenticationController(),),
     ],
       child: Consumer<AuthenticationController>(
-        builder: (context, AuthenticationController, child) {
+        builder: (context, authenticationViewModel, child) {
           return Consumer<ForgotPasswordController>(
             builder: (context, viewModel, child) {
               return Column(
@@ -131,14 +131,14 @@ class _ForgotPasswordModalState extends State<ForgotPasswordScreen> {
                                   mak: ()async{
                                     if(viewModel.phoneController.text.isEmpty || viewModel.phoneController.text == null){
                                       setState(() {
-                                        AuthenticationController.isPhoneLogin = false;
+                                        authenticationViewModel.isPhoneLogin = false;
                                       });
                                     }else{
                                       setState(() {
-                                        AuthenticationController.isPhoneLogin = true;
+                                        authenticationViewModel.isPhoneLogin = true;
                                       });
                                     }
-                                    AuthenticationController.login(
+                                    authenticationViewModel.login(
                                         context: context,
                                         password: viewModel.newPasswordController.text,
                                         email: viewModel.emailController,
