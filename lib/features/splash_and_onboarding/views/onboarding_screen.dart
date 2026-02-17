@@ -12,13 +12,14 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/splash_and_onboarding/controller/splash_onboarding_controller.dart';
 
+
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     CacheHelper.setString(key: "watchScreen", value: "yes");
-    CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now()));
+    CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now().toUtc()));
 
     return ChangeNotifierProvider<OnboardingController>(
         create: (context) => OnboardingController(),

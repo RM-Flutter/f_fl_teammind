@@ -8,6 +8,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 
+
 class BottomNavigationBarModel {
   final String icon;
   final String title;
@@ -109,3 +110,4 @@ class MainLayoutScreen extends StatelessWidget {
     );
   }
 }
+

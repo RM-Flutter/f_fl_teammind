@@ -4,7 +4,7 @@ abstract class AppColors {
 
   static int get buttonColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('buttonColor'),
-    0xFF263E4E,
+    0xFF3389EE,
   );
   static int get buttonSecondaryColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('buttonSecondaryColor'),
@@ -200,7 +200,7 @@ abstract class AppColors {
   static const int green = 0xff09814D;
   static const int veryDarkBlue = 0xff0D3B6F;
   static const int darkRed = 0xff851919;
-  static const int navyBlue = 0xff555C60;
+  static const int navyBlue = 0xff2C376C;
   static const int lightGreyE5 = 0xffE5E5E5;
   static const int grey47 = 0xFF474747;
   static const int grey40 = 0xff404040;
@@ -220,43 +220,6 @@ abstract class AppColors {
   static const int lightBlue = 0xff3AC0E5;
   static const int purple = 0xff9C4995;
 
-
-  // ============================================
-  // Legacy Colors (للتوافق مع الكود القديم)
-  // ============================================
-
-  // application colors (legacy)
-  static int get c1 => primary;
-  static int get c2 => dark;
-  static int get c3 => black;
-  static int get c4 => pink;
-
-  // application background colors (legacy)
-  static int get bgC1 => primary;
-  static int get bgC2 => pink;
-  static int get bgC3 => white;
-  static int get bgC4 => whiteBlue;
-
-  // application text colors (legacy)
-  static int get textC1 => primary;
-  static int get textC2 => pink;
-  static int get textC3 => black;
-  static int get textC4 => darkGrey;
-  static int get textC5 => white;
-
-  // scaffold colors (legacy)
-  static int get appBarBackgroundColor => appBarColor;
-  static int get bodyBackgroundColor => scaffoldBackgroundColor;
-  static int get btmAppBarBackgroundColor => navBarColor;
-  static int get fabBackgroundColor => pink;
-  static int get fabIconColor => white;
-
-  // input colors (legacy)
-  static int get inputHintColor => shadowColor;
-  static int get inputLabelColor => dividerColor;
-  static int get inputTextColor => bodyTextColor;
-
-  // design colors
   static const int oc1 = 0xFF0D3B6F;
   static const int oc2 = 0xFFE6007E;
   static const int oc3 = 0xFFFEED00;
@@ -264,8 +227,33 @@ abstract class AppColors {
   static const int red1 = 0xFFFF6B6B;
   static const int gray1 = 0xFF464646;
 
+  // application colors
+  static const int c1 = 0xff1E2D74;
+  static const int c2 = 0xffff1493;
+  static const int c3 = 0xFF000000;
 
+// application background colors
+  static const int bgC1 = 0xff1E2D74;
+  static const int bgC2 = 0xffff1493;
+  static const int bgC3 = 0xFFFFFFFF;
 
+// application text colors
+  static const int textC1 = 0xff1E2D74;
+  static const int textC2 = 0xffff1493;
+  static const int textC3 = 0xFF000000;
+  static const int textC4 = 0xff606060;
+  static const int textC5 = 0xFFFFFFFF;
+
+//scaffold colors
+  static const int appBarBackgroundColor = 0x00000000; // transparent
+  static const int bodyBackgroundColor = 0xFFFFFFFF;
+  static const int btmAppBarBackgroundColor = 0xFFFFFFFF;
+  static const int fabBackgroundColor = 0xffff1493;
+  static const int fabIconColor = 0xFFFFFFFF;
+// input colors
+  static const int inputHintColor = 0xff231F20;
+  static const int inputLabelColor = 0xffDFDFDF;
+  static const int inputTextColor = 0xff231F20;
   //grideview background color
   static const int oC1Color = 0xff0D3B6F;
   static const int yellowColor = 0xffEFDF00;

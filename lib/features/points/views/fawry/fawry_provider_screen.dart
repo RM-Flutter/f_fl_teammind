@@ -130,7 +130,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
                   child: Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 16,
                       color: Color(AppColors.oc1),
                       fontWeight: FontWeight.w600,

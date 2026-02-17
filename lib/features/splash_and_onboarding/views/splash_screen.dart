@@ -26,6 +26,7 @@ import 'package:app_test/features/splash_and_onboarding/controller/splash_onboar
 
 import '../../../core/utils/overlay_gradient_widget.dart';
 
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

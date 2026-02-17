@@ -554,11 +554,11 @@ class _MoreScreenState extends State<MoreScreen> {
                   // height: MediaQuery.sizeOf(context).height * 0.66,
                   decoration: ShapeDecoration(
                     gradient: LinearGradient(
-                      begin: const Alignment(0, 0),
-                      end: const Alignment(1, 0),
+                      begin: Alignment(0, 0),
+                      end: Alignment(1, 0),
                       colors: [Color(AppColors.white), Color(AppColors.whiteBlue)],
                     ),
-                    shape: const RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         topRight: Radius.circular(40),
@@ -577,7 +577,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             children: [
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
+                                  constraints: BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -631,7 +631,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
                               if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
+                                  constraints: BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -681,7 +681,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               const SizedBox(height : 15),
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
+                                  constraints: BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -834,7 +834,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               const SizedBox(height : 15),
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
+                                  constraints: BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -855,7 +855,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return const CustomizeNotificationScreen();
+                                        return CustomizeNotificationScreen();
                                       });
                                 },
                               ),DefaultListTile(
@@ -981,7 +981,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           .textTheme
                           .bodySmall
                           ?.copyWith(
-                        color: const Color(AppColors.grey4F),
+                        color: Color(AppColors.grey4F),
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         // height: 0,
@@ -1022,7 +1022,7 @@ class DefaultListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
+        constraints: BoxConstraints(
           maxWidth: kIsWeb ? 1100 : double.infinity,
         ),
         child: Container(

@@ -813,7 +813,7 @@ Future<void> defaultActionBottomSheetPoints({
                                 child: Row(
                                   children: [
                                     Text(code.toString(),
-                                      style: const TextStyle(
+                                      style:  TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 12,
                                           color: Color(AppColors.gray1)),),

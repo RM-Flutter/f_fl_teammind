@@ -6,6 +6,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import '../../../../core/constants/app_colors.dart';
 import 'custom_switch_button.dart';
 
+
 class SwitchRow extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;

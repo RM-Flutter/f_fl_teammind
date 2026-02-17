@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_constants.dart';
@@ -26,7 +27,10 @@ import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/features/authentication/login/controller/login_controller.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import '../../../../core/platform/platform_is.dart';
+import '../../../../core/routing/app_router.dart';
+import '../../../../core/widgets/webview_offers.dart';
 import '../../shared/widgets/phone_number_field.dart';
 import '../../shared/widgets/switch_row_widget.dart';
 
@@ -141,262 +145,306 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
         resizeToAvoidBottomInset: false,
         body: Padding(
           padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
-          child: Stack(
-            children: [
-              //const OverlayBackgroundGradientWidget(),
-              AnimatedBackgroundWidget(),
-              //const OverlayGradientWidget(),
-              Positioned.fill(child: const OverlayGradientWidget()),
+          child: SafeArea(
+            child: Stack(
+              children: [
+                //const OverlayBackgroundGradientWidget(),
+                AnimatedBackgroundWidget(),
+                //const OverlayGradientWidget(),
+                Positioned.fill(child: const OverlayGradientWidget()),
 
-              Container(
-                width: double.infinity,
-                height: (kIsWeb || PlatformIs.web) ? double.infinity : null,
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width < 600
-                      ? double.infinity
-                      : 400,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.s24,
-                      vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
-                    ),
-                    child: Form(
-                      key: viewModel.formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: (kIsWeb || PlatformIs.web) ? 40 : 60),
-                          _buildLogoImage(),
-                          gapH32,
-                          // Login Page Headline
-                          AutoSizeText(
-                            AppStrings.loginTo.tr(),
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          AutoSizeText(
-                            AppStrings.yourAccount.tr(),
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          gapH32,
-                          // TOGGLE BUTTON TO TOGGLE BETWEEN (PHONE || EMAIL)
-                          Consumer<AuthenticationController>(
-                            builder: (context, viewModel, child) {
-                              return SwitchRow(
-                                viewPhone: true,
-                                isLoginPageStyle: true,
-                                value: viewModel.isPhoneLogin,
-                                onChanged: (newValue) =>
-                                    viewModel.toggleLoginMethod(),
-                              );
-                            },
-                          ),
-                          gapH20,
-                          // EMAIL OR PHONE FIELD
-                          Consumer<AuthenticationController>(
-                            builder: (context, viewModel, child) {
-                              return viewModel.isPhoneLogin
-                                  ? PhoneNumberField(
-                                controller: viewModel.phoneController,
-                                countryCodeController: viewModel.countryCodeController,
-                              )
-                                  : TextFormField(
-                                controller:
-                                viewModel.emailController,
-                                decoration: InputDecoration(
-                                  hintText:
-                                  AppStrings.yourEmail.tr().toUpperCase(),
-                                ),
-                                validator: (value) =>
-                                    ValidationService.validateEmail(
-                                        value),
-                              );
-                            },
-                          ),
-                          gapH12,
-                          // PASSWORD FIELD
-                          TextFormField(
-                            controller: viewModel.passwordController,
-                            decoration: InputDecoration(
-                              hintText: AppStrings.password.tr().toUpperCase(),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  hidePassword ? Icons.visibility : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    hidePassword = !hidePassword;
-                                  });
-                                },
-                              ),
+                Container(
+                  width: double.infinity,
+                  height: (kIsWeb || PlatformIs.web) ? double.infinity : null,
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width < 600
+                        ? double.infinity
+                        : 400,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.s24,
+                        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
+                      ),
+                      child: Form(
+                        key: viewModel.formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: (kIsWeb || PlatformIs.web) ? 40 : 60),
+                            _buildLogoImage(),
+                            gapH32,
+                            // Login Page Headline
+                            AutoSizeText(
+                              AppStrings.loginTo.tr(),
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.labelLarge,
                             ),
-                            validator: (value) =>
-                                ValidationService.validatePassword(value, login: true),
-                            obscureText: hidePassword,
-                          ),
-                          gapH12,
-                          // FORGET PASSSORD BUTTON
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () async {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  await viewModel.showForgotPasswordModal(
-                                    context: context,
-                                  );
-                                },
-                                child: Text(AppStrings.forgetPassword.tr(),
-                                    style:
-                                    Theme.of(context).textTheme.headlineMedium),
+                            AutoSizeText(
+                              AppStrings.yourAccount.tr(),
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            gapH32,
+                            // TOGGLE BUTTON TO TOGGLE BETWEEN (PHONE || EMAIL)
+                            Consumer<AuthenticationController>(
+                              builder: (context, viewModel, child) {
+                                return SwitchRow(
+                                  viewPhone: true,
+                                  isLoginPageStyle: true,
+                                  value: viewModel.isPhoneLogin,
+                                  onChanged: (newValue) =>
+                                      viewModel.toggleLoginMethod(),
+                                );
+                              },
+                            ),
+                            gapH20,
+                            // EMAIL OR PHONE FIELD
+                            Consumer<AuthenticationController>(
+                              builder: (context, viewModel, child) {
+                                return viewModel.isPhoneLogin
+                                    ? PhoneNumberField(
+                                  controller: viewModel.phoneController,
+                                  countryCodeController: viewModel.countryCodeController,
+                                )
+                                    : TextFormField(
+                                  controller:
+                                  viewModel.emailController,
+                                  decoration: InputDecoration(
+                                    hintText:
+                                    AppStrings.yourEmail.tr().toUpperCase(),
+                                  ),
+                                  validator: (value) =>
+                                      ValidationService.validateEmail(
+                                          value),
+                                );
+                              },
+                            ),
+                            gapH12,
+                            // PASSWORD FIELD
+                            TextFormField(
+                              controller: viewModel.passwordController,
+                              decoration: InputDecoration(
+                                hintText: AppStrings.password.tr().toUpperCase(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    hidePassword ? Icons.visibility : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      hidePassword = !hidePassword;
+                                    });
+                                  },
+                                ),
                               ),
-                            ],
-                          ),
-                          gapH16,
-                          // LOGIN BUTTON
-                          CustomElevatedButton(
-                            title: AppStrings.login.tr(),
-                            onPressed: () async {
-                              // التحقق من صحة النموذج أولاً
-                              if(!viewModel.formKey.currentState!.validate()){
-                                return;
-                              }
-
-                              // إذا كان مختار BY PHONE، التحقق من أن رقم الهاتف غير فارغ وصحيح
-                              if(viewModel.isPhoneLogin){
-                                final phoneText = viewModel.phoneController.text.trim();
-                                if(phoneText.isEmpty){
-                                  Fluttertoast.showToast(
-                                      msg: AppStrings.phoneNumberIsRequired.tr(),
-                                      toastLength: Toast.LENGTH_LONG,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 5,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0
-                                  );
-                                  return;
-                                }
-                                // التحقق من أن الرقم يحتوي على أرقام فقط
-                                if(!RegExp(r'^[0-9]+$').hasMatch(phoneText)){
-                                  Fluttertoast.showToast(
-                                      msg: AppStrings.pleaseEnterValidPhoneNumber.tr(),
-                                      toastLength: Toast.LENGTH_LONG,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 5,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0
-                                  );
-                                  return;
-                                }
-                              }
-
-                              // إذا تم التحقق بنجاح، إرسال الطلب
-                              await viewModel.login(context: context);
-                            },
-                            isPrimaryBackground: false,
-                          ),
-                          gapH16,
-                          if(gCache != null && gCache['can_visit'] == true)
+                              validator: (value) =>
+                                  ValidationService.validatePassword(value, login: true),
+                              obscureText: hidePassword,
+                            ),
+                            gapH12,
+                            // FORGET PASSSORD BUTTON
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  onPressed: () async {
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    await viewModel.showForgotPasswordModal(
+                                      context: context,
+                                    );
+                                  },
+                                  child: Text(AppStrings.forgetPassword.tr(),
+                                      style:
+                                      Theme.of(context).textTheme.headlineMedium),
+                                ),
+                              ],
+                            ),
+                            gapH16,
+                            // LOGIN BUTTON
                             CustomElevatedButton(
-                              title: AppStrings.visitor.tr(),
+                              title: AppStrings.login.tr(),
                               onPressed: () async {
-                                // context.pushNamed(
-                                //   AppRoutes.freeServicesHome.name,
-                                //   pathParameters: {'lang': context.locale.languageCode,},
-                                // );
+                                // التحقق من صحة النموذج أولاً
+                                if(!viewModel.formKey.currentState!.validate()){
+                                  return;
+                                }
+
+                                // إذا كان مختار BY PHONE، التحقق من أن رقم الهاتف غير فارغ وصحيح
+                                if(viewModel.isPhoneLogin){
+                                  final phoneText = viewModel.phoneController.text.trim();
+                                  if(phoneText.isEmpty){
+                                    Fluttertoast.showToast(
+                                        msg: AppStrings.phoneNumberIsRequired.tr(),
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 5,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
+                                    return;
+                                  }
+                                  // التحقق من أن الرقم يحتوي على أرقام فقط
+                                  if(!RegExp(r'^[0-9]+$').hasMatch(phoneText)){
+                                    Fluttertoast.showToast(
+                                        msg: AppStrings.pleaseEnterValidPhoneNumber.tr(),
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 5,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
+                                    return;
+                                  }
+                                }
+
+                                // إذا تم التحقق بنجاح، إرسال الطلب
+                                await viewModel.login(context: context);
                               },
                               isPrimaryBackground: false,
                             ),
-                          SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
-                          if(gCache != null && gCache != "") Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
-                              vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8 : 0,
+                            gapH16,
+                            // if(gCache != null && gCache['can_visit'] == true)
+                            CustomElevatedButton(
+                              title: AppStrings.visitor.tr(),
+                              onPressed: () async {
+                                context.pushNamed(
+                                  AppRoutes.freeServicesHome.name,
+                                  pathParameters: {'lang': context.locale.languageCode,},
+                                );
+                              },
+                              isPrimaryBackground: false,
                             ),
-                            constraints: BoxConstraints(
-                              maxWidth: (kIsWeb || PlatformIs.web)
-                                  ? MediaQuery.of(context).size.width < 600
-                                  ? double.infinity
-                                  : 400
-                                  : double.infinity,
-                            ),
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
-                              children: [
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_google'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.google,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginGoogle}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_facebook'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.facebookColored,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginFacebook}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_linkedin-openid'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.linkedInColored,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginLinkedIn}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_apple'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.apple,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginAppleStore}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                              ],
-                            ),
-                          ),
-                          if(gCache != null && gCache['can_new_register'] == true)...[
                             SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
+                            if(gCache != null && gCache != "") Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
+                                vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8 : 0,
+                              ),
+                              constraints: BoxConstraints(
+                                maxWidth: (kIsWeb || PlatformIs.web)
+                                    ? MediaQuery.of(context).size.width < 600
+                                    ? double.infinity
+                                    : 400
+                                    : double.infinity,
+                              ),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
+                                children: [
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_google'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.google,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
+                                        final url = '${AppConstants.socialLoginGoogle}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_facebook'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.facebookColored,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
+                                        final url = '${AppConstants.socialLoginFacebook}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_linkedin-openid'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.linkedInColored,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
+                                        final url = '${AppConstants.socialLoginLinkedIn}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_apple'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.apple,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
+                                        final url = '${AppConstants.socialLoginAppleStore}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                ],
+                              ),
+                            ),
+                            if(gCache != null && gCache['can_new_register'] == true)...[
+                              SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
+                              Container(
+                                padding: EdgeInsets.only(
+                                  bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s48 : AppSizes.s16,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CustomElevatedButton(
+                                      width: AppSizes.s290,
+                                      title: AppStrings.createNewAccount.tr(),
+                                      isFuture: false,
+                                      onPressed: () => viewModel.showCreateAccountModal(
+                                          context: context),
+                                      buttonStyle: ElevatedButton.styleFrom(
+                                        shadowColor: Colors.transparent,
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Colors.white, // Text color
+                                        disabledForegroundColor: Colors.transparent,
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(AppSizes.s28),
+                                          side: const BorderSide(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      titleWidget: Text(
+                                        AppStrings.createNewAccount.tr(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
                             Container(
                               padding: EdgeInsets.only(
                                 bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s48 : AppSizes.s16,
@@ -406,26 +454,43 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                 children: [
                                   CustomElevatedButton(
                                     width: AppSizes.s290,
-                                    title: AppStrings.createNewAccount.tr(),
+                                    title: AppStrings.addCompany.tr(),
                                     isFuture: false,
-                                    onPressed: () => viewModel.showCreateAccountModal(
-                                        context: context),
-                                    buttonStyle: ElevatedButton.styleFrom(
-                                      shadowColor: Colors.transparent,
-                                      backgroundColor: Colors.transparent,
-                                      foregroundColor: Colors.white, // Text color
-                                      disabledForegroundColor: Colors.transparent,
-                                      elevation: 2,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(AppSizes.s28),
-                                        side: const BorderSide(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
+                                    onPressed: () async {
+                                      const url = 'https://lab.r-m.dev/frontend/emp-app-request/create';
+
+                                      // On web, open in browser. On mobile, use WebView
+                                      if (PlatformIs.web) {
+                                        final uri = Uri.parse(url);
+                                        if (await url_launcher.canLaunchUrl(uri)) {
+                                          await url_launcher.launchUrl(
+                                              uri,
+                                              mode: url_launcher.LaunchMode.externalApplication
+                                          );
+                                        } else {
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('Could not open $url')),
+                                            );
+                                          }
+                                        }
+                                      } else {
+                                        // On mobile, navigate to WebView screen
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Scaffold(
+                                              appBar: AppBar(
+                                                toolbarHeight: 0.0,
+                                              ),
+                                              body: WebViewStackOffers(url),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
                                     titleWidget: Text(
-                                      AppStrings.createNewAccount.tr(),
+                                      AppStrings.addCompany.tr(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -440,73 +505,14 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               ),
                             ),
                           ],
-                          //  Container(
-                          //   padding: EdgeInsets.only(
-                          //     bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s48 : AppSizes.s16,
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.center,
-                          //     children: [
-                          //       CustomElevatedButton(
-                          //         width: AppSizes.s290,
-                          //         title: AppStrings.addCompany.tr(),
-                          //         isFuture: false,
-                          //         onPressed: () async {
-                          //           const url = 'https://lab.r-m.dev/frontend/emp-app-request/create';
-                          //
-                          //           // On web, open in browser. On mobile, use WebView
-                          //           if (PlatformIs.web) {
-                          //             final uri = Uri.parse(url);
-                          //             if (await url_launcher.canLaunchUrl(uri)) {
-                          //               await url_launcher.launchUrl(
-                          //                 uri,
-                          //                 mode: url_launcher.LaunchMode.externalApplication
-                          //               );
-                          //             } else {
-                          //               if (mounted) {
-                          //                 ScaffoldMessenger.of(context).showSnackBar(
-                          //                   SnackBar(content: Text('Could not open $url')),
-                          //                 );
-                          //               }
-                          //             }
-                          //           } else {
-                          //             // On mobile, navigate to WebView screen
-                          //             await Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(
-                          //                 builder: (context) => Scaffold(
-                          //                   appBar: AppBar(
-                          //                     toolbarHeight: 0.0,
-                          //                   ),
-                          //                   body: WebViewStackOffers(url),
-                          //                 ),
-                          //               ),
-                          //             );
-                          //           }
-                          //         },
-                          //         titleWidget: Text(
-                          //           AppStrings.addCompany.tr(),
-                          //           style: Theme.of(context)
-                          //               .textTheme
-                          //               .titleMedium
-                          //               ?.copyWith(
-                          //             color: Theme.of(context)
-                          //                 .colorScheme
-                          //                 .onPrimary,
-                          //           ),
-                          //         ),
-                          //       )
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const LanguageDropdownButton()
-            ],
+                const LanguageDropdownButton()
+              ],
+            ),
           ),
         ),
       ),

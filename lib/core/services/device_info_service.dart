@@ -9,6 +9,7 @@ import 'app_config_service.dart';
 import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 
 
+
 abstract class DeviceInformationService {
   static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   static Future<String?> getCurrentPlatformId() async {
@@ -22,10 +23,10 @@ abstract class DeviceInformationService {
           androidId = await platform.invokeMethod('getAndroidId');
 
         } catch (e) {
-          debugPrint("Error fetching Android ID: $e");
+          print("Error fetching Android ID: $e");
         }
         deviceIdentifier = "$androidId";
-        debugPrint("androidId -> ${androidId}");
+        print("androidId -> ${androidId}");
       } else if (PlatformIs.iOS) {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";

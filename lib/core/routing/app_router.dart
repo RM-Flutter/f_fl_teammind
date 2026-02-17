@@ -18,6 +18,7 @@ import 'package:app_test/features/requests/details/views/request_details_screen.
 import 'package:app_test/features/requests/view_by_ids/views/requests_by_id_screen.dart';
 import 'package:app_test/features/requests/calender/views/requests_calendar_screen.dart';
 import 'package:app_test/features/requests/main_request_layout/views/requests_screen.dart';
+import 'package:app_test/features/services/free_service/views/free_services_home_screen.dart';
 import 'package:app_test/features/services/free_service/views/widgets/smart_card/smart_card_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -88,6 +89,8 @@ enum AppRoutes {
 
 
   home,
+  freeServicesHome,
+
   splash,
   onboarding,
   fingerprintView,
@@ -905,33 +908,33 @@ GoRouter goRouter(BuildContext context) {
                   );
                 },
               ),
-              // GoRoute(
-              //   path: 'free-services-home',
-              //   parentNavigatorKey: rootNavigatorKey,
-              //   name: AppRoutes.freeServicesHome.name,
-              //   pageBuilder: (context, state) {
-              //     final lang = state.uri.queryParameters['lang'];
-              //     if (lang != null) {
-              //       final locale = Locale(lang);
-              //       context.setLocale(locale);
-              //     }
-              //     final animationController = AnimationController(
-              //       vsync: ticker,
-              //     );
-              //     animationController.addStatusListener((status) {
-              //       if (status == AnimationStatus.completed ||
-              //           status == AnimationStatus.dismissed) {
-              //         animationController.dispose();
-              //       }
-              //     });
-              //     return AppRouterTransitions.slideTransition(
-              //       key: state.pageKey,
-              //       child: const FreeServicesHomeScreen(),
-              //       animation: animationController,
-              //       begin: const Offset(1.0, 0.0),
-              //     );
-              //   },
-              // ),
+              GoRoute(
+                path: 'free-services-home',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.freeServicesHome.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const FreeServicesHomeScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
               GoRoute(
                 path: 'my-cv',
                 parentNavigatorKey: rootNavigatorKey,

@@ -1,4 +1,6 @@
 
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+
 abstract class AppConstants {
   static  List<Map<String, dynamic>>? requestsTypess;
   static  List? fingerPrints = [];
@@ -6,9 +8,7 @@ abstract class AppConstants {
 
   /// Get base URL from cache or use default
   static String get base {
-    final cachedBase = "https://a4.r-m.dev";
-
-    // final cachedBase = CacheHelper.getString("custom_domain");
+    final cachedBase = CacheHelper.getString("custom_domain");
     if (cachedBase != null && cachedBase.isNotEmpty) {
       return cachedBase;
     }
@@ -17,12 +17,11 @@ abstract class AppConstants {
 
   static String get baseUrl => "$base/api";
   static const String refreshTokenBaseUrl = "http://refresh_token_test-api/";
-  static const String appPackageName = "com.rightmindtest.leeds";
+  static const String appPackageName = "com.rightminddev.rmemp";
   static const String fontFamilyPoppins = 'Poppins';
   static const String fontFamilyIbrand = 'Ibrand';
   static const String country = 'EG';
   static const String countryCode = '+20';
-  static const String fontFamilyInter = 'Inter';
   static const String fontFamilyMontserratArabic = 'Montserrat-Arabic';
   static String get socialLoginGoogle => '$base/auth/socialite/google/login?redirect_url=$base/front-end/social_login&device_unique_id=';
   static String get socialLoginFacebook => '$base/auth/socialite/facebook/login?redirect_url=$base/front-end/social_login&device_unique_id=';

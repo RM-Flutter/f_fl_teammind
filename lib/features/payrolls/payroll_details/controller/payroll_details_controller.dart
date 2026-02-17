@@ -15,58 +15,53 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:html' if (dart.library.io) '../../../../../core/services/dart_html_stub.dart' as html;
 
+
 class PayrollDetailsViewModel extends ChangeNotifier {
   PayrollModel? payroll;
   UserSettingsModel? currentUserSettings;
   bool isLoading = true;
   bool isLoadingPdf = true;
   String? localFilePath;
-
-  void updateLoadingStatus({required bool loadingValue}) {
-    isLoading = loadingValue;
+  void updateLoadingStatus({required bool laodingValue}) {
+    isLoading = laodingValue;
     notifyListeners();
   }
 
-  Future<void> initializePayrollDetailsScreen({
-    required BuildContext context,
-    required String? payrollId,
-    String? empId,
-  }) async {
+  Future<void> initializePayrollDetailsScreen(
+      {required BuildContext context,
+        required String? payrollId,
+        String? empId}) async {
     if (payrollId == null) return;
-
-    updateLoadingStatus(loadingValue: true);
-
-    final jsonString = CacheHelper.getString("US1");
-    if (jsonString != null && jsonString.isNotEmpty) {
-      final gCache = json.decode(jsonString) as Map<String, dynamic>;
+    updateLoadingStatus(laodingValue: true);
+    var jsonString;
+    UserSettingsModel userSettingsModel;
+    var gCache;
+    jsonString = CacheHelper.getString("US1");
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
-      currentUserSettings = UserSettingsModel.fromJson(gCache);
     }
-
+    userSettingsModel = UserSettingsModel.fromJson(gCache);
+    currentUserSettings = userSettingsModel;
     await _getPayrollDetailsData(
-      context: context,
-      payrollId: payrollId,
-      empId: empId,
-    );
-
-    updateLoadingStatus(loadingValue: false);
+        context: context, payrollId: payrollId, empId: empId);
+    updateLoadingStatus(laodingValue: false);
   }
-
-  /// Download PDF file (Web & Mobile)
-  Future<void> downloadPdf(BuildContext context, String id, {String? slug}) async {
+  downloadPdf(context, id , {slug}) async {
     isLoadingPdf = true;
     notifyListeners();
-
     try {
       final pdfUrl = '${AppConstants.baseUrl}/rm_payroll/v1/payroll/$id/pdf';
 
       if (kIsWeb) {
-        // Web: use dart:html
+        // For web, download directly using dart:html
         try {
+          // Fetch the PDF file
           final response = await html.window.fetch(pdfUrl);
           final blob = await (response as dynamic).blob();
           final blobUrl = html.Url.createObjectUrlFromBlob(blob);
 
+          // Create anchor element to trigger download
           final anchor = html.AnchorElement(href: blobUrl)
             ..download = 'payroll_$id.pdf'
             ..style.display = 'none';
@@ -75,70 +70,78 @@ class PayrollDetailsViewModel extends ChangeNotifier {
           anchor.remove();
           html.Url.revokeObjectUrl(blobUrl);
 
+          isLoadingPdf = false;
           AlertsService.success(
-            context: context,
-            message: AppStrings.saveSucessFull.tr(),
-            title: AppStrings.saved.tr(),
-          );
+              context: context,
+              message: AppStrings.saveSucessFull.tr(),
+              title: AppStrings.saved.tr());
+          notifyListeners();
         } catch (e) {
-          debugPrint('Error downloading PDF (Web): $e');
+          debugPrint('Error downloading PDF with fetch: $e');
           // Fallback: open in new tab
-          final uri = Uri.parse(pdfUrl);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          try {
+            final uri = Uri.parse(pdfUrl);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+            isLoadingPdf = false;
+            AlertsService.success(
+                context: context,
+                message: AppStrings.saveSucessFull.tr(),
+                title: AppStrings.saved.tr());
+            notifyListeners();
+          } catch (e2) {
+            debugPrint('Error opening PDF in new tab: $e2');
+            isLoadingPdf = false;
+            AlertsService.error(
+                context: context,
+                message: e2.toString(),
+                title: AppStrings.failed.tr());
+            notifyListeners();
           }
         }
       } else {
-        // Mobile: save to local storage
-        final dir = await getApplicationDocumentsDirectory();
-        final filePath = '${dir.path}/payroll_$id.pdf';
-
-        await DioHelper.downloadData(
-          context: context,
+        // For mobile, use path_provider
+        var dir = await getApplicationDocumentsDirectory();
+        String filePath = '${dir.path}/payroll_$id.pdf';
+        await DioHelper.downloadData(context: context,
           url: pdfUrl,
           savePath: filePath,
         );
-
         localFilePath = filePath;
-
+        isLoadingPdf = false;
         AlertsService.success(
-          context: context,
-          message: AppStrings.saveSucessFull.tr(),
-          title: AppStrings.saved.tr(),
-        );
+            context: context,
+            message: AppStrings.saveSucessFull.tr(),
+            title: AppStrings.saved.tr());
+        notifyListeners();
       }
     } catch (e) {
       debugPrint("Error downloading PDF: $e");
-      AlertsService.error(
-        context: context,
-        message: e.toString(),
-        title: AppStrings.failed.tr(),
-      );
-    } finally {
       isLoadingPdf = false;
+      AlertsService.error(
+          context: context,
+          message: e.toString(),
+          title: AppStrings.failed.tr());
       notifyListeners();
     }
   }
-
-  /// Fetch payroll details from API
-  Future<void> _getPayrollDetailsData({
-    required BuildContext context,
-    required String payrollId,
-    String? empId,
-  }) async {
+  Future<void> _getPayrollDetailsData(
+      {required BuildContext context,
+        required String payrollId,
+        String? empId}) async {
     try {
       final result = await PayrollRepo.getSinglePayrollById(
-        context: context,
-        payrollId: payrollId,
-        empId: empId,
-        withValues: ['user_id'],
-      );
-
+          context: context,
+          payrollId: payrollId,
+          empId: empId,
+          withValues: ['user_id']);
       if (result.success && result.data != null) {
         payroll = PayrollModel.fromJson(result.data?['item']);
       }
     } catch (err, t) {
-      debugPrint("Error getting payroll details: $err at $t");
+      debugPrint(
+          "error while getting Payroll Details  ${err.toString()} at :- $t");
     }
   }
 }
