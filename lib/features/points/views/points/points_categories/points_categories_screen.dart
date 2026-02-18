@@ -24,7 +24,7 @@ import '../../../controllers/points_controller/points_controller.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;
-  const PointsCategoriesScreen(this.viewArrow);
+  const PointsCategoriesScreen(this.viewArrow, {super.key});
 
   @override
   _PointsCategoriesScreenState createState() => _PointsCategoriesScreenState();
@@ -67,33 +67,41 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
         return Consumer<PointsController>(
           builder: (context, points, child) {
             final jsonString = CacheHelper.getString("USG");
-            var gCache;
-            if (jsonString != null) {
+            Map<String, dynamic>? gCache;
+            if (jsonString != null && jsonString.isNotEmpty) {
               gCache = json.decode(jsonString) as Map<String, dynamic>;
             }
-            if(gCache["fawry_payout"]['active'] == true){
-              payoutName =LocalizationService.isArabic(context: context) ?
-              gCache["fawry_payout"]['title']['ar']:gCache["fawry_payout"]['title']['en'];
+            final fawryPayout = gCache?["fawry_payout"];
+            if (fawryPayout is Map && fawryPayout['active'] == true) {
+              final titleMap = fawryPayout['title'];
+              if (titleMap is Map) {
+                payoutName = LocalizationService.isArabic(context: context)
+                    ? (titleMap['ar']?.toString() ?? '')
+                    : (titleMap['en']?.toString() ?? '');
+              }
             }
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (points.isLoading == false && points.status == true) {
-                final hasPayout = points.categories.any((e) => e['title'] == payoutName);
+                final hasPayout = payoutName != null
+                    ? points.categories.any((e) => e['title'] == payoutName)
+                    : true;
                 final hasFawry = points.categories.any((e) => e['title'] == AppStrings.fawry.tr());
                 if (!hasFawry) {
-                  if (gCache["fawry"]['active'] == true) {
+                  final fawry = gCache?["fawry"];
+                  if (fawry is Map && fawry['active'] == true) {
                     points.categories.add({
                       "id": 0,
                       "title": AppStrings.fawry.tr(),
-                      "image": gCache["fawry"]['logo']
+                      "image": fawry['logo']
                     });
                   }
                 }
                 if (!hasPayout) {
-                  if (gCache["fawry_payout"]['active'] == true) {
+                  if (fawryPayout is Map && fawryPayout['active'] == true) {
                     points.categories.add({
                       "id": 0,
                       "title": payoutName,
-                      "image": gCache["fawry_payout"]['logo']
+                      "image": fawryPayout['logo']
                     });
                   }
                 }
@@ -172,8 +180,11 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                                     (points.categories[index]['image'] != null && points.categories[index]['image'].isNotEmpty)?
                                     points.categories[index]['image'][0]['file'] : "",
                                     onTap: (){
-                                      if(points.categories[index]['title'] == payoutName){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => WithdrawMoneyScreen(gCache['fawry_payout']['points_per_unit'].toString() ?? "0"),));
+                                      if(points.categories[index]['title'] == payoutName && gCache != null){
+                                        final ppu = gCache?['fawry_payout'] is Map
+                                            ? (gCache?['fawry_payout']?['points_per_unit'])?.toString()
+                                            : null;
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => WithdrawMoneyScreen(ppu ?? "0"),));
                                       }
                                       if(points.categories[index]['title'] == AppStrings.fawry.tr()){
                                         context.pushNamed(

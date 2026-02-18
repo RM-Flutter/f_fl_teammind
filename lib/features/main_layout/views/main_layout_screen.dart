@@ -95,7 +95,7 @@ class MainLayoutScreen extends StatelessWidget {
         }).toList(),
         currentIndex: viewModel.currentPage.index,
         onTap: (index) {
-          viewModel.onItemTapped(``
+          viewModel.onItemTapped(
               context: context, page: NavbarPages.values[index]);
         },
       ),

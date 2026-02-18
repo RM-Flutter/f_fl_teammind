@@ -12,6 +12,7 @@ import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:app_test/features/points/views/fawry/fawry_provider_screen.dart';
 import 'package:app_test/features/points/views/points/main_points_layout/points_screen.dart';
 import 'package:app_test/features/points/views/points/points_categories/points_categories_screen.dart';
+import 'package:app_test/features/points/controllers/points_controller/points_controller.dart';
 import 'package:app_test/features/points/views/prize/prize_screen.dart';
 import 'package:app_test/features/requests/add/views/add_request_screen.dart';
 import 'package:app_test/features/requests/details/views/request_details_screen.dart';
@@ -2082,7 +2083,10 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: PointsCategoriesScreen(true,),
+                    child: ChangeNotifierProvider(
+                      create: (_) => PointsController(),
+                      child: const PointsCategoriesScreen(true,),
+                    ),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
