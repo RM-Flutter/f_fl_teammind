@@ -554,11 +554,11 @@ class _MoreScreenState extends State<MoreScreen> {
                   // height: MediaQuery.sizeOf(context).height * 0.66,
                   decoration: ShapeDecoration(
                     gradient: LinearGradient(
-                      begin: Alignment(0, 0),
-                      end: Alignment(1, 0),
+                      begin: const Alignment(0, 0),
+                      end: const Alignment(1, 0),
                       colors: [Color(AppColors.white), Color(AppColors.whiteBlue)],
                     ),
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         topRight: Radius.circular(40),
@@ -577,7 +577,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             children: [
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -628,10 +628,18 @@ class _MoreScreenState extends State<MoreScreen> {
                                       extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
                                       pathParameters: {'lang': context.locale.languageCode})
                               ),
+                              DefaultListTile(
+                                  title: AppStrings.myPoints.tr(),
+                                  onTap: (){
+                                    context.pushNamed(AppRoutes.painterPointsViewScreen.name,
+                                        pathParameters: {'lang': context.locale.languageCode,});
+                                  },
+                                  src: "assets/images/svg/points_menu.svg"
+                              ),
                               if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
                               if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -681,7 +689,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               const SizedBox(height : 15),
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -742,7 +750,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => WebViewStack(),
+                                        builder: (context) => const WebViewStack(),
                                       ),
                                     );
                                   }
@@ -834,7 +842,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               const SizedBox(height : 15),
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(
+                                  constraints: const BoxConstraints(
                                     maxWidth: kIsWeb ? 1070 : double.infinity,
                                   ),
                                   child: Container(
@@ -855,7 +863,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return CustomizeNotificationScreen();
+                                        return const CustomizeNotificationScreen();
                                       });
                                 },
                               ),DefaultListTile(
@@ -981,7 +989,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           .textTheme
                           .bodySmall
                           ?.copyWith(
-                        color: Color(AppColors.grey4F),
+                        color: const Color(AppColors.grey4F),
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         // height: 0,
@@ -1022,7 +1030,7 @@ class DefaultListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxWidth: kIsWeb ? 1100 : double.infinity,
         ),
         child: Container(

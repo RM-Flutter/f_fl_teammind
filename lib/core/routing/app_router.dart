@@ -2007,11 +2007,11 @@ GoRouter goRouter(BuildContext context) {
         },
       ),
       GoRoute(
-          path: 'painters-point-screen',
+          path: '/:lang/painters-point-screen',
           parentNavigatorKey: rootNavigatorKey,
           name: AppRoutes.painterPointsViewScreen.name,
           pageBuilder: (context, state) {
-            final lang = state.uri.queryParameters['lang'];
+            final lang = state.pathParameters['lang'];
             if (lang != null) {
               final locale = Locale(lang);
               context.setLocale(locale);
@@ -2038,7 +2038,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.prizePointsViewScreen.name,
                 pageBuilder: (context, state) {
-                  final lang = state.uri.queryParameters['lang'];
+                  final lang = state.pathParameters['lang'];
                   final id = state.pathParameters['id'] ?? '';
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -2066,7 +2066,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.CategoriesprizePointsViewScreen.name,
                 pageBuilder: (context, state) {
-                  final lang = state.uri.queryParameters['lang'];
+                  final lang = state.pathParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
                     context.setLocale(locale);

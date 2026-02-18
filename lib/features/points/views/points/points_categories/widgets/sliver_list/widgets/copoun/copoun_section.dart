@@ -69,8 +69,10 @@ class CopounSection extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  AppImages.logoWhite,
+                                  "assets/images/app_logo.png",
                                   fit: BoxFit.cover,
+                                  height: 40,
+                                  width: 40,
                                 ),
                                 const SizedBox(width: 10,),
                                 Text(AppStrings.couponCode.tr().toUpperCase(),

@@ -126,7 +126,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
           controller: viewModel.scrollController,
           headers: [
             CoreHeader.transform(
-              pinned: true,
+              // pinned: true,
               color: Colors.white,
               shrinkHeight: AppSizes.s140,
               expandedHeight: AppSizes.s200,

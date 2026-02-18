@@ -205,12 +205,12 @@ class _HomeScreenState extends State<HomeScreen> {
           await Future.delayed(const Duration(milliseconds: 200));
         },
         child: CoreMobileScaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.scaffoldBackgroundColor),
           controller: viewModel.homeScrollController,
           headers: [
             CoreHeader.transform(
-              pinned: true,
-              color: Colors.white,
+              // pinned: true,
+              color: Color(AppColors.backgroundColor),
               shrinkHeight: AppSizes.s140,
               expandedHeight: AppSizes.s300,
               shrinkChild: Consumer<HomeController>(
@@ -312,11 +312,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        // General Screen Message Widget (always at top, not reorderable)
-        GeneralScreenMessageWidget(screenId: '/'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
+          child: GeneralScreenMessageWidget(screenId: '/'),
+        ),
         const SizedBox(height: AppSizes.s12),
-        // Bookmarks List (always at top, not reorderable)
-        const BookmarkListWidget(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.s16),
+          child: BookmarkListWidget(),
+        ),
         // Reorderable widgets
         Listener(
           onPointerMove: (event) {
@@ -392,31 +396,42 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
     }
 
+    final isArabic = LocalizationService.isArabic(context: context);
+
     return Container(
       key: ValueKey(widgetType.id),
       margin: const EdgeInsets.only(
         bottom: AppSizes.s12,
         top: AppSizes.s8,
       ),
-      child: Material(
-        color: Colors.transparent,
+      child: Card(
+        elevation: 2,
+        margin: EdgeInsets.zero,
+        color: Color(AppColors.navBarColor),
+        shadowColor: Color(AppColors.shadowColor).withOpacity(0.08),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.s12),
+        ),
         child: Stack(
           children: [
-            content,
-            // Drag handle - only this can be used to drag
+            Padding(
+              padding: const EdgeInsets.all(AppSizes.s12),
+              child: content,
+            ),
             Positioned(
               top: 8,
-              right: 8,
+              right: isArabic ? null : 8,
+              left: isArabic ? 8 : null,
               child: ReorderableDragStartListener(
                 index: index,
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.95),
+                    color: Color(AppColors.backgroundColor).withOpacity(0.95),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.15),
+                        color: Color(AppColors.shadowColor).withOpacity(0.12),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
@@ -425,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Icon(
                     Icons.drag_handle,
                     color: Color(AppColors.dark),
-                    size: 24,
+                    size: 22,
                   ),
                 ),
               ),

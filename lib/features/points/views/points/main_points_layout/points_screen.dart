@@ -36,16 +36,14 @@ class _PointsScreenState extends State<PointsScreen> {
             GetPrizeRepositoryImplementation(ApiServicesImplementation(),context), RedeemPrizeRepositoryImplementation(ApiServicesImplementation(), context)),
         child: Scaffold( resizeToAvoidBottomInset: false,
           backgroundColor: Color(0xffFFFFFF),
-          body: SafeArea(
-            child: GradientBgImage(
-              padding: EdgeInsets.zero,
-              child: CustomScrollView(
-                physics: ClampingScrollPhysics(),
-                slivers: [
-                  SliverAppBarPoints(arrow: widget.arrow,),
-                  SliverListPoints(),
-                ],
-              ),
+          body: GradientBgImage(
+            padding: EdgeInsets.zero,
+            child: CustomScrollView(
+              physics: ClampingScrollPhysics(),
+              slivers: [
+                SliverAppBarPoints(arrow: widget.arrow,),
+                SliverListPoints(),
+              ],
             ),
           ),
         ),
