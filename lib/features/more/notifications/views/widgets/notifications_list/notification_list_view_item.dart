@@ -24,16 +24,20 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
         setState(() {
           widget.notifications[widget.index]['seen'] = true;
         });
-         context.pushNamed(AppRoutes.notificationDetails.name,
+        context.pushNamed(AppRoutes.notificationDetails.name,
             pathParameters: {'lang': context.locale.languageCode,
-              "id" : widget.notifications[widget.index]['id'].toString(),
+              "id" : "${widget.notifications[widget.index]['id']}",
+              "date" : "${widget.notifications[widget.index]['created_at']}",
+              "image" :(widget.notifications[widget.index]['main_thumbnail'].isNotEmpty)? "${widget.notifications[widget.index]['main_thumbnail'][0]['file']}": "null",
+              "title" : "${widget.notifications[widget.index]['title']}",
+              "contant" : "${widget.notifications[widget.index]['content']}"
             });
       },
       child: Container(
         padding: const EdgeInsetsDirectional.symmetric(
             horizontal: AppSizes.s15, vertical: AppSizes.s12),
         decoration: BoxDecoration(
-          color: Color(AppColors.textC5),
+          color: const Color(AppColors.textC5),
           borderRadius: BorderRadius.circular(AppSizes.s15),
           boxShadow: const [
             BoxShadow(
@@ -50,7 +54,11 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
               height: 63,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFF3389EE)
+                gradient: LinearGradient(
+                  colors: [Color(0xffE6007E), Color(0xff224982)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(2),
@@ -67,7 +75,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                         height: 63,
                         circularRaduis: 63,
                       ),
-                      errorWidget: (context, url, error) =>  const Icon(
+                      errorWidget: (context, url, error) => const Icon(
                         Icons.image_not_supported_outlined,
                       )),
                 ),
@@ -79,18 +87,18 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat("yyyy/MM/dd hh:mm a", context.locale.languageCode).format(DateTime.parse(widget.notifications[widget.index]['created_at'])),
-                    style:  const TextStyle(
+                    "${widget.notifications[widget.index]['created_at']}".toUpperCase(),
+                    style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Color(0xff606060)),
                   ),
                   gapH4,
                   Text(widget.notifications[widget.index]['title'],
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: widget.notifications[widget.index]['seen'] == true? FontWeight.w300 : FontWeight.w700,
-                      color: widget.notifications[widget.index]['seen'] == true? Colors.black.withOpacity(0.5):const Color(0xff0D3B6F)),
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: widget.notifications[widget.index]['seen'] == true? FontWeight.w300 : FontWeight.w700,
+                        color: widget.notifications[widget.index]['seen'] == true? Colors.black.withOpacity(0.5):Color(0xff0D3B6F)),
                   )
                   // Html(
                   //     shrinkWrap: true,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -6,14 +7,16 @@ import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/fingerprint_service.dart';
 import 'package:app_test/features/fingerprint/data/models/fingerprint_model.dart';
-import 'package:app_test/features/fingerprint/data/repo/fingerprint_repo.dart';
-import 'package:dio/dio.dart' as dio_multipart;
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/services/backend_services/api_service/dio_api_service/dio.dart';
 
 
 class FingerprintViewModel extends ChangeNotifier {
@@ -54,16 +57,16 @@ class FingerprintViewModel extends ChangeNotifier {
   Future<void> initializeFingerprintScreen(
       {required BuildContext context, String? empId}) async {
     updateLoadingStatus(laodingValue: true);
-    var jsonString;
-    UserSettingsModel? userSettingsModel;
-    var gCache;
+    String? jsonString;
+    Map<String, dynamic>? gCache;
     jsonString = CacheHelper.getString("US1");
-    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+    if (jsonString != null && jsonString.isNotEmpty) {
+      gCache = json.decode(jsonString) as Map<String, dynamic>;
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+      userSettings = UserSettingsModel.fromJson(gCache);
+    } else {
+      userSettings = null;
     }
-    userSettingsModel = UserSettingsModel.fromJson(gCache);
-    userSettings = userSettingsModel;
     await _getEmployeeFingerprints(context: context, empId: empId);
     await loadFingerprintsFromPreferences();
     updateLoadingStatus(laodingValue: false);
@@ -142,7 +145,7 @@ class FingerprintViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     // Prepare the data as JSON without base64 encoding files
-    final fingerprintData = await prepareFingerprintData(fingerprints);
+    await prepareFingerprintData(fingerprints);
     FormData formData = await buildFormData(fingerprints);
 
     try {
@@ -151,7 +154,9 @@ class FingerprintViewModel extends ChangeNotifier {
       final response = await DioHelper.postFormData(
           context: context,
           url: "/rm_fingerprint/v1/add_fingerprints",
-          formdata: formData
+          formdata: formData,
+          query: null,
+          data: const {}
       );
 
       // Handle the response
@@ -243,7 +248,7 @@ class FingerprintViewModel extends ChangeNotifier {
     } catch (error) {
       String errorMessage;
 
-      if (error is DioError) {
+      if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -299,7 +304,7 @@ class FingerprintViewModel extends ChangeNotifier {
         }
 
         for (var file in filesList) {
-          Uint8List fileBytes = Uint8List.fromList(base64Decode(file['bytes']) as List<int>);
+          Uint8List fileBytes = base64Decode(file['bytes']);
           final fileName = file['fileName'] as String? ?? 'image.jpg';
           final mimeType = file['mimeType'] as String? ?? 'application/octet-stream';
 
@@ -332,10 +337,10 @@ class FingerprintViewModel extends ChangeNotifier {
         'finger_day': fingerprint['finger_day'],
       };
 
-      if (fingerprint['files[]'] != null && fingerprint['files'].isNotEmpty) {
+      if (fingerprint['files'] != null && fingerprint['files'].isNotEmpty) {
         List<Map<String, dynamic>> files = [];
 
-        for (var file in fingerprint['files[]']) {
+        for (var file in fingerprint['files']) {
           files.add({
             'fileName': file['fileName'],
             'mimeType': file['mimeType'],
@@ -343,7 +348,7 @@ class FingerprintViewModel extends ChangeNotifier {
           });
         }
 
-        entry['files[]'] = files;
+        entry['files'] = files;
       }
 
       processed.add(entry);

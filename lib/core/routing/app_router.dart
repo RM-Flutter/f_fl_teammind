@@ -638,7 +638,7 @@ GoRouter goRouter(BuildContext context) {
               CacheHelper.deleteData(key: "value");
               return AppRouterTransitions.slideTransition(
                 key: state.pageKey,
-                child: NotificationScreen(false),
+                child: const NotificationScreen(false),
                 animation: animationController,
                 begin: begin ?? const Offset(1.0, 0.0),
               );
@@ -1923,50 +1923,26 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
+
+
       GoRoute(
-          path: '/:lang/notification-screen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.notification.name,
-          builder: (context, state) => NotificationScreen(true),
-          routes: [
-            GoRoute(
-              path: 'add-notification',
-              parentNavigatorKey: rootNavigatorKey,
-              name: AppRoutes.addNotification.name,
-              pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
-                final lang = state.uri.queryParameters['lang'];
-                if (lang != null) {
-                  final locale = Locale(lang);
-                  context.setLocale(locale);
-                }
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: const AddNotificationScreen(),
-                  animation: animationController,
-                  begin: begin ?? const Offset(1.0, 0.0),
-                );
-              },
-            ),
-          ]
+        path: '/:lang/notification-screen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.notification.name,
+        builder: (context, state) => const NotificationScreen(true),
       ),
       GoRoute(
-        path: '/:lang/notification-details-screen/:id',
+        path: '/:lang/notification-details-screen/:title/:image/:contant/:date/:id',
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.notificationDetails.name,
         pageBuilder: (context, state) {
           Offset? begin = state.extra as Offset?;
           final lang = state.uri.queryParameters['lang'];
+          final title = state.pathParameters['title'] ?? '';
           final id = state.pathParameters['id'] ?? '';
+          final image = state.pathParameters['image'] ?? '';
+          final contant = state.pathParameters['contant'] ?? '';
+          final date = state.pathParameters['date'] ?? '';
 
           if (lang != null) {
             final locale = Locale(lang);
@@ -1985,6 +1961,10 @@ GoRouter goRouter(BuildContext context) {
           return AppRouterTransitions.slideTransition(
             key: state.pageKey,
             child: NotificationDetailsScreen(
+              date: date,
+              title: title,
+              image: image,
+              contant: contant,
               id: id,
             ),
             animation: animationController,
@@ -1992,6 +1972,76 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
+      // GoRoute(
+      //     path: '/:lang/notification-screen',
+      //     parentNavigatorKey: rootNavigatorKey,
+      //     name: AppRoutes.notification.name,
+      //     builder: (context, state) => NotificationScreen(true),
+      //     routes: [
+      //       GoRoute(
+      //         path: 'add-notification',
+      //         parentNavigatorKey: rootNavigatorKey,
+      //         name: AppRoutes.addNotification.name,
+      //         pageBuilder: (context, state) {
+      //           Offset? begin = state.extra as Offset?;
+      //           final lang = state.uri.queryParameters['lang'];
+      //           if (lang != null) {
+      //             final locale = Locale(lang);
+      //             context.setLocale(locale);
+      //           }
+      //           final animationController = AnimationController(
+      //             vsync: ticker,
+      //           );
+      //           animationController.addStatusListener((status) {
+      //             if (status == AnimationStatus.completed ||
+      //                 status == AnimationStatus.dismissed) {
+      //               animationController.dispose();
+      //             }
+      //           });
+      //           return AppRouterTransitions.slideTransition(
+      //             key: state.pageKey,
+      //             child: const AddNotificationScreen(),
+      //             animation: animationController,
+      //             begin: begin ?? const Offset(1.0, 0.0),
+      //           );
+      //         },
+      //       ),
+      //     ]
+      // ),
+      // GoRoute(
+      //   path: '/:lang/notification-details-screen/:id',
+      //   parentNavigatorKey: rootNavigatorKey,
+      //   name: AppRoutes.notificationDetails.name,
+      //   pageBuilder: (context, state) {
+      //     Offset? begin = state.extra as Offset?;
+      //     final lang = state.uri.queryParameters['lang'];
+      //     final id = state.pathParameters['id'] ?? '';
+      //
+      //     if (lang != null) {
+      //       final locale = Locale(lang);
+      //       context.setLocale(locale);
+      //     }
+      //     final animationController = AnimationController(
+      //       vsync: ticker,
+      //     );
+      //     // Make sure to dispose the controller after the transition is complete
+      //     animationController.addStatusListener((status) {
+      //       if (status == AnimationStatus.completed ||
+      //           status == AnimationStatus.dismissed) {
+      //         animationController.dispose();
+      //       }
+      //     });
+      //     return AppRouterTransitions.slideTransition(
+      //       key: state.pageKey,
+      //       child: NotificationDetailsScreen(
+      //         id: id,
+      //       ),
+      //       animation: animationController,
+      //       begin: begin ?? const Offset(1.0, 0.0),
+      //     );
+      //   },
+      // ),
+
       GoRoute(
         path: '/:lang/default-page/:type',
         parentNavigatorKey: rootNavigatorKey,

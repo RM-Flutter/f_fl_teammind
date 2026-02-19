@@ -11,6 +11,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'app.dart';
+import 'core/services/fcm_token.service.dart';
 import 'features/more/user_device/controllers/user_device_controller.dart';
 import 'core/services/app_config_service.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,8 @@ void main() async {
   registerErrorHandlers();
   await EasyLocalization.ensureInitialized();
   await CacheHelper.init();
+  FcmTokenService.initAtAppStart();
+
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -64,6 +67,9 @@ void main() async {
   } catch (ex, t) {
     debugPrint('Failed to initialize Hive Database $ex $t');
   }
+  final appConfigService = AppConfigService();
+  await appConfigService.init();
+
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/json/lang',
@@ -73,8 +79,8 @@ void main() async {
       child: MultiProvider(
         // inject all providers to make it accessable intire all application via context.
         providers: [
-          ChangeNotifierProvider<AppConfigService>(
-            create: (_) => AppConfigService(),
+          ChangeNotifierProvider<AppConfigService>.value(
+            value: appConfigService,
           ),
           ChangeNotifierProvider<MainLayoutController>(
             create: (_) => MainLayoutController(),
