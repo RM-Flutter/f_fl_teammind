@@ -5,6 +5,7 @@ import 'package:app_test/core/constants/string_convert.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/tasks/data/models/get_one_task_model.dart';
 import 'package:app_test/features/tasks/data/repos/tasks_repo.dart';
@@ -103,10 +104,6 @@ class TasksController extends ChangeNotifier {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
 
-  final TasksRepo _repo;
-
-  TasksController({TasksRepo? repo}) : _repo = repo ?? TasksRepoImpl();
-
   void initializeAddTaskScreen({required BuildContext context}) {
     getEmployees(context: context);
     _resetValues();
@@ -135,11 +132,12 @@ class TasksController extends ChangeNotifier {
     }
     isLoading = true;
     notifyListeners();
-    _repo.getEmployees(
-      context: context,
+    DioHelper.getData(
+      url: "/emp_requests/v1/employees",
       query: {
         "under_my_management" : true
       },
+      context: context,
     ).then((value){
       isLoading = false;
       employees = [];
@@ -150,7 +148,7 @@ class TasksController extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -171,12 +169,13 @@ class TasksController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _repo.getTasks(
-        context: context,
+      final response = await DioHelper.getData(
+        url: "/emp_requests/v1/task",
         query: {
           "page": currentPage,
           if (date != null) "date": StringConvert.sanitizeDateString(date),
         },
+        context: context,
       );
 
       final List<dynamic> newTasks = response.data['tasks'] ?? [];
@@ -192,7 +191,7 @@ class TasksController extends ChangeNotifier {
       errorMessage = null;
       notifyListeners();
     } catch (error) {
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -207,9 +206,9 @@ class TasksController extends ChangeNotifier {
   Future<void> getOneTask(BuildContext context, id) {
     isLoading = true;
     notifyListeners();
-    return _repo.getOneTask(
+    return DioHelper.getData(
+      url: "/emp_requests/v1/task/$id",
       context: context,
-      id: id.toString(),
     ).then((value) {
       getOneTaskModel = GetOneTaskModel.fromJson(value.data);
       subTasks = value.data['task']['subTasks'];
@@ -219,7 +218,7 @@ class TasksController extends ChangeNotifier {
       isLoading = false;
       print("TASK ERROR IN --> ${error.toString()}");
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -238,7 +237,8 @@ class TasksController extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isLoading = true;
     notifyListeners();
-    _repo.addTask(
+    DioHelper.postData(
+        url: "/emp_requests/v1/task",
         context: context,
         data: {
           "title" : titleController.text,
@@ -268,7 +268,7 @@ class TasksController extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -283,18 +283,20 @@ class TasksController extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isLoading = true;
     notifyListeners();
-    _repo.updateTask(
-        context: context,
-        id: id.toString(),
-        data: {
-          "title" : titleController.text,
-          "content" : contentController.text,
-          "due_date" : selectedDatecontroller.text,
-          "assign_to" : selectedEmployeeIds,
-          "sub_tasks": tasksList2,
-          "status": selectedStatus.toString(),
-          "icon": selectedIcon.toString(),
-        }
+    final body = <String, dynamic>{
+      "title": titleController.text,
+      "content": contentController.text,
+      "due_date": selectedDatecontroller.text,
+      "assign_to": selectedEmployeeIds,
+      "sub_tasks": tasksList2,
+      "status": selectedStatus.toString(),
+      "icon": selectedIcon.toString(),
+    };
+    DioHelper.putData(
+      url: "/emp_requests/v1/task/$id",
+      context: context,
+      query: null,
+      data: body,
     ).then((value){
       if(value.data['status'] == true){
         Navigator.pop(context);
@@ -314,7 +316,7 @@ class TasksController extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -337,18 +339,20 @@ class TasksController extends ChangeNotifier {
     listIds = listIds.isNotEmpty ? [listIds.first] : [];
     isUpdateLoading = true;
     notifyListeners();
-    _repo.updateTask(
-        context: context,
-        id: id.toString(),
-        data: {
-          "title" : title,
-          "content" : content,
-          if(due != null && due.toString().isNotEmpty) "due_date" : due.toString(),
-          "assign_to" : (assign as List<AssignTo>).map((e) => e.id).toList(),
-          "sub_tasks": (subTask as List<SubTasks>).map((e) => e.toJson()).toList(),
-          "status": status,
-          "icon": icon,
-        }
+    final body = <String, dynamic>{
+      "title": title,
+      "content": content,
+      if (due != null && due.toString().isNotEmpty) "due_date": due.toString(),
+      "assign_to": (assign as List<AssignTo>).map((e) => e.id).toList(),
+      "sub_tasks": (subTask as List<SubTasks>).map((e) => e.toJson()).toList(),
+      "status": status,
+      "icon": icon,
+    };
+    DioHelper.putData(
+      url: "/emp_requests/v1/task/$id",
+      context: context,
+      query: null,
+      data: body,
     ).then((value){
       if(value.data['status'] == true){
         AlertsService.success(
@@ -367,7 +371,7 @@ class TasksController extends ChangeNotifier {
     }).catchError((error){
       isUpdateLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -381,12 +385,12 @@ class TasksController extends ChangeNotifier {
   updateStatusTask(BuildContext context, id) async{
     isLoading = true;
     notifyListeners();
-    _repo.updateStatusTask(
-        context: context,
-        id: id.toString(),
-        data: {
-          "status" : "completed"
-        }
+    final body = <String, dynamic>{"status": "completed"};
+    DioHelper.patchData(
+      url: "/emp_requests/v1/task/$id/status",
+      context: context,
+      query: null,
+      data: body,
     ).then((value){
       if(value.data['status'] == true){
         AlertsService.success(
@@ -405,7 +409,7 @@ class TasksController extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();

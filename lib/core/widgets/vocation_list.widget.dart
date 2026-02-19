@@ -27,11 +27,11 @@ class VacationListWidget extends StatelessWidget {
 
   const VacationListWidget(
       {super.key,
-      this.requests,
-      required this.tap,
-      this.paddingBetweenVocations = AppSizes.s12,
-      this.sectionPadding = AppSizes.s32,
-      this.isInRequestsPage = false});
+        this.requests,
+        required this.tap,
+        this.paddingBetweenVocations = AppSizes.s12,
+        this.sectionPadding = AppSizes.s32,
+        this.isInRequestsPage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class VacationListWidget extends StatelessWidget {
     var gCache;
     List<MapEntry<String, Balance>>? vacationBalance;
     List<Widget>? vacationWidgets;
-     Map<String, Balance>? balance ;
+    Map<String, Balance>? balance ;
     jsonString = CacheHelper.getString("US2");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -117,6 +117,7 @@ class VacationListWidget extends StatelessWidget {
                   Text(AppStrings.viewOnCalendar.tr().toUpperCase(),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        // تحسين الخطوط في الويب
                         letterSpacing: kIsWeb ? 0.5 : null,
                       ))
                 ],
@@ -132,18 +133,18 @@ class VacationListWidget extends StatelessWidget {
         child: Row(
           children: gCache == null
               ? List.generate(
-                  3,
+              3,
                   (index) => Padding(
-                      padding: EdgeInsets.only(right: paddingBetweenVocations!),
-                      child: ShimmerAnimatedLoading(
-                        width: (LayoutService.getWidth(context) -
-                                (AppSizes.s32 +
-                                    ((paddingBetweenVocations ?? AppSizes.s0) *
-                                        3))) /
-                            3,
-                        height: AppSizes.s120,
-                      )))
-              : vacationWidgets! ,
+                  padding: EdgeInsets.only(right: paddingBetweenVocations!),
+                  child: ShimmerAnimatedLoading(
+                    width: (LayoutService.getWidth(context) -
+                        (AppSizes.s32 +
+                            ((paddingBetweenVocations ?? AppSizes.s0) *
+                                3))) /
+                        3,
+                    height: AppSizes.s120,
+                  )))
+              : vacationWidgets ,
         ),
       ),
     );
@@ -159,16 +160,16 @@ class VacationCard extends StatelessWidget {
   final String? userId;
   bool tap = true;
   var type;
-   VacationCard(
+  VacationCard(
       {super.key,
-      this.isInRequestsPage = false,
-      this.sectionPadding,
-      required this.tap,
-      this.type,
-      required this.vocation,
-      this.paddingBetweenVocations,
-      this.userId,
-      this.customBody});
+        this.isInRequestsPage = false,
+        this.sectionPadding,
+        required this.tap,
+        this.type,
+        required this.vocation,
+        this.paddingBetweenVocations,
+        this.userId,
+        this.customBody});
 
   @override
   Widget build(BuildContext context) {
@@ -200,25 +201,25 @@ class VacationCard extends StatelessWidget {
     return InkWell(
       onTap: tap == false ?()async {} : () async => isInRequestsPage == false
           ? await context.pushNamed(AppRoutes.requestsById.name,
-              pathParameters: {
-                  'type': type ?? "me",
-                  'id': vocation.key,
-                  'lang': context.locale.languageCode
-                },
-              extra: {
-                  'offset': const Offset(1.0, 0.0),
-                  'userId': userId
-                })
-          // if the old page is request page , so i dont need to pass type as path parameter becouse the current location is already contain type parameter
+          pathParameters: {
+            'type': type ?? "me",
+            'id': vocation.key,
+            'lang': context.locale.languageCode
+          },
+          extra: {
+            'offset': const Offset(1.0, 0.0),
+            'userId': userId
+          })
+      // if the old page is request page , so i dont need to pass type as path parameter becouse the current location is already contain type parameter
           : await context.pushNamed(AppRoutes.requestsById.name,
-              pathParameters: {
-                  'id': vocation.key,
-                'type': type,
-                  'lang': context.locale.languageCode
-                },
-              extra: {
-                  'userId': userId
-                }),
+          pathParameters: {
+            'id': vocation.key,
+            'type': type,
+            'lang': context.locale.languageCode
+          },
+          extra: {
+            'userId': userId
+          }),
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         height: AppSizes.s120,
@@ -240,50 +241,70 @@ class VacationCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             if(vocation.value.max != -1) gapH18,
-             Column(
-               mainAxisAlignment: MainAxisAlignment.center,
-               crossAxisAlignment: CrossAxisAlignment.center,
-               children: [
-                if(vocation.value.max != -1) AutoSizeText(
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if(vocation.value.max != -1) AutoSizeText(
                     AppStrings.remaining.tr(),
-                   textAlign: TextAlign.center,
-                   style: Theme.of(context).textTheme.titleSmall,
-                 ),
-                if(isTaken) AutoSizeText(
-                  AppStrings.taken.tr(),
-                   textAlign: TextAlign.center,
-                   style: Theme.of(context).textTheme.titleSmall,
-                 ),
-                 gapH4,
-                 if(isTaken) AutoSizeText(
-                     '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
-                     textAlign: TextAlign.center,
-                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                           fontWeight: FontWeight.bold,
-                           fontSize: AppSizes.s20,
-                         )),
-                 if(!isTaken && vocation.value.max != -1)AutoSizeText(
-                     '${(vocation.value.available?.toString() ?? '0') } ${(vocation.value.type?.toString().tr() ?? '')}',
-                     textAlign: TextAlign.center,
-                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                           fontWeight: FontWeight.bold,
-                           fontSize: AppSizes.s20,
-                         )),
-                 gapH4,
-                 if (vocation.value.max != -1 &&
-                     vocation.value.available != -1)
-                   AutoSizeText(
-                     '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
-                     textAlign: TextAlign.center,
-                     style: const TextStyle(
-                       fontWeight: FontWeight.bold,
-                       fontSize: 12,
-                       height: 1.0,
-                       color: Colors.white,
-                     ),
-                   ),
-               ],
-             )
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  if(isTaken) AutoSizeText(
+                    AppStrings.taken.tr(),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  gapH4,
+                  if(isTaken)
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: AutoSizeText(
+                            '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppSizes.s20,
+                            ),
+                            minFontSize: 10,
+                            maxLines: 2),
+                      ),
+                    ),
+                  if(!isTaken && vocation.value.max != -1)
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: AutoSizeText(
+                            '${(vocation.value.available?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppSizes.s20,
+                            ),
+                            minFontSize: 10,
+                            maxLines: 2),
+                      ),
+                    ),
+                  gapH4,
+                  if (vocation.value.max != -1 &&
+                      vocation.value.available != -1)
+                    AutoSizeText(
+                      '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        height: 1.0,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

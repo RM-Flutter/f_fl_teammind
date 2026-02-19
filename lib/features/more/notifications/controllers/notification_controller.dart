@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +17,8 @@ import 'package:app_test/features/more/notifications/data/remote_data/notificati
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/more/notifications/data/models/get_one_notification_model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
+
+import '../../../../core/platform/platform_is.dart';
 
 class NotificationProviderModel extends ChangeNotifier {
   bool isLoading = false;
@@ -74,15 +78,15 @@ class NotificationProviderModel extends ChangeNotifier {
   void _resetValues() {
     // selectedType = null;
     // selectedDatecontroller = TextEditingController();
-     contentArController = TextEditingController();
-     titleArController = TextEditingController();
-     contentEnController = TextEditingController();
-     titleEnController = TextEditingController();
-     selectNotificationType = null;
-     listXAttachmentPersonalImage = [];
-     listAttachmentPersonalImage = [];
-     listIds = [];
-     listIdsDepartment = [];
+    contentArController = TextEditingController();
+    titleArController = TextEditingController();
+    contentEnController = TextEditingController();
+    titleEnController = TextEditingController();
+    selectNotificationType = null;
+    listXAttachmentPersonalImage = [];
+    listAttachmentPersonalImage = [];
+    listIds = [];
+    listIdsDepartment = [];
   }
   bool hasMoreData(int length) {
     if (length < expectedPageSize) {
@@ -99,7 +103,7 @@ class NotificationProviderModel extends ChangeNotifier {
   }
   void getEmployees({required BuildContext context}) {
     var jsonString;
-    Map<String, dynamic> gCache = {};
+    var gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
@@ -107,9 +111,12 @@ class NotificationProviderModel extends ChangeNotifier {
     }
     isLoading = true;
     notifyListeners();
-    NotificationsRepo.getEmployees(
+    DioHelper.getData(
+      url: "/emp_requests/v1/employees",
+      query: {
+        "under_my_management" : true
+      },
       context: context,
-      underMyManagement: true,
     ).then((value){
       isLoading = false;
       employees = [];
@@ -120,7 +127,7 @@ class NotificationProviderModel extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -130,9 +137,13 @@ class NotificationProviderModel extends ChangeNotifier {
   void getDepartment({required BuildContext context}) {
     isLoading = true;
     notifyListeners();
-    NotificationsRepo.getDepartments(
+    DioHelper.getData(
+      url: "/departments/entities-operations",
+      query: {
+        "itemsCount" : 200,
+        "under_my_management" : true,
+      },
       context: context,
-      underMyManagement: true,
     ).then((value){
       isLoading = false;
       departments = List<Map<String, dynamic>>.from(value.data['data']);
@@ -140,7 +151,7 @@ class NotificationProviderModel extends ChangeNotifier {
     }).catchError((error){
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -149,24 +160,35 @@ class NotificationProviderModel extends ChangeNotifier {
   }
   Future<void> getNotification(BuildContext context, {int? page, forWho}) async {
     if(page != null){currentPage = page;}
-    debugPrint("currentPage is --> $currentPage}");
+    print("currentPage is --> $currentPage}");
+    var jsonString;
+    var gCache;
+    jsonString = CacheHelper.getString("US1");
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+    }
     isGetNotificationLoading = true;
     notifyListeners();
     try {
-      final response = await NotificationsRepo.getNotifications(
-        context: context,
-        itemsCount: itemsCount,
-        page: page ?? currentPage,
-        forWho: forWho,
+      final response = await DioHelper.getData(
+        url: (gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))?
+        "/rmnotifications/entities-operations":"/emp_requests/v1/notifications/list",
+        context: context, // Pass this explicitly only if necessary
+        query: {
+          "itemsCount": itemsCount,
+          "page": page ?? currentPage,
+          "for" : forWho
+        },
       );
 
-       newNotifications = response.data['notifications'] ?? [];
+      newNotifications = (gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))?
+      response.data['data'] ?? []:response.data['notifications'] ?? [];
       if (page == 1) {
         notifications.clear(); // Clear only when loading the first page
       }
       if (newNotifications.isNotEmpty) {
         notifications.addAll(newNotifications);
-        debugPrint("LENGTH IS --> ${newNotifications.length}");
+        print("LENGTH IS --> ${newNotifications.length}");
         if (hasMore) currentPage++;
       } else {
         hasMoreNotifications = false; // No more data to fetch
@@ -174,7 +196,7 @@ class NotificationProviderModel extends ChangeNotifier {
 
       isGetNotificationSuccess = true;
     } catch (error) {
-      getNotificationErrorMessage = error is DioException
+      getNotificationErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -186,9 +208,10 @@ class NotificationProviderModel extends ChangeNotifier {
     isGetNotificationLoading = true;
     notifyListeners();
     try {
-      final response = await NotificationsRepo.getNotificationSingle(
+      final response = await DioHelper.getData(
+        url: "/rmnotifications/entities-operations/$id",
         context: context,
-        id: id.toString(),
+        query: null,
       );
       if(response.data["status"] == true){
         notificationModel = NotificationSingleModel.fromJson(response.data['item']);
@@ -197,7 +220,7 @@ class NotificationProviderModel extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
-      getNotificationErrorMessage = error is DioException
+      getNotificationErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
     } finally {
@@ -206,21 +229,43 @@ class NotificationProviderModel extends ChangeNotifier {
     }
   }
   addNotification(BuildContext context, {empIds, depIds})async {
+    if(selectNotificationType == null || selectNotificationType!.toString().isEmpty){
+      AlertsService.warning(
+          context: context,
+          message: "${AppStrings.type.tr()} ${AppStrings.isRequired.tr()}",
+          title: AppStrings.warning.tr());
+      return;
+    }
     isLoading = true;
     notifyListeners();
-    debugPrint("empIds is --> $empIds");
-    debugPrint("empIds is --> ${listXAttachmentPersonalImage.length}");
-    final image = listAttachmentPersonalImage
-        .map((e) => XFile(e["compressed"].path)) // تحويل File → XFile
-        .toList();
-    final images = await Future.wait(
+    print("empIds is --> ${empIds}");
+    print("empIds is --> ${listXAttachmentPersonalImage.length}");
+
+    final images = listXAttachmentPersonalImage.isNotEmpty
+        ? await Future.wait(
       listXAttachmentPersonalImage.map(
-            (file) async => await MultipartFile.fromFile(
-          file.path,
-          filename: file.name,
-        ),
+            (file) async {
+          // على الويب، استخدام readAsBytes بدلاً من path
+          if (kIsWeb || PlatformIs.web) {
+            try {
+              final bytes = await file.readAsBytes();
+              return MultipartFile.fromBytes(
+                bytes,
+                filename: file.name,
+              );
+            } catch (e) {
+              print("Error reading image bytes on web: $e");
+              // محاولة استخدام path كبديل
+              return await MultipartFile.fromFile(file.path, filename: file.name);
+            }
+          } else {
+            return await MultipartFile.fromFile(file.path, filename: file.name);
+          }
+        },
       ),
-    );
+    )
+        : [];
+
     FormData formData = FormData.fromMap({
       "titles[en]" : titleEnController.text,
       "titles[ar]" : titleArController.text,
@@ -232,17 +277,26 @@ class NotificationProviderModel extends ChangeNotifier {
       if(empIds != null && empIds.isNotEmpty)"employee_ids[]" : empIds,
       if(depIds != null && depIds.isNotEmpty)"department_ids[]" : depIds
     });
-    Response response;
+    var response;
     try{
-      response = await NotificationsRepo.addNotification(
+      response = await DioHelper.postFormData(
+        url: "/emp_requests/v1/notifications/create",
         context: context,
-        formData: formData,
+        formdata: formData,
+        query: null,
+        data: {},
       );
       if(response.data['status'] == true){
         titleEnController.clear();
         titleArController.clear();
         contentEnController.clear();
         contentArController.clear();
+        // Clear attached images after successful send
+        listXAttachmentPersonalImage.clear();
+        listAttachmentPersonalImage.clear();
+        attachedFile = null;
+        notifyListeners();
+        print("NOTI IS DONE");
         AlertsService.success(
             context: context,
             message: response.data['message'],
@@ -254,7 +308,7 @@ class NotificationProviderModel extends ChangeNotifier {
             title: AppStrings.failed.tr());
       }
     }catch (error) {
-      errorAddNotificationMessage = error is DioException
+      errorAddNotificationMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
@@ -272,6 +326,11 @@ class NotificationProviderModel extends ChangeNotifier {
     }
   }
   Future<File?> _compressImage(File file) async {
+    // على الويب، لا نحتاج إلى ضغط الصورة
+    if (kIsWeb || PlatformIs.web) {
+      return null; // على الويب، نستخدم XFile مباشرة
+    }
+
     final targetPath =
         "${file.parent.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg";
 
@@ -285,45 +344,89 @@ class NotificationProviderModel extends ChangeNotifier {
     return result != null ? File(result.path) : null;
   }
   Future<void> getProfileImageByCam() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
-    if (imageFileProfile == null) return;
+    try {
+      final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
+      if (imageFileProfile == null) return;
 
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
+      // على الويب، لا نحتاج إلى ضغط الصورة
+      if (kIsWeb || PlatformIs.web) {
+        listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+        listAttachmentPersonalImage.add({
+          "original": imageFileProfile,  // XFile
+          "compressed": imageFileProfile   // على الويب، استخدم نفس الملف
+        });
+        notifyListeners();
+        print("Image added successfully on web. Total images: ${listXAttachmentPersonalImage.length}");
+      } else {
+        File originalFile = File(imageFileProfile.path);
+        File? compressedFile = await _compressImage(originalFile);
 
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
+        if (compressedFile != null) {
+          // احفظ اللي اتنين
+          listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+          listAttachmentPersonalImage.add({
+            "original": imageFileProfile,  // XFile
+            "compressed": compressedFile   // File
+          });
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print("Error getting image from camera: $e");
+      if (kIsWeb || PlatformIs.web) {
+        Fluttertoast.showToast(
+          msg: "Error selecting image. Please try again.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
   Future<void> getProfileImageByGallery() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
-    if (imageFileProfile == null) return;
+    try {
+      final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
+      if (imageFileProfile == null) return;
 
-    File originalFile = File(imageFileProfile.path);
-    File? compressedFile = await _compressImage(originalFile);
+      // على الويب، لا نحتاج إلى ضغط الصورة
+      if (kIsWeb || PlatformIs.web) {
+        listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+        listAttachmentPersonalImage.add({
+          "original": imageFileProfile,  // XFile
+          "compressed": imageFileProfile   // على الويب، استخدم نفس الملف
+        });
+        notifyListeners();
+        print("Image added successfully on web. Total images: ${listXAttachmentPersonalImage.length}");
+      } else {
+        File originalFile = File(imageFileProfile.path);
+        File? compressedFile = await _compressImage(originalFile);
 
-    if (compressedFile != null) {
-      // احفظ اللي اتنين
-      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
-      listAttachmentPersonalImage.add({
-        "original": imageFileProfile,  // XFile
-        "compressed": compressedFile   // File
-      });
-      notifyListeners();
+        if (compressedFile != null) {
+          // احفظ اللي اتنين
+          listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+          listAttachmentPersonalImage.add({
+            "original": imageFileProfile,  // XFile
+            "compressed": compressedFile   // File
+          });
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print("Error getting image from gallery: $e");
+      if (kIsWeb || PlatformIs.web) {
+        Fluttertoast.showToast(
+          msg: "Error selecting image. Please try again.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
@@ -341,10 +444,10 @@ class NotificationProviderModel extends ChangeNotifier {
                   children: <Widget>[
                     Text(
                       AppStrings.selectPhoto.tr(),
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 20, color: Colors.black),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -361,7 +464,7 @@ class NotificationProviderModel extends ChangeNotifier {
                                     : Image.asset("assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -372,26 +475,25 @@ class NotificationProviderModel extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.gallery.tr(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 18, color: Colors.black),
                             ),
                           ],
                         ),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               onTap: () async {
                                 await getProfileImageByCam();
-                                debugPrint(image1);
-                                debugPrint(image2);
+                                print(image1);
+                                print(image2);
                                 await image2 == null
                                     ? null
                                     : Image.asset(
                                     "assets/images/profileImage.png");
                                 Navigator.pop(context);
                               },
-                              child: const CircleAvatar(
+                              child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white,
                                 child: Icon(
@@ -402,9 +504,10 @@ class NotificationProviderModel extends ChangeNotifier {
                             ),
                             Text(
                               AppStrings.camera.tr(),
-                              style: const TextStyle(fontSize: 18, color: Colors.black),
+                              style: TextStyle(fontSize: 18, color: Colors.black),
                             ),
                           ],
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                         ),
                       ],
                     ),

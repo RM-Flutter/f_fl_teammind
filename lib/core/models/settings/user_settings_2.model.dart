@@ -24,6 +24,14 @@ class UserSettings2Model extends AppSettingsModel {
     this.requestTypes,
   });
 
+  static List<String>? _parseWeekend(dynamic value) {
+    if (value == null) return null;
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+    return [value.toString()];
+  }
+
   factory UserSettings2Model.fromJson(Map<String, dynamic> json) {
     DateTime? parsedLastLogin;
     if (json['last_login'] is String) {
@@ -43,19 +51,17 @@ class UserSettings2Model extends AppSettingsModel {
       bookmark: (json['bookmark'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),
-    //   balance: json['balance'] != null
-    // ? (json['balance'] as Map<String, dynamic>).map(
-    //       (key, value) => MapEntry(key, Balance.fromJson(value)),
-    // )
-    //     : {},
+      //   balance: json['balance'] != null
+      // ? (json['balance'] as Map<String, dynamic>).map(
+      //       (key, value) => MapEntry(key, Balance.fromJson(value)),
+      // )
+      //     : {},
       canUseHolidays: json['can_use_holidays'],
-      weekend: (json['weekend'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
+      weekend: _parseWeekend(json['weekend']),
       worktime:
-          json['worktime'] != null ? Worktime.fromJson(json['worktime']) : null,
+      json['worktime'] != null ? Worktime.fromJson(json['worktime']) : null,
       requestTypes: (json['request_types'] as Map<String, dynamic>?)?.map(
-        (key, value) => MapEntry(key, RequestType.fromJson(value)),
+            (key, value) => MapEntry(key, RequestType.fromJson(value)),
       ),
     );
   }
@@ -73,7 +79,7 @@ class UserSettings2Model extends AppSettingsModel {
       'holidays': holidays?.map((e) => e.toJson()).toList(),
       'worktime': worktime?.toJson(),
       'request_types':
-          requestTypes?.map((key, value) => MapEntry(key, value.toJson())),
+      requestTypes?.map((key, value) => MapEntry(key, value.toJson())),
     };
   }
 }
@@ -145,8 +151,8 @@ class Holiday {
   }
 }
 class Title {
-   String? ar;
-   String? en;
+  String? ar;
+  String? en;
 
   Title({
     this.ar,
@@ -161,8 +167,8 @@ class Title {
   }
 }
 class ReqTitle {
-   String? ar;
-   String? en;
+  String? ar;
+  String? en;
 
   ReqTitle({
     this.ar,

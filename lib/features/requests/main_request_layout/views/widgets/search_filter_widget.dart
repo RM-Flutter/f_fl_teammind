@@ -6,6 +6,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/utils/animated_custom_dropdown/custom_dropdown.dart';
+import 'package:app_test/core/widgets/searchable_dropdown_sheet.dart';
 import 'package:app_test/features/requests/add/controller/add_new_request_controller.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/filter_controller.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/requests_controller.dart';
@@ -35,6 +36,41 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   var selectIndex;
   int? selectId;
   bool _filtersLoaded = false;
+
+  /// الحالة الحالية للفلتر (نستخدمها عند الإغلاق بدل الكاش لتجنب إرسال id بعد المسح)
+  static Map<String, String?> _buildFilterMap(AddNewRequestController viewModels, FilterController viewModel) {
+    String? fromStr;
+    String? toStr;
+    if (viewModels.selectedDateOrDatetimeRange != null &&
+        viewModels.selectedDateOrDatetimeRange!.start != null &&
+        viewModels.selectedDateOrDatetimeRange!.end != null) {
+      final arabicToEnglish = {
+        '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+        '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9',
+      };
+      String normalize(String input) {
+        return input.split('').map((c) => arabicToEnglish[c] ?? c).join();
+      }
+      final from = DateService.formateDateTimeBeforeSendToServer(
+          dateTime: viewModels.selectedDateOrDatetimeRange!.start).toString();
+      final to = DateService.formateDateTimeBeforeSendToServer(
+          dateTime: viewModels.selectedDateOrDatetimeRange!.end).toString();
+      fromStr = normalize(from);
+      toStr = normalize(to);
+    }
+    return {
+      'reqId': viewModels.selectReqId,
+      'empId': viewModel.selectEmpId,
+      'depId': viewModel.selectDepId,
+      'selectStatus': viewModels.selectStatus,
+      'from': fromStr,
+      'to': toStr,
+    };
+  }
+
+  static Map<String, String?> _emptyFilterMap() => {
+    'reqId': null, 'empId': null, 'depId': null, 'selectStatus': null, 'from': null, 'to': null,
+  };
 
   void _loadSavedFilters(BuildContext context, AddNewRequestController viewModels, FilterController viewModel) {
     if (_filtersLoaded) return;
@@ -151,339 +187,362 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                     }
 
                     final isWeb = widget.isWeb ?? false;
-                    return SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: isWeb
-                                  ? BorderRadius.circular(35.0)
-                                  : const BorderRadius.vertical(top: Radius.circular(35.0)),
-                              color: Color(AppColors.white)
+                    return PopScope(
+                      canPop: false,
+                      onPopInvokedWithResult: (didPop, result) {
+                        if (didPop) return;
+                        final vm = Provider.of<AddNewRequestController>(context, listen: false);
+                        final fc = Provider.of<FilterController>(context, listen: false);
+                        Navigator.of(context).pop(_buildFilterMap(vm, fc));
+                      },
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
                           ),
-                          width: double.infinity,
-                          height: isWeb
-                              ? null
-                              : MediaQuery.sizeOf(context).height * 0.6,
-                          constraints: isWeb
-                              ? BoxConstraints(
-                            maxHeight: MediaQuery.sizeOf(context).height * 0.8,
-                          )
-                              : null,
-                          alignment: Alignment.topCenter,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (!isWeb) ...[
-                                  const SizedBox(height: 10,),
-                                  Center(
-                                    child:Container(
-                                      width: 63,
-                                      height: 5,
-                                      decoration: BoxDecoration(
-                                          color: Color(AppColors.lightGrey),
-                                          borderRadius: BorderRadius.circular(100)
-                                      ),
-                                    ) ,
-                                  ),
-                                  const SizedBox(height: 10,),
-                                ] else
-                                  const SizedBox(height: 20,),
-                                Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            AppStrings.requests.tr().toUpperCase(),
-                                            style: TextStyle(
-                                                color: Color(AppColors.dark),
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 18
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(height: 15),
-                                      CustomDropdown.search(
-                                          selectedValue: viewModels.selectedRequestType,
-                                          borderRadius: BorderRadius.circular(AppSizes.s15),
-                                          borderSide: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .enabledBorder
-                                              ?.borderSide,
-                                          hintText: AppStrings.requestType.tr(),
-                                          hintStyle: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .hintStyle,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: isWeb
+                                    ? BorderRadius.circular(35.0)
+                                    : const BorderRadius.vertical(top: Radius.circular(35.0)),
+                                color: Color(AppColors.white)
+                            ),
+                            width: double.infinity,
+                            height: isWeb
+                                ? null
+                                : MediaQuery.sizeOf(context).height * 0.6,
+                            constraints: isWeb
+                                ? BoxConstraints(
+                              maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+                            )
+                                : null,
+                            alignment: Alignment.topCenter,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (!isWeb) ...[
+                                    const SizedBox(height: 10,),
+                                    Center(
+                                      child:Container(
+                                        width: 63,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                            color: Color(AppColors.lightGrey),
+                                            borderRadius: BorderRadius.circular(100)
+                                        ),
+                                      ) ,
+                                    ),
+                                    const SizedBox(height: 10,),
+                                  ] else
+                                    const SizedBox(height: 20,),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppStrings.requests.tr().toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Color(AppColors.dark),
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 18
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(height: 15),
+                                        SearchableDropdownSheet(
                                           items: viewModel.requestsTypes,
-                                          nameKey: "title",
+                                          selectedValue: viewModels.selectedRequestType,
+                                          nameKey: 'title',
+                                          hintText: AppStrings.requestType.tr(),
+                                          hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                          height: 65,
+                                          borderRadius: BorderRadius.circular(AppSizes.s10),
+                                          borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                          fieldSuffixIcon: InkWell(
+                                            onTap: () async {
+                                              viewModels.selectedRequestType = null;
+                                              viewModels.selectReqId = null;
+                                              viewModels.reqType = null;
+                                              await CacheHelper.deleteData(key: "reqId");
+                                              if (!context.mounted) return;
+                                              setState(() {});
+                                            },
+                                            child: const Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                              size: 20,
+                                            ),
+                                          ),
                                           onChanged: (value){
                                             viewModels.selectedRequestType = value;
-                                            viewModels.selectReqId = value['id'].toString();
-                                            viewModels.reqType = value['type'].toString();
-                                            CacheHelper.setString(key: "reqId", value: value['id'].toString());
-                                            viewModels.controller.clear();
-                                            setState(() {
-
-                                            });
+                                            viewModels.selectReqId = value['id']?.toString();
+                                            viewModels.reqType = value['type']?.toString();
+                                            if (viewModels.selectReqId != null && viewModels.selectReqId!.isNotEmpty) {
+                                              CacheHelper.setString(key: "reqId", value: viewModels.selectReqId!);
+                                            }
+                                            setState(() {});
                                           },
-                                          contentPadding: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .contentPadding
-                                              ?.resolve(LocalizationService.isArabic(
-                                              context: context)
-                                              ? ui.TextDirection.rtl
-                                              : ui.TextDirection.ltr)),
-                                      const SizedBox(height: 15),
-                                      defaultDropdownField(
-                                          value: viewModels.selectStatus,
-                                          title: viewModels.selectStatus ?? AppStrings.status.tr(),
-                                          hasShadows: false,
-                                          items: viewModels.status!.map((e) => DropdownMenuItem(
-                                            value: e.toString(),
-                                            child: Text(
-                                              e.toString().tr().toString(),
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(AppColors.almostBlack)
-                                              ),),
-                                          ),
-                                          ).toList(),
-                                          onChanged: (String? values) {
-                                            setState(() {
-                                              viewModels.selectStatus = values;
+                                        ),
+                                        const SizedBox(height: 15),
+                                        defaultDropdownField(
+                                            value: viewModels.selectStatus,
+                                            title: viewModels.selectStatus ?? AppStrings.status.tr(),
+                                            hasShadows: false,
+                                            items: viewModels.status!.map((e) => DropdownMenuItem(
+                                              value: e.toString(),
+                                              child: Text(
+                                                e.toString().tr().toString(),
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(AppColors.almostBlack)
+                                                ),),
+                                            ),
+                                            ).toList(),
+                                            onChanged: (String? values) {
+                                              setState(() {
+                                                viewModels.selectStatus = values;
+                                              },
+                                              );
+                                            }
+                                        ),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
+                                          SearchableDropdownSheet(
+                                            items: viewModel.departments,
+                                            selectedValue: viewModel.selectedDepartment,
+                                            nameKey: 'title',
+                                            fieldSuffixIcon: InkWell(
+                                              onTap: () async {
+                                                viewModel.selectedDepartment = null;
+                                                viewModel.selectDepId = null;
+                                                await CacheHelper.deleteData(key: "depId");
+                                                if (!context.mounted) return;
+                                                setState(() {});
+                                              },
+                                              child: const Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            hintText: AppStrings.department.tr(),
+                                            hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                            height: 65,
+                                            borderRadius: BorderRadius.circular(AppSizes.s10),
+                                            borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            onChanged: (value){
+                                              viewModel.selectedDepartment = value;
+                                              viewModel.selectDepId = value['id']?.toString();
+                                              setState(() {});
                                             },
-                                            );
-                                          }
-                                      ),
-                                      if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
-                                      if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)CustomDropdown.search(
-                                          selectedValue: viewModel.selectedDepartment,
-                                          borderRadius: BorderRadius.circular(AppSizes.s15),
-                                          borderSide: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .enabledBorder
-                                              ?.borderSide,
-                                          hintText: AppStrings.department.tr(),
-                                          hintStyle: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .hintStyle,
-                                          items: viewModel.departments,
-                                          nameKey: "title",
-                                          onChanged: (value){
-                                            viewModel.selectedDepartment = value;
-                                            viewModel.selectDepId = value['id'].toString();
-                                            setState(() {});
-                                          },
-                                          contentPadding: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .contentPadding
-                                              ?.resolve(LocalizationService.isArabic(
-                                              context: context)
-                                              ? ui.TextDirection.rtl
-                                              : ui.TextDirection.ltr)),
-                                      if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
-                                      if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)  CustomDropdown.search(
-                                          selectedValue: viewModel.selectedEmployee,
-                                          borderRadius: BorderRadius.circular(AppSizes.s15),
-                                          borderSide: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .enabledBorder
-                                              ?.borderSide,
-                                          hintText: AppStrings.employeeName.tr(),
-                                          hintStyle: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .hintStyle,
-                                          items: viewModel.employees,
-                                          nameKey: "name",
-                                          onChanged: (value){
-                                            viewModel.selectedEmployee = value;
-                                            viewModel.selectedDatecontroller.clear();
-                                            viewModel.selectEmpId = value['id'].toString();
-                                            print("Selected employee ID: ${value["id"]}");
-                                            setState(() {});
-                                            setState(() {});
-                                          },
-                                          contentPadding: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .contentPadding
-                                              ?.resolve(LocalizationService.isArabic(
-                                              context: context)
-                                              ? ui.TextDirection.rtl
-                                              : ui.TextDirection.ltr)),
-                                      const SizedBox(height: 15),
-                                      viewModels.selectedRequestType?['type'] ==
-                                          'instead_of_holidays'
-                                          ? CustomDropdown.search(
-                                          selectedValue: viewModels.selectedRequestType,
-                                          borderRadius:
-                                          BorderRadius.circular(AppSizes.s15),
-                                          borderSide: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .enabledBorder
-                                              ?.borderSide,
-                                          hintText: AppStrings.requestTime.tr(),
-                                          hintStyle: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .hintStyle,
+                                          ),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
+                                          SearchableDropdownSheet(
+                                            items: viewModel.employees,
+                                            selectedValue: viewModel.selectedEmployee,
+                                            nameKey: 'name',
+                                            fieldSuffixIcon: InkWell(
+                                              onTap: () async {
+                                                viewModel.selectedEmployee = null;
+                                                viewModel.selectEmpId = null;
+                                                viewModel.selectedDatecontroller.clear();
+                                                await CacheHelper.deleteData(key: "empId");
+                                                if (!context.mounted) return;
+                                                setState(() {});
+                                              },
+                                              child: const Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            hintText: AppStrings.employeeName.tr(),
+                                            hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                            height: 65,
+                                            borderRadius: BorderRadius.circular(AppSizes.s10),
+                                            borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            onChanged: (value){
+                                              viewModel.selectedEmployee = value;
+                                              viewModel.selectedDatecontroller.clear();
+                                              viewModel.selectEmpId = value['id']?.toString();
+                                              setState(() {});
+                                            },
+                                          ),
+                                        const SizedBox(height: 15),
+                                        viewModels.selectedRequestType?['type'] ==
+                                            'instead_of_holidays'
+                                            ? SearchableDropdownSheet(
                                           items: viewModels.requestsTypes,
-                                          nameKey: "name",
+                                          selectedValue: viewModels.selectedRequestType,
+                                          nameKey: 'name',
+                                          hintText: AppStrings.requestTime.tr(),
+                                          hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
+                                          height: 65,
+                                          borderRadius: BorderRadius.circular(AppSizes.s10),
+                                          borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                           onChanged: (value) =>
                                               viewModels.selectInsteadOfHolidays(context,
                                                   startDateOrDatetime: value['from'],
                                                   endDateOrDatetime: value['to']),
-                                          contentPadding: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .contentPadding
-                                              ?.resolve(LocalizationService.isArabic(
-                                              context: context)
-                                              ? ui.TextDirection.rtl
-                                              : ui.TextDirection.ltr))
-                                          : TextField(
-                                        controller: viewModels.controller,
-                                        decoration: InputDecoration(
-                                          hintText: AppStrings.requestTime.tr(),
-                                          suffixIcon: IconButton(
-                                            icon: const Icon(Icons.calendar_today),
-                                            onPressed: () =>
-                                                viewModels.selectDateFilter(context, filter: true),
+                                        )
+                                            : TextField(
+                                          controller: viewModels.controller,
+                                          decoration: InputDecoration(
+                                            hintText: AppStrings.requestTime.tr(),
+                                            suffixIcon: IconButton(
+                                              icon: const Icon(Icons.calendar_today),
+                                              onPressed: () =>
+                                                  viewModels.selectDateFilter(context, filter: true),
+                                            ),
                                           ),
+                                          readOnly: true,
+                                          onTap: () => viewModels.selectDateFilter(context, filter: true),
                                         ),
-                                        readOnly: true,
-                                        onTap: () => viewModels.selectDateFilter(context, filter: true),
-                                      ),
-                                      const SizedBox(height: 30,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: ()async{
-                                              String normalizeDateToEnglish(String input) {
-                                                final arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-                                                final arabicToEnglish = {
-                                                  '٠': '0',
-                                                  '١': '1',
-                                                  '٢': '2',
-                                                  '٣': '3',
-                                                  '٤': '4',
-                                                  '٥': '5',
-                                                  '٦': '6',
-                                                  '٧': '7',
-                                                  '٨': '8',
-                                                  '٩': '9',
-                                                };
+                                        const SizedBox(height: 30,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: ()async{
+                                                String normalizeDateToEnglish(String input) {
+                                                  final arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                                                  final arabicToEnglish = {
+                                                    '٠': '0',
+                                                    '١': '1',
+                                                    '٢': '2',
+                                                    '٣': '3',
+                                                    '٤': '4',
+                                                    '٥': '5',
+                                                    '٦': '6',
+                                                    '٧': '7',
+                                                    '٨': '8',
+                                                    '٩': '9',
+                                                  };
 
-                                                // Check if the input contains Arabic numerals
-                                                bool containsArabic = input.split('').any((char) => arabicDigits.contains(char));
+                                                  // Check if the input contains Arabic numerals
+                                                  bool containsArabic = input.split('').any((char) => arabicDigits.contains(char));
 
-                                                // Convert Arabic numerals to English if needed
-                                                String normalized = containsArabic
-                                                    ? input.split('').map((c) => arabicToEnglish[c] ?? c).join()
-                                                    : input;
+                                                  // Convert Arabic numerals to English if needed
+                                                  String normalized = containsArabic
+                                                      ? input.split('').map((c) => arabicToEnglish[c] ?? c).join()
+                                                      : input;
 
-                                                // Parse and reformat
-                                                DateTime date = DateTime.parse(normalized); // assumes yyyy-MM-dd
-                                                return "${date.year.toString().padLeft(4, '0')}-"
-                                                    "${date.month.toString().padLeft(2, '0')}-"
-                                                    "${date.day.toString().padLeft(2, '0')}";
-                                              }
+                                                  // Parse and reformat
+                                                  DateTime date = DateTime.parse(normalized); // assumes yyyy-MM-dd
+                                                  return "${date.year.toString().padLeft(4, '0')}-"
+                                                      "${date.month.toString().padLeft(2, '0')}-"
+                                                      "${date.day.toString().padLeft(2, '0')}";
+                                                }
 
-                                              // Don't delete old filters, just update/add new ones
-                                              // Only update if new value is provided
-                                              if(viewModel.selectEmpId != null && viewModel.selectEmpId!.isNotEmpty){
-                                                CacheHelper.setString(key: "empId", value: viewModel.selectEmpId ?? "");
-                                              }
-                                              if(viewModel.selectDepId != null && viewModel.selectDepId!.isNotEmpty){
-                                                CacheHelper.setString(key: "depId", value: viewModel.selectDepId ?? "");
-                                              }
-                                              if(viewModels.selectStatus != null && viewModels.selectStatus!.isNotEmpty){
-                                                CacheHelper.setString(key: "selectStatus", value: viewModels.selectStatus ?? "");
-                                              }
-                                              if(viewModels.selectReqId != null && viewModels.selectReqId!.isNotEmpty){
-                                                CacheHelper.setString(key: "reqId", value: viewModels.selectReqId ?? "");
-                                              }
-                                              if(viewModels.selectedDateOrDatetimeRange != null && viewModels.selectedDateOrDatetimeRange?.start != null){
-                                                CacheHelper.setString(key: "from", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
-                                                    dateTime: viewModels.selectedDateOrDatetimeRange!.start)).toString() ?? "", );
-                                              }
-                                              if(viewModels.selectedDateOrDatetimeRange != null &&viewModels.selectedDateOrDatetimeRange?.end != null) {
-                                                CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
-                                                    dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "",);
-                                              }
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: Color(AppColors.dark),
-                                                borderRadius: BorderRadius.circular(50),
-                                              ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 40),
-                                              child: Text(
-                                                AppStrings.applyFilter.tr().toUpperCase(),
-                                                style:TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Color(AppColors.white)
+                                                // امسح من الكاش أي فيلتر المستخدم شاله من الدروب داون، بعدين سجّل الباقي (await عشان الحذف يخلص قبل ما الـ API يقرأ)
+                                                bool _isEmpty(String? v) => v == null || v.isEmpty || v == "null";
+                                                if (_isEmpty(viewModel.selectEmpId)) {
+                                                  await CacheHelper.deleteData(key: "empId");
+                                                } else {
+                                                  await CacheHelper.setString(key: "empId", value: viewModel.selectEmpId ?? "");
+                                                }
+                                                if (_isEmpty(viewModel.selectDepId)) {
+                                                  await CacheHelper.deleteData(key: "depId");
+                                                } else {
+                                                  await CacheHelper.setString(key: "depId", value: viewModel.selectDepId ?? "");
+                                                }
+                                                if (_isEmpty(viewModels.selectStatus)) {
+                                                  await CacheHelper.deleteData(key: "selectStatus");
+                                                } else {
+                                                  await CacheHelper.setString(key: "selectStatus", value: viewModels.selectStatus ?? "");
+                                                }
+                                                if (_isEmpty(viewModels.selectReqId)) {
+                                                  await CacheHelper.deleteData(key: "reqId");
+                                                } else {
+                                                  await CacheHelper.setString(key: "reqId", value: viewModels.selectReqId ?? "");
+                                                }
+                                                if (viewModels.selectedDateOrDatetimeRange == null ||
+                                                    viewModels.selectedDateOrDatetimeRange?.start == null ||
+                                                    viewModels.selectedDateOrDatetimeRange?.end == null) {
+                                                  await CacheHelper.deleteData(key: "from");
+                                                  await CacheHelper.deleteData(key: "to");
+                                                } else {
+                                                  await CacheHelper.setString(key: "from", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
+                                                      dateTime: viewModels.selectedDateOrDatetimeRange!.start)).toString() ?? "");
+                                                  await CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
+                                                      dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "");
+                                                }
+                                                if (!context.mounted) return;
+                                                Navigator.pop(context, _buildFilterMap(viewModels, viewModel));
+                                              },
+                                              child: Container(
+                                                height: 50,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Color(AppColors.dark),
+                                                  borderRadius: BorderRadius.circular(50),
+                                                ),
+                                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                                child: Text(
+                                                  AppStrings.applyFilter.tr().toUpperCase(),
+                                                  style:TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: Color(AppColors.white)
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: ()async{
-                                              if(CacheHelper.getString( "empId") != "" && CacheHelper.getString( "empId") != null) {
-                                                CacheHelper.deleteData(key: "empId");
-                                              }if(CacheHelper.getString( "from") != "" && CacheHelper.getString( "from") != null) {
-                                                CacheHelper.deleteData(key: "from");
-                                              }if(CacheHelper.getString( "to") != "" && CacheHelper.getString( "to") != null) {
-                                                CacheHelper.deleteData(key: "to");
-                                              }if(CacheHelper.getString( "depId") != "" && CacheHelper.getString( "depId") != null) {
-                                                CacheHelper.deleteData(key: "depId");
-                                              }if(CacheHelper.getString( "reqId") != "" && CacheHelper.getString( "reqId") != null) {
-                                                CacheHelper.deleteData(key: "reqId");
-                                              }
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  borderRadius: BorderRadius.circular(50),
-                                                  border: Border.all(color: Color(AppColors.dark))
-                                              ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 40),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    AppStrings.cancel.tr().toUpperCase(),
-                                                    style:TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight: FontWeight.w500,
-                                                        color: Color(AppColors.dark)
+                                            GestureDetector(
+                                              onTap: () async {
+                                                await CacheHelper.deleteData(key: "empId");
+                                                await CacheHelper.deleteData(key: "from");
+                                                await CacheHelper.deleteData(key: "to");
+                                                await CacheHelper.deleteData(key: "depId");
+                                                await CacheHelper.deleteData(key: "reqId");
+                                                await CacheHelper.deleteData(key: "selectStatus");
+                                                if (!context.mounted) return;
+                                                Navigator.pop(context, _emptyFilterMap());
+                                              },
+                                              child: Container(
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.circular(50),
+                                                    border: Border.all(color: Color(AppColors.dark))
+                                                ),
+                                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      AppStrings.cancel.tr().toUpperCase(),
+                                                      style:TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w500,
+                                                          color: Color(AppColors.dark)
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 30,),
-                                    ],
+                                          ],
+                                        ),
+                                        const SizedBox(height: 30,),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

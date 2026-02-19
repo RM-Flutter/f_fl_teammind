@@ -3,6 +3,68 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class AppStrings {
+  static const jobOfferGenerator = "jobOfferGenerator";
+  static const jobOfferGenerator2 = "jobOfferGenerator2";
+  static const behance = "behance";
+  static const enterYourBehanceProfileURL = "enterYourBehanceProfileURL";
+  static const whatsapp = "whatsapp";
+  static const enterYourWhatsAppNumber = "enterYourWhatsAppNumber";
+  static const currentJobTitle = "currentJobTitle";
+  static const enterYourCurrentJobTitle = "enterYourCurrentJobTitle";
+  static const job = "job";
+  static const selectJob = "selectJob";
+  static const aboutMe = "aboutMe";
+  static const addYourJobDescription = "addYourJobDescription";
+  static const moreSkills = "moreSkills";
+  static const selectDateTo = "selectDateTo";
+
+  static const dateFrom = "dateFrom";
+  static const selectDateFrom = "selectDateFrom";
+  static const dateTo = "dateTo";
+  static const addSkillLevel = "addSkillLevel";
+  static const removeSkillLevel = "removeSkillLevel";
+  static const selectSkill = "selectSkill";
+  static const addEducation = "addEducation";
+  static const removeEducation = "removeEducation";
+  static const institutionName = "institutionName";
+  static const enterInstitutionName = "enterInstitutionName";
+  static const certificateName = "certificateName";
+  static const enterCertificateName = "enterCertificateName";
+  static const logicFacts = "logicFacts";
+  static const feelingsValues = "feelingsValues";
+  static const pastExperiences = "pastExperiences";
+  static const futurePossibilities = "futurePossibilities";
+
+  // Free Services Home Screen
+  static const freeServices = "freeServices";
+  static const myCV = "myCV";
+  static const myCV2 = "myCV2";
+  static const salaryCalc = "salaryCalc";
+  static const getTeamMindSystem = "getTeamMindSystem";
+  static const adForApplication = "adForApplication";
+  static const adSubtitle = "adSubtitle";
+  static const createCV = "createCV";
+  static const submitCV = "submitCV";
+  static const cvCreatedSuccessfully = "cvCreatedSuccessfully";
+  static const failedToCreateCV = "failedToCreateCV";
+  static const enterYourName = "enterYourName";
+  static const familyStatus = "familyStatus";
+  static const selectFamilyStatus = "selectFamilyStatus";
+  static const birthday = "birthday";
+  static const selectBirthday = "selectBirthday";
+  static const gender = "gender";
+  static const selectGender = "selectGender";
+  static const enterYourPhoneNumber = "enterYourPhoneNumber";
+  static const nationality = "nationality";
+  static const selectNationality = "selectNationality";
+  static const country = "country";
+  static const selectCountry = "selectCountry";
+  static const stateProvince = "stateProvince";
+  static const selectStateProvince = "selectStateProvince";
+  static const city = "city";
+  static const selectCity = "selectCity";
+  static const enterYourAddress = "enterYourAddress";
+  static const profilePhoto = "profilePhoto";
   static const referral = "referral";
   static const referralDescripe = 'referralDescripe';
   static const referralCodeInviteFriend = 'referralCodeInviteFriend';
@@ -63,6 +125,7 @@ abstract class AppStrings {
   static const thereIsNoComments = "thereIsNoComments";
   static const comments = "comments";
   static const update = "update";
+
   static const enableAndDisable2fa = "enableAndDisable2fa";
   static const passwordIsRequired = "passwordIsRequired";
   static const youMustUpdateTheAppToContinue = "youMustUpdateTheAppToContinue";
@@ -122,6 +185,12 @@ abstract class AppStrings {
   static const doYouWantToAddThisFingerprint = "doYouWantToAddThisFingerprint";
   static const noEmployeesFounded = "noEmployeesFounded";
   static const approved = "approved";
+  static const useProfilePhoto = "useProfilePhoto";
+  static const addNewPhoto = "addNewPhoto";
+  static const noPhotoUseDefault = "noPhotoUseDefault";
+  static const enterYourEmail = "enterYourEmail";
+  static const linkedin = "linkedin";
+  static const enterYourLinkedInProfileURL = "enterYourLinkedInProfileURL";
   static const hoursDailyCount = "hoursDailyCount";
   static const noWiFiNetworksFound = "noWiFiNetworksFound";
   static const wiFiScanPermissionIsRequired = "wiFiScanPermissionIsRequired";
@@ -628,19 +697,6 @@ abstract class AppStrings {
   static const fastPacedChallenging = "fastPacedChallenging";
   static const calmStable = "calmStable";
   static const makingDecisions = "makingDecisions";
-  static const logicFacts = "logicFacts";
-  static const feelingsValues = "feelingsValues";
-  static const pastExperiences = "pastExperiences";
-  static const futurePossibilities = "futurePossibilities";
-
-  // Free Services Home Screen
-  static const freeServices = "freeServices";
-  static const myCV = "myCV";
-  static const myCV2 = "myCV2";
-  static const salaryCalc = "salaryCalc";
-  static const getTeamMindSystem = "getTeamMindSystem";
-  static const adForApplication = "adForApplication";
-  static const adSubtitle = "adSubtitle";
 
   static const copy = "copy";
   static const fawry = "fawry";
@@ -861,9 +917,7 @@ abstract class AppStrings {
   static const continueShopping = 'continueShopping';
   static const yourOrderWillBeDeliveredSoonThankYouForChoosingOurApp =
       'yourOrderWillBeDeliveredSoonThankYouForChoosingOurApp';
-  static const country = 'country';
   static const stateProvinceRegion = 'stateProvinceRegion';
-  static const city = 'city';
   static const addAddress = 'addAddress';
   static const edit = 'edit';
   static const useThisAddress = 'useThisAddress';
@@ -932,4 +986,94 @@ abstract class AppStrings {
   static const String areYouSureYouDeleteThisUser = 'areYouSureYouDeleteThisUser';
   static const String enterYourCouponCodeHereToGetPointsFromOrientPaintsProducts = 'enterYourCouponCodeHereToGetPointsFromOrientPaintsProducts';
 
+  static const qrCode = "qrCode";
+  static const gettingCurrentLocationPleaseWait = "gettingCurrentLocationPleaseWait";
+  static const wifi = "wifi";
+  static const gps = "gps";
+  static const videos = "videos";
+  static const bluetooth = "bluetooth";
+  static const allowances = "allowances";
+  static const subscriptions = "subscriptions";
+  static const downloadPdf = "downloadPdf";
+  static const invalidYouTubeUrl = "invalidYouTubeUrl";
+
+  static const generateCvWithTemplate = "generateCvWithTemplate";
+  static const invalidTemplate = "invalidTemplate";
+  static const errorGeneratingCv = "errorGeneratingCv";
+  static const cvDownloadedSuccessfully = "cvDownloadedSuccessfully";
+  static const cvSavedSuccessfully = "cvSavedSuccessfully";
+  static const errorSavingPdf = "errorSavingPdf";
+  static const errorDownloadingPdf = "errorDownloadingPdf";
+  static const failedToLoadTemplates = "failedToLoadTemplates";
+  static const invalidFileName = "invalidFileName";
+  static const errorDownloadingFile = "errorDownloadingFile";
+  static const storagePermissionRequiredForDownload = "storagePermissionRequiredForDownload";
+  static const smartCardCompanyPromo = "smartCardCompanyPromo";
+  static const selectCompanyProfile = "selectCompanyProfile";
+  static const noCompaniesFound = "noCompaniesFound";
+  static const addNewCompany = "addNewCompany";
+  static const personalQrProfile = "personalQrProfile";
+  static const noProfileYet = "noProfileYet";
+  static const profileName = "profileName";
+  static const pleaseEnterProfileName = "pleaseEnterProfileName";
+  static const profileCreatedSuccessfully = "profileCreatedSuccessfully";
+  static const errorCreatingProfile = "errorCreatingProfile";
+  static const noProfileLinkAvailable = "noProfileLinkAvailable";
+  static const openInBrowser = "openInBrowser";
+  static const downloadQr = "downloadQr";
+  static const qrSaved = "qrSaved";
+  static const errorSavingQr = "errorSavingQr";
+  static const freeCompanySheetMessage = "freeCompanySheetMessage";
+  static const learnMoreYoutube = "learnMoreYoutube";
+  static const learnMoreAboutOpportunities = "learnMoreAboutOpportunities";
+  static const cvDisplayedFreeCompanies = "cvDisplayedFreeCompanies";
+  static const smartCardDigitalProfileDesc = "smartCardDigitalProfileDesc";
+  static const deleteProfile = "deleteProfile";
+  static const deleteSmartCardProfileConfirm = "deleteSmartCardProfileConfirm";
+  static const removeEmployeeProfileConfirm = "removeEmployeeProfileConfirm";
+  static const profileDeleted = "profileDeleted";
+  static const deleteProfileButton = "deleteProfileButton";
+  static const noEmployees = "noEmployees";
+  static const profileAdded = "profileAdded";
+  static const callUsFor = "callUsFor";
+  static const premiumSmartCard = "premiumSmartCard";
+  static const nfcCards = "nfcCards";
+  static const learnMore = "learnMore";
+  static const premiumSmartCardSheetMessage = "premiumSmartCardSheetMessage";
+  static const nfcCardsSheetMessage = "nfcCardsSheetMessage";
+  static const companyInformation = "companyInformation";
+  static const companyName = "companyName";
+  static const business = "business";
+  static const website = "website";
+  static const pleaseEnterCompanyName = "pleaseEnterCompanyName";
+  static const companyCreatedSuccessfully = "companyCreatedSuccessfully";
+  static const pleaseEnterAtLeastName = "pleaseEnterAtLeastName";
+  static const missingCompanyOrEmployeeId = "missingCompanyOrEmployeeId";
+
+
+  static const notSet = "notSet";
+
+  static const portfolio = "portfolio";
+  static const addPortfolio = "addPortfolio";
+  static const removePortfolio = "removePortfolio";
+  static const projectName = "projectName";
+  static const enterProjectName = "enterProjectName";
+  static const projectDescription = "projectDescription";
+  static const enterProjectDescription = "enterProjectDescription";
+  static const projectLink = "projectLink";
+  static const enterProjectLink = "enterProjectLink";
+  static const addImages = "addImages";
+  static const languages = "languages";
+  static const removeLanguage = "removeLanguage";
+  static const selectLanguage = "selectLanguage";
+  static const selectLevel = "selectLevel";
+  static const skillsLevels = "skillsLevels";
+
+  static const enterAdditionalSkills = "enterAdditionalSkills";
+  static const skills = "skills";
+  static const selectSkills = "selectSkills";
+  static const experience = "experience";
+  static const addExperience = "addExperience";
+  static const removeExperience = "removeExperience";
+  static const enterJobTitle = "enterJobTitle";
 }

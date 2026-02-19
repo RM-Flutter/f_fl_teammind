@@ -95,44 +95,57 @@ class RequestCard extends StatelessWidget {
         } : null,
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AutoSizeText(
-                  AppSettingsService.getRequestTitleFromGenenralSettings(
-                      context: context,
-                      requestId: request.typeId != null ?request.typeId?.toString() : "") ??
-                      '',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: AppSizes.s16,
-                    letterSpacing: 0.75,
-                    color: Color(AppColors.black),
-                    height: 1.1,
-                  ),
-                ),
-                gapH4,
-                Opacity(
-                  opacity: 0.5,
-                  child: AutoSizeText(
-                    (request.duration == 0)?
-                    '${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,request.from)}' : (DateFormat('yyyy-MM-dd').format(DateTime.parse(request.from))  == DateFormat('yyyy-MM-dd').format(DateTime.parse(request.to)))?
-                    '${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,request.from)} (${request.duration} ${request.durationType.toString().tr()})':
-                    '${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,request.from)} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,request.to)} (${request.duration} ${request.durationType.toString().tr()})' ,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AutoSizeText(
+                    AppSettingsService.getRequestTitleFromGenenralSettings(
+                        context: context,
+                        requestId: request.typeId != null ? request.typeId?.toString() : "") ??
+                        '',
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.s12,
-                      letterSpacing: 0.5,
-                      color: Color(AppColors.grey3B),
+                      fontSize: AppSizes.s16,
+                      letterSpacing: 0.75,
+                      color: Color(AppColors.black),
+                      height: 1.1,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  gapH4,
+                  Opacity(
+                    opacity: 0.5,
+                    child: AutoSizeText(
+                      (request.duration == 0)
+                          ? '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)}'
+                          : (DateFormat('yyyy-MM-dd').format(DateTime.parse(request.from)) == DateFormat('yyyy-MM-dd').format(DateTime.parse(request.to)))
+                          ? '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} (${request.duration} ${request.durationType.toString().tr()})'
+                          : '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.to)} (${request.duration} ${request.durationType.toString().tr()})',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: AppSizes.s12,
+                        letterSpacing: 0.5,
+                        color: Color(AppColors.grey3B),
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-                if(reqType == GetRequestsTypes.myTeam ||reqType == GetRequestsTypes.otherDepartment) gapH4,
-                if(reqType == GetRequestsTypes.myTeam||reqType == GetRequestsTypes.otherDepartment) Text("${request.employeeName ?? ""} - ${request.departmentName ?? ""}", style: TextStyle(color: Color(AppColors.grey70), fontWeight: FontWeight.w600,fontSize: 12),)
-              ],
+                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) gapH4,
+                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment)
+                    Text(
+                      "${request.employeeName ?? ""} - ${request.departmentName ?? ""}",
+                      style: TextStyle(color: Color(AppColors.grey70), fontWeight: FontWeight.w600, fontSize: 12),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
             ),
-            const Spacer(),
+            const SizedBox(width: AppSizes.s8),
             RequestsServices.getRequestsStatusIcon(
                 context: context, status: request.status),
           ],

@@ -16,9 +16,7 @@ import 'package:app_test/features/complaints/data/remote_data/complaints_repo.da
 
 class ComplaintsController extends ChangeNotifier {
   bool isGetRequestLoading = false;
-  bool empty = false;
   bool isAddCommentLoading = false;
-  bool getMore = false;
   bool isAddRequestLoading = false;
   bool isGetRequestCommentLoading = false;
   bool isGetRequestTypeLoading = false;
@@ -39,17 +37,15 @@ class ComplaintsController extends ChangeNotifier {
   String? errorAddRequestMessage;
   final picker = ImagePicker();
   bool hasMore = true;
-  bool loading = true;
   final ScrollController controller = ScrollController();
   final int expectedPageSize = 9;
   int pageNumber = 1;
   int count = 0;
-  Set<int> requestsIds = {};
+  Set<int> commentIds = {};
   XFile? XImageFileAttachmentPersonal;
   File? attachmentPersonalImage;
   List listAttachmentPersonalImage = [];
   List<XFile> listXAttachmentPersonalImage = [];
-  // GetRequestCommentModel? getRequestCommentModel;
   GetOneRequestModel? getOneRequestModel;
   List requests = [];
   List requestsTeam = [];
@@ -73,48 +69,7 @@ class ComplaintsController extends ChangeNotifier {
     currentPage = 1;
     hasMore = true;
   }
-  Future<void> getRequestType(BuildContext context) async {
-    isGetRequestTypeLoading = true;
-    notifyListeners();
-    try {
-      final response = await DioHelper.getData(
-        url: "/csrequests-type/entities-operations",
-        context: context,
-      );
-      if(response.data['status'] == false){
-        Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-        );
-      }else{
-        isGetRequestTypeSuccess = true;
-        requestTypes = response.data['data'];
-      }
-      isGetRequestTypeLoading = false;
-      notifyListeners();
-    } catch (error) {
-      getRequestTypeErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
-          : error.toString();
-      Fluttertoast.showToast(
-          msg: getRequestTypeErrorMessage!,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-    } finally {
-      isGetRequestTypeLoading = false;
-      notifyListeners();
-    }
-  }
+
   Future<void> addComment(BuildContext context, {required String id, List<XFile>? images, String? voicePath, slug}) async {
     if(images == null  && voicePath == null && contentController.text.isEmpty){
       print("NULL COMMENT");
@@ -179,7 +134,6 @@ class ComplaintsController extends ChangeNotifier {
         );
         contentController.clear();
         // Refresh comments after successful upload
-        // getRequestCommentModel = null;
         // getRequestComment(context, id);
       }
     } catch (error) {
@@ -202,61 +156,44 @@ class ComplaintsController extends ChangeNotifier {
     }
   }
   Future<void> getRequest(BuildContext context, {int? page}) async {
-    if (page != null) currentPage = page;
-
-    print("currentPage is --> $currentPage");
+    if(page != null){currentPage = page;}
+    print("currentPage is --> $currentPage}");
     isGetRequestLoading = true;
     notifyListeners();
-
     try {
       final response = await DioHelper.getData(
-        url: "/csrequests/entities-operations",
-        context: context,
+        url: "/emp_requests/v1/complain?type=myTeam",
+        context: context, // Pass this explicitly only if necessary
         query: {
           "itemsCount": itemsCount,
           "page": page ?? currentPage,
         },
       );
-
-      if (response.data['status'] == false) {
+      if(response.data['status'] == false){
         Fluttertoast.showToast(
-          msg: response.data['message'],
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
+            msg: response.data['message'],
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
         );
-      } else {
-        isGetRequestSuccess = true;
-
-        List newRequest = response.data['data'] ?? [];
-
-        if (currentPage == 1) {
-          requests.clear();
-          requestsIds.clear();
+      }else{
+        newRequestsTeam = response.data['complains'] ?? [];
+        if (page == 1) {
+          requestsTeam.clear(); // Clear only when loading the first page
         }
-
-        if (newRequest.isNotEmpty) {
-          getMore = true;
-          // شيل التكرار
-          List uniqueRequests = newRequest
-              .where((p) => !requestsIds.contains(p['id']))
-              .toList();
-
-          requests.addAll(uniqueRequests);
-          requestsIds.addAll(uniqueRequests.map((p) => p['id']));
-
-          hasMoreRequests = uniqueRequests.isNotEmpty;
-          if (hasMoreRequests) currentPage++;
+        if (newRequests.isNotEmpty) {
+          requestsTeam.addAll(newRequestsTeam);
+          print("LENGTH IS --> ${newRequestsTeam.length}");
+          // if (hasMore) currentPage++;
         } else {
-          getMore = false;
-          hasMoreRequests = false;
-          if (currentPage == 1) empty = true;
+          hasMoreRequests = false; // No more data to fetch
         }
-      }
 
+        isGetRequestSuccess = true;
+      }
       isGetRequestLoading = false;
       notifyListeners();
     } catch (error) {
@@ -264,84 +201,84 @@ class ComplaintsController extends ChangeNotifier {
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
-        msg: getRequestErrorMessage!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
+          msg: getRequestErrorMessage!,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
       );
     } finally {
       isGetRequestLoading = false;
       notifyListeners();
     }
   }
-  // Future<void> getRequestMine(BuildContext context, {int? page}) async {
-  //   if(page != null){currentPage = page;}
-  //   print("currentPage is --> $currentPage}");
-  //   isGetRequestLoading = true;
-  //   notifyListeners();
-  //   try {
-  //     final response = await DioHelper.getData(
-  //       url: "/emp_requests/v1/complain?type=mine",
-  //       context: context, // Pass this explicitly only if necessary
-  //       query: {
-  //         "itemsCount": itemsCount,
-  //         "page": page ?? currentPage,
-  //       },
-  //     );
-  //     if(response.data['status'] == false){
-  //       Fluttertoast.showToast(
-  //           msg: response.data['message'],
-  //           toastLength: Toast.LENGTH_LONG,
-  //           gravity: ToastGravity.BOTTOM,
-  //           timeInSecForIosWeb: 5,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0
-  //       );
-  //     }else{
-  //       newRequests = response.data['complains'] ?? [];
-  //       if (page == 1) {
-  //         requests.clear(); // Clear only when loading the first page
-  //       }
-  //       if (newRequests.isNotEmpty) {
-  //         requests.addAll(newRequests);
-  //         print("LENGTH IS --> ${newRequests.length}");
-  //         if (hasMore) currentPage++;
-  //       } else {
-  //         hasMoreRequests = false; // No more data to fetch
-  //       }
-  //
-  //       isGetRequestSuccess = true;
-  //     }
-  //     isGetRequestLoading = false;
-  //     notifyListeners();
-  //   } catch (error) {
-  //     getRequestErrorMessage = error is DioError
-  //         ? error.response?.data['message'] ?? 'Something went wrong'
-  //         : error.toString();
-  //     Fluttertoast.showToast(
-  //         msg: getRequestErrorMessage!,
-  //         toastLength: Toast.LENGTH_LONG,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 5,
-  //         backgroundColor: Colors.red,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0
-  //     );
-  //   } finally {
-  //     isGetRequestLoading = false;
-  //     notifyListeners();
-  //   }
-  // }
-  Future<void> getOneRequest(BuildContext context, id) async {
+  Future<void> getRequestMine(BuildContext context, {int? page}) async {
+    if(page != null){currentPage = page;}
+    print("currentPage is --> $currentPage}");
     isGetRequestLoading = true;
     notifyListeners();
     try {
       final response = await DioHelper.getData(
-        url: "/csrequests/entities-operations/$id",
+        url: "/emp_requests/v1/complain?type=mine",
+        context: context, // Pass this explicitly only if necessary
+        query: {
+          "itemsCount": itemsCount,
+          "page": page ?? currentPage,
+        },
+      );
+      if(response.data['status'] == false){
+        Fluttertoast.showToast(
+            msg: response.data['message'],
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      }else{
+        newRequests = response.data['complains'] ?? [];
+        if (page == 1) {
+          requests.clear(); // Clear only when loading the first page
+        }
+        if (newRequests.isNotEmpty) {
+          requests.addAll(newRequests);
+          print("LENGTH IS --> ${newRequests.length}");
+          if (hasMore) currentPage++;
+        } else {
+          hasMoreRequests = false; // No more data to fetch
+        }
+
+        isGetRequestSuccess = true;
+      }
+      isGetRequestLoading = false;
+      notifyListeners();
+    } catch (error) {
+      getRequestErrorMessage = error is DioError
+          ? error.response?.data['message'] ?? 'Something went wrong'
+          : error.toString();
+      Fluttertoast.showToast(
+          msg: getRequestErrorMessage!,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } finally {
+      isGetRequestLoading = false;
+      notifyListeners();
+    }
+  }
+  Future<void> getOneRequest(BuildContext context, id, type) async {
+    isGetRequestLoading = true;
+    notifyListeners();
+    try {
+      final response = await DioHelper.getData(
+        url: "/emp_requests/v1/complain/$id?type=$type",
         query: {
           "with" : "ptype_id"
         },
@@ -380,10 +317,8 @@ class ComplaintsController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> addRequest(BuildContext context, {List<XFile>? images}) async {
-    images = listAttachmentPersonalImage
-        .map((e) => XFile(e["upload"].path)) // تحويل File → XFile
-        .toList();
     isAddRequestLoading = true;
     notifyListeners();
     var response;
@@ -432,7 +367,7 @@ class ComplaintsController extends ChangeNotifier {
           isScrollControlled: true,
           backgroundColor: Colors.white,
           builder: (context) {
-            return SuccessfulSendRequestBottomsheet(response.data['message']);
+            return SuccessfulSendRequestBottomsheet();
           },
         );
       }
@@ -470,59 +405,42 @@ class ComplaintsController extends ChangeNotifier {
     );
     return result != null ? File(result.path) : null;
   }
-  Future<void> getProfileImageByGallery() async {
-    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
-    if (imageFileProfile == null) return;
-
-    if (kIsWeb) {
-      Uint8List bytes = await imageFileProfile.readAsBytes();
-
-      listAttachmentPersonalImage.add({
-        "preview": bytes,     // 🖥️ للعرض
-        "upload": bytes,      // 🖥️ للرفع برضه
-      });
-    } else {
-      File originalFile = File(imageFileProfile.path);
-      File? compressedFile = await _compressImage(originalFile);
-
-      if (compressedFile != null) {
-        listAttachmentPersonalImage.add({
-          "preview": compressedFile,   // 📱 للعرض
-          "upload": compressedFile,    // 📱 للرفع
-        });
-      }
-    }
-
-
-    notifyListeners();
-  }
-
   Future<void> getProfileImageByCam() async {
     final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.camera);
     if (imageFileProfile == null) return;
 
-    if (kIsWeb) {
-      Uint8List bytes = await imageFileProfile.readAsBytes();
+    File originalFile = File(imageFileProfile.path);
+    File? compressedFile = await _compressImage(originalFile);
 
+    if (compressedFile != null) {
+      // احفظ اللي اتنين
+      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
       listAttachmentPersonalImage.add({
-        "preview": bytes,     // 🖥️ للعرض
-        "upload": bytes,      // 🖥️ للرفع برضه
+        "original": imageFileProfile,  // XFile
+        "compressed": compressedFile   // File
       });
-    } else {
-      File originalFile = File(imageFileProfile.path);
-      File? compressedFile = await _compressImage(originalFile);
-
-      if (compressedFile != null) {
-        listAttachmentPersonalImage.add({
-          "preview": compressedFile,   // 📱 للعرض
-          "upload": compressedFile,    // 📱 للرفع
-        });
-      }
+      notifyListeners();
     }
-
-
-    notifyListeners();
   }
+
+  Future<void> getProfileImageByGallery() async {
+    final XFile? imageFileProfile = await picker.pickImage(source: ImageSource.gallery);
+    if (imageFileProfile == null) return;
+
+    File originalFile = File(imageFileProfile.path);
+    File? compressedFile = await _compressImage(originalFile);
+
+    if (compressedFile != null) {
+      // احفظ اللي اتنين
+      listXAttachmentPersonalImage.add(imageFileProfile); // XFile
+      listAttachmentPersonalImage.add({
+        "original": imageFileProfile,  // XFile
+        "compressed": compressedFile   // File
+      });
+      notifyListeners();
+    }
+  }
+
 
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(

@@ -50,76 +50,103 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
   double _downloadProgress = 0.0;
   String? _downloadingFileName;
 
+  /// No permission needed: we save to app directory (getApplicationDocumentsDirectory).
   Future<bool> requestStoragePermission() async {
-    if (PlatformIs.web) return true;
-
-    if (PlatformIs.android) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final sdkInt = androidInfo.version.sdkInt;
-
-      if (sdkInt >= 30) {
-        var status = await Permission.manageExternalStorage.status;
-        if (!status.isGranted) {
-          status = await Permission.manageExternalStorage.request();
-          if (!status.isGranted) {
-            await openAppSettings();
-            return false;
-          }
-        }
-        return true;
-      } else if (sdkInt >= 23) {
-        var status = await Permission.storage.status;
-        if (!status.isGranted) {
-          status = await Permission.storage.request();
-          if (!status.isGranted) return false;
-        }
-        return true;
-      }
-      return true;
-    }
-    return true; // iOS
+    return true;
   }
 
+
+  /// Get download directory. Uses app-specific directory so no storage permission needed.
   Future<dynamic> _getDownloadDirectory() async {
     if (kIsWeb || PlatformIs.web) {
-      throw UnsupportedError("Download directory not available on Web");
+      throw UnsupportedError("Download directory not available on web");
     }
-
-    if (PlatformIs.android) {
-      final io.Directory directory = io.Directory('/storage/emulated/0/Download');
-      if (await directory.exists()) return directory;
-      throw Exception("Download directory not found");
-    } else if (PlatformIs.iOS) {
+    if (!kIsWeb) {
+      // App documents dir: no permission needed on Android/iOS, file can be opened with OpenFile
       return await getApplicationDocumentsDirectory();
-    } else {
-      throw UnsupportedError("Unsupported platform");
     }
+    throw UnsupportedError("Download directory not available on web");
   }
 
+  /// Download a single file and update progress
   Future<void> _downloadFile(String url, String fileName) async {
+    // On web, download the file and open it in a new tab
     if (PlatformIs.web) {
       try {
-        final anchor = html.AnchorElement(href: url)
-          ..download = fileName
-          ..click();
-        Fluttertoast.showToast(
-          msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_LONG,
-          timeInSecForIosWeb: 3,
-        );
+        if (kIsWeb) {
+          // Use dart:html for web download and open in new tab
+          try {
+            // 1. First, trigger download using fetch API to avoid navigation
+            if (kIsWeb) {
+              // Use dynamic typing to work with dart:html types
+              final fetchResult = html.window.fetch(url);
+              fetchResult.then((response) {
+                // response is html.Response on web
+                return (response as dynamic).blob();
+              }).then((blob) {
+                // blob is html.Blob on web
+                final blobUrl = html.Url.createObjectUrlFromBlob(blob as dynamic);
+                final html.AnchorElement downloadAnchor = html.AnchorElement(href: blobUrl);
+                downloadAnchor.download = fileName;
+                downloadAnchor.style.display = 'none';
+                html.document.body?.append(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+                html.Url.revokeObjectUrl(blobUrl);
+              }).catchError((e) {
+                debugPrint('Error downloading file with fetch: $e');
+              });
+            }
+
+            // 2. Open file in new tab using url_launcher (this won't close the app)
+            await Future.delayed(const Duration(milliseconds: 200));
+            final uri = Uri.parse(url);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+
+            Fluttertoast.showToast(
+              msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              toastLength: Toast.LENGTH_LONG,
+              timeInSecForIosWeb: 3,
+            );
+          } catch (e) {
+            debugPrint('Error downloading/opening file: $e');
+            // Fallback: just open in new tab
+            try {
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            } catch (e2) {
+              Fluttertoast.showToast(
+                msg: 'Error opening file: $e2',
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                toastLength: Toast.LENGTH_LONG,
+                timeInSecForIosWeb: 3,
+              );
+            }
+          }
+        }
       } catch (e) {
         Fluttertoast.showToast(
           msg: 'Error downloading file: $e',
           backgroundColor: Colors.red,
           textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 3,
         );
       }
       return;
     }
 
+    // Mobile platforms: download to device storage
     final dio = Dio();
+    final progressNotifier = ValueNotifier<double>(0.0);
+
     try {
       final dir = await _getDownloadDirectory();
       final filePath = '${dir.path}/$fileName';
@@ -129,57 +156,88 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
         _downloadProgress = 0.0;
       });
 
-      await dio.download(url, filePath, onReceiveProgress: (received, total) {
-        if (total != -1) {
-          setState(() => _downloadProgress = received / total);
-        }
-      });
+      if (mounted) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (ctx) => _DownloadProgressDialog(
+            fileName: fileName,
+            progressNotifier: progressNotifier,
+          ),
+        );
+      }
 
+      await dio.download(
+        url,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1 && total > 0) {
+            final p = received / total;
+            progressNotifier.value = p;
+            if (mounted) setState(() => _downloadProgress = p);
+          }
+        },
+      );
+      if (mounted) Navigator.of(context).pop();
       await OpenFilex.open(filePath);
-
-      Fluttertoast.showToast(
-        msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: '$e',
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: '$e',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
     } finally {
-      setState(() {
-        _downloadProgress = 0.0;
-        _downloadingFileName = null;
-      });
+      progressNotifier.dispose();
+      if (mounted) {
+        setState(() {
+          _downloadProgress = 0.0;
+          _downloadingFileName = null;
+        });
+      }
     }
   }
 
+  /// Download all files (looping)
   Future<void> _downloadAllFiles(List files) async {
     if (files.isEmpty) return;
 
-    final granted = await requestStoragePermission();
-    if (!granted) {
-      Fluttertoast.showToast(msg: 'Storage permission is required.');
+    final permissionGranted = await requestStoragePermission();
+    if (!permissionGranted) {
+      Fluttertoast.showToast(msg: 'Storage permission is required to download files.');
       return;
     }
 
     for (var file in files) {
-      final fileUrl = file.file;
-      final fileName = fileUrl.split('/').last;
-      await _downloadFile(fileUrl, fileName);
+      try {
+        final String fileUrl = file.file;
+        final String fileName = fileUrl.split('/').last;
+        await _downloadFile(fileUrl, fileName);
+      } catch (e) {
+        debugPrint('Error downloading file: $e');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final request = widget.request;
     final mainColor = Color(AppColors.blue);
+
+    final request = widget.request;
 
     return Stack(
       children: [
-        // Main header container (with AppBar & tiles)
         Container(
           height: widget.height,
           width: LayoutService.getWidth(context),
@@ -198,16 +256,22 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: kIsWeb ? 1100 : double.infinity),
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100 : double.infinity
+              ),
               child: Column(
                 children: [
                   AppBarWithBookmark(
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                     centerTitle: true,
-                    routeName: '',
-                    defaultTitle: '',
-                    title: '',
+                    routeName: AppRoutes.requestDetails.name,
+                    defaultTitle: AppSettingsService.getRequestTitleFromGenenralSettings(
+                        context: context, requestId: request.typeId.toString()) ??
+                        '',
+                    title: AppSettingsService.getRequestTitleFromGenenralSettings(
+                        context: context, requestId: request.typeId.toString()) ??
+                        '',
                     titleStyle: Theme.of(context)
                         .textTheme
                         .displayLarge
@@ -217,7 +281,12 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                       padding: const EdgeInsets.all(AppSizes.s10),
                       child: InkWell(
                         onTap: () {
-                          if (context.canPop()) context.pop();
+                          if (context.canPop()) {
+                            context.pop(); // هيرجع لورا
+                          } else {
+                            context.goNamed(AppRoutes.home.name,
+                                pathParameters: {'lang': context.locale.languageCode,});
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -233,32 +302,164 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                       ),
                     ),
                   ),
-                  // Info tiles row
+                  const SizedBox(height: 15),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-                      child: Wrap(
-                        spacing: AppSizes.s5,
-                        runSpacing: AppSizes.s5,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (request.files != null && request.files.isNotEmpty)
-                            InfoTileWidget(
-                              onTap: () => _downloadAllFiles(request.files),
-                              imgPath: Icons.file_download_outlined,
-                              title: AppStrings.downloadFile.tr(),
+                          // Status box
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Fluttertoast.showToast(
+                                    msg: request.status.toString().tr(),
+                                    backgroundColor: request.status == "canceled" || request.status == "refused"
+                                        ? Colors.red
+                                        : request.status == "approved"
+                                        ? Colors.green
+                                        : Color(AppColors.darkGrey),
+                                    textColor: Colors.white,
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.TOP,
+                                    timeInSecForIosWeb: 5,
+                                  );
+                                },
+                                child: Container(
+                                  width: AppSizes.s50,
+                                  height: AppSizes.s80,
+                                  decoration: BoxDecoration(
+                                    color: mainColor,
+                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                  ),
+                                  child: Center(
+                                    child: RequestsServices.getRequestsStatusIcon(
+                                      context: context,
+                                      status: request.status,
+                                      iconSize: AppSizes.s30,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+
+                          // Info tiles
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Wrap(
+                                spacing: AppSizes.s5,
+                                runSpacing: AppSizes.s5,
+                                children: [
+                                  // Date tile with formatting
+                                  InfoTileWidget(
+                                    imgPath: Icons.calendar_month,
+                                    title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
+                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
+                                    DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a') !=
+                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')?
+                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
+                                        : "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
+                                        : DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'yyyy') ==
+                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')?
+                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')}":
+                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
+                                    isFullRow: true,
+                                    trailing: InfoTileWidget(
+                                        width: AppSizes.s100,
+                                        background: const Color(AppColors.black).withOpacity(0.08),
+                                        imgPath: Icons.access_time,
+                                        title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
+                                  ),
+
+                                  // Employee info if different user
+                                  if (widget.uId != widget.rId) ...[
+                                    InfoTileWidget(
+                                      onTap: () {
+                                        context.pushNamed(
+                                          'employeeDetails',
+                                          pathParameters: {
+                                            'id': request.employeeId.toString(),
+                                            'lang': context.locale.languageCode,
+                                          },
+                                        );
+                                      },
+                                      imgPath: Icons.person_2_outlined,
+                                      title: request.employeeName ?? '-',
+                                      isHighLight: true,
+                                    ),
+                                    InfoTileWidget(
+                                      imgPath: Icons.category_outlined,
+                                      title: request.departmentName.toString(),
+                                    ),
+                                  ],
+
+                                  // Request type
+                                  InfoTileWidget(
+                                    imgPath: Icons.category_outlined,
+                                    title: request.typeName.toString(),
+                                  ),
+
+                                  // Money value if present
+                                  if (request.moneyValue != null && (double.tryParse(request.moneyValue.toString()) ?? 0) > 0)
+                                    InfoTileWidget(
+                                      imgPath: Icons.attach_money_outlined,
+                                      title:
+                                      '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr().toUpperCase()}',
+                                    ),
+
+                                  // Download files button
+                                  if (request.files != null && request.files.isNotEmpty)
+                                    InfoTileWidget(
+                                      onTap: () => _downloadAllFiles(request.files),
+                                      imgPath: Icons.file_download_outlined,
+                                      title: AppStrings.downloadFile.tr(),
+                                    ),
+
+                                  // Requested to ignore (cancel request) button
+                                  if ((request.status == "waiting_seen" ||
+                                      request.status == "waiting") &&
+                                      request.waitingCancel == true)
+                                    InfoTileWidget(
+                                      onTap: () async {
+                                        if (widget.uId == widget.rId) {
+                                          debugPrint("TAPPED!");
+                                        } else {
+                                          await ModalSheetHelper.showModalSheet(
+                                            context: context,viewProfile: false,
+                                            modalContent: ManagementResponseModal(
+                                                requestId: request.id.toString()),
+                                            title: AppStrings.managementResponse.tr(),
+                                            height: LayoutService.getHeight(context) * 0.5,
+                                          );
+                                        }
+                                      },
+                                      imgPath: Icons.clear,
+                                      background: const Color(AppColors.darkRed),
+                                      imgColor: Color(AppColors.white),
+                                      title: AppStrings.requestedToIgnore.tr().toUpperCase(),
+                                    ),
+                                ],
+                              ),
                             ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
           ),
         ),
 
-        // Download progress overlay (only shows on Mobile)
-        if (_downloadProgress > 0 && _downloadingFileName != null && !kIsWeb)
+        // Download progress overlay
+        if (_downloadProgress > 0 && _downloadingFileName != null)
           Positioned(
             top: 0,
             left: 0,
@@ -267,7 +468,8 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               elevation: 6,
               color: Colors.black87,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
                     const Icon(Icons.file_download, color: Colors.white),
@@ -313,9 +515,84 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
       ],
     );
   }
+
+/// Helper to format date range string
 }
 
-// InfoTileWidget كما هو، بدون تعديل
+/// Dialog shown while a file is downloading (with progress).
+class _DownloadProgressDialog extends StatelessWidget {
+  final String fileName;
+  final ValueNotifier<double> progressNotifier;
+
+  const _DownloadProgressDialog({
+    required this.fileName,
+    required this.progressNotifier,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                AppStrings.downloadFile.tr(),
+                style: const TextStyle(fontSize: 18),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        content: ValueListenableBuilder<double>(
+          valueListenable: progressNotifier,
+          builder: (context, value, _) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  fileName,
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                const SizedBox(height: 16),
+                LinearProgressIndicator(
+                  value: value > 0 ? value : null,
+                  backgroundColor: Colors.grey.shade300,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.blue)),
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  value > 0 ? '${(value * 100).toStringAsFixed(0)}%' : '0%',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
 class InfoTileWidget extends StatelessWidget {
   final IconData imgPath;
   final Color? background;
@@ -326,50 +603,53 @@ class InfoTileWidget extends StatelessWidget {
   final bool? isFullRow;
   final bool? isHighLight;
   final Widget? trailing;
-
-  InfoTileWidget({
-    super.key,
-    this.isHighLight = false,
-    this.isFullRow = false,
-    required this.imgPath,
-    this.width,
-    this.onTap,
-    required this.title,
-    this.background = const Color(AppColors.navyBlue),
-    this.trailing,
-    this.imgColor,
-  });
+  InfoTileWidget(
+      {super.key,
+        this.isHighLight = false,
+        this.isFullRow = false,
+        required this.imgPath,
+        this.width,
+        this.onTap,
+        required this.title,
+        this.background = const Color(AppColors.navyBlue),
+        this.trailing,
+        this.imgColor});
 
   Color get _imgColor => imgColor ?? Color(AppColors.blue);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ?? () {},
+      onTap: onTap ?? (){},
       child: Container(
-        width: width != null
-            ? width
-            : isFullRow == false
+        width: width != null ? width : isFullRow == false
             ? (LayoutService.getWidth(context) - AppSizes.s88) / 2
             : null,
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : background,
             borderRadius: BorderRadius.circular(AppSizes.s6)),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s6),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.s6, vertical: AppSizes.s6),
                 child: Row(
                   children: [
-                    Icon(imgPath, color: isHighLight == true ? Color(AppColors.white) : _imgColor),
-                    const SizedBox(width: 12),
+                    Icon(
+                      imgPath,
+                      color: isHighLight == true ? Color(AppColors.white) : _imgColor,
+                    ),
+                    gapW12,
                     Expanded(
                       child: AutoSizeText(
                         title,
                         style: const TextStyle(
-                            color: Colors.white, fontSize: AppSizes.s10, fontWeight: FontWeight.w400),
+                            color: Colors.white,
+                            fontSize: AppSizes.s10,
+                            fontWeight: FontWeight.w400),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -378,7 +658,7 @@ class InfoTileWidget extends StatelessWidget {
                 ),
               ),
             ),
-            if (isFullRow == true && trailing != null) trailing!,
+            if (isFullRow == true && trailing != null) trailing!
           ],
         ),
       ),

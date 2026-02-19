@@ -1,4 +1,5 @@
-import '../../services/model_helpers_service.dart';
+import 'package:app_test/core/services/model_helpers_service.dart';
+
 import 'app_settings_model.dart';
 
 class GeneralSettingsModel extends AppSettingsModel {
@@ -17,6 +18,9 @@ class GeneralSettingsModel extends AppSettingsModel {
   final WorktimeOrInt? worktime;
   final Map<String, RequestTypeOrList>? requestTypes;
   final bool? fingerprintMustUploadImage;
+  /// عند true (الافتراضي) يظهر للعميل خطوة التحقق من الوجه (face verify) عند إضافة بصمة.
+  /// عند false لا تظهر خطوة face verify للعميل.
+  final bool? showFaceVerificationForFingerprint;
   final bool? fpScanSteps;
   final bool? canNewRegister;
   final bool? canVisit;
@@ -25,26 +29,27 @@ class GeneralSettingsModel extends AppSettingsModel {
 
   GeneralSettingsModel(
       {required super.lastUpdateDate,
-      this.popup,
-      this.mandatoryUpdatesAlertBuild,
-      this.mandatoryUpdatesEndBuild,
-      this.storeUrl,
-      this.canVisit,
-      this.generalMessageByScreen,
-      this.menu,
-      this.features,
-      this.appearance,
-      this.companyContacts,
-      this.availableLang,
-      this.weekends,
-      this.holidays,
-      this.worktime,
-      this.requestTypes,
-      this.fingerprintMustUploadImage,
-      this.fpScanSteps,
-      this.canNewRegister,
-      this.payrollScreenProtection,
-      this.loginTypes});
+        this.popup,
+        this.mandatoryUpdatesAlertBuild,
+        this.mandatoryUpdatesEndBuild,
+        this.storeUrl,
+        this.canVisit,
+        this.generalMessageByScreen,
+        this.menu,
+        this.features,
+        this.appearance,
+        this.companyContacts,
+        this.availableLang,
+        this.weekends,
+        this.holidays,
+        this.worktime,
+        this.requestTypes,
+        this.fingerprintMustUploadImage,
+        this.showFaceVerificationForFingerprint,
+        this.fpScanSteps,
+        this.canNewRegister,
+        this.payrollScreenProtection,
+        this.loginTypes});
 
   factory GeneralSettingsModel.fromJson(Map<String, dynamic> json) {
     return GeneralSettingsModel(
@@ -57,13 +62,13 @@ class GeneralSettingsModel extends AppSettingsModel {
           : null,
       generalMessageByScreen: json['general_message_by_screen'] != null
           ? List<GeneralMessageByScreen>.from(json['general_message_by_screen']
-              .map((x) => GeneralMessageByScreen.fromJson(x)))
+          .map((x) => GeneralMessageByScreen.fromJson(x)))
           : null,
       menu: json['menu'] != null
           ? List<Menu>.from(json['menu'].map((x) => Menu.fromJson(x)))
           : null,
       features:
-          json['features'] == null ? null : Features.fromJson(json['features']),
+      json['features'] == null ? null : Features.fromJson(json['features']),
       appearance: json['appearance'] != null
           ? Appearance.fromJson(json['appearance'])
           : null,
@@ -76,9 +81,9 @@ class GeneralSettingsModel extends AppSettingsModel {
       weekends: json['weekend'] != null ? List<String>.from(json['weekend']) : null,
       holidays: json['holidays'] != null
           ? (json['holidays'] is List
-              ? List<HolidayOrString>.from(
-                  json['holidays'].map((x) => HolidayOrString.fromJson(x)))
-              : null)
+          ? List<HolidayOrString>.from(
+          json['holidays'].map((x) => HolidayOrString.fromJson(x)))
+          : null)
           : null,
       worktime: json['worktime'] != null
           ? WorktimeOrInt.fromJson(json['worktime'])
@@ -86,19 +91,22 @@ class GeneralSettingsModel extends AppSettingsModel {
       requestTypes: json['request_types'] != null
           ? Map<String, RequestTypeOrList>.from(json['request_types'].map(
               (k, v) => MapEntry<String, RequestTypeOrList>(
-                  k, RequestTypeOrList.fromJson(v))))
+              k, RequestTypeOrList.fromJson(v))))
           : null,
       fingerprintMustUploadImage: ModelHelpersService.getBoolValue(
           json['fingerprint_must_upload_image']),
+      showFaceVerificationForFingerprint: ModelHelpersService.getBoolValue(
+          json['show_face_verification_for_fingerprint']) ??
+          true,
       fpScanSteps: ModelHelpersService.getBoolValue(json['fp_scan_steps']),
       canVisit: ModelHelpersService.getBoolValue(json['can_visit']),
       canNewRegister:
-          ModelHelpersService.getBoolValue(json['can_new_register']),
+      ModelHelpersService.getBoolValue(json['can_new_register']),
       payrollScreenProtection: json['payroll_screen_protection'],
       loginTypes: json['login_types'] != null
           ? (json['login_types'] as List<dynamic>)
-              .map((item) => item as String)
-              .toList()
+          .map((item) => item as String)
+          .toList()
           : null,
     );
   }
@@ -121,7 +129,7 @@ class GeneralSettingsModel extends AppSettingsModel {
       'appearance': appearance?.toJson(),
       'company_contacts': companyContacts?.toJson(),
       'available_lang':
-          availableLang != null ? List<dynamic>.from(availableLang!) : null,
+      availableLang != null ? List<dynamic>.from(availableLang!) : null,
       'weekend': weekends != null ? List<dynamic>.from(weekends!) : null,
       'holidays': holidays != null
           ? List<dynamic>.from(holidays!.map((x) => x.toJson()))
@@ -129,9 +137,10 @@ class GeneralSettingsModel extends AppSettingsModel {
       'worktime': worktime?.toJson(),
       'request_types': requestTypes != null
           ? Map<String, dynamic>.from(requestTypes!
-              .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())))
+          .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())))
           : null,
       'fingerprint_must_upload_image': fingerprintMustUploadImage,
+      'show_face_verification_for_fingerprint': showFaceVerificationForFingerprint,
       'fp_scan_steps': fpScanSteps,
       'can_new_register': canNewRegister,
       'payroll_screen_protection': payrollScreenProtection,
@@ -591,7 +600,7 @@ class Appearance {
   factory Appearance.fromJson(Map<String, dynamic> json) {
     return Appearance(
       colors:
-          json['colors'] != null ? ColorsModel.fromJson(json['colors']) : null,
+      json['colors'] != null ? ColorsModel.fromJson(json['colors']) : null,
       logo: json['logo'],
     );
   }
@@ -710,14 +719,14 @@ class CompanyContacts {
       whatassp: json['whatassp'],
       branches: json['branches'] != null
           ? (json['branches'] as List<dynamic>)
-              .map((branch) =>
-                  BranchModel.fromJson(branch as Map<String, dynamic>))
-              .toList()
+          .map((branch) =>
+          BranchModel.fromJson(branch as Map<String, dynamic>))
+          .toList()
           : null,
       whatsapp: json['whatsapp'],
       workingHours: json['working_hours'],
       address:
-          json['address'] != null ? Address.fromJson(json['address']) : null,
+      json['address'] != null ? Address.fromJson(json['address']) : null,
       location: json['location'],
       facebook: json['facebook'],
       twitter: json['twitter'],
@@ -946,7 +955,7 @@ class Fields {
       attachingFile: json['attaching_file'],
       moneyValue: json['money_value'],
       validations:
-          json['valid'] != null ? Validations.fromJson(json['valid']) : null,
+      json['valid'] != null ? Validations.fromJson(json['valid']) : null,
     );
   }
 
@@ -979,9 +988,9 @@ class Validations {
   Map<String, dynamic> toJson() {
     return {
       'attaching_file':
-          attachingFile != null ? List<dynamic>.from(attachingFile!) : null,
+      attachingFile != null ? List<dynamic>.from(attachingFile!) : null,
       'money_value':
-          moneyValue != null ? List<dynamic>.from(moneyValue!) : null,
+      moneyValue != null ? List<dynamic>.from(moneyValue!) : null,
     };
   }
 }
@@ -1103,13 +1112,13 @@ class BranchModel {
   @override
   int get hashCode {
     return isMainBranch.hashCode ^
-        coInfoEmail.hashCode ^
-        coInfoPhone.hashCode ^
-        coInfoAddress.hashCode ^
-        coInfoLocation.hashCode ^
-        coInfoLocationUrl.hashCode ^
-        lat.hashCode ^
-        lng.hashCode;
+    coInfoEmail.hashCode ^
+    coInfoPhone.hashCode ^
+    coInfoAddress.hashCode ^
+    coInfoLocation.hashCode ^
+    coInfoLocationUrl.hashCode ^
+    lat.hashCode ^
+    lng.hashCode;
   }
 }
 

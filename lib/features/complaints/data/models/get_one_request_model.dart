@@ -1,270 +1,284 @@
 class GetOneRequestModel {
   bool? status;
   String? message;
-  String? create;
-  Item? item;
+  Complain? complain;
 
-  GetOneRequestModel({this.status, this.message, this.create, this.item});
+  GetOneRequestModel({this.status, this.message, this.complain});
 
   GetOneRequestModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    create = json['create'];
-    item = json['item'] != null ? new Item.fromJson(json['item']) : null;
+    complain = json['complain'] != null
+        ? new Complain.fromJson(json['complain'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    data['create'] = this.create;
-    if (this.item != null) {
-      data['item'] = this.item!.toJson();
+    if (this.complain != null) {
+      data['complain'] = this.complain!.toJson();
     }
     return data;
   }
 }
 
-class Item {
+class Complain {
   int? id;
-  String? title;
-  List<Voice>? voice;
-  Pfor? pfor;
-  List<PforValue>? pforValue;
-  List<MainThum>? mainThum;
-  Pfor? pstatus;
-  PType? pType;
-  String? content;
+  int? departmentId;
+  String? departmentName;
+  String? commentStatus;
+  String? subject;
+  String? details;
+  List<MainThumbnail>? mainThumbnail;
+  int? employeeId;
+  Employee? employee;
   String? createdAt;
-  Pfor? status;
-  CommentStatus? commentStatus;
-  TicketPriority? ticketPriority;
-  String? scheduleDate;
-
-  Item(
+  String? pstatus;
+  Ptype? pType;
+  Complain(
       {this.id,
-        this.title,
         this.pType,
-        this.voice,
-        this.pfor,
-        this.pforValue,
-        this.mainThum,
-        this.pstatus,
-        this.content,
+        this.departmentId,
+        this.departmentName,
+        this.subject,
+        this.details,
+        this.mainThumbnail,
         this.commentStatus,
-        this.ticketPriority,
+        this.employeeId,
+        this.employee,
         this.createdAt,
-        this.status,
-        this.scheduleDate});
+        this.pstatus});
 
-  Item.fromJson(Map<String, dynamic> json) {
+  Complain.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
-    if (json['voice'] != null) {
-      voice = <Voice>[];
-      json['voice'].forEach((v) {
-        voice!.add(new Voice.fromJson(v));
-      });
-    }
-    pfor = json['pfor'] != null ? new Pfor.fromJson(json['pfor']) : null;
-    if (json['pfor_value'] != null) {
-      pforValue = <PforValue>[];
-      json['pfor_value'].forEach((v) {
-        pforValue!.add(new PforValue.fromJson(v));
-      });
-    } if (json['main_thumbnail'] != null) {
-      mainThum = <MainThum>[];
+    departmentName = json['department_name'];
+    departmentId = json['department_id'];
+    subject = json['subject'];
+    details = json['details'];
+    if (json['main_thumbnail'] != null) {
+      mainThumbnail = <MainThumbnail>[];
       json['main_thumbnail'].forEach((v) {
-        mainThum!.add(new MainThum.fromJson(v));
+        mainThumbnail!.add(new MainThumbnail.fromJson(v));
       });
     }
-    commentStatus = json['comment_status'] != null ? new CommentStatus.fromJson(json['comment_status']) : null;
-    ticketPriority = json['ticket_priority'] != null ? new TicketPriority.fromJson(json['ticket_priority']) : null;
-    pstatus =
-    json['pstatus'] != null ? new Pfor.fromJson(json['pstatus']) : null;
-    pType =
-    json['ptype'] != null ? new PType.fromJson(json['ptype']) : null;
-    content = json['content'];
+    pType = json['ptype'] != null ? new Ptype.fromJson(json['ptype']) : null;
+    employeeId = json['employee_id'];
+    employee = json['employee'] != null
+        ? new Employee.fromJson(json['employee'])
+        : null;
+    commentStatus = json['comment_status'];
     createdAt = json['created_at'];
-    status = json['status'] != null ? new Pfor.fromJson(json['status']) : null;
-    scheduleDate = json['schedule_date'];
+    pstatus = json['pstatus'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['title'] = this.title;
-    if (this.voice != null) {
-      data['voice'] = this.voice!.map((v) => v.toJson()).toList();
+    data['department_id'] = this.departmentId;
+    data['subject'] = this.subject;
+    data['details'] = this.details;
+    if (this.mainThumbnail != null) {
+      data['main_thumbnail'] =
+          this.mainThumbnail!.map((v) => v.toJson()).toList();
     }
-    if (this.pfor != null) {
-      data['pfor'] = this.pfor!.toJson();
+    data['employee_id'] = this.employeeId;
+    if (this.employee != null) {
+      data['employee'] = this.employee!.toJson();
     }
-    if (this.pforValue != null) {
-      data['pfor_value'] = this.pforValue!.map((v) => v.toJson()).toList();
-    }
-    if (this.pstatus != null) {
-      data['pstatus'] = this.pstatus!.toJson();
-    }
-    data['content'] = this.content;
     data['created_at'] = this.createdAt;
-    if (this.status != null) {
-      data['status'] = this.status!.toJson();
+    data['pstatus'] = this.pstatus;
+    return data;
+  }
+}
+class Ptype {
+  var id;
+  String? title;
+
+  Ptype({this.id, this.title});
+
+  Ptype.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+  }
+}
+
+class MainThumbnail {
+  int? id;
+  String? type;
+  String? title;
+  String? alt;
+  String? file;
+  String? thumbnail;
+  Sizes? sizes;
+
+  MainThumbnail(
+      {this.id,
+        this.type,
+        this.title,
+        this.alt,
+        this.file,
+        this.thumbnail,
+        this.sizes});
+
+  MainThumbnail.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    type = json['type'];
+    title = json['title'];
+    alt = json['alt'];
+    file = json['file'];
+    thumbnail = json['thumbnail'];
+    sizes = json['sizes'] != null ? new Sizes.fromJson(json['sizes']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['type'] = this.type;
+    data['title'] = this.title;
+    data['alt'] = this.alt;
+    data['file'] = this.file;
+    data['thumbnail'] = this.thumbnail;
+    if (this.sizes != null) {
+      data['sizes'] = this.sizes!.toJson();
     }
-    data['schedule_date'] = this.scheduleDate;
     return data;
   }
 }
 
-class Voice {
-  int? id;
-  String? type;
-  String? title;
-  String? alt;
-  String? file;
+class Sizes {
   String? thumbnail;
+  String? medium;
+  String? large;
+  String? s1200800;
+  String? s8001200;
+  String? s1200300;
+  String? s3001200;
 
-  Voice({this.id, this.type, this.title, this.alt, this.file, this.thumbnail});
+  Sizes(
+      {this.thumbnail,
+        this.medium,
+        this.large,
+        this.s1200800,
+        this.s8001200,
+        this.s1200300,
+        this.s3001200});
 
-  Voice.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    type = json['type'];
-    title = json['title'];
-    alt = json['alt'];
-    file = json['file'];
+  Sizes.fromJson(Map<String, dynamic> json) {
     thumbnail = json['thumbnail'];
+    medium = json['medium'];
+    large = json['large'];
+    s1200800 = json['1200_800'];
+    s8001200 = json['800_1200'];
+    s1200300 = json['1200_300'];
+    s3001200 = json['300_1200'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
     data['thumbnail'] = this.thumbnail;
+    data['medium'] = this.medium;
+    data['large'] = this.large;
+    data['1200_800'] = this.s1200800;
+    data['800_1200'] = this.s8001200;
+    data['1200_300'] = this.s1200300;
+    data['300_1200'] = this.s3001200;
     return data;
   }
 }
-class MainThum {
+
+class Employee {
   int? id;
-  String? type;
-  String? title;
-  String? alt;
-  String? file;
-  String? thumbnail;
+  String? name;
+  String? email;
+  String? countryKey;
+  int? phone;
+  String? avatar;
+  String? jobTitle;
+  List<Null>? additionalPhoneNumbers;
+  Social? social;
 
-  MainThum({this.id, this.type, this.title, this.alt, this.file, this.thumbnail});
+  Employee(
+      {this.id,
+        this.name,
+        this.email,
+        this.countryKey,
+        this.phone,
+        this.avatar,
+        this.jobTitle,
+        this.additionalPhoneNumbers,
+        this.social});
 
-  MainThum.fromJson(Map<String, dynamic> json) {
+  Employee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    type = json['type'];
-    title = json['title'];
-    alt = json['alt'];
-    file = json['file'];
-    thumbnail = json['thumbnail'];
+    name = json['name'];
+    email = json['email'];
+    countryKey = json['country_key'];
+    phone = json['phone'];
+    avatar = json['avatar'];
+    jobTitle = json['job_title'];
+    social =
+    json['social'] != null ? new Social.fromJson(json['social']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['alt'] = this.alt;
-    data['file'] = this.file;
-    data['thumbnail'] = this.thumbnail;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['country_key'] = this.countryKey;
+    data['phone'] = this.phone;
+    data['avatar'] = this.avatar;
+    data['job_title'] = this.jobTitle;
+    if (this.social != null) {
+      data['social'] = this.social!.toJson();
+    }
     return data;
   }
 }
 
-class Pfor {
-  String? key;
-  String? value;
+class Social {
+  var facebook;
+  var twitter;
+  var linkedin;
+  var instagram;
+  var youtube;
+  var pinterest;
+  var snapchat;
+  var whatsapp;
 
-  Pfor({this.key, this.value});
+  Social(
+      {this.facebook,
+        this.twitter,
+        this.linkedin,
+        this.instagram,
+        this.youtube,
+        this.pinterest,
+        this.snapchat,
+        this.whatsapp});
 
-  Pfor.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    value = json['value'];
+  Social.fromJson(Map<String, dynamic> json) {
+    facebook = json['facebook'];
+    twitter = json['twitter'];
+    linkedin = json['linkedin'];
+    instagram = json['instagram'];
+    youtube = json['youtube'];
+    pinterest = json['pinterest'];
+    snapchat = json['snapchat'];
+    whatsapp = json['whatsapp'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
-    return data;
-  }
-}
-class TicketPriority {
-  String? key;
-  String? value;
-
-  TicketPriority({this.key, this.value});
-
-  TicketPriority.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
-    return data;
-  }
-}
-class PType {
-  int? id;
-  String? title;
-
-  PType({this.id, this.title});
-
-  PType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    return data;
-  }
-}
-class CommentStatus {
-  String? key;
-  String? value;
-
-  CommentStatus({this.key, this.value});
-
-  CommentStatus.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
-    data['value'] = this.value;
-    return data;
-  }
-}
-
-class PforValue {
-  String? label;
-  String? value;
-
-  PforValue({this.label, this.value});
-
-  PforValue.fromJson(Map<String, dynamic> json) {
-    label = json['label'];
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['label'] = this.label;
-    data['value'] = this.value;
+    data['facebook'] = this.facebook;
+    data['twitter'] = this.twitter;
+    data['linkedin'] = this.linkedin;
+    data['instagram'] = this.instagram;
+    data['youtube'] = this.youtube;
+    data['pinterest'] = this.pinterest;
+    data['snapchat'] = this.snapchat;
+    data['whatsapp'] = this.whatsapp;
     return data;
   }
 }

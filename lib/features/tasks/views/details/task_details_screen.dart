@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   var id;
-  TaskDetailsScreen({super.key, this.id,});
+  TaskDetailsScreen({this.id,});
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -33,7 +33,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   late ScrollController _scrollController;
   @override
   void initState() {
-   _scrollController = ScrollController();
+    _scrollController = ScrollController();
     super.initState();
   }
   var icon;
@@ -73,12 +73,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     width: double.infinity,
                     alignment: Alignment.bottomRight,
                     child: FloatingActionButton(
+                      heroTag: 'task_details_edit',
                       onPressed: () async {
                         await context.pushNamed(AppRoutes.editTaskScreen.name, pathParameters: {
                           'lang': context.locale.languageCode,
                           'id' : value.getOneTaskModel!.task!.id.toString()
                         });
-                       await value.getOneTask(context, widget.id);
+                        await value.getOneTask(context, widget.id);
                       }, // Icon inside FAB
                       backgroundColor: Color(AppColors.primary), // Optional: change color
                       tooltip: 'Add',
@@ -323,7 +324,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   ),
                 ),
               );
-          },);
+            },);
         },
       ),
     );

@@ -91,29 +91,22 @@ class _RequestsScreenState extends State<RequestsScreen> {
           pageContext: context,
           routeName: AppRoutes.requests.name,
           floatingActionButton: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: LocalizationService.isArabic(context: context) ? 35 : 0,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
             width: double.infinity,
             alignment: Alignment.bottomRight,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-
-                /// ➕ Add Request FAB
                 FloatingActionButton(
-                  heroTag: 'add_request_fab',
+                  heroTag: 'requests_add',
                   onPressed: () async {
-                    await context.pushNamed(
-                      AppRoutes.addRequest.name,
-                      pathParameters: {
-                        'type': 'mine',
-                        'lang': context.locale.languageCode,
-                      },
-                    );
-                  },
-                  backgroundColor:  Color(AppColors.primary),
+                    await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
+                      'type': 'mine',
+                      'lang': context.locale.languageCode
+                    });
+                  }, // Icon inside FAB
+                  backgroundColor: Color(AppColors.primary), // Optional: change color
                   tooltip: 'Add',
                   child: Center(
                     child: Image.asset(
@@ -124,28 +117,31 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 10),
-
-                /// 🔍 Filter FAB
+                const SizedBox(height: 10,),
                 FloatingActionButton(
-                  heroTag: 'filter_request_fab',
-                  onPressed: () async {
+                  heroTag: 'requests_calendar',
+                  onPressed: ()async {
+                    final Map<String, String?>? filterResult;
                     if (kIsWeb) {
-                      await showDialog(
+                      // Use showDialog for web to ensure it's fully visible
+                      filterResult = await showDialog<Map<String, String?>>(
                         context: context,
-                        builder: (dialogContext) {
-                          final size = MediaQuery.of(dialogContext).size;
+                        barrierDismissible: true,
+                        builder: (BuildContext dialogContext) {
+                          final screenHeight = MediaQuery.of(dialogContext).size.height;
+                          final screenWidth = MediaQuery.of(dialogContext).size.width;
                           return Dialog(
+                            alignment: Alignment.center,
                             insetPadding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.15,
-                              vertical: size.height * 0.1,
+                              horizontal: screenWidth * 0.15,
+                              vertical: screenHeight * 0.1,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(35),
+                              borderRadius: BorderRadius.circular(35.0),
                             ),
                             child: ConstrainedBox(
-                              constraints: const BoxConstraints(
+                              constraints: BoxConstraints(
+                                maxHeight: screenHeight * 0.8,
                                 maxWidth: 600,
                               ),
                               child: SearchFilterWidget(
@@ -158,32 +154,67 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         },
                       );
                     } else {
-                      await showModalBottomSheet(
+                      // Use showModalBottomSheet for mobile
+                      filterResult = await showModalBottomSheet<Map<String, String?>>(
                         context: context,
                         isScrollControlled: true,
+                        enableDrag: false,
+                        isDismissible: true,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                          borderRadius:
+                          BorderRadius.vertical(
+                              top: Radius.circular(
+                                  35.0)),
                         ),
-                        builder: (_) => SearchFilterWidget(
-                          contexts: context,
-                          requestsType: widget.requestsType,
-                          isWeb: false,
-                        ),
+                        builder: (BuildContext context) {
+                          return SearchFilterWidget(
+                            contexts: context,
+                            requestsType: widget.requestsType,
+                            isWeb: false,
+                          );
+                        },
                       );
                     }
-
-                    viewModel.initializeRequestsScreen(
-                      context: context,
-                      requestsType: widget.requestsType!,
-                      requestTypeId: CacheHelper.getString("reqId"),
-                      empIds: CacheHelper.getString("empId"),
-                      from: CacheHelper.getString("from"),
-                      to: CacheHelper.getString("to"),
-                      depId: CacheHelper.getString("depId"),
-                      status: CacheHelper.getString("selectStatus"),
-                    );
+                    if (filterResult != null) {
+                      final _v = (String? s) => (s == null || s.isEmpty) ? null : s;
+                      viewModel.initializeRequestsScreen(
+                        context: context,
+                        requestsType: widget.requestsType!,
+                        requestTypeId: _v(filterResult['reqId']),
+                        empIds: _v(filterResult['empId']),
+                        from: _v(filterResult['from']),
+                        to: _v(filterResult['to']),
+                        depId: _v(filterResult['depId']),
+                        status: _v(filterResult['selectStatus']),
+                      );
+                      // مزامنة الكاش مع نتيجة الفلتر حتى لا يرسل التمرير/التحديث الـ id من قيمة قديمة
+                      final _sync = (String key, String? value) async {
+                        if (value == null || value.isEmpty) {
+                          await CacheHelper.deleteData(key: key);
+                        } else {
+                          await CacheHelper.setString(key: key, value: value);
+                        }
+                      };
+                      await _sync("reqId", filterResult['reqId']);
+                      await _sync("empId", filterResult['empId']);
+                      await _sync("depId", filterResult['depId']);
+                      await _sync("selectStatus", filterResult['selectStatus']);
+                      await _sync("from", filterResult['from']);
+                      await _sync("to", filterResult['to']);
+                    } else {
+                      viewModel.initializeRequestsScreen(
+                        context: context,
+                        requestsType: widget.requestsType!,
+                        requestTypeId: CacheHelper.getString("reqId").isEmpty ? null : CacheHelper.getString("reqId"),
+                        empIds: CacheHelper.getString("empId"),
+                        from: CacheHelper.getString("from"),
+                        to: CacheHelper.getString("to"),
+                        depId: CacheHelper.getString("depId"),
+                        status: CacheHelper.getString("selectStatus"),
+                      );
+                    }
                   },
-                  backgroundColor:  Color(AppColors.primary),
+                  backgroundColor: Color(AppColors.primary), // Optional: change color
                   tooltip: 'Filter',
                   child: Center(
                     child: Image.asset(

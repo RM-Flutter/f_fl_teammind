@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_constants.dart';
@@ -38,9 +40,11 @@ class DioHelper{
           connectTimeout: const Duration(seconds: 30),
           receiveTimeout: const Duration(seconds: 30),
           sendTimeout: const Duration(seconds: 30),
+          persistentConnection: true,
           headers: headers,
           // For web, set followRedirects and validateStatus
           followRedirects: true,
+          maxRedirects: 5,
           validateStatus: (status) {
             return status != null && status < 500;
           },
@@ -57,11 +61,11 @@ class DioHelper{
     dio!.interceptors.add(
       InterceptorsWrapper(
         onResponse: (response, handler) {
-          debugPrint("response.statusCode == ${response.statusCode}");
+          print("response.statusCode == ${response.statusCode}");
           return handler.next(response);
         },
-        onError: (DioError error, handler) {
-          debugPrint("error.response?.statusCode ==z ${error.response?.statusCode}");
+        onError: (DioException error, handler) {
+          print("error.response?.statusCode ==z ${error.response?.statusCode}");
 
           // Handle CORS errors on web
           if (kIsWeb || PlatformIs.web) {
@@ -84,6 +88,44 @@ class DioHelper{
         },
       ),
     );
+    // إعادة محاولة مرة واحدة مع اتصال جديد عند timeout/قطع الاتصال (حل مشكلة عدم رد الـ API حتى إعادة فتح الواي فاي)
+    _addConnectionResetRetryInterceptor();
+  }
+
+  /// عند timeout أو خطأ اتصال: إغلاق الـ adapter واستبداله بواحد جديد ثم إعادة المحاولة مرة واحدة.
+  static void _addConnectionResetRetryInterceptor() {
+    const _extraKey = '_connection_retry';
+    dio!.interceptors.add(
+      InterceptorsWrapper(
+        onError: (DioException error, handler) {
+          final isConnectionIssue = error.type == DioExceptionType.connectionTimeout ||
+              error.type == DioExceptionType.connectionError ||
+              error.type == DioExceptionType.sendTimeout ||
+              error.type == DioExceptionType.receiveTimeout ||
+              (error.message?.toLowerCase().contains('socket') ?? false) ||
+              (error.message?.toLowerCase().contains('failed host lookup') ?? false);
+          final alreadyRetried = error.requestOptions.extra[_extraKey] == true;
+          if (!isConnectionIssue || alreadyRetried || dio == null) {
+            return handler.next(error);
+          }
+          if (kIsWeb || PlatformIs.web) {
+            return handler.next(error);
+          }
+          try {
+            final adapter = dio!.httpClientAdapter;
+            if (adapter is IOHttpClientAdapter) {
+              adapter.close(force: true);
+              dio!.httpClientAdapter = IOHttpClientAdapter();
+            }
+          } catch (_) {}
+          error.requestOptions.extra[_extraKey] = true;
+          dio!.fetch(error.requestOptions).then(
+                (response) => handler.resolve(response),
+            onError: (e) => handler.reject(e),
+          );
+        },
+      ),
+    );
   }
   static Future<Response> downloadData({context,@required url,savePath})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
@@ -95,8 +137,27 @@ class DioHelper{
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       "lang" : "${CacheHelper.getString("lang")}",
     };
-    debugPrint("Headers: ${dio!.options.headers}");
-    return await dio!.download(url, savePath );
+    print("Headers: ${dio!.options.headers}");
+    return await dio!.download(url, savePath);
+  }
+
+  /// Download file with progress (e.g. PDF from URL).
+  static Future<Response> downloadDataWithProgress({
+    required BuildContext context,
+    required String url,
+    required String savePath,
+    void Function(int received, int total)? onReceiveProgress,
+  }) async {
+    final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
+    dio!.options.headers = {
+      'Accept': 'application/json',
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id': deviceUniqueId,
+      'Authorization': 'Bearer ${appConfigServiceProvider.token}',
+      'lang': CacheHelper.getString("lang") ?? "en",
+    };
+    return await dio!.download(url, savePath, onReceiveProgress: onReceiveProgress);
   }
 
   static Future<String?> _getDeviceUniqueId(BuildContext? context, AppConfigService appConfigServiceProvider) async {
@@ -140,20 +201,37 @@ class DioHelper{
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       "lang" : "${CacheHelper.getString("lang")}",
     };
-    debugPrint("Headers: ${dio!.options.headers}");
-    debugPrint("Request URL: $cleanUrl");
-    debugPrint("Query Parameters: $query");
+    print("Headers: ${dio!.options.headers}");
+    print("Request URL: $cleanUrl");
+    print("Query Parameters: $query");
     return await dio!.get(cleanUrl, queryParameters: query );
   }
-  static Future<Response> deleteData({@required url, @required Map<String, dynamic>? query, token, data})async{
-    dio!.options.headers = {
-      'Accept':'application/json',
-      'Authorization': 'Bearer $token',
-    };
 
-    return await dio!.delete(url, queryParameters: query, data: data??null);
+  /// GET request that returns response body as bytes (e.g. for PDF).
+  static Future<Response> getDataAsBytes({
+    required BuildContext context,
+    required String url,
+    Map<String, dynamic>? query,
+    String? acceptHeader = 'application/pdf',
+  }) async {
+    final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
+    String cleanUrl = url.toString().endsWith('/') ? url.toString().substring(0, url.toString().length - 1) : url.toString();
+    dio!.options.headers = {
+      'Accept': acceptHeader ?? 'application/pdf',
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id': deviceUniqueId,
+      'Authorization': 'Bearer ${appConfigServiceProvider.token}',
+      'lang': CacheHelper.getString("lang") ?? "en",
+    };
+    return await dio!.get(
+      cleanUrl,
+      queryParameters: query,
+      options: Options(responseType: ResponseType.bytes),
+    );
   }
-  static Future<Response> postData({ context ,@required url,@required Map<String, dynamic>? query, token, @required data})async{
+
+  static Future<Response> deleteData({context,@required url, @required Map<String, dynamic>? query, token, data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     dio!.options.headers = {
@@ -163,8 +241,23 @@ class DioHelper{
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-
     };
+
+    return await dio!.delete(url, queryParameters: query, data: data??null);
+  }
+  static Future<Response> postData({ context ,@required url,@required Map<String, dynamic>? query, token, @required data})async{
+    final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
+    final isFormData = data is FormData;
+    dio!.options.headers = {
+      'Accept':'application/json',
+      if (!isFormData) 'Content-Type': 'application/json',
+      "lang" : "${CacheHelper.getString("lang")}",
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
+      'Authorization': 'Bearer ${appConfigServiceProvider.token}',
+    };
+    // عند FormData (مثل الصور) لا نضع Content-Type ليتولى Dio إرسال multipart/form-data مع الـ boundary
     return await dio!.post(url, queryParameters: query, data: data??null);
   }
   static Future<Response> putData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
@@ -178,7 +271,18 @@ class DioHelper{
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
     };
-    return await dio!.put(url, queryParameters: query, data: data??null);
+    // PUT body must be sent as raw JSON string (same as Postman raw JSON) to avoid 500
+    final String? bodyJson = data != null ? jsonEncode(data) : null;
+    return await dio!.put(
+      url,
+      queryParameters: query,
+      data: bodyJson,
+      options: Options(
+        contentType: Headers.jsonContentType,
+        sendTimeout: dio!.options.sendTimeout,
+        receiveTimeout: dio!.options.receiveTimeout,
+      ),
+    );
   }
   static Future<Response> patchData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
@@ -191,7 +295,18 @@ class DioHelper{
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
     };
-    return await dio!.patch(url, queryParameters: query, data: data??null);
+    // PATCH body as raw JSON string (same as PUT / Postman raw JSON)
+    final String? bodyJson = data != null ? jsonEncode(data) : null;
+    return await dio!.patch(
+      url,
+      queryParameters: query,
+      data: bodyJson,
+      options: Options(
+        contentType: Headers.jsonContentType,
+        sendTimeout: dio!.options.sendTimeout,
+        receiveTimeout: dio!.options.receiveTimeout,
+      ),
+    );
   }
   static Future<Response> postFormData({@required url, context, formdata,@required Map<String, dynamic>? query, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);

@@ -7,8 +7,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 
 
 class SuccessfulSendRequestBottomsheet extends StatelessWidget {
-  var message;
-  SuccessfulSendRequestBottomsheet(this.message, {super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,15 +22,15 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
           SizedBox(height: 30),
           SvgPicture.asset("assets/images/svg/success_meeting.svg"),
           SizedBox(height: 15,),
-          Text(AppStrings.success.tr().toUpperCase(), style: TextStyle(fontSize: 24,
+          Text(AppStrings.successful.tr().toUpperCase(), style: TextStyle(fontSize: 24,
               fontWeight: FontWeight.w700, color: Color(AppColors.primary))),
           Padding(
             padding: EdgeInsets.all(15.0),
             child: Text(
-              message,
+              AppStrings.youWillBeRepliedSoonThankYouForChoosingOurApp.tr().toUpperCase(),
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Color(0xff1B1B1B),
+                  color: Color(AppColors.almostBlack1B),
                   fontWeight: FontWeight.w500,
                   fontSize: 14
               ),
@@ -52,3 +51,5 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
     );
   }
 }
+
+

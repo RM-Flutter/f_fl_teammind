@@ -19,8 +19,6 @@ import 'package:app_test/features/requests/details/views/request_details_screen.
 import 'package:app_test/features/requests/view_by_ids/views/requests_by_id_screen.dart';
 import 'package:app_test/features/requests/calender/views/requests_calendar_screen.dart';
 import 'package:app_test/features/requests/main_request_layout/views/requests_screen.dart';
-import 'package:app_test/features/services/free_service/views/free_services_home_screen.dart';
-import 'package:app_test/features/services/free_service/views/widgets/smart_card/smart_card_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import '../../features/authentication/login/views/login_screen.dart';
@@ -55,14 +53,23 @@ import '../../features/payrolls/payroll_list/views/payrolls_list_screen.dart';
 import '../../features/personal_profile/views/personal_profile_screen.dart';
 import '../../features/rewards_and_penalties/add_rewards/views/add_rewards_and_penalties_screen.dart';
 import '../../features/rewards_and_penalties/view_rewards/views/rewards_and_penalties_screen.dart';
-import '../../features/services/free_service/views/widgets/about_team_mind_screen.dart';
-import '../../features/services/free_service/views/widgets/cv_generator_screen.dart';
-import '../../features/services/cvs/views/my_cv_screen.dart';
-import '../../features/services/free_service/views/widgets/personality_test_screen.dart';
-import '../../features/services/free_service/views/widgets/premium_templates_screen.dart';
-import '../../features/services/free_service/views/widgets/smart_card/widgets/select_template_screen.dart';
-import '../../features/services/shared/ui_widgets/update_my_info_screen.dart';
-import '../../features/services/free_service/views/widgets/vacation_calc_screen.dart';
+import '../../features/services/views/about_team_mind/about_team_mind_screen.dart';
+import '../../features/services/views/about_team_mind/youtube_video_player_screen.dart';
+import '../../features/services/views/cv_generator/cv_generator_screen.dart';
+import '../../features/services/views/free_service_more.dart';
+import '../../features/services/views/free_services_home_screen.dart';
+import '../../features/services/views/my_cv_screen.dart';
+import '../../features/services/views/personality_test/personality_test_screen.dart';
+import '../../features/services/views/premium_templates/premium_templates_screen.dart';
+import '../../features/services/views/select_template/select_template_screen.dart';
+import '../../features/services/views/smart_card/smart_card_company_detail_screen.dart';
+import '../../features/services/views/smart_card/smart_card_profile_detail_screen.dart';
+import '../../features/services/views/smart_card/smart_card_screen.dart';
+import '../../features/services/views/update_company_info/update_company_info_screen.dart';
+import '../../features/services/views/update_employee_info/update_employee_info_screen.dart';
+import '../../features/services/views/update_my_info/update_my_info_screen.dart';
+import '../../features/services/views/vacation_calc/vacation_calc_screen.dart';
+import '../../features/services/views/widgets/youtube_video_player.dart';
 import '../../features/splash_and_onboarding/views/onboarding_screen.dart';
 import '../../features/splash_and_onboarding/views/splash_screen.dart';
 import '../../features/tasks/views/add/add_task_screen.dart';
@@ -156,7 +163,15 @@ enum AppRoutes {
   vacationCalcScreen,
   personalityTestScreen,
   aboutTeamMindScreen,
-  newRequestScreen
+  newRequestScreen,
+  youtubeVideoScreen,
+  freeMoreScreen,
+  smartCardCompanyDetailScreen,
+  smartCardProfileDetailScreen,
+  updateCompanyInfoScreen,
+  updateEmployeeInfoScreen,
+  mediaCenterYoutubeScreenView,
+
 }
 
 const TestVSync ticker = TestVSync();
@@ -210,6 +225,12 @@ GoRouter goRouter(BuildContext context) {
       final lang = state.pathParameters['lang'] ?? 'en';
       context.setLocale(Locale(lang));
 
+
+      // لا نغيّر المسار أثناء الـ splash؛ الـ splash يقرر بنفسه بعد تهيئة الخدمات
+      if (state.fullPath?.contains('splash-screen') == true) {
+        return null;
+      }
+
       // 🌐 Offline handling is now done via overlay, no redirect needed
       // The overlay will be shown/hidden by ConnectionService
 
@@ -226,13 +247,18 @@ GoRouter goRouter(BuildContext context) {
       final allowedForVisitor = [
         'splash',
         'offline',
+        'freeMoreScreen',
         'onboarding-screen',
         'login',
         'free-services',
         'my-cv',
         'cv-generator',
         'smart-card',
+        'smart-card-company-detail',
+        'smart-card-profile-detail',
         'update-my-info',
+        'update-company-info',
+        'update-employee-info',
         'select-template',
         'premium-templates',
         'vacation-calc',
@@ -395,8 +421,6 @@ GoRouter goRouter(BuildContext context) {
                   GetRequestsTypes? requestType =
                   RequestsServices.getRequestTypeFromString(
                       reqTypeString: state.pathParameters['type']);
-                  List requests = state.extra != null ? state.extra as List : [
-                  ];
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -614,7 +638,7 @@ GoRouter goRouter(BuildContext context) {
               CacheHelper.deleteData(key: "value");
               return AppRouterTransitions.slideTransition(
                 key: state.pageKey,
-                child: const NotificationScreen(false),
+                child: NotificationScreen(false),
                 animation: animationController,
                 begin: begin ?? const Offset(1.0, 0.0),
               );
@@ -651,7 +675,6 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   Offset? begin = state.extra as Offset?;
                   final lang = state.uri.queryParameters['lang'];
-                  final slug = state.pathParameters['slug'] ?? '';
 
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -964,6 +987,33 @@ GoRouter goRouter(BuildContext context) {
                 },
               ),
               GoRoute(
+                path: 'free_more',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.freeMoreScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const FreeServiceMoreScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
                 path: 'cv-generator',
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.cvGeneratorScreen.name,
@@ -1018,6 +1068,34 @@ GoRouter goRouter(BuildContext context) {
                 },
               ),
               GoRoute(
+                path: 'smart-card-company-detail',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.smartCardCompanyDetailScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final company = state.extra as Map<String, dynamic>?;
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: SmartCardCompanyDetailScreen(company: company ?? {}),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
                 path: 'update-my-info',
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.updateMyInfoScreen.name,
@@ -1044,6 +1122,99 @@ GoRouter goRouter(BuildContext context) {
                   );
                 },
               ),
+              GoRoute(
+                path: 'update-company-info',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.updateCompanyInfoScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final company = state.extra as Map<String, dynamic>?;
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: UpdateCompanyInfoScreen(company: company ?? {}),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'smart-card-profile-detail',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.smartCardProfileDetailScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final extra = state.extra as Map<String, dynamic>? ?? {};
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: SmartCardProfileDetailScreen(
+                      employee: extra['employee'] as Map<String, dynamic>? ?? {},
+                      isPersonal: extra['isPersonal'] as bool? ?? false,
+                      companyId: extra['companyId'] as int?,
+                    ),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'update-employee-info',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.updateEmployeeInfoScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final extra = state.extra as Map<String, dynamic>? ?? {};
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: UpdateEmployeeInfoScreen(
+                      employee: extra['employee'] as Map<String, dynamic>? ?? {},
+                      isPersonal: extra['isPersonal'] as bool? ?? false,
+                      companyId: extra['companyId'] as int?,
+                    ),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+
               GoRoute(
                 path: 'select-template',
                 parentNavigatorKey: rootNavigatorKey,
@@ -1153,15 +1324,76 @@ GoRouter goRouter(BuildContext context) {
                 },
               ),
               GoRoute(
-                path: 'about-team-mind',
+                  path: 'about-team-mind',
+                  parentNavigatorKey: rootNavigatorKey,
+                  name: AppRoutes.aboutTeamMindScreen.name,
+                  pageBuilder: (context, state) {
+                    final lang = state.uri.queryParameters['lang'];
+                    if (lang != null) {
+                      final locale = Locale(lang);
+                      context.setLocale(locale);
+                    }
+                    final animationController = AnimationController(
+                      vsync: ticker,
+                    );
+                    animationController.addStatusListener((status) {
+                      if (status == AnimationStatus.completed ||
+                          status == AnimationStatus.dismissed) {
+                        animationController.dispose();
+                      }
+                    });
+                    return AppRouterTransitions.slideTransition(
+                      key: state.pageKey,
+                      child: const AboutTeamMindScreen(),
+                      animation: animationController,
+                      begin: const Offset(1.0, 0.0),
+                    );
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'mediaCenterYoutubeScreenView/:url',
+                      parentNavigatorKey: rootNavigatorKey,
+                      name: AppRoutes.mediaCenterYoutubeScreenView.name,
+                      pageBuilder: (context, state) {
+                        Offset? begin = state.extra as Offset?;
+                        final lang = state.uri.queryParameters['lang'];
+                        final String url = Uri.decodeComponent(state.pathParameters['url']!);
+                        if (lang != null) {
+                          final locale = Locale(lang);
+                          context.setLocale(locale);
+                        }
+                        final animationController = AnimationController(
+                          vsync: ticker,
+                        );
+                        // Make sure to dispose the controller after the transition is complete
+                        animationController.addStatusListener((status) {
+                          if (status == AnimationStatus.completed ||
+                              status == AnimationStatus.dismissed) {
+                            animationController.dispose();
+                          }
+                        });
+                        return AppRouterTransitions.slideTransition(
+                          key: state.pageKey,
+                          child: YouTubeVideoPlayer(videoUrl: url,),
+                          animation: animationController,
+                          begin: begin ?? const Offset(1.0, 0.0),
+                        );
+                      },
+
+                    ),
+                  ]
+              ),
+              GoRoute(
+                path: 'youtube-video/:url',
                 parentNavigatorKey: rootNavigatorKey,
-                name: AppRoutes.aboutTeamMindScreen.name,
+                name: AppRoutes.youtubeVideoScreen.name,
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
                     context.setLocale(locale);
                   }
+                  final url = Uri.decodeComponent(state.pathParameters['url']!);
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1173,7 +1405,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: const AboutTeamMindScreen(),
+                    child: YoutubeVideoPlayerScreen(videoUrl: url),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
@@ -1237,7 +1469,7 @@ GoRouter goRouter(BuildContext context) {
                     key: state.pageKey,
                     child: EvaluationScreen(empId: empId,),
                     animation: animationController,
-                    begin: begin ?? const Offset(1.0, 0.0),
+                    begin: begin,
                   );
                 },
               ),
@@ -1442,7 +1674,7 @@ GoRouter goRouter(BuildContext context) {
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: const ComplainScreen(),
+                      child: ComplainScreen(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
@@ -1485,11 +1717,6 @@ GoRouter goRouter(BuildContext context) {
                       pageBuilder: (context, state) {
                         Offset? begin = state.extra as Offset?;
                         final lang = state.uri.queryParameters['lang'];
-                        final type = state.uri.queryParameters['type'] ?? '';
-                        final details = state.uri.queryParameters['details'] ??
-                            '';
-                        final subject = state.uri.queryParameters['subject'] ??
-                            '';
                         if (lang != null) {
                           final locale = Locale(lang);
                           context.setLocale(locale);
@@ -1506,7 +1733,7 @@ GoRouter goRouter(BuildContext context) {
                         });
                         return AppRouterTransitions.slideTransition(
                           key: state.pageKey,
-                          child: NewComplainScreen(type, subject, details),
+                          child: NewComplainScreen(),
                           animation: animationController,
                           begin: begin ?? const Offset(1.0, 0.0),
                         );
@@ -1690,7 +1917,7 @@ GoRouter goRouter(BuildContext context) {
           });
           return AppRouterTransitions.slideTransition(
             key: state.pageKey,
-            child: const LangSettingScreens(),
+            child: LangSettingScreens(),
             animation: animationController,
             begin: begin ?? const Offset(1.0, 0.0),
           );
@@ -1700,7 +1927,7 @@ GoRouter goRouter(BuildContext context) {
           path: '/:lang/notification-screen',
           parentNavigatorKey: rootNavigatorKey,
           name: AppRoutes.notification.name,
-          builder: (context, state) => const NotificationScreen(true),
+          builder: (context, state) => NotificationScreen(true),
           routes: [
             GoRoute(
               path: 'add-notification',
@@ -1872,7 +2099,6 @@ GoRouter goRouter(BuildContext context) {
           final lang = state.uri.queryParameters['lang'];
           final id = Uri.decodeComponent(state.pathParameters['id'] ?? '');
           final type = state.pathParameters['type'] ?? '';
-          final title = state.pathParameters['title'] ?? '';
           if (lang != null) {
             final locale = Locale(lang);
             context.setLocale(locale);

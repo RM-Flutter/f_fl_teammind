@@ -20,10 +20,9 @@ import 'settings_service.dart';
 
 class   AppConfigService extends ChangeNotifier {
   AppConfigService() {
-    //intialize application services
     _initializeConnectionListener();
-
-    init();
+    // لا نستدعي init() هنا — يتم استدعاؤه وانتظاره في main() فقط لتجنب race
+    // حيث كان يفتح اللوجين أحياناً رغم وجود token لأن القراءة تحدث قبل اكتمال التهيئة
   }
   bool isConnected = true;
   bool isInitialized = false;
@@ -133,6 +132,7 @@ class   AppConfigService extends ChangeNotifier {
   ///   await appConfigService.setBlockFingerprintOnDeveloperMode(false); // Allow fingerprint with Dev Mode
   ///   await appConfigService.setBlockFingerprintOnDeveloperMode(true);  // Block fingerprint with Dev Mode
   Future<void> setBlockFingerprintOnDeveloperMode(bool value, {bool? notify = false}) async {
+
     if (_prefs == null) {
       await init().then((_) => setValueBool('block_fingerprint_on_dev_mode', value));
     } else {
@@ -223,7 +223,7 @@ class   AppConfigService extends ChangeNotifier {
     switch (type) {
       case SettingsType.generalSettings || SettingsType.startupSettings:
         if (data != null && dataS1 != null && dataS2 != null) {
-          debugPrint("Done S");
+          print("Done S");
           _generalSettigns = data;
           _userSettings = dataS1;
           _user2Settings = dataS2;
@@ -231,13 +231,13 @@ class   AppConfigService extends ChangeNotifier {
         }
       case SettingsType.userSettings|| SettingsType.startupSettings:
         if (dataS1 != null) {
-          debugPrint("Done S1");
+          print("Done S1");
           _userSettings = dataS1;
         }
         return;
       case SettingsType.user2Settings|| SettingsType.startupSettings:
         if (dataS2 != null) {
-          debugPrint("Done S2");
+          print("Done S2");
           _user2Settings = dataS2;
         }
         return;
@@ -484,7 +484,22 @@ class   AppConfigService extends ChangeNotifier {
       if (isLogout == false) return;
     }
 
-    // Clear local data first - use await to ensure completion
+    // Call logout API first while token is still present (backend expects the token)
+    if (!skipServerLogout) {
+      try {
+        await DioHelper.postData(
+          url: "/rm_users/v1/log_out",
+          context: context,
+          query: null,
+          data: {},
+        );
+      } catch (e) {
+        // Continue with local logout even if API fails (e.g., network, 401)
+        debugPrint('Logout API call failed (continuing with local logout): $e');
+      }
+    }
+
+    // Clear local data after API call
     await clearToken(notify: true);
     await setIsLogin(false, notify: true);
 
@@ -502,21 +517,20 @@ class   AppConfigService extends ChangeNotifier {
     await CacheHelper.deleteData(key: "gDate");
     await CacheHelper.deleteData(key: "s1Date");
     await CacheHelper.deleteData(key: "s2Date");
-    await CacheHelper.deleteData(key: "fcmToken");
+    // لا تحذف fcm_token حتى start_app التالي (بعد اختيار الدومين) يبعته. احذف last_sent فقط.
+    await CacheHelper.deleteData(key: "last_sent_fcm_token");
 
     // Clear domain selection on logout (but keep domains list)
     try {
       await DomainSelectionService.clearDomainSelectionOnLogout();
+      if (context.mounted) DioHelper.initail(context);
     } catch (e) {
       debugPrint('Error clearing domain selection: $e');
     }
 
-    // Clear device information if needed (optional)
-    // await _prefs?.remove('DeviceInformationMap');
-
     debugPrint('User has been logged out, and token is cleared.');
 
-    // Clear Dio headers to ensure token is not cached
+    // Clear Dio headers after API call
     try {
       if (DioHelper.dio != null) {
         DioHelper.dio!.options.headers.remove('Authorization');
@@ -526,22 +540,6 @@ class   AppConfigService extends ChangeNotifier {
       debugPrint('Error clearing Dio headers: $e');
     }
 
-    // Try to notify server, but don't fail if it doesn't work (e.g., 401)
-    if (!skipServerLogout) {
-      try {
-        await DioHelper.postData(
-          url: "/rm_users/v1/log_out",
-          context: context,
-          query: null,
-          data: {},
-        );
-      } catch (e) {
-        // Ignore errors when logging out (especially 401)
-        debugPrint('Logout API call failed (this is OK): $e');
-      }
-    }
-
-    // Notify listeners after all cleanup is done
     notifyListeners();
 
     // Navigate to login screen after logout (unless skipNavigation is true)

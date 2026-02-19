@@ -62,7 +62,7 @@ class _TaskScreenState extends State<TaskScreen> {
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString)
-          as Map<String, dynamic>; // Convert String back to JSON
+      as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
     return ChangeNotifierProvider<TasksController>(
@@ -91,37 +91,38 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
           )],
           floatingActionButton: (gCache['is_teamleader_in'].isNotEmpty ||
-                  gCache['is_manager_in'].isNotEmpty)
+              gCache['is_manager_in'].isNotEmpty)
               ? Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: LocalizationService.isArabic(context: context)
-                          ? 35
-                          : 0),
-                  width: double.infinity,
-                  alignment: Alignment.bottomRight,
-                  child: FloatingActionButton(
-                    onPressed: () async {
-                      await context.pushNamed(
-                          AppRoutes.addTaskScreen.name,
-                          pathParameters: {
-                            'lang': context.locale.languageCode
-                          });
-                      viewModel.currentPage = 1;
-                      await viewModel.getTask(context, date: null);
-                    },
-                    backgroundColor: Color(
-                        AppColors.primary), // Optional: change color
-                    tooltip: 'Add',
-                    child: Center(
-                      child: Image.asset(
-                        AppImages.addFloatingActionButtonIcon,
-                        color: AppThemeService.colorPalette.fabIconColor.color,
-                        width: AppSizes.s16,
-                        height: AppSizes.s16,
-                      ),
-                    ),
-                  ),
-                )
+            padding: EdgeInsets.symmetric(
+                horizontal: LocalizationService.isArabic(context: context)
+                    ? 35
+                    : 0),
+            width: double.infinity,
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              heroTag: 'tasks_add',
+              onPressed: () async {
+                await context.pushNamed(
+                    AppRoutes.addTaskScreen.name,
+                    pathParameters: {
+                      'lang': context.locale.languageCode
+                    });
+                viewModel.currentPage = 1;
+                await viewModel.getTask(context, date: null);
+              },
+              backgroundColor: Color(
+                  AppColors.primary), // Optional: change color
+              tooltip: 'Add',
+              child: Center(
+                child: Image.asset(
+                  AppImages.addFloatingActionButtonIcon,
+                  color: AppThemeService.colorPalette.fabIconColor.color,
+                  width: AppSizes.s16,
+                  height: AppSizes.s16,
+                ),
+              ),
+            ),
+          )
               : null,
           title: AppStrings.tasks.tr().toUpperCase(),
           onRefresh: () async {
@@ -140,79 +141,81 @@ class _TaskScreenState extends State<TaskScreen> {
                     child: Consumer<TasksController>(
                         builder: (context, viewModel, child) => viewModel.isLoading
                             ? const LoadingPageWidget(
-                                reverse: true,
-                                height: AppSizes.s75,
-                              )
+                          reverse: true,
+                          height: AppSizes.s75,
+                        )
                             : SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    HorizontalCalendar(),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    if (viewModel.tasks.isEmpty == true)
-                                      NoExistingPlaceholderScreen(
-                                          height: LayoutService.getHeight(context) *
-                                              0.6,
-                                          title: AppStrings.thereIsNoTasks.tr()),
-                                    if (viewModel.tasks.isEmpty == false)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: SizedBox(
-                                          height: MediaQuery.sizeOf(context).height * 0.7,
-                                          child: ListView.separated(
-                                            padding: EdgeInsets.zero,
-                                            shrinkWrap: true,
-                                            reverse: false,
-                                            controller: _scrollController,
-                                            physics:
-                                                const ClampingScrollPhysics(),
-                                            itemBuilder: (context, index) {
-                                              final iconName =
-                                                  viewModel.tasks[index]["icon"];
-                                              final icon = viewModel.iconsName.firstWhere(
-                                                (item) => item["name"] == iconName,
-                                                orElse: () => {
-                                                  "value": "assets/images/svg/t3.svg"
-                                                }, // مسار افتراضي لو لم يوجد
-                                              );
-                                              return TaskListTileWidget(
-                                                onTap: ()async{
-                                                  await context
-                                                      .pushNamed(AppRoutes.taskDetails.name, pathParameters: {
-                                                    'lang': context.locale.languageCode,
-                                                    'id' : viewModel.tasks[index]['id'].toString(),
-                                                  });
-                                                  viewModel.currentPage = 1;
-                                                 await viewModel.getTask(context, date: null);
-                                                },
-                                                complete: viewModel.tasks[index]
-                                                            ['status'].toString(),
-                                                assetName: icon['value']!,
-                                                title: viewModel.tasks[index]
-                                                    ['title'],
-                                                id: viewModel.tasks[index]['id']
-                                                    .toString(),
-                                                date:
-                                                viewModel.tasks[index]
-                                                    ['dueDate'] ?? "",
-                                                createdAt:viewModel.tasks[index]
-                                                ['createdAt'] ?? ""
-                                              );
+                          child: Column(
+                            children: [
+                              HorizontalCalendar(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              if (viewModel.tasks == null ||
+                                  viewModel.tasks?.isEmpty == true)
+                                NoExistingPlaceholderScreen(
+                                    height: LayoutService.getHeight(context) *
+                                        0.6,
+                                    title: AppStrings.thereIsNoTasks.tr()),
+                              if (viewModel.tasks != null &&
+                                  viewModel.tasks?.isEmpty == false)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: SizedBox(
+                                    height: MediaQuery.sizeOf(context).height * 0.7,
+                                    child: ListView.separated(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      reverse: false,
+                                      controller: _scrollController,
+                                      physics:
+                                      const ClampingScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final iconName =
+                                        viewModel.tasks[index]["icon"];
+                                        final icon = viewModel.iconsName.firstWhere(
+                                              (item) => item["name"] == iconName,
+                                          orElse: () => {
+                                            "value": "assets/images/svg/t3.svg"
+                                          }, // مسار افتراضي لو لم يوجد
+                                        );
+                                        return TaskListTileWidget(
+                                            onTap: ()async{
+                                              await context
+                                                  .pushNamed(AppRoutes.taskDetails.name, pathParameters: {
+                                                'lang': context.locale.languageCode,
+                                                'id' : viewModel.tasks[index]['id'].toString(),
+                                              });
+                                              viewModel.currentPage = 1;
+                                              await viewModel.getTask(context, date: null);
                                             },
-                                            itemCount: viewModel.tasks.length,
-                                            separatorBuilder: (context, index) =>
-                                                const SizedBox(
-                                              height: 15,
-                                            ),
-                                          ),
-                                        ),
+                                            complete: viewModel.tasks[index]
+                                            ['status'].toString(),
+                                            assetName: icon['value']!,
+                                            title: viewModel.tasks[index]
+                                            ['title'],
+                                            id: viewModel.tasks[index]['id']
+                                                .toString(),
+                                            date:
+                                            viewModel.tasks[index]
+                                            ['dueDate'] ?? "",
+                                            createdAt:viewModel.tasks[index]
+                                            ['createdAt'] ?? ""
+                                        );
+                                      },
+                                      itemCount: viewModel.tasks.length,
+                                      separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                        height: 15,
                                       ),
-                                    if(viewModel.isLoadingMore == true) CircularProgressIndicator()
-                                  ],
+                                    ),
+                                  ),
                                 ),
-                              )),
+                              if(viewModel.isLoadingMore == true) CircularProgressIndicator()
+                            ],
+                          ),
+                        )),
                   ),
                 ],
               ),

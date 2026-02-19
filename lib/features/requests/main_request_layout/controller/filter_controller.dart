@@ -99,6 +99,9 @@ class FilterController extends ChangeNotifier {
     notifyListeners();
     DioHelper.getData(
         url: "/departments/entities-operations",
+      query: {
+        "itemsCount" : 200,
+      },
       context: context,
     ).then((value){
       isLoading = false;

@@ -23,6 +23,7 @@ import 'backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'backend_services/get_endpoint_service.dart';
 import 'localization_service.dart';
 
+
 enum SettingsType {
   generalSettings,
   userSettings,
@@ -87,7 +88,9 @@ abstract class AppSettingsService {
     }
   }
 
-  static Future<void> updateToken(context, token)async{
+  /// method to initialize the general settings and check if there is updates or not.
+  /// setting type [general_settings] || [user_settings] || [user2_settings]
+  static updateToken(context, token)async{
     await DioHelper.postData(
         url: "/rm_users/v1/devices/update_token",
         context: context,
@@ -96,20 +99,20 @@ abstract class AppSettingsService {
           "token" : token
         }
     ).then((value){
-      debugPrint(value.data['message']);
+      print(value.data['message']);
       if(value.data['status'] == true){
         if(value.data['update_url'] != null){
-          debugPrint("THE UPDATE URL IS CHANGES");
+          print("THE UPDATE URL IS CHANGES");
           CacheHelper.setString(key: "update_url", value:value.data['update_url'] );
         }
       }
     }).catchError((error){
-    }).catchError((error){
       if (error is DioError) {
-        debugPrint(error.response?.data['message'] ?? 'Something went wrong');
+        print(error.response?.data['message'] ?? 'Something went wrong');
       }
     });
   }
+
 
   static Future<Map<String, String>?> getIpCountryInfo() async {
     try {
@@ -128,14 +131,14 @@ abstract class AppSettingsService {
       //   final ipData = jsonDecode(ipResponse.body);
       // }
     } catch (e) {
-      debugPrint("Error: $e");
+      print("Error: $e");
     }
     return null;
   }
   static String getDialCode(String countryCode) {
     return AppConstants.countryDialCodes[countryCode] ?? '';
   }
-  static Future<void> printCountryInfo() async {
+  static printCountryInfo() async {
     final info = await getIpCountryInfo();
     if (info != null) {
       String countryCode = info['countryCode'] ?? AppConstants.country; // رمز الدولة، مثل EG
@@ -145,18 +148,18 @@ abstract class AppSettingsService {
       if (countryCode == 'AF' || countryCode == 'af') {
         countryCode = AppConstants.country; // EG
         dialCode = AppConstants.countryCode; // +20
-        debugPrint('⚠️ تم اكتشاف افغانستان من IP، تم تغييرها إلى مصر');
+        print('⚠️ تم اكتشاف افغانستان من IP، تم تغييرها إلى مصر');
       }
 
       CacheHelper.setString(key: "flag", value: countryCode);
       CacheHelper.setString(key: "flagCode", value: dialCode);
-      debugPrint('Country Code: $countryCode');
-      debugPrint('Dial Code: $dialCode');
+      print('Country Code: $countryCode');
+      print('Dial Code: $dialCode');
     } else {
       // إذا فشل الحصول على معلومات الدولة، استخدم مصر كقيمة افتراضية
       CacheHelper.setString(key: "flag", value: AppConstants.country); // EG
       CacheHelper.setString(key: "flagCode", value: AppConstants.countryCode); // +20
-      debugPrint('⚠️ لم يتم الحصول على معلومات الدولة، تم استخدام مصر كقيمة افتراضية');
+      print('⚠️ لم يتم الحصول على معلومات الدولة، تم استخدام مصر كقيمة افتراضية');
     }
   }
 
@@ -175,22 +178,34 @@ abstract class AppSettingsService {
     var s1Cache;
     var s2Cache;
     var gCache;
-    debugPrint("FAAAAAAAAAAAAAAAILD");
-    String? fcm_token;
+    // FCM token: use cache only. Send in start_app when token changed أو بعد اختيار الدومين عشان يروح للدومين اللي اختاره.
+    String? fcm_token = CacheHelper.getString("fcm_token");
+    final String? lastSentFcmToken = CacheHelper.getString("last_sent_fcm_token");
 
-    try {
-      fcm_token = await FirebaseMessaging.instance.getToken();
-    } catch (e) {
-      debugPrint("🔥 Error while requesting permission or token: $e");
+    final fromDomainSelection = CacheHelper.getBool("from_domain_selection") == true;
+    if (fromDomainSelection) {
+      await CacheHelper.deleteData(key: "from_domain_selection");
+      // لو جاي من اختيار الدومين والتوكن لسه مش في الكاش، استنى FcmTokenService (retry من الكاش كل 1.5 ثانية)
+      if (settingType == SettingsType.startupSettings &&
+          (fcm_token == null || fcm_token.isEmpty)) {
+        for (int i = 0; i < 4; i++) {
+          await Future.delayed(const Duration(milliseconds: 1500));
+          fcm_token = CacheHelper.getString("fcm_token");
+          if (fcm_token != null && fcm_token.isNotEmpty) break;
+        }
+      }
     }
 
-    debugPrint("FAAAAAAAAAAAAAAAILD 2");
-
-    fcm_token ??= CacheHelper.getString("fcm_token"); // fallback
-
+    bool sendNotificationToken = false;
     if (settingType == SettingsType.startupSettings) {
+      final bool tokenChanged = fcm_token != null &&
+          fcm_token.isNotEmpty &&
+          fcm_token != lastSentFcmToken;
+      // بعد اختيار الدومين نبعث التوكن عشان يروح للدومين اللي اختاره
+      sendNotificationToken = tokenChanged ||
+          (fromDomainSelection && fcm_token != null && fcm_token.isNotEmpty);
       Map<String, dynamic> body = {
-        if(CacheHelper.getString("fcm_token") != fcm_token.toString()) "notification_token" : fcm_token,
+        if (sendNotificationToken) "notification_token": fcm_token,
         if (CacheHelper.getString("gDate")!= null )"last_update_date_general": CacheHelper.getString("gDate"),
         if (CacheHelper.getString("s1Date")!= null)"last_update_date_user": CacheHelper.getString("s1Date"),
         if (CacheHelper.getString("s2Date") != null) "last_update_date_user2": CacheHelper.getString("s2Date"),
@@ -216,7 +231,7 @@ abstract class AppSettingsService {
           : 'user2_settings';
       Map<String, dynamic> body = {
         "type": settingTypeName,
-        if(CacheHelper.getString("fcm_token") != fcm_token.toString()) "notification_token" : fcm_token,
+        if (fcm_token != null && fcm_token.isNotEmpty) "notification_token": fcm_token,
         "last_update_date": lastUpdateDate
       };
       result = await DioApiService().post<Map<String, dynamic>>(
@@ -229,7 +244,12 @@ abstract class AppSettingsService {
           allData: allData);
     }
     if (result.success && result.data != null && (result.data?.isNotEmpty ?? false)) {
-      CacheHelper.setString(key: "fcm_token", value: fcm_token.toString());
+      if (settingType == SettingsType.startupSettings &&
+          sendNotificationToken &&
+          fcm_token != null &&
+          fcm_token.isNotEmpty) {
+        CacheHelper.setString(key: "last_sent_fcm_token", value: fcm_token);
+      }
       CacheHelper.setString(key: "update_url", value: result.data!['update_url'] ?? "" );
       if(result.data!['token'] != null){
         if(appConfigServiceProvider.token.isNotEmpty && appConfigServiceProvider.token != result.data!['token']){
@@ -242,7 +262,7 @@ abstract class AppSettingsService {
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null && result.data!['user2_settings'] ['status']  != false  && CacheHelper.getString("US2") != null && CacheHelper.getString("US2") != ""){
         CacheHelper.deleteData(key: "US2").then((v){
-          debugPrint("DELETED FROM CACHE SUCCESS");
+          print("DELETED FROM CACHE SUCCESS");
         });}
       if((need == null || need.contains('general_settings')) &&result.data!['general_settings'] != null && result.data!['general_settings'] ['status']  != false && CacheHelper.getString("USG") != null && CacheHelper.getString("USG") != ""){
         CacheHelper.deleteData(key: "USG");
@@ -263,6 +283,7 @@ abstract class AppSettingsService {
         prefs = await SharedPreferences.getInstance();
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
+        AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null){
         if ((need == null || need.contains('user2_settings')) &&result.data!['user2_settings']['data'] != null){
@@ -278,7 +299,7 @@ abstract class AppSettingsService {
           final jsonString = prefs.getString("US1");
           if (jsonString != null) {
             s1Cache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-            debugPrint("S1 IS --> $s1Cache");
+            print("S1 IS --> $s1Cache");
           }
         }
       }
@@ -298,7 +319,7 @@ abstract class AppSettingsService {
           dataS2: (result.data!['user2_settings'] != null)?(result.data!['user2_settings']['status'] == false)? s2Cache : result.data!['user2_settings']['data'] : null
       );
     } else {
-      debugPrint("ERROR DIO IS  --> ${result.errorCodeString}");
+      print("ERROR DIO IS  --> ${result.errorCodeString}");
       // if error happened , then check if i have cached version of settings or not , if i have cached version i will use it , if not , i will store the default settings version into local storage.
       if (appConfigServiceProvider.getSettings(type: settingType) == null) {
         try {
@@ -463,17 +484,20 @@ abstract class AppSettingsService {
     //     context: context);
   }
 
-  static Future<void> getUserSettingsAndUpdateTheStoredSettingsPoint(
-      {required BuildContext context, bool? allData = false, bool closeDate = false}) async {
-    await initializeGeneralSettingsPoints(
-        settingType: SettingsType.startupSettings,
-        allData: allData,
-        closeDate: closeDate,
-        context: context);
-    // await initializeGeneralSettings(
-    //     settingType: SettingsType.user2Settings,
-    //     allData: allData,
-    //     context: context);
+  /// used to get screen general message [NOTE] page route will be used as screen id.
+  static String? getGeneralScreenMessageByScreenId(
+      {required String screenId, required BuildContext context}) {
+    List<GeneralMessageByScreen>? list = (getSettings(
+        settingsType: SettingsType.generalSettings,
+        context: context) as GeneralSettingsModel)
+        .generalMessageByScreen;
+    if (list == null || list.isEmpty) return null;
+    for (var element in list) {
+      if (element.screenId == screenId) {
+        return LocalizationService.isArabic(context: context) ? element.screenMessage!.ar: element.screenMessage!.en;
+      }
+    }
+    return null;
   }
 
   /// used to get request title
@@ -489,4 +513,19 @@ abstract class AppSettingsService {
     }
     return null;
   }
+
+
+  static Future<void> getUserSettingsAndUpdateTheStoredSettingsPoint(
+      {required BuildContext context, bool? allData = false, bool closeDate = false}) async {
+    await initializeGeneralSettingsPoints(
+        settingType: SettingsType.startupSettings,
+        allData: allData,
+        closeDate: closeDate,
+        context: context);
+    // await initializeGeneralSettings(
+    //     settingType: SettingsType.user2Settings,
+    //     allData: allData,
+    //     context: context);
+  }
+
 }

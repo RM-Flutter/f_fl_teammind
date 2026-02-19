@@ -17,36 +17,36 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
+import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../controller/complaints_controller.dart';
 
 class ComplainScreen extends StatefulWidget {
-  const ComplainScreen({super.key});
-
   @override
   State<ComplainScreen> createState() => _ComplainScreenState();
 }
 
 class _ComplainScreenState extends State<ComplainScreen> {
   final ScrollController _scrollController = ScrollController();
-  late ComplaintsController complaintsController;
+  late ComplaintsController requestController;
 
   @override
   void initState() {
     super.initState();
-    complaintsController = ComplaintsController();
+    requestController = ComplaintsController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      complaintsController = Provider.of<ComplaintsController>(context, listen: false);
-      // ComplaintsController.getRequestMine(context, page: 1,);
-      complaintsController.getRequest(context, page: 1,);
+      requestController = Provider.of<ComplaintsController>(context, listen: false);
+      requestController.getRequest(context, page: 1,);
+      requestController.getRequestMine(context, page: 1,);
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      print("Current scroll position: ${_scrollController.position.pixels}");
+      print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
       if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
-          !complaintsController.isGetRequestLoading && complaintsController.getMore == true) {
-        debugPrint("BOTTOM BOTTOM");
-        complaintsController.getRequest(context, page: complaintsController.currentPage);
+          !requestController.isGetRequestLoading &&
+          requestController.hasMoreRequests) {
+        print("BOTTOM BOTTOM");
+        requestController.getRequest(context, page: requestController.currentPage);
       }
     });
 
@@ -65,26 +65,23 @@ class _ComplainScreenState extends State<ComplainScreen> {
         }
         return Scaffold(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: Text(
-              AppStrings.requests.tr().toUpperCase(),
-              style:  TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
-            ),
+          appBar: AppBarWithBookmark(
+            title: AppStrings.ticketSystem.tr().toUpperCase(),
+            titleStyle: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
             centerTitle: true,
-            backgroundColor: Color(0xffFFFFFF),
+            backgroundColor: Color(AppColors.white),
             elevation: 0,
+            routeName: AppRoutes.complainScreen.name,
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () async{
-              await context.pushNamed(AppRoutes.newRequestScreen.name,
-                  pathParameters: {'lang': context.locale.languageCode,
-                    "type" : "no",
-                    "details" : "no",
-                    "subject" : "no",
-                  });
-              await complaintsController.getRequest(context, page: 1, );
+            heroTag: 'complains_new',
+            onPressed: ()async {
+              await context.pushNamed(AppRoutes.newComplainScreen.name,
+                  pathParameters: {'lang': context.locale.languageCode,});
+              await value.getRequest(context, page: 1);
+              await value.getRequestMine(context, page: 1);
             },
-            backgroundColor:  Color(AppColors.primary),
+            backgroundColor: Color(AppColors.primary),
             child: const Icon(Icons.add, color: Colors.white),
           ),
           body: (value.isGetRequestLoading == true && value.currentPage == 1)
@@ -107,97 +104,136 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 height: 100,
               ),
             ), ):
-          GradientBgImage(
-            padding: EdgeInsets.all(0),
-            child: SafeArea(
-              child: RefreshIndicator.adaptive(
-                onRefresh: ()async{
-                  await complaintsController.getRequest(context, page: 1, );
-                },
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  child: (value.requests.isNotEmpty)? Padding(
+          SafeArea(
+            child: (value.requests.isNotEmpty || value.requestsTeam.isNotEmpty)? Container(
+              height: MediaQuery.sizeOf(context).height * 1,
+              alignment: Alignment.topCenter,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  ),
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 10,),
-                        Center(
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100 : double.infinity,
-                            ),
-                            child: ListView.builder(
-                              itemCount: value.requests.length,
-                              reverse: false,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              itemBuilder: (context, index) {
-                                var request = value.requests[index];
-                                var statusKey = request['pstatus']['key'];
-                                if (statusKey == "hold") {
+                    child: RefreshIndicator.adaptive(
+                      onRefresh: ()async{
+                        await value.getRequest(context, page: 1);
+                        await value.getRequestMine(context, page: 1);
+                      },
+                      child: Container(
+                        height: MediaQuery.sizeOf(context).height * 1,
+                        alignment: Alignment.topCenter,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15,),
+                              ListView.builder(
+                                itemCount: value.requests.length,
+                                reverse: false,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  var request = value.requests[index];
+                                  var statusKey = request['pstatus'];
+                                  if (statusKey == "hold") {
+                                    return defaultRequestContainer(
+                                        "mine",
+                                        id: request['id'],
+                                        title: request['subject'],
+                                        containerColor: Color(AppColors.primary),
+                                        date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                            .format(DateTime.parse(request['created_at'].toString()))
+                                            .toString(),
+                                        status: request['pstatus'].toString().tr(),
+                                        statusColor: Color(AppColors.white)
+                                    );
+                                  }else{
+                                    return defaultRequestContainer(
+                                        "mine",
+                                        id: request['id'],
+                                        containerColor: Color(AppColors.white),
+                                        title: request['subject'],
+                                        date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                            .format(DateTime.parse(request['created_at'].toString()))
+                                            .toString(),
+                                        status: request['pstatus'].toString().tr(),
+                                        titleColor: Color(AppColors.primary),
+                                        dateColor: Color(AppColors.darkGrey),
+                                        statusColor: statusKey == "closed"
+                                            ? Color(AppColors.red)
+                                            : Color(AppColors.primary)
+                                    );
+                                  }
+                                  return SizedBox.shrink();  // Return nothing for non-hold items in this section
+                                },
+                              ),
+                              // "Other Requests" Text
+                              if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true))  Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  AppStrings.otherRequests.tr().toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(AppColors.dark),
+                                  ),
+                                ),
+                              ),
+                              if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true))  ListView.builder(
+                                itemCount: value.requestsTeam.length,
+                                reverse: false,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, index) {
+                                  var request = value.requestsTeam[index];
+                                  var statusKey = request['pstatus'];
                                   return defaultRequestContainer(
-                                      context,
-                                      "mine",
+                                      "myTeam",
                                       id: request['id'],
-                                      title: request['title'],
-                                      containerColor: Color(AppColors.primary),
+                                      containerColor: Color(AppColors.white),
+                                      title: request['subject'],
                                       date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
                                           .format(DateTime.parse(request['created_at'].toString()))
                                           .toString(),
-                                      status: request['pstatus']['key'].toString().tr(),
-                                      statusColor: Color(0xffFFFFFF)
-                                  );
-                                }else{
-                                  return defaultRequestContainer(
-                                      context,
-                                      "mine",
-                                      id: request['id'],
-                                      containerColor: Color(0xffFFFFFF),
-                                      title: request['title'],
-                                      date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                                          .format(DateTime.parse(request['created_at'].toString()))
-                                          .toString(),
-                                      status: request['pstatus']['key'].toString().tr(),
+                                      status: request['pstatus'].toString().tr(),
                                       titleColor: Color(AppColors.primary),
-                                      dateColor: Color(0xff5E5E5E),
+                                      dateColor: Color(AppColors.darkGrey),
                                       statusColor: statusKey == "closed"
                                           ? Color(AppColors.red)
                                           : Color(AppColors.primary)
                                   );
-                                }
-                              },
-                            ),
+                                },
+                              ),
+
+                            ],
                           ),
                         ),
-                        if(value.isGetRequestLoading == true && value.currentPage != 1)   const SizedBox(height: 15,),
-                        if(value.isGetRequestLoading == true && value.currentPage != 1)   const Center( child: CircularProgressIndicator(),),
-                        const SizedBox(height: 10,),
-                      ],
+                      ),
                     ),
-                  ) : Center(
-                    child: NoExistingPlaceholderScreen(
-                        height: LayoutService.getHeight(context) * 0.6,
-                        title: AppStrings.thereIsNoRequests.tr()),
                   ),
                 ),
               ),
+            ) : Center(
+              child: NoExistingPlaceholderScreen(
+                  height: LayoutService.getHeight(context) * 0.6,
+                  title: AppStrings.thereIsNoComplains.tr()),
             ),
           ),
         );
       } ,
     );
   }
-
-  Widget defaultRequestContainer(BuildContext parentContext,type,{title, containerColor, statusColor, status, date, titleColor, dateColor , id})=>
+  defaultRequestContainer(type,{title, containerColor, statusColor, status, date, titleColor, dateColor , id})=>
       GestureDetector(
-        onTap: (){
-          parentContext.pushNamed(AppRoutes.requestDetails.name,
-              pathParameters: {'lang': parentContext.locale.languageCode,
+        onTap: ()async{
+          await context.pushNamed(AppRoutes.complainDetails.name,
+              pathParameters: {'lang': context.locale.languageCode,
                 'id' : "${id}",
+                'type' : "$type"
               });
-
         },
         child: Container(
           padding: EdgeInsets.all(12),
@@ -222,7 +258,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: titleColor??Color(0xffFFFFFF),
+                  color: titleColor??Color(AppColors.white),
                 ),
               ),
               SizedBox(height: 8),
@@ -235,7 +271,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: titleColor??Color(0xffFFFFFF),
+                      color: titleColor??Color(AppColors.white),
                     ),
                   ),
                   SizedBox(width: 30,),
@@ -249,4 +285,5 @@ class _ComplainScreenState extends State<ComplainScreen> {
           ),
         ),
       );
+
 }

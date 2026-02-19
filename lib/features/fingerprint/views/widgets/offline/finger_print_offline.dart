@@ -12,6 +12,7 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/fingerprint/views/widgets/offline/widget/finger_print_offline_card.dart';
+import 'package:app_test/features/offline/views/widgets/finger_print_offline_card.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/constants/app_sizes.dart' show AppSizes;
 import '../../../controller/fingerprint_controller.dart';
 import '../../../../../core/widgets/finger_print/loading/fingerprint_loading_screen.dart';
+
 
 class FingerprintOfflineScreen extends StatefulWidget {
   final String? empId;
@@ -92,17 +94,17 @@ class _FingerprintOfflineScreenState extends State<FingerprintOfflineScreen> {
               child: Consumer<FingerprintViewModel>(
                   builder: (context, viewModel, child) {
                     if(viewModel.isLoading == false){
-                      debugPrint("THE LISTS --> ${AppConstants.fingerPrints}");
+                      print("THE LISTS --> ${AppConstants.fingerPrints}");
                     }
                     return viewModel.isLoading
                         ? const FingerprintLoadingScreenWidget()
                         : AppConstants.fingerPrints?.isEmpty == true ||
                         AppConstants.fingerPrints == null
                         ? Center(
-                          child: NoExistingPlaceholderScreen(
+                      child: NoExistingPlaceholderScreen(
                           height: LayoutService.getHeight(context) * 0.6,
                           title: AppStrings.noFingerprintsYet.tr()),
-                        )
+                    )
                         : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -121,7 +123,7 @@ class _FingerprintOfflineScreenState extends State<FingerprintOfflineScreen> {
                             alignment: Alignment.center,
                             child: const CircularProgressIndicator(),
                           ),
-                         if(viewModel.isLoading == false) Center(
+                          if(viewModel.isLoading == false) Center(
                               child: CustomElevatedButton(
                                   backgroundColor: Theme.of(context).colorScheme.primary,
                                   titleSize: AppSizes.s12,
@@ -134,13 +136,17 @@ class _FingerprintOfflineScreenState extends State<FingerprintOfflineScreen> {
                           /// general screen message widget for other requests types
                           // GeneralScreenMessageWidget(
                           //     screenId: '/fingerprints'),
-                          FingerprintCardOffline(
+                          FingerprintCardOffiline(
                             fingerprint: AppConstants.fingerPrints,
+                            onDelete: (index) async {
+                              await viewModel.deleteOfflineFingerprintAt(index);
+                            },
+                            deletingIndexes: viewModel.deletingOfflineIndexes,
                           ),
                           // ...AppConstants.fingerPrints!.map(
                           //       (fingerprint) => Column(
                           //     children: [
-                          //       FingerprintCardOffline(
+                          //       FingerprintCardOffiline(
                           //         fingerprint: fingerprint,
                           //       ),
                           //       gapH12

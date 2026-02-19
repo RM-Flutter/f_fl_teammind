@@ -18,6 +18,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 
+
 class TeamFingerprintScreen extends StatefulWidget {
   final String? empId;
   final String? empName;
@@ -63,7 +64,8 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                   child: Consumer<TeamFingerPrintViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                          : viewModel.employees.isEmpty == true
+                          : viewModel.employees?.isEmpty == true ||
+                          viewModel.employees == null
                           ? NoExistingPlaceholderScreen(
                           height: LayoutService.getHeight(context) * 0.6,
                           title: AppStrings.noEmployeesFounded.tr())
@@ -76,12 +78,14 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                 physics: const ClampingScrollPhysics(),
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
-                                  final totalPoints = viewModel.employees[index]['totalPoints'];
-                                  final gainedPoints = viewModel.employees[index]['gainedPoints'];
+                                  final totalPoints = viewModel.employees![index]['totalPoints'];
+                                  final gainedPoints = viewModel.employees![index]['gainedPoints'];
 
+                                  String percentage;
                                   if (totalPoints != null && gainedPoints != null && gainedPoints != 0) {
+                                    percentage = "${((gainedPoints / totalPoints) * 100).toStringAsFixed(1)}%";
                                   } else {
-// or any fallback value like "0", "Error", etc.
+                                    percentage = "0%"; // or any fallback value like "0", "Error", etc.
                                   }
                                   return defaultTeamEmp(
                                     context,
@@ -95,15 +99,14 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                     },
                                     viewModel.employees[index]['name'],
                                     viewModel.employees[index]['department'],
-                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")?
-                                    "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
-                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
-                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
+                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")? "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
+                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from_start'] != null || viewModel.employees[index]['working_hours']['working_hours_from_end'] != null|| viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
+                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_start']?.toString() ?? viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_end']?.toString()??viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
 
                                   );
                                 },
                                 separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                                itemCount: viewModel.employees.length)
+                                itemCount: viewModel.employees!.length)
                           ])),
                 ),
               ),

@@ -20,6 +20,7 @@ import '../../../sentry_serivce.dart';
 import '../../../telegram_error_service.dart';
 import '../../api_service_helpers.dart';
 import '../../backend_services_interface.dart';
+import 'dio_adapter_reset.dart' as adapter_reset;
 
 class DioApiService implements BackEndServicesInterface {
   static final DioApiService _singleton = DioApiService._internal();
@@ -30,8 +31,44 @@ class DioApiService implements BackEndServicesInterface {
   }
 
   DioApiService._internal() {
-    // Initialize Dio with PrettyDioLogger
-    _dio = Dio();
+    // Initialize Dio with proper timeout and connection settings
+    _dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+        // Enable persistent connections
+        persistentConnection: true,
+        // Follow redirects
+        followRedirects: true,
+        maxRedirects: 5,
+      ),
+    );
+
+    // Add retry interceptor for connection errors (مع إعادة تعيين الاتصال لتفادي مشكلة عدم الرد حتى إعادة فتح الواي فاي)
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (error, handler) {
+          if (_shouldRetry(error)) {
+            final retryCount = error.requestOptions.extra['retryCount'] ?? 0;
+            if (retryCount < 3) {
+              error.requestOptions.extra['retryCount'] = retryCount + 1;
+              // إغلاق الاتصالات القديمة وفتح اتصالات جديدة قبل إعادة المحاولة
+              adapter_reset.resetDioAdapter(_dio);
+              Future.delayed(Duration(seconds: retryCount + 1), () {
+                _dio.fetch(error.requestOptions).then(
+                      (response) => handler.resolve(response),
+                  onError: (err) => handler.reject(err),
+                );
+              });
+              return;
+            }
+          }
+          handler.next(error);
+        },
+      ),
+    );
+
     _dio.interceptors.add(
       PrettyDioLogger(
         requestHeader: true,
@@ -43,7 +80,39 @@ class DioApiService implements BackEndServicesInterface {
         maxWidth: 90,
       ),
     );
+  }
 
+  // Check if error should be retried
+  bool _shouldRetry(DioException error) {
+    return error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.sendTimeout ||
+        error.type == DioExceptionType.receiveTimeout ||
+        error.type == DioExceptionType.connectionError ||
+        (error.message?.contains('Failed host lookup') ?? false) ||
+        (error.message?.contains('SocketException') ?? false);
+  }
+
+  // Get user-friendly error message
+  String _getErrorMessage(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'Connection timeout. Please check your internet connection.';
+      case DioExceptionType.connectionError:
+        return 'Connection error. Please check your internet connection.';
+      case DioExceptionType.badResponse:
+        return error.response?.statusMessage ?? 'Server error occurred';
+      case DioExceptionType.cancel:
+        return 'Request was cancelled';
+      case DioExceptionType.unknown:
+        if (error.message?.contains('Failed host lookup') ?? false) {
+          return 'Cannot connect to server. Please check your internet connection.';
+        }
+        return error.message ?? 'Unexpected error occurred';
+      default:
+        return error.message ?? 'Unexpected error occurred';
+    }
   }
   static Uri _getUri(String url) {
     return Uri.parse(url);
@@ -54,10 +123,15 @@ class DioApiService implements BackEndServicesInterface {
         required String dataKey,
         required BuildContext context,
         bool? allData = false}) async {
-    debugPrint("STATUS CODE IS --> ${response.statusCode}");
+    print("STATUS CODE IS --> ${response.statusCode}");
     String? respond;
+    // Use a context that is still mounted (avoid "deactivated widget's ancestor" when async response arrives after screen closed)
+    final safeContext = context.mounted ? context : rootNavigatorKey.currentContext;
+    if (safeContext == null || !safeContext.mounted) {
+      return OperationResult<T>(success: false, message: 'Request cancelled or screen closed');
+    }
     final appConfigServiceProvider =
-    Provider.of<AppConfigService>(context, listen: false);
+    Provider.of<AppConfigService>(safeContext, listen: false);
     switch (response.statusCode) {
       case 200:
         final reply = response.data;
@@ -98,18 +172,18 @@ class DioApiService implements BackEndServicesInterface {
 
       case 401:
         respond = 'Unauthorized';
-        debugPrint("Unauthorized is ${respond}");
+        print("Unauthorized is ${respond}");
         // _toast.toastMethod(LocaleKeys.respond_401.tr());
-        final appConfigService = Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v){
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+        final appConfigService = Provider.of<AppConfigService>(safeContext, listen: false);
+        appConfigService.logout(safeContext, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v){
+          if (safeContext.mounted) {
+            safeContext.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': safeContext.locale.languageCode});
           }
         }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+          if (safeContext.mounted) {
+            safeContext.goNamed(AppRoutes.splash.name,
+                pathParameters: {'lang': safeContext.locale.languageCode});
           }
         });
         return OperationResult<T>(success: false, message: respond);
@@ -228,9 +302,9 @@ class DioApiService implements BackEndServicesInterface {
           applyTokenLogic: checkOnTokenExpiration!,
           dataKey: dataKey,
           context: context);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      debugPrint("Caught DioError with status code: $statusCode");
+      print("Caught DioException with status code: $statusCode");
 
       // Handle CORS errors on web
       if (kIsWeb || PlatformIs.web) {
@@ -250,34 +324,44 @@ class DioApiService implements BackEndServicesInterface {
       }
 
       if (statusCode == 401) {
-        debugPrint("Unauthorized (caught in DioError catch block)");
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+        print("Unauthorized (caught in DioException catch block)");
+        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+        if (safeCtx != null && safeCtx.mounted) {
+          final appConfigService =
+          Provider.of<AppConfigService>(safeCtx, listen: false);
+          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
+          try {
+            appConfigService.clearToken(notify: true);
+            appConfigService.setIsLogin(false, notify: true);
+          } catch (e) {
+            debugPrint('Error clearing auth state on 401 (get): $e');
           }
-        }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+          if (safeCtx.mounted) {
+            safeCtx.goNamed(
+              AppRoutes.login.name,
+              pathParameters: {'lang': safeCtx.locale.languageCode},
+            );
           }
-        });
+        }
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
+      // Handle connection errors
+      String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,
-        message: e.message ?? "Unexpected error",
+        message: errorMessage,
       );
     } catch (err, t) {
       debugPrint(
         '--------- Failed get() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}',
       );
-      // Send to Sentry
-      final screenName = SentryService.getCurrentScreenName(context);
-      SentryService.captureException(
+      // Send to Telegram (use safe context to avoid deactivated widget lookup)
+      final safeCtxForTelegram = context.mounted ? context : rootNavigatorKey.currentContext;
+      final screenName = safeCtxForTelegram != null && safeCtxForTelegram.mounted
+          ? TelegramErrorService.getCurrentScreenName(safeCtxForTelegram)
+          : 'unknown';
+      TelegramErrorService.captureException(
         err,
         stackTrace: t,
         screenName: screenName,
@@ -314,42 +398,48 @@ class DioApiService implements BackEndServicesInterface {
           applyTokenLogic: checkOnTokenExpiration!,
           dataKey: dataKey,
           context: context);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      debugPrint("Caught DioError with status code: $statusCode");
+      print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        debugPrint("Unauthorized (caught in DioError catch block)");
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-          if (context.mounted) {
-            context.goNamed(
-              AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode,},
+        print("Unauthorized (caught in DioException catch block)");
+        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+        if (safeCtx != null && safeCtx.mounted) {
+          final appConfigService =
+          Provider.of<AppConfigService>(safeCtx, listen: false);
+          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
+          try {
+            appConfigService.clearToken(notify: true);
+            appConfigService.setIsLogin(false, notify: true);
+          } catch (e) {
+            debugPrint('Error clearing auth state on 401 (post): $e');
+          }
+          if (safeCtx.mounted) {
+            safeCtx.goNamed(
+              AppRoutes.login.name,
+              pathParameters: {'lang': safeCtx.locale.languageCode},
             );
           }
-        }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(
-              AppRoutes.splash.name,
-              pathParameters: {'lang': context.locale.languageCode,},
-            );
-          }
-        });
+        }
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
+      // Handle connection errors
+      String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,
-        message: e.message ?? "Unexpected error",
+        message: errorMessage,
       );
     } catch (err, t) {
       debugPrint(
           '--------- Failed post() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      // Send to Sentry
-      final screenName = SentryService.getCurrentScreenName(context);
-      SentryService.captureException(
+      // Send to Telegram (use safe context to avoid deactivated widget lookup)
+      final safeCtxForTelegram = context.mounted ? context : rootNavigatorKey.currentContext;
+      final screenName = safeCtxForTelegram != null && safeCtxForTelegram.mounted
+          ? TelegramErrorService.getCurrentScreenName(safeCtxForTelegram)
+          : 'unknown';
+      TelegramErrorService.captureException(
         err,
         stackTrace: t,
         screenName: screenName,
@@ -425,38 +515,48 @@ class DioApiService implements BackEndServicesInterface {
           message: 'Result code = ${response.statusCode}',
         );
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      debugPrint("Caught DioError with status code: $statusCode");
+      print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        debugPrint("Unauthorized (caught in DioError catch block)");
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+        print("Unauthorized (caught in DioException catch block)");
+        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+        if (safeCtx != null && safeCtx.mounted) {
+          final appConfigService =
+          Provider.of<AppConfigService>(safeCtx, listen: false);
+          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
+          try {
+            appConfigService.clearToken(notify: true);
+            appConfigService.setIsLogin(false, notify: true);
+          } catch (e) {
+            debugPrint('Error clearing auth state on 401 (postFormData): $e');
           }
-        }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+          if (safeCtx.mounted) {
+            safeCtx.goNamed(
+              AppRoutes.login.name,
+              pathParameters: {'lang': safeCtx.locale.languageCode},
+            );
           }
-        });
+        }
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
+      // Handle connection errors
+      String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,
-        message: e.message ?? "Unexpected error",
+        message: errorMessage,
       );
     } catch (err, stackTrace) {
       debugPrint(
           'Failed postWithFormData() ❌ \n error ${err.toString()} - in Line :- ${stackTrace.toString()}');
-      // Send to Sentry
-      final screenName = SentryService.getCurrentScreenName(context);
-      SentryService.captureException(
+      // Send to Telegram (use safe context to avoid deactivated widget lookup)
+      final safeCtxForTelegram = context.mounted ? context : rootNavigatorKey.currentContext;
+      final screenName = safeCtxForTelegram != null && safeCtxForTelegram.mounted
+          ? TelegramErrorService.getCurrentScreenName(safeCtxForTelegram)
+          : 'unknown';
+      TelegramErrorService.captureException(
         err,
         stackTrace: stackTrace,
         screenName: screenName,
@@ -558,29 +658,36 @@ class DioApiService implements BackEndServicesInterface {
           dataKey: dataKey);
     }on DioError catch (e) {
       final statusCode = e.response?.statusCode;
-      debugPrint("Caught DioError with status code: $statusCode");
+      print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        debugPrint("Unauthorized (caught in DioError catch block)");
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+        print("Unauthorized (caught in DioException catch block)");
+        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+        if (safeCtx != null && safeCtx.mounted) {
+          final appConfigService =
+          Provider.of<AppConfigService>(safeCtx, listen: false);
+          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
+          try {
+            appConfigService.clearToken(notify: true);
+            appConfigService.setIsLogin(false, notify: true);
+          } catch (e) {
+            debugPrint('Error clearing auth state on 401 (put): $e');
           }
-        }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+          if (safeCtx.mounted) {
+            safeCtx.goNamed(
+              AppRoutes.login.name,
+              pathParameters: {'lang': safeCtx.locale.languageCode},
+            );
           }
-        });
+        }
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
+      // Handle connection errors
+      String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,
-        message: e.message ?? "Unexpected error",
+        message: errorMessage,
       );
     }  catch (err, t) {
       debugPrint(
@@ -612,29 +719,36 @@ class DioApiService implements BackEndServicesInterface {
           context: context);
     }on DioError catch (e) {
       final statusCode = e.response?.statusCode;
-      debugPrint("Caught DioError with status code: $statusCode");
+      print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        debugPrint("Unauthorized (caught in DioError catch block)");
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+        print("Unauthorized (caught in DioException catch block)");
+        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+        if (safeCtx != null && safeCtx.mounted) {
+          final appConfigService =
+          Provider.of<AppConfigService>(safeCtx, listen: false);
+          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
+          try {
+            appConfigService.clearToken(notify: true);
+            appConfigService.setIsLogin(false, notify: true);
+          } catch (e) {
+            debugPrint('Error clearing auth state on 401 (delete): $e');
           }
-        }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
+          if (safeCtx.mounted) {
+            safeCtx.goNamed(
+              AppRoutes.login.name,
+              pathParameters: {'lang': safeCtx.locale.languageCode},
+            );
           }
-        });
+        }
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
+      // Handle connection errors
+      String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,
-        message: e.message ?? "Unexpected error",
+        message: errorMessage,
       );
     }  catch (err, t) {
       debugPrint(
@@ -691,29 +805,34 @@ class DioApiService implements BackEndServicesInterface {
       }
     }on DioError catch (e) {
       final statusCode = e.response?.statusCode;
-      debugPrint("Caught DioError with status code: $statusCode");
+      print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        debugPrint("Unauthorized (caught in DioError catch block)");
-        final appConfigService =
-        Provider.of<AppConfigService>(context, listen: false);
-        appConfigService.logout(context, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
-          }
-        }).catchError((e) {
-          if (context.mounted) {
-            context.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': context.locale.languageCode});
-          }
-        });
+        print("Unauthorized (caught in DioException catch block)");
+        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+        if (safeCtx != null && safeCtx.mounted) {
+          final appConfigService =
+          Provider.of<AppConfigService>(safeCtx, listen: false);
+          appConfigService.logout(safeCtx, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
+            if (safeCtx.mounted) {
+              safeCtx.goNamed(AppRoutes.splash.name,
+                  pathParameters: {'lang': safeCtx.locale.languageCode});
+            }
+          }).catchError((e) {
+            if (safeCtx.mounted) {
+              safeCtx.goNamed(AppRoutes.splash.name,
+                  pathParameters: {'lang': safeCtx.locale.languageCode});
+            }
+          });
+        }
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
+      // Handle connection errors
+      String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,
-        message: e.message ?? "Unexpected error",
+        message: errorMessage,
       );
     }  catch (err, t) {
       debugPrint(
@@ -940,7 +1059,7 @@ class DioApiService implements BackEndServicesInterface {
       var response = await request.send();
       if (response.statusCode == 200) {
         var data = (await response.stream.toBytes());
-        if (kDebugMode) debugPrint("${data.length}");
+        if (kDebugMode) print(data.length);
         dataString = utf8.decode(data);
         var r = json.decode(dataString);
         return OperationResult(

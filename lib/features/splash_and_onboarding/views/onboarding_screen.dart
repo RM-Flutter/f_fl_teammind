@@ -1,4 +1,5 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
@@ -19,7 +20,7 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CacheHelper.setString(key: "watchScreen", value: "yes");
-    CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now().toUtc()));
+    CacheHelper.setString(key: "dateWatchScreen", value: DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now()));
 
     return ChangeNotifierProvider<OnboardingController>(
         create: (context) => OnboardingController(),
@@ -36,25 +37,65 @@ class OnBoardingScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final data = viewModel.getOnboardingDataWithIndex(index, context);
                     var key = kIsWeb ? 'web_image' : 'image';
-                    final image = data?[key][0]?['file'] ?? '';
-                    if (image?.startsWith('http') == true ||
-                        image?.startsWith('https') == true) {
+                    // Safe access: data[key] may be an empty list, so avoid [0] when length is 0
+                    final imagesList = data?[key];
+                    var image = '';
+                    if (imagesList is List && imagesList.isNotEmpty) {
+                      final first = imagesList[0];
+                      if (first is Map && first['file'] != null) {
+                        image = first['file'].toString();
+                      }
+                    }
+                    // When API returns no image or empty list, use default assets (onboard1, onboard2, onboard3)
+                    if (image.isEmpty) {
+                      image = index == 0
+                          ? AppImages.onboardingFallback1
+                          : index == 1
+                          ? AppImages.onboardingFallback2
+                          : AppImages.onboardingFallback3;
+                    }
+                    if (image.startsWith('http') || image.startsWith('https')) {
                       // Network image
                       return CachedNetworkImage(
-                        imageUrl: image!,
+                        imageUrl: image,
                         fit: BoxFit.cover,
                         key: ValueKey<String>(image),
                         placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                            Stack(
+                              children: [
+                                Image.asset(
+                                  index == 0
+                                      ? AppImages.onboardingFallback1
+                                      : index == 1
+                                      ? AppImages.onboardingFallback2
+                                      : AppImages.onboardingFallback3,
+                                  fit: BoxFit.cover,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(AppColors.dark).withOpacity(0.0),
+                                        Color(AppColors.dark).withOpacity(0.30),
+                                        Color(AppColors.dark).withOpacity(0.7),
+                                      ],
+                                      stops: const [0.0, 0.1, 0.3],
+                                      begin: Alignment.center,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                       );
                     } else {
                       // Asset image
                       return Stack(
                         children: [
                           Image.asset(
-                            image!,
+                            image,
                             fit: BoxFit.cover,
                             key: ValueKey<String>(image),
                           ),
@@ -119,12 +160,28 @@ class OnBoardingScreen extends StatelessWidget {
                                     .getAllOnboardingData(context: context)
                                     ?.length,
                                 itemBuilder: (context, index) {
+                                  final data = viewModel.getOnboardingDataWithIndex(index, context);
+                                  final titleMap = data?['title'];
+                                  final infoMap = data?['info'];
+                                  String? _str(dynamic v) => v?.toString().trim();
+                                  bool _empty(String? s) => s == null || s.isEmpty;
+                                  // لو انجليزي/عربي رجع null أو فاضي تجاهله واعرض التاني (أي داتا راجعة نعرضها)
+                                  final title = titleMap is Map
+                                      ? (_empty(_str(LocalizationService.isArabic(context: context) ? titleMap['ar'] : titleMap['en']))
+                                      ? _str(LocalizationService.isArabic(context: context) ? titleMap['en'] : titleMap['ar'])
+                                      : _str(LocalizationService.isArabic(context: context) ? titleMap['ar'] : titleMap['en']))
+                                      : null;
+                                  final info = infoMap is Map
+                                      ? (_empty(_str(LocalizationService.isArabic(context: context) ? infoMap['ar'] : infoMap['en']))
+                                      ? _str(LocalizationService.isArabic(context: context) ? infoMap['en'] : infoMap['ar'])
+                                      : _str(LocalizationService.isArabic(context: context) ? infoMap['ar'] : infoMap['en']))
+                                      : null;
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        LocalizationService.isArabic(context: context)? viewModel.getOnboardingDataWithIndex(index, context)!['title']!['ar']!.toUpperCase() :viewModel.getOnboardingDataWithIndex(index, context)!['title']!['en']!.toUpperCase(),
+                                        (title ?? '').toUpperCase(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .displayLarge,
@@ -134,7 +191,7 @@ class OnBoardingScreen extends StatelessWidget {
                                       ),
                                       gapH20,
                                       Text(
-                                        LocalizationService.isArabic(context: context)? viewModel.getOnboardingDataWithIndex(index, context)!["info"]["ar"] :viewModel.getOnboardingDataWithIndex(index, context)!['info']!['en'],
+                                        info ?? '',
                                         style: Theme.of(context)
                                             .textTheme
                                             .displaySmall,

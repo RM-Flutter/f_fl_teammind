@@ -43,6 +43,9 @@ class CustomDropdown extends StatefulWidget {
 
   final void Function()? onRemoveClicked;
 
+  /// إظهار أيقونة الـ X الحمراء لمسح الاختيار (في .search لا تُظهر)
+  final bool showClearButton;
+
   const CustomDropdown({
     super.key,
     this.nameKey,
@@ -66,6 +69,7 @@ class CustomDropdown extends StatefulWidget {
     this.customOverRelayWidth,
     this.excludeSelected = true,
     this.fillColor = Colors.white,
+    this.showClearButton = true,
   })  : searchType = null,
         canCloseOutsideBounds = true;
 
@@ -93,6 +97,7 @@ class CustomDropdown extends StatefulWidget {
     this.excludeSelected = false,
     this.canCloseOutsideBounds = true,
     this.fillColor = Colors.white,
+    this.showClearButton = false,
   }) : searchType = SearchType.onListData;
 
   @override
@@ -117,10 +122,10 @@ class CustomDropdownState extends State<CustomDropdown> {
   List<String> get dataItems =>
       widget.items
           ?.map((element) => (element[widget.nameKey] is Map)
-              ? (element[widget.nameKey][widget.nameMapKey]).toString()
-              : element[widget.nameKey].toString())
+          ? (element[widget.nameKey][widget.nameMapKey]).toString()
+          : element[widget.nameKey].toString())
           .toList() ??
-      [];
+          [];
 
   void init() {
     textEditingController = TextEditingController(text: widgetSelectedValue);
@@ -129,9 +134,9 @@ class CustomDropdownState extends State<CustomDropdown> {
 
   void onChangeEx(String value) {
     var result = widget.items?.indexWhere((e) =>
-        ((e[widget.nameKey] is Map)
-            ? e[widget.nameKey][widget.nameMapKey]
-            : e[widget.nameKey]) ==
+    ((e[widget.nameKey] is Map)
+        ? e[widget.nameKey][widget.nameMapKey]
+        : e[widget.nameKey]) ==
         value);
 
     if (result != -1) {
@@ -193,27 +198,27 @@ class CustomDropdownState extends State<CustomDropdown> {
             link: layerLink,
             child: widget.basicWidget != null
                 ? InkWell(
-                    onTap: showCallback,
-                    child: widget.basicWidget,
-                  )
+              onTap: showCallback,
+              child: widget.basicWidget,
+            )
                 : _DropDownField(
-                    onRemoveClicked: widget.onRemoveClicked,
-                    isItemsNullOrEmpty: dataItems.isEmpty,
-                    controller: textEditingController,
-                    onTap: showCallback,
-                    style: selectedStyle,
-                    borderRadius: widget.borderRadius,
-                    borderSide: widget.borderSide,
-                    errorBorderSide: widget.errorBorderSide,
-                    errorStyle: widget.errorStyle,
-                    errorText: widget.errorText,
-                    hintStyle: hintStyle,
-                    hintText: hintText,
-                    suffixIcon: widget.fieldSuffixIcon,
-                    // onChanged: widget.onChanged,
-                    fillColor: widget.fillColor,
-                    contentPadding: widget.contentPadding,
-                  ),
+              onRemoveClicked: widget.onRemoveClicked,
+              isItemsNullOrEmpty: dataItems.isEmpty,
+              controller: textEditingController,
+              onTap: showCallback,
+              style: selectedStyle,
+              borderRadius: widget.borderRadius,
+              borderSide: widget.borderSide,
+              errorBorderSide: widget.errorBorderSide,
+              errorStyle: widget.errorStyle,
+              errorText: widget.errorText,
+              hintStyle: hintStyle,
+              hintText: hintText,
+              suffixIcon: widget.fieldSuffixIcon,
+              // onChanged: widget.onChanged,
+              fillColor: widget.fillColor,
+              contentPadding: widget.contentPadding,
+            ),
           );
         },
       ),

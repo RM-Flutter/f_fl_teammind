@@ -96,13 +96,14 @@ class ExpandableFabState extends State<ExpandableFab>
       duration: const Duration(milliseconds: 250),
       transformAlignment: Alignment.center,
       transform:
-          Matrix4.diagonal3Values(_open ? 0.7 : 1.0, _open ? 0.7 : 1.0, 1.0),
+      Matrix4.diagonal3Values(_open ? 0.7 : 1.0, _open ? 0.7 : 1.0, 1.0),
       curve: Curves.easeOut,
       child: AnimatedOpacity(
         opacity: _open ? 0.0 : 1.0,
         curve: Curves.easeInOut,
         duration: const Duration(milliseconds: 250),
         child: FloatingActionButton(
+          heroTag: 'expandable_fab_main',
           backgroundColor: Theme.of(context).colorScheme.primary,
           onPressed: _toggle,
           child: Center(
@@ -124,8 +125,8 @@ class ExpandableFabState extends State<ExpandableFab>
     final step = AppSizes.s90 / (count - 1);
 
     for (var i = 0, angleInDegrees = 0.0;
-        i < count;
-        i++, angleInDegrees += step) {
+    i < count;
+    i++, angleInDegrees += step) {
       children.add(_ExpandableFab(
           directionDegrees: angleInDegrees,
           maxDistance: widget.distance,
@@ -140,9 +141,9 @@ class ExpandableFabState extends State<ExpandableFab>
 class _ExpandableFab extends StatelessWidget {
   const _ExpandableFab(
       {required this.directionDegrees,
-      required this.maxDistance,
-      required this.progress,
-      required this.child});
+        required this.maxDistance,
+        required this.progress,
+        required this.child});
 
   final double directionDegrees;
   final double maxDistance;

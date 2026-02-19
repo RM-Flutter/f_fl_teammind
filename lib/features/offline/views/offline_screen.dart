@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.service.dart';
 import 'package:app_test/features/offline/views/widgets/finger_print_offline_card.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -169,144 +170,161 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         topRight: Radius.circular(15),
                         topLeft: Radius.circular(15),
                       )),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/images/svg/wifi.svg",),
-                      const SizedBox(height: 25,),
-                      Text(AppStrings.youAreOffline.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
-                      const SizedBox(height: 15,),
-                      Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(AppColors.black)),),
-                      const SizedBox(height: 25,),
-                      Consumer<ConnectionService>(
-                        builder: (context, connectionService, _) {
-                          return CustomElevatedButton(
-                              backgroundColor: Theme.of(context).colorScheme.secondary,
-                              titleSize: AppSizes.s12,
-                              title: AppStrings.retry.tr().toUpperCase(),
-                              onPressed: () async {
-                                // Check connection immediately
-                                await connectionService.checkConnection();
-                                if (connectionService.isConnected && mounted) {
-                                  // Connection restored, just close the overlay
-                                  OfflineOverlayService.hideOfflineOverlay();
-                                } else {
-                                  // Still offline, restart app
-                                  RestartWidget.restartApp(context);
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset("assets/images/svg/wifi.svg",),
+                        const SizedBox(height: 25,),
+                        Text(AppStrings.youAreOffline.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
+                        const SizedBox(height: 15,),
+                        Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(AppColors.black)),),
+                        const SizedBox(height: 25,),
+                        Consumer<ConnectionService>(
+                          builder: (context, connectionService, _) {
+                            return CustomElevatedButton(
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
+                                titleSize: AppSizes.s12,
+                                title: AppStrings.retry.tr().toUpperCase(),
+                                onPressed: () async {
+                                  // Check connection immediately
+                                  await connectionService.checkConnection();
+                                  if (connectionService.isConnected && mounted) {
+                                    // Connection restored, just close the overlay
+                                    OfflineOverlayService.hideOfflineOverlay();
+                                  } else {
+                                    // Still offline, restart app
+                                    RestartWidget.restartApp(context);
+                                  }
                                 }
-                              }
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 40,),
-                      Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
-                      const SizedBox(height: 15,),
-                      if (viewModel.usersFingerprints.isNotEmpty)
-                        Container(
-                          height: 50,
-                          child: ListView.builder(
-                            itemCount: viewModel.usersFingerprints.length,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              IconData icon;
-                              Function()? function;
-                              String hero;
-                              final fingerprintType = viewModel.usersFingerprints[index];
-                              debugPrint("🔍 Setting up fingerprint button: $fingerprintType");
-                              switch (fingerprintType) {
-                                case 'fp_scan':
-                                  icon = Icons.qr_code;
-                                  function = () async{
-                                    debugPrint("👆 QR Code fingerprint button pressed");
-                                    await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                      context: context,
-                                      fingerprintMethod: 'fp_scan',
-                                    );
-                                  };
-                                  hero = 'QR';
-                                  break;
-                                case 'fp_wifi':
-                                  icon = Icons.wifi;
-                                  hero = 'wifi';
-                                  function = ()async {
-                                    debugPrint("👆 WiFi fingerprint button pressed");
-                                    await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                      context: context,
-                                      fingerprintMethod: 'fp_wifi',
-                                    );
-                                  };
-                                  break;
-                                case 'fp_navigate':
-                                case 'custom_fp_navigate':
-                                  icon = Icons.gps_fixed;
-                                  function = () async{
-                                    debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
-                                    await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                      context: context,
-                                      fingerprintMethod: fingerprintType,
-                                    );
-                                  };
-                                  hero = 'gps';
-                                  break;
-                                case 'fp_bluetooth':
-                                  icon = Icons.bluetooth;
-                                  function = ()async{
-                                    debugPrint("👆 Bluetooth fingerprint button pressed");
-                                    await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
-                                      context: context,
-                                      fingerprintMethod: 'fp_bluetooth',
-                                    );
-                                  };
-                                  hero = 'bluetooth';
-                                  break;
-                                default:
-                                  debugPrint("⚠️ Unknown fingerprint type: $fingerprintType");
-                                  return const SizedBox.shrink();
-                              }
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 40,),
+                        if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
+                        const SizedBox(height: 15,),
+                        if (viewModel.usersFingerprints.isNotEmpty)
+                          Container(
+                            height: 50,
+                            child: ListView.builder(
+                              itemCount: viewModel.usersFingerprints.length,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                IconData icon;
+                                Function()? function;
+                                String hero;
+                                final fingerprintType = viewModel.usersFingerprints[index];
+                                debugPrint("🔍 Setting up fingerprint button: $fingerprintType");
+                                switch (fingerprintType) {
+                                  case 'fp_scan':
+                                    icon = Icons.qr_code;
+                                    function = () async{
+                                      debugPrint("👆 QR Code fingerprint button pressed");
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
+                                      await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
+                                        context: navContext,
+                                        fingerprintMethod: 'fp_scan',
+                                      );
+                                    };
+                                    hero = 'QR';
+                                    break;
+                                  case 'fp_wifi':
+                                    icon = Icons.wifi;
+                                    hero = 'wifi';
+                                    function = ()async {
+                                      debugPrint("👆 WiFi fingerprint button pressed");
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
+                                      await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
+                                        context: navContext,
+                                        fingerprintMethod: 'fp_wifi',
+                                      );
+                                    };
+                                    break;
+                                  case 'fp_navigate':
+                                  case 'custom_fp_navigate':
+                                    icon = Icons.gps_fixed;
+                                    function = () async{
+                                      debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
+                                      await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
+                                        context: navContext,
+                                        fingerprintMethod: fingerprintType,
+                                      );
+                                    };
+                                    hero = 'gps';
+                                    break;
+                                  case 'fp_bluetooth':
+                                    icon = Icons.bluetooth;
+                                    function = ()async{
+                                      debugPrint("👆 Bluetooth fingerprint button pressed");
+                                      // لما نفتح بصمة أوفلاين، نشيل overlay ونستخدم سياق الـ root navigator
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                      final navContext = rootNavigatorKey.currentContext ?? context;
+                                      await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
+                                        context: navContext,
+                                        fingerprintMethod: 'fp_bluetooth',
+                                      );
+                                    };
+                                    hero = 'bluetooth';
+                                    break;
+                                  default:
+                                    debugPrint("⚠️ Unknown fingerprint type: $fingerprintType");
+                                    return const SizedBox.shrink();
+                                }
 
-                              return _widget(
-                                  icon: icon, onPress: function, hero: hero);
-                            },
+                                return _widget(
+                                    icon: icon, onPress: function, hero: hero);
+                              },
+                            ),
                           ),
-                        ),
-                      const SizedBox(height: 30,),
-                      // Show saved fingerprints
-                      if (viewModel.savedFingerprints != null &&
-                          viewModel.savedFingerprints!.isNotEmpty)
-                        Padding(
-                          padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                AppStrings.fingerprintsTitle.tr(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(AppColors.dark),
-                                ),
-                              ),
-                              const SizedBox(height: 15,),
-                              if (viewModel.isLoadingFingerprints)
-                                const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(20.0),
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                )
-                              else
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                  child: FingerprintCardOffline(
-                                    fingerprint: viewModel.savedFingerprints,
+                        const SizedBox(height: 30,),
+                        // Show saved fingerprints
+                        if (viewModel.savedFingerprints != null &&
+                            viewModel.savedFingerprints!.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppStrings.fingerprintsTitle.tr(),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(AppColors.dark),
                                   ),
                                 ),
-                            ],
+                                const SizedBox(height: 15,),
+                                if (viewModel.isLoadingFingerprints)
+                                  const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                else
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                    child: FingerprintCardOffiline(
+                                      fingerprint: viewModel.savedFingerprints,
+                                      onDelete: (index) async {
+                                        await viewModel.deleteOfflineFingerprintAt(index);
+                                      },
+                                      deletingIndexes: viewModel.deletingOfflineIndexes,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               )

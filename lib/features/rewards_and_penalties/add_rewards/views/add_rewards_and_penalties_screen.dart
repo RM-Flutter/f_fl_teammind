@@ -178,7 +178,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                   .map((e) => DropdownMenuItem<String>(
                                 value: e.toString(),
                                 child: Text(
-                                  e.toString(),
+                                  e.toString().tr(),
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -188,7 +188,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               ))
                                   .toList(),
                               onChanged: (String? values) {
-                                debugPrint(values);
+                                print(values);
                                 setState(() {
                                   viewModel.selectedTypes = values;
                                 });
@@ -258,7 +258,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                 onChanged: (value){
                                   viewModel.selectedEmployee = value;
                                   viewModel.selectEmpId = value['id'].toString();
-                                  debugPrint("Selected employee ID: ${value["id"]}");
+                                  print("Selected employee ID: ${value["id"]}");
                                   setState(() {});
                                 },
                                 contentPadding: Theme.of(context)
@@ -288,18 +288,18 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                              if(viewModel.isLoadingPost == false)  CustomElevatedButton(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  titleSize: AppSizes.s14,
-                                  radius: AppSizes.s24,
-                                  title: AppStrings.send.tr(),
-                                  onPressed: () async {
-                                    if(formKey.currentState!.validate()){
-                                      viewModel
-                                          .createRewardAndPenalty(context: context);
+                                if(viewModel.isLoadingPost == false)  CustomElevatedButton(
+                                    backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                    titleSize: AppSizes.s14,
+                                    radius: AppSizes.s24,
+                                    title: AppStrings.send.tr(),
+                                    onPressed: () async {
+                                      if(formKey.currentState!.validate()){
+                                        viewModel
+                                            .createRewardAndPenalty(context: context);
+                                      }
                                     }
-                                  }
                                 ),
                                 if(viewModel.isLoadingPost == true) const CircularProgressIndicator()
                               ],

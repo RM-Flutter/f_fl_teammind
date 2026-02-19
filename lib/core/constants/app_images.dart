@@ -1,4 +1,5 @@
-import '../services/dynamic_app_config_service.dart';
+import 'package:app_test/core/services/dynamic_app_config_service.dart';
+
 
 abstract class AppImages {
   // base images directories
@@ -25,8 +26,6 @@ abstract class AppImages {
       '$_baseImagesDirectory/fingerprints_images';
   static const String _penaltiesAndRewardsImagesDirectory =
       '$_baseImagesDirectory/reward_penalties_images';
-  static const String _painterMainScreenImagesDirectory =
-      '$_baseImagesDirectory/painter_main_screen_images';
 
   // general images
   static String get logo {
@@ -58,6 +57,10 @@ abstract class AppImages {
       '$_onboardingImagesDirectory/onboarding_2.png';
   static const String onboardingBackground3 =
       '$_onboardingImagesDirectory/onboarding_3.png';
+  /// Fallback onboarding images when API returns no images (assets/images/png/)
+  static const String onboardingFallback1 = 'assets/images/png/onboard1.png';
+  static const String onboardingFallback2 = 'assets/images/png/onboard2.png';
+  static const String onboardingFallback3 = 'assets/images/png/onboard3.png';
   // login images
   static String get loginBackground {
     final url = DynamicAppConfigService.getLoginBackgroundUrl();
@@ -133,6 +136,4 @@ abstract class AppImages {
       '$_penaltiesAndRewardsImagesDirectory/penalty.png';
   static const String reward =
       '$_penaltiesAndRewardsImagesDirectory/reward.png';
-  static const String logoWhite =
-      '$_painterMainScreenImagesDirectory/logo_white.png';
 }

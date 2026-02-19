@@ -18,15 +18,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/constants/user_consts.dart' show UserSettingConst;
-import 'notification_icon.widget.dart';
+
 
 class HomeAppbarWidget extends StatelessWidget {
   final bool? isExpanded;
   final List<RequestModel>? requests;
   const HomeAppbarWidget(
       {super.key,
-      this.requests,
-      this.isExpanded = true,});
+        this.requests,
+        this.isExpanded = true,});
   String formatName(String fullName) {
     List<String> names = fullName.split(" ");
     if (names.length < 2) return fullName;
@@ -88,13 +88,13 @@ class HomeAppbarWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: isExpanded == true
             ? const BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32))
+            bottomLeft: Radius.circular(AppSizes.s32),
+            bottomRight: Radius.circular(AppSizes.s32))
             : null,
       ),
       padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top,
-        ),
+        top: MediaQuery.of(context).padding.top,
+      ),
       child: Stack(
         children: [
           Stack(
@@ -163,74 +163,89 @@ class HomeAppbarWidget extends StatelessWidget {
                           children: [
                             if(us1Cache != null )InkWell(
                               onTap: () async =>
-                              context.pushNamed(
-                                  AppRoutes.personalProfile.name,
-                                  pathParameters: {'lang': context.locale.languageCode}),
+                                  context.pushNamed(
+                                      AppRoutes.personalProfile.name,
+                                      pathParameters: {'lang': context.locale.languageCode}),
                               child: (us1Cache != null && us1Cache['photo'] == null ||
-                                      (us1Cache['photo'].isEmpty == true))
+                                  (us1Cache['photo'].isEmpty == true))
                                   ? Container(
-                                      width: AppSizes.s40,
-                                      height: AppSizes.s40,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.transparent,
-                                          border:
-                                              Border.all(color: Colors.white, width: 2)),
-                                      child: const Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: AppSizes.s28,
-                                      ),
-                                    )
+                                width: AppSizes.s40,
+                                height: AppSizes.s40,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.transparent,
+                                    border:
+                                    Border.all(color: Colors.white, width: 2)),
+                                child: const Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: AppSizes.s28,
+                                ),
+                              )
                                   : CircleAvatar(
-                                      radius: AppSizes.s22,
-                                      child: ClipOval(
-                                        child: CachedNetworkImage(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          fit: BoxFit.cover,
-                                          imageUrl: us1Cache['photo'] ?? "",
-                                          placeholder: (context, url) =>
-                                              const ShimmerAnimatedLoading(),
-                                          errorWidget: (context, url, error) => const Icon(
-                                            Icons.image_not_supported_outlined,
-                                            size: AppSizes.s32,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
+                                radius: AppSizes.s22,
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    fit: BoxFit.cover,
+                                    imageUrl: us1Cache['photo'] ?? "",
+                                    placeholder: (context, url) =>
+                                    const ShimmerAnimatedLoading(),
+                                    errorWidget: (context, url, error) => const Icon(
+                                      Icons.image_not_supported_outlined,
+                                      size: AppSizes.s32,
+                                      color: Colors.white,
                                     ),
+                                  ),
+                                ),
+                              ),
                             ),
                             gapW12,
                             us1Cache == null
                                 ? const ShimmerAnimatedLoading(
-                                    height: AppSizes.s32,
-                                    width: AppSizes.s50,
-                                  )
+                              height: AppSizes.s32,
+                              width: AppSizes.s50,
+                            )
                                 : Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        AutoSizeText(formatName(us1Cache['name']) ?? '',
-                                            minFontSize: 20,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineLarge
-                                                ?.copyWith(
-                                                    color: AppThemeService.colorPalette
-                                                        .quinaryTextColor.color)),
-                                        Text(AppStrings.niceToMeetYou.tr(),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: 15, color: Color(AppColors.white)
-                                            )),
-                                      ],
-                                    ),
-                                  ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AutoSizeText(formatName(us1Cache['name']?.toString() ?? ''),
+                                      minFontSize: 20,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge
+                                          ?.copyWith(
+                                          color: AppThemeService.colorPalette
+                                              .quinaryTextColor.color)),
+                                  Text(AppStrings.niceToMeetYou.tr(),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 15, color: Color(AppColors.white)
+                                      )),
+                                ],
+                              ),
+                            ),
+                            // if (us1Cache != null)
+                            //   IconButton(
+                            //     icon: const Icon(Icons.logout_outlined, color: Colors.white, size: 22),
+                            //     tooltip: AppStrings.logout.tr(),
+                            //     padding: EdgeInsets.zero,
+                            //     constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                            //     onPressed: () async {
+                            //       final appConfigService = Provider.of<AppConfigService>(context, listen: false);
+                            //       await appConfigService.logout(context, viewAlert: true);
+                            //       if (context.mounted) {
+                            //         context.goNamed(AppRoutes.splash.name, pathParameters: {'lang': context.locale.languageCode});
+                            //       }
+                            //     },
+                            //   ),
+                            gapW8,
                             // const Spacer(),
                             // NotificationIcon(
                             //   hasNewNotifications: true,

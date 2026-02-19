@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,20 +19,31 @@ class DeviceControllerProvider extends ChangeNotifier {
   bool notificationStatus = CacheHelper.getBool("status") ?? false;
   String? errorMessage;
   String? errorMessage2;
+  var status;
   List devices = [];
-
+  changeStatus(newStatus){
+    status = newStatus;
+    notifyListeners();
+  }
+  void setNotificationStatus(bool status) {
+    notificationStatus = status;
+    notifyListeners();
+  }
   getDevices({context}) async {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await UserDeviceRepo.getDevices(context: context);
+      final response = await DioHelper.getData(
+        url: "/rm_users/v1/devices/get",
+        context: context,
+      );
       isLoading = false;
       devices = response.data['devices'];
       notifyListeners();
     } catch (error) {
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
@@ -42,7 +54,13 @@ class DeviceControllerProvider extends ChangeNotifier {
     isDeleteLoading = true;
     notifyListeners();
     try {
-      await UserDeviceRepo.stopDevice(context: context, deviceId: deviceId).then((v){
+      await DioHelper.postData(
+        url: "/rm_users/v1/devices/stop",
+        data:(deviceId != null)? {
+          if(deviceId != null) "device_id" : deviceId
+        } : null,
+        context: context,
+      ).then((v){
         if(v.data['status'] == true){
           AlertsService.success(
             title: AppStrings.success.tr(),
@@ -61,85 +79,155 @@ class DeviceControllerProvider extends ChangeNotifier {
     } catch (error) {
       isDeleteLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
       }
     }
   }
+
   getDeviceSysGet({context}) async {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await UserDeviceRepo.deviceSysGet(context: context);
+      final response = await DioHelper.postData(
+        url: "/rm_users/v1/device_sys",
+        context: context,
+        data: {
+          "action": "get",
+          "key": "notification_token_status",
+        },
+      );
       isLoading = false;
       notificationStatus = response.data['device']['notification_token_status'] == 1 ? true : false;
-      debugPrint("notificationStatus --> $notificationStatus");
+      print("notificationStatus --> $notificationStatus");
       notifyListeners();
     } catch (error) {
       isLoading = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
       }
     }
   }
+  Future<bool> requestNotificationPermission() async {
+    try {
+      final settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      return settings.authorizationStatus == AuthorizationStatus.authorized;
+    } catch (e) {
+      debugPrint('Firebase requestPermission error: $e');
+      return false;
+    }
+  }
+
+  static bool _isFcmServiceUnavailable(Object error) {
+    final msg = error.toString().toLowerCase();
+    return msg.contains('service_not_available') ||
+        msg.contains('firebase_messaging') ||
+        msg.contains('ioexception');
+  }
+
   getDeviceSysSet({context, required bool state}) async {
+    bool allowed = false;
+    try {
+      allowed = await requestNotificationPermission();
+    } catch (e) {
+      debugPrint('requestNotificationPermission: $e');
+    }
+    if (!allowed) {
+      Fluttertoast.showToast(
+        msg: "الإشعارات غير مفعلة – برجاء السماح أولاً.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
     isLoading2 = true;
     notifyListeners();
+
     try {
-      final response = await UserDeviceRepo.deviceSysSetToken(
+      // FCM token: cache only (generated at app start by FcmTokenService; do not call getToken here)
+      final String? token = CacheHelper.getString("fcm_token");
+      if (token == null || token.isEmpty) {
+        Fluttertoast.showToast(
+          msg: "جاري تجهيز الإشعارات. أعد فتح التطبيق أو انتظر قليلاً.",
+          backgroundColor: Colors.orange,
+          textColor: Colors.white,
+        );
+        isLoading2 = false;
+        notifyListeners();
+        return;
+      }
+
+      final response = await DioHelper.postData(
+        url: "/rm_users/v1/device_sys",
         context: context,
-        token: await FirebaseMessaging.instance.getToken(),
+        data: {
+          "action": "set",
+          "key": "notification_token",
+          "value": token,
+        },
       );
+
       isLoading2 = false;
       notificationStatus = state;
-      debugPrint("state---$state");
       CacheHelper.setBool("status", state);
-      debugPrint("STATUS IS ---> ${CacheHelper.getBool("status")}");
-      if(response.data['status'] == true){
-        getDeviceSysSet2(context: context,state: state);
-      }else{
+
+      if (response.data['status'] == true) {
         Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
+          msg: response.data['message'],
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
+        getDeviceSysSet2(context: context, state: state);
+      } else {
+        Fluttertoast.showToast(
+          msg: response.data['message'],
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
         );
       }
+
       notifyListeners();
     } catch (error) {
       isLoading2 = false;
       notifyListeners();
-      if (error is DioException) {
+
+      if (error is DioError) {
         errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
+      } else if (_isFcmServiceUnavailable(error)) {
+        errorMessage2 = "خدمة الإشعارات غير متاحة حالياً. تأكد من الاتصال بالإنترنت وخدمات Google.";
       } else {
         errorMessage2 = error.toString();
       }
-    }
-    Fluttertoast.showToast(
-        msg: errorMessage2!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
+
+      Fluttertoast.showToast(
+        msg: errorMessage2 ?? AppStrings.failed.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+      );
+    }
   }
   getDeviceSysSet2({context, required bool state}) async {
     isLoading2 = true;
     notifyListeners();
     try {
-      final response = await UserDeviceRepo.deviceSysSetTokenStatus(
+      final response = await DioHelper.postData(
+        url: "/rm_users/v1/device_sys",
         context: context,
-        state: state,
+        data: {
+          "action": "set",
+          "key": "notification_token_status",
+          "value": state,
+        },
       );
       if(response.data['status'] == true){
         isSuccess = true;
@@ -156,13 +244,13 @@ class DeviceControllerProvider extends ChangeNotifier {
       }
       isLoading2 = false;
       notificationStatus = state;
-      debugPrint("state---$state");
+      print("state---$state");
       CacheHelper.setBool("status", state);
       notifyListeners();
     } catch (error) {
       isLoading2 = false;
       notifyListeners();
-      if (error is DioException) {
+      if (error is DioError) {
         errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage2 = error.toString();

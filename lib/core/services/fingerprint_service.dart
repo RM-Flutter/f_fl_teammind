@@ -72,10 +72,11 @@ abstract class FingerprintService {
     } catch (e, stackTrace) {
       debugPrint('⚠️ Error checking fake GPS: $e');
       debugPrint('Stack trace: $stackTrace');
+      // في حالة الخطأ، من الأفضل عدم منع البصمة ولكن تسجيل الشك فقط
       return {
-        'isFakeGPS': true,
+        'isFakeGPS': false,
         'message': 'Error checking GPS: $e',
-        'blockFingerprint': true, // في حالة الخطأ، نمنع البصمة للسلامة
+        'blockFingerprint': false,
       };
     }
   }
@@ -220,18 +221,17 @@ abstract class FingerprintService {
         ];
       }
 
-      // إضافة معلومات مقارنة Network Location مع GPS
-      final networkComparison = fakeGPSCheck['networkLocationComparison'] as Map<String, dynamic>?;
-      if (networkComparison != null) {
-        merged['networkLocationComparison'] = networkComparison;
-
-        // إذا كان Network Location مختلف عن GPS (أكثر من 300 متر)، أضف flag
-        if (networkComparison['needsReview'] == true) {
-          merged['suspicious'] = true;
-          merged['suspiciousReasons'] = [
-            ...(merged['suspiciousReasons'] as List<dynamic>? ?? []),
-            networkComparison['message'] ?? 'Network Location مختلف عن GPS',
-          ];
+      if (AppConstants.fingerprintVerifyGpsNetworkComparison) {
+        final networkComparison = fakeGPSCheck['networkLocationComparison'] as Map<String, dynamic>?;
+        if (networkComparison != null) {
+          merged['networkLocationComparison'] = networkComparison;
+          if (networkComparison['needsReview'] == true) {
+            merged['suspicious'] = true;
+            merged['suspiciousReasons'] = [
+              ...(merged['suspiciousReasons'] as List<dynamic>? ?? []),
+              networkComparison['message'] ?? 'Network Location مختلف عن GPS',
+            ];
+          }
         }
       }
     }
@@ -309,14 +309,41 @@ abstract class FingerprintService {
     return response;
   }
 
-  // Save fingerprint to SharedPreferences for display
+  // Save fingerprint to SharedPreferences for display (including face image if available)
   static Future<void> _saveFingerprintToSharedPreferences(
-      Map<String, dynamic> fingerprintData) async {
+      Map<String, dynamic> fingerprintData, {
+        List<FilePickerResult>? files,
+      }) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       // Initialize AppConstants.fingerPrints if null
-      AppConstants.fingerPrints ??= [];
+      if (AppConstants.fingerPrints == null) {
+        AppConstants.fingerPrints = [];
+      }
+
+      // لو عندنا صورة (files) نحولها لـ base64 ونضيفها في الماب تحت key: 'files'
+      if (files != null && files.isNotEmpty) {
+        final List<Map<String, dynamic>> serializedFiles = [];
+
+        for (var fileResult in files) {
+          for (var platformFile in fileResult.files) {
+            if (platformFile.bytes != null) {
+              serializedFiles.add({
+                'fileName': platformFile.name,
+                'bytes': base64Encode(platformFile.bytes!),
+              });
+            }
+          }
+        }
+
+        if (serializedFiles.isNotEmpty) {
+          fingerprintData = {
+            ...fingerprintData,
+            'files': serializedFiles,
+          };
+        }
+      }
 
       // Add the fingerprint to the list
       AppConstants.fingerPrints!.add(fingerprintData);
@@ -378,12 +405,12 @@ abstract class FingerprintService {
   }) async {
 
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
-    var date = DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now());
+    var date = DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now());
     String encoded = base64Encode(utf8.encode("${data}_$date"));
     final formData = {
       'type': 'fp_scan',
       'data': encoded,
-      'finger_day': DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now()),
+      'finger_day': DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now()),
     };
 
     // Get double check data (WiFi or Bluetooth MAC address)
@@ -398,16 +425,15 @@ abstract class FingerprintService {
       debugPrint('⚠️ No double check data available (WiFi and Bluetooth not available)');
     }
 
-    if (noteReport != null) {
+    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
       formData['note'] = jsonEncode(noteReport);
     }
-    debugPrint("formData is --> $formData");
+    print("formData is --> $formData");
     if (await ConnectionsService.isOnline() == true) {
-      //ONLINE CASE: التحقق من fake GPS أولاً
-      final fakeGPSCheck = await _checkFakeGPS();
+      //ONLINE CASE: التحقق من fake GPS أولاً (عند تفعيل المفتاح فقط)
+      final fakeGPSCheck = AppConstants.fingerprintBlockOnFakeGps ? await _checkFakeGPS() : null;
 
-      // إذا كان GPS fake، منع البصمة
-      if (fakeGPSCheck != null && fakeGPSCheck['blockFingerprint'] == true) {
+      if (AppConstants.fingerprintBlockOnFakeGps && fakeGPSCheck != null && fakeGPSCheck['blockFingerprint'] == true) {
         debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
         String errorMessage;
         String errorTitle = AppStrings.failed.tr();
@@ -438,10 +464,11 @@ abstract class FingerprintService {
         );
       }
 
-      // إضافة معلومات fake GPS check في noteReport
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
-      if (mergedNoteReport.isNotEmpty) {
-        formData['note'] = jsonEncode(mergedNoteReport);
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          formData['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -453,11 +480,10 @@ abstract class FingerprintService {
         allData: true,
       );
     } else {
-      //OFFLINE CASE: التحقق من fake GPS أولاً
-      final fakeGPSCheck = await _checkFakeGPS();
+      //OFFLINE CASE: التحقق من fake GPS عند تفعيل المفتاح فقط
+      final fakeGPSCheck = AppConstants.fingerprintBlockOnFakeGps ? await _checkFakeGPS() : null;
 
-      // إذا كان GPS fake، منع البصمة
-      if (fakeGPSCheck != null && fakeGPSCheck['blockFingerprint'] == true) {
+      if (AppConstants.fingerprintBlockOnFakeGps && fakeGPSCheck != null && fakeGPSCheck['blockFingerprint'] == true) {
         debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
         String errorMessage;
         String errorTitle = AppStrings.failed.tr();
@@ -473,7 +499,6 @@ abstract class FingerprintService {
           errorTitle = AppStrings.fakeGPSDetected.tr();
         }
 
-        // عرض رسالة للمستخدم مباشرة
         if (context.mounted) {
           AlertsService.error(
             context: context,
@@ -488,19 +513,19 @@ abstract class FingerprintService {
         );
       }
 
-      // التحقق من GPS timestamp كخطوة إضافية
-      final gpsVerification = await _verifyGPSTimestampOffline();
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, fakeGPSCheck);
-
-      if (mergedNoteReport.isNotEmpty) {
-        formData['note'] = jsonEncode(mergedNoteReport);
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          formData['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
       //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(formData)
           .then((_) async {
-        // Also save to SharedPreferences for display
-        await _saveFingerprintToSharedPreferences(formData);
+        // Also save to SharedPreferences for display (مع حفظ الصورة)
+        await _saveFingerprintToSharedPreferences(formData, files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -526,47 +551,45 @@ abstract class FingerprintService {
       'type': 'fp_navigate',
       'data': '{"lat":${lat.toString()},"long":${long.toString()}}',
       'finger_day':
-      DateFormat('yyyy-MM-dd', "en").format(fingerDay ?? DateTime.now()),
+      DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(fingerDay ?? DateTime.now()),
     };
 
-    // مقارنة GPS مع Network Location
-    final networkComparison = await LocationService.compareGPSWithNetworkLocation(
-      gpsLatitude: lat,
-      gpsLongitude: long,
-    );
-
-    // إنشاء fakeGPSCheck object مع نتائج المقارنة
-    final fakeGPSCheck = {
+    final Map<String, dynamic>? fakeGPSCheck = AppConstants.fingerprintVerifyGpsNetworkComparison
+        ? {
       'isFakeGPS': false,
       'latitude': lat,
       'longitude': long,
-      'networkLocationComparison': networkComparison,
-    };
+      'networkLocationComparison': await LocationService.compareGPSWithNetworkLocation(
+        gpsLatitude: lat,
+        gpsLongitude: long,
+      ),
+    }
+        : null;
 
     if (await ConnectionsService.isOnline() == true) {
-      // دمج noteReport مع نتائج المقارنة
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
-      if (mergedNoteReport.isNotEmpty) {
-        requestBody['note'] = jsonEncode(mergedNoteReport);
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      //OFFLINE CASE: التحقق من GPS timestamp كخطوة إضافية
-      final gpsVerification = await _verifyGPSTimestampOffline();
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, fakeGPSCheck);
-
-      if (mergedNoteReport.isNotEmpty) {
-        requestBody['note'] = jsonEncode(mergedNoteReport);
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
-      //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
           .then((_) async {
-        // Also save to SharedPreferences for display
-        await _saveFingerprintToSharedPreferences(requestBody);
+        // Also save to SharedPreferences for display (مع حفظ الصورة)
+        await _saveFingerprintToSharedPreferences(requestBody, files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -592,28 +615,27 @@ abstract class FingerprintService {
       'type': 'custom_fp_navigate',
       'data': '{"lat":${lat.toString()},"long":${long.toString()}}',
       'finger_day':
-      DateFormat('yyyy-MM-dd HH:mm').format(fingerDay ?? DateTime.now()),
+      DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now()),
     };
 
-    // مقارنة GPS مع Network Location
-    final networkComparison = await LocationService.compareGPSWithNetworkLocation(
-      gpsLatitude: lat,
-      gpsLongitude: long,
-    );
-
-    // إنشاء fakeGPSCheck object مع نتائج المقارنة
-    final fakeGPSCheck = {
+    final Map<String, dynamic>? fakeGPSCheck = AppConstants.fingerprintVerifyGpsNetworkComparison
+        ? {
       'isFakeGPS': false,
       'latitude': lat,
       'longitude': long,
-      'networkLocationComparison': networkComparison,
-    };
+      'networkLocationComparison': await LocationService.compareGPSWithNetworkLocation(
+        gpsLatitude: lat,
+        gpsLongitude: long,
+      ),
+    }
+        : null;
 
     if (await ConnectionsService.isOnline() == true) {
-      // دمج noteReport مع نتائج المقارنة
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(null, null, fakeGPSCheck);
-      if (mergedNoteReport.isNotEmpty) {
-        formData['note'] = jsonEncode(mergedNoteReport);
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(null, null, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          formData['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -625,19 +647,18 @@ abstract class FingerprintService {
         allData: true,
       );
     } else {
-      //OFFLINE CASE: التحقق من GPS timestamp كخطوة إضافية
-      final gpsVerification = await _verifyGPSTimestampOffline();
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(null, gpsVerification, fakeGPSCheck);
-
-      if (mergedNoteReport.isNotEmpty) {
-        formData['note'] = jsonEncode(mergedNoteReport);
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(null, gpsVerification, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          formData['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
-      //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(formData)
           .then((_) async {
-        // Also save to SharedPreferences for display
-        await _saveFingerprintToSharedPreferences(formData);
+        // Also save to SharedPreferences for display (مع حفظ الصورة)
+        await _saveFingerprintToSharedPreferences(formData, files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -656,15 +677,15 @@ abstract class FingerprintService {
         required List<FilePickerResult> files,
         Map<String, dynamic>? noteReport}) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
-    var date = DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now());
+    var date = DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now());
     String encoded = base64Encode(utf8.encode("${data}_$date"));
     final requestBody = {
       'type': 'fp_bluetooth',
       'data': encoded,
       'finger_day':
-      DateFormat('yyyy-MM-dd', "en").format(fingerDay ?? DateTime.now()),
+      DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(fingerDay ?? DateTime.now()),
     };
-    if (noteReport != null) {
+    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
       requestBody['note'] = jsonEncode(noteReport);
     }
     if (await ConnectionsService.isOnline() == true) {
@@ -672,19 +693,17 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      //OFFLINE CASE: التحقق من GPS timestamp كخطوة إضافية
-      final gpsVerification = await _verifyGPSTimestampOffline();
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, null);
-
-      if (mergedNoteReport.isNotEmpty) {
-        requestBody['note'] = jsonEncode(mergedNoteReport);
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, null);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
-      //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
           .then((_) async {
-        // Also save to SharedPreferences for display
-        await _saveFingerprintToSharedPreferences(requestBody);
+        await _saveFingerprintToSharedPreferences(requestBody, files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -703,14 +722,14 @@ abstract class FingerprintService {
         required List<FilePickerResult> files,
         Map<String, dynamic>? noteReport}) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
-    var date = DateFormat('dd-MM-yyyy', "en").format(fingerDay ?? DateTime.now());
+    var date = DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now());
     String encoded = base64Encode(utf8.encode("${data}_$date"));
     final requestBody = {
       'type': 'fp_wifi',
       'data': encoded,
-      'finger_day': DateFormat('yyyy-MM-dd', "en").format(fingerDay ?? DateTime.now()),
+      'finger_day': DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(fingerDay ?? DateTime.now()),
     };
-    if (noteReport != null) {
+    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
       requestBody['note'] = jsonEncode(noteReport);
     }
     if (await ConnectionsService.isOnline() == true) {
@@ -718,19 +737,17 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      //OFFLINE CASE: التحقق من GPS timestamp كخطوة إضافية
-      final gpsVerification = await _verifyGPSTimestampOffline();
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, null);
-
-      if (mergedNoteReport.isNotEmpty) {
-        requestBody['note'] = jsonEncode(mergedNoteReport);
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, null);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
-      //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
           .then((_) async {
-        // Also save to SharedPreferences for display
-        await _saveFingerprintToSharedPreferences(requestBody);
+        await _saveFingerprintToSharedPreferences(requestBody, files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -753,9 +770,9 @@ abstract class FingerprintService {
       'type': 'fp_nfc',
       'data': data,
       'finger_day':
-      DateFormat('yyyy-MM-dd HH:mm').format(fingerDay ?? DateTime.now()),
+      DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now()),
     };
-    if (noteReport != null) {
+    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
       requestBody['note'] = jsonEncode(noteReport);
     }
     if (await ConnectionsService.isOnline() == true) {
@@ -763,19 +780,17 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      //OFFLINE CASE: التحقق من GPS timestamp كخطوة إضافية
-      final gpsVerification = await _verifyGPSTimestampOffline();
-      final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, null);
-
-      if (mergedNoteReport.isNotEmpty) {
-        requestBody['note'] = jsonEncode(mergedNoteReport);
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, null);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
       }
 
-      //OFFLINE CASE:SAVE FINGERPRINT TO LOCAL DB
       return await DBHiveService.saveFingerprint(requestBody)
           .then((_) async {
-        // Also save to SharedPreferences for display
-        await _saveFingerprintToSharedPreferences(requestBody);
+        await _saveFingerprintToSharedPreferences(requestBody, files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');

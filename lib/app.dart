@@ -7,6 +7,11 @@ import 'core/platform/platform_is.dart';
 import 'core/routing/app_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+// 1. csrequest in more
+// 2. notification orient
+// 3. request type
+
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   NotificationService? notificationService;
