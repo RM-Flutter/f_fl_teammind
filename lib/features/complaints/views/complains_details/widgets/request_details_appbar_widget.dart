@@ -1,3 +1,4 @@
+import 'package:app_test/features/customer_service_requests/data/models/get_one_request_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,9 @@ import '../../../../../core/widgets/bookmark_widgets/bookmark_button.widget.dart
 
 
 class RequestDetailsAppbarWidget extends StatelessWidget {
-  GetOneRequestModel? getOneRequestModel;
+  GetOneComplainsRequestModel? getOneRequestModel;
   List? types;
-  RequestDetailsAppbarWidget({this.getOneRequestModel, this.types});
+  RequestDetailsAppbarWidget({super.key, this.getOneRequestModel, this.types});
   var type;
   @override
   Widget build(BuildContext context) {

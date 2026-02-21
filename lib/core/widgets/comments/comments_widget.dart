@@ -107,14 +107,14 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      // shadows: const [
-                      //   BoxShadow(
-                      //     color: Color(AppColors.black),
-                      //     blurRadius: 10,
-                      //     offset: Offset(0, 1),
-                      //     spreadRadius: 0,
-                      //   )
-                      // ],
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(AppColors.black),
+                          blurRadius: 10,
+                          offset: Offset(0, 1),
+                          spreadRadius: 0,
+                        )
+                      ],
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

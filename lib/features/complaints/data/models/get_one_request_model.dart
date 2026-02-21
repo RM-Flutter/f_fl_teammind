@@ -1,11 +1,11 @@
-class GetOneRequestModel {
+class GetOneComplainsRequestModel {
   bool? status;
   String? message;
   Complain? complain;
 
-  GetOneRequestModel({this.status, this.message, this.complain});
+  GetOneComplainsRequestModel({this.status, this.message, this.complain});
 
-  GetOneRequestModel.fromJson(Map<String, dynamic> json) {
+  GetOneComplainsRequestModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     complain = json['complain'] != null

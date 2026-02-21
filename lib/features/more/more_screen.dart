@@ -704,10 +704,10 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               const SizedBox(height : 15),
                               DefaultListTile(
-                                title: AppStrings.ticketSystem.tr(),
+                                title: AppStrings.myRequest.tr(),
                                 src: "assets/images/svg/mts.svg",
                                 onTap: () {
-                                  context.pushNamed(AppRoutes.complainScreen.name,
+                                  context.pushNamed(AppRoutes.customerServiceScreen.name,
                                       pathParameters: {
                                         'lang': context.locale.languageCode
                                       });

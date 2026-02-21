@@ -25,6 +25,9 @@ import '../../features/authentication/login/views/login_screen.dart';
 import '../../features/authentication/login/views/update_main_data.dart';
 import '../../features/complaints/views/complain_list/complains_screen.dart';
 import '../../features/complaints/views/complains_details/complain_details_screen.dart';
+import '../../features/customer_service_requests/views/new_customer_service/new_customer_service_screen.dart';
+import '../../features/customer_service_requests/views/customer_service_list/customer_service_screen.dart';
+import '../../features/customer_service_requests/views/customer_service_details/customer_service_details_screen.dart';
 import '../../features/evaluation/views/require/evaluation_require_screen.dart';
 import '../../features/evaluation/views/main_evaluation_layout/evaluation_screen.dart';
 import '../../features/fingerprint/views/widgets/offline/finger_print_offline.dart';
@@ -38,7 +41,6 @@ import '../../features/more/faqs/views/faq_screen.dart';
 import '../../features/more/general_data/views/general_data_screen.dart';
 import '../../features/more/language_settings/views/language_setting_screen.dart';
 import '../../features/more/more_screen.dart';
-import '../../features/more/notifications/views/widgets/add_notifications/add_notification_screen.dart';
 import '../../features/more/notifications/views/widgets/notifications_list/widgets/notifications_details/notification_details_screen.dart';
 import '../../features/more/request_terms/views/request_terms_screen.dart';
 import '../../features/more/team_fingerprint/view/team_fingerprint_screen.dart';
@@ -114,7 +116,7 @@ enum AppRoutes {
   userDevices,
   offlineScreen,
   complainDetails,
-  complainScreen,
+  customerServiceScreen,
   taskDetails,
   qrcodeScreen,
   notification,
@@ -132,6 +134,7 @@ enum AppRoutes {
   evaluationRequireScreen,
   requestsById,
   requestDetails,
+  customerServiceDetailsScreen,
   addRequest,
   requestsCalendar,
   employeesList,
@@ -163,7 +166,7 @@ enum AppRoutes {
   vacationCalcScreen,
   personalityTestScreen,
   aboutTeamMindScreen,
-  newRequestScreen,
+  newCusomterService,
   youtubeVideoScreen,
   freeMoreScreen,
   smartCardCompanyDetailScreen,
@@ -171,6 +174,9 @@ enum AppRoutes {
   updateCompanyInfoScreen,
   updateEmployeeInfoScreen,
   mediaCenterYoutubeScreenView,
+
+  complainScreen,
+
 
 }
 
@@ -1652,9 +1658,9 @@ GoRouter goRouter(BuildContext context) {
                 ],
               ),
               GoRoute(
-                  path: 'complainScreen',
+                  path: 'customerServiceScreen',
                   parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.complainScreen.name,
+                  name: AppRoutes.customerServiceScreen.name,
                   pageBuilder: (context, state) {
                     Offset? begin = state.extra as Offset?;
                     final lang = state.uri.queryParameters['lang'];
@@ -1674,16 +1680,16 @@ GoRouter goRouter(BuildContext context) {
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: ComplainScreen(),
+                      child: const CustomerServiceScreen(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
                   },
                   routes: [
                     GoRoute(
-                      path: 'requestDetailsScreen/:id',
+                      path: 'customerRequestDetailsScreen/:id',
                       parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.complainDetails.name,
+                      name: AppRoutes.customerServiceDetailsScreen.name,
                       pageBuilder: (context, state) {
                         Offset? begin = state.extra as Offset?;
                         final lang = state.uri.queryParameters['lang'];
@@ -1704,19 +1710,22 @@ GoRouter goRouter(BuildContext context) {
                         });
                         return AppRouterTransitions.slideTransition(
                           key: state.pageKey,
-                          child: ComplainDetailsScreen(id: id),
+                          child: CustomerServiceDetailsScreen(id : id),
                           animation: animationController,
                           begin: begin ?? const Offset(1.0, 0.0),
                         );
                       },
                     ),
                     GoRoute(
-                      path: 'newRequestScreens/:type/:subject/:details',
+                      path: 'newCustomerServiceScreen/:type/:subject/:details',
                       parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.newRequestScreen.name,
+                      name: AppRoutes.newCusomterService.name,
                       pageBuilder: (context, state) {
                         Offset? begin = state.extra as Offset?;
                         final lang = state.uri.queryParameters['lang'];
+                        final type = state.uri.queryParameters['type'] ?? '';
+                        final details = state.uri.queryParameters['details'] ?? '';
+                        final subject = state.uri.queryParameters['subject'] ?? '';
                         if (lang != null) {
                           final locale = Locale(lang);
                           context.setLocale(locale);
@@ -1733,7 +1742,7 @@ GoRouter goRouter(BuildContext context) {
                         });
                         return AppRouterTransitions.slideTransition(
                           key: state.pageKey,
-                          child: NewComplainScreen(),
+                          child: NewCustomerServiceScreen(type, subject, details),
                           animation: animationController,
                           begin: begin ?? const Offset(1.0, 0.0),
                         );
@@ -2517,6 +2526,99 @@ GoRouter goRouter(BuildContext context) {
             ),
           ]
       ),
+      GoRoute(
+          path: 'complainScreen',
+          parentNavigatorKey: rootNavigatorKey,
+          name: AppRoutes.complainScreen.name,
+          pageBuilder: (context, state) {
+            Offset? begin = state.extra as Offset?;
+            final lang = state.uri.queryParameters['lang'];
+            if (lang != null) {
+              final locale = Locale(lang);
+              context.setLocale(locale);
+            }
+            final animationController = AnimationController(
+              vsync: ticker,
+            );
+            // Make sure to dispose the controller after the transition is complete
+            animationController.addStatusListener((status) {
+              if (status == AnimationStatus.completed ||
+                  status == AnimationStatus.dismissed) {
+                animationController.dispose();
+              }
+            });
+            return AppRouterTransitions.slideTransition(
+              key: state.pageKey,
+              child: ComplainScreen(),
+              animation: animationController,
+              begin: begin ?? const Offset(1.0, 0.0),
+            );
+          },
+          routes: [
+            GoRoute(
+              path: 'complainDetailsScreen/:id/:type',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.complainDetails.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                final id = state.pathParameters['id'] ?? '';
+                final type = state.pathParameters['type'] ?? '';
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                // Make sure to dispose the controller after the transition is complete
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: ComplainDetailsScreen(id : id, type: type,),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+          ]
+      ),
+
+      GoRoute(
+        path: '/:lang/newComplainsScreen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.newComplainScreen.name,
+        pageBuilder: (context, state) {
+          Offset? begin = state.extra as Offset?;
+          final lang = state.uri.queryParameters['lang'];
+          if (lang != null) {
+            final locale = Locale(lang);
+            context.setLocale(locale);
+          }
+          final animationController = AnimationController(
+            vsync: ticker,
+          );
+          // Make sure to dispose the controller after the transition is complete
+          animationController.addStatusListener((status) {
+            if (status == AnimationStatus.completed ||
+                status == AnimationStatus.dismissed) {
+              animationController.dispose();
+            }
+          });
+          return AppRouterTransitions.slideTransition(
+            key: state.pageKey,
+            child: NewComplainScreen(),
+            animation: animationController,
+            begin: begin ?? const Offset(1.0, 0.0),
+          );
+        },
+      ),
+
 
     ],
     debugLogDiagnostics: true,
