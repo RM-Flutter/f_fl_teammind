@@ -24,7 +24,7 @@ class GetHistoryRepositoryImplementation extends GetHistoryRepository {
             'device_unique_id': get.deviceInformation.deviceUniqueId
         }
       );
-      debugPrint(data.data);
+      debugPrint(data.data.toString());
       return Right(HistoryModel.fromJson(data.data));
     } catch (error, stacktrace) {
       debugPrint("🔥 Error in getHistory: \$error");

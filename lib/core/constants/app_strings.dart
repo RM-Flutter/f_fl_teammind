@@ -76,6 +76,7 @@ abstract class AppStrings {
   static const notes = "notes";
   static const voucherCouponCode = "voucherCouponCode";
   static const loadHistory = "loadHistory";
+  static const noHistoryFound = "noHistoryFound";
   static const redeemNow = "redeemNow";
   static const myPoints = "myPoints";
   static const fromContactList = "fromContactList";

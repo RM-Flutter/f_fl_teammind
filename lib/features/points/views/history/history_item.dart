@@ -132,7 +132,30 @@ class HistoryItem extends StatelessWidget {
                     );
                   },
                 ).toList()),
-          ) : const SizedBox.shrink();
+          ) : Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/images/app_logo.png',
+                    height: 80,
+                    width: 80,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    AppStrings.noHistoryFound.tr(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         } else {
           return Center(
             child: ElevatedButton(
