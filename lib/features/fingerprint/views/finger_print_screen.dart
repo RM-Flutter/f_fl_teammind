@@ -100,8 +100,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                   child: Consumer<FingerprintViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const FingerprintLoadingScreenWidget()
-                          : (viewModel.fingerprints?.isEmpty == true ||
-                          viewModel.fingerprints == null) && (AppConstants.fingerPrints == null && AppConstants.fingerPrints!.isEmpty)
+                          : (viewModel.fingerprints?.isEmpty ?? true) && (AppConstants.fingerPrints?.isEmpty ?? true)
                               ? NoExistingPlaceholderScreen(
                                   height: LayoutService.getHeight(context) * 0.6,
                                   title: AppStrings.noFingerprintsYet.tr())

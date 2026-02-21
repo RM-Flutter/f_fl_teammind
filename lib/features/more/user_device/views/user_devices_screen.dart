@@ -28,7 +28,9 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
     appConfigServiceProvider =
         Provider.of<AppConfigService>(context, listen: false);
     final notificationProvider = Provider.of<DeviceControllerProvider>(context, listen: false);
-    notificationProvider.getDevices(context: context); // Load initial notifications
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notificationProvider.getDevices(context: context); // Load initial notifications
+    });
   }
   @override
   Widget build(BuildContext context) {
