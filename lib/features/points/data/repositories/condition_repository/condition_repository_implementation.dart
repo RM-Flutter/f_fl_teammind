@@ -28,7 +28,11 @@ class GetConditionRepositoryImplementation extends ConditionRepository {
       return Right(TermsAndConditionsModel.fromJson(data.data));
     } catch (error) {
       if (error is DioException) {
-        return Left(ServerFailure(error.response!.data['message'].toString()));
+        final response = error.response;
+        if (response != null && response.data != null && response.data is Map && response.data['message'] != null) {
+          return Left(ServerFailure(response.data['message'].toString()));
+        }
+        return Left(ServerFailure(error.message ?? 'Network error occurred'));
       } else {
         return Left(ServerFailure(error.toString()));
       }

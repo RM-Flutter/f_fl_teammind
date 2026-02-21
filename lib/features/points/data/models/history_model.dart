@@ -10,9 +10,11 @@ class HistoryModel {
     message = json['message'];
     if (json['history'] != null) {
       history = <History>[];
-      json['history'].forEach((v) {
-        history!.add(History.fromJson(v));
-      });
+      if (json['history'] is List) {
+        json['history'].forEach((v) {
+          history!.add(History.fromJson(v));
+        });
+      }
     }
   }
 }

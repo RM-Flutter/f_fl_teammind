@@ -1,3 +1,4 @@
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/points/core/end_points/end_points.dart';
@@ -15,6 +16,16 @@ class ApiServicesImplementation implements ApiServices {
       receiveDataWhenStatusError: true,
     );
     _dio = Dio(baseOptions);
+    _dio!.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: true,
+        error: true,
+        compact: true,
+      ),
+    );
   }
 
   @override

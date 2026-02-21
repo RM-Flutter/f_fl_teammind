@@ -3,7 +3,14 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 
 class PointFeatureEndPoints {
   String postId = '';
-  static final String baseUrl = '${CacheHelper.getString("custom_domain")}';
+  static String get baseUrl {
+    String domain = CacheHelper.getString("custom_domain") ?? "";
+    if (domain.isEmpty) {
+      domain = "https://lab.r-m.dev";
+    }
+    return domain.endsWith("/") ? domain : "$domain/";
+  }
+
   ///replace with token after login
   ///replace with deviceId after login
   static const String getHistory = 'api/rm_pointsys/v1/history';
