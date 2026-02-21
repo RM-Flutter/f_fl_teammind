@@ -110,7 +110,7 @@ class HomeAppbarWidget extends StatelessWidget {
                   child: Image.asset(
                     "assets/images/png/team-mind-home.jpg",
                     fit: BoxFit.cover,
-                    width: double.infinity,height: 300,
+                    width: double.infinity,height: 380,
                   ),
                 ),
               ),

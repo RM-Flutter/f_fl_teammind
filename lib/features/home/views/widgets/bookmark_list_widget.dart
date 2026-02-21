@@ -142,7 +142,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
             child: Text(
               AppStrings.myBookmarks.tr(),
               style: TextStyle(
@@ -157,7 +157,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
             height: 120,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               itemCount: _bookmarks.length,
               itemBuilder: (context, index) {
                 final bookmark = _bookmarks[index];

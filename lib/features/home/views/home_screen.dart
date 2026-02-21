@@ -212,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // pinned: true,
               color: Color(AppColors.backgroundColor),
               shrinkHeight: AppSizes.s140,
-              expandedHeight: AppSizes.s300,
+              expandedHeight: 380,
               shrinkChild: Consumer<HomeController>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
                     requests: viewModel.myRequests,
@@ -317,10 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: GeneralScreenMessageWidget(screenId: '/'),
         ),
         const SizedBox(height: AppSizes.s12),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.s16),
-          child: BookmarkListWidget(),
-        ),
+        const BookmarkListWidget(),
         // Reorderable widgets
         Listener(
           onPointerMove: (event) {
