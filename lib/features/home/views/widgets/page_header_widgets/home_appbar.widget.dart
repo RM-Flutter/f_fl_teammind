@@ -92,9 +92,6 @@ class HomeAppbarWidget extends StatelessWidget {
             bottomRight: Radius.circular(AppSizes.s32))
             : null,
       ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
-      ),
       child: Stack(
         children: [
           Stack(
@@ -123,6 +120,7 @@ class HomeAppbarWidget extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(height: MediaQuery.of(context).padding.top),
                 if ( us1Cache != null &&  ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) )  GestureDetector(
                   onTap: ()async{
                     await context.pushNamed(
@@ -131,19 +129,19 @@ class HomeAppbarWidget extends StatelessWidget {
                   },
                   child: Container(
                     color: Colors.yellow,
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+                    padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        Icon(Icons.warning, color: Colors.red),
-                        SizedBox(width: 8),
+                        const Icon(Icons.warning, color: Colors.red),
+                        const SizedBox(width: 8),
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.6,
                           child: Text(
-                            getVerificationStatus(us1Cache),   style: TextStyle(color: Colors.red),
+                            getVerificationStatus(us1Cache),   style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                        Spacer(),
-                        Text(AppStrings.activeNow.tr(), style: TextStyle(fontSize: 12, color: Colors.green),),
+                        const Spacer(),
+                        Text(AppStrings.activeNow.tr(), style: const TextStyle(fontSize: 12, color: Colors.green),),
                       ],
                     ),
                   ),
@@ -258,7 +256,7 @@ class HomeAppbarWidget extends StatelessWidget {
                             //   onTap: () => context.pushNamed(AppRoutes.notification.name,
                             //       pathParameters: {'lang': context.locale.languageCode}),
                             // )
-                            Spacer(),
+                            const Spacer(),
                             if((us1Cache['email_verified_at'] == null) || ( us1Cache['phone_verified_at'] == null))
                               GestureDetector(
                                   onTap: ()async{
@@ -266,7 +264,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                         AppRoutes.personalProfile.name,
                                         pathParameters: {'lang': context.locale.languageCode});
                                   },
-                                  child: Icon(Icons.error, color: Colors.yellow,))
+                                  child: const Icon(Icons.error, color: Colors.yellow,))
                           ],
                         ),
                       ),
@@ -274,7 +272,7 @@ class HomeAppbarWidget extends StatelessWidget {
                       if (isExpanded == true)
                         Center(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(
+                            constraints: const BoxConstraints(
                                 maxWidth: kIsWeb ? 1100 : double.infinity
                             ),
                             child: VacationListWidget(
