@@ -25,6 +25,7 @@ import '../../features/authentication/login/views/login_screen.dart';
 import '../../features/authentication/login/views/update_main_data.dart';
 import '../../features/complaints/views/complain_list/complains_screen.dart';
 import '../../features/complaints/views/complains_details/complain_details_screen.dart';
+import '../../features/complaints/controller/complaints_controller.dart';
 import '../../features/evaluation/views/require/evaluation_require_screen.dart';
 import '../../features/evaluation/views/main_evaluation_layout/evaluation_screen.dart';
 import '../../features/fingerprint/views/widgets/offline/finger_print_offline.dart';
@@ -1658,7 +1659,10 @@ GoRouter goRouter(BuildContext context) {
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: const ComplainScreen(),
+                      child: ChangeNotifierProvider(
+                        create: (_) => ComplaintsController(),
+                        child: const ComplainScreen(),
+                      ),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
@@ -2102,7 +2106,10 @@ GoRouter goRouter(BuildContext context) {
           });
           return AppRouterTransitions.slideTransition(
             key: state.pageKey,
-            child: const NewComplainScreen(),
+            child: ChangeNotifierProvider(
+              create: (_) => ComplaintsController(),
+              child: const NewComplainScreen(),
+            ),
             animation: animationController,
             begin: begin ?? const Offset(1.0, 0.0),
           );
