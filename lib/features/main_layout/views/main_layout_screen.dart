@@ -99,13 +99,14 @@ class MainLayoutScreen extends StatelessWidget {
               context: context, page: NavbarPages.values[index]);
         },
       ),
-      body: Builder(
-        builder: (context) {
-          return child;
-        },
+      body: SafeArea(
+        child: Builder(
+          builder: (context) {
+            return child;
+          },
+        ),
       ),
 
     );
   }
 }
-

@@ -1585,7 +1585,7 @@ abstract class MainFabServices {
         onDiscovered: (NfcTag tag) async {
           // Extract the UID, card content, and tag type
           final Map<String, dynamic> data =
-              (tag.data is Map<String, dynamic>) ? (tag.data as Map<String, dynamic>) : {};
+          (tag.data is Map<String, dynamic>) ? (tag.data as Map<String, dynamic>) : {};
           String uid = data['id']?.toString() ?? '0';
           String cardContent =
               '0'; // Placeholder, customize as per your card type

@@ -26,7 +26,7 @@ import '../../../../core/utils/gradient_bg_image.dart';
 
 class NotificationScreen extends StatefulWidget {
   final bool viewArrow;
-  const NotificationScreen(this.viewArrow);
+  NotificationScreen(this.viewArrow);
 
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
@@ -35,13 +35,22 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final ScrollController _scrollController = ScrollController();
   late NotificationProviderModel notificationProvider;
-
+  bool value = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("CacheHelper.getBool --> ${CacheHelper.getBool("value")}");
       notificationProvider = Provider.of<NotificationProviderModel>(context, listen: false);
-      notificationProvider.getNotification(context, page: 1);
+      if(CacheHelper.getBool("value") != null){
+        if(CacheHelper.getBool("value") == false){
+          notificationProvider.getNotification(context, page: 1, forWho: "all");
+        }else{
+          notificationProvider.getNotification(context, page: 1, forWho: "department");
+        }
+      }else{
+        notificationProvider.getNotification(context, page: 1, forWho: "all");
+      }
     });
     _scrollController.addListener(() {
       print("Current scroll position: ${_scrollController.position.pixels}");
@@ -51,7 +60,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
           !notificationProvider.isGetNotificationLoading &&
           notificationProvider.hasMoreNotifications) {
         print("BOTTOM BOTTOM");
-        notificationProvider.getNotification(context, page: notificationProvider.currentPage);
+        if(CacheHelper.getBool("value") != null){
+          if(CacheHelper.getBool("value") == false){
+            notificationProvider.getNotification(context, page: notificationProvider.currentPage, forWho: "all");
+          }else{
+            notificationProvider.getNotification(context, page: notificationProvider.currentPage, forWho: "department");
+          }
+        }else{
+          notificationProvider.getNotification(context, page: notificationProvider.currentPage, forWho: "department");
+        }
       }
     });
 
@@ -61,82 +78,137 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Consumer<NotificationProviderModel>(
       builder: (context, notificationProviderModel, child) {
+        var jsonString;
+        var gCache;
+        jsonString = CacheHelper.getString("US1");
+        if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+          gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
+          UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+        }
         return SafeArea(
-          child: Scaffold( resizeToAvoidBottomInset: false,
-            backgroundColor: const Color(0xffFFFFFF),
-            body: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-
-              controller: _scrollController,
-              child: GradientBgImage(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    Container(
-                      color: Colors.transparent,
-                      height: 90,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.arrow_back, color: widget.viewArrow ? const Color(0xff224982) : Colors.transparent),
-                            onPressed: () => widget.viewArrow ? Navigator.pop(context) : null,
-                          ),
-                          Text(
-                            AppStrings.notificationsCenter.tr().toUpperCase(),
-                            style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.transparent),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.s20),
-                    if(!notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage == 1 && notificationProviderModel.notifications.isEmpty)Center(
-                      child: NoExistingPlaceholderScreen(
-                          height: LayoutService.getHeight(context) * 0.4,
-                          title: AppStrings.noNotificationFounded.tr()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        reverse: false,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty
-                            ? 12 // Show 5 loading items initially
-                            : notificationProviderModel.notifications.length,
-                        itemBuilder: (context, index) {
-                          if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage == 1) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                                padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(AppSizes.s15),
-                                ),
-                                height: 100,
-                              ),
-                            );
-                          } else {
-                            return PainterNotificationListViewItem(
-                              notifications: notificationProviderModel.notifications,
-                              index: index,
-                            );
-                          }
+          child: Scaffold(
+            backgroundColor: Color(AppColors.white),
+            appBar: AppBarWithBookmark(
+              surfaceTintColor: Colors.transparent,
+              title: AppStrings.notifications.tr().toUpperCase(),
+              titleStyle: TextStyle(fontSize: 16,
+                  color: Color(AppColors.dark), fontWeight: FontWeight.w700),
+              backgroundColor: Colors.transparent,
+              routeName: AppRoutes.notifications.name,
+            ),
+            floatingActionButton: (gCache['is_teamleader_in'].isNotEmpty ||
+                gCache['is_manager_in'].isNotEmpty)?Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: LocalizationService.isArabic(context: context)
+                      ? 35
+                      : 0),
+              width: double.infinity,
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton(
+                heroTag: 'notification_screen_add',
+                onPressed: () async => await context.pushNamed(
+                    AppRoutes.addNotification.name,
+                    pathParameters: {
+                      'lang': context.locale.languageCode
+                    }), // Icon inside FAB
+                backgroundColor: Color(
+                    AppColors.primary), // Optional: change color
+                tooltip: 'Add',
+                child: Center(
+                  child: Image.asset(
+                    AppImages.addFloatingActionButtonIcon,
+                    color: AppThemeService.colorPalette.fabIconColor.color,
+                    width: AppSizes.s16,
+                    height: AppSizes.s16,
+                  ),
+                ),
+              ),
+            ) : const SizedBox.shrink(),
+            body: RefreshIndicator.adaptive(
+              onRefresh: ()async{
+                setState(() {
+                  CacheHelper.setBool("value", false);
+                });
+                await notificationProviderModel.getNotification(context, page: 1, forWho: "all");
+                // if(CacheHelper.getBool("value") != null){
+                //   if(CacheHelper.getBool("value") == false){
+                //     await notificationProviderModel.getNotification(context, page: 1, forWho: "all");
+                //   }else{
+                //     await notificationProviderModel.getNotification(context, page: 1, forWho: "department");
+                //   }
+                // }else{
+                //   await notificationProviderModel.getNotification(context, page: 1, forWho: "department");
+                // }
+              },
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  ),
+                  child: ListView(
+                    controller: _scrollController,
+                    children: [
+                      if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5,)
+                      else  SwitchRowNotification(
+                        isLoginPageStyle: false,
+                        value: CacheHelper.getBool("value") ??value!,
+                        onChanged: (newValue){
+                          setState(() {
+                            value = newValue;
+                            CacheHelper.setBool("value", newValue);
+                          });
+                          notificationProviderModel.getNotification(context,
+                              page: 1, forWho: (newValue == false)? "all" : "department"
+                          );
                         },
                       ),
-                    ),
-                    if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage != 1)
-                      const Center(child: CircularProgressIndicator()),
-                  ],
+                      const SizedBox(height: 25,),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          reverse: false,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty
+                              ? 12 // Show 5 loading items initially
+                              : notificationProviderModel.notifications.length,
+                          itemBuilder: (context, index) {
+                            if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage == 1) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                                  padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(AppSizes.s15),
+                                  ),
+                                  height: 100,
+                                ),
+                              );
+                            } else {
+                              return PainterNotificationListViewItem(
+                                notifications: notificationProviderModel.notifications,
+                                index: index,
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      if(!notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty) Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child:  NoExistingPlaceholderScreen(
+                            height: LayoutService.getHeight(context) *
+                                0.6,
+                            title: AppStrings.thereIsNoNotifications.tr()),
+                      ),
+                      if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage != 1)
+                        const Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
                 ),
               ),
             ),

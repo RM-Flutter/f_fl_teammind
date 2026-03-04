@@ -21,6 +21,8 @@ import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../controller/complaints_controller.dart';
 
 class ComplainScreen extends StatefulWidget {
+  const ComplainScreen({super.key});
+
   @override
   State<ComplainScreen> createState() => _ComplainScreenState();
 }

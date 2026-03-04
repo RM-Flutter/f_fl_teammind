@@ -20,7 +20,7 @@ import 'package:app_test/core/widgets/gradient_bg_image.dart';
 class ComplainDetailsScreen extends StatefulWidget {
   var id;
   var type;
-  ComplainDetailsScreen({required this.id, this.type});
+  ComplainDetailsScreen({super.key, required this.id, this.type});
 
   @override
   State<ComplainDetailsScreen> createState() => _ComplainDetailsScreenState();

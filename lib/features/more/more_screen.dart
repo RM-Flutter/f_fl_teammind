@@ -534,485 +534,477 @@ class _MoreScreenState extends State<MoreScreen> {
     return Consumer<HomeController>(
       builder: (context, value, child) {
         return Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.zero,
-                alignment: Alignment.topCenter,
-                color: Color(AppColors.dark),
-                child: SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.25,
-                  child: Image.asset(
-                    "assets/images/png/more_back.png",
-                    fit: BoxFit.cover,
-                  ),
+          alignment: Alignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.zero,
+              alignment: Alignment.topCenter,
+              color: Color(AppColors.dark),
+              child: SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.25,
+                child: Image.asset(
+                  "assets/images/png/more_back.png",
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned.fill(
-                top: MediaQuery.sizeOf(context).height * 0.25,
-                child: Container(
-                  // height: MediaQuery.sizeOf(context).height * 0.66,
-                  decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      begin: const Alignment(0, 0),
-                      end: const Alignment(1, 0),
-                      colors: [Color(AppColors.white), Color(AppColors.whiteBlue)],
-                    ),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                      ),
-                    ),
+            ),
+            Positioned.fill(
+              top: MediaQuery.sizeOf(context).height * 0.25,
+              child: Container(
+                // height: MediaQuery.sizeOf(context).height * 0.66,
+                decoration: ShapeDecoration(
+                  gradient: LinearGradient(
+                    begin: const Alignment(0, 0),
+                    end: const Alignment(1, 0),
+                    colors: [Color(AppColors.white), Color(AppColors.whiteBlue)],
                   ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.15,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: ListView(
-                            children: [
-                              Center(
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: kIsWeb ? 1070 : double.infinity,
-                                  ),
-                                  child: Container(
-                                    alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                    child: Text(AppStrings.functionality.tr().toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(AppColors.primary))),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height : 15),
-                              DefaultListTile(
-                                title: AppStrings.payroll.tr(),
-                                src: AppIcons.payroll,
-                                onTap: () async => await context
-                                    .pushNamed(AppRoutes.payrollsList.name, extra: {
-                                  'employeeName': null,
-                                  'employeeId': null
-                                }, pathParameters: {
-                                  'lang': context.locale.languageCode
-                                }),
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.tasks.tr(),
-                                src: AppIcons.tasks,
-                                onTap: () async => await context.pushNamed(
-                                    AppRoutes.taskScreen.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    }),
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.evaluationRequests.tr(),
-                                src: AppIcons.payroll,
-                                onTap: () async => await context.pushNamed(
-                                    AppRoutes.evaluationRequireScreen.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    }),
-                              ),
-                              DefaultListTile(
-                                  title: AppStrings.rewardsAndPenalties.tr(),
-                                  src: AppIcons.reward,
-                                  onTap: () async => await context.pushNamed(
-                                      AppRoutes.rewardsAndPenalties.name,
-                                      extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
-                                      pathParameters: {'lang': context.locale.languageCode})
-                              ),
-                              DefaultListTile(
-                                  title: AppStrings.myPoints.tr(),
-                                  onTap: (){
-                                    context.pushNamed(AppRoutes.painterPointsViewScreen.name,
-                                        pathParameters: {'lang': context.locale.languageCode,});
-                                  },
-                                  src: "assets/images/svg/points_menu.svg"
-                              ),
-                              if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
-                              if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Center(
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: kIsWeb ? 1070 : double.infinity,
-                                  ),
-                                  child: Container(
-                                    alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                    child: Text(AppStrings.management.tr().toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(AppColors.primary))),
-                                  ),
-                                ),
-                              ),
-                              if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                                title: AppStrings.teamRequests.tr(),
-                                src: AppIcons.teamRequests,
-                                onTap: ()async {
-                                  await context.pushNamed(AppRoutes.requests2.name,
-                                      //  extra: requests,
-                                      pathParameters: {
-                                        'type': GetRequestsTypes.myTeam.name,
-                                        'lang': context.locale.languageCode
-                                      });
-                                },
-                              ),
-                              if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                                title: AppStrings.otherDepartmentsRequests.tr(),
-                                src: AppIcons.otherDepartments,
-                                onTap: () async{
-                                  await context.pushNamed(AppRoutes.requests2.name,
-                                      //  extra: requests,
-                                      pathParameters: {
-                                        'type': GetRequestsTypes.otherDepartment.name,
-                                        'lang': context.locale.languageCode
-                                      });
-                                },
-                              ),
-                              if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                                title: AppStrings.teamFingerprint.tr(),
-                                src: AppIcons.teamFingerprint,
-                                onTap: () async{
-                                  await context.pushNamed(AppRoutes.teamFingerprint.name,
-                                      pathParameters: {
-                                        'lang': context.locale.languageCode
-                                      });
-                                },
-                              ),
-                              const SizedBox(height : 15),
-                              Center(
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: kIsWeb ? 1070 : double.infinity,
-                                  ),
-                                  child: Container(
-                                    alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                    child: Text(AppStrings.more.tr().toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(AppColors.primary))),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height : 15),
-                              DefaultListTile(
-                                title: AppStrings.myRequest.tr(),
-                                src: "assets/images/svg/mts.svg",
-                                onTap: () {
-                                  context.pushNamed(AppRoutes.customerServiceScreen.name,
-                                      pathParameters: {
-                                        'lang': context.locale.languageCode
-                                      });
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.employeesDirectory.tr(),
-                                src:  "assets/images/svg/med.svg",
-                                onTap: () {
-                                  context.pushNamed(AppRoutes.employeesList.name,
-                                      pathParameters: {'lang': context.locale.languageCode,
-                                      });
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.companyStructure.tr(),
-                                src: "assets/images/svg/mcs.svg",
-                                onTap: () async{
-                                  final jsonString = CacheHelper.getString("USG");
-                                  Map<String, dynamic>? gCache;
-                                  if (jsonString != null && jsonString.isNotEmpty) {
-                                    gCache = json.decode(jsonString) as Map<String, dynamic>;
-                                  }
-                                  final url = gCache?['company_structure_url'] ?? "https://www.google.com/";
-
-                                  // On web, open in browser. On mobile, use WebView
-                                  if (PlatformIs.web) {
-                                    final uri = Uri.parse(url);
-                                    if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                    } else {
-                                      if (mounted) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('Could not open $url')),
-                                        );
-                                      }
-                                    }
-                                  } else {
-                                    // On mobile, navigate to WebView screen
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const WebViewStack(),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.articlesNew.tr(),
-                                src: "assets/images/svg/man.svg",
-                                onTap: () {
-                                  if (kIsWeb) {
-                                    context.pushNamed(
-                                      AppRoutes.defaultListPage.name,
-                                      pathParameters: {
-                                        "lang": context.locale.languageCode,
-                                        "type": "blogs"
-                                      },
-                                    );
-                                  } else {
-                                    context.pushNamed(
-                                      AppRoutes.defaultPage.name,
-                                      pathParameters: {
-                                        "lang": context.locale.languageCode,
-                                        "type": "blogs"
-                                      },
-                                    );
-                                  }
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.aboutComapny.tr(),
-                                src: "assets/images/svg/map.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.aboutUsScreen.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.contactUs.tr(),
-                                src: "assets/images/svg/s8.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.contactUs.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.faqs.tr(),
-                                src: "assets/images/svg/faqqs.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.faqScreen.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.companyPolicy.tr(),
-                                src: "assets/images/svg/faqqs.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.generalDataScreen.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.requestTerms.tr(),
-                                src: "assets/images/svg/faqqs.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.requestTermsScreen.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              const SizedBox(height : 15),
-                              Center(
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: kIsWeb ? 1070 : double.infinity,
-                                  ),
-                                  child: Container(
-                                    alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                    child: Text(AppStrings.myAccount.tr().toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(AppColors.primary))),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height : 15),
-                              DefaultListTile(
-                                title:AppStrings.customizeNotifications.tr(),
-                                src: "assets/images/svg/mcn.svg",
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const CustomizeNotificationScreen();
-                                      });
-                                },
-                              ),DefaultListTile(
-                                title:AppStrings.languageSettings.tr(),
-                                src: "assets/images/svg/mls.svg",
-                                onTap: () {
-                                  context.pushNamed(AppRoutes.langSettingScreen.name,
-                                      pathParameters: {'lang': context.locale.languageCode,
-                                      });
-                                },
-                              ),
-                              DefaultListTile(
-                                title:AppStrings.updatePassword.tr(),
-                                src: "assets/images/svg/mup.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.updatePassword.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.personalInfo.tr(),
-                                src: "assets/images/svg/mpi.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.personalProfile.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.userDevices.tr(),
-                                src: "assets/images/svg/mpi.svg",
-                                onTap: () {
-                                  context.pushNamed(
-                                    AppRoutes.userDevices.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                              ),
-                              DefaultListTile(
-                                title: AppStrings.logout.tr(),
-                                src: "assets/images/svg/mlo.svg",
-                                onTap: () async {
-                                  final appConfigService =
-                                  Provider.of<AppConfigService>(context,
-                                      listen: false);
-                                  appConfigService.logout(context, viewAlert: true).then((v) {
-                                    context.goNamed(
-                                      AppRoutes.splash.name,
-                                      pathParameters: {'lang': context.locale.languageCode,},
-                                    );
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: MediaQuery.sizeOf(context).height * 0.15,
                 child: Column(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(124),
-                      child: GestureDetector(
-                        onTap:(){
-                          context.pushNamed(AppRoutes.personalProfile.name,
-                              pathParameters: {'lang': context.locale.languageCode,
-                              });
-                        },
-                        child: CachedNetworkImage(
-                            imageUrl:(gCache != null)? gCache['photo']??"" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
-                            fit: BoxFit.cover,
-                            height: 124,
-                            width: 124,
-                            placeholder: (context, url) => const ShimmerAnimatedLoading(
-                              width: 63.0,
-                              height: 63,
-                              circularRaduis: 63,
-                            ),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.image_not_supported_outlined,
-                            )),
-                      ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.15,
                     ),
-                    const SizedBox(height: 15),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      width: MediaQuery.sizeOf(context).width * 1,
-                      child: Text(
-                        (gCache['name'] ?? '').toUpperCase(),
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                          color: Color(AppColors.dark),
-                          // fontSize: 16,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: ListView(
+                          children: [
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: kIsWeb ? 1070 : double.infinity,
+                                ),
+                                child: Container(
+                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                  child: Text(AppStrings.functionality.tr().toUpperCase(),
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(AppColors.primary))),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height : 15),
+                            DefaultListTile(
+                              title: AppStrings.payroll.tr(),
+                              src: AppIcons.payroll,
+                              onTap: () async => await context
+                                  .pushNamed(AppRoutes.payrollsList.name, extra: {
+                                'employeeName': null,
+                                'employeeId': null
+                              }, pathParameters: {
+                                'lang': context.locale.languageCode
+                              }),
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.tasks.tr(),
+                              src: AppIcons.tasks,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.taskScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.evaluationRequests.tr(),
+                              src: AppIcons.payroll,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.evaluationRequireScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
+                            DefaultListTile(
+                                title: AppStrings.rewardsAndPenalties.tr(),
+                                src: AppIcons.reward,
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.rewardsAndPenalties.name,
+                                    extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
+                                    pathParameters: {'lang': context.locale.languageCode})
+                            ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
+                           if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Center(
+                             child: ConstrainedBox(
+                               constraints: const BoxConstraints(
+                                 maxWidth: kIsWeb ? 1070 : double.infinity,
+                               ),
+                               child: Container(
+                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                 child: Text(AppStrings.management.tr().toUpperCase(),
+                                     style: TextStyle(
+                                         fontSize: 13,
+                                         fontWeight: FontWeight.w600,
+                                         color: Color(AppColors.primary))),
+                               ),
+                             ),
+                           ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                              title: AppStrings.teamRequests.tr(),
+                              src: AppIcons.teamRequests,
+                              onTap: ()async {
+                                await context.pushNamed(AppRoutes.requests2.name,
+                                  //  extra: requests,
+                                    pathParameters: {
+                                      'type': GetRequestsTypes.myTeam.name,
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                              title: AppStrings.otherDepartmentsRequests.tr(),
+                              src: AppIcons.otherDepartments,
+                              onTap: () async{
+                                await context.pushNamed(AppRoutes.requests2.name,
+                                    //  extra: requests,
+                                    pathParameters: {
+                                      'type': GetRequestsTypes.otherDepartment.name,
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                              title: AppStrings.teamFingerprint.tr(),
+                              src: AppIcons.teamFingerprint,
+                              onTap: () async{
+                                await context.pushNamed(AppRoutes.teamFingerprint.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
+                            const SizedBox(height : 15),
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: kIsWeb ? 1070 : double.infinity,
+                                ),
+                                child: Container(
+                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                  child: Text(AppStrings.more.tr().toUpperCase(),
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(AppColors.primary))),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height : 15),
+                            DefaultListTile(
+                              title: AppStrings.ticketSystem.tr(),
+                              src: "assets/images/svg/mts.svg",
+                              onTap: () {
+                                context.pushNamed(AppRoutes.complainScreen.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.employeesDirectory.tr(),
+                              src:  "assets/images/svg/med.svg",
+                              onTap: () {
+                                context.pushNamed(AppRoutes.employeesList.name,
+                                    pathParameters: {'lang': context.locale.languageCode,
+                                    });
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.companyStructure.tr(),
+                              src: "assets/images/svg/mcs.svg",
+                              onTap: () async{
+                                final jsonString = CacheHelper.getString("USG");
+                                Map<String, dynamic>? gCache;
+                                if (jsonString != null && jsonString.isNotEmpty) {
+                                  gCache = json.decode(jsonString) as Map<String, dynamic>;
+                                }
+                                final url = gCache?['company_structure_url'] ?? "https://www.google.com/";
 
-                          // fontWeight: FontWeight.w700,
-                          // height: 0,
+                                // On web, open in browser. On mobile, use WebView
+                                if (PlatformIs.web) {
+                                  final uri = Uri.parse(url);
+                                  if (await canLaunchUrl(uri)) {
+                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                  } else {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Could not open $url')),
+                                      );
+                                    }
+                                  }
+                                } else {
+                                  // On mobile, navigate to WebView screen
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const WebViewStack(),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.articlesNew.tr(),
+                              src: "assets/images/svg/man.svg",
+                              onTap: () {
+                                if (kIsWeb) {
+                                  context.pushNamed(
+                                    AppRoutes.defaultListPage.name,
+                                    pathParameters: {
+                                      "lang": context.locale.languageCode,
+                                      "type": "blogs"
+                                    },
+                                  );
+                                } else {
+                                  context.pushNamed(
+                                    AppRoutes.defaultPage.name,
+                                    pathParameters: {
+                                      "lang": context.locale.languageCode,
+                                      "type": "blogs"
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.aboutComapny.tr(),
+                              src: "assets/images/svg/map.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.aboutUsScreen.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.contactUs.tr(),
+                              src: "assets/images/svg/s8.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.contactUs.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.faqs.tr(),
+                              src: "assets/images/svg/faqqs.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.faqScreen.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.companyPolicy.tr(),
+                              src: "assets/images/svg/faqqs.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.generalDataScreen.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.requestTerms.tr(),
+                              src: "assets/images/svg/faqqs.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.requestTermsScreen.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            const SizedBox(height : 15),
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: kIsWeb ? 1070 : double.infinity,
+                                ),
+                                child: Container(
+                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                  child: Text(AppStrings.myAccount.tr().toUpperCase(),
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(AppColors.primary))),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height : 15),
+                            DefaultListTile(
+                              title:AppStrings.customizeNotifications.tr(),
+                              src: "assets/images/svg/mcn.svg",
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const CustomizeNotificationScreen();
+                                    });
+                              },
+                            ),DefaultListTile(
+                              title:AppStrings.languageSettings.tr(),
+                              src: "assets/images/svg/mls.svg",
+                              onTap: () {
+                                context.pushNamed(AppRoutes.langSettingScreen.name,
+                                    pathParameters: {'lang': context.locale.languageCode,
+                                    });
+                              },
+                            ),
+                            DefaultListTile(
+                              title:AppStrings.updatePassword.tr(),
+                              src: "assets/images/svg/mup.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.updatePassword.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.personalInfo.tr(),
+                              src: "assets/images/svg/mpi.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.personalProfile.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.userDevices.tr(),
+                              src: "assets/images/svg/mpi.svg",
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.userDevices.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
+                              title: AppStrings.logout.tr(),
+                              src: "assets/images/svg/mlo.svg",
+                              onTap: () async {
+                                final appConfigService =
+                                Provider.of<AppConfigService>(context,
+                                    listen: false);
+                                appConfigService.logout(context, viewAlert: true).then((v) {
+                                  context.goNamed(
+                                    AppRoutes.splash.name,
+                                    pathParameters: {'lang': context.locale.languageCode,},
+                                  );
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-        Container(
-        alignment: Alignment.center,
-        width: MediaQuery.sizeOf(context).width * 0.5,
-        child: Text(
-        gCache['job_title'] ?? "",
-        maxLines: 2,
-        style: Theme.of(context)
-            .textTheme
-            .bodySmall
-            ?.copyWith(
-        color: Color(AppColors.grey4F),
-        fontSize: 11,
-        fontWeight: FontWeight.w500,
-        // height: 0,
-        ),
-
-        //      TextStyle(
-        // color: Color(0xFF4F4F4F),
-        // fontSize: 10,
-        //   fontFamily: 'Bai Jamjuree',
-        //   fontWeight: FontWeight.w500,
-        //   height: 0,
-        // ),
-        ),
-        )
                   ],
                 ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.sizeOf(context).height * 0.15,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(124),
+                    child: GestureDetector(
+                      onTap:(){
+                        context.pushNamed(AppRoutes.personalProfile.name,
+                            pathParameters: {'lang': context.locale.languageCode,
+                            });
+                      },
+                      child: CachedNetworkImage(
+                          imageUrl:(gCache != null)? gCache['photo']??"" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
+                          fit: BoxFit.cover,
+                          height: 124,
+                          width: 124,
+                          placeholder: (context, url) => const ShimmerAnimatedLoading(
+                            width: 63.0,
+                            height: 63,
+                            circularRaduis: 63,
+                          ),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.image_not_supported_outlined,
+                          )),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    width: MediaQuery.sizeOf(context).width * 1,
+                    child: Text(
+                      (gCache['name'] ?? '').toUpperCase(),
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(
+                        color: Color(AppColors.dark),
+                        // fontSize: 16,
 
-              )
-            ]
+                        // fontWeight: FontWeight.w700,
+                        // height: 0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.sizeOf(context).width * 0.5,
+                    child: Text(
+                      gCache['job_title'] ?? "",
+                      maxLines: 2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(
+                        color: const Color(AppColors.grey4F),
+                         fontSize: 11,
+                         fontWeight: FontWeight.w500,
+                        // height: 0,
+                      ),
+
+                      //      TextStyle(
+                      // color: Color(0xFF4F4F4F),
+                      // fontSize: 10,
+                      //   fontFamily: 'Bai Jamjuree',
+                      //   fontWeight: FontWeight.w500,
+                      //   height: 0,
+                      // ),
+                    ),
+                  )
+                ],
+              ),
+
+        )
+        ]
         );
       },
     );

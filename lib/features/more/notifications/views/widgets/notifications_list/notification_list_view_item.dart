@@ -26,18 +26,14 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
         });
         context.pushNamed(AppRoutes.notificationDetails.name,
             pathParameters: {'lang': context.locale.languageCode,
-              "id" : "${widget.notifications[widget.index]['id']}",
-              "date" : "${widget.notifications[widget.index]['created_at']}",
-              "image" :(widget.notifications[widget.index]['main_thumbnail'].isNotEmpty)? "${widget.notifications[widget.index]['main_thumbnail'][0]['file']}": "null",
-              "title" : "${widget.notifications[widget.index]['title']}",
-              "contant" : "${widget.notifications[widget.index]['content']}"
+              "id" : widget.notifications[widget.index]['id'].toString(),
             });
       },
       child: Container(
         padding: const EdgeInsetsDirectional.symmetric(
             horizontal: AppSizes.s15, vertical: AppSizes.s12),
         decoration: BoxDecoration(
-          color: const Color(AppColors.textC5),
+          color: Color(AppColors.white),
           borderRadius: BorderRadius.circular(AppSizes.s15),
           boxShadow: const [
             BoxShadow(
@@ -52,20 +48,16 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
             Container(
               width: 63,
               height: 63,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [Color(0xffE6007E), Color(0xff224982)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(AppColors.primary)
               ),
               child: Padding(
                 padding: const EdgeInsets.all(2),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(63),
                   child: CachedNetworkImage(
-                      imageUrl: (widget.notifications[widget.index]['main_thumbnail'].isNotEmpty)?
+                      imageUrl: (widget.notifications![widget.index]['main_thumbnail'].isNotEmpty)?
                       widget.notifications[widget.index]['main_thumbnail'][0]['file'] : "",
                       fit: BoxFit.cover,
                       height: 40,
@@ -87,18 +79,18 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.notifications[widget.index]['created_at']}".toUpperCase(),
-                    style: const TextStyle(
+                    DateFormat("yyyy/MM/dd hh:mm a", context.locale.languageCode).format(DateTime.parse(widget.notifications[widget.index]['created_at'])),
+                    style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: Color(0xff606060)),
+                        color: Color(AppColors.darkGrey)),
                   ),
                   gapH4,
                   Text(widget.notifications[widget.index]['title'],
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: widget.notifications[widget.index]['seen'] == true? FontWeight.w300 : FontWeight.w700,
-                        color: widget.notifications[widget.index]['seen'] == true? Colors.black.withOpacity(0.5):Color(0xff0D3B6F)),
+                        color: widget.notifications[widget.index]['seen'] == true? Colors.black.withOpacity(0.5):Color(AppColors.dark)),
                   )
                   // Html(
                   //     shrinkWrap: true,
@@ -107,7 +99,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                   //       "p": Style(
                   //           fontSize: FontSize(12),
                   //           fontWeight: FontWeight.w600,
-                  //           color: Color(0xff0D3B6F)),
+                  //           color: Color(AppColors.dark)),
                   //     }),
                 ],
               ),

@@ -8,9 +8,6 @@ import 'core/routing/app_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-// 1. csrequest in more
-// 2. notification orient
-// 3. request type
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -27,7 +24,7 @@ class MyApp extends StatelessWidget {
     // precacheImage(const AssetImage(AppImages.splashScreenBackground), context);
     final appGoRouter = goRouter(context);
     return MaterialApp.router(
-      title: 'rmemp',
+      title: 'Team Mind',
       restorationScopeId: 'app',
       routerConfig: appGoRouter,
       localizationsDelegates: context.localizationDelegates,

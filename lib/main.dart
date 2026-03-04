@@ -1,5 +1,3 @@
-import 'package:app_test/features/complaints/controller/complaints_controller.dart';
-import 'package:app_test/features/customer_service_requests/controller/customer_service_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -22,14 +20,14 @@ import 'core/services/internet_check.dart';
 import 'features/home/controllers/home_controller.dart';
 import 'features/main_layout/controllers/main_controller.dart';
 import 'package:app_test/core/utils/error_handling/global_error_handler.dart';
-
 import 'firebase_options.dart';
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   debugPrint("🔹 Background Notification: ${message.notification?.title}");
 }
 
@@ -56,9 +54,8 @@ void main() async {
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
   } else {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform, // الأفضل
+      options: DefaultFirebaseOptions.currentPlatform,
     );
-
   }
 
   GoRouter.optionURLReflectsImperativeAPIs = true;
@@ -91,10 +88,11 @@ void main() async {
           ),
           ChangeNotifierProvider(create: (context) => BlogProviderModel()),
           ChangeNotifierProvider(create: (context) => ConnectionService()),
-          ChangeNotifierProvider(create: (context) => CustomerRequestController()),
-          ChangeNotifierProvider(create: (context) => DeviceControllerProvider()),
+          ChangeNotifierProvider(
+              create: (context) => DeviceControllerProvider()),
           ChangeNotifierProvider(create: (context) => CommentProvider()),
-          ChangeNotifierProvider(create: (context) => NotificationProviderModel()),
+          ChangeNotifierProvider(
+              create: (context) => NotificationProviderModel()),
         ],
         child: MyApp(),
       )));

@@ -12,17 +12,20 @@ class SentryService {
   static Future<void> init() async {
     try {
       // TODO: Replace with your actual Sentry DSN
-      const dsn = 'https://0d94befc800e6d6d3a2aa7025b0b1435@o4509722812284928.ingest.us.sentry.io/4510596001038336';
+      const dsn =
+          'https://0d94befc800e6d6d3a2aa7025b0b1435@o4509722812284928.ingest.us.sentry.io/4510596001038336';
 
       if (dsn == 'YOUR_SENTRY_DSN_HERE') {
-        debugPrint('⚠️ Sentry DSN not configured. Please set your DSN in sentry_service.dart');
+        debugPrint(
+            '⚠️ Sentry DSN not configured. Please set your DSN in sentry_service.dart');
         return;
       }
 
       await SentryFlutter.init(
-            (options) {
+        (options) {
           options.dsn = dsn;
-          options.tracesSampleRate = 1.0; // Capture 100% of transactions for performance monitoring
+          options.tracesSampleRate =
+              1.0; // Capture 100% of transactions for performance monitoring
           options.environment = kDebugMode ? 'development' : 'production';
           // Screen name will be added via scope.setExtra in setCurrentScreen and capture methods
         },
@@ -79,13 +82,16 @@ class SentryService {
 
   /// Capture exception with screen name
   static Future<void> captureException(
-      dynamic exception, {
-        dynamic stackTrace,
-        String? screenName,
-        Map<String, dynamic>? extra,
-        String? hint,
-      }) async {
-    final screen = screenName ?? _currentScreenName ?? getCurrentScreenName(_currentContext) ?? 'unknown';
+    dynamic exception, {
+    dynamic stackTrace,
+    String? screenName,
+    Map<String, dynamic>? extra,
+    String? hint,
+  }) async {
+    final screen = screenName ??
+        _currentScreenName ??
+        getCurrentScreenName(_currentContext) ??
+        'unknown';
 
     debugPrint('🚨 Sentry Error [Screen: $screen]: ${exception.toString()}');
     if (stackTrace != null) {
@@ -118,12 +124,15 @@ class SentryService {
 
   /// Capture message with screen name
   static Future<void> captureMessage(
-      String message, {
-        SentryLevel level = SentryLevel.info,
-        String? screenName,
-        Map<String, dynamic>? extra,
-      }) async {
-    final screen = screenName ?? _currentScreenName ?? getCurrentScreenName(_currentContext) ?? 'unknown';
+    String message, {
+    SentryLevel level = SentryLevel.info,
+    String? screenName,
+    Map<String, dynamic>? extra,
+  }) async {
+    final screen = screenName ??
+        _currentScreenName ??
+        getCurrentScreenName(_currentContext) ??
+        'unknown';
 
     debugPrint('📝 Sentry Message [Screen: $screen] [$level]: $message');
     if (extra != null) {

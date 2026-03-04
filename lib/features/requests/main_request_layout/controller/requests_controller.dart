@@ -42,8 +42,8 @@ class RequestsViewModel extends ChangeNotifier {
     bool loadMore = false,
   }) async {
     debugPrint("🟡 isLoading: $isLoading, isLoadingMore: $isLoadingMore, loadMore: $loadMore");
-    isLoading = isLoading ?? false;
-    isLoadingMore = isLoadingMore ?? false;
+    isLoading = isLoading;
+    isLoadingMore = isLoadingMore;
     if (isLoading || isLoadingMore) return;
 
     if (!loadMore) {

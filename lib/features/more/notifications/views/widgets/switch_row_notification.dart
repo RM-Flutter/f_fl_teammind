@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import '../../../../../core/constants/app_colors.dart';
 import '../../../../authentication/shared/widgets/custom_switch_button.dart';
 
 class SwitchRowNotification extends StatelessWidget {
@@ -26,7 +27,7 @@ class SwitchRowNotification extends StatelessWidget {
         ? Theme.of(context)
         .textTheme
         .labelLarge
-        ?.copyWith(fontSize: AppSizes.s12, fontWeight: FontWeight.w500, color: const Color(0xff515151))
+        ?.copyWith(fontSize: AppSizes.s12, fontWeight: FontWeight.w500, color: const Color(AppColors.grey51))
         : Theme.of(context).textTheme.displaySmall;
 
     return Directionality(
@@ -44,7 +45,7 @@ class SwitchRowNotification extends StatelessWidget {
             height: AppSizes.s20,
             padding: AppSizes.s3,
             value: value,
-            inactiveColor: const Color(0xff2C376C),
+            inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
           gapW8,

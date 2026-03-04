@@ -70,6 +70,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '436937858575',
     projectId: 'rm-test-a6159',
     storageBucket: 'rm-test-a6159.firebasestorage.app',
-    iosBundleId: 'com.rightmindtest.rmtest',
+    iosBundleId: 'com.rightminddev.rmemp',
   );
 }

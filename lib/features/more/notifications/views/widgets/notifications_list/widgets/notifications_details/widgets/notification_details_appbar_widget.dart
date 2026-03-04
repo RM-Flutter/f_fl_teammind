@@ -1,3 +1,5 @@
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/widgets/bookmark_widgets/bookmark_button.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -10,7 +12,7 @@ import 'package:app_test/features/more/notifications/data/models/get_one_notific
 
 class NotificationDetailsAppbarWidget extends StatelessWidget {
   NotificationSingleModel? notificationSingleModel;
-  NotificationDetailsAppbarWidget({super.key, this.notificationSingleModel});
+  NotificationDetailsAppbarWidget({this.notificationSingleModel});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,7 +24,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
             image: AssetImage("assets/images/png/home_back.png"),
             fit: BoxFit.fill,
             opacity: 0.4),
-        color: Theme.of(context).colorScheme.secondary,
+        color: Color(AppColors.dark),
         borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s28),
             bottomRight: Radius.circular(AppSizes.s28)),
@@ -35,45 +37,49 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 50,),
+                SizedBox(height: 50,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                         onTap: (){Navigator.pop(context);},
-                        child: const Icon(Icons.arrow_back, color: Color(0xffFFFFFF),)),
-                    const Spacer(),
+                        child: Icon(Icons.arrow_back, color: Color(AppColors.white),)),
+                    Spacer(),
                     Text(
                       AppStrings.notificationInfo.tr().toUpperCase(),
-                      style:  const TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const Spacer(),
-                    Container(width: 20,),
+                    Spacer(),
+                    BookmarkButton(
+                      routeName: AppRoutes.notificationDetails.name,
+                      defaultTitle: AppStrings.notificationInfo.tr(),
+                      iconColor: Colors.white,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 16,),
+                SizedBox(height: 16,),
                 Text(
                   notificationSingleModel!.title?.toString() ?? "",
-                  style:  const TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 25,),
+                SizedBox(height: 25,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                     DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(notificationSingleModel!.createdAt.toString())).toString(),
+                      DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(notificationSingleModel!.createdAt.toString())).toString(),
                       textAlign: TextAlign.center,
-                      style:  const TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -107,7 +113,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                         Text(
                           notificationSingleModel!.ptype!.key!.toString().tr(),
                           textAlign: TextAlign.center,
-                          style:  const TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -117,7 +123,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16,),
+                SizedBox(height: 16,),
 
               ],
             ),

@@ -276,6 +276,8 @@ import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../../../core/widgets/custom_elevated_button.widget.dart';
 
 class NewComplainScreen extends StatefulWidget {
+  const NewComplainScreen({super.key});
+
   @override
   State<NewComplainScreen> createState() => _NewComplainScreenState();
 }

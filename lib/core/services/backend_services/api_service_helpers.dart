@@ -19,6 +19,7 @@ abstract class ApiServiceHelpers {
     final appConfigServiceProvider =
     Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
+    debugPrint("DEVICE UNIQE ID $deviceUniqueId");
     var headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',

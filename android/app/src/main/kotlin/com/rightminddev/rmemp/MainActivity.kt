@@ -1,4 +1,4 @@
-package com.rightmindtest.rmtest
+package com.rightminddev.rmemp
 import android.os.Bundle
 import android.view.WindowManager
 import android.provider.Settings  // Add this import statement

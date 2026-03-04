@@ -9,10 +9,10 @@ import 'package:app_test/features/employee_profiles/list/views/employees_list_sc
 import 'package:app_test/features/home/views/home_screen.dart';
 import 'package:app_test/features/more/notifications/views/notification_screen.dart';
 import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
+import 'package:app_test/features/points/controllers/points_controller/points_controller.dart';
 import 'package:app_test/features/points/views/fawry/fawry_provider_screen.dart';
 import 'package:app_test/features/points/views/points/main_points_layout/points_screen.dart';
 import 'package:app_test/features/points/views/points/points_categories/points_categories_screen.dart';
-import 'package:app_test/features/points/controllers/points_controller/points_controller.dart';
 import 'package:app_test/features/points/views/prize/prize_screen.dart';
 import 'package:app_test/features/requests/add/views/add_request_screen.dart';
 import 'package:app_test/features/requests/details/views/request_details_screen.dart';
@@ -25,12 +25,10 @@ import '../../features/authentication/login/views/login_screen.dart';
 import '../../features/authentication/login/views/update_main_data.dart';
 import '../../features/complaints/views/complain_list/complains_screen.dart';
 import '../../features/complaints/views/complains_details/complain_details_screen.dart';
-import '../../features/customer_service_requests/views/new_customer_service/new_customer_service_screen.dart';
-import '../../features/customer_service_requests/views/customer_service_list/customer_service_screen.dart';
-import '../../features/customer_service_requests/views/customer_service_details/customer_service_details_screen.dart';
 import '../../features/evaluation/views/require/evaluation_require_screen.dart';
 import '../../features/evaluation/views/main_evaluation_layout/evaluation_screen.dart';
 import '../../features/fingerprint/views/widgets/offline/finger_print_offline.dart';
+import '../../features/more/notifications/views/widgets/add_notifications/add_notification_screen.dart';
 import '../../features/more/team_fingerprint/view/widgets/finger_print_view_screen.dart';
 import '../../features/fingerprint/views/finger_print_screen.dart';
 import '../../features/main_layout/views/main_layout_screen.dart';
@@ -88,7 +86,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../services/backend_services/api_service/dio_api_service/shared.dart';
-import '../services/sentry_serivce.dart';
+import '../services/telegram_error_service.dart';
 import '../widgets/webview_offers.dart';
 
 enum AppRoutes {
@@ -97,10 +95,7 @@ enum AppRoutes {
   prizePointsViewScreen,
   painterPointsViewScreen,
 
-
   home,
-  freeServicesHome,
-
   splash,
   onboarding,
   fingerprintView,
@@ -114,9 +109,10 @@ enum AppRoutes {
   webViewMainDataScreen,
   webViewScreen,
   userDevices,
+  mediaCenterYoutubeScreenView,
   offlineScreen,
   complainDetails,
-  customerServiceScreen,
+  complainScreen,
   taskDetails,
   qrcodeScreen,
   notification,
@@ -134,7 +130,6 @@ enum AppRoutes {
   evaluationRequireScreen,
   requestsById,
   requestDetails,
-  customerServiceDetailsScreen,
   addRequest,
   requestsCalendar,
   employeesList,
@@ -156,35 +151,28 @@ enum AppRoutes {
   aboutUsScreen,
   notificationDetails,
   requestTermsScreen,
-  // freeServicesHome,
+  freeServicesHome,
   myCVScreen,
   cvGeneratorScreen,
+  freeMoreScreen,
   smartCardScreen,
+  smartCardCompanyDetailScreen,
+  smartCardProfileDetailScreen,
   updateMyInfoScreen,
+  updateCompanyInfoScreen,
+  updateEmployeeInfoScreen,
   selectTemplateScreen,
   premiumTemplatesScreen,
   vacationCalcScreen,
   personalityTestScreen,
   aboutTeamMindScreen,
-  newCusomterService,
   youtubeVideoScreen,
-  freeMoreScreen,
-  smartCardCompanyDetailScreen,
-  smartCardProfileDetailScreen,
-  updateCompanyInfoScreen,
-  updateEmployeeInfoScreen,
-  mediaCenterYoutubeScreenView,
-
-  complainScreen,
-
-
 }
 
 const TestVSync ticker = TestVSync();
 
 class TestVSync implements TickerProvider {
   const TestVSync();
-
   @override
   Ticker createTicker(TickerCallback onTick) => Ticker(onTick);
 }
@@ -216,21 +204,17 @@ GoRouter goRouter(BuildContext context) {
   // Offline handling is done via overlay, not navigation
   final refreshListenable = kIsWeb
       ? Listenable.merge([]) // Listenable فارغ في الويب
-      : Listenable.merge(
-      []); // ConnectionService removed to prevent router refresh
+      : Listenable.merge([]); // ConnectionService removed to prevent router refresh
 
   return GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/${context.locale.languageCode}/splash-screen',
     refreshListenable: refreshListenable,
     redirect: (context, state) {
-      final appConfigServiceProvider = Provider.of<AppConfigService>(
-          context, listen: false);
-      final isLoggedIn = appConfigServiceProvider.isLogin &&
-          appConfigServiceProvider.token.isNotEmpty;
+      final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+      final isLoggedIn = appConfigServiceProvider.isLogin && appConfigServiceProvider.token.isNotEmpty;
       final lang = state.pathParameters['lang'] ?? 'en';
       context.setLocale(Locale(lang));
-
 
       // لا نغيّر المسار أثناء الـ splash؛ الـ splash يقرر بنفسه بعد تهيئة الخدمات
       if (state.fullPath?.contains('splash-screen') == true) {
@@ -285,14 +269,13 @@ GoRouter goRouter(BuildContext context) {
     routes: [
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
-        builder: (context, state, child) =>
-            MainLayoutScreen(
-              key: UniqueKey(),
-              currentNavPage: state.fullPath == null
-                  ? NavbarPages.home
-                  : getNavbarPage(currentLocationRoute: state.fullPath!),
-              child: child,
-            ),
+        builder: (context, state, child) => MainLayoutScreen(
+          key: UniqueKey(),
+          currentNavPage: state.fullPath == null
+              ? NavbarPages.home
+              : getNavbarPage(currentLocationRoute: state.fullPath!),
+          child: child,
+        ),
         routes: [
           GoRoute(
             path: '/:lang',
@@ -300,10 +283,8 @@ GoRouter goRouter(BuildContext context) {
             name: AppRoutes.home.name,
             pageBuilder: (context, state) {
               // Track screen navigation for Sentry
-              final screenName = state.uri.path
-                  .split('/')
-                  .last;
-              SentryService.setCurrentScreen(screenName, context: context);
+              final screenName = state.uri.path.split('/').last;
+              TelegramErrorService.setCurrentScreen(screenName, context: context);
 
               Offset? begin = state.extra as Offset?;
               final lang = state.uri.queryParameters['lang'];
@@ -455,8 +436,7 @@ GoRouter goRouter(BuildContext context) {
                   GetRequestsTypes? requestType =
                   RequestsServices.getRequestTypeFromString(
                       reqTypeString: state.pathParameters['type']);
-                  List requests = state.extra != null ? state.extra as List : [
-                  ];
+                  List requests = state.extra != null ? state.extra as List : [];
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -506,8 +486,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.requestsById.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = (state.extra as Map<String,
-                      dynamic>)['offset'] as Offset?;
+                  Offset? begin = (state.extra as Map<String, dynamic>)['offset'] as Offset?;
                   String? userId = (state.extra
                   as Map<String, dynamic>)['userId'] as String?;
                   String? id = state.pathParameters['id'];
@@ -570,12 +549,17 @@ GoRouter goRouter(BuildContext context) {
               ),
             ],
           ),
-
           GoRoute(
               path: '/:lang/fingerprint',
               parentNavigatorKey: _shellNavigatorKey,
               name: AppRoutes.fingerprint.name,
               pageBuilder: (context, state) {
+                // Offset? begin =
+                //     (state.extra as Map<String, dynamic>)['offset'] as Offset?;
+                // String? employeeName = (state.extra
+                //     as Map<String, dynamic>)['employeeName'] as String?;
+                // String? employeeId = (state.extra
+                //     as Map<String, dynamic>)['employeeId'] as String?;
                 final lang = state.uri.queryParameters['lang'];
                 if (lang != null) {
                   final locale = Locale(lang);
@@ -644,7 +628,7 @@ GoRouter goRouter(BuildContext context) {
               CacheHelper.deleteData(key: "value");
               return AppRouterTransitions.slideTransition(
                 key: state.pageKey,
-                child: const NotificationScreen(false),
+                child: NotificationScreen(false),
                 animation: animationController,
                 begin: begin ?? const Offset(1.0, 0.0),
               );
@@ -734,7 +718,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: FingerPrintViewScreen(empId: id, empName: name,),
+                    child: FingerPrintViewScreen(empId: id,empName: name,),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
@@ -932,7 +916,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: const ContactScreen(),
+                    child:  const ContactScreen(),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
@@ -1220,7 +1204,6 @@ GoRouter goRouter(BuildContext context) {
                   );
                 },
               ),
-
               GoRoute(
                 path: 'select-template',
                 parentNavigatorKey: rootNavigatorKey,
@@ -1449,18 +1432,13 @@ GoRouter goRouter(BuildContext context) {
                   var jsonString;
                   var gCache;
                   jsonString = CacheHelper.getString("US1");
-                  if (jsonString != null && jsonString.isNotEmpty &&
-                      jsonString != "") {
-                    gCache = json.decode(jsonString) as Map<String,
-                        dynamic>; // Convert String back to JSON
+                  if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+                    gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
                   }
-                  debugPrint(
-                      "ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
+                  print("ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
                   final extra = state.extra as Map<String, dynamic>?;
-                  final empId = extra?["empId"] ??
-                      gCache['employee_profile_id'].toString();
-                  final begin = extra?["begin"] as Offset? ??
-                      const Offset(1.0, 0.0);
+                  final empId = extra?["empId"] ?? gCache['employee_profile_id'].toString();
+                  final begin = extra?["begin"] as Offset? ?? const Offset(1.0, 0.0);
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1473,7 +1451,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: EvaluationScreen(empId: empId,),
+                    child: EvaluationScreen( empId: empId,),
                     animation: animationController,
                     begin: begin,
                   );
@@ -1658,9 +1636,9 @@ GoRouter goRouter(BuildContext context) {
                 ],
               ),
               GoRoute(
-                  path: 'customerServiceScreen',
+                  path: 'complainScreen',
                   parentNavigatorKey: rootNavigatorKey,
-                  name: AppRoutes.customerServiceScreen.name,
+                  name: AppRoutes.complainScreen.name,
                   pageBuilder: (context, state) {
                     Offset? begin = state.extra as Offset?;
                     final lang = state.uri.queryParameters['lang'];
@@ -1680,20 +1658,21 @@ GoRouter goRouter(BuildContext context) {
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: const CustomerServiceScreen(),
+                      child: const ComplainScreen(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );
                   },
                   routes: [
                     GoRoute(
-                      path: 'customerRequestDetailsScreen/:id',
+                      path: 'complainDetailsScreen/:id/:type',
                       parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.customerServiceDetailsScreen.name,
+                      name: AppRoutes.complainDetails.name,
                       pageBuilder: (context, state) {
                         Offset? begin = state.extra as Offset?;
                         final lang = state.uri.queryParameters['lang'];
                         final id = state.pathParameters['id'] ?? '';
+                        final type = state.pathParameters['type'] ?? '';
                         if (lang != null) {
                           final locale = Locale(lang);
                           context.setLocale(locale);
@@ -1710,39 +1689,7 @@ GoRouter goRouter(BuildContext context) {
                         });
                         return AppRouterTransitions.slideTransition(
                           key: state.pageKey,
-                          child: CustomerServiceDetailsScreen(id : id),
-                          animation: animationController,
-                          begin: begin ?? const Offset(1.0, 0.0),
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      path: 'newCustomerServiceScreen/:type/:subject/:details',
-                      parentNavigatorKey: rootNavigatorKey,
-                      name: AppRoutes.newCusomterService.name,
-                      pageBuilder: (context, state) {
-                        Offset? begin = state.extra as Offset?;
-                        final lang = state.uri.queryParameters['lang'];
-                        final type = state.uri.queryParameters['type'] ?? '';
-                        final details = state.uri.queryParameters['details'] ?? '';
-                        final subject = state.uri.queryParameters['subject'] ?? '';
-                        if (lang != null) {
-                          final locale = Locale(lang);
-                          context.setLocale(locale);
-                        }
-                        final animationController = AnimationController(
-                          vsync: ticker,
-                        );
-                        // Make sure to dispose the controller after the transition is complete
-                        animationController.addStatusListener((status) {
-                          if (status == AnimationStatus.completed ||
-                              status == AnimationStatus.dismissed) {
-                            animationController.dispose();
-                          }
-                        });
-                        return AppRouterTransitions.slideTransition(
-                          key: state.pageKey,
-                          child: NewCustomerServiceScreen(type, subject, details),
+                          child: ComplainDetailsScreen(id : id, type: type,),
                           animation: animationController,
                           begin: begin ?? const Offset(1.0, 0.0),
                         );
@@ -1932,26 +1879,50 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
-
-
       GoRoute(
-        path: '/:lang/notification-screen',
-        parentNavigatorKey: rootNavigatorKey,
-        name: AppRoutes.notification.name,
-        builder: (context, state) => const NotificationScreen(true),
+          path: '/:lang/notification-screen',
+          parentNavigatorKey: rootNavigatorKey,
+          name: AppRoutes.notification.name,
+          builder: (context, state) => NotificationScreen(true),
+          routes: [
+            GoRoute(
+              path: 'add-notification',
+              parentNavigatorKey: rootNavigatorKey,
+              name: AppRoutes.addNotification.name,
+              pageBuilder: (context, state) {
+                Offset? begin = state.extra as Offset?;
+                final lang = state.uri.queryParameters['lang'];
+                if (lang != null) {
+                  final locale = Locale(lang);
+                  context.setLocale(locale);
+                }
+                final animationController = AnimationController(
+                  vsync: ticker,
+                );
+                animationController.addStatusListener((status) {
+                  if (status == AnimationStatus.completed ||
+                      status == AnimationStatus.dismissed) {
+                    animationController.dispose();
+                  }
+                });
+                return AppRouterTransitions.slideTransition(
+                  key: state.pageKey,
+                  child: const AddNotificationScreen(),
+                  animation: animationController,
+                  begin: begin ?? const Offset(1.0, 0.0),
+                );
+              },
+            ),
+          ]
       ),
       GoRoute(
-        path: '/:lang/notification-details-screen/:title/:image/:contant/:date/:id',
+        path: '/:lang/notification-details-screen/:id',
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.notificationDetails.name,
         pageBuilder: (context, state) {
           Offset? begin = state.extra as Offset?;
           final lang = state.uri.queryParameters['lang'];
-          final title = state.pathParameters['title'] ?? '';
           final id = state.pathParameters['id'] ?? '';
-          final image = state.pathParameters['image'] ?? '';
-          final contant = state.pathParameters['contant'] ?? '';
-          final date = state.pathParameters['date'] ?? '';
 
           if (lang != null) {
             final locale = Locale(lang);
@@ -1970,10 +1941,6 @@ GoRouter goRouter(BuildContext context) {
           return AppRouterTransitions.slideTransition(
             key: state.pageKey,
             child: NotificationDetailsScreen(
-              date: date,
-              title: title,
-              image: image,
-              contant: contant,
               id: id,
             ),
             animation: animationController,
@@ -1981,76 +1948,6 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
-      // GoRoute(
-      //     path: '/:lang/notification-screen',
-      //     parentNavigatorKey: rootNavigatorKey,
-      //     name: AppRoutes.notification.name,
-      //     builder: (context, state) => NotificationScreen(true),
-      //     routes: [
-      //       GoRoute(
-      //         path: 'add-notification',
-      //         parentNavigatorKey: rootNavigatorKey,
-      //         name: AppRoutes.addNotification.name,
-      //         pageBuilder: (context, state) {
-      //           Offset? begin = state.extra as Offset?;
-      //           final lang = state.uri.queryParameters['lang'];
-      //           if (lang != null) {
-      //             final locale = Locale(lang);
-      //             context.setLocale(locale);
-      //           }
-      //           final animationController = AnimationController(
-      //             vsync: ticker,
-      //           );
-      //           animationController.addStatusListener((status) {
-      //             if (status == AnimationStatus.completed ||
-      //                 status == AnimationStatus.dismissed) {
-      //               animationController.dispose();
-      //             }
-      //           });
-      //           return AppRouterTransitions.slideTransition(
-      //             key: state.pageKey,
-      //             child: const AddNotificationScreen(),
-      //             animation: animationController,
-      //             begin: begin ?? const Offset(1.0, 0.0),
-      //           );
-      //         },
-      //       ),
-      //     ]
-      // ),
-      // GoRoute(
-      //   path: '/:lang/notification-details-screen/:id',
-      //   parentNavigatorKey: rootNavigatorKey,
-      //   name: AppRoutes.notificationDetails.name,
-      //   pageBuilder: (context, state) {
-      //     Offset? begin = state.extra as Offset?;
-      //     final lang = state.uri.queryParameters['lang'];
-      //     final id = state.pathParameters['id'] ?? '';
-      //
-      //     if (lang != null) {
-      //       final locale = Locale(lang);
-      //       context.setLocale(locale);
-      //     }
-      //     final animationController = AnimationController(
-      //       vsync: ticker,
-      //     );
-      //     // Make sure to dispose the controller after the transition is complete
-      //     animationController.addStatusListener((status) {
-      //       if (status == AnimationStatus.completed ||
-      //           status == AnimationStatus.dismissed) {
-      //         animationController.dispose();
-      //       }
-      //     });
-      //     return AppRouterTransitions.slideTransition(
-      //       key: state.pageKey,
-      //       child: NotificationDetailsScreen(
-      //         id: id,
-      //       ),
-      //       animation: animationController,
-      //       begin: begin ?? const Offset(1.0, 0.0),
-      //     );
-      //   },
-      // ),
-
       GoRoute(
         path: '/:lang/default-page/:type',
         parentNavigatorKey: rootNavigatorKey,
@@ -2182,35 +2079,35 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
-      // GoRoute(
-      //   path: '/:lang/newComplainsScreen',
-      //   parentNavigatorKey: rootNavigatorKey,
-      //   name: AppRoutes.newComplainScreen.name,
-      //   pageBuilder: (context, state) {
-      //     Offset? begin = state.extra as Offset?;
-      //     final lang = state.uri.queryParameters['lang'];
-      //     if (lang != null) {
-      //       final locale = Locale(lang);
-      //       context.setLocale(locale);
-      //     }
-      //     final animationController = AnimationController(
-      //       vsync: ticker,
-      //     );
-      //     // Make sure to dispose the controller after the transition is complete
-      //     animationController.addStatusListener((status) {
-      //       if (status == AnimationStatus.completed ||
-      //           status == AnimationStatus.dismissed) {
-      //         animationController.dispose();
-      //       }
-      //     });
-      //     return AppRouterTransitions.slideTransition(
-      //       key: state.pageKey,
-      //       child: NewComplainScreen(),
-      //       animation: animationController,
-      //       begin: begin ?? const Offset(1.0, 0.0),
-      //     );
-      //   },
-      // ),
+      GoRoute(
+        path: '/:lang/newComplainsScreen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.newComplainScreen.name,
+        pageBuilder: (context, state) {
+          Offset? begin = state.extra as Offset?;
+          final lang = state.uri.queryParameters['lang'];
+          if (lang != null) {
+            final locale = Locale(lang);
+            context.setLocale(locale);
+          }
+          final animationController = AnimationController(
+            vsync: ticker,
+          );
+          // Make sure to dispose the controller after the transition is complete
+          animationController.addStatusListener((status) {
+            if (status == AnimationStatus.completed ||
+                status == AnimationStatus.dismissed) {
+              animationController.dispose();
+            }
+          });
+          return AppRouterTransitions.slideTransition(
+            key: state.pageKey,
+            child: const NewComplainScreen(),
+            animation: animationController,
+            begin: begin ?? const Offset(1.0, 0.0),
+          );
+        },
+      ),
       GoRoute(
         path: '/:lang/onboarding-screen',
         parentNavigatorKey: rootNavigatorKey,
@@ -2406,236 +2303,24 @@ GoRouter goRouter(BuildContext context) {
                       );
                     },
                   ),
-                  // GoRoute(
-                  //   path: 'billPaymentScreen',
-                  //   parentNavigatorKey: _rootNavigatorKey,
-                  //   name: AppRoutes.billPaymentScreen.name,
-                  //   pageBuilder: (context, state) {
-                  //     //  Offset? begin = state.extra as Offset?;
-                  //     final lang = state.pathParameters['lang'];
-                  //     if (lang != null) {
-                  //       final locale = Locale(lang);
-                  //       context.setLocale(locale);
-                  //     }
-                  //     final animationController = AnimationController(
-                  //       vsync: ticker,
-                  //     );
-                  //     // Make sure to dispose the controller after the transition is complete
-                  //     animationController.addStatusListener((status) {
-                  //       if (status == AnimationStatus.completed ||
-                  //           status == AnimationStatus.dismissed) {
-                  //         animationController.dispose();
-                  //       }
-                  //     });
-                  //     return AppRouterTransitions.slideTransition(
-                  //       key: state.pageKey,
-                  //       child: BillPaymentScreen(),
-                  //       animation: animationController,
-                  //       begin: const Offset(1.0, 0.0),
-                  //     );
-                  //   },
-                  // ),
-                  // GoRoute(
-                  //   path: 'chargePhoneScreen',
-                  //   parentNavigatorKey: _rootNavigatorKey,
-                  //   name: AppRoutes.chargePhoneScreen.name,
-                  //   pageBuilder: (context, state) {
-                  //     //  Offset? begin = state.extra as Offset?;
-                  //     final lang = state.pathParameters['lang'];
-                  //     if (lang != null) {
-                  //       final locale = Locale(lang);
-                  //       context.setLocale(locale);
-                  //     }
-                  //     final animationController = AnimationController(
-                  //       vsync: ticker,
-                  //     );
-                  //     // Make sure to dispose the controller after the transition is complete
-                  //     animationController.addStatusListener((status) {
-                  //       if (status == AnimationStatus.completed ||
-                  //           status == AnimationStatus.dismissed) {
-                  //         animationController.dispose();
-                  //       }
-                  //     });
-                  //     return AppRouterTransitions.slideTransition(
-                  //       key: state.pageKey,
-                  //       child: ChargePhoneScreen(),
-                  //       animation: animationController,
-                  //       begin: const Offset(1.0, 0.0),
-                  //     );
-                  //   },
-                  // ),
-                  // GoRoute(
-                  //   path: 'payBillScreen',
-                  //   parentNavigatorKey: _rootNavigatorKey,
-                  //   name: AppRoutes.payBillScreen.name,
-                  //   pageBuilder: (context, state) {
-                  //     //  Offset? begin = state.extra as Offset?;
-                  //     final lang = state.pathParameters['lang'];
-                  //     if (lang != null) {
-                  //       final locale = Locale(lang);
-                  //       context.setLocale(locale);
-                  //     }
-                  //     final animationController = AnimationController(
-                  //       vsync: ticker,
-                  //     );
-                  //     // Make sure to dispose the controller after the transition is complete
-                  //     animationController.addStatusListener((status) {
-                  //       if (status == AnimationStatus.completed ||
-                  //           status == AnimationStatus.dismissed) {
-                  //         animationController.dispose();
-                  //       }
-                  //     });
-                  //     return AppRouterTransitions.slideTransition(
-                  //       key: state.pageKey,
-                  //       child: PayBillScreen(),
-                  //       animation: animationController,
-                  //       begin: const Offset(1.0, 0.0),
-                  //     );
-                  //   },
-                  // ),
-                  // GoRoute(
-                  //   path: 'withdrawMoneyScreen',
-                  //   parentNavigatorKey: _rootNavigatorKey,
-                  //   name: AppRoutes.withdrawMoneyScreen.name,
-                  //   pageBuilder: (context, state) {
-                  //     //  Offset? begin = state.extra as Offset?;
-                  //     final lang = state.pathParameters['lang'];
-                  //     if (lang != null) {
-                  //       final locale = Locale(lang);
-                  //       context.setLocale(locale);
-                  //     }
-                  //     final animationController = AnimationController(
-                  //       vsync: ticker,
-                  //     );
-                  //     // Make sure to dispose the controller after the transition is complete
-                  //     animationController.addStatusListener((status) {
-                  //       if (status == AnimationStatus.completed ||
-                  //           status == AnimationStatus.dismissed) {
-                  //         animationController.dispose();
-                  //       }
-                  //     });
-                  //     return AppRouterTransitions.slideTransition(
-                  //       key: state.pageKey,
-                  //       child: WithdrawMoneyScreen(),
-                  //       animation: animationController,
-                  //       begin: const Offset(1.0, 0.0),
-                  //     );
-                  //   },
-                  // ),
                 ]
             ),
           ]
       ),
-      GoRoute(
-          path: 'complainScreen',
-          parentNavigatorKey: rootNavigatorKey,
-          name: AppRoutes.complainScreen.name,
-          pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
-            final lang = state.uri.queryParameters['lang'];
-            if (lang != null) {
-              final locale = Locale(lang);
-              context.setLocale(locale);
-            }
-            final animationController = AnimationController(
-              vsync: ticker,
-            );
-            // Make sure to dispose the controller after the transition is complete
-            animationController.addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                animationController.dispose();
-              }
-            });
-            return AppRouterTransitions.slideTransition(
-              key: state.pageKey,
-              child: ComplainScreen(),
-              animation: animationController,
-              begin: begin ?? const Offset(1.0, 0.0),
-            );
-          },
-          routes: [
-            GoRoute(
-              path: 'complainDetailsScreen/:id/:type',
-              parentNavigatorKey: rootNavigatorKey,
-              name: AppRoutes.complainDetails.name,
-              pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
-                final lang = state.uri.queryParameters['lang'];
-                final id = state.pathParameters['id'] ?? '';
-                final type = state.pathParameters['type'] ?? '';
-                if (lang != null) {
-                  final locale = Locale(lang);
-                  context.setLocale(locale);
-                }
-                final animationController = AnimationController(
-                  vsync: ticker,
-                );
-                // Make sure to dispose the controller after the transition is complete
-                animationController.addStatusListener((status) {
-                  if (status == AnimationStatus.completed ||
-                      status == AnimationStatus.dismissed) {
-                    animationController.dispose();
-                  }
-                });
-                return AppRouterTransitions.slideTransition(
-                  key: state.pageKey,
-                  child: ComplainDetailsScreen(id : id, type: type,),
-                  animation: animationController,
-                  begin: begin ?? const Offset(1.0, 0.0),
-                );
-              },
-            ),
-          ]
-      ),
-
-      GoRoute(
-        path: '/:lang/newComplainsScreen',
-        parentNavigatorKey: rootNavigatorKey,
-        name: AppRoutes.newComplainScreen.name,
-        pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
-          final lang = state.uri.queryParameters['lang'];
-          if (lang != null) {
-            final locale = Locale(lang);
-            context.setLocale(locale);
-          }
-          final animationController = AnimationController(
-            vsync: ticker,
-          );
-          // Make sure to dispose the controller after the transition is complete
-          animationController.addStatusListener((status) {
-            if (status == AnimationStatus.completed ||
-                status == AnimationStatus.dismissed) {
-              animationController.dispose();
-            }
-          });
-          return AppRouterTransitions.slideTransition(
-            key: state.pageKey,
-            child: NewComplainScreen(),
-            animation: animationController,
-            begin: begin ?? const Offset(1.0, 0.0),
-          );
-        },
-      ),
-
 
     ],
     debugLogDiagnostics: true,
     errorBuilder: (context, state) {
       // Track error screen for Sentry
-      final screenName = state.uri.path
-          .split('/')
-          .last;
-      SentryService.setCurrentScreen(screenName);
+      final screenName = state.uri.path.split('/').last;
+      TelegramErrorService.setCurrentScreen(screenName);
 
       // على الويب، عند حدوث خطأ 404، إعادة توجيه إلى splash screen
       if (kIsWeb || PlatformIs.web) {
         try {
           final lang = state.pathParameters['lang'] ??
               ((state.uri.pathSegments.isNotEmpty &&
-                  (state.uri.pathSegments.first == 'ar' ||
-                      state.uri.pathSegments.first == 'en'))
+                  (state.uri.pathSegments.first == 'ar' || state.uri.pathSegments.first == 'en'))
                   ? state.uri.pathSegments.first
                   : context.locale.languageCode);
           // إعادة التوجيه إلى splash screen
