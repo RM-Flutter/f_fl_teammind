@@ -143,7 +143,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSizes.s20),
-                        if(points.categories.isEmpty)Container(
+                        if(points.categories.isEmpty && !points.isLoading)Container(
                           height: MediaQuery.sizeOf(context).height * 0.8,
                           alignment: Alignment.center,
                           child: NoExistingPlaceholderScreen(

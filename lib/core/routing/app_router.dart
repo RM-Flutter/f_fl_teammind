@@ -2238,7 +2238,10 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: PrizeScreen(true,id),
+                    child: ChangeNotifierProvider(
+                      create: (_) => PointsController(),
+                      child: PrizeScreen(true,id),
+                    ),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );

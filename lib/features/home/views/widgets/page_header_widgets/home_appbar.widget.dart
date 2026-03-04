@@ -86,11 +86,9 @@ class HomeAppbarWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: isExpanded == true
-            ? const BorderRadius.only(
+        borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32))
-            : null,
+            bottomRight: Radius.circular(AppSizes.s32)),
       ),
       child: Stack(
         children: [

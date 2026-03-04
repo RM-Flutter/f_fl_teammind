@@ -130,7 +130,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSizes.s20),
-                        if(points.prizes.isEmpty)Container(
+                        if(points.prizes.isEmpty && !points.isLoading)Container(
                           height: MediaQuery.sizeOf(context).height * 0.8,
                           alignment: Alignment.center,
                           child: NoExistingPlaceholderScreen(
