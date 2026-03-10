@@ -32,14 +32,13 @@ class _NotificationCardState extends State<NotificationCard> {
         setState(() {
           widget.notification!.seen = true;
         });
-        context.pushNamed(AppRoutes.notificationDetails.name,
-            pathParameters: {'lang': context.locale.languageCode,
-              "id" : widget.notification.id!.toString(),
-              "date" : widget.notification.createdAt ?? "none",
-              "image" : (widget.notification.mainThumbnail != null && widget.notification.mainThumbnail!.isNotEmpty)? widget.notification.mainThumbnail![0].file ?? "null" : "null",
-              "title" : widget.notification.title ?? "none",
-              "contant" : widget.notification.content ?? "none"
-            });
+        context.pushNamed(
+          AppRoutes.notificationDetails.name,
+          pathParameters: {
+            'lang': context.locale.languageCode,
+            'id': widget.notification.id!.toString(),
+          },
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
