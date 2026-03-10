@@ -8,6 +8,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 
+
 class BottomNavigationBarModel {
   final String icon;
   final String title;
@@ -41,7 +42,6 @@ final bottomNavigationBarItems = [
 class MainLayoutScreen extends StatelessWidget {
   final Widget child;
   final NavbarPages currentNavPage;
-
   const MainLayoutScreen(
       {super.key, required this.child, required this.currentNavPage});
 
@@ -60,8 +60,7 @@ class MainLayoutScreen extends StatelessWidget {
         selectedLabelStyle: Theme.of(context)
             .navigationBarTheme
             .labelTextStyle
-            ?.resolve({WidgetState.selected})?.copyWith(
-                color: Color(AppColors.dark)),
+            ?.resolve({WidgetState.selected})?.copyWith(color: Color(AppColors.dark)),
         unselectedLabelStyle: Theme.of(context)
             .navigationBarTheme
             .labelTextStyle
@@ -100,11 +99,14 @@ class MainLayoutScreen extends StatelessWidget {
               context: context, page: NavbarPages.values[index]);
         },
       ),
-      body: Builder(
-        builder: (context) {
-          return child;
-        },
+      body: SafeArea(
+        child: Builder(
+          builder: (context) {
+            return child;
+          },
+        ),
       ),
+
     );
   }
 }

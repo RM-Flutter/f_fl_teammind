@@ -473,10 +473,8 @@ class AddNewRequestController extends ChangeNotifier {
       }
       print("HI 2");
       // Fetch request types from generalSettings and if there is no request types in generalSettings then return requests types with empty list
-      print("TYPE IS --> ${UserSettingConst.generalSettingsModel!.requestTypes}");
       final requestsTypesDataFromGeneralSettings = UserSettingConst.generalSettingsModel!.requestTypes;
-      if (requestsTypesDataFromGeneralSettings == null ||
-          requestsTypesDataFromGeneralSettings.isEmpty) {
+      if (requestsTypesDataFromGeneralSettings == null || requestsTypesDataFromGeneralSettings.isEmpty) {
         requestsTypes = [];
         return;
       }

@@ -209,10 +209,10 @@ class _HomeScreenState extends State<HomeScreen> {
           controller: viewModel.homeScrollController,
           headers: [
             CoreHeader.transform(
-              pinned: false,
-              color: Colors.transparent,
+              pinned: true,
+              color: Colors.white,
               shrinkHeight: AppSizes.s140,
-              expandedHeight: AppSizes.s340,
+              expandedHeight: AppSizes.s300,
               shrinkChild: Consumer<HomeController>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
                     requests: viewModel.myRequests,
