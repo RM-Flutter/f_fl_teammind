@@ -144,7 +144,7 @@ class EmployeesListViewModel extends ChangeNotifier {
               hintText: AppStrings.department.tr(),
               hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
               items: departments
-                  ?.whereType<Department>()
+                  ?.whereType<DepartmentModel>()
                   .map((dep) => dep.toJson())
                   .toList(),
               nameKey: "title",

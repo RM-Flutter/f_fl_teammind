@@ -18,7 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/services/dart_io_stub.dart';
+import '../../../../core/services/universal_file.dart';
 
 
 class NotificationProviderModel extends ChangeNotifier {
