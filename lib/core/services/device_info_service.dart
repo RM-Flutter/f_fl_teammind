@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/models/device_information.model.dart';
 import 'package:app_test/core/platform/platform_is.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'app_config_service.dart';
 import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 
@@ -15,18 +16,15 @@ abstract class DeviceInformationService {
   static Future<String?> getCurrentPlatformId() async {
     try {
       String? deviceIdentifier;
-      String? androidId;
       if (PlatformIs.android) {
         AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
         const platform = MethodChannel('com.rightminddev.rmemp/secure');
         try {
-          androidId = await platform.invokeMethod('getAndroidId');
-
+          deviceIdentifier = await platform.invokeMethod('getAndroidId');
         } catch (e) {
           print("Error fetching Android ID: $e");
         }
-        deviceIdentifier = "$androidId";
-        print("androidId -> ${androidId}");
+        print("androidId -> $deviceIdentifier");
       } else if (PlatformIs.iOS) {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";
@@ -52,11 +50,14 @@ abstract class DeviceInformationService {
         LinuxDeviceInfo linuxInfo = await _deviceInfo.linuxInfo;
         deviceIdentifier = linuxInfo.machineId;
       }
-      // deviceIdentifier = ConfigService.getValueString("deviceIdentifier");
-      // if (deviceIdentifier.isEmpty) {
-      //   deviceIdentifier = DateTime.now().microsecondsSinceEpoch.toString();
-      //   ConfigService.setValueString("deviceIdentifier", deviceIdentifier);
-      // }
+
+      if (deviceIdentifier == null || deviceIdentifier.isEmpty || deviceIdentifier == "null") {
+        deviceIdentifier = CacheHelper.getString("deviceIdentifier");
+        if (deviceIdentifier == null || deviceIdentifier.isEmpty) {
+          deviceIdentifier = DateTime.now().microsecondsSinceEpoch.toString();
+          CacheHelper.setString(key: "deviceIdentifier", value: deviceIdentifier);
+        }
+      }
       return deviceIdentifier;
     } catch (ex) {
       return null;

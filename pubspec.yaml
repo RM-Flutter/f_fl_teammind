@@ -166,6 +166,7 @@ flutter:
     - assets/images/notifications_images/
     - assets/images/profiles_images/
     - assets/images/company_info_images/
+    - assets/images/reward_penalties_images/
 
   fonts:
     - family: Poppins

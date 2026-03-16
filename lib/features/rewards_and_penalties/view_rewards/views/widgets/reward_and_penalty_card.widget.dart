@@ -12,6 +12,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("rewards ${rewardAndPenalty.type?.value}");
     return Column(
       children: [
         InkWell(
@@ -49,6 +50,11 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                   RewardsAndPenaltiesRepo.getRewardAndPenaltyImage(
                       type: rewardAndPenalty.type?.value),
                   width: AppSizes.s24,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.error_outline,
+                    size: AppSizes.s24,
+                    color: Colors.red,
+                  ),
                 ),
                 gapW8,
                 Expanded(

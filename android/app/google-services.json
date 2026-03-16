@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "436937858575",
-    "project_id": "rm-test-a6159",
-    "storage_bucket": "rm-test-a6159.firebasestorage.app"
+    "project_number": "288740335268",
+    "project_id": "rm-emp",
+    "storage_bucket": "rm-emp.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:436937858575:android:0f3ed7dd59405f08d5cd7a",
+        "mobilesdk_app_id": "1:288740335268:android:843fe7d69492bafff8d031",
         "android_client_info": {
           "package_name": "com.rightminddev.rmemp"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBPkXh5qNh3djz1r-51p_ir3q2RGA0XpMc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:436937858575:android:a966a5daa12bff60d5cd7a",
-        "android_client_info": {
-          "package_name": "com.rightminddev.rmemp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBPkXh5qNh3djz1r-51p_ir3q2RGA0XpMc"
+          "current_key": "AIzaSyDESBKGkTir6PlfewBQfZT6EDiD-vFKNYo"
         }
       ],
       "services": {

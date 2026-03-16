@@ -53,6 +53,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
       s1Cache = json.decode(s1JsonString) as Map<String, dynamic>; // Convert String back to JSON
     }
 
+
     if(s1Cache['can_add_reward'] == true && s1Cache['can_add_penalty'] == true){
       types = [
         {
@@ -67,7 +68,8 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
       setState(() {
 
       });
-    }else if(s1Cache['can_add_reward'] == true && s1Cache['can_add_penalty'] == false){
+    }
+    else if(s1Cache['can_add_reward'] == true && s1Cache['can_add_penalty'] == false){
       types = [
         {
           'type': 'reward',
@@ -77,19 +79,21 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
       setState(() {
 
       });
-    }else if(s1Cache['can_add_reward'] == false && s1Cache['can_add_penalty'] == true){
+    }
+    else if(s1Cache['can_add_reward'] == false && s1Cache['can_add_penalty'] == true){
       types = [
         {
           'type': 'penalty',
           'name': AppStrings.penalty.tr(),
         },
       ];
-    }else{
+    }
+    else{
       types = [];
       setState(() {
-
       });
     }
+
     return ChangeNotifierProvider<AddRewardAndPenaltyViewModel>(
       create: (_) => viewModel,
       child: TemplatePage(
