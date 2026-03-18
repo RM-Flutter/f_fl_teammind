@@ -9,7 +9,7 @@ import UIKit
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     let controller = window?.rootViewController as! FlutterViewController
-        let secureChannel = FlutterMethodChannel(name: "com.yourcompany.app/secure", binaryMessenger: controller.binaryMessenger)
+        let secureChannel = FlutterMethodChannel(name: "com.rightminddev.rmemp/secure", binaryMessenger: controller.binaryMessenger)
         secureChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             if (call.method == "enableSecureFlag") {
                 if #available(iOS 13.0, *) {

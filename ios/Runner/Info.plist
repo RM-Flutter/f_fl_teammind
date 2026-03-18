@@ -59,7 +59,7 @@
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>We need your location to access Wi-Fi information.</string>
 		<key>NSFaceIDUsageDescription</key>
-		<string>Why is my app authenticating using face ID?</string>
+		<string>This app requires Face ID to secure your sensitive payroll information.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>We need your location to provide better services even when the app is in the background.</string>
 		<key>UIBackgroundModes</key>

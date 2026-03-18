@@ -32,6 +32,8 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
   late final PayrollDetailsViewModel viewModel;
   final LocalAuthentication _auth = LocalAuthentication();
   bool _authPassed = false;
+  bool _isAuthenticating = false;
+  String? _authError;
 
   @override
   void initState() {
@@ -46,24 +48,36 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
       }); // هذا يمنع السكرين شوت
 
       // Require device authentication on screen entry (فقط على الموبايل)
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await _requireAuthentication();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requireAuthentication();
       });
     }
 
     viewModel = PayrollDetailsViewModel();
-    // viewModel.initializePayrollDetailsScreen(
-    //     context: context,
-    //     payrollId: widget.payroll?.id?.toString(),
-    //     empId: widget.payroll?.userId?.toString());
   }
 
   Future<void> _requireAuthentication() async {
-    try {
-      final bool isSupported = await _auth.isDeviceSupported();
-      final bool canCheck = await _auth.canCheckBiometrics;
+    if (_isAuthenticating) return;
 
-      // Some devices return false negatives; we still try authenticate with device credentials allowed
+    setState(() {
+      _isAuthenticating = true;
+      _authError = null;
+    });
+
+    try {
+      final bool canAuthenticateWithBiometrics = await _auth.canCheckBiometrics;
+      final bool canAuthenticate = canAuthenticateWithBiometrics || await _auth.isDeviceSupported();
+
+      if (!canAuthenticate) {
+        setState(() {
+          _authError = context.locale.languageCode == 'ar'
+              ? 'لا توجد وسيلة للتحقق من الهوية (بصمة أو كلمة مرور) مفعلة على هذا الجهاز.'
+              : 'No authentication method (biometrics or screen lock) is enabled on this device.';
+          _isAuthenticating = false;
+        });
+        return;
+      }
+
       bool didAuth = await _auth.authenticate(
         localizedReason: context.locale.languageCode == 'ar'
             ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
@@ -76,88 +90,86 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
         ),
       );
 
-      // Retry once after a short delay if it failed unexpectedly
-      if (!didAuth && (isSupported || canCheck)) {
-        await Future.delayed(const Duration(milliseconds: 300));
-        didAuth = await _auth.authenticate(
-          localizedReason: context.locale.languageCode == 'ar'
-              ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
-              : 'Please authenticate to view your payroll',
-          options: const AuthenticationOptions(
-            biometricOnly: false,
-            stickyAuth: true,
-            sensitiveTransaction: true,
-            useErrorDialogs: true,
-          ),
-        );
-      }
       if (!mounted) return;
-      if (!didAuth) {
-        Navigator.of(context).pop();
-      } else {
+
+      if (didAuth) {
         setState(() {
           _authPassed = true;
+          _isAuthenticating = false;
+        });
+      } else {
+        setState(() {
+          _isAuthenticating = false;
+          _authError = context.locale.languageCode == 'ar'
+              ? 'فشل التحقق من الهوية. يرجى المحاولة مرة أخرى.'
+              : 'Authentication failed. Please try again.';
         });
       }
     } on PlatformException catch (e) {
-      // Some devices throw even when credentials exist; do not pop immediately
+      debugPrint('Biometric Auth Error: $e');
       if (!mounted) return;
-      // Try a final fallback attempt allowing device credentials
-      try {
-        final bool didAuth = await _auth.authenticate(
-          localizedReason: context.locale.languageCode == 'ar'
-              ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
-              : 'Please authenticate to view your payroll',
-          options: const AuthenticationOptions(
-            biometricOnly: false,
-            stickyAuth: true,
-            sensitiveTransaction: true,
-            useErrorDialogs: true,
-          ),
-        );
-        if (!mounted) return;
-        if (!didAuth) {
-          Navigator.of(context).pop();
-        } else {
-          setState(() {
-            _authPassed = true;
-          });
-        }
-      } catch (_) {
-        // Show message but keep user on page to avoid instant back navigation
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              context.locale.languageCode == 'ar'
-                  ? 'لا يمكن التحقق من الهوية على هذا الجهاز. يرجى التأكد من إعداد بصمة أو كلمة مرور للجهاز.'
-                  : 'Authentication is not available. Please ensure device biometrics or screen lock is set up.',
-            ),
-          ),
-        );
-      }
-    } catch (_) {
-      // Any other unexpected error: do not pop automatically
+      setState(() {
+        _isAuthenticating = false;
+        _authError = context.locale.languageCode == 'ar'
+            ? 'حدث خطأ أثناء التحقق من الهوية: ${e.message}'
+            : 'An error occurred during authentication: ${e.message}';
+      });
+    } catch (e) {
+      debugPrint('Unexpected Auth Error: $e');
+      if (!mounted) return;
+      setState(() {
+        _isAuthenticating = false;
+        _authError = context.locale.languageCode == 'ar'
+            ? 'حدث خطأ غير متوقع.'
+            : 'An unexpected error occurred.';
+      });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     if (!_authPassed) {
-      // White screen while waiting for authentication
       return Scaffold(
         backgroundColor: Colors.white,
         body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              Text(
-                context.locale.languageCode == 'ar'
-                    ? 'جارٍ التحقق من الهوية...'
-                    : 'Authenticating...',
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_isAuthenticating) ...[
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(
+                    context.locale.languageCode == 'ar'
+                        ? 'جارٍ التحقق من الهوية...'
+                        : 'Authenticating...',
+                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ] else if (_authError != null) ...[
+                  const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  Text(
+                    _authError!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: _requireAuthentication,
+                    icon: const Icon(Icons.refresh),
+                    label: Text(context.locale.languageCode == 'ar' ? 'إعادة المحاولة' : 'Retry'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(context.locale.languageCode == 'ar' ? 'إلغاء' : 'Cancel'),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       );
@@ -206,7 +218,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
 }
 
 class SecureScreen {
-  static const MethodChannel _channel = MethodChannel('com.rightmindtest.leeds/secure');
+  static const MethodChannel _channel = MethodChannel('com.rightminddev.rmemp/secure');
 
   static Future<void> enableSecureFlag() async {
     try {

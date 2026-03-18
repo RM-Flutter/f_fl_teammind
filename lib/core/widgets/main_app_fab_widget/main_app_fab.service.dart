@@ -189,7 +189,7 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
 abstract class MainFabServices {
   static const double _minProfileSimilarity = 0.4;
   static const MethodChannel _secureChannel =
-      MethodChannel('com.rightmindtest.leeds/secure');
+      MethodChannel('com.rightminddev.rmemp/secure');
 
   static Future<bool> _isDeveloperModeEnabled() async {
     if (PlatformIs.web) return false;
