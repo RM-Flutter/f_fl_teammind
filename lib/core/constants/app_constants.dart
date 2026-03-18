@@ -65,7 +65,7 @@ abstract class AppConstants {
         }
       } catch (_) {}
     }
-    final contains = (String key) => list.any((e) => e?.toString() == key);
+    bool contains(String key) => list.any((e) => e?.toString() == key);
     fingerprintFaceChallengeEnabled = contains('fingerprint_face_challenge_enabled');
     fingerprintUploadFaceImageToBackend = contains('fingerprint_upload_face_image_to_backend');
     blockFingerprintOnDeveloperMode = contains('block_fingerprint_on_developer_mode');

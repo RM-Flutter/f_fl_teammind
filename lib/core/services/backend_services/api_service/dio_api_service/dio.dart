@@ -314,7 +314,7 @@ class DioHelper{
     dio!.options.headers = {
       'Accept':'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
-      'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'multipart/form-data', // Dio handles this automatically for FormData
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',

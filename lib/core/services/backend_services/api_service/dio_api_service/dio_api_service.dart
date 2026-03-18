@@ -493,13 +493,15 @@ class DioApiService implements BackEndServicesInterface {
         }
       }
 
+      final headers = await ApiServiceHelpers.buildHeaders(
+          additionalHeaders: header, context: context);
+      headers.remove('Content-Type'); // Let Dio handle it for FormData
+      
       // Send the request
       final response = await _dio.post(
         _getUri(url).toString(),
         data: formData,
-        options: Options(
-            headers: await ApiServiceHelpers.buildHeaders(
-                additionalHeaders: header, context: context)),
+        options: Options(headers: headers),
       );
 
       if (response.statusCode == 200) {
