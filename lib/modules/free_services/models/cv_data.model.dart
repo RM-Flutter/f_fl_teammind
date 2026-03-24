@@ -391,7 +391,6 @@ class CreateCVRequestModel {
   final String? whatsapp;
   final List<int>? skills;
   final List<CVExperience>? experiences;
-  final List<CVEducation>? educations;
   final List<CVPortfolio>? portfolios;
   final List<CVLanguageLevel>? languagesLevels;
   final List<CVSkillLevel>? skillsLevels;
@@ -418,7 +417,6 @@ class CreateCVRequestModel {
     this.whatsapp,
     this.skills,
     this.experiences,
-    this.educations,
     this.portfolios,
     this.languagesLevels,
     this.skillsLevels,
@@ -452,9 +450,6 @@ class CreateCVRequestModel {
     if (skills != null && skills!.isNotEmpty) json['skills'] = skills;
     if (experiences != null && experiences!.isNotEmpty) {
       json['experiences'] = experiences!.map((e) => e.toJson()).toList();
-    }
-    if (educations != null && educations!.isNotEmpty) {
-      json['educations'] = educations!.map((e) => e.toJson()).toList();
     }
     if (portfolios != null && portfolios!.isNotEmpty) {
       json['portfolios'] = portfolios!.map((e) => e.toJson()).toList();

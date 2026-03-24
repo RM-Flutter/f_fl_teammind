@@ -27,6 +27,7 @@ import '../../../models/settings/user_settings.model.dart';
 
 import '../../../common_modules_widgets/cached_network_image_widget.dart';
 import '../../../general_services/app_config.service.dart';
+import '../../../general_services/usg_packages.service.dart';
 import '../../../routing/app_router.dart';
 import '../../home/view_models/home.viewmodel.dart';
 import '../../personal_profile/viewmodels/personal_profile.viewmodel.dart';
@@ -130,6 +131,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ),
                             const SizedBox(height : 15),
+                            if (UsgPackagesService.isPayrollActive)
                             DefaultListTile(
                               title: AppStrings.payroll.tr(),
                               src: AppIcons.payroll,
@@ -150,6 +152,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
+                            if (UsgPackagesService.isEvaluationActive)
                             DefaultListTile(
                               title: AppStrings.evaluationRequests.tr(),
                               src: AppIcons.payroll,
@@ -159,6 +162,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
+                            if (UsgPackagesService.isPayrollActive)
                             DefaultListTile(
                                 title: AppStrings.rewardsAndPenalties.tr(),
                                 src: AppIcons.reward,
@@ -183,7 +187,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                ),
                              ),
                            ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                            if (UsgPackagesService.isRequestsActive && (gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true))DefaultListTile(
                               title: AppStrings.teamRequests.tr(),
                               src: AppIcons.teamRequests,
                               onTap: ()async {
@@ -195,7 +199,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                            if (UsgPackagesService.isRequestsActive && (gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true))DefaultListTile(
                               title: AppStrings.otherDepartmentsRequests.tr(),
                               src: AppIcons.otherDepartments,
                               onTap: () async{
@@ -207,7 +211,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                            if (UsgPackagesService.isFingerprintActive && (gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true))DefaultListTile(
                               title: AppStrings.teamFingerprint.tr(),
                               src: AppIcons.teamFingerprint,
                               onTap: () async{

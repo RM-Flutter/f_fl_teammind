@@ -21,24 +21,14 @@ class DioHelper{
       "lang" : "${CacheHelper.getString("lang")}",
       'Content-Type':"application/json",
     };
-    
-    // Add CORS headers for web platform
-    if (kIsWeb || PlatformIs.web) {
-      headers.addAll({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization, lang, device-unique-id',
-      });
-    }
-    
+        
     dio = Dio(
         BaseOptions(
             baseUrl: AppConstants.baseUrl,
             receiveDataWhenStatusError: true,
-            connectTimeout: const Duration(seconds: 30),
-            receiveTimeout: const Duration(seconds: 30),
-            sendTimeout: const Duration(seconds: 30),
-            persistentConnection: true,
+            connectTimeout: const Duration(seconds: 20),
+            receiveTimeout: const Duration(seconds: 20),
+            sendTimeout: const Duration(seconds: 20),
             headers: headers,
             // For web, set followRedirects and validateStatus
             followRedirects: true,
@@ -87,56 +77,77 @@ class DioHelper{
       ),
     );
     // إعادة محاولة مرة واحدة مع اتصال جديد عند timeout/قطع الاتصال (حل مشكلة عدم رد الـ API حتى إعادة فتح الواي فاي)
-    _addConnectionResetRetryInterceptor();
+    _addConnectionResetRetryInterceptor(context);
   }
 
   /// عند timeout أو خطأ اتصال: إغلاق الـ adapter واستبداله بواحد جديد ثم إعادة المحاولة مرة واحدة.
-  static void _addConnectionResetRetryInterceptor() {
-    const _extraKey = '_connection_retry';
-    dio!.interceptors.add(
-      InterceptorsWrapper(
-        onError: (DioException error, handler) {
-          final isConnectionIssue = error.type == DioExceptionType.connectionTimeout ||
-              error.type == DioExceptionType.connectionError ||
-              error.type == DioExceptionType.sendTimeout ||
-              error.type == DioExceptionType.receiveTimeout ||
-              (error.message?.toLowerCase().contains('socket') ?? false) ||
-              (error.message?.toLowerCase().contains('failed host lookup') ?? false);
-          final alreadyRetried = error.requestOptions.extra[_extraKey] == true;
-          if (!isConnectionIssue || alreadyRetried || dio == null) {
-            return handler.next(error);
-          }
-          if (kIsWeb || PlatformIs.web) {
-            return handler.next(error);
-          }
-          try {
-            final adapter = dio!.httpClientAdapter;
-            if (adapter is IOHttpClientAdapter) {
-              adapter.close(force: true);
-              dio!.httpClientAdapter = IOHttpClientAdapter();
-            }
-          } catch (_) {}
-          error.requestOptions.extra[_extraKey] = true;
-          dio!.fetch(error.requestOptions).then(
-            (response) => handler.resolve(response),
-            onError: (e) => handler.reject(e),
+static void _addConnectionResetRetryInterceptor(BuildContext context) {
+  const retryKey = '_retried';
+
+  dio!.interceptors.add(
+    InterceptorsWrapper(
+      onError: (error, handler) async {
+        final isNetworkError =
+            error.type == DioExceptionType.connectionError ||
+            error.type == DioExceptionType.connectionTimeout ||
+            error.type == DioExceptionType.receiveTimeout ||
+            error.type == DioExceptionType.sendTimeout;
+
+        final alreadyRetried = error.requestOptions.extra[retryKey] == true;
+
+        if (!isNetworkError || alreadyRetried) {
+          return handler.next(error);
+        }
+
+        error.requestOptions.extra[retryKey] = true;
+
+        debugPrint('🔄 Hard reset Dio due to network issue');
+
+        await hardResetDio(context);
+
+        try {
+          final response = await dio!.fetch(error.requestOptions);
+          return handler.resolve(response);
+        } catch (e) {
+          return handler.reject(
+            e is DioException
+                ? e
+                : DioException(
+                    requestOptions: error.requestOptions,
+                    error: e,
+                  ),
           );
-        },
-      ),
-    );
-  }
+
+        }
+      },
+    ),
+  );
+}
+
+  
+  static Future<void> hardResetDio(BuildContext context) async {
+  try {
+    dio?.close(force: true);
+  } catch (_) {}
+
+  dio = null;
+  initail(context);
+}
+
   static Future<Response> downloadData({context,@required url,savePath})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
+  
+    print("Headers: ${dio!.options.headers}");
+    return await dio!.download(url, savePath, options: Options(
+        headers : {
       'Accept':'application/json',
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       "lang" : "${CacheHelper.getString("lang")}",
-    };
-    print("Headers: ${dio!.options.headers}");
-    return await dio!.download(url, savePath);
+    }
+    ));
   }
 
   /// Download file with progress (e.g. PDF from URL).
@@ -148,14 +159,17 @@ class DioHelper{
   }) async {
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
+ 
+    return await dio!.download(url, savePath, onReceiveProgress: onReceiveProgress,
+    options: Options(
+      headers : {
       'Accept': 'application/json',
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id': deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       'lang': CacheHelper.getString("lang") ?? "en",
-    };
-    return await dio!.download(url, savePath, onReceiveProgress: onReceiveProgress);
+    }
+    ));
   }
   
   static Future<String?> _getDeviceUniqueId(BuildContext? context, AppConfigService appConfigServiceProvider) async {
@@ -191,18 +205,21 @@ class DioHelper{
     // Remove trailing slash from URL for better web compatibility
     String cleanUrl = url.toString().endsWith('/') ? url.toString().substring(0, url.toString().length - 1) : url.toString();
     
-    dio!.options.headers = {
+    print("Headers: ${dio!.options.headers}");
+    print("Request URL: $cleanUrl");
+    print("Query Parameters: $query");
+    return await dio!.get(cleanUrl, queryParameters: query,
+    
+    options: Options(
+      headers : {
       'Accept':'application/json',
       if(sendLang == true)"Accept-Language" : CacheHelper.getString("lang") ?? "en",
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-       "lang" : "${CacheHelper.getString("lang")}",
-    };
-    print("Headers: ${dio!.options.headers}");
-    print("Request URL: $cleanUrl");
-    print("Query Parameters: $query");
-    return await dio!.get(cleanUrl, queryParameters: query );
+      "lang" : "${CacheHelper.getString("lang")}",
+    }
+    ));
   }
 
   /// GET request that returns response body as bytes (e.g. for PDF).
@@ -215,60 +232,60 @@ class DioHelper{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     String cleanUrl = url.toString().endsWith('/') ? url.toString().substring(0, url.toString().length - 1) : url.toString();
-    dio!.options.headers = {
+  
+    return await dio!.get(
+      cleanUrl,
+      queryParameters: query,
+      options: Options(responseType: ResponseType.bytes,
+      headers : {
       'Accept': acceptHeader ?? 'application/pdf',
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id': deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       'lang': CacheHelper.getString("lang") ?? "en",
-    };
-    return await dio!.get(
-      cleanUrl,
-      queryParameters: query,
-      options: Options(responseType: ResponseType.bytes),
-    );
+    }
+    ));
   }
 
   static Future<Response> deleteData({context,@required url, @required Map<String, dynamic>? query, token, data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
+
+    return await dio!.delete(url, queryParameters: query, data: data??null,
+    options: Options(
+      headers : {
       'Accept':'application/json',
       'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-    };
-
-    return await dio!.delete(url, queryParameters: query, data: data??null);
+    }
+    ));
   }
   static Future<Response> postData({ context ,@required url,@required Map<String, dynamic>? query, token, @required data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     final isFormData = data is FormData;
-    dio!.options.headers = {
+  
+    // عند FormData (مثل الصور) لا نضع Content-Type ليتولى Dio إرسال multipart/form-data مع الـ boundary
+    return await dio!.post(url, queryParameters: query, data: data??null,
+    
+    options: Options(
+      headers : {
       'Accept':'application/json',
       if (!isFormData) 'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-    };
-    // عند FormData (مثل الصور) لا نضع Content-Type ليتولى Dio إرسال multipart/form-data مع الـ boundary
-    return await dio!.post(url, queryParameters: query, data: data??null);
+    }
+    ));
   }
   static Future<Response> putData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
-      'Accept':'application/json',
-      'Content-Type': 'application/json',
-      "lang" : "${CacheHelper.getString("lang")}",
-      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
-        'device-unique-id' : deviceUniqueId,
-      'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-    };
+
     // PUT body must be sent as raw JSON string (same as Postman raw JSON) to avoid 500
     final String? bodyJson = data != null ? jsonEncode(data) : null;
     return await dio!.put(
@@ -279,20 +296,21 @@ class DioHelper{
         contentType: Headers.jsonContentType,
         sendTimeout: dio!.options.sendTimeout,
         receiveTimeout: dio!.options.receiveTimeout,
-      ),
-    );
-  }
-  static Future<Response> patchData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
-    final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
-    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
+        headers : {
       'Accept':'application/json',
       'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-    };
+    }
+      ),
+    );
+  }
+  static Future<Response> patchData({ context ,@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{
+    final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
+    String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
+  
     // PATCH body as raw JSON string (same as PUT / Postman raw JSON)
     final String? bodyJson = data != null ? jsonEncode(data) : null;
     return await dio!.patch(
@@ -303,21 +321,33 @@ class DioHelper{
         contentType: Headers.jsonContentType,
         sendTimeout: dio!.options.sendTimeout,
         receiveTimeout: dio!.options.receiveTimeout,
+        headers : {
+      'Accept':'application/json',
+      'Content-Type': 'application/json',
+      "lang" : "${CacheHelper.getString("lang")}",
+      if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
+        'device-unique-id' : deviceUniqueId,
+      'Authorization': 'Bearer ${appConfigServiceProvider.token}',
+    }
       ),
     );
   }
   static Future<Response> postFormData({@required url, context, formdata,@required Map<String, dynamic>? query, @required Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
+ 
+    return await dio!.post(url, queryParameters: query, data: formdata,
+    
+    options: Options(
+      headers : {
       'Accept':'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       'Content-Type': 'multipart/form-data',
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id' : deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
-    };
-    return await dio!.post(url, queryParameters: query, data: formdata);
+    }
+    ));
   }
 
   static Future<Response> postDataSocket({@required url,@required Map<String, dynamic>? query, token, @required Map<String, dynamic>? data})async{

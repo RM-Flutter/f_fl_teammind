@@ -11,6 +11,7 @@ import 'package:rmemp/constants/app_colors.dart';
 import 'package:rmemp/constants/user_consts.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:rmemp/general_services/localization.service.dart';
+import 'package:rmemp/general_services/usg_packages.service.dart';
 import '../../../../../common_modules_widgets/vocation_list.widget.dart';
 import '../../../../../constants/app_images.dart';
 import '../../../../../constants/app_sizes.dart';
@@ -32,13 +33,23 @@ class HomeAppbarWidget extends StatelessWidget {
       this.requests,
       this.isExpanded = true,});
   String formatName(String fullName) {
-    List<String> names = fullName.split(" ");
+    final trimmed = fullName.trim();
+    if (trimmed.isEmpty) return fullName;
+
+    final names = trimmed.split(" ").where((s) => s.isNotEmpty).toList();
+    if (names.isEmpty) return fullName;
     if (names.length < 2) return fullName;
 
-    String firstName = names[0];
-    String lastInitial = names[1][0].toUpperCase();
+    final firstName = names[0];
+    final secondPart = names[1];
+    if (firstName.isEmpty || secondPart.isEmpty) return fullName;
 
-    return "${firstName[0].toUpperCase()}${firstName.substring(1)} $lastInitial.";
+    final lastInitial = secondPart[0].toUpperCase();
+    final firstCapitalized = firstName.length > 1
+        ? "${firstName[0].toUpperCase()}${firstName.substring(1)}"
+        : firstName.toUpperCase();
+
+    return "$firstCapitalized $lastInitial.";
   }
 
   @override
@@ -275,7 +286,7 @@ class HomeAppbarWidget extends StatelessWidget {
                         ),
                       ),
                       gapH32,
-                      if (isExpanded == true)
+                      if (isExpanded == true && UsgPackagesService.isRequestsActive)
                         Center(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(

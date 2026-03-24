@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,18 +7,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
-import 'package:rmemp/constants/user_consts.dart';
 import 'package:rmemp/general_services/app_theme.service.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:rmemp/general_services/localization.service.dart';
 import 'package:rmemp/platform/platform_is.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../../../common_modules_widgets/custom_floating_action_button.widget.dart';
 import '../../../common_modules_widgets/template_page.widget.dart';
 import '../../../constants/app_images.dart';
 import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
-import '../../../models/request.model.dart';
 import '../../../routing/app_router.dart';
 import '../../../services/requests.services.dart';
 import '../view_models/requests_calendar.viewmodel.dart';
@@ -34,6 +30,30 @@ String _titleByLang(dynamic value, String lang) {
   return value.toString();
 }
 
+/// يستخرج اسم نوع الطلب من عنصر (Map من API يستخدم type_name أو كائن يستخدم typeName).
+dynamic _requestTypeName(dynamic request) {
+  if (request == null) return null;
+  if (request is Map) return request['type_name'] ?? request['typeName'];
+  return request.typeName;
+}
+
+/// يفسّر تاريخ الـ API كتاريخ محلي (تاريخ فقط) لتفادي انزياح التوقيت — مثلاً "2026-04-05 02:00:00" → 5 أبريل 2026.
+DateTime _parseCalendarDate(String dateStr, {bool endOfDay = false}) {
+  final s = dateStr.toString().trim();
+  if (s.length >= 10) {
+    final datePart = s.substring(0, 10);
+    final dt = DateTime.parse(datePart);
+    if (endOfDay) {
+      return DateTime(dt.year, dt.month, dt.day, 23, 59, 59, 999);
+    }
+    return DateTime(dt.year, dt.month, dt.day);
+  }
+  final parsed = DateTime.parse(s);
+  return endOfDay
+      ? DateTime(parsed.year, parsed.month, parsed.day, 23, 59, 59, 999)
+      : DateTime(parsed.year, parsed.month, parsed.day);
+}
+
 class RequestsCalendarScreen extends StatelessWidget {
   final requests;
   final GetRequestsTypes requestType;
@@ -41,13 +61,38 @@ class RequestsCalendarScreen extends StatelessWidget {
       {super.key, this.requests, required this.requestType});
 
   List _buildCalendarAppointments(BuildContext context, List sourceRequests, Map<String, dynamic>? gCache) {
-    final List combined = [...sourceRequests];
+    // استبعاد الطلبات التي لا تحتوي على from/to صالحة حتى لا يتعطل الكاليندر
+    final List combined = sourceRequests.where((r) {
+      if (r is Map) {
+        final from = r['from']?.toString();
+        final to = r['to']?.toString();
+        if (from == null || to == null || from.isEmpty || to.isEmpty) return false;
+        try {
+          DateTime.parse(from);
+          DateTime.parse(to);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+      final from = r.from?.toString();
+      final to = r.to?.toString();
+      if (from == null || to == null || from.isEmpty || to.isEmpty) return false;
+      try {
+        DateTime.parse(from);
+        DateTime.parse(to);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }).toList();
     final lang = context.locale.languageCode;
-    // Append holidays as calendar items if present (from US2)
+    // Append holidays as calendar items (from US2 or USG — العطل غالباً في general_settings)
     try {
       final holidays = gCache?['holidays'] as List?;
       if (holidays != null && holidays.isNotEmpty) {
         for (final h in holidays) {
+          if (h is! Map) continue;
           final String? from = h['from']?.toString();
           final String? to = h['to']?.toString();
           if (from == null || to == null) continue;
@@ -84,6 +129,12 @@ class RequestsCalendarScreen extends StatelessWidget {
               if (jsonString != null && jsonString != "") {
                 gCache = json.decode(jsonString) as Map<String, dynamic>;
               }
+              final json2String = CacheHelper.getString("USG");
+              var gCache2;
+              if (json2String != null && json2String != "") {
+                gCache2 = json.decode(json2String) as Map<String, dynamic>;
+              }
+
           return TemplatePage(
               pageContext: context,
               floatingActionButton: FloatingActionButton(
@@ -150,33 +201,33 @@ class RequestsCalendarScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
-                            height: MediaQuery.sizeOf(context).height  * 0.6,
+                            height: MediaQuery.sizeOf(context).height * 0.72,
                             child: SfCalendar(
                               backgroundColor: Color(AppColors.white),
                               key: UniqueKey(),
                               view: viewModel.calendarView ?? CalendarView.month,
-                              dataSource: RequestDataSource(_buildCalendarAppointments(context, requests, gCache), context.locale.languageCode),
+                              dataSource: RequestDataSource(_buildCalendarAppointments(context, requests, gCache2), context.locale.languageCode),
                               monthViewSettings: MonthViewSettings(
                                 appointmentDisplayMode:
                                     MonthAppointmentDisplayMode.appointment,
                                 showAgenda: false,
-                                appointmentDisplayCount: (kIsWeb || PlatformIs.web) ? 2 : 1,
+                                appointmentDisplayCount: 2,
                                 showTrailingAndLeadingDates: true,
                               ),
                               showNavigationArrow: true,
                               appointmentBuilder: (context, details) {
                                 final appt = details.appointments.first;
-                                // Render holidays (Map) differently
+                                final bounds = details.bounds;
+
+                                // عطلات رسمية (مضافة من الكاش)
                                 if (appt is Map && appt['_isHoliday'] == true) {
                                   final title = _titleByLang(appt['typeName'], currentLang);
                                   final displayTitle = title.isEmpty ? 'Holiday' : title;
                                   return Container(
-                                    width: double.infinity,
-                                    constraints: BoxConstraints(
-                                      minHeight: (kIsWeb || PlatformIs.web) ? 50 : 28,
-                                    ),
+                                    width: bounds.width,
+                                    height: bounds.height,
                                     alignment: Alignment.center,
-                                    padding: (kIsWeb || PlatformIs.web) 
+                                    padding: (kIsWeb || PlatformIs.web)
                                         ? const EdgeInsets.symmetric(horizontal: 5, vertical: 3)
                                         : const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                                     decoration: BoxDecoration(
@@ -187,7 +238,6 @@ class RequestsCalendarScreen extends StatelessWidget {
                                       displayTitle,
                                       textAlign: TextAlign.center,
                                       maxLines: (kIsWeb || PlatformIs.web) ? 1 : 1,
-                                  
                                       overflow: TextOverflow.visible,
                                       style: TextStyle(
                                         color: Color(AppColors.white),
@@ -198,54 +248,66 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   );
                                 }
 
+                                // باقي الطلبات
                                 final request = appt;
-                                final status = request?.status?.toLowerCase()?.trim();
-                                final canShow = status == "approved" || status == "waiting_seen" || status == "waiting";
+                                final rawStatus =
+                                    (request is Map ? request['status'] : request?.status)?.toString();
+                                final status =
+                                    rawStatus?.toLowerCase().trim().replaceAll(' ', '_');
+
+                                // نعرض فقط الحالات المطلوبة
+                                final canShow = status == "approved" ||
+                                    status == "waiting_seen" ||
+                                    status == "waiting" ||
+                                    status == "waiting_cancel";
                                 if (!canShow) return const SizedBox.shrink();
 
                                 final backgroundColor = viewModel.getStatusColor(status);
                                 // تحديد لون النص بناءً على لون الخلفية
-                                // إذا كانت الخلفية خضراء (approved) أو رمادية (waiting) -> نص أبيض
-                                // خلاف ذلك -> النص الأزرق
-                                final textColor = (backgroundColor == Color(AppColors.green) || 
-                                                  backgroundColor == Color(AppColors.darkGrey))
-                                    ? Color(AppColors.white)
-                                    : Theme.of(context).colorScheme.primary;
+                                final textColor =
+                                    (backgroundColor == Color(AppColors.green) || backgroundColor == Color(AppColors.darkGrey))
+                                        ? Color(AppColors.white)
+                                        : Theme.of(context).colorScheme.primary;
+
+                                // استخرج رقم الطلب (id) من الماب أو من الموديل
+                                final requestId = (request is Map
+                                        ? (request['id'] ?? request['requestId'])
+                                        : request?.id)
+                                    ?.toString();
 
                                 return GestureDetector(
                                   onTap: () async {
+                                    if (requestId == null) return;
                                     await context.pushNamed(
                                       AppRoutes.requestDetails.name,
                                       extra: request,
                                       pathParameters: {
-                                        'type': RequestsServices.getRequestsTypeStr(type: requestType),
-                                        'id': CacheHelper.getInt("id").toString(),
+                                        // نستخدم اسم الـ enum مباشرة زي RequestCard (mine / myTeam / otherDepartment)
+                                        'type': (requestType ?? GetRequestsTypes.mine).name,
+                                        'id': requestId,
                                         'lang': context.locale.languageCode,
                                       },
                                     );
                                   },
                                   child: Container(
-                                    width: double.infinity,
-                                    constraints: BoxConstraints(
-                                      minHeight: (kIsWeb || PlatformIs.web) ? 50 : 28,
-                                    ),
+                                    width: bounds.width,
+                                    height: bounds.height,
                                     alignment: Alignment.center,
-                                    padding: (kIsWeb || PlatformIs.web) 
+                                    padding: (kIsWeb || PlatformIs.web)
                                         ? const EdgeInsets.symmetric(horizontal: 5, vertical: 3)
-                                        : const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                                        : const EdgeInsets.symmetric(horizontal: 3),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(AppSizes.s4),
                                       color: backgroundColor,
                                     ),
                                     child: Text(
-                                      _titleByLang(request?.typeName, currentLang),
+                                      _titleByLang(_requestTypeName(request), currentLang),
                                       textAlign: TextAlign.center,
                                       maxLines: (kIsWeb || PlatformIs.web) ? 2 : 1,
-                          
                                       overflow: TextOverflow.visible,
                                       style: TextStyle(
                                         color: textColor,
-                                        fontSize: (kIsWeb || PlatformIs.web) ? 13 : 13,
+                                        fontSize: (kIsWeb || PlatformIs.web) ? 13 : 14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -273,7 +335,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 12),
-                                  ...(gCache['holidays'] as List? ?? []).map(
+                                  ...(gCache2['holidays'] as List? ?? []).where((h) => h is Map).map(
                                         (holiday) {
                                       final name = _titleByLang(holiday['name'], context.locale.languageCode);
                                       return ListTile(
@@ -313,27 +375,24 @@ class RequestDataSource extends CalendarDataSource {
   DateTime getStartTime(int index) {
     final item = appointments![index];
     if (item is Map) {
-      return DateTime.parse(item['from'].toString());
+      return _parseCalendarDate(item['from'].toString());
     }
-    return DateTime.parse(item.from!);
+    return _parseCalendarDate(item.from!);
   }
 
   @override
   DateTime getEndTime(int index) {
     final item = appointments![index];
     if (item is Map) {
-      return DateTime.parse(item['to'].toString());
+      return _parseCalendarDate(item['to'].toString(), endOfDay: true);
     }
-    return DateTime.parse(item.to!);
+    return _parseCalendarDate(item.to!, endOfDay: true);
   }
 
   @override
   String getSubject(int index) {
     final item = appointments![index];
-    if (item is Map) {
-      return _titleByLang(item['typeName'], _lang);
-    }
-    return _titleByLang(item?.typeName, _lang);
+    return _titleByLang(_requestTypeName(item), _lang);
   }
 
   @override
@@ -342,9 +401,13 @@ class RequestDataSource extends CalendarDataSource {
     if (item is Map && item['_isHoliday'] == true) {
       return Color(AppColors.green); // Holiday color
     }
-    switch ((item.status as String).toLowerCase().trim()) {
+    final status = (item is Map ? item['status'] : item.status)?.toString().toLowerCase().trim();
+    switch (status) {
       case 'approved':
         return Color(AppColors.green);
+      case 'waiting_seen':
+      case 'waiting_cancel':
+      case 'waiting':
       default:
         return Color(AppColors.darkGrey);
     }

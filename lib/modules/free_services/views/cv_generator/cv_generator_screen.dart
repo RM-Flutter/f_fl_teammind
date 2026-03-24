@@ -131,7 +131,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                       ),
                     ),
                     child: Text(
-                      'Create CV',
+                      AppStrings.createCV.tr(),
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,

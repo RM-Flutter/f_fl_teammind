@@ -14,7 +14,6 @@ import '../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
 import '../../../routing/app_router.dart';
 import '../view_models/my_cv.viewmodel.dart';
 import 'widgets/cv_tabs/cv_contact_tab.dart';
-import 'widgets/cv_tabs/cv_education_tab.dart';
 import 'widgets/cv_tabs/cv_job_info_tab.dart';
 import 'widgets/cv_tabs/cv_personal_tab.dart';
 
@@ -32,7 +31,6 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
     AppStrings.personal.tr().toUpperCase(),
     AppStrings.contact.tr().toUpperCase(),
     AppStrings.jopInfo.tr().toUpperCase(),
-    AppStrings.education.tr().toUpperCase()
   ];
 
   void _goBack() {
@@ -103,7 +101,6 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
                           if(selectIndex == 0) CVPersonalTab(cvData: viewModel.cvData),
                           if(selectIndex == 1) CVContactTab(cvData: viewModel.cvData),
                           if(selectIndex == 2) CVJobInfoTab(cvData: viewModel.cvData),
-                          if(selectIndex == 3) CVEducationTab(cvData: viewModel.cvData),
                         ],
                       ),
                     ),

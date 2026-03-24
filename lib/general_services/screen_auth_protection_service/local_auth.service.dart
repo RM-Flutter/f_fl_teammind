@@ -48,9 +48,7 @@ abstract class LocalAuthenticationService {
       try {
         return await _auth.authenticate(
           localizedReason: localizedReason,
-          options: const AuthenticationOptions(
-            biometricOnly: true,
-          ),
+          biometricOnly: true,
         );
       } on PlatformException catch (e) {
         debugPrint("Error during biometric authentication: ${e.toString()}");

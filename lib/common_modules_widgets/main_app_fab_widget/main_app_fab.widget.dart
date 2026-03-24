@@ -14,8 +14,15 @@ import '../../utils/custom_expandable_fab/expandable_fab.dart';
 import '../custom_floating_action_button.widget.dart';
 import '../../constants/app_images.dart';
 import '../../constants/app_sizes.dart';
+import '../../general_services/usg_packages.service.dart';
 import '../../routing/app_router.dart';
 import 'main_app_fab.service.dart';
+
+/// على الويب فقط QR والـ GPS يعملان؛ WiFi و Bluetooth لا.
+bool _isWebSupportedFingerprint(String method) {
+  final m = method.toLowerCase().trim();
+  return m == 'fp_scan' || m == 'fp_navigate' || m == 'custom_fp_navigate';
+}
 
 class MainAppFabWidget extends StatelessWidget {
   bool? requests = false;
@@ -52,19 +59,25 @@ class MainAppFabWidget extends StatelessWidget {
         }
       }
     }
+    // على الويب نعرض فقط البصمات اللي تعمل على الويب (QR و GPS) دون المساس بالموبايل
+    final List<String>? displayFingerprints = (PlatformIs.web && avFingerprints != null)
+        ? avFingerprints!.where(_isWebSupportedFingerprint).toList()
+        : avFingerprints;
+    final bool showFingerprintFab = UsgPackagesService.isFingerprintActive &&
+        userSettingsFingerprints != null &&
+        userSettingsFingerprints.isNotEmpty == true &&
+        displayFingerprints != null &&
+        displayFingerprints.isNotEmpty;
+
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        if (PlatformIs.mobile &&
-            userSettingsFingerprints != null &&
-            userSettingsFingerprints.isNotEmpty == true &&
-            avFingerprints != null &&
-            avFingerprints.isNotEmpty == true)
+        if (showFingerprintFab)
           Container(
             margin:  EdgeInsets.only(bottom: viewRequest == true? AppSizes.s75 :  35),
             child: ExpandableFab(
-                distance: (avFingerprints.length < 4) ? AppSizes.s30 * 4 : AppSizes.s30 * avFingerprints.length,
-                children: avFingerprints.map(
+                distance: (displayFingerprints.length < 4) ? AppSizes.s30 * 4 : AppSizes.s30 * displayFingerprints.length,
+                children: displayFingerprints.map(
                       (String fingerprintMethod) => ActionButton(
                         icon: Icon(
                           MainFabServices.getFingerprintMethodIcon(
@@ -79,7 +92,8 @@ class MainAppFabWidget extends StatelessWidget {
                     )
                     .toList()),
           ),
-       if(viewRequest == true) Positioned(
+       if (UsgPackagesService.isRequestsActive && viewRequest == true)
+          Positioned(
           child: CustomFloatingActionButton(
             iconPath: AppImages.addFloatingActionButtonIcon,
             onPressed: () async => await context

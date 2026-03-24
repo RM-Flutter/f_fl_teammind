@@ -239,7 +239,7 @@ abstract class AppThemeService {
         // application theme
         brightness: isDark ? Brightness.dark : Brightness.light,
         // application btm nav bar theme
-        bottomAppBarTheme: BottomAppBarTheme(
+        bottomAppBarTheme: BottomAppBarThemeData(
           color: colorPalette.btmAppBarBackgroundColor.color,
         ),
         colorScheme: ColorScheme.fromSeed(

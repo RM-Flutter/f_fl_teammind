@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../constants/app_constants.dart';
 import '../general_services/backend_services/api_service/dio_api_service/shared.dart';
+import '../general_services/usg_packages.service.dart';
 
 class CacheConsts {
   static var gCache;
@@ -12,6 +13,7 @@ class CacheConsts {
     if (jsonString != null && jsonString.isNotEmpty) {
       gCache = json.decode(jsonString) as Map<String, dynamic>;
       AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+      UsgPackagesService.clearCache();
     }
   }
   static Future<void> initUS1() async {

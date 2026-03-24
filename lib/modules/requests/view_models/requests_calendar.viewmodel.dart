@@ -29,12 +29,13 @@ class RequestsCalendarViewModel extends ChangeNotifier {
   }
 
   Color getStatusColor(String? status) {
-    switch (status?.toLowerCase().trim()) {
+    final s = status?.toLowerCase().trim();
+    switch (s) {
       case 'approved':
         return Colors.green;
-      // case 'refused' || 'canceled':
-      //   return Colors.red;
-      case 'waiting_seen' || 'waiting_cancel'|| 'waiting':
+      case 'waiting_seen':
+      case 'waiting_cancel':
+      case 'waiting':
         return Color(AppColors.darkGrey);
       default:
         return Colors.transparent;

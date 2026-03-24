@@ -1,7 +1,6 @@
 import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
 import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/platform/platform_is.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -621,56 +619,20 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
     }
   }
 
-  /// Request storage permission based on Android version
-  Future<bool> _requestStoragePermission() async {
-    if (PlatformIs.web) {
-      return true;
-    }
-    
-    if (PlatformIs.android) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final sdkInt = androidInfo.version.sdkInt;
-
-      if (sdkInt >= 30) {
-        var status = await Permission.manageExternalStorage.status;
-        if (!status.isGranted) {
-          status = await Permission.manageExternalStorage.request();
-          if (!status.isGranted) {
-            await openAppSettings();
-            return false;
-          }
-        }
-        return true;
-      } else if (sdkInt >= 23) {
-        var status = await Permission.storage.status;
-        if (!status.isGranted) {
-          status = await Permission.storage.request();
-          if (!status.isGranted) return false;
-        }
-        return true;
-      } else {
-        return true;
-      }
-    }
-    return true;
-  }
-
-  /// Get appropriate download directory
+  /// Get appropriate download directory (app-specific, no storage permission needed)
   Future<dynamic> _getDownloadDirectory() async {
     if (kIsWeb || PlatformIs.web) {
       throw UnsupportedError("Download directory not available on web");
     }
     
     if (!kIsWeb) {
-      if (PlatformIs.android) {
-        final io.Directory directory = io.Directory('/storage/emulated/0/Download');
-        if (await directory.exists()) {
-          return directory;
-        } else {
-          throw Exception("Download directory not found");
+      if (PlatformIs.android || PlatformIs.iOS) {
+        final appDir = await getApplicationDocumentsDirectory();
+        final downloadDir = io.Directory('${appDir.path}/PremiumTemplates');
+        if (!await downloadDir.exists()) {
+          await downloadDir.create(recursive: true);
         }
-      } else if (PlatformIs.iOS) {
-        return await getApplicationDocumentsDirectory();
+        return downloadDir;
       } else {
         throw UnsupportedError("Unsupported platform");
       }
@@ -768,21 +730,8 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
       return;
     }
 
-    // Mobile platforms: download to device storage
-    final permissionGranted = await _requestStoragePermission();
-    if (!permissionGranted) {
-      setState(() {
-        _downloadProgress.remove(fileId);
-        _downloadingFileNames.remove(fileId);
-      });
-      Fluttertoast.showToast(
-        msg: AppStrings.storagePermissionRequiredForDownload.tr(),
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-      return;
-    }
-
+    // Mobile platforms: save to app directory (no storage permission needed)
+    // Skip permission request - we use app-specific directory
     final dio = Dio();
 
     try {

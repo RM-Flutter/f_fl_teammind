@@ -3,10 +3,12 @@
 class Directory {
   final String path;
   Directory(this.path);
-  
+
   Future<bool> exists() async => false;
-  
-  // Add other methods that might be used
+
+  /// Stub: not used on web (_getDownloadDirectory throws before creating dirs).
+  Future<void> create({bool recursive = false}) async {}
+
   String get absolute => path;
 }
 

@@ -33,10 +33,14 @@ class ConnectionService extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 300));
     await _checkConnectionStatus();
     
-    // Show overlay if offline on startup
+    // تأخير ظهور الـ overlay عند أول تشغيل حتى لا يغطي dialog صلاحية الإشعارات (يظهر بعد أول frame)
     if (!_isConnected) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        OfflineOverlayService.showOfflineOverlay();
+      Future.delayed(const Duration(milliseconds: 2500), () {
+        if (!_isConnected) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            OfflineOverlayService.showOfflineOverlay();
+          });
+        }
       });
     }
     

@@ -11,10 +11,18 @@ import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/constants/internet_check.dart';
 import 'package:rmemp/constants/restart_app.dart';
 import 'package:rmemp/general_services/offline_overlay.service.dart';
+import 'package:rmemp/general_services/usg_packages.service.dart';
+import 'package:rmemp/platform/platform_is.dart';
 import 'package:rmemp/routing/app_router.dart';
 import 'package:rmemp/modules/fingerprint/views/widgets/finger_print_offline_card.dart';
 import '../../../constants/app_sizes.dart';
 import '../view_models/offline_viewmodel.dart';
+
+/// على الويب نعرض فقط QR و GPS في شاشة الأوفلاين؛ الموبايل يظهر الكل
+List<String> _offlineDisplayFingerprints(List<String> list) {
+  if (!PlatformIs.web) return list;
+  return list.where((m) => m == 'fp_scan' || m == 'fp_navigate' || m == 'custom_fp_navigate').toList();
+}
 
 class OfflineScreen extends StatefulWidget {
   const OfflineScreen({super.key});
@@ -205,20 +213,20 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                           },
                         ),
                         const SizedBox(height: 40,),
-                          if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
+                          if (UsgPackagesService.isFingerprintActive && _offlineDisplayFingerprints(viewModel.usersFingerprints).isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
                         const SizedBox(height: 15,),
-                        if (viewModel.usersFingerprints.isNotEmpty)
+                        if (UsgPackagesService.isFingerprintActive && _offlineDisplayFingerprints(viewModel.usersFingerprints).isNotEmpty)
                           Container(
                             height: 50,
                             child: ListView.builder(
-                              itemCount: viewModel.usersFingerprints.length,
+                              itemCount: _offlineDisplayFingerprints(viewModel.usersFingerprints).length,
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 IconData icon;
                                 Function()? function;
                                 String hero;
-                                final fingerprintType = viewModel.usersFingerprints[index];
+                                final fingerprintType = _offlineDisplayFingerprints(viewModel.usersFingerprints)[index];
                                 debugPrint("🔍 Setting up fingerprint button: $fingerprintType");
                                 switch (fingerprintType) {
                                   case 'fp_scan':
@@ -286,8 +294,9 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             ),
                           ),
                           const SizedBox(height: 30,),
-                          // Show saved fingerprints
-                          if (viewModel.savedFingerprints != null && 
+                          // Show saved fingerprints (only when fingerprint package is active)
+                          if (UsgPackagesService.isFingerprintActive &&
+                              viewModel.savedFingerprints != null && 
                               viewModel.savedFingerprints!.isNotEmpty)
                             Padding(
                               padding: EdgeInsetsGeometry.symmetric(horizontal: 15),

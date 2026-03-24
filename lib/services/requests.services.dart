@@ -74,6 +74,20 @@ abstract class RequestsServices {
     }
   }
 
+  /// path param for calendar route: 'mine' | 'myTeam' | 'otherDepartment'
+  static String getRequestTypePathParam(GetRequestsTypes type) {
+    switch (type) {
+      case GetRequestsTypes.mine:
+        return 'mine';
+      case GetRequestsTypes.myTeam:
+        return 'myTeam';
+      case GetRequestsTypes.otherDepartment:
+        return 'otherDepartment';
+      case GetRequestsTypes.allCompany:
+        return 'allCompany';
+    }
+  }
+
   /// get Request Status Icon [waiting_seen - seen - approved - canceled - refused]
   static Icon getRequestsStatusIcon(
       {required BuildContext context,
@@ -102,7 +116,8 @@ abstract class RequestsServices {
     }
   }
 
-  /// build query parameters string
+  /// build query parameters string.
+  /// [status] can be String or List<String>; when List, sends status= X &status= Y &...
   static String _buildQueryParameters({
     String? requestTypeId,
     var ids,
@@ -114,19 +129,26 @@ abstract class RequestsServices {
     int? page,
     String? type,
   }) {
-    final Map<String, String> queryParams = {};
+    final List<String> pairs = [];
 
-    if (requestTypeId != null&&requestTypeId != "") queryParams['request_type_id'] = requestTypeId;
-    if (ids != null && ids.isNotEmpty) queryParams['emp_ids[]'] = ids;
-    if (department != null && department.isNotEmpty) queryParams['department_id'] = department;
-    if (from != null && from != "") queryParams['from'] = from;
-    if (status != null && status != "") queryParams['status'] = status;
-    if (to != null && to != "") queryParams['to'] = to;
-    if (plimits != null) queryParams['plimits'] = plimits.toString();
-    if (page != null) queryParams['page'] = page.toString();
-    if (type != null) queryParams['type'] = type;
+    if (requestTypeId != null && requestTypeId != "") pairs.add('request_type_id=$requestTypeId');
+    if (ids != null && ids.isNotEmpty) pairs.add('emp_ids[]=$ids');
+    if (department != null && department.isNotEmpty) pairs.add('department_id=$department');
+    if (from != null && from != "") pairs.add('from=$from');
+    if (status != null) {
+      if (status is List) {
+        final values = status.where((s) => s != null && s.toString().trim().isNotEmpty).map((s) => s.toString().trim()).toList();
+        if (values.isNotEmpty) pairs.add('status=${values.join("&")}');
+      } else if (status.toString().trim().isNotEmpty) {
+        pairs.add('status=${Uri.encodeComponent(status.toString().trim())}');
+      }
+    }
+    if (to != null && to != "") pairs.add('to=$to');
+    if (plimits != null) pairs.add('plimits=$plimits');
+    if (page != null) pairs.add('page=$page');
+    if (type != null && type != "") pairs.add('type=$type');
 
-    return queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+    return pairs.join('&');
   }
 
   /// get Requests depends on the current user privileges
@@ -169,6 +191,51 @@ abstract class RequestsServices {
     final response = await DioApiService().get<Map<String, dynamic>>(url,
         dataKey: 'data', context: context, allData: true);
     return response;
+  }
+
+  /// Statuses that should appear on the calendar: approved, waiting_seen, waiting
+  static const List<String> _calendarStatuses = ['approved', 'waiting_seen', 'waiting'];
+
+  /// Fetches requests for calendar view (approved + waiting_seen + waiting), one request per status, merged and deduped.
+  static Future<List<dynamic>> getRequestsForCalendar({
+    required BuildContext context,
+    required GetRequestsTypes reqType,
+    String? requestTypeId,
+    String? from,
+    String? to,
+    var empIds,
+    String? depId,
+  }) async {
+    final Map<String, dynamic> seenIds = {};
+    final List<dynamic> merged = [];
+
+    for (final status in _calendarStatuses) {
+      final result = await getRequestsByTypeDependsOnUserPrivileges(
+        context: context,
+        reqType: reqType,
+        requestTypeId: requestTypeId,
+        empIds: empIds,
+        from: from,
+        to: to,
+        depId: depId,
+        status: status,
+        plimits: 500,
+        page: 1,
+      );
+      if (result.success && result.data != null) {
+        final requestsData = result.data!['requests'] as List<dynamic>?;
+        if (requestsData != null) {
+          for (final item in requestsData) {
+            final id = (item is Map ? item['id'] ?? item['requestId'] : item.id)?.toString();
+            if (id != null && !seenIds.containsKey(id)) {
+              seenIds[id] = true;
+              merged.add(item);
+            }
+          }
+        }
+      }
+    }
+    return merged;
   }
 
   /// get Requests depends on the current user privileges

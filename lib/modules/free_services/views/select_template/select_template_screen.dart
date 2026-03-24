@@ -11,7 +11,16 @@ import '../../models/cv_template.model.dart';
 import '../../view_models/select_template.viewmodel.dart';
 
 class SelectTemplateScreen extends StatefulWidget {
-  const SelectTemplateScreen({super.key});
+  final bool isSmartCardEmployee;
+  final bool isSmartCardCompany;
+  final int? companyId;
+
+  const SelectTemplateScreen({
+    super.key,
+    this.isSmartCardEmployee = false,
+    this.isSmartCardCompany = false,
+    this.companyId,
+  });
 
   @override
   State<SelectTemplateScreen> createState() => _SelectTemplateScreenState();
@@ -21,12 +30,19 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
   late SelectTemplateViewModel viewModel;
   int selectedTemplateIndex = 0;
 
+  bool get _isSmartCardMode =>
+      widget.isSmartCardEmployee || widget.isSmartCardCompany;
+
   @override
   void initState() {
     super.initState();
     viewModel = SelectTemplateViewModel();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.fetchTemplates(context, itemsCount: 200);
+      if (_isSmartCardMode) {
+        viewModel.fetchSmartCardTemplates(context);
+      } else {
+        viewModel.fetchTemplates(context, itemsCount: 200);
+      }
     });
   }
 
@@ -93,7 +109,9 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => vm.fetchTemplates(context, itemsCount: 200),
+                      onPressed: () => _isSmartCardMode
+                          ? vm.fetchSmartCardTemplates(context)
+                          : vm.fetchTemplates(context, itemsCount: 200),
                       child: Text(AppStrings.retry.tr()),
                     ),
                   ],
@@ -153,7 +171,60 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                   child: ElevatedButton(
                     onPressed: vm.isLoadingTemplate
                         ? null
-                        : () => vm.onGenerateCv(context, templates[selectedTemplateIndex]),
+                        : () async {
+                            final template = templates[selectedTemplateIndex];
+                            if (widget.isSmartCardEmployee) {
+                              final raw = vm.smartCardTemplatesRaw != null &&
+                                      selectedTemplateIndex >= 0 &&
+                                      selectedTemplateIndex < vm.smartCardTemplatesRaw!.length
+                                  ? vm.smartCardTemplatesRaw![selectedTemplateIndex]
+                                  : null;
+                              final ok = await vm.applyEmployeeTemplate(
+                                context,
+                                template,
+                                rawTemplate: raw,
+                              );
+                              if (ok && context.mounted) {
+                                try {
+                                  GoRouter.of(context).pop();
+                                } catch (_) {
+                                  Navigator.of(context).pop();
+                                }
+                              }
+                            } else if (widget.isSmartCardCompany) {
+                              if (widget.companyId == null) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(AppStrings.missingCompanyOrEmployeeId.tr()),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              } else {
+                                final raw = vm.smartCardTemplatesRaw != null &&
+                                        selectedTemplateIndex >= 0 &&
+                                        selectedTemplateIndex < vm.smartCardTemplatesRaw!.length
+                                    ? vm.smartCardTemplatesRaw![selectedTemplateIndex]
+                                    : null;
+                                final ok = await vm.applyCompanyTemplate(
+                                  context,
+                                  companyId: widget.companyId!,
+                                  template: template,
+                                  rawTemplate: raw,
+                                );
+                                if (ok && context.mounted) {
+                                  try {
+                                    GoRouter.of(context).pop();
+                                  } catch (_) {
+                                    Navigator.of(context).pop();
+                                  }
+                                }
+                              }
+                            } else {
+                              await vm.onGenerateCv(context, template);
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(AppColors.dark),
                       foregroundColor: Colors.white,
@@ -172,7 +243,9 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                             ),
                           )
                         : Text(
-                            AppStrings.generateCvWithTemplate.tr(),
+                            _isSmartCardMode
+                                ? AppStrings.applyTemplate.tr()
+                                : AppStrings.generateCvWithTemplate.tr(),
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

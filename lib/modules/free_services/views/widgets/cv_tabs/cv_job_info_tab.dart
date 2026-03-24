@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../../constants/app_colors.dart';
+import '../../../../../constants/app_strings.dart';
 import '../../../models/cv_data.model.dart';
 import '../../../view_models/my_cv.viewmodel.dart';
 import 'cv_info_item.widget.dart';
@@ -25,36 +27,36 @@ class CVJobInfoTab extends StatelessWidget {
           _buildSeparator(),
           
           CVInfoItem(
-            label: 'CURRENT JOB TITLE',
+            label: AppStrings.currentJobTitle.tr().toUpperCase(),
             value: jobInfo?.currentJobTitle,
             isRequired: true,
           ),
           CVInfoItem(
-            label: 'JOB',
+            label: AppStrings.currentJobTitle.tr().toUpperCase(),
             value: jobInfo?.jobTitle ?? jobInfo?.jobId?.toString(),
             isRequired: true,
-            hint: '(SELECT)',
+            hint: "cvSelectPlaceholder".tr(),
           ),
           CVInfoItem(
-            label: 'ABOUT ME - ADD YOUR JOB DESCRIPTION...',
+            label: "cvAboutMeJobDescriptionLabel".tr(),
             value: jobInfo?.aboutMe,
           ),
           CVInfoItem(
-            label: 'SKILLS',
+            label: AppStrings.skills.tr().toUpperCase(),
             value: jobInfo?.skillsTitles?.join(', ') ?? jobInfo?.skills?.join(', '),
-            hint: '(اختيار من الموجود)',
+            hint: "cvSkillsSelectExistingHint".tr(),
           ),
           CVInfoItem(
-            label: 'MORE SKILLS',
+            label: AppStrings.moreSkills.tr().toUpperCase(),
             value: jobInfo?.moreSkills,
-            hint: 'ادخال قائمة عناصر اضافية - بشكل حر',
+            hint: "cvMoreSkillsFreeListHint".tr(),
           ),
           
           // Separator line
           _buildSeparator(),
           
           // Experience Section
-          _buildSectionTitle('EXPERIENCE'),
+          _buildSectionTitle(AppStrings.experience.tr().toUpperCase()),
           if (jobInfo?.experiences != null && jobInfo!.experiences!.isNotEmpty)
             ...jobInfo.experiences!.map((exp) => _buildExperienceItem(exp))
           else
@@ -63,16 +65,16 @@ class CVJobInfoTab extends StatelessWidget {
           _buildSeparator(),
           
           // Portfolio Section
-          _buildSectionTitle('PORTFOLIO'),
+          _buildSectionTitle(AppStrings.portfolio.tr().toUpperCase()),
           if (jobInfo?.portfolios != null && jobInfo!.portfolios!.isNotEmpty)
             ...jobInfo.portfolios!.map((portfolio) => _buildPortfolioItem(portfolio))
           else
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CVInfoItem(label: 'اسم المشروع', value: null),
-                CVInfoItem(label: 'وصف المشروع', value: null),
-                CVInfoItem(label: 'رابط المشروع', value: null),
+                CVInfoItem(label: AppStrings.projectName.tr(), value: null),
+                CVInfoItem(label: AppStrings.projectDescription.tr(), value: null),
+                CVInfoItem(label: AppStrings.projectLink.tr(), value: null),
               ],
             ),
         ],

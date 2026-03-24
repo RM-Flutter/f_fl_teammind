@@ -14,7 +14,6 @@ import '../../view_models/my_cv.viewmodel.dart';
 import '../widgets/create_cv_tabs/create_cv_personal_tab.dart';
 import '../widgets/create_cv_tabs/create_cv_contact_tab.dart';
 import '../widgets/create_cv_tabs/create_cv_job_info_tab.dart';
-import '../widgets/create_cv_tabs/create_cv_education_tab.dart';
 
 class UpdateMyInfoScreen extends StatefulWidget {
   const UpdateMyInfoScreen({super.key});
@@ -31,7 +30,6 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
     AppStrings.personal.tr().toUpperCase(),
     AppStrings.contact.tr().toUpperCase(),
     AppStrings.jopInfo.tr().toUpperCase(),
-    AppStrings.education.tr().toUpperCase()
   ];
 
   @override
@@ -116,7 +114,6 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
                           if(selectIndex == 0) _buildEditablePersonalTab(viewModel),
                           if(selectIndex == 1) _buildEditableContactTab(viewModel),
                           if(selectIndex == 2) _buildEditableJobInfoTab(viewModel),
-                          if(selectIndex == 3) _buildEditableEducationTab(viewModel),
                         ],
                       ),
                     ),
@@ -221,9 +218,5 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
 
   Widget _buildEditableJobInfoTab(CreateCVViewModel viewModel) {
     return CreateCVJobInfoTab(viewModel: viewModel);
-  }
-
-  Widget _buildEditableEducationTab(CreateCVViewModel viewModel) {
-    return CreateCVEducationTab(viewModel: viewModel);
   }
 }

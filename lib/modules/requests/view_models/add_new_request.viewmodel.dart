@@ -191,22 +191,22 @@ class AddNewRequestViewModel extends ChangeNotifier {
       required String? endDateOrDatetime}) async {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
     final DateFormat dateTimeFormatter = DateFormat('yyyy-MM-dd HH:mm');
-    if (startDateOrDatetime == null || endDateOrDatetime == null) {
-      AlertsService.warning(
-          context: context,
-          message: 'please select offical holiday again !',
-          title: AppStrings.warning.tr());
-      return;
-    }
+    // if (startDateOrDatetime == null || endDateOrDatetime == null) {
+    //   AlertsService.warning(
+    //       context: context,
+    //       message: 'please select offical holiday again !',
+    //       title: AppStrings.warning.tr());
+    //   return;
+    // }
     DateTime start;
     DateTime end;
     bool containsTime =
-        startDateOrDatetime.contains(' ') || endDateOrDatetime.contains(' ');
+        startDateOrDatetime!.contains(' ') || endDateOrDatetime!.contains(' ');
 
     if (containsTime) {
       // Parse date and time
       start = dateTimeFormatter.parse(startDateOrDatetime);
-      end = dateTimeFormatter.parse(endDateOrDatetime);
+      end = dateTimeFormatter.parse(endDateOrDatetime!);
     } else {
       // Parse date only
       start = dateFormatter.parse(startDateOrDatetime);
@@ -266,13 +266,13 @@ class AddNewRequestViewModel extends ChangeNotifier {
   Future<void> selectDateFilter(BuildContext context,{bool filter = false}) async {
     // check if the type is days then show the date range picker
     await _selectDateRange(context);
-    if (selectedDateOrDatetimeRange == null) {
-      AlertsService.warning(
-          context: context,
-          message: AppStrings.pleaseSelectRequestDuration.tr(),
-          title: AppStrings.warning.tr());
-      return;
-    }
+    // if (selectedDateOrDatetimeRange == null) {
+    //   AlertsService.warning(
+    //       context: context,
+    //       message: AppStrings.pleaseSelectRequestDuration.tr(),
+    //       title: AppStrings.warning.tr());
+    //   return;
+    // }
     controller.text = formatDateTimeRange(context,selectedDateOrDatetimeRange!);
     _calcDuration(context: context);
     notifyListeners();
@@ -544,17 +544,30 @@ class AddNewRequestViewModel extends ChangeNotifier {
     final isEndToday = isSameDate(selectedDates, now);
     final isTodayAndSameDay = isStartEndSame && isStartToday && isEndToday;
 
-    print('الريكويست تايب بيقبل نص يوم؟ ${halfDay == true ? "آه" : "لا"}');
-    // halfDay من نوع الطلب (half_day_leave): لو النوع مش بيقبل نصف يوم → حتى لو انهاردا المدة = 1
-    if (type?.toLowerCase().trim() == 'days' && halfDay == true && isTodayAndSameDay) {
+    // === برينتات تشخيص نفس اليوم + ويک إند ===
+    debugPrint('[_calcDuration] type="$type" trimmed="${type?.toLowerCase().trim()}" isDays=${type?.toLowerCase().trim() == 'days'}');
+    debugPrint('[_calcDuration] selectedDate=$selectedDate selectedDates=$selectedDates now=$now');
+    debugPrint('[_calcDuration] isStartEndSame=$isStartEndSame isStartToday=$isStartToday isEndToday=$isEndToday isTodayAndSameDay=$isTodayAndSameDay');
+    debugPrint('[_calcDuration] halfDay=$halfDay (بيقبل نص يوم؟ ${halfDay == true ? "آه" : "لا"})');
+    // لو الريكويست نوعه أيام وبيبتدى وينتهي انهاردا: لو اليوم في الويك إند أو إجازة → 0، وإلا لو النوع بيقبل نصف يوم → 0.5 وإلا → 1
+    if (type?.toLowerCase().trim() == 'days' && isTodayAndSameDay) {
+      debugPrint('[_calcDuration] دخلنا بلوك نفس اليوم (days + today)');
       final isWeekendOrHoliday = isWeekendOrHolidayDateFromString(context, selectedDate.toString());
-      duration = isWeekendOrHoliday ? 1 : 0.5;
+      debugPrint('[_calcDuration] isWeekendOrHoliday=$isWeekendOrHoliday → duration سيكون ${isWeekendOrHoliday ? 0 : (halfDay == true ? 0.5 : 1)}');
+      if (isWeekendOrHoliday) {
+        duration = 0;
+      } else {
+        duration = (halfDay == true) ? 0.5 : 1;
+      }
       formattedDuration = '${duration} ${AppStrings.days.tr()}';
       notifyListeners();
+      return;
     } else if (type?.toLowerCase().trim() == 'days' && halfDay == true && !isTodayAndSameDay) {
+      debugPrint('[_calcDuration] دخلنا بلوك days + halfDay + مش نفس اليوم → _getDateDifference');
       formattedDuration = null;
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
     } else if (type?.toLowerCase().trim() == 'days' && halfDay == false) {
+      debugPrint('[_calcDuration] دخلنا بلوك days + مش بيقبل نصف يوم → _getDateDifference');
       // النوع مش بيقبل نصف يوم: انهاردا أو أي فترة → حساب الأيام العادي (انهاردا = 1)
       formattedDuration = null;
       _getDateDifferenceWithoutWeekendsAndOfficailHolidays(context: context);
@@ -580,7 +593,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
     try {
       date = DateTime.parse(dateString);
     } catch (e) {
-      // Parsing failed, treat as not weekend/holiday
+      debugPrint('[isWeekendOrHoliday] parse فشل dateString=$dateString → false');
       return false;
     }
 
@@ -599,11 +612,10 @@ class AddNewRequestViewModel extends ChangeNotifier {
       gCache2 = json.decode(jsonString2) as Map<String, dynamic>;
       UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache2);
       generalSettingsModel = GeneralSettingsModel.fromJson(gCache2);
-
     }
     // Get general settings with holidays list
     final generalSettings = generalSettingsModel;
-    final List<HolidayOrString>? holidays = generalSettings!.holidays;
+    final List<HolidayOrString>? holidays = generalSettings?.holidays;
 
     // Map weekday int to string
     final Map<int, String> weekdaysMap = {
@@ -620,28 +632,33 @@ class AddNewRequestViewModel extends ChangeNotifier {
     final defaultWeekendDays = ['saturday', 'sunday'];
     final weekendDays = user2Settings?.weekend ?? defaultWeekendDays;
     final isVariable = weekendDays.any((e) => e.toString().trim().toLowerCase() == 'variable');
+    final dayName = weekdaysMap[date.weekday]; // 5 = friday
+
+    debugPrint('[isWeekendOrHoliday] date=$date date.weekday=${date.weekday} dayName(english)=$dayName');
+    debugPrint('[isWeekendOrHoliday] weekendDays from US2=$weekendDays isVariable=$isVariable');
+    debugPrint('[isWeekendOrHoliday] weekendDays.contains(dayName)=${dayName != null && weekendDays.contains(dayName)} (مقارنة بالإنجليزي)');
+    for (var i = 0; i < weekendDays.length; i++) {
+      debugPrint('[isWeekendOrHoliday] weekendDays[$i]="${weekendDays[i]}" == dayName? ${weekendDays[i].toString().trim().toLowerCase() == dayName}');
+    }
 
     // If weekend is 'variable', treat as no weekend (custom handling)
     if (!isVariable) {
-      final dayName = weekdaysMap[date.weekday];
       if (dayName != null && weekendDays.contains(dayName)) {
+        debugPrint('[isWeekendOrHoliday] → true (اليوم ويک إند)');
         return true; // It's a weekend
       }
+      // لو اللستة فيها أسماء عربي (مثلاً الجمعة) مش هتتطابق مع friday
+      final dayNameLower = dayName?.toLowerCase();
+      final matchByLower = dayNameLower != null && weekendDays.any((e) => e.toString().trim().toLowerCase() == dayNameLower);
+      debugPrint('[isWeekendOrHoliday] بعد مقارنة lowercase: matchByLower=$matchByLower');
+      if (matchByLower) {
+        debugPrint('[isWeekendOrHoliday] → true (ويک إند بعد مقارنة lowercase)');
+        return true;
+      }
     }
-      print("holidays is --> $holidays");
-      print("canUseHolidays is --> ${user2Settings?.canUseHolidays}");
     // Check holidays if user can use holidays
     if (user2Settings?.canUseHolidays == true && holidays != null && holidays.isNotEmpty) {
-      print("holidays is --> $holidays");
-      print("canUseHolidays is --> ${user2Settings?.canUseHolidays}");
-      print("weekendDays is --> $weekendDays");
-      print("date is --> $date");
-      print("date.weekday is --> ${date.weekday}");
-      print("weekdaysMap is --> $weekdaysMap");
-      print("weekdaysMap[date.weekday] is --> ${weekdaysMap[date.weekday]}");
-      print("weekendDays.contains(weekdaysMap[date.weekday]) is --> ${weekendDays.contains(weekdaysMap[date.weekday])}");
-      print("weekendDays.contains(weekdaysMap[date.weekday]) is --> ${weekendDays.contains(weekdaysMap[date.weekday])}");
-      // Compare by date only (no time) to avoid timezone/DST issues
+      debugPrint('[isWeekendOrHoliday] نفحص الـ holidays (canUseHolidays=true)');
       final dateOnly = DateTime(date.year, date.month, date.day);
       for (var holidayOrString in holidays) {
         if (holidayOrString.holiday != null) {
@@ -651,6 +668,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
           final holidayEndOnly = DateTime(holidayEnd.year, holidayEnd.month, holidayEnd.day);
           if (!dateOnly.isBefore(holidayStartOnly) && !dateOnly.isAfter(holidayEndOnly)) {
             if (!weekendDays.contains(weekdaysMap[date.weekday])) {
+              debugPrint('[isWeekendOrHoliday] → true (تاريخ في إجازة رسمية)');
               return true; // It's an official holiday
             }
           }
@@ -658,7 +676,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
       }
     }
 
-    // If none matched
+    debugPrint('[isWeekendOrHoliday] → false (مش ويک إند ومش إجازة)');
     return false;
   }
 
@@ -889,8 +907,7 @@ class AddNewRequestViewModel extends ChangeNotifier {
         //     dateTime: selectedDateOrDatetimeRange!.start)).toString(),
         // 'date_to': normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
         //     dateTime: selectedDateOrDatetimeRange!.end)).toString(),
-        'duration': (StringConvert.sanitizeDateString(dateTimeFormat.format(selectedDateOrDatetimeRange!.start)) == StringConvert.sanitizeDateString(dateTimeFormat.format(selectedDateOrDatetimeRange!.end)) &&
-        halfDay == true && isToday == true)? "0.5":duration.toString(),
+        'duration': (duration ?? 0).toString(),
         'reason': reasonController.text,
         if(amountController.text.isNotEmpty)'money_value' : amountController.text,
       };

@@ -545,17 +545,11 @@ class CreateCVViewModel extends ChangeNotifier {
     setError(null);
 
     try {
-      // Filter out empty experiences, educations, portfolios, etc.
+      // Filter out empty experiences, portfolios, etc.
       final filteredExperiences = experiences.where((exp) => 
         exp.jobTitle != null && exp.jobTitle!.isNotEmpty ||
         exp.dateFrom != null && exp.dateFrom!.isNotEmpty ||
         exp.countryId != null
-      ).toList();
-      
-      final filteredEducations = educations.where((edu) => 
-        edu.institutionName != null && edu.institutionName!.isNotEmpty ||
-        edu.certificateName != null && edu.certificateName!.isNotEmpty ||
-        edu.dateFrom != null && edu.dateFrom!.isNotEmpty
       ).toList();
       
       final filteredPortfolios = portfolios.where((port) => 
@@ -594,7 +588,6 @@ class CreateCVViewModel extends ChangeNotifier {
         whatsapp: whatsappController.text.trim().isEmpty ? null : whatsappController.text.trim(),
         skills: selectedSkills.isEmpty ? null : selectedSkills,
         experiences: filteredExperiences.isEmpty ? null : filteredExperiences,
-        educations: filteredEducations.isEmpty ? null : filteredEducations,
         portfolios: filteredPortfolios.isEmpty ? null : filteredPortfolios,
         languagesLevels: filteredLanguagesLevels.isEmpty ? null : filteredLanguagesLevels,
         skillsLevels: filteredSkillsLevels.isEmpty ? null : filteredSkillsLevels,
@@ -806,17 +799,11 @@ class CreateCVViewModel extends ChangeNotifier {
     setError(null);
 
     try {
-      // Filter out empty experiences, educations, portfolios, etc.
+      // Filter out empty experiences, portfolios, etc.
       final filteredExperiences = experiences.where((exp) => 
         exp.jobTitle != null && exp.jobTitle!.isNotEmpty ||
         exp.dateFrom != null && exp.dateFrom!.isNotEmpty ||
         exp.countryId != null
-      ).toList();
-      
-      final filteredEducations = educations.where((edu) => 
-        edu.institutionName != null && edu.institutionName!.isNotEmpty ||
-        edu.certificateName != null && edu.certificateName!.isNotEmpty ||
-        edu.dateFrom != null && edu.dateFrom!.isNotEmpty
       ).toList();
       
       final filteredPortfolios = portfolios.where((port) => 
@@ -855,7 +842,6 @@ class CreateCVViewModel extends ChangeNotifier {
         whatsapp: whatsappController.text.trim().isEmpty ? null : whatsappController.text.trim(),
         skills: selectedSkills.isEmpty ? null : selectedSkills,
         experiences: filteredExperiences.isEmpty ? null : filteredExperiences,
-        educations: filteredEducations.isEmpty ? null : filteredEducations,
         portfolios: filteredPortfolios.isEmpty ? null : filteredPortfolios,
         languagesLevels: filteredLanguagesLevels.isEmpty ? null : filteredLanguagesLevels,
         skillsLevels: filteredSkillsLevels.isEmpty ? null : filteredSkillsLevels,

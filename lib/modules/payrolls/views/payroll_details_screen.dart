@@ -63,12 +63,9 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
         localizedReason: context.locale.languageCode == 'ar'
             ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
             : 'Please authenticate to view your payroll',
-        options: const AuthenticationOptions(
-          biometricOnly: false, // allow PIN/Pattern/Password
-          stickyAuth: true,
-          sensitiveTransaction: true,
-          useErrorDialogs: true,
-        ),
+        biometricOnly: false, // allow PIN/Pattern/Password
+        sensitiveTransaction: true,
+        persistAcrossBackgrounding: true,
       );
 
       // Retry once after a short delay if it failed unexpectedly
@@ -78,12 +75,9 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
           localizedReason: context.locale.languageCode == 'ar'
               ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
               : 'Please authenticate to view your payroll',
-          options: const AuthenticationOptions(
-            biometricOnly: false,
-            stickyAuth: true,
-            sensitiveTransaction: true,
-            useErrorDialogs: true,
-          ),
+          biometricOnly: false,
+          sensitiveTransaction: true,
+          persistAcrossBackgrounding: true,
         );
       }
       if (!mounted) return;
@@ -103,12 +97,9 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
           localizedReason: context.locale.languageCode == 'ar'
               ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
               : 'Please authenticate to view your payroll',
-          options: const AuthenticationOptions(
-            biometricOnly: false,
-            stickyAuth: true,
-            sensitiveTransaction: true,
-            useErrorDialogs: true,
-          ),
+          biometricOnly: false,
+          sensitiveTransaction: true,
+          persistAcrossBackgrounding: true,
         );
         if (!mounted) return;
         if (!didAuth) {
@@ -134,6 +125,16 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
       // Any other unexpected error: do not pop automatically
     }
   }
+
+  @override
+  void dispose() {
+    // إزالة منع السكرين شوت عند الخروج حتى تعمل السكرين شوت في باقي التطبيق
+    if (!kIsWeb && !PlatformIs.web) {
+      SecureScreen.disableSecureFlag();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_authPassed) {
@@ -215,6 +216,15 @@ class SecureScreen {
       await _channel.invokeMethod('enableSecureFlag');
     } on PlatformException catch (e) {
       print("Failed to enable secure flag: '${e.message}'.");
+    }
+  }
+
+  /// Removes FLAG_SECURE so screenshots work again on other screens.
+  static Future<void> disableSecureFlag() async {
+    try {
+      await _channel.invokeMethod('disableSecureFlag');
+    } on PlatformException catch (e) {
+      print("Failed to disable secure flag: '${e.message}'.");
     }
   }
 

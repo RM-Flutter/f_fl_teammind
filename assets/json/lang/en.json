@@ -5,6 +5,7 @@
   "skip": "SKIP",
   "videos": "Videos",
   "qrCode": "QR Code",
+  "applyTemplate" : "Apply Templete",
   "updatedSuccessfully": "Updated Successfully",
   "gettingCurrentLocationPleaseWait": "Getting current location, please wait...",
   "wifi": "WiFi",
@@ -760,5 +761,10 @@
   "enterCertificateName": "Enter certificate name",
   "notSet": "Not set",
   "from": "From",
-  "to": "To"
+  "to": "To",
+  "cannotEditPremiumRequired": "You cannot edit this. You must have a premium account.",
+  "cvSelectPlaceholder": "(SELECT)",
+  "cvAboutMeJobDescriptionLabel": "ABOUT ME - ADD YOUR JOB DESCRIPTION...",
+  "cvSkillsSelectExistingHint": "Select from existing",
+  "cvMoreSkillsFreeListHint": "Enter additional items as a free list"
 }

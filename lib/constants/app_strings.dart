@@ -509,6 +509,7 @@ abstract class AppStrings {
   static const smartCard2 = "smartCard2";
   static const updateCompanyInfo = "updateCompanyInfo";
   static const selectTemplate = "selectTemplate";
+  static const applyTemplate = "applyTemplate";
   static const generateCvWithTemplate = "generateCvWithTemplate";
   static const invalidTemplate = "invalidTemplate";
   static const errorGeneratingCv = "errorGeneratingCv";
@@ -717,4 +718,5 @@ abstract class AppStrings {
   static const certificateName = "certificateName";
   static const enterCertificateName = "enterCertificateName";
   static const notSet = "notSet";
+  static const cannotEditPremiumRequired = "cannotEditPremiumRequired";
 }

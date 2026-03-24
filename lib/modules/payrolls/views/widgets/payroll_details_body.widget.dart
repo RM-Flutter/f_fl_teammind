@@ -131,7 +131,7 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
                     fontSize: AppSizes.s14,
                     color: Color(AppColors.black),
                   ),
-                  maxLines: 2,
+                  maxLines: 6,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,
                 ),

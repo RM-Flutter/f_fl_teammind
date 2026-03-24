@@ -22,6 +22,8 @@ import '../models/settings/general_settings.model.dart';
 import 'app_config.service.dart';
 import 'backend_services/api_service/dio_api_service/dio_api.service.dart';
 import 'backend_services/get_endpoint.service.dart';
+import 'dynamic_app_config.service.dart';
+import 'usg_packages.service.dart';
 
 enum SettingsType {
   generalSettings,
@@ -194,6 +196,15 @@ abstract class AppSettingsService {
         }
       }
     }
+    // على الويب: لو start_app اتنادى والتوكن لسه مش في الكاش، استنى شوية (ما نكررش الانتظار لو جينا من domain selection)
+    if (kIsWeb && settingType == SettingsType.startupSettings &&
+        (fcm_token == null || fcm_token.isEmpty) && !fromDomainSelection) {
+      for (int i = 0; i < 4; i++) {
+        await Future.delayed(const Duration(milliseconds: 1500));
+        fcm_token = CacheHelper.getString("fcm_token");
+        if (fcm_token != null && fcm_token.isNotEmpty) break;
+      }
+    }
 
     bool sendNotificationToken = false;
     if (settingType == SettingsType.startupSettings) {
@@ -203,6 +214,9 @@ abstract class AppSettingsService {
       // بعد اختيار الدومين نبعث التوكن عشان يروح للدومين اللي اختاره
       sendNotificationToken = tokenChanged ||
           (fromDomainSelection && fcm_token != null && fcm_token.isNotEmpty);
+      if (kIsWeb) {
+        debugPrint('🔔 start_app (ويب): fcm_token في الكاش: ${fcm_token != null && fcm_token.isNotEmpty}, sendNotificationToken: $sendNotificationToken');
+      }
       Map<String, dynamic> body = {
         if (sendNotificationToken) "notification_token": fcm_token,
         if (CacheHelper.getString("gDate")!= null )"last_update_date_general": CacheHelper.getString("gDate"),
@@ -283,6 +297,8 @@ abstract class AppSettingsService {
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
         AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+        DynamicAppConfigService.clearCache();
+        UsgPackagesService.clearCache();
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null){
         if ((need == null || need.contains('user2_settings')) &&result.data!['user2_settings']['data'] != null){

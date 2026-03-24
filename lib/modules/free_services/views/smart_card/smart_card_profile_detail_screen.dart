@@ -219,6 +219,7 @@ class _SmartCardProfileDetailScreenState
     context.pushNamed(
       AppRoutes.selectTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
+      extra: {'isSmartCardEmployee': widget.isPersonal},
     );
   }
 

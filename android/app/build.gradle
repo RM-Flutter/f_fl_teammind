@@ -13,9 +13,9 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     namespace = "com.rightminddev.rmemp"
-    compileSdk 35
+    compileSdk 36
     // NDK r28+ مطلوب لدعم صفحات الذاكرة 16 كيلوبايت (متطلب Google Play)
-    ndkVersion = "28.0.13004108"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -33,10 +33,9 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 26
         targetSdk = 35
-        versionCode = 16
+        versionCode = 21
         versionName = flutter.versionName
         multiDexEnabled true
-
     }
 
     signingConfigs {
@@ -53,10 +52,7 @@ android {
         }
     }
 
-    // توافق 16 KB (متطلب Google Play من نوفمبر 2025):
-    // مع AGP 8.5.1+ و NDK r28+ نترك المحاذاة الافتراضية (useLegacyPackaging = false)
-    // حتى تُحاذى مكتبات .so على 16 KB في الـ AAB/APK.
-    // إذا استمر الرفض من Play، تأكد من تحديث Flutter وجميع الإضافات التي تحتوي native code.
+    // توافق 16 KB (متطلب Google Play من نوفمبر 2025): useLegacyPackaging = false مع AGP 8.5.1+ و NDK r28+
     packaging {
         jniLibs {
             useLegacyPackaging false

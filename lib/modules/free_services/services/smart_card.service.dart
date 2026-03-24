@@ -70,6 +70,7 @@ class SmartCardService {
 
   // ─── Templates ─────────────────────────────────────────────────────────
   /// GET templates – Smart Card templates list
+  /// نفس الـ endpoint في Postman: GET {{url}}/api/sm-card-templates/entities-operations?itemsCount=200&with=type_id
   static Future<Map<String, dynamic>> getTemplates(BuildContext context) async {
     try {
       final response = await DioHelper.getData(
@@ -252,13 +253,16 @@ class SmartCardService {
     BuildContext context, {
     required int companyId,
     required int templateId,
+    Map<String, dynamic>? templateData,
   }) async {
     try {
+      final Map<String, dynamic> body = {'template_id': templateId};
+      if (templateData != null) body['template_data'] = templateData;
       final response = await DioHelper.patchData(
         context: context,
         url: '$_companyBase/$companyId/template',
         query: null,
-        data: {'template_id': templateId},
+        data: body,
       );
       final data = response.data is Map ? Map<String, dynamic>.from(response.data as Map) : <String, dynamic>{};
       _checkResponse(data);
@@ -586,17 +590,6 @@ class SmartCardService {
       addMediaInOrder('photo', photoList, photoNewBase64, 'photo', 'jpg');
       addMediaInOrder('works_gallery', worksList, worksNewBase64, 'work', 'jpg');
       addMediaInOrder('video_gallery', videoList, videoNewBase64, 'video', 'mp4');
-
-      // educations – نفس الطريقة والكي كما في Create CV: حقل واحد educations = json.encode(list)
-      final educationsRaw = original['educations'];
-      if (educationsRaw is List && educationsRaw.isNotEmpty) {
-        final filtered = educationsRaw
-            .where((e) => e is Map && e.isNotEmpty)
-            .toList();
-        if (filtered.isNotEmpty) {
-          formData.fields.add(MapEntry('educations', json.encode(filtered)));
-        }
-      }
 
       // experiences – الباك يتوقع array، بنبعت بالمفتاح company_name وغيره صراحة
       final experiencesRaw = original['experiences'];

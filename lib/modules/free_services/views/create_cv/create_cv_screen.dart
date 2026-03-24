@@ -13,7 +13,6 @@ import '../../view_models/create_cv.viewmodel.dart';
 import '../widgets/create_cv_tabs/create_cv_personal_tab.dart';
 import '../widgets/create_cv_tabs/create_cv_contact_tab.dart';
 import '../widgets/create_cv_tabs/create_cv_job_info_tab.dart';
-import '../widgets/create_cv_tabs/create_cv_education_tab.dart';
 
 class CreateCVScreen extends StatefulWidget {
   const CreateCVScreen({super.key});
@@ -29,7 +28,6 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
     AppStrings.personal.tr().toUpperCase(),
     AppStrings.contact.tr().toUpperCase(),
     AppStrings.jopInfo.tr().toUpperCase(),
-    AppStrings.education.tr().toUpperCase()
   ];
 
   @override
@@ -124,7 +122,6 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
                           if (selectIndex == 0) CreateCVPersonalTab(viewModel: viewModel),
                           if (selectIndex == 1) CreateCVContactTab(viewModel: viewModel),
                           if (selectIndex == 2) CreateCVJobInfoTab(viewModel: viewModel),
-                          if (selectIndex == 3) CreateCVEducationTab(viewModel: viewModel),
                         ],
                       ),
                     ),

@@ -7,7 +7,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rmemp/common_modules_widgets/comments/logic/view_model.dart';
 import 'package:rmemp/constants/general_listener.dart';
 import 'package:rmemp/constants/restart_app.dart';
@@ -113,26 +112,10 @@ void main() async {
   // Single place for FCM token: retry + onTokenRefresh; no cached fallback when getToken() is null
   FcmTokenService.initAtAppStart();
 
+  // لا نطلب صلاحية الإشعارات هنا حتى لا يظهر الـ dialog فوق الـ native splash ويحصل overlay يمنع الضغط على Accept.
+  // الطلب يحدث بعد أول frame في NotificationService.init() من app.dart.
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
-  if (await Permission.notification.isDenied) {
-    await Permission.notification.request();
-  }
-
-  if (await Permission.notification.isPermanentlyDenied) {
-    openAppSettings();
-  } else {
-    try {
-      const platform = MethodChannel('notification_settings_channel');
-      await platform.invokeMethod('openNotificationSettings');
-    } catch (e) {
-      print("Error opening notification settings: $e");
-    }
-  }
-  // Request notification permissions
-  if (await Permission.notification.isDenied) {
-    await Permission.notification.request();
-  }
   // Initialize local notifications
   var androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
   var iOSSettings = DarwinInitializationSettings();

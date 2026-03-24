@@ -350,9 +350,17 @@ class _SmartCardCompanyDetailScreenState
     );
   }
   void _navigateToSelectTemplate() {
+    final companyId = viewModel.selectedCompanyId ??
+        (viewModel.selectedCompany?['id'] is int
+            ? viewModel.selectedCompany!['id'] as int
+            : int.tryParse(viewModel.selectedCompany?['id']?.toString() ?? ''));
     context.pushNamed(
       AppRoutes.selectTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
+      extra: {
+        'isSmartCardCompany': true,
+        'companyId': companyId,
+      },
     );
   }
   @override

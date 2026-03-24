@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -6,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_strings.dart';
+import '../../../../../general_services/localization.service.dart';
 import '../../../../../utils/animated_custom_dropdown/custom_dropdown.dart';
 import '../../../view_models/create_cv.viewmodel.dart';
 import '../../../models/cv_data.model.dart';
+import '../../../utils/video_compress_helper.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -83,21 +86,17 @@ class CreateCVJobInfoTab extends StatelessWidget {
               const SizedBox(height: 24),
             ],
 
-            // In Smart Card Employee, hide Experience/Portfolio completely when not premium.
-            if (!isSmartCardEmployee ) ...[
+            if (!isSmartCardEmployee) ...[
               _buildExperiencesSection(context),
               const SizedBox(height: 24),
               _buildPortfoliosSection(),
             ],
-            if(isSmartCardEmployee && isPremium)...[
-              _buildExperiencesSection(context),
+            if (isSmartCardEmployee) ...[
+              _wrapPremiumSection(context, _buildExperiencesSection(context)),
               const SizedBox(height: 24),
-              _buildPortfoliosSection(),
-            ],
-
-            if (isSmartCardEmployee && isPremium == true) ...[
+              _wrapPremiumSection(context, _buildPortfoliosSection()),
               const SizedBox(height: 24),
-              _buildMediaGalleriesSection(context),
+              _wrapPremiumSection(context, _buildMediaGalleriesSection(context)),
             ],
             if (showCvOnlySections) ...[
               const SizedBox(height: 24),
@@ -107,6 +106,21 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _wrapPremiumSection(BuildContext context, Widget child) {
+    if (isPremium) return child;
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("cannotEditPremiumRequired".tr())),
+        );
+      },
+      child: AbsorbPointer(
+        absorbing: true,
+        child: child,
       ),
     );
   }
@@ -220,13 +234,13 @@ class CreateCVJobInfoTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 6,
+          runSpacing: 6,
           children: viewModel.skills.map((skill) {
             final skillId = skill['id'] as int;
             final isSelected = viewModel.selectedSkills.contains(skillId);
             return FilterChip(
-              label: Text(skill['title'] ?? ''),
+              label: Text(skill['title'] ?? '', style: TextStyle(fontSize: 16),),
               selected: isSelected,
               onSelected: (selected) {
                 if (selected) {
@@ -337,8 +351,13 @@ class CreateCVJobInfoTab extends StatelessWidget {
             runSpacing: 8,
             children: List.generate(viewModel.videoGallery.length, (i) {
               final value = viewModel.videoGallery[i];
-              final urlOrBase64 = _mediaDisplayUrl(value);
-              final isUrl = urlOrBase64 != null && urlOrBase64.startsWith('https');
+              // صورة الفيديو: نعرض صورة فقط لو الباك رجع thumbnail (ملف فيديو .mp4 مش صورة)
+              final thumbnailUrl = value is Map
+                  ? value['thumbnail']?.toString().trim()
+                  : (value is String ? value : null);
+              final hasThumbnail = thumbnailUrl != null &&
+                  thumbnailUrl.isNotEmpty &&
+                  (thumbnailUrl.startsWith('http') || thumbnailUrl.startsWith('https'));
               return Stack(
                 alignment: Alignment.topRight,
                 children: [
@@ -351,9 +370,23 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       color: Colors.grey.shade200,
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: isUrl
-                        ? Image.network(urlOrBase64, fit: BoxFit.cover)
-                        : const Icon(Icons.videocam, size: 32),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        if (hasThumbnail)
+                          Image.network(thumbnailUrl, fit: BoxFit.cover)
+                        else
+                          const Icon(Icons.videocam, size: 32),
+                        if (hasThumbnail)
+                          const Center(
+                            child: Icon(
+                              Icons.videocam,
+                              size: 28,
+                              color: Colors.white,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close, size: 18, color: Colors.red),
@@ -414,9 +447,16 @@ class CreateCVJobInfoTab extends StatelessWidget {
       if (result == null || result.files.isEmpty) return;
       final List<String> files = [];
       for (final file in result.files) {
-        if (file.bytes != null) {
-          files.add(base64Encode(file.bytes!));
-        }
+        final path = file.path;
+        final rawBytes = file.bytes;
+        final bytes = rawBytes != null
+            ? (rawBytes is Uint8List ? rawBytes : Uint8List.fromList(rawBytes))
+            : null;
+        final base64Result = await compressVideoToBase64(
+          path: path != null && path.isNotEmpty ? path : null,
+          bytes: bytes,
+        );
+        if (base64Result != null) files.add(base64Result);
       }
       if (files.isEmpty) return;
       viewModel.addVideoGalleryItems(files);

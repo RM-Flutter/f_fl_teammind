@@ -148,7 +148,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
           decoration: const BoxDecoration(color: Color(0xFF1E2D74)),
           child: YoutubeVideoPlayerScreen(
             videoUrl: url,
-            videoTitle: 'Video',
+            videoTitle: AppStrings.videos.tr(),
             showCloseButton: true,
           ),
         ),
@@ -174,7 +174,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
           ),
           onPressed: _goBack,
         ),
-        title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
+        title: AppStrings.aboutTeamMind.tr(),
         titleStyle: TextStyle(
           color: Color(AppColors.dark),
           fontSize: 20,

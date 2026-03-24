@@ -25,6 +25,8 @@ class VacationListWidget extends StatelessWidget {
   final double? paddingBetweenVocations;
   final double? sectionPadding;
   final List<RequestModel>? requests;
+  /// Used when opening calendar: fetch requests with status approved, waiting_seen, waiting
+  final GetRequestsTypes? calendarRequestType;
 
   const VacationListWidget(
       {super.key,
@@ -32,7 +34,8 @@ class VacationListWidget extends StatelessWidget {
       required this.tap,
       this.paddingBetweenVocations = AppSizes.s12,
       this.sectionPadding = AppSizes.s32,
-      this.isInRequestsPage = false});
+      this.isInRequestsPage = false,
+      this.calendarRequestType});
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +96,22 @@ class VacationListWidget extends StatelessWidget {
       Padding(
           padding: EdgeInsets.only(right: paddingBetweenVocations!),
           child: InkWell(
-            onTap: () async => await context.pushNamed(
+            onTap: () async {
+              final reqType = calendarRequestType ?? GetRequestsTypes.mine;
+              final list = await RequestsServices.getRequestsForCalendar(
+                context: context,
+                reqType: reqType,
+              );
+              if (!context.mounted) return;
+              await context.pushNamed(
                 AppRoutes.requestsCalendar.name,
                 pathParameters: {
-                  'type': 'mine',
-                  'lang': context.locale.languageCode
+                  'type': RequestsServices.getRequestTypePathParam(reqType),
+                  'lang': context.locale.languageCode,
                 },
-                extra: requests),
+                extra: list,
+              );
+            },
             child: Container(
               width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
               height: AppSizes.s120,

@@ -246,6 +246,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       isInRequestsPage: true,
                                       tap: true,
                                       requests: viewModel.requests,
+                                      calendarRequestType: widget.requestsType,
                                     ),
                             )),
                   )
@@ -347,18 +348,26 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       if (widget.requestsType == GetRequestsTypes.myTeam ||
                                           widget.requestsType == GetRequestsTypes.otherDepartment)
                                         CustomRequestsPageButton(
-                                          onPressed: () async => await context.pushNamed(
-                                            AppRoutes.requestsCalendar.name,
-                                            pathParameters: {
-                                              'type': 'mine',
-                                              'lang': context.locale.languageCode,
-                                            },
-                                            extra: widget.requestsType == GetRequestsTypes.mine
-                                                ? viewModel.requests
-                                                : (widget.requestsType == GetRequestsTypes.myTeam)
-                                                ? viewModel.myTeamRequests
-                                                : viewModel.otherDepartmentRequestModel,
-                                          ),
+                                          onPressed: () async {
+                                            final list = await RequestsServices.getRequestsForCalendar(
+                                              context: context,
+                                              reqType: widget.requestsType!,
+                                              requestTypeId: CacheHelper.getString("reqId"),
+                                              from: CacheHelper.getString("from"),
+                                              to: CacheHelper.getString("to"),
+                                              empIds: CacheHelper.getString("empId"),
+                                              depId: CacheHelper.getString("depId"),
+                                            );
+                                            if (!context.mounted) return;
+                                            await context.pushNamed(
+                                              AppRoutes.requestsCalendar.name,
+                                              pathParameters: {
+                                                'type': RequestsServices.getRequestTypePathParam(widget.requestsType!),
+                                                'lang': context.locale.languageCode,
+                                              },
+                                              extra: list,
+                                            );
+                                          },
                                           title: AppStrings.viewTeamRequestsOnCalendar.tr(),
                                           icon: Icons.calendar_month_outlined,
                                         ),

@@ -29,22 +29,37 @@ abstract class DeviceInformationService {
         IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
         deviceIdentifier = "${iosInfo.model}_${iosInfo.identifierForVendor}";
       } else if (PlatformIs.web) {
-        WebBrowserInfo webInfo = await _deviceInfo.webBrowserInfo;
-        // Generate a more stable unique ID for web using localStorage
         try {
-          // Try to get or create a persistent device ID from localStorage
-          final existingId = html.window.localStorage['web_device_unique_id'];
-          if (existingId != null && existingId.isNotEmpty) {
-            deviceIdentifier = existingId;
-          } else {
-            // Generate a new ID based on browser fingerprint
-            deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}_${DateTime.now().millisecondsSinceEpoch}";
-            // Store it in localStorage for persistence
-            html.window.localStorage['web_device_unique_id'] = deviceIdentifier;
+          // أولاً نحاول استخدام device_info_plus + localStorage
+          WebBrowserInfo webInfo = await _deviceInfo.webBrowserInfo;
+          try {
+            // Try to get or create a persistent device ID from localStorage
+            final existingId = html.window.localStorage['web_device_unique_id'];
+            if (existingId != null && existingId.isNotEmpty) {
+              deviceIdentifier = existingId;
+            } else {
+              // Generate a new ID based on browser fingerprint
+              deviceIdentifier =
+                  "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}_${DateTime.now().millisecondsSinceEpoch}";
+              // Store it in localStorage for persistence
+              html.window.localStorage['web_device_unique_id'] =
+                  deviceIdentifier!;
+            }
+          } catch (e) {
+            // Fallback if localStorage is not available
+            deviceIdentifier =
+                "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}";
           }
         } catch (e) {
-          // Fallback if localStorage is not available
-          deviceIdentifier = "${webInfo.vendor}_${webInfo.userAgent}_${webInfo.hardwareConcurrency}";
+          // Fallback قوي في حالة فشل device_info_plus نفسه (بعض متصفحات الموبايل)
+          try {
+            final ua = html.window.navigator.userAgent;
+            deviceIdentifier =
+                "WebFallback_${ua}_${DateTime.now().millisecondsSinceEpoch}";
+          } catch (_) {
+            // لو كل شيء فشل، على الأقل نرجّع قيمة نصية بدل null
+            deviceIdentifier = "WebUnknown_${DateTime.now().millisecondsSinceEpoch}";
+          }
         }
       } else if (PlatformIs.linux) {
         LinuxDeviceInfo linuxInfo = await _deviceInfo.linuxInfo;

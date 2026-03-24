@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../general_services/localization.service.dart';
+import '../../utils/video_compress_helper.dart';
 import '../../../../constants/app_sizes.dart';
 import '../../../../constants/app_strings.dart';
 import '../../../../routing/app_router.dart';
@@ -33,7 +36,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   bool _initialLoadDone = false;
 
   int _selectedTabIndex = 0;
-  late final List<String> _tabs;
+  List<String> _tabs = [];
 
   late final TextEditingController _nameController;
   late final TextEditingController _aboutController;
@@ -84,7 +87,6 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
       AppStrings.personal.tr().toUpperCase(),
       AppStrings.contact.tr().toUpperCase(),
       AppStrings.jopInfo.tr().toUpperCase(),
-      AppStrings.portfolio.tr().toUpperCase(),
     ];
     _loadFullCompanyAndRefs();
   }
@@ -107,6 +109,12 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
       }
       _company = full;
       _isPremium = _company['is_premium'] == true;
+      _tabs = [
+        AppStrings.personal.tr().toUpperCase(),
+        AppStrings.contact.tr().toUpperCase(),
+        AppStrings.jopInfo.tr().toUpperCase(),
+        AppStrings.portfolio.tr().toUpperCase(),
+      ];
 
       _nameController.text = _company['name']?.toString() ?? '';
       _aboutController.text = _company['about']?.toString() ?? '';
@@ -381,9 +389,16 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
       if (result == null || result.files.isEmpty) return;
       final List<String> files = [];
       for (final file in result.files) {
-        if (file.bytes != null) {
-          files.add(base64Encode(file.bytes!));
-        }
+        final path = file.path;
+        final rawBytes = file.bytes;
+        final bytes = rawBytes != null
+            ? (rawBytes is Uint8List ? rawBytes : Uint8List.fromList(rawBytes))
+            : null;
+        final base64Result = await compressVideoToBase64(
+          path: path != null && path.isNotEmpty ? path : null,
+          bytes: bytes,
+        );
+        if (base64Result != null) files.add(base64Result);
       }
       if (files.isEmpty) return;
       setState(() {
@@ -431,12 +446,14 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           .map((c) => SmartCardOtherLink(url: c.text.trim().isEmpty ? null : c.text.trim()))
           .toList();
       final portfolioList = <SmartCardPortfolioItem>[];
-      for (var i = 0; i < _portfolioNames.length; i++) {
-        portfolioList.add(SmartCardPortfolioItem(
-          projectName: _portfolioNames[i].text.trim().isEmpty ? null : _portfolioNames[i].text.trim(),
-          projectDescription: _portfolioDescs[i].text.trim().isEmpty ? null : _portfolioDescs[i].text.trim(),
-          projectLink: _portfolioLinks[i].text.trim().isEmpty ? null : _portfolioLinks[i].text.trim(),
-        ));
+      if (_isPremium) {
+        for (var i = 0; i < _portfolioNames.length; i++) {
+          portfolioList.add(SmartCardPortfolioItem(
+            projectName: _portfolioNames[i].text.trim().isEmpty ? null : _portfolioNames[i].text.trim(),
+            projectDescription: _portfolioDescs[i].text.trim().isEmpty ? null : _portfolioDescs[i].text.trim(),
+            projectLink: _portfolioLinks[i].text.trim().isEmpty ? null : _portfolioLinks[i].text.trim(),
+          ));
+        }
       }
       final fullModel = SmartCardCompanyProfileModel(
         logo: _logo.isEmpty ? null : _logo,
@@ -456,7 +473,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
         website: _websiteController.text.trim().isEmpty ? null : _websiteController.text.trim(),
         whatsapp: _whatsappController.text.trim().isEmpty ? null : _whatsappController.text.trim(),
         otherLinks: otherLinksList.isEmpty ? null : otherLinksList,
-        portfolios: portfolioList.isEmpty ? null : portfolioList,
+        portfolios: _isPremium && portfolioList.isNotEmpty ? portfolioList : null,
         worksGallery: _worksGallery,
         videoGallery: _videoGallery,
       );
@@ -624,7 +641,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           selectIndex: _selectedTabIndex,
           enableScroll: kIsWeb ? false : true,
           onTapItem: (index) {
-            setState(() => _selectedTabIndex = index);
+            setState(() {
+              _selectedTabIndex = index;
+              if (_selectedTabIndex >= _tabs.length) _selectedTabIndex = _tabs.length - 1;
+            });
           },
         ),
       ),
@@ -862,17 +882,28 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                     _buildField(controller: _businessController, label: AppStrings.business.tr(), hint: AppStrings.business.tr()),
                   ],
                   if (_selectedTabIndex == 3) ...[
-                    _sectionTitle(AppStrings.portfolio.tr()),
-                    ...List.generate(_portfolioNames.length, (i) => _buildPortfolioItem(i)),
-                    OutlinedButton.icon(
-                      onPressed: _addPortfolio,
-                      icon: const Icon(Icons.add),
-                      label: Text(AppStrings.addPortfolio.tr(), style: const TextStyle(fontSize: 16)),
-                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
-                    ),
-                    if (!_isPremium) ...[
-
-                      _sectionTitle(AppStrings.gallery.tr()),
+                    GestureDetector(
+                      onTap: () {
+                        if (!_isPremium) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("cannotEditPremiumRequired".tr())),
+                          );
+                        }
+                      },
+                      child: AbsorbPointer(
+                        absorbing: !_isPremium,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionTitle(AppStrings.portfolio.tr()),
+                            ...List.generate(_portfolioNames.length, (i) => _buildPortfolioItem(i)),
+                            OutlinedButton.icon(
+                              onPressed: _addPortfolio,
+                              icon: const Icon(Icons.add),
+                              label: Text(AppStrings.addPortfolio.tr(), style: const TextStyle(fontSize: 16)),
+                              style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                            ),
+                            _sectionTitle(AppStrings.gallery.tr()),
                       if (_worksGallery.isNotEmpty)
                         Wrap(
                           spacing: 8,
@@ -970,7 +1001,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                         label:  Text(AppStrings.videos.tr(), style: TextStyle(fontSize: 16)),
                         style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
                       ),
-                    ],
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 8),

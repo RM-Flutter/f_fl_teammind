@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:rmemp/routing/app_router.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/constants/cache_consts.dart';
 import 'package:rmemp/constants/general_listener.dart';
@@ -15,6 +17,7 @@ import '../../../services/requests.services.dart';
 import '../../../utils/base_page/mobile.header.dart';
 import '../../../utils/base_page/mobile.scaffold.dart';
 import '../../../utils/general_screen_message_widget.dart';
+import '../../../general_services/usg_packages.service.dart';
 import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../models/home_widget_type.dart';
 import '../view_models/home.viewmodel.dart';
@@ -209,11 +212,11 @@ class _HomeScreenState extends State<HomeScreen> {
             CoreHeader.transform(
               pinned: true,
               color: Colors.white,
-              shrinkHeight: AppSizes.s140,
-              expandedHeight: AppSizes.s300,
+              shrinkHeight: UsgPackagesService.isRequestsActive ? AppSizes.s140 : AppSizes.s100,
+              expandedHeight: UsgPackagesService.isRequestsActive ? AppSizes.s300 : AppSizes.s150,
               shrinkChild: Consumer<HomeViewModel>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
-                        requests: viewModel.myRequests,
+                        requests: UsgPackagesService.isRequestsActive ? viewModel.myRequests : null,
                         isExpanded: false,
                       )),
               child: SingleChildScrollView(
@@ -222,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const HomeAppbarLoading()
                           : HomeAppbarWidget(
-                              requests: viewModel.myRequests,
+                              requests: UsgPackagesService.isRequestsActive ? viewModel.myRequests : null,
                             ))),
             )
           ],
@@ -236,6 +239,64 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           children: [
+            // Always visible: the 3 buttons (regardless of loading or data state)
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: AppSizes.s16,
+            //     vertical: AppSizes.s8,
+            //   ),
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     child: OutlinedButton.icon(
+            //       onPressed: () {
+            //         context.push(
+            //           '/${context.locale.languageCode}/webview',
+            //           extra: 'https://www.google.com',
+            //         );
+            //       },
+            //       icon: const Icon(Icons.open_in_browser, size: 20),
+            //       label: const Text('Go to Google'),
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: AppSizes.s16,
+            //     vertical: AppSizes.s8,
+            //   ),
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     child: OutlinedButton.icon(
+            //       onPressed: () {
+            //         context.pushNamed(
+            //           AppRoutes.sampleApiScreen.name,
+            //           pathParameters: {'lang': context.locale.languageCode},
+            //         );
+            //       },
+            //       icon: const Icon(Icons.api, size: 20),
+            //       label: const Text('View Other API Data'),
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: AppSizes.s16,
+            //     vertical: AppSizes.s8,
+            //   ),
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     child: OutlinedButton.icon(
+            //       onPressed: () {
+            //         context.pushNamed(
+            //           AppRoutes.itemsApiScreen.name,
+            //           pathParameters: {'lang': context.locale.languageCode},
+            //         );
+            //       },
+            //       icon: const Icon(Icons.list_alt, size: 20),
+            //       label: const Text('View Items API Data'),
+            //     ),
+            //   ),
+            // ),
             Consumer<HomeViewModel>(
               builder: (context, viewModel, child) => viewModel.isLoading
                   ? const HomeLoadingPage()
@@ -266,20 +327,24 @@ class _HomeScreenState extends State<HomeScreen> {
     _availableWidgets = <HomeWidgetType>[];
     final widgetsWithData = <HomeWidgetType>[];
 
-    // First, collect all widgets that have data
-    if (viewModel.myRequests != null &&
+    // First, collect all widgets that have data (requests only when package active)
+    if (UsgPackagesService.isRequestsActive &&
+        viewModel.myRequests != null &&
         viewModel.myRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myRequests);
     }
-    if (viewModel.myTeamRequests != null &&
+    if (UsgPackagesService.isRequestsActive &&
+        viewModel.myTeamRequests != null &&
         viewModel.myTeamRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myTeamRequests);
     }
-    if (viewModel.otherDepartmentRequests != null &&
+    if (UsgPackagesService.isRequestsActive &&
+        viewModel.otherDepartmentRequests != null &&
         viewModel.otherDepartmentRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.otherDepartmentRequests);
     }
-    if (viewModel.allCompanyRequests != null &&
+    if (UsgPackagesService.isRequestsActive &&
+        viewModel.allCompanyRequests != null &&
         viewModel.allCompanyRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.allCompanyRequests);
     }

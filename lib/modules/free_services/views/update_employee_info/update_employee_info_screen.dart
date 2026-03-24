@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_sizes.dart';
 import '../../../../constants/app_strings.dart';
+import '../../../../general_services/localization.service.dart';
 import '../../../../utils/tab_bar_widget.dart';
 import '../../../../common_modules_widgets/app_bar_with_bookmark.widget.dart';
 import '../../../../routing/app_router.dart';
@@ -17,7 +18,6 @@ import '../../models/smart_card_profile_models.dart';
 import '../../services/smart_card.service.dart';
 import '../widgets/create_cv_tabs/create_cv_personal_tab.dart';
 import '../widgets/create_cv_tabs/create_cv_job_info_tab.dart';
-import '../widgets/create_cv_tabs/create_cv_education_tab.dart';
 
 class UpdateEmployeeInfoScreen extends StatefulWidget {
   final Map<String, dynamic> employee;
@@ -47,11 +47,11 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   List<dynamic> _photo = [];
   // Smart Card employee – more phones (UI فقط هنا، مش في CV)
   final List<TextEditingController> _morePhonesControllers = [];
+  final List<TextEditingController> _otherLinksControllers = [];
   List<String> taps = [
     AppStrings.personal.tr().toUpperCase(),
     AppStrings.contact.tr().toUpperCase(),
     AppStrings.jopInfo.tr().toUpperCase(),
-    AppStrings.education.tr().toUpperCase(),
   ];
 
   @override
@@ -64,8 +64,22 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   static int? _parseId(dynamic v) {
     if (v == null) return null;
     if (v is int) return v;
+    if (v is double) return v.toInt();
     if (v is String) return int.tryParse(v);
     return null;
+  }
+
+  static int? _parseCompanyId(dynamic v) {
+    if (v == null) return null;
+    if (v is int) return v;
+    if (v is double) return v.toInt();
+    if (v is String) return int.tryParse(v);
+    return null;
+  }
+
+  static int? _employeeIdFromMap(Map<String, dynamic>? emp) {
+    if (emp == null) return null;
+    return _parseId(emp['id']) ?? _parseId(emp['employee_id']);
   }
 
   static bool _parseBool(dynamic v, {bool defaultVal = true}) {
@@ -127,6 +141,10 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         c.dispose();
       }
       _morePhonesControllers.clear();
+      for (final c in _otherLinksControllers) {
+        c.dispose();
+      }
+      _otherLinksControllers.clear();
 
       await viewModel.loadReferenceData(context);
       // جلب بيانات الموظف من الـ API (GET) ثم استخدام الريسبونس
@@ -139,20 +157,25 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           employeeMap = normalized;
         }
       } else {
-        final cId = widget.companyId;
-        final eId = widget.employee['id'];
+        final cId = _parseCompanyId(widget.companyId) ?? widget.companyId;
+        final eId = _employeeIdFromMap(widget.employee);
         if (cId != null && eId != null) {
-          final id = eId is int ? eId : int.tryParse(eId.toString());
-          if (id != null) {
-            final res = await SmartCardService.getEmployeeInCompany(
-              context,
-              companyId: cId,
-              employeeId: id,
-            );
-            if (res.isNotEmpty) {
-              final normalized = _normalizeEmployeeMap(res);
-              _employeeData = normalized;
-              employeeMap = normalized;
+          final res = await SmartCardService.getCompanyEmployees(
+            context,
+            companyId: cId,
+          );
+          final data = res['data'];
+          if (data is List && data.isNotEmpty) {
+            for (final item in data) {
+              if (item is Map) {
+                final map = Map<String, dynamic>.from(item);
+                final itemId = _parseId(map['id']) ?? _parseId(map['employee_id']);
+                if (itemId == eId) {
+                  _employeeData = map;
+                  employeeMap = map;
+                  break;
+                }
+              }
             }
           }
         }
@@ -198,6 +221,12 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           TextEditingController(text: p.phone?.toString() ?? ''),
         );
       }
+      final existingOtherLinks = existing.otherLinks ?? [];
+      for (final link in existingOtherLinks) {
+        _otherLinksControllers.add(
+          TextEditingController(text: link.url?.toString() ?? ''),
+        );
+      }
       if (mounted) setState(() {});
     } catch (e) {
       viewModel.setError(e.toString());
@@ -239,6 +268,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   }
 
   Future<void> _saveToSmartCard() async {
+    if (!mounted) return;
     viewModel.setSubmitting(true);
     viewModel.setError(null);
     try {
@@ -256,7 +286,16 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           .where((v) => v.isNotEmpty)
           .map((v) => SmartCardMorePhone(phone: v))
           .toList();
-      final otherLinks = existing.otherLinks ?? [];
+      List<SmartCardOtherLink> otherLinks;
+      if (_isPremium) {
+        otherLinks = _otherLinksControllers
+            .map((c) => c.text.trim())
+            .where((v) => v.isNotEmpty)
+            .map((v) => SmartCardOtherLink(url: v))
+            .toList();
+      } else {
+        otherLinks = existing.otherLinks ?? [];
+      }
       final experiences = vm.experiences
           .map((e) => SmartCardExperienceItem(
         companyName: e.companyName,
@@ -273,18 +312,6 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         projectDescription: e.projectDescription,
         projectLink: e.projectLink,
       ))
-          .toList();
-      // تعليم – نفس المفتاح والبنية كما في Create CV (educations)
-      final filteredEducations = vm.educations
-          .where((e) =>
-              (e.institutionName != null && e.institutionName!.isNotEmpty) ||
-              (e.certificateName != null && e.certificateName!.isNotEmpty) ||
-              e.countryId != null ||
-              e.stateId != null ||
-              e.dateFrom != null ||
-              e.dateTo != null)
-          .map((e) => e.toJson())
-          .where((j) => j.isNotEmpty)
           .toList();
       final fullModel = SmartCardEmployeeProfileModel(
         photo: _photo.isEmpty ? null : _photo,
@@ -311,7 +338,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         otherLinks: otherLinks.isEmpty ? null : otherLinks,
         portfolios: portfolios.isEmpty ? null : portfolios,
         experiences: experiences.isEmpty ? null : experiences,
-        educations: filteredEducations.isEmpty ? null : filteredEducations,
+        educations: null,
         // works_gallery & video_gallery: نستخدم القيم الموجودة في الـ ViewModel (بعد التعديل من الشاشة)
         // API يتوقع Array بنفس المفاتيح works_gallery / video_gallery
         worksGallery: vm.worksGallery,
@@ -322,8 +349,9 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
       if (widget.isPersonal) {
         await SmartCardService.updateEmployee(context, body: body);
       } else {
-        final cId = widget.companyId;
-        final eId = _parseId((_employeeData ?? widget.employee)['id']);
+        final cId = _parseCompanyId(widget.companyId) ?? widget.companyId;
+        final empMap = _employeeData ?? widget.employee;
+        final eId = _employeeIdFromMap(empMap.isNotEmpty ? empMap : null);
         if (cId == null || eId == null) {
           viewModel.setError(AppStrings.missingCompanyOrEmployeeId.tr());
           viewModel.setSubmitting(false);
@@ -341,16 +369,23 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         SnackBar(content: Text(AppStrings.updatedSuccessfully.tr())),
       );
       GoRouter.of(context).pop();
-    } catch (e) {
+    } catch (e, stackTrace) {
       final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
-      viewModel.setError(msg);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(msg),
-            backgroundColor: Colors.red,
-          ),
-        );
+        viewModel.setError(msg);
+        try {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(msg),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        } catch (_) {
+          debugPrint('UpdateEmployeeInfo error: $msg\n$stackTrace');
+        }
+      } else {
+        debugPrint('UpdateEmployeeInfo error (unmounted): $msg\n$stackTrace');
       }
     } finally {
       if (mounted) viewModel.setSubmitting(false);
@@ -360,6 +395,9 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   @override
   void dispose() {
     for (final c in _morePhonesControllers) {
+      c.dispose();
+    }
+    for (final c in _otherLinksControllers) {
       c.dispose();
     }
     viewModel.dispose();
@@ -412,10 +450,18 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (selectIndex == 0) ...[
-                           if(_isPremium) SizedBox(height: 15,),
-                           if(_isPremium) Center(
+                            const SizedBox(height: 15),
+                            Center(
                               child: GestureDetector(
-                                onTap: _pickPhoto,
+                                onTap: () {
+                                  if (_isPremium) {
+                                    _pickPhoto();
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("cannotEditPremiumRequired".tr())),
+                                    );
+                                  }
+                                },
                                 child: Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
@@ -471,16 +517,46 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                               isSmartCardEmployee: true,
                               isPremium: _isPremium,
                             ),
-                          if (selectIndex == 3)
-                            CreateCVEducationTab(viewModel: vm),
                         ],
                       ),
                     ),
                   ),
+                  if (vm.errorMessage != null && vm.errorMessage!.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.red.shade200),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.error_outline, color: Colors.red.shade700, size: 22),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                vm.errorMessage!,
+                                style: TextStyle(color: Colors.red.shade900, fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                   Container(
                     padding: const EdgeInsets.all(16),
                     child: ElevatedButton(
-                      onPressed: vm.isSubmitting ? null : _saveToSmartCard,
+                      onPressed: vm.isSubmitting
+                          ? null
+                          : () {
+                              viewModel.setError(null);
+                              _saveToSmartCard();
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(AppColors.dark),
                         foregroundColor: Colors.white,
@@ -615,6 +691,13 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           ),
           const SizedBox(height: 16),
           _buildContactField(
+            controller: vm.whatsappController,
+            label: AppStrings.whatsapp.tr(),
+            hint: AppStrings.enterYourWhatsAppNumber.tr(),
+            keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 16),
+          _buildContactField(
             controller: vm.emailController,
             label: AppStrings.email.tr(),
             isRequired: true,
@@ -643,11 +726,76 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
             keyboardType: TextInputType.url,
           ),
           const SizedBox(height: 16),
-          _buildContactField(
-            controller: vm.whatsappController,
-            label: AppStrings.whatsapp.tr(),
-            hint: AppStrings.enterYourWhatsAppNumber.tr(),
-            keyboardType: TextInputType.phone,
+          GestureDetector(
+            onTap: () {
+              if (!_isPremium) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("cannotEditPremiumRequired".tr())),
+                );
+              }
+            },
+            child: AbsorbPointer(
+              absorbing: !_isPremium,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...List.generate(_otherLinksControllers.length, (i) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _otherLinksControllers[i],
+                              keyboardType: TextInputType.url,
+                              decoration: InputDecoration(
+                                labelText: '${AppStrings.website.tr()} / URL ${i + 1}',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.remove_circle_outline,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              if (i >= 0 && i < _otherLinksControllers.length) {
+                                _otherLinksControllers[i].dispose();
+                                _otherLinksControllers.removeAt(i);
+                                setState(() {});
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  if (_otherLinksControllers.isNotEmpty) const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _otherLinksControllers.add(TextEditingController());
+                        });
+                      },
+                      icon: const Icon(Icons.add),
+                      label: Text(
+                        '${AppStrings.website.tr()} / URL (${AppStrings.addOne.tr()})',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

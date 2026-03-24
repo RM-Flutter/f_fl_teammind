@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -193,123 +194,136 @@ class DomainSelectionService {
       barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(
         builder: (dialogContext, setState) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Text(
-              AppStrings.enterYourDomain.tr(),
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color(AppColors.dark)),
-            ),
-            content: SizedBox(
-              width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Domain input field
-                    TextField(
-                      controller: controller,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.domainExample.tr(),
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.qr_code_scanner),
-                          onPressed: () async {
-                            // Scan QR code
-                            final scannedText = await Navigator.push<String>(
-                              ctx,
-                              MaterialPageRoute(
-                                builder: (context) => const QRScannerView(),
-                              ),
-                            );
-                            
-                            if (scannedText != null && scannedText.isNotEmpty) {
-                              // Extract domain from QR code (clean it)
-                              final cleaned = _cleanDomain(scannedText);
-                              controller.text = cleaned;
-                            }
-                          },
+          final dialogContent = AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text(
+                AppStrings.enterYourDomain.tr(),
+                style: TextStyle(fontWeight: FontWeight.bold, color: Color(AppColors.dark)),
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Domain input field
+                      TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.domainExample.tr(),
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.qr_code_scanner),
+                            onPressed: () async {
+                              // Scan QR code
+                              final scannedText = await Navigator.push<String>(
+                                ctx,
+                                MaterialPageRoute(
+                                  builder: (context) => const QRScannerView(),
+                                ),
+                              );
+
+                              if (scannedText != null && scannedText.isNotEmpty) {
+                                // Extract domain from QR code (clean it)
+                                final cleaned = _cleanDomain(scannedText);
+                                controller.text = cleaned;
+                              }
+                            },
+                          ),
                         ),
+                        keyboardType: TextInputType.url,
                       ),
-                      keyboardType: TextInputType.url,
-                    ),
-                    
-                    const SizedBox(height: 16),
-                    
-                    // Saved domains list
-                    if (savedDomains.isNotEmpty) ...[
-                      Text(
-                        AppStrings.savedDomains.tr(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Color(AppColors.dark),
+
+                      const SizedBox(height: 16),
+
+                      // Saved domains list
+                      if (savedDomains.isNotEmpty) ...[
+                        Text(
+                          AppStrings.savedDomains.tr(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: Color(AppColors.dark),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        constraints: const BoxConstraints(maxHeight: 200),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[300]!),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: savedDomains.length,
-                          itemBuilder: (context, index) {
-                            final domain = savedDomains[index];
-                            // Extract subdomain from full domain (remove https://webapp.)
-                            final displayDomain = domain.replaceFirst('https://webapp.', '');
-                            
-                            return ListTile(
-                              title: Text(
-                                displayDomain,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.close, size: 20, color: Colors.red),
-                                onPressed: () async {
-                                  await removeDomainFromList(domain);
-                                  setState(() {
-                                    savedDomains.remove(domain);
-                                  });
+                        const SizedBox(height: 8),
+                        Container(
+                          constraints: const BoxConstraints(maxHeight: 200),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey[300]!),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: savedDomains.length,
+                            itemBuilder: (context, index) {
+                              final domain = savedDomains[index];
+                              // Extract subdomain from full domain (remove https://webapp.)
+                              final displayDomain = domain.replaceFirst('https://webapp.', '');
+
+                              return ListTile(
+                                title: Text(
+                                  displayDomain,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.close, size: 20, color: Colors.red),
+                                  onPressed: () async {
+                                    await removeDomainFromList(domain);
+                                    setState(() {
+                                      savedDomains.remove(domain);
+                                    });
+                                  },
+                                ),
+                                onTap: () {
+                                  // Use selected domain
+                                  Navigator.of(dialogContext).pop(displayDomain);
                                 },
-                              ),
-                              onTap: () {
-                                // Use selected domain
-                                Navigator.of(dialogContext).pop(displayDomain);
-                              },
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(null),
-                child: Text(
-                  AppStrings.cancel.tr(),
-                  style: const TextStyle(color: Colors.red),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(null),
+                  child: Text(
+                    AppStrings.cancel.tr(),
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  final domain = controller.text.trim();
-                  if (domain.isNotEmpty) {
-                    print("🌐 Domain entered: $domain");
-                    Navigator.of(ctx).pop(domain);
-                  }
-                },
-                child: Text(
-                  AppStrings.confirm.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                TextButton(
+                  onPressed: () {
+                    final domain = controller.text.trim();
+                    if (domain.isNotEmpty) {
+                      print("🌐 Domain entered: $domain");
+                      Navigator.of(ctx).pop(domain);
+                    }
+                  },
+                  child: Text(
+                    AppStrings.confirm.tr(),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
+              ],
+            );
+          // على الويب الـ overlay يعطي مساحة مفتوحة؛ Center + ConstrainedBox يضمنان تطبيق maxWidth وتموضع الديالوج في المنتصف
+          if (kIsWeb) {
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 800),
+                child: dialogContent,
               ),
-            ],
+            );
+          }
+          return ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: dialogContent,
           );
         },
       ),

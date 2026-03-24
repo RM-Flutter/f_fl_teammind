@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../../../constants/app_strings.dart';
 import '../../../../general_services/string_helpers.service.dart';
 
 /// نسخة مطابقة من leeds: lib/modules/guidelines_video/widgets/youtube_video_player.dart
@@ -136,7 +138,7 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
               )
             : null,
         title: Text(
-          widget.videoTitle.isEmpty ? 'Video' : widget.videoTitle,
+          widget.videoTitle.isEmpty ? AppStrings.videos.tr() : widget.videoTitle,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -144,7 +146,7 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
         foregroundColor: Colors.white,
       ),
       body: _invalidUrl
-          ? const Center(child: Text('رابط الفيديو غير صالح', style: TextStyle(fontSize: 16)))
+          ? Center(child: Text(AppStrings.invalidYouTubeUrl.tr(), style: const TextStyle(fontSize: 16)))
           : Stack(
         children: [
           if (controller != null) WebViewWidget(controller: controller!),

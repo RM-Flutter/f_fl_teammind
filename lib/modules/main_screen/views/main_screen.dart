@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rmemp/constants/app_colors.dart';
 import 'package:rmemp/general_services/connections.service.dart';
+import 'package:rmemp/general_services/usg_packages.service.dart';
 import 'package:rmemp/models/color_palette.model.dart';
 import '../../../common_modules_widgets/main_app_fab_widget/main_app_fab.widget.dart';
 import '../../../constants/app_images.dart';
@@ -44,6 +45,16 @@ final bottomNavigationBarItems = [
   ),
 ];
 
+/// Visible bottom nav pages based on USG packages (emp-requests, fingerprint-sys).
+List<NavbarPages> getVisibleNavbarPages() {
+  final list = <NavbarPages>[NavbarPages.home];
+  if (UsgPackagesService.isRequestsActive) list.add(NavbarPages.requests);
+  if (UsgPackagesService.isFingerprintActive) list.add(NavbarPages.fingerprint);
+  list.add(NavbarPages.page);
+  list.add(NavbarPages.more);
+  return list;
+}
+
 class MainScreen extends StatelessWidget {
   final Widget child;
   final NavbarPages currentNavPage;
@@ -55,6 +66,36 @@ class MainScreen extends StatelessWidget {
     // ConnectionsService.init();
     final viewModel = Provider.of<MainScreenViewModel>(context);
     viewModel.currentPage = currentNavPage;
+    final visiblePages = getVisibleNavbarPages();
+    final navItems = visiblePages.map((page) {
+      final model = bottomNavigationBarItems[page.index];
+      return BottomNavigationBarItem(
+        icon: Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 12),
+          child: SvgPicture.asset(
+            model.icon,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.tertiary,
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+        activeIcon: Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 12),
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              Color(AppColors.dark),
+              BlendMode.srcIn,
+            ),
+            child: SvgPicture.asset(model.icon),
+          ),
+        ),
+        label: model.title.tr(),
+      );
+    }).toList();
+    int currentIndex = visiblePages.indexOf(currentNavPage);
+    if (currentIndex < 0) currentIndex = 0;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // floatingActionButton: const MainAppFabWidget(),
@@ -73,35 +114,11 @@ class MainScreen extends StatelessWidget {
         selectedItemColor: Color(AppColors.dark),
         elevation: 0,
         type: BottomNavigationBarType.fixed,
-        items: bottomNavigationBarItems.map((element) {
-          return BottomNavigationBarItem(
-            icon: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 12),
-              child: SvgPicture.asset(
-                element.icon,
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.tertiary,
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
-            activeIcon: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 12),
-              child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  Color(AppColors.dark),
-                  BlendMode.srcIn,
-                ),
-                child: SvgPicture.asset(element.icon),
-              ),
-            ),
-            label: element.title.tr(),
-          );
-        }).toList(),
-        currentIndex: viewModel.currentPage.index,
+        items: navItems,
+        currentIndex: currentIndex,
         onTap: (index) {
           viewModel.onItemTapped(
-              context: context, page: NavbarPages.values[index]);
+              context: context, page: visiblePages[index]);
         },
       ),
       body: SafeArea(

@@ -88,6 +88,27 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                     ),
                   ),
                 ),
+                Positioned(
+                  top: MediaQuery.paddingOf(context).top + 8,
+                  left: LocalizationService.isArabic(context: context) ? 8 : 0,
+                  child: IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color(AppColors.blue),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.arrow_back, color: Color(AppColors.white), size: 18),
+                    ),
+                    onPressed: () {
+                      try {
+                        GoRouter.of(context).pop();
+                      } catch (e) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                ),
                 Positioned.fill(
                   top: MediaQuery.sizeOf(context).height * 0.25,
                   child: Container(

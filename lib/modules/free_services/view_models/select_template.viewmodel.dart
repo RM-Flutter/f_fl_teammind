@@ -12,6 +12,7 @@ import 'package:rmemp/platform/platform_is.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/cv_template.model.dart';
 import '../services/cv_templates.service.dart';
+import '../services/smart_card.service.dart';
 
 /// Result of "generate CV" — either data to save/download or an error.
 sealed class GenerateCvResult {}
@@ -38,6 +39,8 @@ class GenerateCvErrorResult extends GenerateCvResult {
 
 class SelectTemplateViewModel extends ChangeNotifier {
   List<CvTemplateModel>? templates;
+  /// القوالب الخام من API (للموظف/الشركة) لاستخراج default_fields وبناء template_data
+  List<Map<String, dynamic>>? smartCardTemplatesRaw;
   bool isLoading = false;
   String? errorMessage;
   bool _disposed = false;
@@ -79,6 +82,154 @@ class SelectTemplateViewModel extends ChangeNotifier {
     } finally {
       if (!_disposed) {
         isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Fetch Smart Card templates (للموظف/الشركة – اختيار القالب ثم PATCH).
+  /// الـ endpoint: GET .../api/sm-card-templates/entities-operations?itemsCount=200&with=type_id
+  Future<void> fetchSmartCardTemplates(BuildContext context) async {
+    if (_disposed) return;
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final res = await SmartCardService.getTemplates(context);
+      if (_disposed) return;
+      // القائمة قد تكون تحت data أو data.data أو templates حسب شكل الـ API
+      List<dynamic>? list;
+      final data = res['data'];
+      if (data is List) {
+        list = data;
+      } else if (data is Map && data['data'] is List) {
+        list = data['data'] as List;
+      } else if (res['templates'] is List) {
+        list = res['templates'] as List;
+      }
+      if (list != null && list.isNotEmpty) {
+        smartCardTemplatesRaw = list.map((e) => e is Map ? Map<String, dynamic>.from(e) : <String, dynamic>{}).toList();
+        templates = list.map((e) {
+          if (e is Map) {
+            return _smartCardMapToCvTemplate(Map<String, dynamic>.from(e));
+          }
+          return CvTemplateModel(id: null, slug: null, image: null);
+        }).where((t) => t.id != null).toList();
+      } else {
+        smartCardTemplatesRaw = [];
+        templates = [];
+      }
+      errorMessage = null;
+    } catch (e) {
+      if (_disposed) return;
+      errorMessage = e.toString();
+      smartCardTemplatesRaw = [];
+      templates = [];
+    } finally {
+      if (!_disposed) {
+        isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  static CvTemplateModel _smartCardMapToCvTemplate(Map<String, dynamic> map) {
+    final id = map['id'];
+    final slug = map['slug']?.toString() ?? map['title']?.toString() ?? map['name']?.toString();
+    final imageList = map['image'] ?? map['images'];
+    List<CvTemplateImageItem>? images;
+    if (imageList is List && imageList.isNotEmpty) {
+      final first = imageList.first;
+      if (first is Map) {
+        final m = Map<String, dynamic>.from(first);
+        images = [CvTemplateImageItem(file: m['file']?.toString(), thumbnail: m['thumbnail']?.toString())];
+      }
+    }
+    return CvTemplateModel(id: id is int ? id : int.tryParse(id?.toString() ?? ''), slug: slug, image: images);
+  }
+
+  /// بناء template_data من أوبجيكت القالب (default_fields: primary_color, secondary_color, third_color ...).
+  static Map<String, dynamic> buildTemplateDataFromRaw(Map<String, dynamic>? raw) {
+    final data = <String, dynamic>{};
+    if (raw == null) return data;
+    final defaultFields = raw['default_fields'];
+    if (defaultFields is! List) return data;
+    for (final field in defaultFields) {
+      if (field is Map && field['key'] != null) {
+        final key = field['key'].toString();
+        final value = field['default'];
+        if (value != null) data[key] = value;
+      }
+    }
+    return data;
+  }
+
+  /// تطبيق القالب على بروفايل الموظف (Smart Card) – PATCH employee/template.
+  Future<bool> applyEmployeeTemplate(
+    BuildContext context,
+    CvTemplateModel template, {
+    Map<String, dynamic>? rawTemplate,
+  }) async {
+    if (template.id == null) {
+      _showToast(AppStrings.invalidTemplate.tr(), isError: true);
+      return false;
+    }
+    if (_disposed) return false;
+    isLoadingTemplate = true;
+    notifyListeners();
+    try {
+      final templateData = buildTemplateDataFromRaw(rawTemplate);
+      await SmartCardService.updateEmployeeTemplate(
+        context,
+        templateId: template.id!,
+        templateData: templateData.isNotEmpty ? templateData : null,
+      );
+      if (_disposed) return false;
+      _showToast(AppStrings.updatedSuccessfully.tr(), isError: false);
+      return true;
+    } catch (e) {
+      if (!_disposed) _showToast(e.toString(), isError: true);
+      return false;
+    } finally {
+      if (!_disposed) {
+        isLoadingTemplate = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// تطبيق القالب على الشركة (Smart Card) – PATCH company/{{companyId}}/template.
+  Future<bool> applyCompanyTemplate(
+    BuildContext context, {
+    required int companyId,
+    required CvTemplateModel template,
+    Map<String, dynamic>? rawTemplate,
+  }) async {
+    if (template.id == null) {
+      _showToast(AppStrings.invalidTemplate.tr(), isError: true);
+      return false;
+    }
+    if (_disposed) return false;
+    isLoadingTemplate = true;
+    notifyListeners();
+    try {
+      final templateData = buildTemplateDataFromRaw(rawTemplate);
+      await SmartCardService.updateCompanyTemplate(
+        context,
+        companyId: companyId,
+        templateId: template.id!,
+        templateData: templateData.isNotEmpty ? templateData : null,
+      );
+      if (_disposed) return false;
+      _showToast(AppStrings.updatedSuccessfully.tr(), isError: false);
+      return true;
+    } catch (e) {
+      if (!_disposed) _showToast(e.toString(), isError: true);
+      return false;
+    } finally {
+      if (!_disposed) {
+        isLoadingTemplate = false;
         notifyListeners();
       }
     }

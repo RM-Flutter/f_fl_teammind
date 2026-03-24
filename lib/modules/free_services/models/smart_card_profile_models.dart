@@ -182,7 +182,6 @@ class SmartCardEmployeeProfileModel {
       'other_links': otherLinks?.map((e) => e.toJson()).toList() ?? [],
       'portfolios': portfolios?.map((e) => e.toJson()).toList() ?? [],
       'experiences': experiences?.map((e) => e.toJson()).toList() ?? [],
-      'educations': educations ?? [],
       'works_gallery': worksGallery ?? [],
       'video_gallery': videoGallery ?? [],
     };

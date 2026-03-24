@@ -14,6 +14,7 @@ import '../../../constants/app_sizes.dart';
 import '../../../constants/app_strings.dart';
 import '../../../general_services/layout.service.dart';
 import '../../../general_services/settings.service.dart';
+import '../../../general_services/usg_packages.service.dart';
 import '../../../routing/app_router.dart';
 import '../../../utils/general_screen_message_widget.dart';
 import '../../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
@@ -114,13 +115,13 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                                   // GeneralScreenMessageWidget(
                                   //     screenId:
                                   //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
-                                  if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
+                                  if (UsgPackagesService.isReportsActive && viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
                                       onPressed: () async => viewModel
                                           .showSummaryReports(context: context),
                                       title: AppStrings.summaryReports.tr(),
                                       icon: Icons.folder_copy_outlined,
                                     ),
-                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH12,
+                        if(UsgPackagesService.isReportsActive && viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH12,
                                   if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
                                     viewModel.rulesMessage ?? "",
                                     maxLines: 10,

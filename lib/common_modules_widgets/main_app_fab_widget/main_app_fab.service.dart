@@ -1801,14 +1801,17 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           context: context,
           message: 'Please attach the device to the NFC chip',
           title: 'NFC');
-      // Start NFC session
+      // Start NFC session (nfc_manager 4.x requires pollingOptions)
       await NfcManager.instance.startSession(
+        pollingOptions: {NfcPollingOption.iso14443, NfcPollingOption.iso18092, NfcPollingOption.iso15693},
         onDiscovered: (NfcTag tag) async {
-          // Extract the UID, card content, and tag type
-          String uid = tag.data['id']?.toString() ?? '0';
+          // Extract UID/card data: nfc_manager 4.x exposes raw platform data via tag
+          final raw = (tag as dynamic).data;
+          final data = raw is Map ? Map<String, dynamic>.from(raw as Map) : <String, dynamic>{};
+          String uid = data['id']?.toString() ?? '0';
           String cardContent =
               '0'; // Placeholder, customize as per your card type
-          String tagType = tag.data['type']?.toString() ?? '0';
+          String tagType = data['type']?.toString() ?? '0';
 
           // Combine the UID, card content, and tag type
           String nfcData = '$uid-$cardContent-$tagType';
@@ -1849,13 +1852,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
               title: AppStrings.failed.tr(),
             );
           }
-        },
-        onError: (NfcError error) {
-          AlertsService.error(
-              context: context,
-              message: 'Error during NFC session: ${error.message}',
-              title: AppStrings.failed.tr());
-          return NfcManager.instance.stopSession();
         },
       );
     } catch (e) {
@@ -2273,7 +2269,8 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       }
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       _CapturedFaceData? capturedFace;
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      // على الويب لا نستخدم التحقق من الوجه (غير مدعوم)؛ الموبايل يظل كما هو
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled && !PlatformIs.web;
       if (showFaceVerify) {
         debugPrint("📍 Starting face verification for GPS fingerprint...");
         capturedFace = await captureEmployeeFaceAndVerify(context);
@@ -2369,7 +2366,8 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       final bool isOnline = await ConnectionsService.isOnline();
       // في كل أنواع البصمات الأخرى الكاميرا تفتح لو مفتاح الكاميرا مفعّل حتى في وضع الأوفلاين.
       // هنا كانت مربوطة بوجود إنترنت، فتم فصلها عن isOnline عشان QR يتصرف نفس التصرف.
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      // على الويب لا نستخدم التحقق من الوجه (غير مدعوم)؛ الموبايل يظل كما هو
+      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled && !PlatformIs.web;
       if (showFaceVerify) {
         debugPrint("📱 Starting face verification for QR Code fingerprint...");
         final faceContext = rootNavigatorKey.currentContext ?? context;

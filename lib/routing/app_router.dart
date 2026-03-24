@@ -40,6 +40,8 @@ import '../modules/free_services/views/free_service_more.dart';
 import '../modules/free_services/views/widgets/youtube_video_player.dart';
 import '../modules/general/views/company_structure_tree_screen.dart';
 import '../modules/home/views/home_screen.dart';
+import '../modules/home/views/items_api_screen.dart';
+import '../modules/home/views/sample_api_screen.dart';
 import '../modules/home/views/widgets/webview_offers.dart';
 import '../modules/main_screen/views/main_screen.dart';
 import '../modules/more/views/general_data/general_data_screen.dart';
@@ -86,6 +88,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../general_services/telegram_error_service.dart';
+import '../general_services/usg_packages.service.dart';
 import '../modules/requests/views/requests_calendar_screen.dart';
 
 enum AppRoutes {
@@ -161,6 +164,8 @@ enum AppRoutes {
   personalityTestScreen,
   aboutTeamMindScreen,
   youtubeVideoScreen,
+  sampleApiScreen,
+  itemsApiScreen,
 }
 
 const TestVSync ticker = TestVSync();
@@ -174,10 +179,10 @@ class TestVSync implements TickerProvider {
 enum NavbarPages { home, requests, fingerprint, page, more }
 
 NavbarPages getNavbarPage({required String currentLocationRoute}) {
-  if (currentLocationRoute.contains('requests')) {
+  if (currentLocationRoute.contains('requests') && UsgPackagesService.isRequestsActive) {
     return NavbarPages.requests;
   }
-  if (currentLocationRoute.contains('fingerprint')) {
+  if (currentLocationRoute.contains('fingerprint') && UsgPackagesService.isFingerprintActive) {
     return NavbarPages.fingerprint;
   }
   if (currentLocationRoute.contains('notifications')) {
@@ -255,6 +260,23 @@ GoRouter goRouter(BuildContext context) {
     
     if (!isLoggedIn && !isAllowedPage) {
       return '/$lang/login-screen';
+    }
+
+    // Hide packages: redirect to home when accessing disabled package routes
+    if (isLoggedIn && state.fullPath != null) {
+      final path = state.fullPath!;
+      if (path.contains('requests') && !UsgPackagesService.isRequestsActive) {
+        return '/$lang';
+      }
+      if (path.contains('fingerprint') && !UsgPackagesService.isFingerprintActive) {
+        return '/$lang';
+      }
+      if (path.contains('payroll') && !UsgPackagesService.isPayrollActive) {
+        return '/$lang';
+      }
+      if (path.contains('evaluation') && !UsgPackagesService.isEvaluationActive) {
+        return '/$lang';
+      }
     }
 
     return null;
@@ -336,7 +358,7 @@ GoRouter goRouter(BuildContext context) {
           ],
         ),
         GoRoute(
-          path: '/:lang/default-page2/:type',
+            path: '/:lang/default-page2/:type',
           parentNavigatorKey: _shellNavigatorKey,
           name: AppRoutes.defaultPage2.name,
           pageBuilder: (context, state) {
@@ -1210,6 +1232,16 @@ GoRouter goRouter(BuildContext context) {
                   final locale = Locale(lang);
                   context.setLocale(locale);
                 }
+                final extra = state.extra as Map<String, dynamic>? ?? {};
+                final isSmartCardEmployee = extra['isSmartCardEmployee'] as bool? ?? false;
+                final isSmartCardCompany = extra['isSmartCardCompany'] as bool? ?? false;
+                final rawCompanyId = extra['companyId'];
+                int? companyId;
+                if (rawCompanyId != null) {
+                  if (rawCompanyId is int) companyId = rawCompanyId;
+                  else if (rawCompanyId is double) companyId = rawCompanyId.toInt();
+                  else if (rawCompanyId is String) companyId = int.tryParse(rawCompanyId);
+                }
                 final animationController = AnimationController(
                   vsync: ticker,
                 );
@@ -1221,7 +1253,11 @@ GoRouter goRouter(BuildContext context) {
                 });
                 return AppRouterTransitions.slideTransition(
                   key: state.pageKey,
-                  child: const SelectTemplateScreen(),
+                  child: SelectTemplateScreen(
+                    isSmartCardEmployee: isSmartCardEmployee,
+                    isSmartCardCompany: isSmartCardCompany,
+                    companyId: companyId,
+                  ),
                   animation: animationController,
                   begin: const Offset(1.0, 0.0),
                 );
@@ -1703,6 +1739,60 @@ GoRouter goRouter(BuildContext context) {
       builder: (context, state) {
         final link = state.extra as String;
         return WebViewStackOffers(link);
+      },
+    ),
+    GoRoute(
+      path: '/:lang/sample-api-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.sampleApiScreen.name,
+      pageBuilder: (context, state) {
+        final lang = state.uri.queryParameters['lang'];
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: const SampleApiScreen(),
+          animation: animationController,
+          begin: const Offset(1.0, 0.0),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/:lang/items-api-screen',
+      parentNavigatorKey: rootNavigatorKey,
+      name: AppRoutes.itemsApiScreen.name,
+      pageBuilder: (context, state) {
+        final lang = state.uri.queryParameters['lang'];
+        if (lang != null) {
+          final locale = Locale(lang);
+          context.setLocale(locale);
+        }
+        final animationController = AnimationController(
+          vsync: ticker,
+        );
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) {
+            animationController.dispose();
+          }
+        });
+        return AppRouterTransitions.slideTransition(
+          key: state.pageKey,
+          child: const ItemsApiScreen(),
+          animation: animationController,
+          begin: const Offset(1.0, 0.0),
+        );
       },
     ),
 

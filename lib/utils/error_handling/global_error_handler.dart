@@ -20,14 +20,21 @@ void registerErrorHandlers() {
     TelegramErrorService.captureException(error, stackTrace: stack);
     return true;
   };
-  // * Show some error UI when any widget in the app fails to build
+  // * Show some error UI when any widget in the app fails to build.
+  // Wrapped in Directionality (and Material) so it works even when invoked
+  // before MaterialApp is built (e.g. early startup errors).
   ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: const Text('An error occurred'),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Material(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.red,
+            title: const Text('An error occurred'),
+          ),
+          body: Center(child: Text(details.toString())),
+        ),
       ),
-      body: Center(child: Text(details.toString())),
     );
   };
 }
