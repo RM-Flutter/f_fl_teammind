@@ -49,43 +49,57 @@ class FingerprintViewModel extends ChangeNotifier {
   String? errorMessage;
   List<int>? validIndexes;
   final Set<int> _deletingOfflineIndexes = {};
-  void updateLoadingStatus({required bool laodingValue}) {
-    isLoading = laodingValue;
+  void updateLoadingStatus({required bool loadingValue}) {
+    isLoading = loadingValue;
     notifyListeners();
   }
 
   Future<void> initializeFingerprintScreen(
       {required BuildContext context, String? empId}) async {
-    updateLoadingStatus(laodingValue: true);
-    String? jsonString;
-    Map<String, dynamic>? gCache;
-    jsonString = CacheHelper.getString("US1");
-    if (jsonString != null && jsonString.isNotEmpty) {
-      gCache = json.decode(jsonString) as Map<String, dynamic>;
-      UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
-      userSettings = UserSettingsModel.fromJson(gCache);
-    } else {
-      userSettings = null;
+    updateLoadingStatus(loadingValue: true);
+    try {
+      String? jsonString;
+      Map<String, dynamic>? gCache;
+      jsonString = CacheHelper.getString("US1");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        gCache = json.decode(jsonString) as Map<String, dynamic>;
+        UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+        userSettings = UserSettingsModel.fromJson(gCache);
+      } else {
+        userSettings = null;
+      }
+      await _getEmployeeFingerprints(context: context, empId: empId);
+      await loadFingerprintsFromPreferences();
+    } catch (e) {
+      debugPrint('Error initializing fingerprint screen: $e');
+    } finally {
+      updateLoadingStatus(loadingValue: false);
     }
-    await _getEmployeeFingerprints(context: context, empId: empId);
-    await loadFingerprintsFromPreferences();
-    updateLoadingStatus(laodingValue: false);
   }
   Future<void> loadFingerprintsFromPreferences() async {
     isLoading = true;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('fingerPrints')) {
-      final String? jsonString = prefs.getString('fingerPrints');
-      if (jsonString != null) {
-        // Decode the JSON string back to a list of objects
-        final List<dynamic> decodedList = jsonDecode(jsonString);
-        AppConstants.fingerPrints = decodedList.cast<Map<String, dynamic>>();
-        isLoading = false;
-        notifyListeners();
-        print("Loaded fingerprints: ${AppConstants.fingerPrints}");
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('fingerPrints')) {
+        final String? jsonString = prefs.getString('fingerPrints');
+        if (jsonString != null && jsonString.isNotEmpty) {
+          // Decode the JSON string back to a list of objects
+          final List<dynamic> decodedList = jsonDecode(jsonString);
+          AppConstants.fingerPrints = decodedList.cast<Map<String, dynamic>>();
+          print("Loaded fingerprints: ${AppConstants.fingerPrints}");
+        } else {
+          AppConstants.fingerPrints = [];
+        }
+      } else {
+        AppConstants.fingerPrints = [];
+        print("No fingerprints found in shared preferences");
       }
-    } else {
-      print("No fingerprints found in shared preferences");
+    } catch (e) {
+      debugPrint("Error loading fingerprints from preferences: $e");
+      AppConstants.fingerPrints = [];
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -141,7 +155,6 @@ class FingerprintViewModel extends ChangeNotifier {
 
 
   Future<void> addFingerPrints(BuildContext context,fingerprints) async {
-    print("object --> ${fingerprints}");
     isLoading = true;
     notifyListeners();
     // Prepare the data as JSON without base64 encoding files
