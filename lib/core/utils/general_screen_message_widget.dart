@@ -19,31 +19,37 @@ class GeneralScreenMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var gCache;
+    Map<String, dynamic>? gCache;
     final jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
-    }return  gCache["general_message_by_screen"] != null && gCache["general_message_by_screen"].isNotEmpty
-        ? Padding(
-        padding: const EdgeInsets.only(
-            left: AppSizes.s12, right: AppSizes.s12, bottom: AppSizes.s16),
-        child: ListView.separated(
-            reverse: false,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemBuilder: (context, index) => AutoSizeText(
-              LocalizationService.isArabic(context: context)? gCache["general_message_by_screen"][index]["screen_message"]["ar"]:gCache["general_message_by_screen"][index]["screen_message"]["en"] ?? "",
-              maxLines: maxTextLines,
-              style: const TextStyle(
-                  color: Color(AppColors.grey40),
-                  fontSize: AppSizes.s12,
-                  fontWeight: FontWeight.w400),
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              softWrap: true,
-            ), separatorBuilder: (context, index) => const SizedBox(height: 15,), itemCount: gCache["general_message_by_screen"].length)
-    )
-        : const SizedBox.shrink();
+      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+    }
+    if (gCache == null) return const SizedBox.shrink();
+    final messages = (gCache["general_message_by_screen"] as List?)?.cast<Map<String, dynamic>>();
+    if (messages == null || messages.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: AppSizes.s12, right: AppSizes.s12, bottom: AppSizes.s16),
+      child: ListView.separated(
+          reverse: false,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemBuilder: (context, index) => AutoSizeText(
+            LocalizationService.isArabic(context: context)
+                ? messages[index]["screen_message"]["ar"]
+                : messages[index]["screen_message"]["en"] ?? "",
+            maxLines: maxTextLines,
+            style: const TextStyle(
+                color: Color(AppColors.grey40),
+                fontSize: AppSizes.s12,
+                fontWeight: FontWeight.w400),
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            softWrap: true,
+          ),
+          separatorBuilder: (context, index) => const SizedBox(height: 15),
+          itemCount: messages.length),
+    );
   }
 }
