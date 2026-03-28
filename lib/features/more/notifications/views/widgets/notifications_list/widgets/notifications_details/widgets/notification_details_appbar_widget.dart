@@ -32,7 +32,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                 bottomLeft: Radius.circular(AppSizes.s32),
                 bottomRight: Radius.circular(AppSizes.s32)),
             child: Image.asset(
-              "assets/images/png/team-mind-home.jpg",
+              "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
               width: double.infinity,
               height: 300,
