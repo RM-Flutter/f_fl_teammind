@@ -39,15 +39,6 @@ class _TaskScreenState extends State<TaskScreen> {
     super.initState();
     viewModel = TasksController();
     viewModel.getTask(context, date: null);
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200 &&
-          !viewModel.isLoadingMore &&
-          viewModel.hasMore) {
-        viewModel.getTask(context, loadMore: true);
-      }
-    });
   }
 
   @override
@@ -57,8 +48,8 @@ class _TaskScreenState extends State<TaskScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    var jsonString;
-    var gCache;
+    dynamic jsonString;
+    dynamic gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
       gCache = json.decode(jsonString)
@@ -151,68 +142,89 @@ class _TaskScreenState extends State<TaskScreen> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              if (viewModel.tasks == null ||
-                                  viewModel.tasks?.isEmpty == true)
+                              if (viewModel.tasks.isEmpty)
                                 NoExistingPlaceholderScreen(
                                     height: LayoutService.getHeight(context) *
                                         0.6,
                                     title: AppStrings.thereIsNoTasks.tr()),
-                              if (viewModel.tasks != null &&
-                                  viewModel.tasks?.isEmpty == false)
+                              if (viewModel.tasks.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  child: SizedBox(
-                                    height: MediaQuery.sizeOf(context).height * 0.7,
-                                    child: ListView.separated(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      reverse: false,
-                                      controller: _scrollController,
-                                      physics:
-                                      const ClampingScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        final iconName =
-                                        viewModel.tasks[index]["icon"];
-                                        final icon = viewModel.iconsName.firstWhere(
-                                              (item) => item["name"] == iconName,
-                                          orElse: () => {
-                                            "value": "assets/images/svg/t3.svg"
-                                          }, // مسار افتراضي لو لم يوجد
-                                        );
-                                        return TaskListTileWidget(
-                                            onTap: ()async{
-                                              await context
-                                                  .pushNamed(AppRoutes.taskDetails.name, pathParameters: {
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    reverse: false,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final iconName =
+                                          viewModel.tasks[index]["icon"];
+                                      final icon = viewModel.iconsName.firstWhere(
+                                        (item) => item["name"] == iconName,
+                                        orElse: () => {"value": "assets/images/svg/t3.svg"},
+                                      );
+                                      return TaskListTileWidget(
+                                        onTap: () async {
+                                          await context.pushNamed(
+                                              AppRoutes.taskDetails.name,
+                                              pathParameters: {
                                                 'lang': context.locale.languageCode,
-                                                'id' : viewModel.tasks[index]['id'].toString(),
+                                                'id': viewModel.tasks[index]['id']
+                                                    .toString(),
                                               });
-                                              viewModel.currentPage = 1;
-                                              await viewModel.getTask(context, date: null);
-                                            },
-                                            complete: viewModel.tasks[index]
-                                            ['status'].toString(),
-                                            assetName: icon['value']!,
-                                            title: viewModel.tasks[index]
-                                            ['title'],
-                                            id: viewModel.tasks[index]['id']
-                                                .toString(),
-                                            date:
-                                            viewModel.tasks[index]
-                                            ['dueDate'] ?? "",
-                                            createdAt:viewModel.tasks[index]
-                                            ['createdAt'] ?? ""
-                                        );
+                                          viewModel.currentPage = 1;
+                                          await viewModel.getTask(context,
+                                              date: null);
+                                        },
+                                        complete: viewModel.tasks[index]['status']
+                                            .toString(),
+                                        assetName: icon['value']!,
+                                        title: viewModel.tasks[index]['title'],
+                                        id: viewModel.tasks[index]['id']
+                                            .toString(),
+                                        date: viewModel.tasks[index]['dueDate'] ??
+                                            "",
+                                        createdAt: viewModel.tasks[index]
+                                                ['createdAt'] ??
+                                            "",
+                                      );
+                                    },
+                                    itemCount: viewModel.tasks.length,
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(height: 15),
+                                  ),
+                                ),
+                              const SizedBox(height: 20),
+                              if (viewModel.hasMore && !viewModel.isLoadingMore)
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 30),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        viewModel.getTask(context, loadMore: true);
                                       },
-                                      itemCount: viewModel.tasks.length,
-                                      separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                        height: 15,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xff090B5F),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        AppStrings.loadMore.tr().toUpperCase(),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                       ),
                                     ),
                                   ),
                                 ),
-                              if(viewModel.isLoadingMore == true) CircularProgressIndicator()
+                              if (viewModel.isLoadingMore)
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 30),
+                                  child: Center(child: CircularProgressIndicator()),
+                                ),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         )),

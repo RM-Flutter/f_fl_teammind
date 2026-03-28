@@ -15,7 +15,7 @@ class TaskListTileWidget extends StatelessWidget {
   final String assetName;
   final String complete;
   final VoidCallback? onTap;
-  TaskListTileWidget({
+  const TaskListTileWidget({
     super.key,
     required this.date,
     required this.onTap,
