@@ -17,13 +17,13 @@ class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
 
   @override
-  State<AddTaskScreen> createState() =>
-      _AddTaskScreenState();
+  State<AddTaskScreen> createState() => _AddTaskScreenState();
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   late final TasksController viewModel;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +37,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
-          title: AppStrings.addTask.tr(),
+          title: AppStrings.addNewTask.tr(),
           body: Scaffold(
             body: SingleChildScrollView(
               child: Center(
@@ -55,28 +55,35 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             gapH14,
-                            Text(AppStrings.mainData.tr(), style: TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w600, fontSize: 14),),
+                            Text(
+                              AppStrings.mainData.tr(),
+                              style: TextStyle(
+                                  color: Color(AppColors.primary),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14),
+                            ),
                             gapH14,
                             TextFormField(
                               controller: viewModel.titleController,
                               decoration: InputDecoration(
                                 hintText: AppStrings.title.tr(),
                               ),
-                              validator: (String? value){
-                                if(value!.isEmpty){
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
                                   return "${AppStrings.title.tr()} ${AppStrings.isRequired.tr()}";
                                 }
                                 return null;
                               },
-                            ),gapH14,
+                            ),
+                            gapH14,
                             TextFormField(
                               maxLines: 8,
                               controller: viewModel.contentController,
                               decoration: InputDecoration(
                                 hintText: AppStrings.content.tr(),
                               ),
-                              validator: (String? value){
-                                if(value!.isEmpty){
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
                                   return "${AppStrings.content.tr()} ${AppStrings.isRequired.tr()}";
                                 }
                                 return null;
@@ -89,7 +96,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 hintText: AppStrings.deadline.tr(),
                                 suffixIcon: IconButton(
                                   icon: const Icon(Icons.calendar_today),
-                                  onPressed: () => viewModel.selectDate(context),
+                                  onPressed: () =>
+                                      viewModel.selectDate(context),
                                 ),
                               ),
                               readOnly: true,
@@ -97,11 +105,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             ),
                             gapH14,
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 showModalBottomSheet(
                                   context: context,
                                   shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(16)),
                                   ),
                                   builder: (context) {
                                     return StatefulBuilder(
@@ -109,29 +118,41 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                         return Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                             Padding(
-                                              padding: const EdgeInsets.all(16.0),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
                                               child: Text(
                                                 AppStrings.employeeName.tr(),
-                                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                             Expanded(
                                               child: ListView.builder(
-                                                itemCount: viewModel.employees.length,
+                                                itemCount:
+                                                    viewModel.employees.length,
                                                 itemBuilder: (context, index) {
-                                                  final emp = viewModel.employees[index];
+                                                  final emp = viewModel
+                                                      .employees[index];
                                                   final id = emp['id'] as int;
-                                                  final isSelected = viewModel.selectedEmployeeIds.contains(id);
+                                                  final isSelected = viewModel
+                                                      .selectedEmployeeIds
+                                                      .contains(id);
                                                   return CheckboxListTile(
                                                     value: isSelected,
                                                     title: Text(emp['name']),
                                                     onChanged: (checked) {
                                                       setModalState(() {
                                                         if (checked == true) {
-                                                          viewModel.selectedEmployeeIds.add(id);
+                                                          viewModel
+                                                              .selectedEmployeeIds
+                                                              .add(id);
                                                         } else {
-                                                          viewModel.selectedEmployeeIds.remove(id);
+                                                          viewModel
+                                                              .selectedEmployeeIds
+                                                              .remove(id);
                                                         }
                                                       });
                                                     },
@@ -140,13 +161,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                               ),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.all(16.0),
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                   setState(() {});
                                                 },
-                                                child: Text(AppStrings.send.tr(), style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                                                child: Text(
+                                                    AppStrings.send.tr(),
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14)),
                                               ),
                                             )
                                           ],
@@ -159,13 +186,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               child: Container(
                                 height: 65,
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 0),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                    borderRadius:
+                                        BorderRadius.circular(AppSizes.s10),
                                     side: BorderSide(
-                                      color :Color(AppColors.whiteGrey),
+                                      color: Color(AppColors.whiteGrey),
                                       width: 1.0,
                                     ),
                                   ),
@@ -183,7 +212,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                viewModel.selectedEmployeeIds.isNotEmpty? "${viewModel.selectedEmployeeIds.length} ${AppStrings.selected.tr()}": AppStrings.employeeName.tr(),
+                                      viewModel.selectedEmployeeIds.isNotEmpty
+                                          ? "${viewModel.selectedEmployeeIds.length} ${AppStrings.selected.tr()}"
+                                          : AppStrings.employeeName.tr(),
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400,
@@ -196,49 +227,67 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             gapH14,
                             defaultDropdownField(
                               value: viewModel.selectedIcon,
+                              icon: Icons.ios_share,
                               title: viewModel.selectedIcon ?? AppStrings.selectIcon.tr(),
-                              items: viewModel.iconsName.map((e) => DropdownMenuItem(
-                                value: e['name'].toString(),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SvgPicture.asset(e['value']!, fit: BoxFit.scaleDown, width: 27, height: 24,),
-                                    const SizedBox(width: 10,),
-                                    Text(
-                                      e['name'].toString(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(AppColors.almostBlack)
-                                      ),),
-                                  ],
-                                )
-                              ),
-                              ).toList(),
+                              items: viewModel.iconsName.map(
+                                    (e) => DropdownMenuItem(
+                                        value: e['name'].toString(),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              e['value']!,
+                                              fit: BoxFit.scaleDown,
+                                              width: 27,
+                                              height: 24,
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              e['name'].toString(),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(
+                                                      AppColors.almostBlack)),
+                                            ),
+                                          ],
+                                        )),
+                                  )
+                                  .toList(),
                               onChanged: (String? values) {
                                 debugPrint(values);
                                 setState(() {
                                   viewModel.selectedIcon = values;
-                                  debugPrint("selectedIcon is --> ${viewModel.selectedIcon}");
+                                  debugPrint(
+                                      "selectedIcon is --> ${viewModel.selectedIcon}");
                                 });
                               },
                             ),
                             gapH14,
                             defaultDropdownField(
                               value: viewModel.selectedStatus,
-                              title: viewModel.selectedStatus ?? AppStrings.status.tr(),
-                              items: viewModel.statusTypes.map((e) => DropdownMenuItem(
-                                value: e['value'].toString(),
-                                child: Text(
-                                  e['name'].toString(),
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(AppColors.almostBlack)
-                                  ),),
-                              ),
-                              ).toList(),
+                              title: viewModel.selectedStatus ??
+                                  AppStrings.status.tr(),
+                              items: viewModel.statusTypes
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e['value'].toString(),
+                                      child: Text(
+                                        e['name'].toString(),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color:
+                                                Color(AppColors.almostBlack)),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                               onChanged: (String? values) {
                                 debugPrint(values);
                                 setState(() {
@@ -246,26 +295,29 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 });
                               },
                             ),
-                            gapH14,
+                            gapH24,
                             AddNewTaskListWidget(),
                             gapH14,
-                            const SizedBox(height: 30,),
+                            const SizedBox(
+                              height: 30,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                if(viewModel.isLoading == false) CustomElevatedButton(
-                                  backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                                  titleSize: AppSizes.s14,
-                                  radius: AppSizes.s24,
-                                  title: AppStrings.addTask.tr(),
-                                  onPressed: () async {
-                                    if(formKey.currentState!.validate()){
-                                      viewModel.addTask(context);
-                                    }
-                                  },
-                                ),
-                              if(viewModel.isLoading == true) const CircularProgressIndicator()
+                                if (viewModel.isLoading == false)
+                                  CustomElevatedButton(
+                                    backgroundColor: const Color(0xff090B5F),
+                                    titleSize: AppSizes.s14,
+                                    radius: AppSizes.s24,
+                                    title: AppStrings.addTask.tr().toUpperCase(),
+                                    onPressed: () async {
+                                      if (formKey.currentState!.validate()) {
+                                        viewModel.addTask(context);
+                                      }
+                                    },
+                                  ),
+                                if (viewModel.isLoading == true)
+                                  const CircularProgressIndicator()
                               ],
                             ),
                           ],

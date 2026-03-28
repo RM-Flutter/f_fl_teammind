@@ -109,7 +109,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
+                    border: Border.all(color: Color(AppColors.whiteGrey)),
                   ),
                   child: ListTile(
                     title: TextField(
@@ -119,16 +119,13 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                         debugPrint("Updated index $index: ${value.tasksList2[index]}");
                         setState(() {}); // if you want to reflect changes immediately
                       },
-                      onTap: (){
-                        if(_controllers[index].text == AppStrings.taskName.tr()){
-                          setState(() {
-                            _controllers[index].text = "";
-                          });
-                        }
-                      },
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: AppStrings.taskName.tr(),
+                        hintStyle: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Color(AppColors.almostBlack)),
                         contentPadding: EdgeInsets.zero,
                         disabledBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -166,12 +163,11 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
               ),
               onPressed: () {
                 setState(() {
-                  int nextIndex = value.tasksList.length + 1;
                   value.tasksList2.add({
-                    "name" : AppStrings.taskName.tr(),
+                    "name" : "",
                     "status" : false
                   });
-                  _controllers.add(TextEditingController(text: AppStrings.taskName.tr()));
+                  _controllers.add(TextEditingController(text: ""));
                 });
               },
               icon: const Icon(Icons.add, color: Colors.white),

@@ -210,7 +210,8 @@ abstract class AppStrings {
   static const resend = "resend";
   static const goToComplain = "goToComplain";
   static const egp = "egp";
-  static const taskName = "taskName";
+  static const String taskName = "taskName";
+  static const String addNewTask = "addNewTask";
   static const amounts = "amounts";
   static const employeeHasNoVocationBalance = "employeeHasNoVocationBalance";
   static const ins = "in";

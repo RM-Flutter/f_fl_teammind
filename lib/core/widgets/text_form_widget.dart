@@ -137,6 +137,7 @@ Widget defaultDropdownField(
       String? title,
       bool? isExpanded,
       Color? borderColor,
+      IconData? icon,
       bool? hasShadows = false,
       required items,
       required void Function(String?)? onChanged}) {
@@ -166,9 +167,10 @@ Widget defaultDropdownField(
     ),
     child: DropdownButton<String>(
         dropdownColor: Colors.white,
-        icon: const Icon(
-          Icons.keyboard_arrow_down,
-          color: Color(AppColors.black),
+        icon: Icon(
+          icon ?? Icons.keyboard_arrow_down,
+          // color: const Color(AppColors.grey),
+          color:  Colors.grey,
         ),
         isExpanded: isExpanded ?? true,
         value: value,
