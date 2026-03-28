@@ -36,21 +36,23 @@ class SwitchRowNotification extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            rightText ?? AppStrings.myDepartment.tr(),
+            leftText ?? AppStrings.allNotifications.tr(),
             style: textStyle,
           ),
           gapW8,
           CustomSwitchButton(
-            width: AppSizes.s50,
-            height: AppSizes.s20,
-            padding: AppSizes.s3,
+            width: 60,
+            height: 30,
+            padding: 4,
+            circleSize: 22,
             value: value,
+            activeColor: const Color(0xFF3489EF),
             inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
           gapW8,
           Text(
-            leftText ?? AppStrings.allNotifications.tr(),
+            rightText ?? AppStrings.myDepartment.tr(),
             style: textStyle,
           ),
 

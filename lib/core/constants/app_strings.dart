@@ -1077,4 +1077,5 @@ abstract class AppStrings {
   static const addExperience = "addExperience";
   static const removeExperience = "removeExperience";
   static const enterJobTitle = "enterJobTitle";
+  static const loadMore = "loadMore";
 }

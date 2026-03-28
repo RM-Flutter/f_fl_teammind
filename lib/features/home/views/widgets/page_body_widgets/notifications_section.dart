@@ -6,10 +6,12 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/widgets/notification_card.widget.dart';
+import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class NotificationsSection extends StatelessWidget {
   final List<NotificationModel> notifications;
@@ -19,7 +21,7 @@ class NotificationsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
             maxWidth: kIsWeb ? 1100 : double.infinity
         ),
         child: Container(
@@ -42,11 +44,12 @@ class NotificationsSection extends StatelessWidget {
                         letterSpacing: kIsWeb ? 0.3 : null,
                       )),
                   GestureDetector(
-                    onTap: (){
-                      CacheHelper.deleteData(key: "value");
-                      context.pushNamed(AppRoutes.notification.name,
-                          pathParameters: {'lang': context.locale.languageCode,
-                          });
+                    onTap: () {
+                      Provider.of<MainLayoutController>(context, listen: false)
+                          .onItemTapped(
+                        context: context,
+                        page: NavbarPages.page,
+                      );
                     },
                     child: Text(
                       AppStrings.viewAll.tr(),
