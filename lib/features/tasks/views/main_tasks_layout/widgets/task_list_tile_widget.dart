@@ -14,7 +14,7 @@ class TaskListTileWidget extends StatelessWidget {
   final String id;
   final String assetName;
   final String complete;
-  var onTap;
+  final VoidCallback? onTap;
   TaskListTileWidget({
     super.key,
     required this.date,
@@ -44,74 +44,148 @@ class TaskListTileWidget extends StatelessWidget {
       }
     }
 
-    return GestureDetector(
-      onTap: onTap ?? (){},
-      child: Container(
-        margin: const EdgeInsets.only(bottom: AppSizes.s12),
-        padding: EdgeInsets.only(left: LocalizationService.isArabic(context: context) ?0 :15,
-            right: LocalizationService.isArabic(context: context) ?15 :0),
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Color(AppColors.lightGrey).withOpacity(0.5),
-                blurRadius: AppSizes.s5,
-                spreadRadius: 1,
-              )
-            ],
-            border: Border.all(color: complete == "completed" || complete == "closed"? Color(AppColors.primary) : Colors.transparent),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+    return IntrinsicHeight(
+      child: GestureDetector(
+        onTap: onTap ?? (){},
+        child: Container(
+          margin: const EdgeInsets.only(bottom: AppSizes.s12),
+          decoration: BoxDecoration(
+            boxShadow: (complete == "completed" || complete == "closed")
+                ? null : null,
+                // : [
+                //     BoxShadow(
+                //       color: Color(AppColors.lightGrey).withValues(alpha: 0.5),
+                //       blurRadius: AppSizes.s5,
+                //       spreadRadius: 1,
+                //     )
+                //   ],
+            border: Border.all(
+              color: (complete == "completed" || complete == "closed")
+                  ? Color(AppColors.primary)
+                  : Colors.grey.shade300,
+              width: 1.0,
             ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(padding: EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(assetName),
-                const SizedBox(width: 12,),
-                SizedBox(
-                  width: !kIsWeb ? MediaQuery.sizeOf(context).width * 0.6 : MediaQuery.sizeOf(context).width * 0.3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(AppSizes.s12),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: LocalizationService.isArabic(context: context) ? 0 : 15,
+                    right: LocalizationService.isArabic(context: context) ? 15 : 0,
+                    top: 20,
+                    bottom: 20,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(title,style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: Color(AppColors.dark))),
-                      const SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          if(createdAt != null && createdAt != "")Text(DateFormat('yyyy-MM-dd').format(DateTime.parse(createdAt)).toString(),style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 8, color: Color(AppColors.grey4F))),
-                          if(date != null && date != "")const Text(" | ",style: TextStyle(fontWeight: FontWeight.w400, fontSize: 8, color: Color(AppColors.grey4F))),
-                          if(date != null && date != "")Text(DateFormat('yyyy-MM-dd').format(DateTime.parse(date)).toString(),style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 8, color: Color(AppColors.grey4F))),
-                          if(createdAt != null && createdAt != "" && date != null && date != "")
-                             Text(formatDateDifference(DateTime.parse(createdAt), DateTime.parse(date)) != "0 ${AppStrings.days.tr()}" &&
-                                 formatDateDifference(DateTime.parse(createdAt), DateTime.parse(date)) != "0 ${AppStrings.month.tr()}"?
-                             " (${formatDateDifference(DateTime.parse(createdAt), DateTime.parse(date))})" : " (1 ${AppStrings.days.tr()})",style: TextStyle(fontWeight: FontWeight.w400, fontSize: 8, color: Color(AppColors.grey4F))),
-
-                        ],
-                      )
+                      SvgPicture.asset(assetName),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                color: Color(AppColors.dark),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Row(
+                              children: [
+                                if (createdAt.isNotEmpty)
+                                  Text(
+                                    DateFormat('yyyy-MM-dd')
+                                        .format(DateTime.parse(createdAt))
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: Color(AppColors.grey4F),
+                                    ),
+                                  ),
+                                if (date.isNotEmpty)
+                                  const Text(
+                                    " | ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: Color(AppColors.grey4F),
+                                    ),
+                                  ),
+                                if (date.isNotEmpty)
+                                  Text(
+                                    DateFormat('yyyy-MM-dd')
+                                        .format(DateTime.parse(date))
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: Color(AppColors.grey4F),
+                                    ),
+                                  ),
+                                if (createdAt.isNotEmpty && date.isNotEmpty)
+                                  Text(
+                                    formatDateDifference(DateTime.parse(createdAt),
+                                                DateTime.parse(date)) !=
+                                            "0 ${AppStrings.days.tr()}" &&
+                                            formatDateDifference(
+                                                    DateTime.parse(createdAt),
+                                                    DateTime.parse(date)) !=
+                                                "0 ${AppStrings.month.tr()}"
+                                        ? " (${formatDateDifference(DateTime.parse(createdAt), DateTime.parse(date))})"
+                                        : " (1 ${AppStrings.days.tr()})",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: Color(AppColors.grey4F),
+                                    ),
+                                  ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ],
-            ),
-            ),
-            Spacer(),
-           if(complete == "completed" || complete == "closed") Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 5 ,vertical: 30),
-              decoration: BoxDecoration(
-                  color: Color(AppColors.primary),
-                  borderRadius: BorderRadius.only(
-                    topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
-                    bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
-                    topLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
-                    bottomLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
-                  )
               ),
-              child: complete == "closed"? Icon(Icons.close, color: Colors.white):Icon(Icons.check, color: Colors.white),
-            )
-          ],
+              if (complete == "completed" || complete == "closed")
+                Container(
+                  width: 45,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color(AppColors.primary),
+                    borderRadius: BorderRadius.only(
+                      topRight: LocalizationService.isArabic(context: context)
+                          ? const Radius.circular(0)
+                          : const Radius.circular(AppSizes.s12),
+                      bottomRight: LocalizationService.isArabic(context: context)
+                          ? const Radius.circular(0)
+                          : const Radius.circular(AppSizes.s12),
+                      topLeft: LocalizationService.isArabic(context: context)
+                          ? const Radius.circular(AppSizes.s12)
+                          : const Radius.circular(0),
+                      bottomLeft: LocalizationService.isArabic(context: context)
+                          ? const Radius.circular(AppSizes.s12)
+                          : const Radius.circular(0),
+                    ),
+                  ),
+                  child: Icon(
+                    complete == "closed" ? Icons.close : Icons.check,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );

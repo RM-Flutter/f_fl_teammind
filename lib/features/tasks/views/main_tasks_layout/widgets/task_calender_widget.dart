@@ -37,15 +37,21 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                 viewModel.getTask(context, date: null);
               },
               child: Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(AppColors.primary),),
+                height: 60,
+                width: 50,
+                margin: const EdgeInsets.only(left: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: viewModel.selectedIndex == null ? Color(AppColors.primary) : Colors.white,
+                  border: viewModel.selectedIndex == null ? null : Border.all(color: Colors.grey.shade300),
+                ),
                 alignment: Alignment.center,
-                child:  Text(
+                child: Text(
                   AppStrings.all.tr(),
                   style: TextStyle(
-                    color: Colors.white,
+                    color: viewModel.selectedIndex == null ? Colors.white : Colors.black,
                     fontWeight: FontWeight.w500,
+                    fontSize: 14,
                   ),
                 ),
               ),
