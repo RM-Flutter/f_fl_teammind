@@ -1,5 +1,5 @@
-import 'package:app_test/core/widgets/comments/comments_widget.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
+import 'package:app_test/core/widgets/comments/send_comment_widget.dart';
 import 'package:app_test/core/widgets/full_image_screen.dart';
 import 'package:app_test/features/complaints/controller/complaints_controller.dart';
 import 'package:app_test/features/more/notifications/views/widgets/notifications_list/widgets/notifications_details/widgets/notification_details_appbar_widget.dart';
@@ -20,15 +20,8 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 
 
 class NotificationDetailsScreen extends StatefulWidget {
-  var id;
-  var date;
-  var title;
-  var image;
-  var contant;
-  NotificationDetailsScreen({required this.id,
-    this.date,
-
-  });
+  final dynamic id;
+  const NotificationDetailsScreen({required this.id, super.key});
 
   @override
   State<NotificationDetailsScreen> createState() => _NotificationDetailsScreenState();
@@ -99,56 +92,21 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                         shrinkWrap: true,
                                         data: value.notificationModel!.content ?? "",
                                         style: {
-                                          "h1":Style(
-                                            color: const Color(AppColors.oC2Color),
-                                            fontSize: FontSize(26),
-                                            fontWeight: FontWeight.w500,
-                                          ),"h2":Style(
-                                            color: const Color(AppColors.oC2Color),
-                                            fontSize: FontSize(24),
-                                            fontWeight: FontWeight.w500,
-                                          ),"h3":Style(
-                                            color: const Color(AppColors.oC2Color),
-                                            fontSize: FontSize(22),
-                                            fontWeight: FontWeight.w500,
-                                          ),"h4":Style(
-                                            color: const Color(AppColors.oC2Color),
-                                            fontSize: FontSize(20),
-                                            fontWeight: FontWeight.w500,
-                                          ),"h5":Style(
-                                            color: const Color(AppColors.oC2Color),
-                                            fontSize: FontSize(18),
-                                            fontWeight: FontWeight.w500,
-                                          ),"h6":Style(
-                                            color: const Color(AppColors.oC2Color),
-                                            fontSize: FontSize(16),
-                                            fontWeight: FontWeight.w500,
+                                          "body": Style(
+                                            textAlign: TextAlign.center,
+                                            margin: Margins.zero,
+                                            padding: HtmlPaddings.zero,
                                           ),
                                           "p": Style(
-                                            color: Color(AppColors.grey52),
-                                            lineHeight: LineHeight(1.5),
-                                            fontSize: FontSize(12), // Adjust font size for better visibility
+                                            color: const Color(0xFF666666),
+                                            lineHeight: const LineHeight(1.6),
+                                            fontSize: FontSize(14),
                                             fontWeight: FontWeight.w400,
-                                          ), "ul": Style(
-                                            color: Color(AppColors.grey33),
-                                            lineHeight: LineHeight(1.5),
-                                            fontSize: FontSize(18), // Adjust font size for better visibility
-                                            fontWeight: FontWeight.w500,
-                                          ),"li": Style(
-                                            color: Color(AppColors.grey33),
-                                            lineHeight: LineHeight(1.5),
-                                            fontSize: FontSize(18), // Adjust font size for better visibility
-                                            fontWeight: FontWeight.w500,
-                                          ),"ol": Style(
-                                            color: Color(AppColors.grey33),
-                                            lineHeight: LineHeight(1.5),
-                                            fontSize: FontSize(18), // Adjust font size for better visibility
-                                            fontWeight: FontWeight.w500,
-                                          ),"*": Style(
-                                            color: Color(AppColors.grey33),
-                                            lineHeight: LineHeight(1.5),
-                                            fontSize: FontSize(14), // Adjust font size for better visibility
-                                            fontWeight: FontWeight.w500,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          "*": Style(
+                                            color: const Color(0xFF666666),
+                                            textAlign: TextAlign.center,
                                           ),
                                         }),
                                     SizedBox(height: 10,),
@@ -248,44 +206,27 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 30,),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
-                                              ),
-                                            ),
-                                          ),
+                                    const SizedBox(height: 30),
+                                    _buildSectionHeader(AppStrings.comments.tr()),
+                                    const SizedBox(height: 15),
+                                    _buildCommentsList(values.comments),
+                                    const SizedBox(height: 30),
+                                    _buildSectionHeader(AppStrings.addNewComment.tr()),
+                                    const SizedBox(height: 20),
+                                    if (value.notificationModel!.commentStatus!.key == "enable")
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 20),
+                                        child: SendCommentWidget(widget.id, "rmnotifications"),
+                                      )
+                                    else
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 20),
+                                        child: Text(
+                                          AppStrings.theCommentOnThisRequestHasBeenClosedByTheAdmin.tr(),
+                                          style: const TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w500),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        Text(AppStrings.lastedComments.tr().toUpperCase(), style: TextStyle(fontSize: 14,
-                                            fontWeight: FontWeight.w500, color: Color(AppColors.dark))),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10,),
-                                    CommentsWidget(
-                                        "rmnotifications",
-                                        enable: value.notificationModel!.commentStatus!.key,
-                                        comments: values.comments,
-                                        pageNumber:  values.pageNumber,
-                                        loading: values.isGetCommentLoading,
-                                        scrollController: _scrollController,
-                                        id : widget.id
-                                    ),
-                                    const SizedBox(height: 20,)
+                                      ),
                                   ],
                                 ),
                               ),
@@ -301,6 +242,111 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
           );
         } ,
       ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Row(
+      children: [
+        const Expanded(child: Divider(color: Color(0xFFE8ECF0), thickness: 1)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Text(
+            title.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF3489EF),
+            ),
+          ),
+        ),
+        const Expanded(child: Divider(color: Color(0xFFE8ECF0), thickness: 1)),
+      ],
+    );
+  }
+
+  Widget _buildCommentsList(List<dynamic> comments) {
+    if (comments.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+          child: Text(
+            AppStrings.noCommentsFound.tr(),
+            style: const TextStyle(color: Colors.grey, fontSize: 14),
+          ),
+        ),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemCount: comments.length,
+      itemBuilder: (context, index) {
+        final comment = comments[index];
+        DateTime utcDateTime = DateTime.parse("${comment['created_at']}");
+        String formattedDate = DateFormat("dd/MM/yyyy hh:mm:ss a", context.locale.languageCode).format(utcDateTime);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: const Color(0xFFF1F4F7)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4), // Increased padding for better white ring
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(color: const Color(0xFFF1F4F7), width: 1),
+                ),
+                child: CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Colors.grey[200],
+                  backgroundImage: CachedNetworkImageProvider(comment['user']['avatar'] ?? ""),
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      comment['content'] ?? "",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF4A4A4A),
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      formattedDate,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFFB0B7C3),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

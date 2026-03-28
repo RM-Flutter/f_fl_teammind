@@ -214,16 +214,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
           children: [
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                    ),
-                  ],
+                  border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
                 ),
                 child: Row(
                   children: [
@@ -246,15 +241,15 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                           focusedErrorBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           hintText: AppStrings.typeYourMessage.tr().toUpperCase(),
-                          hintStyle: TextStyle(
+                          hintStyle:  const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
-                              color: Color(AppColors.darkGrey)),
+                              color: Color(0xFFB0B7C3)),
                           border: InputBorder.none,
                         ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () async {
                         // عدم مسح الصور السابقة عند اختيار صورة جديدة
@@ -283,11 +278,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                         }
                       },
                       child: SvgPicture.asset("assets/images/svg/image.svg",
-                          color: Color(AppColors.primary),
+                          color:  Color(AppColors.primary),
                           width: 20,
                           height: 20),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     GestureDetector(
                       onTap: _isRecording ? () => _stopRecording() : null,
                       onLongPress: _isRecording ? () => _stopRecording() : _startRecording,
@@ -295,11 +290,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                       child: _isRecording
                           ? Text(
                         '$_elapsedTime s',
-                        style: TextStyle(
+                        style:  TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold, color: Color(AppColors.primary)),
                       )
                           : SvgPicture.asset("assets/images/svg/voice.svg",
-                          color: Color(AppColors.primary),
+                          color:  Color(AppColors.primary),
                           width: 20,
                           height: 20),
                     ),
@@ -307,11 +302,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                 ),
               ),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Container(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(
+              decoration:  BoxDecoration(
                 color: Color(AppColors.primary),
                 shape: BoxShape.circle,
               ),
@@ -330,12 +325,9 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                   borderRadius: BorderRadius.circular(24),
                   child: Center(
                     child: (value.isAddCommentLoading == false)
-                        ? SvgPicture.asset("assets/images/svg/send.svg",
-                        color: Color(AppColors.white),
-                        width: 20,
-                        height: 20)
-                        : Padding(
-                      padding: const EdgeInsets.all(3.0),
+                        ? const Icon(Icons.send_rounded, color: Colors.white, size: 22) // Paper plane icon
+                        : const Padding(
+                      padding: EdgeInsets.all(3.0),
                       child: CircularProgressIndicator(
                           color: Colors.white,
                           strokeWidth: 2),

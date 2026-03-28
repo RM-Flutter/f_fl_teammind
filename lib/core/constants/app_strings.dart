@@ -321,6 +321,7 @@ abstract class AppStrings {
   static const errorPleaseTryAgain = "errorPleaseTryAgain";
   static const blogDetails = "blogDetails";
   static const uploadImage = "uploadImage";
+  static const imageCover = "imageCover";
   static const subject = "subject";
   static const image = "image";
   static const specifyTheTypeOfRequest = "specifyTheTypeOfRequest";

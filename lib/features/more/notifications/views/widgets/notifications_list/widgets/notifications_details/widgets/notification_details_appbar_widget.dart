@@ -8,6 +8,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/more/notifications/data/models/get_one_notification_model.dart';
+import 'package:share_plus/share_plus.dart';
 
 
 class NotificationDetailsAppbarWidget extends StatelessWidget {
@@ -16,120 +17,152 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
-      clipBehavior: Clip.antiAlias,
-      width: LayoutService.getWidth(context),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-            image: AssetImage("assets/images/png/home_back.png"),
-            fit: BoxFit.fill,
-            opacity: 0.4),
-        color: Color(AppColors.dark),
-        borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28),
-            bottomRight: Radius.circular(AppSizes.s28)),
+      width: double.infinity,
+      height: 300,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(AppSizes.s32),
+            bottomRight: Radius.circular(AppSizes.s32)),
       ),
       child: Stack(
-        alignment: Alignment.topCenter,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 50,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                        onTap: (){Navigator.pop(context);},
-                        child: Icon(Icons.arrow_back, color: Color(AppColors.white),)),
-                    Spacer(),
-                    Text(
-                      AppStrings.notificationInfo.tr().toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Spacer(),
-                    BookmarkButton(
-                      routeName: AppRoutes.notificationDetails.name,
-                      defaultTitle: AppStrings.notificationInfo.tr(),
-                      iconColor: Colors.white,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16,),
-                Text(
-                  notificationSingleModel!.title?.toString() ?? "",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 25,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          // Background image using the Home screen asset
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(AppSizes.s32),
+                bottomRight: Radius.circular(AppSizes.s32)),
+            child: Image.asset(
+              "assets/images/png/team-mind-home.jpg",
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 300,
+            ),
+          ),
+          // Content
+          Positioned.fill(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(notificationSingleModel!.createdAt.toString())).toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    //     Row(
-                    //   children: [
-                    //     Icon(Icons.folder_open_outlined, color: Colors.white,),
-                    //     SizedBox(width: 5,),
-                    //     SizedBox(
-                    //       width: MediaQuery.sizeOf(context).width * 0.25,
-                    //       child: Text(
-                    //         (notificationSingleModel!.commentStatus != null)?
-                    //         notificationSingleModel!.commentStatus!.value!.toUpperCase() : "",
-                    //         textAlign: TextAlign.center,
-                    //         style: TextStyle(
-                    //           fontSize: 12,
-                    //           color: Colors.white,
-                    //           fontWeight: FontWeight.w500,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    const SizedBox(width: 15,),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    Stack(
+                      alignment: Alignment.center,
                       children: [
-                        Icon(Icons.category, color: Color(AppColors.primary),),
-                        const SizedBox(width: 5,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            BookmarkButton(
+                              routeName: AppRoutes.notificationDetails.name,
+                              defaultTitle: "Notification Info",
+                              iconColor: Colors.white,
+                            ),
+                          ],
+                        ),
                         Text(
-                          notificationSingleModel!.ptype!.key!.toString().tr(),
-                          textAlign: TextAlign.center,
+                          AppStrings.notificationInfo.tr(),
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 18,
                             color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        (notificationSingleModel?.title?.toString() ?? "").toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 26,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          height: 1.1,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildMetadataItem(
+                          context,
+                          icon: Icons.calendar_today_outlined,
+                          text: notificationSingleModel?.createdAt != null
+                              ? DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                  .format(DateTime.parse(notificationSingleModel!.createdAt.toString()))
+                              : "",
+                        ),
+                        const SizedBox(width: 15),
+                        _buildMetadataItem(
+                          context,
+                          icon: Icons.folder_open_outlined,
+                          text: (notificationSingleModel?.ptype?.key ?? "").toUpperCase(),
+                        ),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                             if (notificationSingleModel != null) {
+                              Share.share(
+                                "${notificationSingleModel!.title}\n\n"
+                                "${notificationSingleModel!.content?.replaceAll(RegExp(r'<[^>]*>'), '') ?? ''}",
+                              );
+                            }
+                          },
+                          child: _buildMetadataItem(
+                            context,
+                            icon: Icons.share_outlined,
+                            text: "SHARE",
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
                   ],
                 ),
-                SizedBox(height: 16,),
-
-              ],
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMetadataItem(BuildContext context, {required IconData icon, required String text}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: const Color(0xFF3489EF), size: 16),
+        const SizedBox(width: 6),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 11,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
+          ),
+        ),
+      ],
     );
   }
 }
