@@ -36,7 +36,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
     }
     TextStyle style = TextStyle(
       color: Colors.white.withOpacity(0.8),
-      fontSize: AppSizes.s10,
+      fontSize: AppSizes.s12,
       fontWeight: FontWeight.w400,
     );
     return Container(
@@ -54,8 +54,9 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                 bottomLeft: Radius.circular(AppSizes.s32),
                 bottomRight: Radius.circular(AppSizes.s32)),
             child: Image.asset(
-              "assets/images/png/team-mind-home.jpg",
+              "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
+              alignment: const Alignment(0.5, 0.0),
               width: double.infinity,
               height: 300,
             ),
@@ -101,18 +102,18 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Spacer(),
+                    const Spacer(flex: 2),
                     SvgPicture.asset(
                       "$assets",
-                      height: 38,
-                      width: 43,
+                      height: 50,
+                      width: 50,
                     ),
                     const SizedBox(height: 15),
                     Text(
                       taskName?.toUpperCase() ?? "",
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 22,
+                        fontSize: 24,
                         fontWeight: FontWeight.w800,
                       ),
                       textAlign: TextAlign.center,
@@ -129,7 +130,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                             style: style,
                           ),
                         if (taskDate != null && taskDate != "")
-                          Text(" | ", style: style),
+                          Text(" : ", style: style),
                         if (taskDate != null && taskDate != "")
                           Text(
                             DateFormat('yyyy-MM-dd')
@@ -155,7 +156,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                           ),
                       ],
                     ),
-                    const Spacer(),
+                    const Spacer(flex: 3),
                   ],
                 ),
               ),

@@ -101,17 +101,21 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 12),
+                        vertical: 12, horizontal: 12),
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: Colors.grey.withOpacity(0.1),
+                          width: 1,
+                        ),
                       ),
-                      shadows: const [
+                      shadows: [
                         BoxShadow(
-                          color: Color(AppColors.black),
-                          blurRadius: 10,
-                          offset: Offset(0, 1),
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
                           spreadRadius: 0,
                         )
                       ],
@@ -119,19 +123,29 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(63),
-                          child: CachedNetworkImage(
-                            width: 63,
-                            height: 63,
-                            fit: BoxFit.cover,
-                            imageUrl: comments[index]['user']['avatar'] ?? "",
-                            placeholder: (context, url) =>
-                            const ShimmerAnimatedLoading(),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.image_not_supported_outlined,
-                              size: AppSizes.s32,
-                              color: Colors.white,
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              imageUrl: comments[index]['user']['avatar'] ?? "",
+                              placeholder: (context, url) =>
+                              const ShimmerAnimatedLoading(),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.image_not_supported_outlined,
+                                size: 24,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
@@ -140,77 +154,60 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.4,
-                                child: Text(
-                                    comments[index]['user']['name'] ?? "",
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 12,
-                                        color: Color(AppColors.dark))),
-                              ),
-                              const SizedBox(height: 5),
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.4,
-                                child: Text(
-                                  formattedDate,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      color: Color(AppColors.darkGrey)),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
                               if (comments[index]['content'] != null)
                                 Text(
                                   comments[index]['content'] ?? "",
-                                  style: const TextStyle(
-                                      color: Color(AppColors.black),
+                                  style: TextStyle(
+                                      color: Color(AppColors.dark),
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                                      height: 1.4,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               if (comments[index]['images'].isNotEmpty)
-                                Container(
-                                  width: 94,
-                                  height: 94,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: Color(AppColors.primary),
-                                        width: 2),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              FullScreenImageViewer(
-                                                initialIndex: 0,
-                                                imageUrls: const [""],
-                                                one: true,
-                                                url: false,
-                                                image: comments[index]['images'][0]
-                                                ['file'],
-                                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Container(
+                                    width: 150,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                          color: Color(AppColors.primary).withOpacity(0.2),
+                                          width: 1),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FullScreenImageViewer(
+                                                    initialIndex: 0,
+                                                    imageUrls: const [""],
+                                                    one: true,
+                                                    url: false,
+                                                    image: comments[index]['images'][0]
+                                                    ['file'],
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: CachedNetworkImage(
+                                          imageUrl: comments[index]['images'][0]
+                                          ['file'],
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                          const ShimmerAnimatedLoading(),
+                                          errorWidget: (context, url, error) =>
+                                          const Icon(
+                                            Icons.image_not_supported_outlined,
+                                            size: 24,
+                                            color: Colors.grey,
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    child: CachedNetworkImage(
-                                      imageUrl: comments[index]['images'][0]
-                                      ['file'],
-                                      fit: BoxFit.cover,
-                                      width: 94,
-                                      height: 94,
-                                      placeholder: (context, url) =>
-                                      const ShimmerAnimatedLoading(),
-                                      errorWidget: (context, url, error) =>
-                                      const Icon(
-                                        Icons.image_not_supported_outlined,
-                                        size: AppSizes.s32,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -220,7 +217,15 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                   key: ValueKey('${comments[index]['id']}_voice'),
                                   audioUrl: comments[index]['sounds'][0]
                                   ['file'],
-                                )
+                                ),
+                              const SizedBox(height: 8),
+                              Text(
+                                formattedDate,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10,
+                                    color: Color(AppColors.darkGrey)),
+                              ),
                             ],
                           ),
                         ),
