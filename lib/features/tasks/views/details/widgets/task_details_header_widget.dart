@@ -40,85 +40,127 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
       fontWeight: FontWeight.w400,
     );
     return Container(
-      height: AppSizes.s300,
-      clipBehavior: Clip.antiAlias,
-      width: LayoutService.getWidth(context),
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-            image: AssetImage("assets/images/png/home_back.png"),
-            fit: BoxFit.fill,
-            opacity: 0.4),
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28),
-            bottomRight: Radius.circular(AppSizes.s28)),
+      width: double.infinity,
+      height: 300,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(AppSizes.s32),
+            bottomRight: Radius.circular(AppSizes.s32)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          AppBarWithBookmark(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: AppStrings.tasksInfo.tr(),
-            titleStyle: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
-            centerTitle: true,
-            routeName: AppRoutes.taskDetails.name,
-            defaultTitle: AppStrings.tasksInfo.tr(),
-            bookmarkIconColor: Colors.white,
-            leading: Padding(
-              padding: const EdgeInsets.all(AppSizes.s10),
-              child: InkWell(
-                onTap: () => context.pop(),
-                child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.2)),
-                  child: const Icon(
-                    Icons.arrow_back_sharp,
-                    color: Colors.white,
-                    size: AppSizes.s18,
-                  ),
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(AppSizes.s32),
+                bottomRight: Radius.circular(AppSizes.s32)),
+            child: Image.asset(
+              "assets/images/png/team-mind-home.jpg",
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 300,
+            ),
+          ),
+          Positioned.fill(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          AppStrings.tasksInfo.tr(),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    SvgPicture.asset(
+                      "$assets",
+                      height: 38,
+                      width: 43,
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      taskName?.toUpperCase() ?? "",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (taskCreatedAt != null && taskCreatedAt != "")
+                          Text(
+                            DateFormat('yyyy-MM-dd')
+                                .format(DateTime.parse(taskCreatedAt))
+                                .toString(),
+                            style: style,
+                          ),
+                        if (taskDate != null && taskDate != "")
+                          Text(" | ", style: style),
+                        if (taskDate != null && taskDate != "")
+                          Text(
+                            DateFormat('yyyy-MM-dd')
+                                .format(DateTime.parse(taskDate))
+                                .toString(),
+                            style: style,
+                          ),
+                        if (taskCreatedAt != null &&
+                            taskCreatedAt != "" &&
+                            taskDate != null &&
+                            taskDate != "")
+                          Text(
+                            formatDateDifference(DateTime.parse(taskCreatedAt),
+                                        DateTime.parse(taskDate)) !=
+                                    "0 ${AppStrings.days.tr()}" &&
+                                    formatDateDifference(
+                                            DateTime.parse(taskCreatedAt),
+                                            DateTime.parse(taskDate)) !=
+                                        "0 ${AppStrings.month.tr()}"
+                                ? " (${formatDateDifference(DateTime.parse(taskCreatedAt), DateTime.parse(taskDate))})"
+                                : " (1 ${AppStrings.days.tr()})",
+                            style: style,
+                          ),
+                      ],
+                    ),
+                    const Spacer(),
+                  ],
                 ),
               ),
             ),
           ),
-          gapH20,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset("$assets", height: 38, width: 43,),
-                const SizedBox(height: 10,),
-                Text(
-                  taskName ?? "",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: AppSizes.s17,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if(taskCreatedAt != null && taskCreatedAt != "")Text(DateFormat('yyyy-MM-dd').format(DateTime.parse(taskCreatedAt)).toString(),style: style),
-                    if(taskDate != null && taskDate != "")Text(" | ",style: style),
-                    if(taskDate != null && taskDate != "")Text(DateFormat('yyyy-MM-dd').format(DateTime.parse(taskDate)).toString(),style: style),
-                    if(taskCreatedAt != null && taskCreatedAt != "" && taskDate != null && taskDate != "")
-                      Text(formatDateDifference(DateTime.parse(taskCreatedAt), DateTime.parse(taskDate)) != "0 ${AppStrings.days.tr()}" &&
-                          formatDateDifference(DateTime.parse(taskCreatedAt), DateTime.parse(taskDate)) != "0 ${AppStrings.month.tr()}"?
-                      " (${formatDateDifference(DateTime.parse(taskCreatedAt), DateTime.parse(taskDate))})" : " (1 ${AppStrings.days.tr()})",style: style),
-
-                  ],
-                )
-                 ],
-            ),
-          )
         ],
       ),
     );

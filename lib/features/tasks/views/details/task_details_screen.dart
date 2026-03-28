@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   var id;
-  TaskDetailsScreen({this.id,});
+  TaskDetailsScreen({super.key, this.id,});
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -56,17 +56,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   } );
             }
           }
-          var jsonString;
-          var gCache;
-          jsonString = CacheHelper.getString("US1");
+          final jsonString = CacheHelper.getString("US1");
+          Map<String, dynamic>? gCache;
           if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-            gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+            gCache = json.decode(jsonString) as Map<String, dynamic>;
             UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
           }
           return Consumer<CommentProvider>(
             builder: (context, values, child) {
               return Scaffold(
-                floatingActionButton: value.getOneTaskModel != null ?(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)?Padding(
+                floatingActionButton: value.getOneTaskModel != null && gCache != null ?(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)?Padding(
                   padding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.05),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
@@ -112,7 +111,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                         Center(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(
+                            constraints: const BoxConstraints(
                                 maxWidth: kIsWeb ? 800 : double.infinity
                             ),
                             child: Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -141,99 +140,158 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     ],
                                   ),
                                   const SizedBox(height: 20,),
-                                  Text(AppStrings.description.tr(),
-                                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Color(AppColors.primary)),
+                                  Text(
+                                    AppStrings.description.tr().toUpperCase(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Color(AppColors.primary)),
                                   ),
                                   const SizedBox(height: 10,),
                                   Text(
                                     value.getOneTaskModel!.task!.content!,
-                                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.darkGrey)),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13,
+                                        color: Color(AppColors.darkGrey)),
                                   ),
                                   const SizedBox(height: 20,),
                                   ListView.separated(
-                                      padding: EdgeInsets.zero,
-                                      reverse: false,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        final iconName = value.getOneTaskModel!.task!.icon;
-                                        final icon = value.iconsName.firstWhere(
-                                              (item) => item["name"] == iconName,
-                                          orElse: () => {"value": "assets/images/svg/t3.svg"}, // مسار افتراضي لو لم يوجد
-                                        );
-                                        return Container(
-                                          padding: EdgeInsets.only(
-                                              left: LocalizationService.isArabic(context: context) ?0 :15,
-                                              right: LocalizationService.isArabic(context: context) ?15 :0
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              borderRadius: BorderRadius.circular(5),
+                                    padding: EdgeInsets.zero,
+                                    reverse: false,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final subTask = value.getOneTaskModel!.task!.subTasks![index];
+                                      final isCompleted = subTask.status == true;
+                                      final iconName = value.getOneTaskModel!.task!.icon;
+                                      final icon = value.iconsName.firstWhere(
+                                        (item) => item["name"] == iconName,
+                                        orElse: () => {"value": "assets/images/svg/t3.svg"},
+                                      );
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexSelect = index;
+                                            subTask.status = !subTask.status!;
+                                          });
+                                          value.updateSubTask(
+                                            context,
+                                            content: value.getOneTaskModel!.task!.content.toString(),
+                                            assign: value.getOneTaskModel!.task!.assignTo,
+                                            due: value.getOneTaskModel!.task!.dueDate,
+                                            icon: value.getOneTaskModel!.task!.icon.toString(),
+                                            id: value.getOneTaskModel!.task!.id,
+                                            status: value.getOneTaskModel!.task!.status.toString(),
+                                            subTask: value.getOneTaskModel!.task!.subTasks,
+                                            title: value.getOneTaskModel!.task!.title.toString(),
+                                          );
+                                        },
+                                        child: IntrinsicHeight(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.zero,
                                               border: Border.all(
-                                                color: Color(AppColors.primary),
-                                              )
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                                child: Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    SvgPicture.asset(icon['value']!),
-                                                    const SizedBox(width: 12,),
-                                                    SizedBox(
-                                                        width: !kIsWeb?MediaQuery.sizeOf(context).width * 0.6:MediaQuery.sizeOf(context).width * 0.2,
-                                                        child: Text(value.getOneTaskModel!.task!.subTasks![index].name ?? "",
-                                                          style: TextStyle(color: Color(AppColors.dark),fontSize: 12,fontWeight: FontWeight.w600),)),
-                                                  ],
-                                                ),
+                                                color: isCompleted
+                                                    ? const Color(0xFF3489EF)
+                                                    : Color(AppColors.whiteGrey),
+                                                width: 1,
                                               ),
-                                              const Spacer(),
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: GestureDetector(
-                                                  onTap: (){
-                                                    setState(() {
-                                                      indexSelect = index;
-                                                      value.getOneTaskModel!.task!.subTasks![index].status = !value.getOneTaskModel!.task!.subTasks![index].status!;
-                                                    });
-                                                    value.updateSubTask(context,
-                                                      content: value.getOneTaskModel!.task!.content.toString(),
-                                                      assign: value.getOneTaskModel!.task!.assignTo,
-                                                      due: value.getOneTaskModel!.task!.dueDate,
-                                                      icon: value.getOneTaskModel!.task!.icon.toString(),
-                                                      id: value.getOneTaskModel!.task!.id,
-                                                      status: value.getOneTaskModel!.task!.status.toString(),
-                                                      subTask: value.getOneTaskModel!.task!.subTasks,
-                                                      title: value.getOneTaskModel!.task!.title.toString(),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: 20,
-                                                    height: 20,
-                                                    padding: const EdgeInsets.all(4),
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(color: Color(AppColors.primary)),
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: indexSelect == index && value.isUpdateLoading == true?
-                                                    const CircularProgressIndicator()
-                                                        :Container(
-                                                      decoration: BoxDecoration(
-                                                        color: value.getOneTaskModel!.task!.subTasks![index].status == true ?Color(AppColors.primary) : Colors.transparent,
-                                                        shape: BoxShape.circle,
-                                                      ),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                                                  child: SvgPicture.asset(
+                                                    icon['value']!,
+                                                    width: 24,
+                                                    height: 24,
+                                  colorFilter: isCompleted
+                                      ? const ColorFilter.mode(Color(0xFF3489EF), BlendMode.srcIn)
+                                      : null,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          subTask.name?.toUpperCase() ?? "",
+                                                          style: TextStyle(
+                                                            color: isCompleted
+                                                                ? const Color(0xFF090B5F)
+                                                                : Color(AppColors.dark),
+                                                            fontSize: 13,
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(height: 4),
+                                                        Text(
+                                                          "${value.getOneTaskModel!.task!.createAt != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.createAt!)) : ""} : ${value.getOneTaskModel!.task!.dueDate != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.dueDate!)) : ""}",
+                                                          style: TextStyle(
+                                                            color: Color(AppColors.darkGrey).withOpacity(0.7),
+                                                            fontSize: 10,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
-                                              )
-                                            ],
+                                                if (isCompleted)
+                                                  Container(
+                                                    width: 40,
+                                                    decoration: const BoxDecoration(
+                                                      color: Color(0xFF3489EF),
+                                                      borderRadius: BorderRadius.zero,
+                                                    ),
+                                                    child: const Center(
+                                                      child: Icon(
+                                                        Icons.check,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  )
+                                                else if (indexSelect == index && value.isUpdateLoading == true)
+                                                  const SizedBox(
+                                                    width: 40,
+                                                    child: Center(
+                                                      child: SizedBox(
+                                                        width: 20,
+                                                        height: 20,
+                                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                                      ),
+                                                    ),
+                                                  )
+                                                else
+                                                  Container(
+                                                    width: 40,
+                                                    alignment: Alignment.center,
+                                                    child: Container(
+                                                      width: 20,
+                                                      height: 20,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(color: const Color(0xFF3489EF), width: 1.5),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
                                           ),
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) => const SizedBox(height: 15,),
-                                      itemCount: value.getOneTaskModel!.task!.subTasks!.length),
+                                        ),
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) => const SizedBox(height: 15),
+                                    itemCount: value.getOneTaskModel!.task!.subTasks!.length,
+                                  ),
                                   const SizedBox(height: 15,),
                                   if(value.getOneTaskModel!.task!.status == "open")GestureDetector(
                                     onTap: (){
@@ -252,7 +310,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                          Padding(padding: const EdgeInsets.symmetric(vertical: 10),
                                             child: Text(AppStrings.closeMainTask.tr(),
                                               style: TextStyle(color: Color(AppColors.white),fontSize: 12,fontWeight: FontWeight.w600),),
                                           ),
@@ -269,7 +327,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                   bottomLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
                                                 )
                                             ),
-                                            child: (value.isLoading == true)? const CircularProgressIndicator(color: Colors.white,):Icon(Icons.check, color: Colors.white,),
+                                            child: (value.isLoading == true)? const CircularProgressIndicator(color: Colors.white,):const Icon(Icons.check, color: Colors.white,),
                                           )
                                         ],
                                       ),
@@ -288,8 +346,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           ),
                                         ),
                                       ),
-                                      Text(AppStrings.lastedComments.tr().toUpperCase(), style: TextStyle(fontSize: 14,
-                                          fontWeight: FontWeight.w500, color: Color(AppColors.dark))),
+                                      Text(AppStrings.comments.tr().toUpperCase(), style: TextStyle(fontSize: 14,
+                                          fontWeight: FontWeight.bold, color: Color(AppColors.primary))),
                                       Expanded(
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -302,7 +360,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 10,),
+                                  const SizedBox(height: 10,),
                                   CommentsWidget(
                                       "tasks",
                                       enable: "enable",
