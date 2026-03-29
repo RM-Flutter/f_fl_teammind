@@ -27,7 +27,7 @@ Widget defaultTapBarItem({
         height: !useVertical ? 50 : null,
         width: totalWidth,
         decoration: BoxDecoration(
-          color: const Color(0xff090B5F),
+          color:  Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(32),
         ),
         child: SizedBox(

@@ -204,7 +204,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         viewModel.getTask(context, loadMore: true);
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xff090B5F),
+                                        backgroundColor: Theme.of(context).colorScheme.secondary,
                                         foregroundColor: Colors.white,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 40, vertical: 12),

@@ -124,29 +124,32 @@ abstract class ModalSheetHelper {
                         borderRadius: BorderRadius.circular(AppSizes.s4)),
                   ), gapH24,
                   // Modal Sheet title
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  Stack(
+                    alignment: Alignment.center,
                     children: [
                       Center(
                         child: Text(title!,
                             style: Theme.of(context).textTheme.headlineLarge!),
                       ),
-                      if(viewProfile == true)  Spacer(),
-                      if(viewProfile == true)   CustomElevatedButton(
-                        width: 130,
-                        onPressed: () async{
-                          context.pushNamed(
-                              AppRoutes.employeeDetails.name,
-                              pathParameters: {
-                                'id': id.toString(),
-                                'lang':
-                                context.locale.languageCode
-                              });
-                        },
-                        title: AppStrings.viewProfile.tr().toUpperCase(),
-                        titleSize: 12,
-                        isFuture: false,
-                      ),
+                      if(viewProfile == true) 
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: CustomElevatedButton(
+                            width: 130,
+                            onPressed: () async{
+                              context.pushNamed(
+                                  AppRoutes.employeeDetails.name,
+                                  pathParameters: {
+                                    'id': id.toString(),
+                                    'lang':
+                                    context.locale.languageCode
+                                  });
+                            },
+                            title: AppStrings.viewProfile.tr().toUpperCase(),
+                            titleSize: 12,
+                            isFuture: false,
+                          ),
+                        ),
                     ],
                   ),
                   gapH26,

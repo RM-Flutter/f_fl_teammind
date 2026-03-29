@@ -36,16 +36,17 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                  offset: const Offset(0, 0),
-                  blurRadius: 2.5,
-                ),
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                )
               ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                gapW8,
                 Image.asset(
                   RewardsAndPenaltiesRepo.getRewardAndPenaltyImage(
                       type: rewardAndPenalty.type?.value),
@@ -56,11 +57,11 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                     color: Colors.red,
                   ),
                 ),
-                gapW8,
+                gapW12,
                 Expanded(
                   child: Text(
                     RewardsAndPenaltiesRepo.formatDate(context,
-                            rewardAndPenalty.dueDate) ??
+                        rewardAndPenalty.dueDate) ??
                         '',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -75,11 +76,11 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                   width: AppSizes.s28,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.secondary),
+                      color: Theme.of(context).colorScheme.primary),
                   child: const Icon(
                     Icons.arrow_forward_outlined,
                     color: Colors.white,
-                    size: AppSizes.s18,
+                    size: AppSizes.s12,
                   ),
                 ),
               ],

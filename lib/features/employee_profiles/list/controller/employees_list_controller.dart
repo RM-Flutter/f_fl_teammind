@@ -141,7 +141,7 @@ class EmployeesListViewModel extends ChangeNotifier {
                   .inputDecorationTheme
                   .enabledBorder
                   ?.borderSide,
-              hintText: AppStrings.department.tr(),
+              hintText: AppStrings.selectDepartment.tr(),
               hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
               items: departments
                   ?.whereType<DepartmentModel>()

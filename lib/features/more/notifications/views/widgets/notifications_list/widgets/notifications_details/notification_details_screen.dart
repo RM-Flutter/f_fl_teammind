@@ -253,10 +253,10 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Text(
             title.toUpperCase(),
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF3489EF),
+              color: (Theme.of(context).colorScheme.primary),
             ),
           ),
         ),

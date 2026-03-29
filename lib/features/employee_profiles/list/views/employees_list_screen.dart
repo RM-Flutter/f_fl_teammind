@@ -99,7 +99,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             )
           ),
           pageContext: context,
-          title: AppStrings.employeesList.tr().toUpperCase(),
+          title: AppStrings.employeesList.tr(),
           onRefresh: () async =>
               await viewModel.initializeEmployeesListScreen(context),
           body: Column(

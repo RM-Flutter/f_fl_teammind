@@ -306,7 +306,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               children: [
                                 if (viewModel.isLoading == false)
                                   CustomElevatedButton(
-                                    backgroundColor: const Color(0xff090B5F),
+                                    backgroundColor: const Theme.of(context).colorScheme.secondary,
                                     titleSize: AppSizes.s14,
                                     radius: AppSizes.s24,
                                     title: AppStrings.addTask.tr().toUpperCase(),

@@ -370,7 +370,8 @@ abstract class AppStrings {
   static const generalInfo = "generalInfo";
   static const thereIsNoEmployeeDataFound = "thereIsNoEmployeeDataFound";
   static const searchByName = "searchByName";
-  static const employeesList = "employeesList";
+  static const String employeesList = "employeesList";
+  static const String selectDepartment = "selectDepartment";
   static const thereIsNoEmployees = "thereIsNoEmployees";
   static const taken = "taken";
   static const from = "from";

@@ -151,7 +151,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: const Color(0xFF3489EF), size: 16),
+        Icon(icon, color: (Theme.of(context).colorScheme.primary), size: 16),
         const SizedBox(width: 6),
         Text(
           text,

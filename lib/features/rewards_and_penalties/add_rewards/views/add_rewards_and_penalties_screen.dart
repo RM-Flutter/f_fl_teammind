@@ -294,7 +294,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               children: [
                                 if(viewModel.isLoadingPost == false)  CustomElevatedButton(
                                     backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).colorScheme.secondary,
                                     titleSize: AppSizes.s14,
                                     radius: AppSizes.s24,
                                     title: AppStrings.send.tr(),

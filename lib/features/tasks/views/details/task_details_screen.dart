@@ -195,7 +195,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                               borderRadius: BorderRadius.zero,
                                               border: Border.all(
                                                 color: isCompleted
-                                                    ? const Color(0xFF3489EF)
+                                                    ?  (Theme.of(context).colorScheme.primary)
                                                     : Color(AppColors.whiteGrey),
                                                 width: 1,
                                               ),
@@ -210,7 +210,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                     width: 24,
                                                     height: 24,
                                   colorFilter: isCompleted
-                                      ? const ColorFilter.mode(Color(0xFF3489EF), BlendMode.srcIn)
+                                      ?  ColorFilter.mode((Theme.of(context).colorScheme.primary), BlendMode.srcIn)
                                       : null,
                                                   ),
                                                 ),
@@ -225,7 +225,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                           subTask.name?.toUpperCase() ?? "",
                                                           style: TextStyle(
                                                             color: isCompleted
-                                                                ? const Color(0xFF090B5F)
+                                                                ? Theme.of(context).colorScheme.secondary
                                                                 : Color(AppColors.dark),
                                                             fontSize: 13,
                                                             fontWeight: FontWeight.bold,
@@ -247,8 +247,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                 if (isCompleted)
                                                   Container(
                                                     width: 40,
-                                                    decoration: const BoxDecoration(
-                                                      color: Color(0xFF3489EF),
+                                                    decoration:  BoxDecoration(
+                                                      color: (Theme.of(context).colorScheme.primary),
                                                       borderRadius: BorderRadius.zero,
                                                     ),
                                                     child: const Center(
@@ -279,7 +279,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                       height: 20,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        border: Border.all(color: const Color(0xFF3489EF), width: 1.5),
+                                                        border: Border.all(color:  (Theme.of(context).colorScheme.primary), width: 1.5),
                                                       ),
                                                     ),
                                                   ),

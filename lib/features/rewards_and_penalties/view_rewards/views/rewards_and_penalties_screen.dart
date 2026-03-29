@@ -64,13 +64,13 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
             width: AppSizes.s16,
           ) : null,
           pageContext: context,
-          title: AppStrings.rewardsAndPenalties.tr().toUpperCase(),
+          title: AppStrings.rewardsAndPenalties.tr(),
           onRefresh: () async =>
               await viewModel.initializeRewardsAndPenaltiesListScreen(
                   context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(
