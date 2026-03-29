@@ -47,8 +47,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                     maxWidth: kIsWeb ? 1100 : double.infinity
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.s12, vertical: AppSizes.s12),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s12),
                   child: Row(
                     children: [
                       Expanded(
@@ -56,16 +55,30 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                           controller: viewModel.searchController,
                           onChanged: viewModel.updateSearchQuery,
                           decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.search),
+                              prefixIcon: const Icon(Icons.search, color: Colors.grey),
                               hintText: AppStrings.searchByName.tr(),
-                              fillColor:
-                              Theme.of(context).primaryColor.withOpacity(0.05),
-                              suffixIcon: IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed:
-                                  viewModel.releaseSearchValuesAndFilters),
+                              hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+                              filled: true,
+                              fillColor: const Color(0xffF2F4F5),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: viewModel.searchController.text.isNotEmpty 
+                                  ? IconButton(
+                                      icon: const Icon(Icons.close, color: Colors.grey),
+                                      onPressed: viewModel.releaseSearchValuesAndFilters)
+                                  : null,
                               isDense: true,
-                              contentPadding: const EdgeInsets.all(AppSizes.s8)),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12)),
                         ),
                       ),
                       gapW4,
@@ -93,7 +106,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             children: [
               Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                       maxWidth: kIsWeb ? 1100 : double.infinity
                   ),
                   child: Padding(
@@ -116,8 +129,11 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                       return Column(
                                         children: [
                                           ListTile(
-                                            leading: employee.avatar != null
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                            leading: employee.avatar != null && employee.avatar!.isNotEmpty
                                                 ? CircleAvatar(
+                                                    radius: 25,
+                                                    backgroundColor: Colors.transparent,
                                                     child: Center(
                                                       child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(50),
@@ -134,57 +150,79 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                                 ),
                                                             errorWidget: (context,
                                                                     url, error) =>
-                                                                const Icon(
-                                                                  Icons
-                                                                      .image_not_supported_outlined,
+                                                                Image.asset(
+                                                                  "assets/images/user.png",
+                                                                  fit: BoxFit.cover,
+                                                                  width: 50,
+                                                                  height: 50,
                                                                 )),
                                                       ),
                                                     ),
                                                   )
                                                 : CircleAvatar(
+                                                    radius: 25,
+                                                    backgroundColor: Colors.transparent,
                                                     child: Image.asset(
-                                                      AppImages.profilePlaceHolder,
-                                                      fit: BoxFit.contain,
+                                                      "assets/images/user.png",
+                                                      fit: BoxFit.cover,
+                                                      width: 50,
+                                                      height: 50,
                                                     ),
                                                   ),
-                                            title: Text(employee.name ?? ''),
-                                            subtitle: employee.jobTitle != null &&
-                                                        employee.jobTitle
-                                                                ?.isNotEmpty ==
-                                                            true ||
-                                                    employee.phone != null
-                                                ? Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
-                                                    children: [
-                                                      if (employee.jobTitle != null)
-                                                        Text(employee.jobTitle!),
-                                                      if (employee.phone != null)
-                                                        Text(
-                                                            employee.countryKey != null?
-                                                            LocalizationService.isArabic(context: context)?  '${employee.phone!}(${employee.countryKey ?? ''}+)':'(+${employee.countryKey ?? ''})${employee.phone!}'
-                                                                : '${employee.phone!}'
-                                                        ),
-                                                    ],
-                                                  )
-                                                : const SizedBox.shrink(),
+                                            title: Text(
+                                              employee.name ?? '',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            subtitle: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                if (employee.jobTitle != null && employee.jobTitle!.isNotEmpty)
+                                                  Text(
+                                                    employee.jobTitle!,
+                                                    style: TextStyle(
+                                                      color: Colors.grey.shade600,
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                if (employee.phone != null && employee.phone.toString().isNotEmpty) ... [
+                                                  const SizedBox(height: 3),
+                                                  Text(
+                                                    employee.countryKey != null
+                                                        ? LocalizationService.isArabic(context: context)
+                                                        ? '${employee.phone.toString()}(${employee.countryKey ?? ''}+)'
+                                                        : '(+${employee.countryKey ?? ''}) ${employee.phone.toString()}'
+                                                        : '${employee.phone.toString()}',
+                                                    style: TextStyle(
+                                                      color: Colors.grey.shade600,
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+
+                                              ],
+                                            ),
                                             onTap: () async {
                                               FocusManager.instance.primaryFocus?.unfocus();
-                                              await context
-                                                  .pushNamed(
+                                              await context.pushNamed(
                                                   AppRoutes.employeeDetails.name,
                                                   pathParameters: {
                                                     'id': employee.id.toString(),
-                                                    'lang':
-                                                    context.locale.languageCode
+                                                    'lang': context.locale.languageCode
                                                   });
-                                            }
+                                            },
                                           ),
-                                          Divider(
-                                            color: Colors.grey.withOpacity(0.2),
-                                            height: AppSizes.s1,
+                                           Divider(
+                                            color: Colors.grey.withOpacity(.3),
+                                            height: 1,
+                                            indent: 16,
+                                            endIndent: 16,
                                           )
                                         ],
                                       );
