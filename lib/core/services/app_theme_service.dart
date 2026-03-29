@@ -186,7 +186,7 @@ abstract class AppThemeService {
         // application font family
         fontFamily: LocalizationService.isArabic(context: context)
             ? AppConstants.fontFamilyMontserratArabic
-            : AppConstants.fontFamilyIbrand,
+            : AppConstants.fontFamilyPoppins,
         // application input decoration theme
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(
@@ -235,7 +235,7 @@ abstract class AppThemeService {
         textTheme: _textTheme(context: context, isDark: isDark).apply(
           fontFamily: LocalizationService.isArabic(context: context)
               ? AppConstants.fontFamilyMontserratArabic
-              : AppConstants.fontFamilyIbrand,
+              : AppConstants.fontFamilyPoppins,
         ),
         // application theme
         brightness: isDark ? Brightness.dark : Brightness.light,
@@ -272,7 +272,7 @@ abstract class AppThemeService {
             fontSize: AppSizes.s16,
             fontFamily: LocalizationService.isArabic(context: context)
                 ? AppConstants.fontFamilyMontserratArabic
-                : AppConstants.fontFamilyIbrand,
+                : AppConstants.fontFamilyPoppins,
             fontWeight: FontWeight.bold,
           ),
           unselectedLabelColor: colorPalette.tertiaryTextColor.color,
@@ -280,7 +280,7 @@ abstract class AppThemeService {
               fontSize: AppSizes.s16,
               fontFamily: LocalizationService.isArabic(context: context)
                   ? AppConstants.fontFamilyMontserratArabic
-                  : AppConstants.fontFamilyIbrand,
+                  : AppConstants.fontFamilyPoppins,
               fontWeight: FontWeight.bold),
           labelPadding: const EdgeInsets.symmetric(vertical: 8.0),
         ),

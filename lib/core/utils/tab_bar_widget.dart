@@ -69,12 +69,10 @@ Widget defaultTapBarItem({
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11,
                     color: Colors.white,
-                    fontWeight: (selectIndex == index || selectName == items[index])
-                        ? FontWeight.w700
-                        : FontWeight.w400,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ),

@@ -31,8 +31,7 @@ class ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: marginBottom ?? AppSizes.s12),
-      padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.s16, horizontal: AppSizes.s20),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16, horizontal: AppSizes.s20),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -55,20 +54,19 @@ class ProfileTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     icon ?? const SizedBox.shrink(),
-                    gapW4,
-                    Text(title,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.black))),
-                    gapW12,
-                    if(isList == false)Expanded(
-                      child: AutoSizeText(
+                    const SizedBox(width: 12),
+                    Text(title,
+                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Color(0xff2F88FF))),
+                    const Spacer(),
+                    if(isList == false)
+                      AutoSizeText(
                         trailingTitle ?? '',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),
+                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black),
                         textAlign: TextAlign.end,
                       ),
-                    ),
                     if(isList == true)Container(
-                      width: MediaQuery.sizeOf(context).width * 0.5,
                       alignment: Alignment.centerRight,
                       height: 15,
                       child: ListView.separated(
@@ -82,10 +80,10 @@ class ProfileTile extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),
+                                fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black),
                             textAlign: TextAlign.end,
                           ),
-                          separatorBuilder: (context, index) => SizedBox(width: 10,child: Text(index == weekends!.length - 1 ? "" : ",", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),),),
+                          separatorBuilder: (context, index) => SizedBox(width: 4,child: Text(index == weekends!.length - 1 ? "" : ",", style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black),),),
                           itemCount: weekends!.length),
                     )
                   ],

@@ -48,12 +48,13 @@ class GeneralSectionWidget extends StatelessWidget {
       gCache = json.decode(json1String) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    final textStyle = TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Theme.of(context).colorScheme.primary,
-      fontSize: AppSizes.s13,
+    final textStyle = const TextStyle(
+      fontWeight: FontWeight.w700,
+      color: Color(0xff2F88FF),
+      fontSize: 14,
     );
     return SingleChildScrollView(
+      // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,19 +62,20 @@ class GeneralSectionWidget extends StatelessWidget {
           gapH12,
           if (employee?.jobDescription != null &&
               employee?.jobDescription?.isNotEmpty == true) ...[
-            AutoSizeText(
+            Text(
               AppStrings.jopDescription.tr().toUpperCase(),
               style: textStyle,
             ),
-            gapH8,
+            const SizedBox(height: 12),
             Text(employee!.jobDescription!,
             style: TextStyle(
               fontWeight: FontWeight.w400,
-              color: Color(AppColors.darkGrey),
-              fontSize: AppSizes.s12,
+              color: const Color(0xff666666),
+              fontSize: 13,
+              height: 1.5,
             ),
             ),
-            gapH20,
+            const SizedBox(height: 24),
           ],
           if ((employee?.hireDate != null &&
                   employee?.hireDate?.isNotEmpty == true) ||
@@ -84,11 +86,11 @@ class GeneralSectionWidget extends StatelessWidget {
                       true) ||
               (employee?.weekends != null &&
                   employee?.weekends?.isNotEmpty == true)) ...[
-            AutoSizeText(
+            Text(
               AppStrings.generalInfo.tr().toUpperCase(),
               style: textStyle,
             ),
-            gapH8,
+            const SizedBox(height: 12),
             //HIRE DATE
             if (employee?.hireDate != null &&
                 employee?.hireDate?.isNotEmpty == true)
@@ -97,7 +99,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.hireDate.tr().toUpperCase(),
                 trailingTitle: employee!.hireDate,
-                icon: Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),
             //WORK HOURS TYPE
             if (employee?.workingHoursType != null &&
@@ -106,8 +108,8 @@ class GeneralSectionWidget extends StatelessWidget {
                 isTitleOnly: false,
                 isList: false,
                 title: AppStrings.workHoursType.tr().toUpperCase(),
-                trailingTitle: employee?.workingHoursType.toString().tr() ?? '',
-                icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
+                trailingTitle: employee?.workingHoursType.toString().tr().toUpperCase() ?? '',
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),
             if ((employee?.workingHoursType.toString().tr() == "عدد الساعات اليومية" ||
                 employee?.workingHoursType.toString().tr() == "According Hours Count" ) || (employee?.workingHoursType.toString().tr() == "ساعات حرة" ||
@@ -117,7 +119,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.hoursDailyCount.tr().toUpperCase(),
                 trailingTitle: employee!.workingHours!.dailyWorkingHours ?? '',
-                icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),
             // WORK HOURS
             if ((employee!.workingHours!.dailyWorkingHoursStart != null || employee!.workingHours!.dailyWorkingHoursEnd != null))
@@ -125,15 +127,15 @@ class GeneralSectionWidget extends StatelessWidget {
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursStart)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursStart.toString())
-                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}",
-                icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
+                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}".toUpperCase(),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),if ((employee!.workingHours!.dailyWorkingHoursFrom != null || employee!.workingHours!.dailyWorkingHoursTo != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursFrom)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursFrom.toString())
-                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}",
-                icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
+                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}".toUpperCase(),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),
             if (employee?.workingHoursType.toString().tr() == "ساعات ثابتة" ||
                 employee?.workingHoursType.toString().tr() == "Fixed Hours" )
@@ -141,110 +143,27 @@ class GeneralSectionWidget extends StatelessWidget {
                 isTitleOnly: false,
                 isList: false,
                 title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
-                trailingTitle: "${employee!.workingHours!.allowedDelayMinutes} ${AppStrings.minutes.tr()}",
-                icon: const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
+                trailingTitle: "${employee!.workingHours!.allowedDelayMinutes} ${AppStrings.minutes.tr()}".toUpperCase(),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),
             //WEEKENDS
-            if (employee!.id.toString() != gCache['empId'].toString() && employee!.weekends != null&& employee!.weekends!.isNotEmpty )Container(
-                margin: EdgeInsets.only(bottom: AppSizes.s12),
-                padding: const EdgeInsets.symmetric(
-                    vertical: AppSizes.s12, horizontal: AppSizes.s10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(AppSizes.s8),
-                    border: Border.all(color: Colors.grey.withOpacity(0.1))),
-                child:  Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
-                    gapW4,
-                    Text(AppStrings.weekends.tr().toUpperCase(),style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.black))),
-                    gapW12,
-                    Expanded(
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width * 0.38,
-                          alignment:LocalizationService.isArabic(context: context)? Alignment.centerLeft : Alignment.centerRight,
-                          height: 18,
-                          child: ListView.separated(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.horizontal,
-                              physics: const ClampingScrollPhysics(),
-                              shrinkWrap: true,
-                              reverse: false,
-                              itemBuilder: (context, index) => AutoSizeText(
-                                employee!.weekends![index].toString().tr(),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),
-                                textAlign: LocalizationService.isArabic(context: context)?TextAlign.end : TextAlign.start,
-                              ),
-                              separatorBuilder: (context, index) => SizedBox(width: 10,child: Text(index == employee!.weekends!.length - 1 ? "" : ",", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),),),
-                              itemCount: employee!.weekends!.length),
-                        )
-                    ),
-                  ],
-                )
+            if (employee!.id.toString() != gCache['empId'].toString() && employee!.weekends != null&& employee!.weekends!.isNotEmpty )
+              ProfileTile(
+                isTitleOnly: false,
+                isList: true,
+                title: AppStrings.weekends.tr().toUpperCase(),
+                weekends: employee!.weekends!.map((e) => e.toString().tr().toUpperCase()).toList(),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
               ),
-            if (employee!.id.toString() == gCache['empId'].toString() && us2Cache['weekend'] != null&&us2Cache['weekend']!.isNotEmpty ) Container(
-              margin: const EdgeInsets.only(bottom: AppSizes.s12),
-              padding: const EdgeInsets.symmetric(
-                  vertical: AppSizes.s12, horizontal: AppSizes.s10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(AppSizes.s8),
-                  border: Border.all(color: Colors.grey.withOpacity(0.1))),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(Icons.check_circle_outline, color: Color(AppColors.black),),
-                  gapW4,
-                  Text(AppStrings.weekends.tr().toUpperCase(),style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.black))),
-                  gapW12,
-                  Expanded(
-                      child: Container(
-                        width: MediaQuery.sizeOf(context).width * 0.38,
-                        alignment: LocalizationService.isArabic(context: context)?Alignment.centerLeft: Alignment.centerRight,
-                        height: 18,
-                        child: ListView.separated(
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
-                            physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            reverse: false,
-                            itemBuilder: (context, index) => AutoSizeText(
-                              us2Cache['weekend']![index].toString().tr(),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),
-                              textAlign: LocalizationService.isArabic(context: context)?TextAlign.end:TextAlign.start,
-                            ),
-                            separatorBuilder: (context, index) => SizedBox(width: 10,child: Text(index == us2Cache['weekend']!.length - 1 ? "" : ",", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Color(AppColors.black)),),),
-                            itemCount: us2Cache['weekend']!.length),
-                      )
-                  ),
-                ],
-              )
-            ),
+            if (employee!.id.toString() == gCache['empId'].toString() && us2Cache['weekend'] != null&&us2Cache['weekend']!.isNotEmpty )
+              ProfileTile(
+                isTitleOnly: false,
+                isList: true,
+                title: AppStrings.weekends.tr().toUpperCase(),
+                weekends: (us2Cache['weekend'] as List).map((e) => e.toString().tr().toUpperCase()).toList(),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+              ),
           ],
-          // gapH24,
-          // Center(
-          //   child: CustomElevatedButton(
-          //     backgroundColor: Theme.of(context).colorScheme.black,
-          //     titleSize: AppSizes.s12,
-          //     title: AppStrings.viewFingerPrints.tr().toUpperCase(),
-          //     onPressed: () async => await context.pushNamed(
-          //       AppRoutes.employeeFingerprint.name,
-          //       extra: {},
-          //       pathParameters: {
-          //         'lang': context.locale.languageCode,
-          //         'employeeName': employee?.name ?? '',
-          //         'employeeId': employee?.id?.toString() ?? '',
-          //       },
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
