@@ -30,7 +30,7 @@ class ContactsSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: 12,
+        horizontal: 0,
         vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 12,
       ),
       child: Column(

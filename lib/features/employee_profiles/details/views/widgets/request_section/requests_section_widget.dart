@@ -31,16 +31,19 @@ class RequestsSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           gapH12,
-          ProfileBalanceWidget(
-            balance: employee?.balance,
-            empDepartmentId: employee?.departmentId?.toString(),
-            employeeId: employee?.id?.toString(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: ProfileBalanceWidget(
+              balance: employee?.balance,
+              empDepartmentId: employee?.departmentId?.toString(),
+              employeeId: employee?.id?.toString(),
+            ),
           ),
           gapH24,
           Center(
               child: CustomElevatedButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  titleSize: AppSizes.s12,
+                  titleSize: AppSizes.s14,
                   title: AppStrings.viewTheLatestReviews.tr().toUpperCase(),
                   onPressed: () async{
                     var mine;

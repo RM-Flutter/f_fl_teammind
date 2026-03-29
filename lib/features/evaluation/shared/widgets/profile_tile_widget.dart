@@ -30,8 +30,9 @@ class ProfileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: marginBottom ?? AppSizes.s12),
-      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16, horizontal: AppSizes.s20),
+      margin: EdgeInsets.only(
+          bottom: marginBottom ?? AppSizes.s12, left: 8, right: 8),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -129,22 +130,29 @@ class ProfileTileEva extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: marginBottom ?? AppSizes.s12),
         padding: const EdgeInsets.symmetric(
-            vertical: AppSizes.s12, horizontal: AppSizes.s10),
+            vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(AppSizes.s8),
-            border: Border.all(color: Colors.grey.withOpacity(0.1))),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              )
+            ],
+            border: Border.all(color: Colors.grey.withOpacity(0.05))),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       icon ?? const SizedBox.shrink(),
-                      gapW4,
-                      Text(title,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.black))),
+                      const SizedBox(width: 12),
+                      Text(title,style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Colors.black)),
                       gapW12,
                       if(isViewArrow == true) const Spacer(),
                      if(isViewArrow == true) CircleAvatar(
                         backgroundColor: Color(AppColors.blue),
                         radius: 12,
-                        child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
+                        child: const Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
                       )
                     ],
                   ),
@@ -240,26 +248,33 @@ class ProfileTileNotTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: marginBottom ?? AppSizes.s12),
-      padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.s12, horizontal: AppSizes.s10),
+      margin: EdgeInsets.only(
+          bottom: marginBottom ?? AppSizes.s12, left: 8, right: 8),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.s8),
-          border: Border.all(color: Colors.grey.withOpacity(0.1))),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+          ],
+          border: Border.all(color: Colors.grey.withOpacity(0.05))),
       child: Row(crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     icon ?? const SizedBox.shrink(),
-                    gapW4,
+                    const SizedBox(width: 12),
                     SizedBox(
-                        width: !kIsWeb? MediaQuery.sizeOf(context).width * 0.7 : MediaQuery.sizeOf(context).width * 0.3,
-                        child: Text(title,style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.black)))),
+                        width: !kIsWeb? MediaQuery.sizeOf(context).width * 0.6 : MediaQuery.sizeOf(context).width * 0.3,
+                        child: Text(title,style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Colors.black))),
                     gapW12,
                     if(isViewArrow == true) const Spacer(),
                    if(isViewArrow == true) CircleAvatar(
                       backgroundColor: Color(AppColors.blue),
                       radius: 12,
-                      child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
+                      child: const Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
                     )
                   ],
                 ),

@@ -17,11 +17,6 @@ class EvalutaionSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Theme.of(context).colorScheme.primary,
-      fontSize: AppSizes.s13,
-    );
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -41,12 +36,12 @@ class EvalutaionSectionWidget extends StatelessWidget {
                    gainedPoints: evaluations![index]['gainedPoints'],
                    totalPoints: evaluations![index]['totalPoints'],
                    title: "${evaluations![index]['title']}",
-                   icon: evaluations![index]['done'] == true ?const Icon(Icons.check_circle_outline, color: Colors.green,):const Icon(Icons.calendar_month, color: Colors.black,),
+                   icon: evaluations![index]['done'] == true ? const Icon(Icons.check_circle_outline, color: Colors.green,): Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Colors.black),
                    url: (evaluations![index]['submitUrl'] != null)? evaluations![index]['submitUrl'].toString() : null,
                  ),
-                 separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                 separatorBuilder: (context, index) => const SizedBox(height: 12,),
                  itemCount:evaluations!.length <= 6 ? evaluations!.length : 6),
-          if(evaluations!.isNotEmpty)gapH24,
+          if(evaluations!.isNotEmpty) const SizedBox(height: 24),
           if(evaluations!.isNotEmpty) Center(
               child: CustomElevatedButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,

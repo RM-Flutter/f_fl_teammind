@@ -141,55 +141,75 @@ class BalanceCard extends StatelessWidget {
           : null,
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-        height: AppSizes.s120,
-        padding: const EdgeInsets.symmetric(
-            vertical: AppSizes.s14, horizontal: AppSizes.s6),
+        height: 140,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
-          color: Color(AppColors.dark),
-          borderRadius: BorderRadius.circular(AppSizes.s8),
+          color: const Color(0xff090B5F),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AutoSizeText(
-              LocalizationService.isArabic(context: context)? balance.title!.ar! : balance.title!.en! ?? '-',
+            // Title section - Two lines close to each other
+            Text(
+              (LocalizationService.isArabic(context: context)
+                      ? balance.title!.ar!
+                      : balance.title!.en!)
+                  .toUpperCase()
+                  .replaceAll(' ', '\n'),
               textAlign: TextAlign.center,
-              style: mainTextStyle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            gapH18,
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AutoSizeText(isTaken ? AppStrings.taken.tr() : AppStrings.remaining.tr(),
-                      textAlign: TextAlign.center, style: mainTextStyle),
-                  gapH4,
-                  AutoSizeText(
-                      '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}',
-                      textAlign: TextAlign.center,
-                      style: mainTextStyle.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppSizes.s20,
-                      )),
-                  gapH4,
-                  if (balance.max != -1 && balance.available != -1)
-                    AutoSizeText(
-                      '${AppStrings.from.tr().toUpperCase()} ${(balance.max?.toString() ?? '0')}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        height: 1.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                ],
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                height: 1.1,
+                fontWeight: FontWeight.w700,
+                // fontWeight: FontWeight.w400,
               ),
-            )
+              maxLines: 2,
+            ),
+            // Value section
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  (isTaken ? AppStrings.taken.tr() : AppStrings.remaining.tr())
+                      .toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    // fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}'
+                      .toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Ensure the "FROM" line always takes space for alignment
+                Text(
+                  (balance.max != -1 && balance.available != -1)
+                      ? '${AppStrings.from.tr()} ${(balance.max?.toString() ?? '0')}'
+                          .toUpperCase()
+                      : '',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

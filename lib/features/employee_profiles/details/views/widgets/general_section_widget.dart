@@ -54,7 +54,6 @@ class GeneralSectionWidget extends StatelessWidget {
       fontSize: 14,
     );
     return SingleChildScrollView(
-      // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,18 +61,24 @@ class GeneralSectionWidget extends StatelessWidget {
           gapH12,
           if (employee?.jobDescription != null &&
               employee?.jobDescription?.isNotEmpty == true) ...[
-            Text(
-              AppStrings.jopDescription.tr().toUpperCase(),
-              style: textStyle,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                AppStrings.jopDescription.tr().toUpperCase(),
+                style: textStyle,
+              ),
             ),
             const SizedBox(height: 12),
-            Text(employee!.jobDescription!,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: const Color(0xff666666),
-              fontSize: 13,
-              height: 1.5,
-            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(employee!.jobDescription!,
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Color(0xff666666),
+                fontSize: 13,
+                height: 1.5,
+              ),
+              ),
             ),
             const SizedBox(height: 24),
           ],
@@ -86,9 +91,12 @@ class GeneralSectionWidget extends StatelessWidget {
                       true) ||
               (employee?.weekends != null &&
                   employee?.weekends?.isNotEmpty == true)) ...[
-            Text(
-              AppStrings.generalInfo.tr().toUpperCase(),
-              style: textStyle,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                AppStrings.generalInfo.tr().toUpperCase(),
+                style: textStyle,
+              ),
             ),
             const SizedBox(height: 12),
             //HIRE DATE
