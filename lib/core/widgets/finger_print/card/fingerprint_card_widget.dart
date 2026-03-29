@@ -55,15 +55,16 @@ class FingerprintCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppSizes.s8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSizes.s10),
+          borderRadius: BorderRadius.circular(AppSizes.s12),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-              offset: const Offset(0, 0),
-              blurRadius: 2.5,
-            ),
-          ],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              )
+            ],
+            border: Border.all(color: Colors.grey.withOpacity(0.05)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -91,9 +92,7 @@ class FingerprintCard extends StatelessWidget {
                       ),
                     ),
                     AutoSizeText(
-                      DateService.getDaysInMonth(fingerprint.fingerDay)
-                              ?.toString() ??
-                          ' - ',
+                      DateService.getDaysInMonth(fingerprint.fingerDay)?.toString() ?? ' - ',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: AppSizes.s12,
@@ -121,23 +120,13 @@ class FingerprintCard extends StatelessWidget {
                   if (formatFingerDatetime(fingerprint.fingerDateTime) != null)
                     AutoSizeText(
                       formatFingerDatetime(fingerprint.fingerDateTime) ?? '',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: AppSizes.s12,
                         letterSpacing: 0.5,
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Color(0xff606060)
                       ),
                     ),
-                  // if (formatFingerDatetime(fingerprint.fingerDateTime) != null)
-                  //   AutoSizeText(
-                  //     formatFingerDatetime(fingerprint.fingerDateTime) ?? '',
-                  //     style: TextStyle(
-                  //       fontWeight: FontWeight.w400,
-                  //       fontSize: AppSizes.s12,
-                  //       letterSpacing: 0.5,
-                  //       color: Colors.grey.withOpacity(0.5),
-                  //     ),
-                  //   ),
                 ],
               ),
             ),

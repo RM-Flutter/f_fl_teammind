@@ -91,7 +91,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
               context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(
@@ -107,18 +107,6 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                               : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            //    if(widget.empName != null && widget.empName!.isNotEmpty && widget.empName != "noName") Center(
-                            //       child: Text(widget.empName!, style:
-                            //         TextStyle(
-                            //           fontWeight: FontWeight.w400,fontSize: 22,
-                            //           color: Color(AppColors.dark)
-                            //         )
-                            //         ,),
-                            //     ),
-                            // if(widget.empName != null && widget.empName!.isNotEmpty && widget.empName != "noName")  const SizedBox(height: 20,),
-                            //       /// general screen message widget for other requests types
-                            //       // GeneralScreenMessageWidget(
-                            //       //     screenId: '/fingerprints'),
                           if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
                                 child: CustomElevatedButton(
                                     backgroundColor: Theme.of(context).colorScheme.primary,

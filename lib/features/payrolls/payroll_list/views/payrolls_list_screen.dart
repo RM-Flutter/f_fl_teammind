@@ -84,7 +84,7 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
               context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxWidth: kIsWeb ? 1100 : double.infinity,
               ),
               child: Padding(
@@ -99,8 +99,9 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                                   height: LayoutService.getHeight(context) * 0.6,
                                   title: AppStrings.noExistingPayrolls.tr())
                               : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            gapH12,
                        if(widget.empName == null) Text(gCache['name'], style:
                         TextStyle(
                             fontWeight: FontWeight.w600,fontSize: 20,

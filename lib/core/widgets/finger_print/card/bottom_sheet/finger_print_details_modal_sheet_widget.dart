@@ -157,8 +157,7 @@ class _FingerprintDatetimeCardWidgetState
   Widget build(BuildContext context) {
     return Container(
       width: LayoutService.getWidth(context),
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.s16, vertical: AppSizes.s12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
       margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondary.withOpacity(0.05),

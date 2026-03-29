@@ -23,31 +23,33 @@ class PayrollListItemWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 vertical: AppSizes.s14, horizontal: AppSizes.s16),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s10),
               color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                  offset: const Offset(0, 0),
-                  blurRadius: 2.5,
-                ),
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                )
               ],
+              border: Border.all(color: Colors.grey.withOpacity(0.05)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.calendar_month,
-                  color: Colors.black,
-                  size: AppSizes.s24,
-                ),
                 gapW8,
+                 Image.asset(
+                  "assets/images/new-cale.png",
+                  color: Colors.black,
+                  // size: AppSizes.s24,
+                ),
+                gapW12,
                 Expanded(
                   child: Text(
                     PayrollRepo.formatDate(payroll.dateTo, context) ?? '',
                     style: const TextStyle(
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w600,
                       fontSize: AppSizes.s14,
                       color: Colors.black,
                     ),
@@ -63,7 +65,7 @@ class PayrollListItemWidget extends StatelessWidget {
                   child: const Icon(
                     Icons.arrow_forward_outlined,
                     color: Colors.white,
-                    size: AppSizes.s18,
+                    size: AppSizes.s12,
                   ),
                 ),
               ],
