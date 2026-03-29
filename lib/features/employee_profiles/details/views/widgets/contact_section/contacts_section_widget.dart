@@ -29,8 +29,9 @@ class ContactsSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
+      padding: EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 12,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -117,32 +117,24 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start, // 👈 Align start in column
                               children: [
                                 Container(
-                                  margin: EdgeInsets.zero, // ← key part
+                                  margin: const EdgeInsets.symmetric(horizontal: 4),
                                   decoration: BoxDecoration(
-                                    color: Color(AppColors.dark),
-                                    borderRadius:
-                                    BorderRadius.circular(
-                                        AppSizes.s30),
+                                    color: const Color(0xff090B5F),
+                                    borderRadius: BorderRadius.circular(AppSizes.s32),
                                   ),
-                                  height: AppSizes.s55,
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: AppSizes.s6,
-                                      vertical: AppSizes.s6),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft, // FORCE alignment to start
-                                    child: defaultTapBarItem(
-                                      isVertical: false,
-                                      items: taps,
-                                      tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
-                                      selectIndex: selectIndex,
-                                      enableScroll: kIsWeb ? false : true,
-                                      onTapItem: (index) {
-                                        setState(() {
-                                          selectIndex = index;
-                                        });
-                                      },
-                                    ),
+                                  height: 60,
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                                  child: defaultTapBarItem(
+                                    isVertical: false,
+                                    items: taps,
+                                    tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
+                                    selectIndex: selectIndex,
+                                    enableScroll: true,
+                                    onTapItem: (index) {
+                                      setState(() {
+                                        selectIndex = index;
+                                      });
+                                    },
                                   ),
                                 ),
                                 Expanded(

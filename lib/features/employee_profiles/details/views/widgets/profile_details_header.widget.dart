@@ -26,123 +26,137 @@ class EmployeeDetailsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 302,
+      height: 350,
       width: LayoutService.getWidth(context),
       decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage("assets/images/png/more_back.png"),
-            fit: BoxFit.fill,
-            opacity: 0.4),
         color: Color(AppColors.dark),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28),
-            bottomRight: Radius.circular(AppSizes.s28)),
+            bottomLeft: Radius.circular(AppSizes.s32),
+            bottomRight: Radius.circular(AppSizes.s32)),
       ),
-      child: Column(
+      child: Stack(
         children: [
-          AppBarWithBookmark(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: AppStrings.employeeInfo.tr(),
-            titleStyle: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(color: Colors.white),
-            centerTitle: true,
-            routeName: AppRoutes.employeeDetails.name,
-            defaultTitle: AppStrings.employeeInfo.tr(),
-            bookmarkIconColor: Colors.white,
-            leading: Padding(
-              padding: const EdgeInsets.all(AppSizes.s10),
-              child: InkWell(
-                onTap: () => context.pop(),
-                child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.2)),
-                  child: const Icon(
-                    Icons.arrow_back_sharp,
-                    color: Colors.white,
-                    size: AppSizes.s18,
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(AppSizes.s32),
+                bottomRight: Radius.circular(AppSizes.s32)),
+            child: Image.asset(
+              "assets/images/profile-app-bar.png",
+              fit: BoxFit.cover,
+              alignment: const Alignment(0.5, 0.0),
+              width: double.infinity,
+              height: 350,
+            ),
+          ),
+          Column(
+            children: [
+              AppBarWithBookmark(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                title: AppStrings.employeeInfo.tr(),
+                titleStyle: Theme.of(context)
+                    .textTheme
+                    .displayLarge
+                    ?.copyWith(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                centerTitle: true,
+                routeName: AppRoutes.employeeDetails.name,
+                defaultTitle: AppStrings.employeeInfo.tr(),
+                bookmarkIconColor: Colors.white,
+                leading: Padding(
+                  padding: const EdgeInsets.all(AppSizes.s10),
+                  child: InkWell(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.2)),
+                      child: const Icon(
+                        Icons.arrow_back_sharp,
+                        color: Colors.white,
+                        size: AppSizes.s18,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          gapH12,
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
-              ),
-              child: Column(
-                children: [
-                  employee?.avatar != null
-                      ? GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FullScreenImageViewer(
-                            initialIndex: 0,
-                            imageUrls: [""],
-                            one: true,
-                            url: false,
-                            image: employee!.avatar!,
+              gapH12,
+              Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  ),
+                  child: Column(
+                    children: [
+                      employee?.avatar != null
+                          ? GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImageViewer(
+                                initialIndex: 0,
+                                imageUrls: [""],
+                                one: true,
+                                url: false,
+                                image: employee!.avatar!,
+                              ),
+                            ),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(85),
+                          child: CachedNetworkImage(
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                            imageUrl: employee!.avatar!,
+                            placeholder: (context, url) =>
+                            const ShimmerAnimatedLoading(),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.image_not_supported_outlined,
+                              size: AppSizes.s32,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(85),
-                      child: CachedNetworkImage(
-                        width: 85,
-                        height: 85,
-                        fit: BoxFit.cover,
-                        imageUrl: employee!.avatar!,
-                        placeholder: (context, url) =>
-                        const ShimmerAnimatedLoading(),
-                        errorWidget: (context, url, error) => const Icon(
-                          Icons.image_not_supported_outlined,
-                          size: AppSizes.s32,
-                          color: Colors.white,
+                      )
+                          : CircleAvatar(
+                        radius: 50,
+                        child: Image.asset(
+                          AppImages.profilePlaceHolder,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  )
-                      : CircleAvatar(
-                    radius: AppSizes.s36,
-                    child: Image.asset(
-                      AppImages.profilePlaceHolder,
-                      fit: BoxFit.cover,
-                    ),
+                      gapH12,
+                      Text(
+                        employee?.name ?? '',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        employee?.jobTitle?.toUpperCase() ?? '',
+                        style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 14,
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w400),
+                      ) ,
+                      if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
+                        "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase()}",
+                        style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 12,
+                            letterSpacing: 1.1,
+                            fontWeight: FontWeight.w400),
+                      )
+                    ],
                   ),
-                  gapH12,
-                  Text(
-                    employee?.name ?? '',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: AppSizes.s20,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    employee?.jobTitle ?? '',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: AppSizes.s14,
-                        fontWeight: FontWeight.w400),
-                  ) ,
-                 if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
-                     "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase() ?? ''}",
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: AppSizes.s14,
-                        fontWeight: FontWeight.w400),
-                  )
-                ],
-              ),
-            ),
-          )
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

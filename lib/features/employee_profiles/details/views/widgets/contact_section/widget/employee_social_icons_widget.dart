@@ -110,17 +110,14 @@ class SocailIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () async => UrlLauncherServiceEx.launch(
             context: context, url: url, mode: mode ?? LaunchMode.platformDefault),
         child: CircleAvatar(
-          backgroundColor: Color(AppColors.dark),
-          radius: AppSizes.s20,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.s4),
-            child: Center(child: FaIcon(icon, color: Colors.white)),
-          ),
+          backgroundColor: const Color(0xff090B5F),
+          radius: 18,
+          child: Center(child: FaIcon(icon, color: Colors.white, size: 16)),
         ),
       ),
     );

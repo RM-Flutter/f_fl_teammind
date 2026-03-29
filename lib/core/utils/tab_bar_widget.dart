@@ -16,16 +16,19 @@ Widget defaultTapBarItem({
       bool isWeb = MediaQuery.of(context).size.width > 600;
       bool useVertical = isVertical ?? isWeb; // 👈 لو محددتش، يعتمد على الويب
 
+      double totalWidth = useVertical
+          ? 200
+          : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.95);
+      double itemWidth = useVertical ? double.infinity : (totalWidth / 3.8);
+
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7.5),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         alignment: Alignment.center,
-        height: !useVertical ? 40 : null,
-        width: useVertical
-            ? 200
-            : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.95),
+        height: !useVertical ? 50 : null,
+        width: totalWidth,
         decoration: BoxDecoration(
-          color: Color(AppColors.dark),
-          borderRadius: BorderRadius.circular(25),
+          color: const Color(0xff090B5F),
+          borderRadius: BorderRadius.circular(32),
         ),
         child: SizedBox(
           child: ListView.builder(
@@ -49,23 +52,29 @@ Widget defaultTapBarItem({
               child: Container(
                 margin: EdgeInsets.symmetric(
                   horizontal: useVertical ? 0 : 4,
-                  vertical: useVertical ? 6 : 0,
+                  vertical: useVertical ? 4 : 0,
                 ),
-                height: useVertical ? 40 : 32,
-                width: useVertical ? double.infinity : 90,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                height: useVertical ? 40 : 42,
+                width: itemWidth,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(20),
                   color: (selectIndex == index || selectName == items[index])
-                      ? Color(AppColors.primary)
+                      ? const Color(0xff2F88FF)
                       : Colors.transparent,
                 ),
                 child: Text(
                   items[index].toUpperCase(),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Color(AppColors.white),
-                    fontWeight: FontWeight.w900,
+                    fontSize: 11,
+                    color: Colors.white,
+                    fontWeight: (selectIndex == index || selectName == items[index])
+                        ? FontWeight.w700
+                        : FontWeight.w400,
                   ),
                 ),
               ),

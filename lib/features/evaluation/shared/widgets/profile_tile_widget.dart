@@ -32,15 +32,22 @@ class ProfileTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: marginBottom ?? AppSizes.s12),
       padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.s12, horizontal: AppSizes.s10),
+          vertical: AppSizes.s16, horizontal: AppSizes.s20),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.s8),
-          border: Border.all(color: Colors.grey.withOpacity(0.1))),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+          ],
+          border: Border.all(color: Colors.grey.withOpacity(0.05))),
       child: isTitleOnly == true
           ? Center(
               child: Text(title.toString(),
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Color(AppColors.black)),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black),
               ),
             )
           : icon != null && trailingTitle != null
