@@ -62,7 +62,7 @@ class GeneralSectionWidget extends StatelessWidget {
           if (employee?.jobDescription != null &&
               employee?.jobDescription?.isNotEmpty == true) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 AppStrings.jopDescription.tr().toUpperCase(),
                 style: textStyle,
@@ -70,7 +70,7 @@ class GeneralSectionWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(employee!.jobDescription!,
               style: const TextStyle(
                 fontWeight: FontWeight.w400,
@@ -92,7 +92,7 @@ class GeneralSectionWidget extends StatelessWidget {
               (employee?.weekends != null &&
                   employee?.weekends?.isNotEmpty == true)) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
                 AppStrings.generalInfo.tr().toUpperCase(),
                 style: textStyle,

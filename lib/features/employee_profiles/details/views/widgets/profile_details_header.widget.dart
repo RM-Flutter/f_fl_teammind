@@ -30,7 +30,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
       width: LayoutService.getWidth(context),
       decoration: BoxDecoration(
         color: Color(AppColors.dark),
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s32),
             bottomRight: Radius.circular(AppSizes.s32)),
       ),
@@ -82,7 +82,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
               gapH12,
               Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                       maxWidth: kIsWeb ? 1100 : double.infinity
                   ),
                   child: Column(
@@ -137,20 +137,20 @@ class EmployeeDetailsHeader extends StatelessWidget {
                       ),
                       Text(
                         employee?.jobTitle?.toUpperCase() ?? '',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w600),
+                      ) ,
+                      if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
+                        "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase()}",
                         style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
                             fontSize: 14,
                             letterSpacing: 1.2,
                             fontWeight: FontWeight.w400),
                       ) ,
-                      if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
-                        "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase()}",
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
-                            fontSize: 12,
-                            letterSpacing: 1.1,
-                            fontWeight: FontWeight.w400),
-                      )
                     ],
                   ),
                 ),
