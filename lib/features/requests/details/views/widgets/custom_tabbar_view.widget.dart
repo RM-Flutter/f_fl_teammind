@@ -29,13 +29,15 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 color: Color(AppColors.dark),
                 borderRadius: BorderRadius.circular(AppSizes.s30),
               ),
-              height: 48,
+              height: 52,
               padding: const EdgeInsets.symmetric(
-                  horizontal: 2.0, vertical: 4.0),
+                  horizontal: 8.0, vertical: 6.0),
               child: TabBar(
+                dividerColor: Colors.transparent,
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
-                  color: Color(AppColors.primary),
+                  color: const Color(0xFF3489EF),
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 labelColor: Colors.white,
@@ -138,49 +140,75 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(height: 25,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("${AppStrings.createdOn.tr()} : ",
-                                style: const TextStyle(
-                                    color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            padding:  EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3F3F3),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("${AppStrings.createdOn.tr()} : ",
+                                  style: const TextStyle(
+                                      color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                  ),
                                 ),
-                              ),
-                              Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.createdAt.toString())),
-                                style: const TextStyle(
-                                    color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.createdAt.toString())),
+                                  style:  TextStyle(
+                                      color: Color(AppColors.primary),fontWeight: FontWeight.bold, fontSize: 13
+                                  ),
                                 ),
-                              ),
-
-                            ],
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 25,),
-                          if(request.seenAt != null && request.seenAt != "")Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("${AppStrings.seenOn.tr()} : ",style: const TextStyle(
-                                  color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
-                              ),),
-                              Text(DateFormat('d-M-y | hh:mm a', LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.seenAt.toString())),
-                                style: const TextStyle(
+                          const SizedBox(height: 12,),
+                          if(request.seenAt != null && request.seenAt != "") Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3F3F3),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("${AppStrings.seenOn.tr()} : ",style: const TextStyle(
                                     color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                ),),
+                                Text(DateFormat('d-M-y | hh:mm a', LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.seenAt.toString())),
+                                  style:  TextStyle(
+                                      color: Color(AppColors.primary),fontWeight: FontWeight.bold, fontSize: 13
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 25,),
-                          if(request.statusUpdate != null && request.statusUpdate != "")Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("${AppStrings.statusUpdate.tr()} : ",style: const TextStyle(
-                                  color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
-                              ),),
-                              Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.statusUpdate.toString())),
-                                style: const TextStyle(
+                          const SizedBox(height: 12,),
+                          if(request.statusUpdate != null && request.statusUpdate != "") Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3F3F3),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("${AppStrings.statusUpdate.tr()} : ",style: const TextStyle(
                                     color: Color(AppColors.black),fontWeight: FontWeight.w400, fontSize: 12
+                                ),),
+                                Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.statusUpdate.toString())),
+                                  style:  TextStyle(
+                                      color: Color(AppColors.primary),fontWeight: FontWeight.bold, fontSize: 13
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           if(request.seenBy != null && request.seenBy.isNotEmpty) const SizedBox(height: 25,),
                           if(request.seenBy != null && request.seenBy.isNotEmpty)Text(AppStrings.seenBy.tr(),style: const TextStyle(

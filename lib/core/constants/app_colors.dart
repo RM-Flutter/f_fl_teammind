@@ -42,6 +42,10 @@ abstract class AppColors {
     DynamicAppConfigService.getColorValue('backgroundColor'),
     0xffFFFFFF,
   );
+  static int get surfaceF3 => DynamicAppConfigService.hexToInt(
+    DynamicAppConfigService.getColorValue('surfaceF3'),
+    0xFFF3F3F3,
+  );
   static int get scaffoldBackgroundColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('scaffoldBackgroundColor'),
     0xFFF5F8FA,

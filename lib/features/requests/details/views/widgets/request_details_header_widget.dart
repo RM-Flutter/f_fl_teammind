@@ -232,14 +232,14 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
   @override
   Widget build(BuildContext context) {
-    final mainColor = Color(AppColors.blue);
+    final mainColor = Theme.of(context).colorScheme.primary;
 
     final request = widget.request;
 
     return Stack(
       children: [
         Container(
-          height: (widget.height! + 40) ,
+          height: (widget.height! + 30) ,
           width: LayoutService.getWidth(context),
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -249,7 +249,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               bottomRight: Radius.circular(AppSizes.s28),
             ),
             image: const DecorationImage(
-              image: AssetImage("assets/images/profile-app-bar.png"),
+              image: AssetImage("assets/images/request-app-bar.png"),
               fit: BoxFit.fill,
               opacity: 1.0,
             ),
@@ -302,7 +302,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 18),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
                     child: Row(
@@ -331,7 +331,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                   width: 65,
                                   height: 85,
                                   decoration: BoxDecoration(
-                                    color: mainColor,
+                                    color: mainColor.withOpacity(.3),
                                     borderRadius: BorderRadius.circular(AppSizes.s10),
                                   ),
                                   child: Center(
@@ -353,8 +353,8 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Wrap(
-                                spacing: 8.0,
-                                runSpacing: 8.0,
+                                spacing: 12.0,
+                                runSpacing: 12.0,
                                 children: [
                                   // Date tile with formatting
                                   InfoTileWidget(
@@ -625,7 +625,7 @@ class InfoTileWidget extends StatelessWidget {
       onTap: onTap ?? (){},
       child: Container(
         width: width != null ? width : isFullRow == false
-            ? (LayoutService.getWidth(context) - 110) / 2
+            ? (LayoutService.getWidth(context) - 116) / 2
             : LayoutService.getWidth(context) - 97,
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : background,
