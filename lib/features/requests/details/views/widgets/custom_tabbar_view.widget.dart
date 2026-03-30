@@ -16,7 +16,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
     final mainTextStyle = Theme.of(context)
         .textTheme
         .headlineSmall
-        ?.copyWith(fontSize: AppSizes.s10);
+        ?.copyWith(fontSize: 10.5, fontWeight: FontWeight.bold);
     return Padding(
       padding: const EdgeInsets.symmetric(
           horizontal: AppSizes.s8, vertical: AppSizes.s12),
@@ -29,10 +29,11 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 color: Color(AppColors.dark),
                 borderRadius: BorderRadius.circular(AppSizes.s30),
               ),
-              height: AppSizes.s64,
+              height: 48,
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.s6, vertical: AppSizes.s6),
+                  horizontal: 2.0, vertical: 4.0),
               child: TabBar(
+                labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
                   color: Color(AppColors.primary),
                   borderRadius: BorderRadius.circular(30.0),
@@ -44,51 +45,43 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabs: [
                   Container(
-                      margin:
-                      const EdgeInsets.symmetric(horizontal: AppSizes.s6),
+                      margin: EdgeInsets.zero,
                       child:  Tab(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              AppStrings.reason.tr().toUpperCase(),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ],
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            AppStrings.reason.tr().toUpperCase(),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         ),
                       )),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: AppSizes.s6),
+                    margin: EdgeInsets.zero,
                     child: Tab(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            AppStrings.managerResponse.tr().toUpperCase(),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ],
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          AppStrings.managerResponse.tr().toUpperCase(),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
                     ),
                   ),
                   Container(
-                      margin:
-                      const EdgeInsets.symmetric(horizontal: AppSizes.s6),
+                      margin: EdgeInsets.zero,
                       child: Tab(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              AppStrings.information.tr().toUpperCase(),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ],
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            AppStrings.information.tr().toUpperCase(),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         ),
                       )),
                 ],

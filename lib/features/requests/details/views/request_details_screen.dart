@@ -45,7 +45,7 @@ class RequestDetailsScreen extends StatelessWidget {
                     RequestDetailsHeaderWidget(
                       uId: viewModel.userSettings?.empId,
                       rId:viewModel.requestModel!.employeeId,
-                      height: kIsWeb? AppSizes.s240:AppSizes.s300,
+                      height: kIsWeb ? AppSizes.s320 : AppSizes.s340,
                       request: viewModel.requestModel!,
                     ),
                     Expanded(
@@ -78,9 +78,10 @@ class RequestDetailsScreen extends StatelessWidget {
                             height: kIsWeb? 40 : null,
                             alignment: Alignment.topCenter,
                             padding: EdgeInsets.symmetric(
-                                vertical: kIsWeb ? AppSizes.s1 : AppSizes.s6,
-                                horizontal: AppSizes.s8),
-                            margin: EdgeInsets.all(kIsWeb ? AppSizes.s6 : AppSizes.s8),
+                                vertical: kIsWeb ? AppSizes.s1 : 12.0,
+                                horizontal: 16.0),
+                            margin: EdgeInsets.only(
+                                left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
                             width: LayoutService.getWidth(context),
                             decoration: BoxDecoration(
                                 color: Color(AppColors.dark),
@@ -131,9 +132,10 @@ class RequestDetailsScreen extends StatelessWidget {
                           child: Container(
                             alignment: Alignment.topCenter,
                             padding: EdgeInsets.symmetric(
-                                vertical: kIsWeb ? AppSizes.s4 : AppSizes.s6,
-                                horizontal: AppSizes.s8),
-                            margin: EdgeInsets.all(kIsWeb ? AppSizes.s6 : AppSizes.s8),
+                                vertical: kIsWeb ? AppSizes.s4 : 12.0,
+                                horizontal: 16.0),
+                            margin: EdgeInsets.only(
+                                left: 24.0, right: 24.0, bottom: 32.0, top: 8.0),
                             width: LayoutService.getWidth(context),
                             decoration: BoxDecoration(
                                 color: Color(AppColors.dark),

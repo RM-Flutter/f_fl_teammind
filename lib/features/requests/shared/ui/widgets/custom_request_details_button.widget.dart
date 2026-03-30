@@ -35,6 +35,17 @@ class CustomRequestDetailsButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         title: title,
+        titleWidget: Text(
+          title.toUpperCase(),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }

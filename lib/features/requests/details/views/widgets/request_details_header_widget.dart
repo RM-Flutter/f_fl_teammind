@@ -34,12 +34,12 @@ class RequestDetailsHeaderWidget extends StatefulWidget {
   final dynamic rId;
 
   const RequestDetailsHeaderWidget({
-    Key? key,
+    super.key,
     required this.request,
     required this.height,
     this.rId,
     this.uId,
-  }) : super(key: key);
+  });
 
   @override
   State<RequestDetailsHeaderWidget> createState() =>
@@ -239,7 +239,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     return Stack(
       children: [
         Container(
-          height: widget.height,
+          height: (widget.height! + 40) ,
           width: LayoutService.getWidth(context),
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -249,14 +249,14 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               bottomRight: Radius.circular(AppSizes.s28),
             ),
             image: const DecorationImage(
-              image: AssetImage("assets/images/png/single_request_back.png"),
+              image: AssetImage("assets/images/profile-app-bar.png"),
               fit: BoxFit.fill,
-              opacity: 0.4,
+              opacity: 1.0,
             ),
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                   maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Column(
@@ -302,13 +302,12 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                           // Status box
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,8 +328,8 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                   );
                                 },
                                 child: Container(
-                                  width: AppSizes.s50,
-                                  height: AppSizes.s80,
+                                  width: 65,
+                                  height: 85,
                                   decoration: BoxDecoration(
                                     color: mainColor,
                                     borderRadius: BorderRadius.circular(AppSizes.s10),
@@ -340,6 +339,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                       context: context,
                                       status: request.status,
                                       iconSize: AppSizes.s30,
+                                      iconColor: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -353,12 +353,12 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Wrap(
-                                spacing: AppSizes.s5,
-                                runSpacing: AppSizes.s5,
+                                spacing: 8.0,
+                                runSpacing: 8.0,
                                 children: [
                                   // Date tile with formatting
                                   InfoTileWidget(
-                                    imgPath: Icons.calendar_month,
+                                    imagePath: 'assets/images/new-cale.png',
                                     title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
                                         DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
                                     DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a') !=
@@ -451,7 +451,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         ],
                       ),
                     ),
-                  )
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
@@ -594,7 +594,8 @@ class _DownloadProgressDialog extends StatelessWidget {
 }
 
 class InfoTileWidget extends StatelessWidget {
-  final IconData imgPath;
+  final IconData? imgPath;
+  final String? imagePath;
   final Color? background;
   final Color? imgColor;
   final String title;
@@ -607,7 +608,8 @@ class InfoTileWidget extends StatelessWidget {
       {super.key,
         this.isHighLight = false,
         this.isFullRow = false,
-        required this.imgPath,
+        this.imgPath,
+        this.imagePath,
         this.width,
         this.onTap,
         required this.title,
@@ -623,11 +625,11 @@ class InfoTileWidget extends StatelessWidget {
       onTap: onTap ?? (){},
       child: Container(
         width: width != null ? width : isFullRow == false
-            ? (LayoutService.getWidth(context) - AppSizes.s88) / 2
-            : null,
+            ? (LayoutService.getWidth(context) - 110) / 2
+            : LayoutService.getWidth(context) - 97,
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : background,
-            borderRadius: BorderRadius.circular(AppSizes.s6)),
+            borderRadius: BorderRadius.circular(AppSizes.s10)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -638,18 +640,26 @@ class InfoTileWidget extends StatelessWidget {
                     horizontal: AppSizes.s6, vertical: AppSizes.s6),
                 child: Row(
                   children: [
-                    Icon(
-                      imgPath,
-                      color: isHighLight == true ? Color(AppColors.white) : _imgColor,
-                    ),
+                    if (imagePath != null)
+                      Image.asset(
+                        imagePath!,
+                        width: AppSizes.s14,
+                        height: AppSizes.s14,
+                        color: isHighLight == true ? Color(AppColors.white) : _imgColor,
+                      )
+                    else if (imgPath != null)
+                      Icon(
+                        imgPath,
+                        color: isHighLight == true ? Color(AppColors.white) : _imgColor,
+                      ),
                     gapW12,
                     Expanded(
                       child: AutoSizeText(
                         title,
                         style: const TextStyle(
                             color: Colors.white,
-                            fontSize: AppSizes.s10,
-                            fontWeight: FontWeight.w400),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
