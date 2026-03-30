@@ -126,10 +126,10 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               Expanded(
                 child: AutoSizeText(
                   title ?? "",
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: AppSizes.s14,
-                    color: Color(AppColors.black),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -138,11 +138,12 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               ),
               gapW16,
               AutoSizeText(
-                subtitle ?? '',
+                subtitle! + '' " " "${AppStrings.EGP.tr()}",
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: AppSizes.s12,
-                  color: subtitleColor ?? Color(AppColors.primary),
+                  // color: subtitleColor ?? Colors.black,
+                  color: Colors.black,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

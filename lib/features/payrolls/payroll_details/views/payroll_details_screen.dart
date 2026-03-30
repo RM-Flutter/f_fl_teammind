@@ -198,7 +198,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                         padding: const EdgeInsets.only(bottom: 20),
                         child: Center(
                             child: CustomElevatedButton(
-                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
                                 titleSize: AppSizes.s12,
                                 title: AppStrings.downloadFile.tr().toUpperCase(),
                                 onPressed: () async{

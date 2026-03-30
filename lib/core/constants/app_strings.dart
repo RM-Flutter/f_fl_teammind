@@ -341,6 +341,7 @@ abstract class AppStrings {
   static const pleaseEnterReason = "pleaseEnterReason";
   static const filter = "filter";
   static const currency = "currency";
+  static const EGP = "EGP";
   static const totalSalary = "totalSalary";
   static const salaryAdvance = "salaryAdvance";
   static const totalSpecialAndBonuses = "totalSpecialAndBonuses";

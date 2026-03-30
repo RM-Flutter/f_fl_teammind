@@ -24,7 +24,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
       width: LayoutService.getWidth(context),
       decoration: BoxDecoration(
         image: const DecorationImage(
-            image: AssetImage("assets/images/png/home_back.png"),
+            image: AssetImage("assets/images/png/tasks-app-bar.png"),
             fit: BoxFit.fill,
             opacity: 0.4),
         color: Theme.of(context).colorScheme.secondary,
@@ -67,7 +67,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
           gapH12,
           Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxWidth: kIsWeb ? 1100 : double.infinity,
               ),
               child: Padding(
@@ -75,9 +75,9 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                        '',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: AppSizes.s22,
                         fontWeight: FontWeight.w400,
@@ -123,7 +123,7 @@ class PayrollHeaderTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: !kIsWeb ?LayoutService.getWidth(context) * 0.8 : LayoutService.getWidth(context) * 0.4,
+      width: !kIsWeb ?LayoutService.getWidth(context) * 0.6 : LayoutService.getWidth(context) * 0.4,
       decoration: BoxDecoration(
           color: const Color(AppColors.navyBlue),
           borderRadius: BorderRadius.circular(AppSizes.s6)),
