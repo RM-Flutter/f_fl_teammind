@@ -101,25 +101,35 @@ class VacationListWidget extends StatelessWidget {
                 extra: requests),
             child: Container(
               width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-              height: AppSizes.s120,
+              height: 120,
               padding: const EdgeInsets.symmetric(
-                  vertical: AppSizes.s14, horizontal: AppSizes.s6),
+                  vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(AppSizes.s8),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset("assets/images/svg/calendar.svg"),
-                  gapH18,
-                  Text(AppStrings.viewOnCalendar.tr().toUpperCase(),
-                      textAlign: TextAlign.center,
+                  gapH8,
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        // تحسين الخطوط في الويب
-                        letterSpacing: kIsWeb ? 0.5 : null,
-                      ))
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        height: 1.0,
+                        letterSpacing: 0.5,
+                      ),
+                      children: const [
+                        TextSpan(text: 'VIEW ON\n'),
+                        TextSpan(text: 'CALENDAR'),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -142,14 +152,15 @@ class VacationListWidget extends StatelessWidget {
                             ((paddingBetweenVocations ?? AppSizes.s0) *
                                 3))) /
                         3,
-                    height: AppSizes.s120,
+                    height: 110,
                   )))
-              : vacationWidgets ,
+              : vacationWidgets,
         ),
       ),
     );
   }
 }
+
 
 class VacationCard extends StatelessWidget {
   final bool? isInRequestsPage;
@@ -210,7 +221,6 @@ class VacationCard extends StatelessWidget {
             'offset': const Offset(1.0, 0.0),
             'userId': userId
           })
-      // if the old page is request page , so i dont need to pass type as path parameter becouse the current location is already contain type parameter
           : await context.pushNamed(AppRoutes.requestsById.name,
           pathParameters: {
             'id': vocation.key,
@@ -222,88 +232,69 @@ class VacationCard extends StatelessWidget {
           }),
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-        height: AppSizes.s120,
-        padding: const EdgeInsets.symmetric(
-            vertical: AppSizes.s14, horizontal: AppSizes.s6),
+        height: 120,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
-          color: Color(AppColors.dark),
-          borderRadius: BorderRadius.circular(AppSizes.s8),
+          color: Theme.of(context).colorScheme.secondary, // Match BalanceCard color
+          borderRadius: BorderRadius.circular(12), // Match BalanceCard radius
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Match BalanceCard layout
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AutoSizeText(
-              LocalizationService.isArabic(context: context)? vocation.value.title!.ar! : vocation.value.title!.en! ?? '-',
+            // Title section
+            Text(
+              (context.locale.languageCode == 'ar'
+                  ? vocation.value.title!.ar!
+                  : vocation.value.title!.en! ?? '-')
+                  .replaceAll(' ', '\n'),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleSmall,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                height: 1.1,
+                fontWeight: FontWeight.w400,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            if(vocation.value.max != -1) gapH18,
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if(vocation.value.max != -1) AutoSizeText(
-                    AppStrings.remaining.tr(),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleSmall,
+            // Value section
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  (isTaken ? AppStrings.taken.tr() : AppStrings.remaining.tr()),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
-                  if(isTaken) AutoSizeText(
-                    AppStrings.taken.tr(),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleSmall,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${(isTaken ? vocation.value.take : vocation.value.available)?.toString() ?? '0'} ${vocation.value.type?.toString().tr() ?? ''}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18, // Match BalanceCard size
+                    fontWeight: FontWeight.w900,
                   ),
-                  gapH4,
-                  if(isTaken)
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: AutoSizeText(
-                            '${(vocation.value.take?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppSizes.s20,
-                            ),
-                            minFontSize: 10,
-                            maxLines: 2),
-                      ),
-                    ),
-                  if(!isTaken && vocation.value.max != -1)
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: AutoSizeText(
-                            '${(vocation.value.available?.toString() ?? '0')} ${(vocation.value.type?.toString().tr() ?? '')}',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppSizes.s20,
-                            ),
-                            minFontSize: 10,
-                            maxLines: 2),
-                      ),
-                    ),
-                  gapH4,
-                  if (vocation.value.max != -1 &&
-                      vocation.value.available != -1)
-                    AutoSizeText(
-                      '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        height: 1.0,
-                        color: Colors.white,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 4),
+                // "FROM" line
+                Text(
+                  (!isTaken && vocation.value.max != -1)
+                      ? '${AppStrings.from.tr()} ${(vocation.value.max?.toString() ?? '0')}'
+                      : '',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -311,3 +302,4 @@ class VacationCard extends StatelessWidget {
     );
   }
 }
+

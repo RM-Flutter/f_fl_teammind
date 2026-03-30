@@ -184,13 +184,13 @@ class RequestsViewModel extends ChangeNotifier {
       {required GetRequestsTypes requestsType}) {
     switch (requestsType) {
       case GetRequestsTypes.allCompany:
-        return 'ALL COMPANY REQUESTS';
+        return 'All Company Requests';
       case GetRequestsTypes.myTeam:
-        return AppStrings.teamRequests.tr().toUpperCase();
+        return AppStrings.teamRequests.tr();
       case GetRequestsTypes.otherDepartment:
-        return AppStrings.otherDepartmentRequests.tr().toUpperCase();
+        return AppStrings.otherDepartmentRequests.tr();
       default:
-        return AppStrings.myRequests.tr().toUpperCase();
+        return AppStrings.myRequests.tr();
     }
   }
 }

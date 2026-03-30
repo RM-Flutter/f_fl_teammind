@@ -76,7 +76,7 @@ abstract class RequestsServices {
   }
 
   /// get Request Status Icon [waiting_seen - seen - approved - canceled - refused]
-  static Icon getRequestsStatusIcon(
+  static Widget getRequestsStatusIcon(
       {required BuildContext context,
         String? status,
         Color? iconColor,
@@ -92,8 +92,12 @@ abstract class RequestsServices {
         return Icon(Icons.access_time,
             color: iconColor ?? Colors.blue, size: iconSize ?? AppSizes.s24);
       case 'waiting_seen' || 'waiting_cancel'|| 'waiting':
-        return Icon(Icons.access_time,
-            color: iconColor ?? Color(AppColors.darkGrey), size: iconSize ?? AppSizes.s24);
+        return Image.asset(
+          'assets/images/waiting_icon.png',
+          color: iconColor,
+          width: iconSize ?? AppSizes.s24,
+          height: iconSize ?? AppSizes.s24,
+        );
       default:
         return Icon(
           Icons.more_horiz,
@@ -102,6 +106,7 @@ abstract class RequestsServices {
         );
     }
   }
+
 
   /// build query parameters string
   static String _buildQueryParameters({
