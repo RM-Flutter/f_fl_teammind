@@ -110,7 +110,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
           });
         }
       } catch (_) {
-        // Show message but keep user on page to avoid instant back navigation
+        // Show message ثم الرجوع بدلاً من ترك المستخدم على شاشة بيضاء
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -120,9 +120,13 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
             ),
           ),
         );
+        Navigator.of(context).pop();
       }
     } catch (_) {
-      // Any other unexpected error: do not pop automatically
+      // أي خطأ غير متوقع: رجوع بدلاً من تعليق المستخدم على شاشة بيضاء
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
