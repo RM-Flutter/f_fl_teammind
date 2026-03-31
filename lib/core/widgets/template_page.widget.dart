@@ -13,6 +13,7 @@ class TemplatePage extends StatelessWidget {
   final Color? backgroundColor;
   final PreferredSizeWidget? bottomAppbarWidget;
   final String? routeName;
+  final TextStyle? titleStyle;
 
   /// used if you want to active [PULLTOREFRESH] option to page.
   final Future<void> Function()? onRefresh;
@@ -25,6 +26,7 @@ class TemplatePage extends StatelessWidget {
       required this.title,
       required this.body,
       this.floatingActionButton,
+      this.titleStyle,
       this.onRefresh,
       this.routeName});
 
@@ -38,7 +40,7 @@ class TemplatePage extends StatelessWidget {
         backgroundColor:
             backgroundColor ?? Theme.of(pageContext).scaffoldBackgroundColor,
         title: title,
-        titleStyle: TextStyle(
+        titleStyle: titleStyle ?? TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w700,
           color: Color(AppColors.dark)

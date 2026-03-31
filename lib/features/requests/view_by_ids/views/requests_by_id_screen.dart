@@ -113,13 +113,6 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                         // GeneralScreenMessageWidget(
                         //     screenId:
                         //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
-                        if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
-                          onPressed: () async => viewModel
-                              .showSummaryReports(context: context),
-                          title: AppStrings.summaryReports.tr(),
-                          icon: Icons.folder_copy_outlined,
-                        ),
-                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH12,
                         if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
                           viewModel.rulesMessage ?? "",
                           maxLines: 10,
@@ -132,6 +125,13 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           softWrap: true,
                         ),
                         if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  gapH16,
+                        if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
+                          onPressed: () async => viewModel
+                              .showSummaryReports(context: context),
+                          title: AppStrings.summaryReports.tr(),
+                          icon: Icons.folder_copy_outlined,
+                        ),
+                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH16,
                         if (viewModel.requestsById != null &&
                             viewModel.requestsById!.isNotEmpty)
                           ...viewModel.requestsById!.map(

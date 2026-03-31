@@ -59,6 +59,11 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
       child: TemplatePage(
           pageContext: context,
           title: AppStrings.newRequest.tr(),
+          titleStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Color(AppColors.dark)
+          ),
           body: Scaffold(
             body: Center(
               child: ConstrainedBox(
@@ -203,8 +208,9 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                         controller: viewModel.controller,
                                         decoration: InputDecoration(
                                           hintText: AppStrings.requestTime.tr(),
+                                          hintStyle: TextStyle(color: Colors.grey[600], fontSize: 13),
                                           suffixIcon: IconButton(
-                                            icon: const Icon(Icons.calendar_today),
+                                            icon: Image.asset('assets/images/new-cale.png', width: 22, height: 22, color: Colors.grey[600]),
                                             onPressed: () =>
                                                 viewModel.selectDate(context, filter: false),
                                           ),
@@ -215,9 +221,10 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                       gapH14,
                                       TextFormField(
                                         controller: viewModel.reasonController,
-                                        maxLines: 5,
+                                        maxLines: 3,
                                         decoration: InputDecoration(
                                           hintText: AppStrings.reason.tr(),
+                                          hintStyle: TextStyle(color: Colors.grey[600], fontSize: 13),
                                         ),
                                       ),
                                       gapH14,
@@ -234,11 +241,10 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                           if(viewModel.reqTypeFile == "required"|| viewModel.reqTypeFile == "optional")TextFormField(
                                             controller: viewModel.fileController,
                                             decoration: InputDecoration(
-                                              hintText:
-                                              AppStrings.uploadFiles.tr(),
+                                              hintText: AppStrings.uploadFiles.tr(),
+                                              hintStyle: TextStyle(color: Colors.grey[600], fontSize: 13),
                                               suffixIcon: IconButton(
-                                                icon:
-                                                const Icon(Icons.upload_file),
+                                                icon: const Icon(Icons.cloud_upload_outlined, color: Colors.grey, size: 26),
                                                 onPressed: () async =>
                                                     viewModel.pickFile(),
                                               ),
@@ -254,6 +260,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                             keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                               hintText: AppStrings.amount.tr(),
+                                              hintStyle: TextStyle(color: Colors.grey[600], fontSize: 13),
                                             ),
                                           )
                                         ],
