@@ -24,6 +24,12 @@ bool _isWebSupportedFingerprint(String method) {
   return m == 'fp_scan' || m == 'fp_navigate' || m == 'custom_fp_navigate';
 }
 
+/// على iOS نخفي بصمة الواي فاي لأن wifi_scan غير مدعوم.
+bool _isIosSupportedFingerprint(String method) {
+  final m = method.toLowerCase().trim();
+  return m != 'fp_wifi';
+}
+
 class MainAppFabWidget extends StatelessWidget {
   bool? requests = false;
   bool viewRequest = true;
@@ -59,10 +65,17 @@ class MainAppFabWidget extends StatelessWidget {
         }
       }
     }
-    // على الويب نعرض فقط البصمات اللي تعمل على الويب (QR و GPS) دون المساس بالموبايل
-    final List<String>? displayFingerprints = (PlatformIs.web && avFingerprints != null)
-        ? avFingerprints!.where(_isWebSupportedFingerprint).toList()
-        : avFingerprints;
+    // على الويب نعرض فقط البصمات المدعومة، وعلى iOS نخفي WiFi.
+    final List<String>? displayFingerprints;
+    if (avFingerprints == null) {
+      displayFingerprints = null;
+    } else if (PlatformIs.web) {
+      displayFingerprints = avFingerprints.where(_isWebSupportedFingerprint).toList();
+    } else if (PlatformIs.iOS) {
+      displayFingerprints = avFingerprints.where(_isIosSupportedFingerprint).toList();
+    } else {
+      displayFingerprints = avFingerprints;
+    }
     final bool showFingerprintFab = UsgPackagesService.isFingerprintActive &&
         userSettingsFingerprints != null &&
         userSettingsFingerprints.isNotEmpty == true &&

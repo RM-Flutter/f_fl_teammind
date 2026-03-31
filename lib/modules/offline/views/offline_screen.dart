@@ -18,10 +18,17 @@ import 'package:rmemp/modules/fingerprint/views/widgets/finger_print_offline_car
 import '../../../constants/app_sizes.dart';
 import '../view_models/offline_viewmodel.dart';
 
-/// على الويب نعرض فقط QR و GPS في شاشة الأوفلاين؛ الموبايل يظهر الكل
+/// على الويب نعرض فقط QR و GPS، وعلى iOS نخفي WiFi لأنه غير مدعوم.
 List<String> _offlineDisplayFingerprints(List<String> list) {
-  if (!PlatformIs.web) return list;
-  return list.where((m) => m == 'fp_scan' || m == 'fp_navigate' || m == 'custom_fp_navigate').toList();
+  if (PlatformIs.web) {
+    return list
+        .where((m) => m == 'fp_scan' || m == 'fp_navigate' || m == 'custom_fp_navigate')
+        .toList();
+  }
+  if (PlatformIs.iOS) {
+    return list.where((m) => m != 'fp_wifi').toList();
+  }
+  return list;
 }
 
 class OfflineScreen extends StatefulWidget {

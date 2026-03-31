@@ -678,11 +678,21 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   }
 
   static Future<bool> _ensureCameraPermission() async {
-    final permission = permission_handler.Permission.camera;
-    var status = await permission.status;
-    if (status.isGranted) return true;
-    status = await permission.request();
-    return status.isGranted;
+    try {
+      final permission = permission_handler.Permission.camera;
+      var status = await permission.status;
+      if (status.isGranted || status.isLimited) return true;
+
+      if (status.isDenied) {
+        status = await permission.request();
+        if (status.isGranted || status.isLimited) return true;
+      }
+
+      return false;
+    } catch (e) {
+      debugPrint('⚠️ Camera permission check failed: $e');
+      return false;
+    }
   }
 
   static Future<String?> _recordVerificationVideo(
@@ -1305,7 +1315,20 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     if (!AppConstants.fingerprintLivenessChallengesEnabled) {
       // تقاطيع صورة واحدة بدون تحديات (لا يظهر للعميل أي تحدي حي)
       final picker = ImagePicker();
-      final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+      XFile? photo;
+      try {
+        photo = await picker.pickImage(source: ImageSource.camera);
+      } catch (e) {
+        final warningContext = rootNavigatorKey.currentContext ?? context;
+        if (warningContext.mounted) {
+          _showWarning(
+            warningContext,
+            en: 'Unable to access camera. Please allow camera permission and try again.',
+            ar: 'تعذر الوصول إلى الكاميرا. يرجى منح إذن الكاميرا ثم المحاولة مرة أخرى.',
+          );
+        }
+        return null;
+      }
       if (photo == null || !context.mounted) return null;
       try {
         capturedImageFile = File(photo.path);

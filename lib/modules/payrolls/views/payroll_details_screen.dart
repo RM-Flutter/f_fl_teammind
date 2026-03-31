@@ -9,7 +9,6 @@ import 'package:rmemp/constants/app_sizes.dart';
 import 'package:rmemp/constants/app_strings.dart';
 import 'package:rmemp/modules/payrolls/views/view_pdf_screen.dart';
 import 'package:rmemp/platform/platform_is.dart';
-import 'package:rmemp/routing/app_router.dart';
 import '../models/payroll.model.dart';
 import '../view_models/payroll_details.viewmodel.dart';
 import 'widgets/payroll_details_body.widget.dart';
@@ -31,17 +30,14 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     // على الويب، تخطي التحقق من الهوية
     if (kIsWeb || PlatformIs.web) {
       _authPassed = true;
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        SecureScreen.enableSecureFlag();
-      }); // هذا يمنع السكرين شوت
-
-      // Require device authentication on screen entry (فقط على الموبايل)
+      // هذا يمنع السكرين شوت + يطلب التحقق على دخول الشاشة
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await SecureScreen.enableSecureFlag();
         await _requireAuthentication();
       });
     }
@@ -55,11 +51,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
 
   Future<void> _requireAuthentication() async {
     try {
-      final bool isSupported = await _auth.isDeviceSupported();
-      final bool canCheck = await _auth.canCheckBiometrics;
-
-      // Some devices return false negatives; we still try authenticate with device credentials allowed
-      bool didAuth = await _auth.authenticate(
+      final bool didAuth = await _auth.authenticate(
         localizedReason: context.locale.languageCode == 'ar'
             ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
             : 'Please authenticate to view your payroll',
@@ -68,66 +60,45 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
         persistAcrossBackgrounding: true,
       );
 
-      // Retry once after a short delay if it failed unexpectedly
-      if (!didAuth && (isSupported || canCheck)) {
-        await Future.delayed(const Duration(milliseconds: 300));
-        didAuth = await _auth.authenticate(
-          localizedReason: context.locale.languageCode == 'ar'
-              ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
-              : 'Please authenticate to view your payroll',
-          biometricOnly: false,
-          sensitiveTransaction: true,
-          persistAcrossBackgrounding: true,
-        );
-      }
       if (!mounted) return;
       if (!didAuth) {
-        Navigator.of(context).pop();
+        _safeExitAuthFailed();
       } else {
-        setState(() {
-          _authPassed = true;
-        });
-      }
-    } on PlatformException catch (e) {
-      // Some devices throw even when credentials exist; do not pop immediately
-      if (!mounted) return;
-      // Try a final fallback attempt allowing device credentials
-      try {
-        final bool didAuth = await _auth.authenticate(
-          localizedReason: context.locale.languageCode == 'ar'
-              ? 'الرجاء تأكيد هويتك لعرض كشف المرتب'
-              : 'Please authenticate to view your payroll',
-          biometricOnly: false,
-          sensitiveTransaction: true,
-          persistAcrossBackgrounding: true,
-        );
-        if (!mounted) return;
-        if (!didAuth) {
-          Navigator.of(context).pop();
-        } else {
-          setState(() {
-            _authPassed = true;
-          });
+        try {
+          setState(() => _authPassed = true);
+        } catch (_) {
+          // If the widget is already in a bad state, just exit gracefully.
+          _safeExitAuthFailed();
         }
-      } catch (_) {
-        // Show message ثم الرجوع بدلاً من ترك المستخدم على شاشة بيضاء
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              context.locale.languageCode == 'ar'
-                  ? 'لا يمكن التحقق من الهوية على هذا الجهاز. يرجى التأكد من إعداد بصمة أو كلمة مرور للجهاز.'
-                  : 'Authentication is not available. Please ensure device biometrics or screen lock is set up.',
-            ),
-          ),
-        );
-        Navigator.of(context).pop();
       }
+    } on PlatformException {
+      if (!mounted) return;
+      _safeExitAuthFailed();
     } catch (_) {
-      // أي خطأ غير متوقع: رجوع بدلاً من تعليق المستخدم على شاشة بيضاء
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
+      if (!mounted) return;
+      _safeExitAuthFailed();
     }
+  }
+
+  void _safeExitAuthFailed() {
+    if (!mounted) return;
+    // Avoid crashing due to route issues (some navigation stacks can't pop safely).
+    try {
+      final messenger = ScaffoldMessenger.maybeOf(context);
+      messenger?.showSnackBar(
+        SnackBar(
+          content: Text(
+            context.locale.languageCode == 'ar'
+                ? 'تعذر التحقق من الهوية. حاول مرة أخرى.'
+                : 'Authentication failed. Please try again.',
+          ),
+        ),
+      );
+    } catch (_) {}
+
+    try {
+      Navigator.of(context, rootNavigator: true).maybePop();
+    } catch (_) {}
   }
 
   @override
