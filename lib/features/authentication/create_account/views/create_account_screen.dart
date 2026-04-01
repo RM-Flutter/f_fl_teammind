@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import '../../shared/widgets/phone_number_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,7 +63,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           TextFormField(
                             controller: viewModel.emailController,
                             decoration: InputDecoration(
-                              hintText: AppStrings.yourEmail.tr(),
+                              hintText: AppStrings.yourEmail.tr().toUpperCase(),
+                              hintStyle: const TextStyle(
+                                  color: Color(0xff606060),
+                                  fontSize: 12),
                               errorText: viewModel.emailError,
                             ),
                             validator: (val) => ValidationService.validateEmail(val),
@@ -72,6 +76,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             controller: viewModel.passwordController,
                             decoration: InputDecoration(
                               hintText: AppStrings.password.tr().toUpperCase(),
+                              hintStyle: TextStyle(
+                                  color: const Color(0xff606060),
+                                  fontSize: 12),
                               errorText: viewModel.passwordError,
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -92,7 +99,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           TextFormField(
                             controller: viewModel.nameController,
                             decoration: InputDecoration(
-                              hintText: AppStrings.yourName.tr(),
+                              hintText: AppStrings.yourName.tr().toUpperCase(),
+                              hintStyle: const TextStyle(
+                                  color: Color(0xff606060),
+                                  fontSize: 12),
                               errorText: viewModel.nameError,
                             ),
                             validator: (val) => ValidationService.validateRequired(val, AppStrings.yourName.tr()),

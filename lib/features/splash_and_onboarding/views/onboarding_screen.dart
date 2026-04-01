@@ -24,7 +24,9 @@ class OnBoardingScreen extends StatelessWidget {
 
     return ChangeNotifierProvider<OnboardingController>(
         create: (context) => OnboardingController(),
-        child: Scaffold(body:
+        child: Scaffold(
+            backgroundColor: Colors.black,
+            body:
         Consumer<OnboardingController>(builder: (context, viewModel, child) {
           return Stack(
             children: [
@@ -56,79 +58,67 @@ class OnBoardingScreen extends StatelessWidget {
                     }
                     if (image.startsWith('http') || image.startsWith('https')) {
                       // Network image
-                      return CachedNetworkImage(
-                        imageUrl: image,
-                        fit: BoxFit.cover,
-                        key: ValueKey<String>(image),
-                        placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
+                      return Opacity(
+                        opacity: 0.5,
+                        child: CachedNetworkImage(
+                          imageUrl: image,
+                          fit: BoxFit.cover,
+                          key: ValueKey<String>(image),
+                          placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>
                             Stack(
                               children: [
-                                Image.asset(
-                                  index == 0
-                                      ? AppImages.onboardingFallback1
-                                      : index == 1
-                                      ? AppImages.onboardingFallback2
-                                      : AppImages.onboardingFallback3,
-                                  fit: BoxFit.cover,
+                                Opacity(
+                                  opacity: 0.5,
+                                  child: Image.asset(
+                                    index == 0
+                                        ? AppImages.onboardingFallback1
+                                        : index == 1
+                                        ? AppImages.onboardingFallback2
+                                        : AppImages.onboardingFallback3,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(AppColors.dark).withOpacity(0.0),
-                                        Color(AppColors.dark).withOpacity(0.30),
-                                        Color(AppColors.dark).withOpacity(0.7),
-                                      ],
-                                      stops: const [0.0, 0.1, 0.3],
-                                      begin: Alignment.center,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
+                                  color: Colors.black.withOpacity(0.35),
                                 ),
                               ],
                             ),
-                      );
+                          ),
+                        );
                     } else {
                       // Asset image
                       return Stack(
                         children: [
-                          Image.asset(
-                            image,
-                            fit: BoxFit.cover,
-                            key: ValueKey<String>(image),
+                          Opacity(
+                            opacity: 0.5,
+                            child: Image.asset(
+                              image,
+                              fit: BoxFit.cover,
+                              key: ValueKey<String>(image),
+                            ),
                           ),
                           Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(AppColors.dark).withOpacity(0.0), // #090B60 at 0%
-                                  Color(AppColors.dark).withOpacity(0.30), // #090B60 at 15%
-                                  Color(AppColors.dark).withOpacity(0.7), // #090B60 at 30%
-                                ],
-                                stops: [0.0, 0.1, 0.3], // Define stops for each color
-                                begin: Alignment.center,
-                                end: Alignment.bottomCenter,
-                              ),
-                            ),
+                            color: Colors.black.withOpacity(0.35),
                           )
                         ],
                       );
                     }
                   }),
-              // Logo
-              // Positioned(
-              //   top: MediaQuery.of(context).size.height * 0.3,
-              //   left: AppSizes.s0,
-              //   right: AppSizes.s0,
-              //   child: Image.asset(
-              //     AppImages.logo,
-              //     width: AppSizes.s125,
-              //     height: AppSizes.s125,
-              //     key: const ValueKey<String>(AppImages.logo),
-              //   ),
-              // ),
+              // Centered Logo
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.25,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Image.asset(
+                    AppImages.logo,
+                    width: AppSizes.s140,
+                    height: AppSizes.s140,
+                  ),
+                ),
+              ),
 
               Positioned(
                 bottom: AppSizes.s48,
@@ -148,7 +138,7 @@ class OnBoardingScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: AppSizes.s18, vertical: AppSizes.s20),
-                        height: AppSizes.s300,
+                        height: AppSizes.s340,
                         child: Column(
                           children: [
                             Expanded(
@@ -180,25 +170,33 @@ class OnBoardingScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        (title ?? '').toUpperCase(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayLarge,
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                        Text(
+                                          (title ?? '').split(' ').map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}').join(' '),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge
+                                              ?.copyWith(
+                                                color: const Color(0xFF3489EF),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       gapH20,
-                                      Text(
-                                        info ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall,
-                                        textAlign: TextAlign.center,
-                                        maxLines: 4,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                        Text(
+                                          info ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                color: Colors.grey.shade500,
+                                                height: 1.65,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 4,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                     ],
                                   );
                                 },
@@ -220,7 +218,7 @@ class OnBoardingScreen extends StatelessWidget {
                                     onPressed: () => viewModel.skip(context),
                                     style: ElevatedButton.styleFrom(
                                       fixedSize:
-                                      const Size(AppSizes.s150, AppSizes.s50),
+                                      const Size(AppSizes.s170, AppSizes.s50),
                                     ),
                                     child: Text(AppStrings.skip.tr(),
                                         style: Theme.of(context)

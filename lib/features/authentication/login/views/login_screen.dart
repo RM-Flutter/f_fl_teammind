@@ -23,6 +23,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_icons.dart';
 import 'package:app_test/core/constants/app_images.dart';
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/app_config_service.dart';
@@ -43,7 +44,8 @@ class LoginScreen extends StatefulWidget {
   LoginScreenState createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin,WidgetsBindingObserver {
+class LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AuthenticationController viewModel;
   bool hidePassword = true;
   final ValueNotifier<bool> isLoginBySocial = ValueNotifier<bool>(false);
@@ -51,6 +53,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
   late final AppConfigService appConfigServiceProvider;
   AppLifecycleState _appLifecycleState = AppLifecycleState.inactive;
   GeneralSettingsModel? generalSettings;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -135,12 +138,12 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    var gCache;
+    Map<String, dynamic>? gCache;
     final jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
+      gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
-    print("Can Register is --> ${gCache['can_new_register']}");
     return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
       child: Scaffold(
@@ -172,7 +175,8 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: (kIsWeb || PlatformIs.web) ? 40 : 60),
+                          SizedBox(
+                              height: (kIsWeb || PlatformIs.web) ? 40 : 60),
                           _buildLogoImage(),
                           gapH32,
                           // Login Page Headline
@@ -205,20 +209,24 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             builder: (context, viewModel, child) {
                               return viewModel.isPhoneLogin
                                   ? PhoneNumberField(
-                                controller: viewModel.phoneController,
-                                countryCodeController: viewModel.countryCodeController,
-                              )
+                                      controller: viewModel.phoneController,
+                                      countryCodeController:
+                                          viewModel.countryCodeController,
+                                    )
                                   : TextFormField(
-                                controller:
-                                viewModel.emailController,
-                                decoration: InputDecoration(
-                                  hintText:
-                                  AppStrings.yourEmail.tr().toUpperCase(),
-                                ),
-                                validator: (value) =>
-                                    ValidationService.validateEmail(
-                                        value),
-                              );
+                                      controller: viewModel.emailController,
+                                      decoration: InputDecoration(
+                                        hintText: AppStrings.yourEmail
+                                            .tr()
+                                            .toUpperCase(),
+                                        hintStyle: TextStyle(
+                                            color: const Color(0xff606060),
+                                            fontSize: 12),
+                                      ),
+                                      validator: (value) =>
+                                          ValidationService.validateEmail(
+                                              value),
+                                    );
                             },
                           ),
                           gapH12,
@@ -227,9 +235,14 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             controller: viewModel.passwordController,
                             decoration: InputDecoration(
                               hintText: AppStrings.password.tr().toUpperCase(),
+                              hintStyle: TextStyle(
+                                  color: const Color(0xff606060),
+                                  fontSize: 12),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  hidePassword ? Icons.visibility : Icons.visibility_off,
+                                  hidePassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -239,10 +252,10 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               ),
                             ),
                             validator: (value) =>
-                                ValidationService.validatePassword(value, login: true),
+                                ValidationService.validatePassword(value,
+                                    login: true),
                             obscureText: hidePassword,
                           ),
-                          gapH12,
                           // FORGET PASSSORD BUTTON
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -255,8 +268,9 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                   );
                                 },
                                 child: Text(AppStrings.forgetPassword.tr(),
-                                    style:
-                                    Theme.of(context).textTheme.headlineMedium),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium),
                               ),
                             ],
                           ),
@@ -266,36 +280,38 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             title: AppStrings.login.tr(),
                             onPressed: () async {
                               // التحقق من صحة النموذج أولاً
-                              if(!viewModel.formKey.currentState!.validate()){
+                              if (!viewModel.formKey.currentState!.validate()) {
                                 return;
                               }
 
                               // إذا كان مختار BY PHONE، التحقق من أن رقم الهاتف غير فارغ وصحيح
-                              if(viewModel.isPhoneLogin){
-                                final phoneText = viewModel.phoneController.text.trim();
-                                if(phoneText.isEmpty){
+                              if (viewModel.isPhoneLogin) {
+                                final phoneText =
+                                    viewModel.phoneController.text.trim();
+                                if (phoneText.isEmpty) {
                                   Fluttertoast.showToast(
-                                      msg: AppStrings.phoneNumberIsRequired.tr(),
+                                      msg:
+                                          AppStrings.phoneNumberIsRequired.tr(),
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
-                                      fontSize: 16.0
-                                  );
+                                      fontSize: 16.0);
                                   return;
                                 }
                                 // التحقق من أن الرقم يحتوي على أرقام فقط
-                                if(!RegExp(r'^[0-9]+$').hasMatch(phoneText)){
+                                if (!RegExp(r'^[0-9]+$').hasMatch(phoneText)) {
                                   Fluttertoast.showToast(
-                                      msg: AppStrings.pleaseEnterValidPhoneNumber.tr(),
+                                      msg: AppStrings
+                                          .pleaseEnterValidPhoneNumber
+                                          .tr(),
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
-                                      fontSize: 16.0
-                                  );
+                                      fontSize: 16.0);
                                   return;
                                 }
                               }
@@ -311,20 +327,24 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                             title: AppStrings.addCompany.tr(),
                             onPressed: () async {
                               // لا تحذف fcm_token حتى start_app بعد اختيار الدومين يبعته. احذف last_sent فقط.
-                              await CacheHelper.deleteData(key: "last_sent_fcm_token");
-                              await DomainSelectionService.resetDomainSelection();
+                              await CacheHelper.deleteData(
+                                  key: "last_sent_fcm_token");
+                              await DomainSelectionService
+                                  .resetDomainSelection();
                               if (context.mounted) {
                                 DioHelper.initail(context);
                                 context.goNamed(
                                   AppRoutes.splash.name,
-                                  pathParameters: {'lang': context.locale.languageCode},
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  },
                                 );
                               }
                             },
                             isPrimaryBackground: false,
                           ),
                           gapH16,
-                          if(gCache != null && gCache['can_visit'] == true)
+                          if (gCache != null && gCache['can_visit'] == true)
                             CustomElevatedButton(
                               title: AppStrings.visitor.tr(),
                               onPressed: () async {
@@ -335,95 +355,131 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                               },
                               isPrimaryBackground: false,
                             ),
-                          SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
-                          if(gCache != null && gCache != "") Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
-                              vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8 : 0,
+                          SizedBox(
+                              height: (kIsWeb || PlatformIs.web) ? 30 : 25),
+                          if (gCache != null && gCache != "")
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: (kIsWeb || PlatformIs.web)
+                                    ? AppSizes.s16
+                                    : 0,
+                                vertical: (kIsWeb || PlatformIs.web)
+                                    ? AppSizes.s8
+                                    : 0,
+                              ),
+                              constraints: BoxConstraints(
+                                maxWidth: (kIsWeb || PlatformIs.web)
+                                    ? MediaQuery.of(context).size.width < 600
+                                        ? double.infinity
+                                        : 400
+                                    : double.infinity,
+                              ),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: (kIsWeb || PlatformIs.web)
+                                    ? AppSizes.s12
+                                    : AppSizes.s8,
+                                children: [
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_google'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.google,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(
+                                                    context,
+                                                    listen: false)
+                                                .deviceInformation
+                                                .deviceUniqueId;
+                                        final url =
+                                            '${AppConstants.socialLoginGoogle}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(
+                                            context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_facebook'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.facebookColored,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(
+                                                    context,
+                                                    listen: false)
+                                                .deviceInformation
+                                                .deviceUniqueId;
+                                        final url =
+                                            '${AppConstants.socialLoginFacebook}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(
+                                            context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_linkedin-openid'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.linkedInColored,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(
+                                                    context,
+                                                    listen: false)
+                                                .deviceInformation
+                                                .deviceUniqueId;
+                                        final url =
+                                            '${AppConstants.socialLoginLinkedIn}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(
+                                            context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                  if ((gCache['login_types'] ?? [])
+                                      .contains('social_apple'))
+                                    defaultCircularSocial(
+                                      context: context,
+                                      src: AppIcons.apple,
+                                      onTap: () async {
+                                        isLoginBySocial.value = true;
+                                        final deviceUniqueId =
+                                            Provider.of<AppConfigService>(
+                                                    context,
+                                                    listen: false)
+                                                .deviceInformation
+                                                .deviceUniqueId;
+                                        final url =
+                                            '${AppConstants.socialLoginAppleStore}$deviceUniqueId';
+                                        await viewModel.loginWithSocial(
+                                            context, url);
+                                      },
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                    ),
+                                ],
+                              ),
                             ),
-                            constraints: BoxConstraints(
-                              maxWidth: (kIsWeb || PlatformIs.web)
-                                  ? MediaQuery.of(context).size.width < 600
-                                  ? double.infinity
-                                  : 400
-                                  : double.infinity,
-                            ),
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
-                              children: [
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_google'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.google,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginGoogle}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_facebook'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.facebookColored,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginFacebook}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_linkedin-openid'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.linkedInColored,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginLinkedIn}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                if ((gCache['login_types'] ?? [])
-                                    .contains('social_apple'))
-                                  defaultCircularSocial(
-                                    context: context,
-                                    src: AppIcons.apple,
-                                    onTap: () async {
-                                      isLoginBySocial.value = true;
-                                      final deviceUniqueId =
-                                          Provider.of<AppConfigService>(context, listen: false).deviceInformation.deviceUniqueId;
-                                      final url = '${AppConstants.socialLoginAppleStore}$deviceUniqueId';
-                                      await viewModel.loginWithSocial(context, url);
-                                    },
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                              ],
-                            ),
-                          ),
-                          if(gCache != null && gCache['can_new_register'] == true)...[
-                            SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
+                          if (gCache != null &&
+                              gCache['can_new_register'] == true) ...[
+                            SizedBox(
+                                height: (kIsWeb || PlatformIs.web) ? 30 : 25),
                             Container(
                               padding: EdgeInsets.only(
-                                bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s48 : AppSizes.s16,
+                                bottom: (kIsWeb || PlatformIs.web)
+                                    ? AppSizes.s48
+                                    : AppSizes.s16,
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -432,17 +488,20 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                     width: AppSizes.s290,
                                     title: AppStrings.createNewAccount.tr(),
                                     isFuture: false,
-                                    onPressed: () => viewModel.showCreateAccountModal(
-                                        context: context),
+                                    onPressed: () =>
+                                        viewModel.showCreateAccountModal(
+                                            context: context),
                                     buttonStyle: ElevatedButton.styleFrom(
                                       shadowColor: Colors.transparent,
                                       backgroundColor: Colors.transparent,
-                                      foregroundColor: Colors.white, // Text color
-                                      disabledForegroundColor: Colors.transparent,
+                                      foregroundColor: Colors.white,
+                                      // Text color
+                                      disabledForegroundColor:
+                                          Colors.transparent,
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(AppSizes.s28),
+                                            BorderRadius.circular(AppSizes.s28),
                                         side: const BorderSide(
                                           color: Colors.white,
                                         ),
@@ -454,10 +513,10 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
                                           .textTheme
                                           .titleMedium
                                           ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
                                     ),
                                   )
                                 ],
@@ -539,19 +598,20 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
 }
 
 Widget defaultCircularSocial({context, onTap, src, color}) => GestureDetector(
-  onTap: onTap,
-  child: Container(
-    margin: const EdgeInsets.symmetric(horizontal: 8),
-    padding: const EdgeInsets.all(5),
-    height: 30,
-    width: 30,
-    decoration: const BoxDecoration(
-      shape: BoxShape.circle,
-      color: Colors.white,
-    ),
-    child: SvgPicture.asset(src),
-  ),
-);
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(5),
+        height: 30,
+        width: 30,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+        ),
+        child: SvgPicture.asset(src),
+      ),
+    );
+
 Future<void> loginWithSocial(BuildContext context, String url) async {
   try {
     await custom_tabs.launchUrl(
@@ -571,7 +631,8 @@ Future<void> loginWithSocial(BuildContext context, String url) async {
         preferredBarTintColor: Theme.of(context).colorScheme.surface,
         preferredControlTintColor: Theme.of(context).colorScheme.onSurface,
         barCollapsingEnabled: true,
-        dismissButtonStyle: custom_tabs.SafariViewControllerDismissButtonStyle.close,
+        dismissButtonStyle:
+            custom_tabs.SafariViewControllerDismissButtonStyle.close,
       ),
     );
   } catch (e) {
@@ -591,6 +652,7 @@ class _AnimatedBackgroundWidgetState extends State<AnimatedBackgroundWidget>
     with TickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> animation;
+
   @override
   void initState() {
     animationController = AnimationController(
@@ -613,33 +675,35 @@ class _AnimatedBackgroundWidgetState extends State<AnimatedBackgroundWidget>
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
-        final bgUrl = !kIsWeb ? AppImages.loginBackground : AppImages.loginBackgroundWeb;
-        final isNetworkImage = bgUrl.startsWith('http://') || bgUrl.startsWith('https://');
+        final bgUrl =
+            !kIsWeb ? AppImages.loginBackground : AppImages.loginBackgroundWeb;
+        final isNetworkImage =
+            bgUrl.startsWith('http://') || bgUrl.startsWith('https://');
 
         return FractionallySizedBox(
           widthFactor: AppSizes.s4,
           alignment: Alignment((animation.value * 2) - 1, 0),
           child: isNetworkImage
               ? CachedNetworkImage(
-            imageUrl: bgUrl,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Image.asset(
-              !kIsWeb
-                  ? 'assets/images/login_images/login_background.png'
-                  : 'assets/images/login_images/login-bg.jpg',
-              fit: BoxFit.cover,
-            ),
-            errorWidget: (context, url, error) => Image.asset(
-              !kIsWeb
-                  ? 'assets/images/login_images/login_background.png'
-                  : 'assets/images/login_images/login-bg.jpg',
-              fit: BoxFit.cover,
-            ),
-          )
+                  imageUrl: bgUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Image.asset(
+                    !kIsWeb
+                        ? 'assets/images/login_images/login_background.png'
+                        : 'assets/images/login_images/login-bg.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    !kIsWeb
+                        ? 'assets/images/login_images/login_background.png'
+                        : 'assets/images/login_images/login-bg.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                )
               : Image.asset(
-            bgUrl,
-            fit: BoxFit.cover,
-          ),
+                  bgUrl,
+                  fit: BoxFit.cover,
+                ),
         );
       },
     );

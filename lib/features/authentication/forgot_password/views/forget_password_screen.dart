@@ -10,6 +10,7 @@ import '../controller/forgot_password_controller.dart';
 import '../../login/controller/login_controller.dart';
 import '../../shared/widgets/phone_number_field.dart';
 import '../../shared/widgets/verification_tile_widget.dart';
+import 'package:app_test/core/constants/app_colors.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   final bool isPhoneLogin;
@@ -53,7 +54,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           : TextFormField(
                         controller: viewModel.emailController,
                         decoration: InputDecoration(
-                            hintText: AppStrings.yourEmail.tr()),
+                            hintStyle: const TextStyle(
+                                color: Color(0xff606060),
+                                fontSize: 12),
+                            hintText: AppStrings.yourEmail.tr().toUpperCase()),
                         validator: (value) =>
                             ValidationService.validateEmail(value),
                       ),),
@@ -94,7 +98,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               controller: viewModel.codeController,
                               keyboardType: TextInputType.number,
                               decoration:
-                              InputDecoration(hintText: AppStrings.enterVerificationCode.tr()),
+                              InputDecoration(
+                                  hintStyle: const TextStyle(
+                                      color: Color(0xff606060),
+                                      fontSize: 12),
+                                  hintText: AppStrings.enterVerificationCode.tr().toUpperCase()),
                               validator: (value) =>
                                   ValidationService.validateRequired(value, AppStrings.code.tr()),
                             ),
@@ -102,7 +110,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             TextFormField(
                               controller: viewModel.newPasswordController,
                               decoration: InputDecoration(
-                                hintText: AppStrings.newPassword.tr(),
+                                hintStyle: const TextStyle(
+                                    color: Color(0xff606060),
+                                    fontSize: 12),
+                                hintText: AppStrings.newPassword.tr().toUpperCase(),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscureText ? Icons.visibility : Icons.visibility_off,

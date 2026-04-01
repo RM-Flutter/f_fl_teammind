@@ -12,14 +12,14 @@ class SwitchRow extends StatelessWidget {
   final ValueChanged<bool> onChanged;
   final String? rightText;
   final String? leftText;
-  bool? viewPhone = true;
+  final bool? viewPhone;
   final bool? isLoginPageStyle;
-  MainAxisAlignment? axis;
-  SwitchRow({
+  final MainAxisAlignment? axis;
+  const SwitchRow({
     super.key,
     required this.value,
     required this.onChanged,
-    this.viewPhone,
+    this.viewPhone = true,
     this.rightText,
     this.leftText,
     this.axis,

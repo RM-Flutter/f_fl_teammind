@@ -94,7 +94,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         languageCode: context.locale.languageCode,
         decoration: InputDecoration(
           errorText: widget.phoneError,
-          hintText: AppStrings.yourPhone.tr(),
+          hintText: AppStrings.yourPhone.tr().toUpperCase(),
+          hintStyle: const TextStyle(color: Color(0xff606060), fontSize: 12),
           counter: const SizedBox.shrink(),
         ),
         initialCountryCode: detectedCountryCode ?? widget.initialCountry ?? "EG",
