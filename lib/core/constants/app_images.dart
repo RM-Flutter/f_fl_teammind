@@ -46,7 +46,8 @@ abstract class AppImages {
   static const String alertsSuccess = '$_alertsImagesDirectory/success.svg';
   static const String alertsWarning = '$_alertsImagesDirectory/warning.svg';
   // splash screen images
-  static const String splashScreenBackground = '$_splashImagesDirectory/team-mind-splash.png';
+  static const String splashScreenBackground =
+      '$_splashImagesDirectory/splash_screen_background.png';
   static const String splashScreenBackgroundWeb =
       '$_splashImagesDirectory/splash-bg.jpg';
   // onboarding screen images
