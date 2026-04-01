@@ -13,6 +13,7 @@ import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 
 class WebViewStackMainData extends StatefulWidget {
+  const WebViewStackMainData({super.key});
 
   @override
   State<WebViewStackMainData> createState() => _WebViewStackMainDataState();
@@ -33,7 +34,6 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) {
-            print("onPageStarted is -> ${url}");
             if (mounted) {
               setState(() {
                 loadingPercentage = 0;
@@ -48,7 +48,6 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
             }
           },
           onPageFinished: (url) {
-            print("onPageFinished is -> ${url}");
             if (mounted) {
               setState(() {
                 loadingPercentage = 100;
@@ -56,16 +55,10 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
             }
           },
           onHttpError: (error) {
-            print("onHttpError is --- > ${error.response!.statusCode}");
-            print("onHttpError is --- > ${error.response!.headers}");
-            print("onHttpError is --- > ${error.response!.uri}");
-            print("onHttpError is --- > ${error.request!.uri}");
           },
           onWebResourceError: (error) {
-            print("onWebResourceError is --- > $error");
           },
           onNavigationRequest: (navigation) {
-            print("NAV is -> ${navigation.url}");
             final host = Uri.parse(navigation.url).host;
             if (navigation.url.contains('status=1')) {
               CacheHelper.deleteData(key: "update_url");
@@ -155,7 +148,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
 
     return Stack(
       children: [
-        SizedBox(height: 30,),
+        const SizedBox(height: 30,),
         WebViewWidget(controller: controller),
         if (loadingPercentage < 100)
           LinearProgressIndicator(value: loadingPercentage / 100.0),
