@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/models/notifications_model.dart';
 import 'package:app_test/core/models/requests_model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -23,9 +24,11 @@ import '../../../../../core/constants/user_consts.dart' show UserSettingConst;
 class HomeAppbarWidget extends StatelessWidget {
   final bool? isExpanded;
   final List<RequestModel>? requests;
+  final List<NotificationModel>? notifications;
   const HomeAppbarWidget(
       {super.key,
         this.requests,
+        this.notifications,
         this.isExpanded = true,});
   String formatName(String fullName) {
     List<String> names = fullName.split(" ");
@@ -245,17 +248,35 @@ class HomeAppbarWidget extends StatelessWidget {
                             //   ),
                             const Spacer(),
                             if (us1Cache != null)
-                              IconButton(
-                                icon: const Icon(Icons.notifications_none_outlined,
-                                    color: Colors.white, size: 28),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(
-                                    minWidth: 40, minHeight: 40),
-                                onPressed: () => context.pushNamed(
-                                    AppRoutes.notification.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    }),
+                              Stack(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.notifications_none_outlined,
+                                        color: Colors.white, size: 28),
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                        minWidth: 40, minHeight: 40),
+                                    onPressed: () => context.pushNamed(
+                                        AppRoutes.notification.name,
+                                        pathParameters: {
+                                          'lang': context.locale.languageCode
+                                        }),
+                                  ),
+                                  if (notifications?.any((n) => n.seen == false || n.seen == 0) ?? false)
+                                    Positioned(
+                                      top: 10,
+                                      right: LocalizationService.isArabic(context: context) ? 12 : null,
+                                      left: LocalizationService.isArabic(context: context) ? null : 12,
+                                      child: Container(
+                                        width: 7,
+                                        height: 7,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             if(us1Cache != null && ((us1Cache['email_verified_at'] == null) || ( us1Cache['phone_verified_at'] == null)))
                               GestureDetector(

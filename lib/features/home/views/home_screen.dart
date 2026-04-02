@@ -223,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
               shrinkChild: Consumer<HomeController>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
                         requests: viewModel.myRequests,
+                        notifications: viewModel.notifications,
                         isExpanded: false,
                       )),
               child: SingleChildScrollView(
@@ -233,6 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ? const HomeAppbarLoading()
                               : HomeAppbarWidget(
                                   requests: viewModel.myRequests,
+                                  notifications: viewModel.notifications,
                                 ))),
             )
           ],
