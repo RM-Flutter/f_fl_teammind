@@ -568,26 +568,22 @@ class _MoreScreenState extends State<MoreScreen> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.15,
+                      height: MediaQuery.sizeOf(context).height * 0.11,
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: EdgeInsets.zero,
                         child: ListView(
                           children: [
-                            Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: kIsWeb ? 1070 : double.infinity,
-                                ),
-                                child: Container(
-                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                  child: Text(AppStrings.functionality.tr().toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(AppColors.primary))),
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              child: Container(
+                                alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                child: Text(AppStrings.functionality.tr().toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(AppColors.primary))),
                               ),
                             ),
                             const SizedBox(height : 15),
@@ -629,19 +625,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                     pathParameters: {'lang': context.locale.languageCode})
                             ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) const SizedBox(height : 15),
-                           if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Center(
-                             child: ConstrainedBox(
-                               constraints: const BoxConstraints(
-                                 maxWidth: kIsWeb ? 1070 : double.infinity,
-                               ),
-                               child: Container(
-                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                 child: Text(AppStrings.management.tr().toUpperCase(),
-                                     style: TextStyle(
-                                         fontSize: 13,
-                                         fontWeight: FontWeight.w600,
-                                         color: Color(AppColors.primary))),
-                               ),
+                           if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Padding(
+                             padding: const EdgeInsets.symmetric(horizontal: 24),
+                             child: Container(
+                               alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                               child: Text(AppStrings.management.tr().toUpperCase(),
+                                   style: TextStyle(
+                                       fontSize: 13,
+                                       fontWeight: FontWeight.w600,
+                                       color: Color(AppColors.primary))),
                              ),
                            ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
@@ -679,19 +671,15 @@ class _MoreScreenState extends State<MoreScreen> {
                               },
                             ),
                             const SizedBox(height : 15),
-                            Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: kIsWeb ? 1070 : double.infinity,
-                                ),
-                                child: Container(
-                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                  child: Text(AppStrings.more.tr().toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(AppColors.primary))),
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              child: Container(
+                                alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                child: Text(AppStrings.more.tr().toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(AppColors.primary))),
                               ),
                             ),
                             const SizedBox(height : 15),
@@ -842,19 +830,15 @@ class _MoreScreenState extends State<MoreScreen> {
                               },
                             ),
                             const SizedBox(height : 15),
-                            Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: kIsWeb ? 1070 : double.infinity,
-                                ),
-                                child: Container(
-                                  alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                  child: Text(AppStrings.myAccount.tr().toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(AppColors.primary))),
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              child: Container(
+                                alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
+                                child: Text(AppStrings.myAccount.tr().toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(AppColors.primary))),
                               ),
                             ),
                             const SizedBox(height : 15),
@@ -1035,33 +1019,31 @@ class DefaultListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: kIsWeb ? 1100 : double.infinity,
-        ),
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          padding: EdgeInsets.zero,
-          child: ListTile(
-            leading: SvgPicture.asset(
-              src,
-              color: Color(AppColors.primary),
-              fit: BoxFit.scaleDown,
-              width: 20, height: 20,
-            ),
-            title: Text(
-              title!.toUpperCase() ?? "",
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-            // trailing: Icon(
-            //   Icons.arrow_forward_ios,
-            //   color: Theme.of(context).colorScheme.primary,
-            // ),
-            onTap: onTap ?? () {}, // Add your onTap functionality here
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+          leading: SvgPicture.asset(
+            src,
+            color: Color(AppColors.primary),
+            fit: BoxFit.scaleDown,
+            width: 20,
+            height: 20,
           ),
+          title: Text(
+            title!.toUpperCase() ?? "",
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+          onTap: onTap ?? () {},
         ),
-      ),
+        const Divider(
+          height: 1.3,
+          thickness: 2,
+          color: Color(0xFFF3F3F3), // Light gray divider
+          indent: 0,
+          endIndent: 0,
+        ),
+      ],
     );
   }
 }
