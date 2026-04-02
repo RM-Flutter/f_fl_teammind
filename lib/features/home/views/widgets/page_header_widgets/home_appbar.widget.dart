@@ -107,11 +107,12 @@ class HomeAppbarWidget extends StatelessWidget {
                         bottomLeft: Radius.circular(AppSizes.s32),
                         bottomRight: Radius.circular(AppSizes.s32)),
                   ),
-                  child: Image.asset(
-                    "assets/images/png/team-mind-home.jpg",
-                    fit: BoxFit.cover,
-                    width: double.infinity,height: 380,
-                  ),
+                    child: Image.asset(
+                      "assets/images/png/team-mind-home.jpg",
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 300.0,
+                    ),
                 ),
               ),
               // Your content goes here, if any
@@ -148,12 +149,11 @@ class HomeAppbarWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 25,
+                    top: 5,
                     right: LocalizationService.isArabic(context: context) ? 15 : 0, left: LocalizationService.isArabic(context: context) ? 0 : 15,
                   ),
                   child: Column(
                     children: [
-                      gapH18,
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
@@ -219,13 +219,13 @@ class HomeAppbarWidget extends StatelessWidget {
                                           ?.copyWith(
                                           color: AppThemeService.colorPalette
                                               .quinaryTextColor.color)),
-                                  Text(AppStrings.niceToMeetYou.tr(),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 15, color: Color(AppColors.white)
-                                      )),
+                                  // Text(AppStrings.niceToMeetYou.tr(),
+                                  //     maxLines: 2,
+                                  //     overflow: TextOverflow.ellipsis,
+                                  //     style: TextStyle(
+                                  //         fontWeight: FontWeight.w300,
+                                  //         fontSize: 15, color: Color(AppColors.white)
+                                  //     )),
                                 ],
                               ),
                             ),
@@ -243,21 +243,21 @@ class HomeAppbarWidget extends StatelessWidget {
                             //       }
                             //     },
                             //   ),
-                            gapW8,
-                            // const Spacer(),
-                            // NotificationIcon(
-                            //   hasNewNotifications: true,
-                            //   numOfUnreadNotifications:
-                            //   us1Cache['new_notification_count'] ?? 0,
-                            //   // onTap: () async => await context.pushNamed(
-                            //   //     AppRoutes.rewardsAndPenalties.name,
-                            //   //     extra: {'employeeName': null, 'employeeId': null},
-                            //   //     pathParameters: {'lang': context.locale.languageCode})
-                            //   onTap: () => context.pushNamed(AppRoutes.notification.name,
-                            //       pathParameters: {'lang': context.locale.languageCode}),
-                            // )
                             const Spacer(),
-                            if((us1Cache['email_verified_at'] == null) || ( us1Cache['phone_verified_at'] == null))
+                            if (us1Cache != null)
+                              IconButton(
+                                icon: const Icon(Icons.notifications_none_outlined,
+                                    color: Colors.white, size: 28),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                    minWidth: 40, minHeight: 40),
+                                onPressed: () => context.pushNamed(
+                                    AppRoutes.notification.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
+                            if(us1Cache != null && ((us1Cache['email_verified_at'] == null) || ( us1Cache['phone_verified_at'] == null)))
                               GestureDetector(
                                   onTap: ()async{
                                     await context.pushNamed(

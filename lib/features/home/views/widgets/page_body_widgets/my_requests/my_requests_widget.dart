@@ -46,51 +46,27 @@ class RequestsWidget extends StatelessWidget {
       });
     }
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: kIsWeb ? 1100 : double.infinity
-        ),
-        child: Container(
-          alignment: Alignment.topCenter,
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.s24, vertical: AppSizes.s12),
-          decoration: ShapeDecoration(
-            color: Theme.of(context).cardTheme.color,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                topRight: Radius.circular(40),
-              ),
-            ),
-            shadows: [
-              BoxShadow(
-                color: Color(AppColors.lightGrey).withOpacity(0.5),
-                blurRadius: AppSizes.s5,
-                spreadRadius: 1,
-              )
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+    return Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: 24, vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(getRequestsTypeStr(),
-                      style: TextStyle(
-                        fontSize: AppSizes.s19,
+                      style: const TextStyle(
+                        fontSize: 19,
                         fontWeight: FontWeight.w700,
-                        color: Color(AppColors.blue),
-                        // تحسين الخطوط في الويب
-                        letterSpacing: kIsWeb ? 0.3 : null,
+                        color: Color(0xFF3489EF),
                       ),),
                   TextButton(
                     onPressed: () async =>
                         await pushToRequestsScreenWithRequestsType(
                             context: context, reqType: requestType),
-                    child: AutoSizeText(AppStrings.viewAll.tr(),
-                        style: Theme.of(context).textTheme.bodySmall),
+                    child: const Text("VIEW ALL",
+                        style: TextStyle(color: Colors.grey, fontSize: 12)),
                   ),
                 ],
               ),
@@ -103,8 +79,6 @@ class RequestsWidget extends StatelessWidget {
               )
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 }

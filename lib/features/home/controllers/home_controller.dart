@@ -34,6 +34,7 @@ class HomeController extends ChangeNotifier {
   List<AllCompanyRequestModel>? allCompanyRequests;
   List<OtherDepartmentRequestModel>? otherDepartmentRequests;
   List<NotificationModel>? notifications;
+  List<dynamic>? myTasks;
   final ScrollController homeScrollController = ScrollController();
   bool isLoading = false;
   bool isSuccess = false;
@@ -305,6 +306,7 @@ class HomeController extends ChangeNotifier {
             ?.map((item) =>
             NotificationModel.fromJson(item as Map<String, dynamic>))
             .toList();
+        myTasks = value.data['tasks'] as List<dynamic>?;
       }else{
         AlertsService.error(
             context: context,

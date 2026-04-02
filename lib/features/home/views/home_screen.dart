@@ -21,12 +21,14 @@ import 'package:app_test/features/home/views/widgets/page_body_widgets/notificat
 import 'package:app_test/features/home/views/widgets/page_header_widgets/home_appbar.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/services/general_listener.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
 
 import '../../../core/constants/app_colors.dart';
-
+import '../../../core/routing/app_router.dart';
+import '../../tasks/views/main_tasks_layout/widgets/task_list_tile_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic>? gCache;
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
     final popups = gCache?['popups'];
     if (popups != null && popups.isNotEmpty) {
@@ -145,9 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _autoScrollTimer?.cancel();
 
-    if (distanceFromTop < scrollThreshold && position.pixels > position.minScrollExtent) {
+    if (distanceFromTop < scrollThreshold &&
+        position.pixels > position.minScrollExtent) {
       // Scroll up
-      _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      _autoScrollTimer =
+          Timer.periodic(const Duration(milliseconds: 16), (timer) {
         if (!scrollController.hasClients || !mounted || !_isDragging) {
           timer.cancel();
           return;
@@ -163,9 +168,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
         scrollController.jumpTo(newPosition);
       });
-    } else if (distanceFromBottom < scrollThreshold && position.pixels < position.maxScrollExtent) {
+    } else if (distanceFromBottom < scrollThreshold &&
+        position.pixels < position.maxScrollExtent) {
       // Scroll down
-      _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      _autoScrollTimer =
+          Timer.periodic(const Duration(milliseconds: 16), (timer) {
         if (!scrollController.hasClients || !mounted || !_isDragging) {
           timer.cancel();
           return;
@@ -210,41 +217,39 @@ class _HomeScreenState extends State<HomeScreen> {
           headers: [
             CoreHeader.transform(
               pinned: true,
-              color: Colors.white,
+              color: Colors.transparent,
               shrinkHeight: AppSizes.s140,
-              expandedHeight: AppSizes.s300,
+              expandedHeight: 300.0,
               shrinkChild: Consumer<HomeController>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
-                    requests: viewModel.myRequests,
-                    isExpanded: false,
-                  )),
+                        requests: viewModel.myRequests,
+                        isExpanded: false,
+                      )),
               child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Consumer<HomeController>(
-                      builder: (context, viewModel, child) => viewModel.isLoading
-                          ? const HomeAppbarLoading()
-                          : HomeAppbarWidget(
-                        requests: viewModel.myRequests,
-                      ))),
+                      builder: (context, viewModel, child) =>
+                          viewModel.isLoading
+                              ? const HomeAppbarLoading()
+                              : HomeAppbarWidget(
+                                  requests: viewModel.myRequests,
+                                ))),
             )
           ],
           floatingActionButton: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:
-                LocalizationService.isArabic(context: context) ? 35 : 0),
-            child: MainAppFabWidget(
-                requests: false,
-                viewRequest: true
-            ),
+                    LocalizationService.isArabic(context: context) ? 35 : 0),
+            child: MainAppFabWidget(requests: false, viewRequest: true),
           ),
           children: [
             Consumer<HomeController>(
               builder: (context, viewModel, child) => viewModel.isLoading
                   ? const HomeLoadingPage()
                   : Padding(
-                padding: const EdgeInsets.only(top: AppSizes.s12),
-                child: _buildReorderableWidgets(viewModel),
-              ),
+                      padding: const EdgeInsets.only(top: AppSizes.s12),
+                      child: _buildReorderableWidgets(viewModel),
+                    ),
             )
           ],
         ),
@@ -258,7 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
         (viewModel.myTeamRequests == null) &&
         (viewModel.otherDepartmentRequests == null) &&
         (viewModel.allCompanyRequests == null) &&
-        (viewModel.notifications == null)) {
+        (viewModel.notifications == null) &&
+        (viewModel.myTasks == null)) {
       return NoExistingPlaceholderScreen(
           height: LayoutService.getHeight(context) * 0.4,
           title: AppStrings.thereIsNoRequestsAndNotifications.tr());
@@ -273,10 +279,10 @@ class _HomeScreenState extends State<HomeScreen> {
         viewModel.myRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myRequests);
     }
-    if (viewModel.myTeamRequests != null &&
-        viewModel.myTeamRequests?.isNotEmpty == true) {
-      widgetsWithData.add(HomeWidgetType.myTeamRequests);
-    }
+    // if (viewModel.myTeamRequests != null &&
+    //     viewModel.myTeamRequests?.isNotEmpty == true) {
+    //   widgetsWithData.add(HomeWidgetType.myTeamRequests);
+    // }
     if (viewModel.otherDepartmentRequests != null &&
         viewModel.otherDepartmentRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.otherDepartmentRequests);
@@ -289,6 +295,9 @@ class _HomeScreenState extends State<HomeScreen> {
         viewModel.notifications?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.notifications);
     }
+    // if (viewModel.myTasks != null && viewModel.myTasks?.isNotEmpty == true) {
+    //   widgetsWithData.add(HomeWidgetType.myTasks);
+    // }
 
     // Add widgets that have data, following the saved order
     for (final widgetType in _widgetOrder) {
@@ -313,10 +322,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         // General Screen Message Widget (always at top, not reorderable)
-        GeneralScreenMessageWidget(screenId: '/'),
-        const SizedBox(height: AppSizes.s12),
-        // Bookmarks List (always at top, not reorderable)
-        const BookmarkListWidget(),
+        // Shortcut actions (Replaces BookmarkList)
+        _buildShortcutActions(context),
+        const SizedBox(height: AppSizes.s4),
+        // const Center(
+        //   child: Text(
+        //     "welcome to employee main screeen",
+        //     style: TextStyle(color: Colors.grey, fontSize: 12),
+        //   ),
+        // ),
+        const SizedBox(height: AppSizes.s4),
         // Reorderable widgets
         Listener(
           onPointerMove: (event) {
@@ -390,6 +405,9 @@ class _HomeScreenState extends State<HomeScreen> {
           notifications: viewModel.notifications!,
         );
         break;
+      case HomeWidgetType.myTasks:
+        content = _buildTasksSection(context, viewModel.myTasks!);
+        break;
     }
 
     return Container(
@@ -432,6 +450,148 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildShortcutActions(BuildContext context) {
+    final List<Map<String, dynamic>> items = [
+      {
+        'title': 'ADD\nREQUESTS',
+        'icon': 'assets/images/add-request.png',
+        'onTap': () => context.pushNamed(AppRoutes.addRequest.name,
+                pathParameters: {
+                  'type': 'mine',
+                  'lang': context.locale.languageCode
+                })
+      },
+      {
+        'title': 'VIEW\nTASKS',
+        'icon': 'assets/images/view-tasks.png',
+        'onTap': () => context.pushNamed(AppRoutes.taskScreen.name,
+            pathParameters: {'lang': context.locale.languageCode})
+      },
+      {
+        'title': 'MY TEAM\nREQUESTS',
+        'icon': 'assets/images/my-team-request.png',
+        'onTap': () => context.pushNamed(AppRoutes.requests2.name,
+            pathParameters: {
+              'type': GetRequestsTypes.myTeam.name,
+              'lang': context.locale.languageCode
+            })
+      },
+      {
+        'title': 'VIEW\nPAYROLL',
+        'icon': 'assets/images/view-payroll.png',
+        'onTap': () => context.pushNamed(AppRoutes.payrollsList.name,
+            extra: {'employeeName': null, 'employeeId': null},
+            pathParameters: {'lang': context.locale.languageCode})
+      },
+      {
+        'title': 'VIEW\nARTICLES',
+        'icon': 'assets/images/view-articles.png',
+        'onTap': () => context.pushNamed(AppRoutes.defaultPage.name,
+            pathParameters: {
+              'lang': context.locale.languageCode,
+              'type': 'blogs'
+            })
+      },
+    ];
+
+    return SizedBox(
+      height: 120,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: items[index]['onTap'],
+            child: Container(
+              width: 105,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF090B60), // Dark Blue from Figma
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    items[index]['icon'],
+                    height: 28,
+                    width: 28,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    items[index]['title'],
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w900,
+                      height: 1.1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTasksSection(BuildContext context, List tasks) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "My Tasks",
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF3489EF),
+                ),
+              ),
+              TextButton(
+                onPressed: () => context.pushNamed(AppRoutes.taskScreen.name,
+                    pathParameters: {'lang': context.locale.languageCode}),
+                child: const Text(
+                  "VIEW ALL",
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...tasks.take(3).map((task) {
+            // Mapping the dynamic task from home API to the TaskListTileWidget
+            // If the model is different, we adjust the fields
+            return TaskListTileWidget(
+              id: task['id']?.toString() ?? '',
+              title: task['title']?.toString() ?? 'No Title',
+              date: task['due_date']?.toString() ?? '',
+              createdAt: task['created_at']?.toString() ?? '',
+              complete: task['status']?.toString() ?? '',
+              assetName: "assets/images/svg/tasks_icon.svg",
+              // Default task icon
+              onTap: () => context.pushNamed(AppRoutes.taskDetails.name,
+                  pathParameters: {
+                    'id': task['id'].toString(),
+                    'lang': context.locale.languageCode
+                  }),
+            );
+          }),
+        ],
       ),
     );
   }

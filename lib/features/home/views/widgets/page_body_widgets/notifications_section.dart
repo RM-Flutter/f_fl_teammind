@@ -37,7 +37,7 @@ class NotificationsSection extends StatelessWidget {
                 children: [
                   Text(AppStrings.myNotifications.tr(),
                       style: TextStyle(
-                        color: Color(AppColors.white), 
+                        color: Color(AppColors.primary), 
                         fontSize: 19, 
                         fontWeight: FontWeight.w700,
                         // تحسين الخطوط في الويب
