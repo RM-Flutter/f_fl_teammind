@@ -222,13 +222,14 @@ class HomeAppbarWidget extends StatelessWidget {
                                           ?.copyWith(
                                           color: AppThemeService.colorPalette
                                               .quinaryTextColor.color)),
-                                  // Text(AppStrings.niceToMeetYou.tr(),
-                                  //     maxLines: 2,
-                                  //     overflow: TextOverflow.ellipsis,
-                                  //     style: TextStyle(
-                                  //         fontWeight: FontWeight.w300,
-                                  //         fontSize: 15, color: Color(AppColors.white)
-                                  //     )),
+                                   Text(AppStrings.niceToMeetYou.tr().toUpperCase(),
+                                       maxLines: 2,
+                                       overflow: TextOverflow.ellipsis,
+                                       style: TextStyle(
+                                           fontWeight: FontWeight.w400,
+                                           letterSpacing: 0.5,
+                                           fontSize: 15.5, color: Color(AppColors.white)
+                                       )),
                                 ],
                               ),
                             ),
