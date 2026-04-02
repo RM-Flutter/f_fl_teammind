@@ -29,7 +29,8 @@ abstract class AppImages {
 
   // general images
   static String get logo {
-    final url = DynamicAppConfigService.getLogoUrl();
+    // final url = DynamicAppConfigService.getLogoUrl();
+    const url = null;
     // Return default if url is null or empty
     if (url == null || url.isEmpty) {
       return '$_generalImagesDirectory/logo.png';
