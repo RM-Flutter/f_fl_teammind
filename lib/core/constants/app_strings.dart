@@ -3,6 +3,10 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class AppStrings {
+  static const aboutApplication = "aboutApplication";
+  static const aboutAppDescription = "aboutAppDescription";
+  static const followUs = "followUs";
+  static const sendByEmail = "sendByEmail";
   static const jobOfferGenerator = "jobOfferGenerator";
   static const jobOfferGenerator2 = "jobOfferGenerator2";
   static const behance = "behance";
@@ -253,7 +257,6 @@ abstract class AppStrings {
   static const email = "email";
   static const faqs = "faqs";
   static const hotline = "hotline";
-  static const followUs = "followUs";
   static const sendEmail = "sendEmail";
   static const contactUs = "contactUs";
   static const phone = "phone";

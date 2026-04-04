@@ -1,4 +1,8 @@
 {
+  "aboutApplication": "About Application",
+  "aboutAppDescription": "Team Mind is an innovativ employee management application that aims to improve work efficiency and streamline daily operations within an organization. The application provides advanced tools to track employee attendance, organize work schedules, manage tasks, and monitor team performance in real time.\n\nWith an easy-to-use interface and detailed reports, Team Mind helps managers and employees stay connected and aligned, boosting productivity and contributing to the effective achievement of company goals. Whether you manage a small team or a large company, Team Mind is your ideal partner for efficient and professional HR management.",
+  "followUs": "FOLLOW US",
+  "sendByEmail": "SEND BY EMAIL",
   "loading": "LOADING",
   "next": "NEXT",
   "faceVerification": "Face Verification",
@@ -156,7 +160,7 @@
   "faqs": "FAQs",
   "allNotifications": "All Notifications",
   "myDepartment": "My Department",
-  "followUs": "Follow Us",
+  "logIn": "Log In",
   "sendEmail": "Send Email",
   "updatePassword": "Update Password",
   "myAccount": "My Account",
