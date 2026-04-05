@@ -28,6 +28,8 @@ class AddRequestScreen extends StatefulWidget {
 class _AddRequestScreenState extends State<AddRequestScreen> {
   late final AddNewRequestViewModel viewModel;
   late final HomeViewModel homeViewModel;
+  bool _isInitializing = true;
+  String? _initError;
 
   @override
   void initState() {
@@ -35,11 +37,26 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
     viewModel = AddNewRequestViewModel();
     homeViewModel = HomeViewModel();
     _initAsync();
-    viewModel.initializeAddNewRequestScreen(context: context);
   }
 
   Future<void> _initAsync() async {
-    await homeViewModel.initializeHomeScreen(context, ['user2_settings']);
+    if (!mounted) return;
+    setState(() {
+      _isInitializing = true;
+      _initError = null;
+    });
+    try {
+      await homeViewModel.initializeHomeScreen(context, ['user2_settings']);
+      if (!mounted) return;
+      viewModel.initializeAddNewRequestScreen(context: context);
+    } catch (e) {
+      _initError = e.toString();
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        _isInitializing = false;
+      });
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -70,6 +87,42 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                       vertical: AppSizes.s16, horizontal: !kIsWeb? AppSizes.s12 : 0),
                   child: Consumer<AddNewRequestViewModel>(
                     builder: (context, viewModel, child){
+                      if (_isInitializing) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      final bool hasRequestTypes =
+                          (viewModel.requestsTypes?.isNotEmpty == true) ||
+                              (AppConstants.requestsTypess?.isNotEmpty == true);
+                      if (!hasRequestTypes) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  AppStrings.failed.tr(),
+                                  style: textStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  _initError?.isNotEmpty == true
+                                      ? _initError!
+                                      : AppStrings.noDataFounded.tr(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                const SizedBox(height: 12),
+                                ElevatedButton(
+                                  onPressed: _initAsync,
+                                  child: Text(AppStrings.retry.tr().toUpperCase()),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
                       // viewModel.requestsTypes = (json['request_types'] as Map<String, dynamic>?)?.values.map((e) {
                       //   final map = e as Map<String, dynamic>;
                       //   final titleMap = map['title'] as Map<String, dynamic>?;

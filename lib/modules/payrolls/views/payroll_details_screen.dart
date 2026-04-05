@@ -32,7 +32,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
     super.initState();
 
     // على الويب، تخطي التحقق من الهوية
-    if (kIsWeb || PlatformIs.web) {
+    if (kIsWeb || PlatformIs.web || PlatformIs.iOS) {
       _authPassed = true;
     } else {
       // هذا يمنع السكرين شوت + يطلب التحقق على دخول الشاشة
