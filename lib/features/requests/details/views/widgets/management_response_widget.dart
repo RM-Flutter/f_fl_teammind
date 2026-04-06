@@ -1,5 +1,6 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/widget/controller/management_response_controller.dart';
@@ -31,62 +32,60 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
               // Blue info banner
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
                 decoration: BoxDecoration(
                   color: const Color(0xFF3489EF),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: const Text(
+                child: Text(
                   "HASSAN RAMY ASKS YOU TO CANCEL THIS REQUEST",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
+                  style: AppStyles.whiteContent(context).copyWith(
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               // Hint message
               Text(
                 "A Message In Case Of Waiting For Approval From The Other Party\n(Another Level Of Management)",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(AppColors.almostBlack),
-                  fontSize: 10,
+                style: AppStyles.almostBlackContent(context).copyWith(
+                  fontSize: 10.sp,
                   height: 1.5,
                 ),
               ),
               */
-              gapH24,
+              SizedBox(height: 24.h),
               // request statuses options
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F3F3),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF3489EF)),
+                    icon: Icon(Icons.arrow_drop_down, color: const Color(0xFF3489EF), size: 24.r),
                     hint: Text(
                       (viewModel.selectedRequestStatus ?? AppStrings.requestType.tr()).toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style: AppStyles.darkContent(context).copyWith(
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF090B60),
+                        color: const Color(0xFF090B60),
                       ),
                     ),
                     items: viewModel.availableActions.map((e) => DropdownMenuItem(
                       value: e.toString(),
                       child: Text(
                         e.toString().toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 12,
+                        style: AppStyles.darkContent(context).copyWith(
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF090B60)
+                            color: const Color(0xFF090B60)
                         ),),
                     )).toList(),
                     onChanged: (String? values) {
@@ -97,40 +96,40 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                 ),
               ),
-              gapH18,
+              SizedBox(height: 18.h),
               TextFormField(
                 controller: viewModel.reasonController,
                 maxLines: 5,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: AppStyles.darkContent(context).copyWith(
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF090B60),
+                  color: const Color(0xFF090B60),
                 ),
                 decoration: InputDecoration(
                   hintText: AppStrings.reason.tr().toUpperCase(),
-                  hintStyle: const TextStyle(
-                    fontSize: 12,
+                  hintStyle: AppStyles.darkContent(context).copyWith(
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF090B60),
+                    color: const Color(0xFF090B60),
                   ),
                   filled: true,
                   fillColor: const Color(0xFFF3F3F3),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                     borderSide: BorderSide.none,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                     borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              gapH28,
+              SizedBox(height: 28.h),
               Center(
                 child: CustomElevatedButton(
                   buttonStyle: ElevatedButton.styleFrom(
@@ -142,9 +141,8 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                    style: AppStyles.whiteContent(context).copyWith(
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

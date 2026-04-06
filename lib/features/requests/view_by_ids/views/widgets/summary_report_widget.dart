@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/string_convert.dart';
@@ -17,40 +19,40 @@ class SummaryReportsModal extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        gapH16,
+        SizedBox(height: 16.h),
         Container(
-          height: MediaQuery.sizeOf(context).height * 0.4,
+          height: 0.4.sh,
           child: ListView.builder(
             itemCount: summaryReports.length,
             itemBuilder: (context, index) {
               final report = summaryReports[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
+                padding: EdgeInsets.symmetric(vertical: 8.h),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(AppColors.lightGreyEF),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: ListTile(
                     title: Row(
                       children: [
-                        const Icon(Icons.calendar_month, color: Colors.black,),
-                        const SizedBox(width: 15,),
+                        Icon(Icons.calendar_month, color: Colors.black, size: 20.r),
+                        SizedBox(width: 15.w),
                         Text(
                           '${report.month.toString().tr() ?? ''} - ${LocalizationService.isArabic(context: context) ? StringConvert.sanitizeDateStringArabic(report.year.toString()) : StringConvert.sanitizeDateString(report.year.toString())}',
-                          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                          style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13.sp),
                         ),
                       ],
                     ),
                     trailing:
-                    Text('${report.duration} ${AppStrings.days.tr()}',  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),),
+                    Text('${report.duration} ${AppStrings.days.tr()}',  style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13.sp),),
                   ),
                 ),
               );
             },
           ),
         ),
-        gapH16
+        SizedBox(height: 16.h)
       ],
     );
   }

@@ -12,6 +12,8 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/requests/calender/controller/requests_calendar_controller.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -95,8 +97,8 @@ class RequestsCalendarScreen extends StatelessWidget {
                       child: Image.asset(
                         AppImages.addFloatingActionButtonIcon,
                         color: AppThemeService.colorPalette.fabIconColor.color,
-                        width: AppSizes.s16,
-                        height: AppSizes.s16,
+                        width: 16.r,
+                        height: 16.r,
                       ),
                     ),
                   ),
@@ -112,11 +114,11 @@ class RequestsCalendarScreen extends StatelessWidget {
                             value: view['value'],
                             child: Text(
                               view['name'],
-                              style: TextStyle(
+                              style: AppStyles.darkContent(context).copyWith(
                                   color: viewModel.calendarView == view['value']
                                       ? Theme.of(context).colorScheme.secondary
                                       : Theme.of(context).colorScheme.primary,
-                                  fontSize: AppSizes.s14,
+                                  fontSize: 14.sp,
                                   fontWeight:
                                   viewModel.calendarView == view['value']
                                       ? FontWeight.bold
@@ -127,11 +129,11 @@ class RequestsCalendarScreen extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.preview_outlined,
-                        size: AppSizes.s32,
+                        size: 32.r,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.s12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
                   ],
@@ -139,14 +141,14 @@ class RequestsCalendarScreen extends StatelessWidget {
                     child: Center(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                            maxWidth: kIsWeb ? 1100 : double.infinity
+                            maxWidth: kIsWeb ? 1100.w : 1.sw
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(AppSizes.s12),
+                          padding: EdgeInsets.all(12.r),
                           child: Column(
                             children: [
                               Container(
-                                height: MediaQuery.sizeOf(context).height  * 0.6,
+                                height: 0.6.sh,
                                 child: SfCalendar(
                                   backgroundColor: Color(AppColors.white),
                                   key: UniqueKey(),
@@ -169,14 +171,14 @@ class RequestsCalendarScreen extends StatelessWidget {
                                       return Container(
                                         width: double.infinity,
                                         constraints: BoxConstraints(
-                                          minHeight: (kIsWeb || PlatformIs.web) ? 50 : 28,
+                                          minHeight: (kIsWeb || PlatformIs.web) ? 50.h : 28.h,
                                         ),
                                         alignment: Alignment.center,
                                         padding: (kIsWeb || PlatformIs.web)
-                                            ? const EdgeInsets.symmetric(horizontal: 5, vertical: 3)
-                                            : const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                                            ? EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h)
+                                            : EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(AppSizes.s4),
+                                          borderRadius: BorderRadius.circular(4.r),
                                           color: Color(AppColors.green),
                                         ),
                                         child: Text(
@@ -185,9 +187,8 @@ class RequestsCalendarScreen extends StatelessWidget {
                                           maxLines: (kIsWeb || PlatformIs.web) ? 1 : 1,
 
                                           overflow: TextOverflow.visible,
-                                          style: TextStyle(
-                                            color: Color(AppColors.white),
-                                            fontSize: (kIsWeb || PlatformIs.web) ? 12 : 13,
+                                          style: AppStyles.whiteContent(context).copyWith(
+                                            fontSize: (kIsWeb || PlatformIs.web) ? 12.sp : 13.sp,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -223,14 +224,14 @@ class RequestsCalendarScreen extends StatelessWidget {
                                       child: Container(
                                         width: double.infinity,
                                         constraints: BoxConstraints(
-                                          minHeight: (kIsWeb || PlatformIs.web) ? 50 : 28,
+                                          minHeight: (kIsWeb || PlatformIs.web) ? 50.h : 28.h,
                                         ),
                                         alignment: Alignment.center,
                                         padding: (kIsWeb || PlatformIs.web)
-                                            ? const EdgeInsets.symmetric(horizontal: 5, vertical: 3)
-                                            : const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                                            ? EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h)
+                                            : EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(AppSizes.s4),
+                                          borderRadius: BorderRadius.circular(4.r),
                                           color: backgroundColor,
                                         ),
                                         child: Text(
@@ -239,9 +240,9 @@ class RequestsCalendarScreen extends StatelessWidget {
                                           maxLines: (kIsWeb || PlatformIs.web) ? 2 : 1,
 
                                           overflow: TextOverflow.visible,
-                                          style: TextStyle(
+                                          style: AppStyles.content(context).copyWith(
                                             color: textColor,
-                                            fontSize: (kIsWeb || PlatformIs.web) ? 13 : 13,
+                                            fontSize: (kIsWeb || PlatformIs.web) ? 13.sp : 13.sp,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -250,33 +251,33 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 15,),
+                              SizedBox(height: 15.h,),
                               Card(
-                                margin: EdgeInsets.all(16),
+                                margin: EdgeInsets.all(16.r),
                                 elevation: 4,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
                                 child: Padding(
-                                  padding: EdgeInsets.all(16),
+                                  padding: EdgeInsets.all(16.r),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "📅 ${AppStrings.publicHolidays.tr()}",
-                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        style: AppStyles.darkHeading(context).copyWith(
                                             fontWeight: FontWeight.bold,
-                                            color: Color(AppColors.dark),
-                                            fontSize: 20
+                                            fontSize: 20.sp
                                         ),
                                       ),
-                                      const SizedBox(height: 12),
+                                      SizedBox(height: 12.h),
                                       ...(gCache['holidays'] as List? ?? []).map(
                                               (holiday) {
                                             final name = _titleByLang(holiday['name'], context.locale.languageCode);
                                             return ListTile(
                                               leading: Icon(Icons.event, color: Color(AppColors.green)),
-                                              title: Text(name.isEmpty ? 'Holiday' : name),
+                                              title: Text(name.isEmpty ? 'Holiday' : name, style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold),),
                                               subtitle: Text(
                                                 "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr().toUpperCase()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
+                                                style: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
                                               ),
                                             );
                                           }).toList(),

@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -62,8 +64,8 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
               'lang': context.locale.languageCode
             }),
             tagSuffix: 'add',
-            height: AppSizes.s16,
-            width: AppSizes.s16,
+            height: 16.r,
+            width: 16.r,
           ),
           title: AppSettingsService.getRequestTitleFromGenenralSettings(
               context: context, requestId: widget.requestTypeId) ??
@@ -80,10 +82,10 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+                  maxWidth: kIsWeb ? 1100.w : 1.sw
               ),
               child: Padding(
-                  padding: const EdgeInsets.all(!kIsWeb? AppSizes.s12 : 0),
+                  padding: EdgeInsets.all(!kIsWeb? 12.r : 0),
                   child: Consumer<RequestsWithTypeIdViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const LoadingPageWidget()
@@ -94,9 +96,8 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                         children: [
                           if(viewModel.rulesMessage != null) AutoSizeText(
                             viewModel.rulesMessage ?? "",
-                            style: const TextStyle(
-                                color: Color(AppColors.grey40),
-                                fontSize: AppSizes.s12,
+                            style: AppStyles.greyContent(context).copyWith(
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w400),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 10,
@@ -104,7 +105,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                             softWrap: true,
                           ),
                           NoExistingPlaceholderScreen(
-                              height: LayoutService.getHeight(context) * 0.6,
+                              height: 0.6.sh,
                               title: AppStrings.thereIsNoRequests.tr()),
                         ],
                       )
@@ -116,22 +117,21 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                         if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
                           viewModel.rulesMessage ?? "",
                           maxLines: 10,
-                          style: const TextStyle(
-                              color: Color(AppColors.grey40),
-                              fontSize: AppSizes.s12,
+                          style: AppStyles.greyContent(context).copyWith(
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           softWrap: true,
                         ),
-                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  gapH16,
+                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  SizedBox(height: 16.h),
                         if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
                           onPressed: () async => viewModel
                               .showSummaryReports(context: context),
                           title: AppStrings.summaryReports.tr(),
                           icon: Icons.folder_copy_outlined,
                         ),
-                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)gapH16,
+                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)SizedBox(height: 16.h),
                         if (viewModel.requestsById != null &&
                             viewModel.requestsById!.isNotEmpty)
                           ...viewModel.requestsById!.map(

@@ -1,4 +1,4 @@
-import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/models/requests_model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 import 'package:app_test/core/services/requests_services.dart';
@@ -29,7 +29,7 @@ class StatisticsModal extends StatelessWidget {
             type: type,
             employeeId: employeeId,
           ),
-          gapH14,
+          SizedBox(height: 14.h),
           ...requests!
               .map(
                 (req) => RequestCard(
@@ -62,30 +62,33 @@ class StatisticsBalanceList extends StatelessWidget {
     this.type,
     super.key,
     this.employeeId,
-    this.paddingBetweenVocations = AppSizes.s12,
-    this.sectionPadding = AppSizes.s32,
+    this.paddingBetweenVocations,
+    this.sectionPadding,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double pVocations = paddingBetweenVocations ?? 12.w;
+    final double sPadding = sectionPadding ?? 32.w;
+
     return vacationBalance == null || vacationBalance?.isEmpty == true
         ? const SizedBox.shrink()
         : Padding(
-      padding: const EdgeInsets.only(bottom: AppSizes.s32),
+      padding: EdgeInsets.only(bottom: 32.h),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: vacationBalance!
               .map((entry) => Padding(
             padding:
-            EdgeInsets.only(right: paddingBetweenVocations!),
+            EdgeInsets.only(right: pVocations),
             child: VacationCard(
               userId: employeeId,
               tap: false,
               type: type,
               vocation: entry,
-              sectionPadding: sectionPadding,
-              paddingBetweenVocations: paddingBetweenVocations,
+              sectionPadding: sPadding,
+              paddingBetweenVocations: pVocations,
             ),
           ))
               .toList(),

@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
 import 'dart:html' if (dart.library.io) '../../../../../core/services/dart_html_stub.dart' as html;
 import 'package:open_filex/open_filex.dart';
@@ -20,7 +22,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/localization_service.dart';
@@ -239,14 +240,14 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     return Stack(
       children: [
         Container(
-          height: (widget.height! + 30) ,
-          width: LayoutService.getWidth(context),
+          height: (widget.height! + 30.h) ,
+          width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: Color(AppColors.dark),
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(AppSizes.s28),
-              bottomRight: Radius.circular(AppSizes.s28),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(28.r),
+              bottomRight: Radius.circular(28.r),
             ),
             image: const DecorationImage(
               image: AssetImage("assets/images/request-app-bar.png"),
@@ -256,8 +257,8 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100.w : 1.sw
               ),
               child: Column(
                 children: [
@@ -272,13 +273,10 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                     title: AppSettingsService.getRequestTitleFromGenenralSettings(
                         context: context, requestId: request.typeId.toString()) ??
                         '',
-                    titleStyle: Theme.of(context)
-                        .textTheme
-                        .displayLarge
-                        ?.copyWith(color: Colors.white),
+                    titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20.sp),
                     bookmarkIconColor: Colors.white,
                     leading: Padding(
-                      padding: const EdgeInsets.all(AppSizes.s10),
+                      padding: EdgeInsets.all(10.r),
                       child: InkWell(
                         onTap: () {
                           if (context.canPop()) {
@@ -293,18 +291,18 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                             color: Colors.white.withOpacity(0.2),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.white,
-                            size: AppSizes.s18,
+                            size: 18.r,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  SizedBox(height: 18.h),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -328,17 +326,17 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                   );
                                 },
                                 child: Container(
-                                  width: 65,
-                                  height: 85,
+                                  width: 65.w,
+                                  height: 85.h,
                                   decoration: BoxDecoration(
                                     color: mainColor.withOpacity(.3),
-                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Center(
                                     child: RequestsServices.getRequestsStatusIcon(
                                       context: context,
                                       status: request.status,
-                                      iconSize: AppSizes.s30,
+                                      iconSize: 30.r,
                                       iconColor: Colors.white,
                                     ),
                                   ),
@@ -346,15 +344,15 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                               )
                             ],
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.w),
 
                           // Info tiles
                           Expanded(
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Wrap(
-                                spacing: 12.0,
-                                runSpacing: 12.0,
+                                spacing: 12.w,
+                                runSpacing: 12.h,
                                 children: [
                                   // Date tile with formatting
                                   InfoTileWidget(
@@ -371,7 +369,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
                                     isFullRow: true,
                                     trailing: InfoTileWidget(
-                                        width: AppSizes.s100,
+                                        width: 100.w,
                                         background: const Color(AppColors.black).withOpacity(0.08),
                                         imgPath: Icons.access_time,
                                         title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
@@ -435,7 +433,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                             modalContent: ManagementResponseModal(
                                                 requestId: request.id.toString()),
                                             title: AppStrings.managementResponse.tr(),
-                                            height: LayoutService.getHeight(context) * 0.5,
+                                            height: 0.5.sh,
                                           );
                                         }
                                       },
@@ -451,7 +449,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         ],
                       ),
                     ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                 ],
               ),
             ),
@@ -469,22 +467,21 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               color: Colors.black87,
               child: Container(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Row(
                   children: [
-                    const Icon(Icons.file_download, color: Colors.white),
-                    const SizedBox(width: 12),
+                    Icon(Icons.file_download, color: Colors.white, size: 24.r),
+                    SizedBox(width: 12.w),
                     Expanded(
                       child: Text(
                         _downloadingFileName!,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: AppStyles.whiteContent(context).copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12.w),
                     Expanded(
                       flex: 2,
                       child: LinearProgressIndicator(
@@ -493,10 +490,10 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         backgroundColor: Colors.white24,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12.w),
                     Text(
                       "${(_downloadProgress * 100).toStringAsFixed(0)}%",
-                      style: const TextStyle(color: Colors.white),
+                      style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white),
@@ -534,19 +531,19 @@ class _DownloadProgressDialog extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
         title: Row(
           children: [
-            const SizedBox(
-              width: 28,
-              height: 28,
-              child: CircularProgressIndicator(strokeWidth: 2),
+            SizedBox(
+              width: 28.r,
+              height: 28.r,
+              child: const CircularProgressIndicator(strokeWidth: 2),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Expanded(
               child: Text(
                 AppStrings.downloadFile.tr(),
-                style: const TextStyle(fontSize: 18),
+                style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -561,27 +558,26 @@ class _DownloadProgressDialog extends StatelessWidget {
               children: [
                 Text(
                   fileName,
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: 13,
+                  style: AppStyles.greyContent(context).copyWith(
+                    fontSize: 13.sp,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
                   backgroundColor: Colors.grey.shade300,
                   valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.blue)),
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(4),
+                  minHeight: 8.h,
+                  borderRadius: BorderRadius.circular(4.r),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Text(
                   value > 0 ? '${(value * 100).toStringAsFixed(0)}%' : '0%',
-                  style: const TextStyle(
+                  style: AppStyles.darkContent(context).copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
               ],
@@ -625,40 +621,40 @@ class InfoTileWidget extends StatelessWidget {
       onTap: onTap ?? (){},
       child: Container(
         width: width != null ? width : isFullRow == false
-            ? (LayoutService.getWidth(context) - 116) / 2
-            : LayoutService.getWidth(context) - 97,
+            ? (1.sw - 116.w) / 2
+            : 1.sw - 97.w,
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : background,
-            borderRadius: BorderRadius.circular(AppSizes.s10)),
+            borderRadius: BorderRadius.circular(10.r)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSizes.s6, vertical: AppSizes.s6),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 6.w, vertical: 6.h),
                 child: Row(
                   children: [
                     if (imagePath != null)
                       Image.asset(
                         imagePath!,
-                        width: AppSizes.s14,
-                        height: AppSizes.s14,
+                        width: 14.r,
+                        height: 14.r,
                         color: isHighLight == true ? Color(AppColors.white) : _imgColor,
                       )
                     else if (imgPath != null)
                       Icon(
                         imgPath,
+                        size: 20.r,
                         color: isHighLight == true ? Color(AppColors.white) : _imgColor,
                       ),
-                    gapW12,
+                    SizedBox(width: 12.w),
                     Expanded(
                       child: AutoSizeText(
                         title,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
+                        style: AppStyles.whiteContent(context).copyWith(
+                            fontSize: 11.sp,
                             fontWeight: FontWeight.w700),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

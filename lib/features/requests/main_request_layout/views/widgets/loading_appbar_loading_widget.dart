@@ -1,4 +1,4 @@
-import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +16,14 @@ class RequestsAppbarLoading extends StatelessWidget {
                 children: List.generate(
                     3,
                         (index) => Padding(
-                        padding: const EdgeInsets.only(right: AppSizes.s12),
+                        padding: EdgeInsets.only(right: 12.w),
                         child: ShimmerAnimatedLoading(
-                          width: (LayoutService.getWidth(context) -
-                              (AppSizes.s32 + ((AppSizes.s12) * 3))) /
+                          width: (1.sw -
+                              (32.w + (12.w * 3))) /
                               3,
-                          height: AppSizes.s120,
+                          height: 120.h,
                         )))),
-            gapH32,
+            SizedBox(height: 32.h),
           ],
         ),
       ],

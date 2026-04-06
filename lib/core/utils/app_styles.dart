@@ -161,4 +161,10 @@ class AppStyles {
       color: Color(AppColors.grey70),
     );
   }
+
+  static TextStyle blackWithObacityContent(BuildContext context) {
+    return content(context).copyWith(
+      color: Color(AppColors.blackWithObacity),
+    );
+  }
 }

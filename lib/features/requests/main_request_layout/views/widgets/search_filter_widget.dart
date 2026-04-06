@@ -10,6 +10,8 @@ import 'package:app_test/core/widgets/searchable_dropdown_sheet.dart';
 import 'package:app_test/features/requests/add/controller/add_new_request_controller.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/filter_controller.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/requests_controller.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart' as local;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -203,17 +205,17 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: isWeb
-                                    ? BorderRadius.circular(35.0)
-                                    : const BorderRadius.vertical(top: Radius.circular(35.0)),
+                                    ? BorderRadius.circular(35.r)
+                                    : BorderRadius.vertical(top: Radius.circular(35.r)),
                                 color: Color(AppColors.white)
                             ),
                             width: double.infinity,
                             height: isWeb
                                 ? null
-                                : MediaQuery.sizeOf(context).height * 0.6,
+                                : 0.6.sh,
                             constraints: isWeb
                                 ? BoxConstraints(
-                              maxHeight: MediaQuery.sizeOf(context).height * 0.8,
+                              maxHeight: 0.8.sh,
                             )
                                 : null,
                             alignment: Alignment.topCenter,
@@ -222,22 +224,22 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   if (!isWeb) ...[
-                                    const SizedBox(height: 10,),
+                                    SizedBox(height: 10.h,),
                                     Center(
                                       child:Container(
-                                        width: 63,
-                                        height: 5,
+                                        width: 63.w,
+                                        height: 5.h,
                                         decoration: BoxDecoration(
                                             color: Color(AppColors.lightGrey),
-                                            borderRadius: BorderRadius.circular(100)
+                                            borderRadius: BorderRadius.circular(100.r)
                                         ),
                                       ) ,
                                     ),
-                                    const SizedBox(height: 10,),
+                                    SizedBox(height: 10.h,),
                                   ] else
-                                    const SizedBox(height: 20,),
+                                    SizedBox(height: 20.h,),
                                   Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: EdgeInsets.all(20.r),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,25 +249,24 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           children: [
                                             Text(
                                               AppStrings.requests.tr().toUpperCase(),
-                                              style: TextStyle(
-                                                  color: Color(AppColors.dark),
+                                              style: AppStyles.darkHeading(context).copyWith(
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 18
+                                                  fontSize: 18.sp
                                               ),
                                             )
                                           ],
                                         ),
-                                        const SizedBox(height: 15),
+                                        SizedBox(height: 15.h),
                                         SearchableDropdownSheet(
                                           items: viewModel.requestsTypes,
                                           selectedValue: viewModels.selectedRequestType,
                                           nameKey: 'title',
                                           hintText: AppStrings.requestType.tr(),
-                                          hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
-                                          height: 65,
-                                          borderRadius: BorderRadius.circular(AppSizes.s10),
+                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
+                                          height: 65.h,
+                                          borderRadius: BorderRadius.circular(10.r),
                                           borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                           fieldSuffixIcon: InkWell(
                                             onTap: () async {
                                               viewModels.selectedRequestType = null;
@@ -275,10 +276,10 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               if (!context.mounted) return;
                                               setState(() {});
                                             },
-                                            child: const Icon(
+                                            child: Icon(
                                               Icons.close,
                                               color: Colors.red,
-                                              size: 20,
+                                              size: 20.r,
                                             ),
                                           ),
                                           onChanged: (value){
@@ -291,7 +292,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             setState(() {});
                                           },
                                         ),
-                                        const SizedBox(height: 15),
+                                        SizedBox(height: 15.h),
                                         defaultDropdownField(
                                             value: viewModels.selectStatus,
                                             title: viewModels.selectStatus ?? AppStrings.status.tr(),
@@ -300,10 +301,9 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               value: e.toString(),
                                               child: Text(
                                                 e.toString().tr().toString(),
-                                                style: TextStyle(
-                                                    fontSize: 12,
+                                                style: AppStyles.almostBlackContent(context).copyWith(
+                                                    fontSize: 12.sp,
                                                     fontWeight: FontWeight.w400,
-                                                    color: Color(AppColors.almostBlack)
                                                 ),),
                                             ),
                                             ).toList(),
@@ -314,7 +314,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               );
                                             }
                                         ),
-                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   SizedBox(height: 15.h),
                                         if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
                                           SearchableDropdownSheet(
                                             items: viewModel.departments,
@@ -328,25 +328,25 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 if (!context.mounted) return;
                                                 setState(() {});
                                               },
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons.close,
                                                 color: Colors.red,
-                                                size: 20,
+                                                size: 20.r,
                                               ),
                                             ),
                                             hintText: AppStrings.department.tr(),
-                                            hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
-                                            height: 65,
-                                            borderRadius: BorderRadius.circular(AppSizes.s10),
+                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
+                                            height: 65.h,
+                                            borderRadius: BorderRadius.circular(10.r),
                                             borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                             onChanged: (value){
                                               viewModel.selectedDepartment = value;
                                               viewModel.selectDepId = value['id']?.toString();
                                               setState(() {});
                                             },
                                           ),
-                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   SizedBox(height: 15.h),
                                         if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
                                           SearchableDropdownSheet(
                                             items: viewModel.employees,
@@ -361,18 +361,18 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 if (!context.mounted) return;
                                                 setState(() {});
                                               },
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons.close,
                                                 color: Colors.red,
-                                                size: 20,
+                                                size: 20.r,
                                               ),
                                             ),
                                             hintText: AppStrings.employeeName.tr(),
-                                            hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
-                                            height: 65,
-                                            borderRadius: BorderRadius.circular(AppSizes.s10),
+                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
+                                            height: 65.h,
+                                            borderRadius: BorderRadius.circular(10.r),
                                             borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                             onChanged: (value){
                                               viewModel.selectedEmployee = value;
                                               viewModel.selectedDatecontroller.clear();
@@ -380,7 +380,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               setState(() {});
                                             },
                                           ),
-                                        const SizedBox(height: 15),
+                                        SizedBox(height: 15.h),
                                         viewModels.selectedRequestType?['type'] ==
                                             'instead_of_holidays'
                                             ? SearchableDropdownSheet(
@@ -388,11 +388,11 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           selectedValue: viewModels.selectedRequestType,
                                           nameKey: 'name',
                                           hintText: AppStrings.requestTime.tr(),
-                                          hintStyle: TextStyle(color: Color(AppColors.grey46), fontSize: 12),
-                                          height: 65,
-                                          borderRadius: BorderRadius.circular(AppSizes.s10),
+                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
+                                          height: 65.h,
+                                          borderRadius: BorderRadius.circular(10.r),
                                           borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                           onChanged: (value) =>
                                               viewModels.selectInsteadOfHolidays(context,
                                                   startDateOrDatetime: value['from'],
@@ -400,10 +400,12 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                         )
                                             : TextField(
                                           controller: viewModels.controller,
+                                          style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
                                           decoration: InputDecoration(
                                             hintText: AppStrings.requestTime.tr(),
+                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
                                             suffixIcon: IconButton(
-                                              icon: const Icon(Icons.calendar_today),
+                                              icon: Icon(Icons.calendar_today, size: 20.r),
                                               onPressed: () =>
                                                   viewModels.selectDateFilter(context, filter: true),
                                             ),
@@ -411,7 +413,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           readOnly: true,
                                           onTap: () => viewModels.selectDateFilter(context, filter: true),
                                         ),
-                                        const SizedBox(height: 30,),
+                                        SizedBox(height: 30.h,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -484,54 +486,48 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 Navigator.pop(context, _buildFilterMap(viewModels, viewModel));
                                               },
                                               child: Container(
-                                                height: 50,
+                                                height: 50.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.dark),
-                                                  borderRadius: BorderRadius.circular(50),
+                                                  borderRadius: BorderRadius.circular(50.r),
                                                 ),
-                                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                                padding: EdgeInsets.symmetric(horizontal: 40.w),
                                                 child: Text(
                                                   AppStrings.applyFilter.tr().toUpperCase(),
-                                                  style:TextStyle(
-                                                      fontSize: 12,
+                                                  style: AppStyles.whiteContent(context).copyWith(
+                                                      fontSize: 12.sp,
                                                       fontWeight: FontWeight.w500,
-                                                      color: Color(AppColors.white)
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: () async {
+                                              onTap: ()async{
+                                                await CacheHelper.deleteData(key: "reqId");
+                                                await CacheHelper.deleteData(key: "selectStatus");
+                                                await CacheHelper.deleteData(key: "depId");
                                                 await CacheHelper.deleteData(key: "empId");
                                                 await CacheHelper.deleteData(key: "from");
                                                 await CacheHelper.deleteData(key: "to");
-                                                await CacheHelper.deleteData(key: "depId");
-                                                await CacheHelper.deleteData(key: "reqId");
-                                                await CacheHelper.deleteData(key: "selectStatus");
                                                 if (!context.mounted) return;
                                                 Navigator.pop(context, _emptyFilterMap());
                                               },
                                               child: Container(
-                                                height: 50,
+                                                height: 50.h,
+                                                alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                    color: Colors.transparent,
-                                                    borderRadius: BorderRadius.circular(50),
-                                                    border: Border.all(color: Color(AppColors.dark))
+                                                  color: Color(AppColors.white),
+                                                  borderRadius: BorderRadius.circular(50.r),
+                                                  border: Border.all(color: Color(AppColors.dark), width: 1.w),
                                                 ),
-                                                padding: const EdgeInsets.symmetric(horizontal: 40),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      AppStrings.cancel.tr().toUpperCase(),
-                                                      style:TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.w500,
-                                                          color: Color(AppColors.dark)
-                                                      ),
-                                                    ),
-                                                  ],
+                                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                                child: Text(
+                                                  AppStrings.clear.tr().toUpperCase(),
+                                                  style: AppStyles.darkContent(context).copyWith(
+                                                      fontSize: 12.sp,
+                                                      fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
                                               ),
                                             ),

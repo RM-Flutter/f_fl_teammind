@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -19,42 +21,43 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
     const isWeb = kIsWeb;
     return Consumer<HomeController>(builder: (context, value, child) {
       return Container(
-        height: isWeb ? MediaQuery.of(context).size.height * 0.4 : MediaQuery.of(context).size.height * 0.5,
-        width: isWeb ? null : MediaQuery.sizeOf(context).width * 0.99,
+        height: isWeb ? 0.4.sh : 0.5.sh,
+        width: isWeb ? null : 0.99.sw,
         constraints: isWeb
             ? BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.6,
-          maxWidth: 500,
+          maxHeight: 0.6.sh,
+          maxWidth: 500.w,
         )
             : null,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: isWeb
-              ? BorderRadius.circular(30)
-              : BorderRadius.vertical(top: Radius.circular(30)),
+              ? BorderRadius.circular(30.r)
+              : BorderRadius.vertical(top: Radius.circular(30.r)),
         ),
         child: Column(
           children: [
-            const SizedBox(height: 30),
-            SvgPicture.asset("assets/images/svg/success_reqs.svg"),
-            const SizedBox(height: 15,),
-            Text(AppStrings.success.tr().toUpperCase(), style: TextStyle(fontSize: 24,
-                fontWeight: FontWeight.w700, color: Color(AppColors.dark))),
+            SizedBox(height: 30.h),
+            SvgPicture.asset("assets/images/svg/success_reqs.svg", width: 100.r, height: 100.r),
+            SizedBox(height: 15.h,),
+            Text(AppStrings.success.tr().toUpperCase(), style: AppStyles.darkHeading(context).copyWith(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w700,
+            )),
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: EdgeInsets.all(15.r),
               child: Text(
                 AppStrings.yourRequestHasBeenSubmittedSuccessfully.tr().toUpperCase(),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Color(AppColors.blackWithObacity),
+                style: AppStyles.blackWithObacityContent(context).copyWith(
                     fontWeight: FontWeight.w400,
-                    fontSize: 14
+                    fontSize: 14.sp
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -68,12 +71,19 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                           },
                           backgroundColor: Color(AppColors.dark),
                           title: AppStrings.goToHome.tr().toUpperCase(),
+                          titleWidget: Text(
+                            AppStrings.goToHome.tr().toUpperCase(),
+                            style: AppStyles.whiteContent(context).copyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           isPrimaryBackground: true,
-                          width:!kIsWeb? MediaQuery.sizeOf(context).width * 0.45:null,
+                          width:!kIsWeb? 0.45.sw : null,
                           isFuture: false),
                     ),
                   ),
-                  SizedBox(width: kIsWeb ? 10 : 5,),
+                  SizedBox(width: kIsWeb ? 10.w : 5.w,),
                   Flexible(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
@@ -91,9 +101,16 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                                   'lang': context.locale.languageCode
                                 });
                           },
-                          width: !kIsWeb? MediaQuery.sizeOf(context).width * 0.45:null,
+                          width: !kIsWeb? 0.45.sw : null,
                           backgroundColor: Color(AppColors.dark),
                           title: title ?? AppStrings.goToRequest.tr().toUpperCase(),
+                          titleWidget: Text(
+                            (title ?? AppStrings.goToRequest.tr()).toUpperCase(),
+                            style: AppStyles.whiteContent(context).copyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           isPrimaryBackground: true,
                           isFuture: false),
                     ),
@@ -101,7 +118,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
           ],
         ),
       );

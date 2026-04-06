@@ -1,12 +1,14 @@
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
@@ -108,37 +110,37 @@ class OnBoardingScreen extends StatelessWidget {
                   }),
               // Centered Logo
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.25,
+                top: 0.25.sh,
                 left: 0,
                 right: 0,
                 child: Center(
                   child: Image.asset(
                     AppImages.logo,
-                    width: AppSizes.s140,
-                    height: AppSizes.s140,
+                    width: 140.r,
+                    height: 140.r,
                   ),
                 ),
               ),
 
               Positioned(
-                bottom: AppSizes.s48,
-                left: AppSizes.s0,
-                right: AppSizes.s0,
+                bottom: 48.h,
+                left: 0,
+                right: 0,
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: kIsWeb?800: double.infinity,
+                    constraints: BoxConstraints(
+                      maxWidth: kIsWeb? 800.w : 1.sw,
                     ),
                     child: Card(
-                      margin: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
+                      margin: EdgeInsets.symmetric(horizontal: 16.w),
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.s25),
+                        borderRadius: BorderRadius.circular(25.r),
                       ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSizes.s18, vertical: AppSizes.s20),
-                        height: AppSizes.s340,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 18.w, vertical: 20.h),
+                        height: 340.h,
                         child: Column(
                           children: [
                             Expanded(
@@ -172,12 +174,10 @@ class OnBoardingScreen extends StatelessWidget {
                                     children: [
                                         Text(
                                           (title ?? '').split(' ').map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}').join(' '),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displayLarge
-                                              ?.copyWith(
+                                          style: AppStyles.primaryHeading(context).copyWith(
                                                 color: const Color(0xFF3489EF),
                                                 fontWeight: FontWeight.bold,
+                                                fontSize: 24.sp,
                                               ),
                                           textAlign: TextAlign.center,
                                           maxLines: 2,
@@ -186,12 +186,10 @@ class OnBoardingScreen extends StatelessWidget {
                                       gapH20,
                                         Text(
                                           info ?? '',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
+                                          style: AppStyles.greyContent(context).copyWith(
                                                 color: Colors.grey.shade500,
                                                 height: 1.65,
+                                                fontSize: 14.sp,
                                               ),
                                           textAlign: TextAlign.center,
                                           maxLines: 4,
@@ -211,21 +209,20 @@ class OnBoardingScreen extends StatelessWidget {
                                       onPressed: () async =>
                                           viewModel.goNext(context),
                                       title: AppStrings.next.tr(),
-                                      width: AppSizes.s120,
+                                      width: 120.w,
+                                      titleSize: 14.sp,
                                       isPrimaryBackground: true,
                                       isFuture: false),
                                   TextButton(
                                     onPressed: () => viewModel.skip(context),
                                     style: ElevatedButton.styleFrom(
                                       fixedSize:
-                                      const Size(AppSizes.s170, AppSizes.s50),
+                                      Size(170.w, 50.h),
                                     ),
                                     child: Text(AppStrings.skip.tr(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall
-                                            ?.copyWith(
+                                        style: AppStyles.blackContent(context).copyWith(
                                             fontWeight: FontWeight.bold,
+                                            fontSize: 16.sp,
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .secondary)),

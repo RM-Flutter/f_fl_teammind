@@ -1,4 +1,5 @@
-import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 
@@ -21,13 +22,13 @@ class CustomRequestsPageButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(
-            vertical: AppSizes.s14,
-            horizontal: AppSizes.s12,
+          padding: EdgeInsets.symmetric(
+            vertical: 14.h,
+            horizontal: 12.w,
           ),
           backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
         ),
         child: Row(
@@ -36,15 +37,14 @@ class CustomRequestsPageButton extends StatelessWidget {
             Icon(
               icon,
               color: Colors.white,
-              size: AppSizes.s22,
+              size: 22.r,
             ),
-            gapW12,
+            SizedBox(width: 12.w),
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.white,
+              style: AppStyles.whiteContent(context).copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: AppSizes.s14,
+                fontSize: 14.sp,
               ),
             ),
           ],

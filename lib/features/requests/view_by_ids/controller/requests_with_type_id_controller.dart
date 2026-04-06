@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/models/requests_model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
@@ -32,7 +33,7 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
     if (summaryReports == null || summaryReports?.isEmpty == true) return;
     await ModalSheetHelper.showModalSheet(
         context: context,viewProfile: false,
-        height: (LayoutService.getHeight(context) * 0.5),
+        height: 0.5.sh,
         modalContent: SummaryReportsModal(summaryReports: summaryReports!),
         title: AppStrings.summaryReports.tr());
   }

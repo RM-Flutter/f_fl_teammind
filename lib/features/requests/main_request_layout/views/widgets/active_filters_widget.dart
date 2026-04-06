@@ -11,6 +11,8 @@ import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/settings_service.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/filter_controller.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/requests_controller.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +55,11 @@ class ActiveFiltersWidget extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       color: Colors.grey.shade50,
       child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
+        spacing: 8.w,
+        runSpacing: 8.h,
         children: activeFilters.map((filter) {
           return _FilterChip(
             label: filter['label'] as String,
@@ -261,12 +263,12 @@ class _FilterChip extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onRemove,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: Color(AppColors.primary).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
               color: Color(AppColors.primary).withOpacity(0.3),
               width: 1,
@@ -278,24 +280,23 @@ class _FilterChip extends StatelessWidget {
               Flexible(
                 child: Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: AppStyles.darkContent(context).copyWith(
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    color: Color(AppColors.dark),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6.w),
               Container(
-                padding: const EdgeInsets.all(2),
+                padding: EdgeInsets.all(2.r),
                 decoration: BoxDecoration(
                   color: Color(AppColors.dark),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.close,
-                  size: 14,
+                  size: 14.r,
                   color: Colors.white,
                 ),
               ),
