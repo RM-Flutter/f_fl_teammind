@@ -6,10 +6,12 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -73,18 +75,17 @@ class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
         gapH16,
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(AppSizes.s10),
+            padding: EdgeInsets.all(AppSizes.s10.r),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s8),
+              borderRadius: BorderRadius.circular(AppSizes.s8.r),
               color: Theme.of(context).colorScheme.primary,
             ),
             child: Center(
               child: Text(
                 rewardAndpenalty.profile?.name ?? '',
-                style: const TextStyle(
-                    color: Colors.white,
+                style: AppStyles.whiteContent(context).copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.s12),
+                    fontSize: AppSizes.s12.sp),
               ),
             ),
           ),
@@ -129,16 +130,16 @@ class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
         if (canShowComplaintButton) ...[
           gapH24,
           CustomElevatedButton(
-            titleSize: AppSizes.s10,
+            titleSize: AppSizes.s10.sp,
             buttonStyle: ElevatedButton.styleFrom(
-              fixedSize: const Size(double.infinity, double.infinity),alignment: Alignment.center,
+              fixedSize: Size(double.infinity, 50.h),alignment: Alignment.center,
               shadowColor: Colors.transparent,
               backgroundColor:Color(AppColors.dark),
               foregroundColor: Color(AppColors.dark),
               disabledForegroundColor: Colors.transparent,
               elevation: 2,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s28),
+                borderRadius: BorderRadius.circular(AppSizes.s28.r),
               ),
             ),
             onPressed: () async => context.pushNamed(
@@ -165,10 +166,9 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = TextStyle(
-        color: Theme.of(context).colorScheme.primary,
+    TextStyle textStyle = AppStyles.primaryContent(context).copyWith(
         fontWeight: FontWeight.w600,
-        fontSize: AppSizes.s14);
+        fontSize: AppSizes.s14.sp);
     Widget titleWidget = AutoSizeText(title, style: textStyle);
     
     return SizedBox(
@@ -184,7 +184,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                   children: [
                     titleWidget,
                     AutoSizeText(subtitle,
-                        style: textStyle.copyWith(color: Color(AppColors.black),fontSize: 14, fontWeight: FontWeight.w600)),
+                        style: textStyle.copyWith(color: Color(AppColors.black),fontSize: 14.sp, fontWeight: FontWeight.w600)),
                   ],
                 )
               : Row(
@@ -194,7 +194,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                     titleWidget,
                     Expanded(
                       child: AutoSizeText(subtitle,
-                          style: textStyle.copyWith(color: Color(AppColors.black),fontSize: 14, fontWeight: FontWeight.w600)),
+                          style: textStyle.copyWith(color: Color(AppColors.black),fontSize: 14.sp, fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),

@@ -8,12 +8,14 @@ import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/animated_custom_dropdown/custom_dropdown.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/rewards_and_penalties/add_rewards/controllers/add_reward_and_penalty_controller.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/widgets/text_form_widget.dart';
@@ -104,11 +106,11 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100 : double.infinity
+                      maxWidth: kIsWeb ? 1100.w : double.infinity
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppSizes.s16, horizontal: AppSizes.s12),
+                    padding: EdgeInsets.symmetric(
+                        vertical: AppSizes.s16.h, horizontal: AppSizes.s12.w),
                     child: Consumer<AddRewardAndPenaltyViewModel>(
                       builder: (context, viewModel, child) => Form(
                         key: formKey,
@@ -119,7 +121,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             //Date Field
                             CustomDropdown.search(
                                 selectedValue: viewModel.selectedType,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
+                                borderRadius: BorderRadius.circular(AppSizes.s15.r),
                                 borderSide: Theme.of(context)
                                     .inputDecorationTheme
                                     .enabledBorder
@@ -183,10 +185,9 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                 value: e.toString(),
                                 child: Text(
                                   e.toString().tr(),
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                  style: AppStyles.darkContent(context).copyWith(
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: Color(AppColors.almostBlack),
                                   ),
                                 ),
                               ))
@@ -199,32 +200,6 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               },
                             ),
 
-                            // CustomDropdown.search(
-                            //     selectedValue: viewModel.selectedCategory,
-                            //     borderRadius: BorderRadius.circular(AppSizes.s15),
-                            //     borderSide: Theme.of(context)
-                            //         .inputDecorationTheme
-                            //         .enabledBorder
-                            //         ?.borderSide,
-                            //     hintText: AppStrings.category.tr(),
-                            //     onRemoveClicked: (){
-                            //       viewModel.selectedCategory = null;
-                            //       setState(() {
-                            //       });
-                            //     },
-                            //     hintStyle:
-                            //         Theme.of(context).inputDecorationTheme.hintStyle,
-                            //     items: viewModel.categories,
-                            //     nameKey: "name",
-                            //     onChanged: (value) =>
-                            //         viewModel.selectedCategory = value,
-                            //     contentPadding: Theme.of(context)
-                            //         .inputDecorationTheme
-                            //         .contentPadding
-                            //         ?.resolve(
-                            //             LocalizationService.isArabic(context: context)
-                            //                 ? TextDirection.rtl
-                            //                 : TextDirection.ltr)),
                             gapH14,
                             TextFormField(
                               controller: viewModel.amountController,
@@ -242,7 +217,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             gapH14,
                             CustomDropdown.search(
                                 selectedValue: viewModel.selectedEmployee,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
+                                borderRadius: BorderRadius.circular(AppSizes.s15.r),
                                 borderSide: Theme.of(context)
                                     .inputDecorationTheme
                                     .enabledBorder
@@ -288,15 +263,15 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               ),
                             ),
                             //TODO:ADDING EMPLOYEE THAT MANAGED BY ME IN DROPDOWN
-                            const SizedBox(height: 30,),
+                            SizedBox(height: 30.h,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 if(viewModel.isLoadingPost == false)  CustomElevatedButton(
                                     backgroundColor:
                                     Theme.of(context).colorScheme.secondary,
-                                    titleSize: AppSizes.s14,
-                                    radius: AppSizes.s24,
+                                    titleSize: AppSizes.s14.sp,
+                                    radius: AppSizes.s24.r,
                                     title: AppStrings.send.tr(),
                                     onPressed: () async {
                                       if(formKey.currentState!.validate()){

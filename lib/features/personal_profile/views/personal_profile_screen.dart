@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -64,10 +66,10 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
+    final textStyle = AppStyles.darkHeading(context).copyWith(
       fontWeight: FontWeight.w600,
       color: Theme.of(context).colorScheme.secondary,
-      fontSize: AppSizes.s14,
+      fontSize: AppSizes.s14.sp,
     );
     return ChangeNotifierProvider<PersonalProfileController>(
       create: (_) => viewModel,
@@ -78,8 +80,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
             CoreHeader.transform(
               pinned: true,
               color: Colors.white,
-              shrinkHeight: AppSizes.s140,
-              expandedHeight: AppSizes.s340,
+              shrinkHeight: AppSizes.s140.h,
+              expandedHeight: AppSizes.s340.h,
               shrinkChild: const PersonalProfileShrinkedHeaderWidget(),
               child: SingleChildScrollView(
                   controller: viewModel.scrollController,
@@ -87,14 +89,14 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                     builder: (context, viewModel, child) =>
                         PersonalProfileHeaderWidget(
                             viewModel: viewModel,
-                            circleBorderWidth: AppSizes.s12,
+                            circleBorderWidth: AppSizes.s12.r,
                             key: UniqueKey(),
                             headerImage: AppImages.companyInfoBackground,
-                            backgroundHeight: viewModel.backgroundHeight,
+                            backgroundHeight: viewModel.backgroundHeight.h,
                             notchedContainerHeight:
-                            viewModel.notchedContainerHeight,
-                            notchRadius: viewModel.notchRadius,
-                            notchPadding: viewModel.notchPadding,
+                            viewModel.notchedContainerHeight.h,
+                            notchRadius: viewModel.notchRadius.r,
+                            notchPadding: viewModel.notchPadding.r,
                             notchImage: AppImages.logo,
                             title: viewModel.nameController.text.isNotEmpty ? viewModel.nameController.text : "",
                             photo: UserSettingConst.userSettings != null ?UserSettingConst.userSettings!.photo ??"" : "",
@@ -132,10 +134,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                       return Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: AppSizes.s12),
+                            padding: EdgeInsets.only(top: AppSizes.s12.h),
                             child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: AppSizes.s12, right: AppSizes.s12),
+                              padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
                               child: !kIsWeb?Column(
                                 children: [
                                   // CHANGE PHONE NUMBER
@@ -180,8 +181,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                           gapH18,
                                           Center(
                                             child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
-                                                radius: AppSizes.s10,
-                                                titleSize: AppSizes.s14,
+                                                radius: AppSizes.s10.r,
+                                                titleSize: AppSizes.s14.sp,
                                                 title: AppStrings.updateProfile.tr(),
                                                 onPressed: () async =>
                                                     viewModel.updateProfileMainInfo(
@@ -214,8 +215,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     gapH18,
                                     Center(
                                       child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
-                                          radius: AppSizes.s10,
-                                          titleSize: AppSizes.s14,
+                                          radius: AppSizes.s10.r,
+                                          titleSize: AppSizes.s14.sp,
                                           backgroundColor: UserSettingConst.userSettings
                                               ?.emailVerifiedAt ==
                                               null &&
@@ -269,8 +270,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     gapH18,
                                     Center(
                                       child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
-                                          titleSize: AppSizes.s14,
-                                          radius: AppSizes.s10,
+                                          titleSize: AppSizes.s14.sp,
+                                          radius: AppSizes.s10.r,
                                           backgroundColor: UserSettingConst.userSettings
                                               ?.phoneVerifiedAt ==
                                               null &&
@@ -317,7 +318,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     children: [
                                       Text(
                                         AppStrings.enableAndDisable2fa.tr(),
-                                        style: textStyle.copyWith(fontSize: 18),
+                                        style: textStyle.copyWith(fontSize: 18.sp),
                                       ),
                                       const Spacer(),
                                       if(us1Cache != null) Switch(
@@ -339,9 +340,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   ),
                                   if(us1Cache['tfa'] == true)Center(
                                     child: CustomElevatedButton(
-                                      titleSize: AppSizes.s14,
-                                      width: LayoutService.getWidth(context),
-                                      radius: AppSizes.s10,
+                                      titleSize: AppSizes.s14.sp,
+                                      width: 1.sw,
+                                      radius: AppSizes.s10.r,
                                       backgroundColor:
                                       Theme.of(context).colorScheme.primary,
                                       title: AppStrings.enable2fa.tr(),
@@ -356,21 +357,21 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   // Enable 2FA
                                   Center(
                                     child: CustomElevatedButton(
-                                      titleSize: AppSizes.s14,
-                                      width: LayoutService.getWidth(context),
-                                      radius: AppSizes.s10,
+                                      titleSize: AppSizes.s14.sp,
+                                      width: 1.sw,
+                                      radius: AppSizes.s10.r,
                                       backgroundColor: const Color(AppColors.pureRed),
                                       title: AppStrings.deleteYourAccount.tr(),
                                       onPressed: () async => await viewModel
                                           .removeAccount(context: context),
                                     ),
                                   ),
-                                  SizedBox(height: 25,)
+                                  SizedBox(height: 25.h,)
                                 ],
                               ):
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxWidth: 1100),
+                                  constraints: BoxConstraints(maxWidth: 1100.w),
                                   child: Column(
                                     children: [
                                       // CHANGE PHONE NUMBER
@@ -383,7 +384,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                               AppStrings.updateMainData.tr(),
                                               style: textStyle,
                                             ),
-                                            SizedBox(width: 20,),
+                                            SizedBox(width: 20.w,),
                                             Expanded(
                                               flex: 5,
                                               child: Form(
@@ -426,8 +427,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                         Center(
                                           child: CustomElevatedButton( isOutlined: true,
                                               titleColor: Color(AppColors.primary),
-                                              radius: AppSizes.s10,
-                                              titleSize: AppSizes.s14,
+                                              radius: AppSizes.s10.r,
+                                              titleSize: AppSizes.s14.sp,
                                               title: AppStrings.updateProfile.tr(),
                                               onPressed: () async =>
                                                   viewModel.updateProfileMainInfo(
@@ -471,8 +472,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                   ? Colors.yellow
                                                   : Color(AppColors.primary),
                                               isOutlined: true,
-                                              radius: AppSizes.s10,
-                                              titleSize: AppSizes.s14,
+                                              radius: AppSizes.s10.r,
+                                              titleSize: AppSizes.s14.sp,
                                               backgroundColor: UserSettingConst.userSettings?.emailVerifiedAt == null && UserSettingConst.userSettings?.email != null
                                                   ? Colors.yellow
                                                   : Color(AppColors.primary),
@@ -530,8 +531,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                   ? Colors.yellow
                                                   : Color(AppColors.primary),
                                               isOutlined: true,
-                                              titleSize: AppSizes.s14,
-                                              radius: AppSizes.s10,
+                                              titleSize: AppSizes.s14.sp,
+                                              radius: AppSizes.s10.r,
                                               backgroundColor: UserSettingConst.userSettings
                                                   ?.phoneVerifiedAt ==
                                                   null &&
@@ -578,7 +579,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                         children: [
                                           Text(
                                             AppStrings.enableAndDisable2fa.tr(),
-                                            style: textStyle.copyWith(fontSize: 18),
+                                            style: textStyle.copyWith(fontSize: 18.sp),
                                           ),
                                           const Spacer(),
                                           if(us1Cache != null) Switch(
@@ -601,9 +602,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
 
                                       if( us1Cache!= null && us1Cache['tfa'] == true) Center(
                                         child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
-                                          titleSize: AppSizes.s14,
-                                          width: LayoutService.getWidth(context),
-                                          radius: AppSizes.s10,
+                                          titleSize: AppSizes.s14.sp,
+                                          width: 1.sw,
+                                          radius: AppSizes.s10.r,
                                           backgroundColor:
                                           Theme.of(context).colorScheme.primary,
                                           title: AppStrings.enable2fa.tr(),
@@ -619,16 +620,16 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                       // Enable 2FA
                                       Center(
                                         child: CustomElevatedButton(
-                                          titleSize: AppSizes.s14,
-                                          width: LayoutService.getWidth(context),
-                                          radius: AppSizes.s10,
+                                          titleSize: AppSizes.s14.sp,
+                                          width: 1.sw,
+                                          radius: AppSizes.s10.r,
                                           backgroundColor: const Color(AppColors.pureRed),
                                           title: AppStrings.deleteYourAccount.tr(),
                                           onPressed: () async => await viewModel
                                               .removeAccount(context: context),
                                         ),
                                       ),
-                                      SizedBox(height: 25,)
+                                      SizedBox(height: 25.h,)
                                     ],
                                   ),
                                 ),

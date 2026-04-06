@@ -1,5 +1,7 @@
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -17,15 +19,15 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
     return Consumer<PersonalProfileController>(
       builder: (context, viewModel, child) => Stack(
         children: [
-          const PersonalProfileHeaderBackgroundWidget(
+          PersonalProfileHeaderBackgroundWidget(
             headerImage: AppImages.companyInfoBackground,
-            backgroundHeight: AppSizes.s140,
+            backgroundHeight: AppSizes.s140.h,
           ),
           Positioned(
-            top: MediaQuery.of(context).padding.top + AppSizes.s12,
+            top: MediaQuery.of(context).padding.top + AppSizes.s12.h,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
-              width: LayoutService.getWidth(context),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
+              width: 1.sw,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,23 +35,23 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                   Container(
                       decoration: BoxDecoration(
                         color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppSizes.s15),
+                        borderRadius: BorderRadius.circular(AppSizes.s15.r),
                       ),
                       child: Center(
                         child: IconButton(
                           onPressed: () => context.pop(),
-                          icon:  const Icon(
+                          icon:  Icon(
                             Icons.arrow_back_ios_new,
                             color: Colors.white,
-                            size: AppSizes.s18,
+                            size: AppSizes.s18.r,
                           ),
                         ),
                       )),
                    Text(
                     AppStrings.accountAndSettings.tr(),
-                    style: const TextStyle(
+                    style: AppStyles.whiteContent(context).copyWith(
                       fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.s14,
+                      fontSize: AppSizes.s14.sp,
                       letterSpacing: 1.4,
                       color: Colors.white,
                     ),
@@ -57,16 +59,16 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                   Container(
                       decoration: BoxDecoration(
                         color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppSizes.s15),
+                        borderRadius: BorderRadius.circular(AppSizes.s15.r),
                       ),
                       child: Center(
                         child: IconButton(
                           onPressed: () async =>
                               await viewModel.logout(context: context),
-                          icon:  const Icon(
+                          icon:  Icon(
                             Icons.logout_outlined,
                             color: Colors.red,
-                            size: AppSizes.s18,
+                            size: AppSizes.s18.r,
                           ),
                         ),
                       )),

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -63,6 +65,32 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
             height: AppSizes.s16,
             width: AppSizes.s16,
           ) : null,
+          bottomAppbarWidget: widget.empId != null &&
+                  widget.empId?.isNotEmpty == true &&
+                  widget.empName != null &&
+                  widget.empName?.isNotEmpty == true &&
+                  UserSettingConst.userSettings?.userId.toString() != widget.empId
+              ? PreferredSize(
+                  preferredSize: Size.fromHeight(AppSizes.s40.h),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.s12.w, vertical: AppSizes.s6.h),
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        widget.empName!,
+                        style: AppStyles.darkHeading(context).copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: AppSizes.s20.sp),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                )
+              : null,
           pageContext: context,
           title: AppStrings.rewardsAndPenalties.tr(),
           onRefresh: () async =>
@@ -70,51 +98,67 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                   context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 1100.w : double.infinity,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s12),
+                padding: EdgeInsets.all(AppSizes.s12.r),
                 child: SingleChildScrollView(
                   child: Consumer<RewardsAndPenaltiesViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
                           : (viewModel.rewardsAndPenalties?.isEmpty == true ||
-                                  viewModel.rewardsAndPenalties == null)&&(viewModel.rewardsAndPenaltiesTeam?.isEmpty == true ||
-                                  viewModel.rewardsAndPenaltiesTeam == null)
+                                  viewModel.rewardsAndPenalties == null) &&
+                                  (viewModel.rewardsAndPenaltiesTeam?.isEmpty == true ||
+                                      viewModel.rewardsAndPenaltiesTeam == null)
                               ? NoExistingPlaceholderScreen(
-                                  height: LayoutService.getHeight(context) * 0.6,
+                                  height: 0.6.sh,
                                   title: AppStrings.noExistingPenaltiesAndRewards.tr())
                               : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)
-                              Text(AppStrings.myRewardsAndPenalties.tr(),style: TextStyle(
-                                    color: Color(AppColors.dark),fontWeight: FontWeight.w600,fontSize: 16
-                                  ),),
-                            const SizedBox(height: 15,),
-                            // if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)     const SizedBox(height: 15,),
-                            //       GeneralScreenMessageWidget(
-                            //           screenId: '/penalties-and-rewards'),
-                                  ...viewModel.rewardsAndPenalties!.map(
-                                      (rewardAndPenalty) =>
-                                          RewardAndPenaltyCardWidget(
-                                            rewardAndPenalty: rewardAndPenalty,
-                                          )),
-                            if(viewModel.rewardsAndPenalties != null && viewModel.rewardsAndPenalties?.isEmpty == false)     const SizedBox(height: 25,),
-                            if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))
-                              Text(AppStrings.teamRewardsAndPenalties.tr(),style: TextStyle(
-                                color: Color(AppColors.dark),fontWeight: FontWeight.w600,fontSize: 16
-                            ),),
-                            if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))   const SizedBox(height: 15,),
-                            // if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && gCache['is_teamleader_in'].isNotEmpty)  const SizedBox(height: 15,),
-                            // if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && gCache['is_teamleader_in'].isNotEmpty)  GeneralScreenMessageWidget(
-                            //     screenId: '/penalties-and-rewards'),
-                            if(viewModel.rewardsAndPenaltiesTeam != null && viewModel.rewardsAndPenaltiesTeam?.isEmpty == false && (gCache['is_teamleader_in'].isNotEmpty ||gCache['is_manager_in'].isNotEmpty))   ...viewModel.rewardsAndPenaltiesTeam!.map(
-                                    (rewardAndPenalty) => RewardAndPenaltyCardWidget(
-                                      rewardAndPenalty: rewardAndPenalty,
-                                    )),
-                                ])),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                      if (viewModel.rewardsAndPenalties != null &&
+                                          viewModel.rewardsAndPenalties?.isEmpty == false)
+                                        Text(
+                                          AppStrings.myRewardsAndPenalties.tr(),
+                                          style: AppStyles.darkHeading(context).copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.sp),
+                                        ),
+                                      SizedBox(height: 15.h),
+                                      ...viewModel.rewardsAndPenalties!.map(
+                                          (rewardAndPenalty) =>
+                                              RewardAndPenaltyCardWidget(
+                                                rewardAndPenalty: rewardAndPenalty,
+                                              )),
+                                      if (viewModel.rewardsAndPenalties != null &&
+                                          viewModel.rewardsAndPenalties?.isEmpty == false)
+                                        SizedBox(height: 25.h),
+                                      if (viewModel.rewardsAndPenaltiesTeam != null &&
+                                          viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
+                                          (gCache['is_teamleader_in'].isNotEmpty ||
+                                              gCache['is_manager_in'].isNotEmpty))
+                                        Text(
+                                          AppStrings.teamRewardsAndPenalties.tr(),
+                                          style: AppStyles.darkHeading(context).copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.sp),
+                                        ),
+                                      if (viewModel.rewardsAndPenaltiesTeam != null &&
+                                          viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
+                                          (gCache['is_teamleader_in'].isNotEmpty ||
+                                              gCache['is_manager_in'].isNotEmpty))
+                                        SizedBox(height: 15.h),
+                                      if (viewModel.rewardsAndPenaltiesTeam != null &&
+                                          viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
+                                          (gCache['is_teamleader_in'].isNotEmpty ||
+                                              gCache['is_manager_in'].isNotEmpty))
+                                        ...viewModel.rewardsAndPenaltiesTeam!.map(
+                                            (rewardAndPenalty) =>
+                                                RewardAndPenaltyCardWidget(
+                                                  rewardAndPenalty: rewardAndPenalty,
+                                                )),
+                                    ])),
                 ),
               ),
             ),
