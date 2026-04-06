@@ -1,4 +1,6 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -57,23 +59,24 @@ class MainLayoutScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
         showUnselectedLabels: true,
         showSelectedLabels: true,
-        selectedLabelStyle: Theme.of(context)
-            .navigationBarTheme
-            .labelTextStyle
-            ?.resolve({WidgetState.selected})?.copyWith(color: Color(AppColors.dark)),
-        unselectedLabelStyle: Theme.of(context)
-            .navigationBarTheme
-            .labelTextStyle
-            ?.resolve({WidgetState.dragged}),
+        selectedLabelStyle: AppStyles.darkContent(context).copyWith(
+          fontSize: 11.sp,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedLabelStyle: AppStyles.greyContent(context).copyWith(
+          fontSize: 10.sp,
+        ),
         selectedItemColor: Color(AppColors.dark),
         elevation: 0,
         type: BottomNavigationBarType.fixed,
         items: bottomNavigationBarItems.map((element) {
           return BottomNavigationBarItem(
             icon: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 12),
+              padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
               child: SvgPicture.asset(
                 element.icon,
+                height: 24.r,
+                width: 24.r,
                 colorFilter: ColorFilter.mode(
                   Theme.of(context).colorScheme.tertiary,
                   BlendMode.srcIn,
@@ -81,13 +84,17 @@ class MainLayoutScreen extends StatelessWidget {
               ),
             ),
             activeIcon: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 12),
+              padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
                   Color(AppColors.dark),
                   BlendMode.srcIn,
                 ),
-                child: SvgPicture.asset(element.icon),
+                child: SvgPicture.asset(
+                  element.icon,
+                  height: 24.r,
+                  width: 24.r,
+                ),
               ),
             ),
             label: element.title.tr(),

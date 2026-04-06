@@ -5,6 +5,8 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/request_card.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +49,8 @@ class RequestsWidget extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 24, vertical: 6),
+      padding: EdgeInsets.symmetric(
+          horizontal: 24.w, vertical: 6.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,21 +58,22 @@ class RequestsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(getRequestsTypeStr(),
-                      style: const TextStyle(
-                        fontSize: 19,
+                      style: AppStyles.primaryHeading(context).copyWith(
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF3489EF),
                       ),),
                   TextButton(
                     onPressed: () async =>
                         await pushToRequestsScreenWithRequestsType(
                             context: context, reqType: requestType),
-                    child: const Text("VIEW ALL",
-                        style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    child: Text("VIEW ALL",
+                        style: AppStyles.greyContent(context).copyWith(
+                          fontSize: 12.sp,
+                        )),
                   ),
                 ],
               ),
-              gapH16,
+              SizedBox(height: 16.h),
               ...requests.map(
                 (req) => RequestCard(
                   request: req,

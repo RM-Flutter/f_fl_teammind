@@ -19,6 +19,8 @@ import 'package:app_test/features/home/views/widgets/loading/home_body_loading.d
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/my_requests_widget.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/notifications_section.dart';
 import 'package:app_test/features/home/views/widgets/page_header_widgets/home_appbar.widget.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -218,8 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
             CoreHeader.transform(
               pinned: true,
               color: Colors.transparent,
-              shrinkHeight: AppSizes.s140,
-              expandedHeight: 300.0,
+              shrinkHeight: AppSizes.s140.h,
+              expandedHeight: 300.0.h,
               shrinkChild: Consumer<HomeController>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
                         requests: viewModel.myRequests,
@@ -241,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:
-                    LocalizationService.isArabic(context: context) ? 35 : 0),
+                    LocalizationService.isArabic(context: context) ? 35.w : 0),
             child: MainAppFabWidget(requests: false, viewRequest: true),
           ),
           children: [
@@ -249,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, viewModel, child) => viewModel.isLoading
                   ? const HomeLoadingPage()
                   : Padding(
-                      padding: const EdgeInsets.only(top: AppSizes.s12),
+                      padding: EdgeInsets.only(top: AppSizes.s12.h),
                       child: _buildReorderableWidgets(viewModel),
                     ),
             )
@@ -326,14 +328,14 @@ class _HomeScreenState extends State<HomeScreen> {
         // General Screen Message Widget (always at top, not reorderable)
         // Shortcut actions (Replaces BookmarkList)
         _buildShortcutActions(context),
-        const SizedBox(height: AppSizes.s4),
+        SizedBox(height: AppSizes.s4.h),
         // const Center(
         //   child: Text(
         //     "welcome to employee main screeen",
         //     style: TextStyle(color: Colors.grey, fontSize: 12),
         //   ),
         // ),
-        const SizedBox(height: AppSizes.s4),
+        SizedBox(height: AppSizes.s4.h),
         // Reorderable widgets
         Listener(
           onPointerMove: (event) {
@@ -360,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return Material(
                 elevation: 8,
                 shadowColor: Colors.black.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(AppSizes.s12),
+                borderRadius: BorderRadius.circular(AppSizes.s12.r),
                 child: child,
               );
             },
@@ -414,9 +416,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       key: ValueKey(widgetType.id),
-      margin: const EdgeInsets.only(
-        bottom: AppSizes.s12,
-        top: AppSizes.s8,
+      margin: EdgeInsets.only(
+        bottom: AppSizes.s12.h,
+        top: AppSizes.s8.h,
       ),
       child: Material(
         color: Colors.transparent,
@@ -425,27 +427,27 @@ class _HomeScreenState extends State<HomeScreen> {
             content,
             // Drag handle - only this can be used to drag
             Positioned(
-              top: 8,
-              right: 8,
+              top: 8.h,
+              right: 8.w,
               child: ReorderableDragStartListener(
                 index: index,
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.95),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.15),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
+                        blurRadius: 6.r,
+                        offset: Offset(0, 2.h),
                       ),
                     ],
                   ),
                   child: Icon(
                     Icons.drag_handle,
                     color: Color(AppColors.dark),
-                    size: 24,
+                    size: 24.r,
                   ),
                 ),
               ),
@@ -501,39 +503,38 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return SizedBox(
-      height: 120,
+      height: 120.h,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 12),
+        separatorBuilder: (context, index) => SizedBox(width: 12.w),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: items[index]['onTap'],
             child: Container(
-              width: 105,
-              padding: const EdgeInsets.all(8),
+              width: 105.w,
+              padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
                 color: const Color(0xFF090B60), // Dark Blue from Figma
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
                     items[index]['icon'],
-                    height: 28,
-                    width: 28,
+                    height: 28.r,
+                    width: 28.r,
                     color: Colors.white,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   Text(
                     items[index]['title'],
                     textAlign: TextAlign.center,
                     maxLines: 2,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.0,
+                    style: AppStyles.whiteContent(context).copyWith(
+                      fontSize: 12.0.sp,
                       fontWeight: FontWeight.w900,
                       height: 1.1,
                     ),
@@ -549,32 +550,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTasksSection(BuildContext context, List tasks) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "My Tasks",
-                style: TextStyle(
-                  fontSize: 19,
+                style: AppStyles.primaryHeading(context).copyWith(
+                  fontSize: 19.sp,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF3489EF),
                 ),
               ),
               TextButton(
                 onPressed: () => context.pushNamed(AppRoutes.taskScreen.name,
                     pathParameters: {'lang': context.locale.languageCode}),
-                child: const Text(
+                child: Text(
                   "VIEW ALL",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  style: AppStyles.greyContent(context).copyWith(
+                    fontSize: 12.sp,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           ...tasks.take(3).map((task) {
             // Mapping the dynamic task from home API to the TaskListTileWidget
             // If the model is different, we adjust the fields

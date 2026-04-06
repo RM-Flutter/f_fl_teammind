@@ -14,6 +14,8 @@ import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/widget/view/managment_widget.dart';
 import 'package:app_test/features/requests/details/views/widgets/management_response_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -51,18 +53,18 @@ class RequestCard extends StatelessWidget {
             (userSettings?.empId != null && request.employeeId != null && userSettings!.empId != request.employeeId);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSizes.s16),
-      padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.s14, horizontal: AppSizes.s16),
+      margin: EdgeInsets.only(bottom: AppSizes.s16.h),
+      padding: EdgeInsets.symmetric(
+          vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
       decoration: ShapeDecoration(
         color: Theme.of(context).cardTheme.color,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
         ),
         shadows: [
           BoxShadow(
             color: Color(AppColors.lightGrey).withOpacity(0.5),
-            blurRadius: AppSizes.s5,
+            blurRadius: AppSizes.s5.r,
             spreadRadius: 1,
           )
         ],
@@ -105,17 +107,16 @@ class RequestCard extends StatelessWidget {
                         context: context,
                         requestId: request.typeId != null ? request.typeId?.toString() : "") ??
                         '',
-                    style: const TextStyle(
+                    style: AppStyles.blackContent(context).copyWith(
                       fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.s16,
+                      fontSize: AppSizes.s16.sp,
                       letterSpacing: 0.75,
-                      color: Color(AppColors.black),
                       height: 1.1,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  gapH4,
+                  SizedBox(height: 4.h),
                   Opacity(
                     opacity: 0.5,
                     child: AutoSizeText(
@@ -124,28 +125,30 @@ class RequestCard extends StatelessWidget {
                           : (DateFormat('yyyy-MM-dd').format(DateTime.parse(request.from)) == DateFormat('yyyy-MM-dd').format(DateTime.parse(request.to)))
                           ? '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} (${request.duration} ${request.durationType.toString().tr()})'
                           : '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.to)} (${request.duration} ${request.durationType.toString().tr()})',
-                      style: const TextStyle(
+                      style: AppStyles.greyContent(context).copyWith(
                         fontWeight: FontWeight.w400,
-                        fontSize: AppSizes.s12,
+                        fontSize: AppSizes.s12.sp,
                         letterSpacing: 0.5,
-                        color: Color(AppColors.grey3B),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) gapH4,
+                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) SizedBox(height: 4.h),
                   if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment)
                     Text(
                       "${request.employeeName ?? ""} - ${request.departmentName ?? ""}",
-                      style: TextStyle(color: Color(AppColors.grey70), fontWeight: FontWeight.w600, fontSize: 12),
+                      style: AppStyles.grey70Content(context).copyWith(
+                        fontWeight: FontWeight.w600, 
+                        fontSize: 12.sp
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                 ],
               ),
             ),
-            const SizedBox(width: AppSizes.s8),
+            SizedBox(width: AppSizes.s8.w),
             RequestsServices.getRequestsStatusIcon(
                 context: context, status: request.status),
           ],

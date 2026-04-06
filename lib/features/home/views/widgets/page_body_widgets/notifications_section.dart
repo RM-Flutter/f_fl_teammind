@@ -7,6 +7,8 @@ import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/widgets/notification_card.widget.dart';
 import 'package:app_test/features/main_layout/controllers/main_controller.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +28,8 @@ class NotificationsSection extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.s12, vertical: AppSizes.s20),
+          padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
           color: Color(AppColors.dark),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,9 +38,8 @@ class NotificationsSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppStrings.myNotifications.tr(),
-                      style: TextStyle(
-                        color: Color(AppColors.primary), 
-                        fontSize: 19, 
+                      style: AppStyles.primaryHeading(context).copyWith(
+                        fontSize: 19.sp, 
                         fontWeight: FontWeight.w700,
                         // تحسين الخطوط في الويب
                         letterSpacing: kIsWeb ? 0.3 : null,
@@ -53,15 +54,14 @@ class NotificationsSection extends StatelessWidget {
                     },
                     child: Text(
                       AppStrings.viewAll.tr(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color:
-                                AppThemeService.colorPalette.quinaryTextColor.color,
-                          ),
+                      style: AppStyles.greyContent(context).copyWith(
+                        fontSize: 12.sp,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 15,),
+              SizedBox(height: 15.h,),
               ListView.separated(
                 padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
@@ -70,7 +70,7 @@ class NotificationsSection extends StatelessWidget {
                   itemBuilder: (context, index) => NotificationCard(
                     notification: notifications[index],
                   ),
-                  separatorBuilder: (context, index) => const SizedBox(height: 8,),
+                  separatorBuilder: (context, index) => SizedBox(height: 8.h,),
                   itemCount: (notifications.length > 8)? 8 : notifications.length)
             ],
           ),
