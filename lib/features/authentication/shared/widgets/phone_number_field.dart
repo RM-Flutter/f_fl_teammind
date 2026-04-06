@@ -11,6 +11,7 @@ import 'package:app_test/core/services/localization_service.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/platform/platform_is.dart';
+import '../../../../core/utils/app_styles.dart';
 
 class PhoneNumberField extends StatefulWidget {
   final TextEditingController controller;
@@ -95,7 +96,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         decoration: InputDecoration(
           errorText: widget.phoneError,
           hintText: AppStrings.yourPhone.tr().toUpperCase(),
-          hintStyle: const TextStyle(color: Color(0xff606060), fontSize: 12),
+          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
           counter: const SizedBox.shrink(),
         ),
         initialCountryCode: detectedCountryCode ?? widget.initialCountry ?? "EG",
@@ -154,7 +155,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           Icons.arrow_drop_down,
         ),
         dropdownTextStyle:
-        const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.bold),
         dropdownIconPosition: intl_phone_field.IconPosition.trailing,
         showCursor: true,
         dropdownDecoration: BoxDecoration(

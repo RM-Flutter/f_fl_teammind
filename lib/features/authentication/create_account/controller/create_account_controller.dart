@@ -9,6 +9,7 @@ import 'package:app_test/core/services/app_config_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../data/repo/create_account_repo.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 
 class CreateAccountController extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
@@ -75,7 +76,7 @@ class CreateAccountController extends ChangeNotifier {
           AppStrings.formIsInvalid.tr(),
           context: context,
           backgroundColor: Colors.red,
-          textStyle: const TextStyle(color: Colors.white),
+          textStyle: AppStyles.whiteContent(context),
           duration: const Duration(seconds: 5),
           position: StyledToastPosition.bottom,
         );

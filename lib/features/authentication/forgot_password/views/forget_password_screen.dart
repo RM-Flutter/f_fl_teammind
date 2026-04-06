@@ -11,6 +11,7 @@ import '../../login/controller/login_controller.dart';
 import '../../shared/widgets/phone_number_field.dart';
 import '../../shared/widgets/verification_tile_widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   final bool isPhoneLogin;
@@ -54,9 +55,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           : TextFormField(
                         controller: viewModel.emailController,
                         decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                                color: Color(0xff606060),
-                                fontSize: 12),
+                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                             hintText: AppStrings.yourEmail.tr().toUpperCase()),
                         validator: (value) =>
                             ValidationService.validateEmail(value),
@@ -99,9 +98,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               keyboardType: TextInputType.number,
                               decoration:
                               InputDecoration(
-                                  hintStyle: const TextStyle(
-                                      color: Color(0xff606060),
-                                      fontSize: 12),
+                                  hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   hintText: AppStrings.enterVerificationCode.tr().toUpperCase()),
                               validator: (value) =>
                                   ValidationService.validateRequired(value, AppStrings.code.tr()),
@@ -110,9 +107,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             TextFormField(
                               controller: viewModel.newPasswordController,
                               decoration: InputDecoration(
-                                hintStyle: const TextStyle(
-                                    color: Color(0xff606060),
-                                    fontSize: 12),
+                                hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                 hintText: AppStrings.newPassword.tr().toUpperCase(),
                                 suffixIcon: IconButton(
                                   icon: Icon(

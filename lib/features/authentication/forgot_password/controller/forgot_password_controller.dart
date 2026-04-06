@@ -7,6 +7,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import '../data/repo/forgot_password_repo.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 
 class ForgotPasswordController extends ChangeNotifier {
   bool goToChooseForgotMethod = false;
@@ -80,7 +81,7 @@ class ForgotPasswordController extends ChangeNotifier {
         AppStrings.formIsInvalid.tr(),
         context: context,
         backgroundColor: Colors.red,
-        textStyle: const TextStyle(color: Colors.white),
+        textStyle: AppStyles.whiteContent(context),
         duration: const Duration(seconds: 5),
         position: StyledToastPosition.bottom,
       );
