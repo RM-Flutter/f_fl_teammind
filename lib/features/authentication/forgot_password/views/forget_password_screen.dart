@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -44,7 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       onChanged: (newValue) =>
                           viewModel.toggleLoginMethod(newValue),
                     ),
-                    gapH24,
+                    SizedBox(height: AppSizes.s24.h),
                     Form(
                       key: viewModel.codeFormKey,
                       child: viewModel.isPhoneLogin
@@ -60,7 +61,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         validator: (value) =>
                             ValidationService.validateEmail(value),
                       ),),
-                    gapH26,
+                    SizedBox(height: AppSizes.s26.h),
                     Center(
                       child: CustomElevatedButton(
                           isPrimaryBackground: false,
@@ -73,7 +74,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                       ),
                     ),
-                    gapH28,
+                    SizedBox(height: AppSizes.s28.h),
                   ] else if (!viewModel.codeSent &&
                       viewModel.goToChooseForgotMethod &&
                       viewModel.forgotPasswordMethods != null &&
@@ -103,7 +104,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               validator: (value) =>
                                   ValidationService.validateRequired(value, AppStrings.code.tr()),
                             ),
-                            gapH20,
+                            SizedBox(height: AppSizes.s20.h),
                             TextFormField(
                               controller: viewModel.newPasswordController,
                               decoration: InputDecoration(
@@ -126,7 +127,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             ),
                           ],
                         )),
-                    gapH20,
+                    SizedBox(height: AppSizes.s20.h),
                     Center(
                       child: CustomElevatedButton(
                           isPrimaryBackground: false,
@@ -158,7 +159,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           }
                       ),
                     ),
-                    gapH28,
+                    SizedBox(height: AppSizes.s28.h),
                   ],
                 ],
               );

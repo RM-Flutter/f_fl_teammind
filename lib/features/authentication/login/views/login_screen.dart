@@ -12,6 +12,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -111,27 +112,27 @@ class LoginScreenState extends State<LoginScreen>
     if (isNetworkImage) {
       return CachedNetworkImage(
         imageUrl: logoUrl,
-        height: AppSizes.s100,
-        width: AppSizes.s100,
+        height: AppSizes.s100.h,
+        width: AppSizes.s100.w,
         fit: BoxFit.contain,
         placeholder: (context, url) => Image.asset(
           'assets/images/general_images/logo.png',
-          height: AppSizes.s100,
-          width: AppSizes.s100,
+          height: AppSizes.s100.h,
+          width: AppSizes.s100.w,
           fit: BoxFit.contain,
         ),
         errorWidget: (context, url, error) => Image.asset(
           'assets/images/general_images/logo.png',
-          height: AppSizes.s100,
-          width: AppSizes.s100,
+          height: AppSizes.s100.h,
+          width: AppSizes.s100.w,
           fit: BoxFit.contain,
         ),
       );
     } else {
       return Image.asset(
         logoUrl,
-        height: AppSizes.s100,
-        width: AppSizes.s100,
+        height: AppSizes.s100.h,
+        width: AppSizes.s100.w,
         fit: BoxFit.contain,
       );
     }
@@ -168,7 +169,7 @@ class LoginScreenState extends State<LoginScreen>
                       : 400,
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.s24,
+                      horizontal: AppSizes.s24.w,
                       vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
                     ),
                     child: Form(
@@ -179,7 +180,7 @@ class LoginScreenState extends State<LoginScreen>
                           SizedBox(
                               height: (kIsWeb || PlatformIs.web) ? 40 : 60),
                           _buildLogoImage(),
-                          gapH32,
+                          SizedBox(height: AppSizes.s32.h),
                           // Login Page Headline
                           AutoSizeText(
                             AppStrings.loginTo.tr(),
@@ -191,7 +192,7 @@ class LoginScreenState extends State<LoginScreen>
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
-                          gapH32,
+                          SizedBox(height: AppSizes.s32.h),
                           // TOGGLE BUTTON TO TOGGLE BETWEEN (PHONE || EMAIL)
                           Consumer<AuthenticationController>(
                             builder: (context, viewModel, child) {
@@ -204,7 +205,7 @@ class LoginScreenState extends State<LoginScreen>
                               );
                             },
                           ),
-                          gapH20,
+                          SizedBox(height: AppSizes.s20.h),
                           // EMAIL OR PHONE FIELD
                           Consumer<AuthenticationController>(
                             builder: (context, viewModel, child) {
@@ -228,7 +229,7 @@ class LoginScreenState extends State<LoginScreen>
                                     );
                             },
                           ),
-                          gapH12,
+                          SizedBox(height: AppSizes.s12.h),
                           // PASSWORD FIELD
                           TextFormField(
                             controller: viewModel.passwordController,
@@ -271,7 +272,7 @@ class LoginScreenState extends State<LoginScreen>
                               ),
                             ],
                           ),
-                          gapH16,
+                          SizedBox(height: AppSizes.s16.h),
                           // LOGIN BUTTON
                           CustomElevatedButton(
                             title: AppStrings.login.tr(),
@@ -318,7 +319,7 @@ class LoginScreenState extends State<LoginScreen>
                             },
                             isPrimaryBackground: false,
                           ),
-                          gapH16,
+                          SizedBox(height: AppSizes.s16.h),
                           // LOGIN BUTTON
                           CustomElevatedButton(
                             title: AppStrings.addCompany.tr(),
@@ -340,7 +341,7 @@ class LoginScreenState extends State<LoginScreen>
                             },
                             isPrimaryBackground: false,
                           ),
-                          gapH16,
+                          SizedBox(height: AppSizes.s16.h),
                           if (gCache != null && gCache['can_visit'] == true)
                             CustomElevatedButton(
                               title: AppStrings.visitor.tr(),
@@ -482,7 +483,7 @@ class LoginScreenState extends State<LoginScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CustomElevatedButton(
-                                    width: AppSizes.s290,
+                                    width: AppSizes.s290.w,
                                     title: AppStrings.createNewAccount.tr(),
                                     isFuture: false,
                                     onPressed: () =>
@@ -498,7 +499,7 @@ class LoginScreenState extends State<LoginScreen>
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(AppSizes.s28),
+                                            BorderRadius.circular(AppSizes.s28.r),
                                         side: const BorderSide(
                                           color: Colors.white,
                                         ),
@@ -528,7 +529,7 @@ class LoginScreenState extends State<LoginScreen>
                           //     mainAxisAlignment: MainAxisAlignment.center,
                           //     children: [
                           //       CustomElevatedButton(
-                          //         width: AppSizes.s290,
+                          //         width: AppSizes.s290.w,
                           //         title: AppStrings.addCompany.tr(),
                           //         isFuture: false,
                           //         onPressed: () async {

@@ -2,6 +2,7 @@ import 'package:app_test/features/authentication/create_account/controller/creat
 import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
@@ -47,20 +48,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          gapH20,
+                          SizedBox(height: AppSizes.s20.h),
                           PhoneNumberField(
                             controller: viewModel.phoneController,
                             phoneError: viewModel.phoneError,
                             countryCodeController: viewModel.countryCodeController,
                           ),
-                          // gapH4,
+                          // SizedBox(height: AppSizes.s4.h),
                           // SwitchRow(
                           //   value: false,
                           //   onChanged: (newValue) => setState(() {}),
                           //   leftText: AppStrings.smsActive.tr(),
                           //   rightText: AppStrings.whatsAppActive.tr(),
                           // ),
-                          gapH20,
+                          SizedBox(height: AppSizes.s20.h),
                           TextFormField(
                             controller: viewModel.emailController,
                             decoration: InputDecoration(
@@ -70,7 +71,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             ),
                             validator: (val) => ValidationService.validateEmail(val),
                           ),
-                          gapH20,
+                          SizedBox(height: AppSizes.s20.h),
                           TextFormField(
                             controller: viewModel.passwordController,
                             decoration: InputDecoration(
@@ -92,7 +93,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 ValidationService.validatePassword(value, login: false),
                             obscureText: _obscureText,
                           ),
-                          gapH20,
+                          SizedBox(height: AppSizes.s20.h),
                           TextFormField(
                             controller: viewModel.nameController,
                             decoration: InputDecoration(
@@ -107,12 +108,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           //   height: 55,
                           //   alignment: LocalizationService.isArabic(context: context)
                           //       ?Alignment.centerRight : Alignment.centerLeft,
-                          //   margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
+                          //   margin: const EdgeInsets.symmetric(vertical: AppSizes.s10.h,),
                           //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                           //   decoration: ShapeDecoration(
                           //     color: AppThemeService.colorPalette.tertiaryColorBackground.color,
                           //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(AppSizes.s8),
+                          //       borderRadius: BorderRadius.circular(AppSizes.s8.r),
                           //       side: BorderSide(
                           //         color: Color(AppColors.whiteGrey),
                           //         width: 1.0,
@@ -141,7 +142,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           //     ),
                           //   ),
                           // ),
-                          gapH28,
+                          SizedBox(height: AppSizes.s28.h),
                           Center(
                               child: viewModel.isEmailRegister == false ?CustomElevatedButton(
                                   isPrimaryBackground: false,
@@ -184,7 +185,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   }
                               ): const CircularProgressIndicator()
                           ),
-                          gapH32,
+                          SizedBox(height: AppSizes.s32.h),
                         ],
                       ),
                     );

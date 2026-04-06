@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:app_test/core/constants/app_strings.dart';
@@ -49,7 +50,7 @@ class VerificationTileWidget extends StatelessWidget {
 
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.s10),
+        borderRadius: BorderRadius.circular(AppSizes.s10.r),
       ),
       elevation: 5,
       child: ListTile(

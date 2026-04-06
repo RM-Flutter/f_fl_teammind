@@ -7,6 +7,7 @@ import 'core/platform/platform_is.dart';
 import 'core/routing/app_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -23,18 +24,25 @@ class MyApp extends StatelessWidget {
     }
     // precacheImage(const AssetImage(AppImages.splashScreenBackground), context);
     final appGoRouter = goRouter(context);
-    return MaterialApp.router(
-      title: 'Team Mind',
-      restorationScopeId: 'app',
-      routerConfig: appGoRouter,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
-      theme: AppThemeService.getTheme(isDark: false, context: context),
-      darkTheme: AppThemeService.getTheme(isDark: true, context: context),
-      scrollBehavior: PlatformIs.web ? AppScrollBehavior() : null,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // Standard mobile mockup size
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'Team Mind',
+          restorationScopeId: 'app',
+          routerConfig: appGoRouter,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          debugShowCheckedModeBanner: false,
+          themeMode: ThemeMode.light,
+          theme: AppThemeService.getTheme(isDark: false, context: context),
+          darkTheme: AppThemeService.getTheme(isDark: true, context: context),
+          scrollBehavior: PlatformIs.web ? AppScrollBehavior() : null,
+        );
+      },
     );
   }
 }

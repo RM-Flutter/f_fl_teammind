@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart' as intl_phone_field;
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -147,9 +148,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         disableAutoFillHints: false,
         disableLengthCheck: false,
         keyboardType: TextInputType.phone,
-        flagsButtonMargin: const EdgeInsets.symmetric(
-          horizontal: AppSizes.s12,
-          vertical: AppSizes.s8,
+        flagsButtonMargin: EdgeInsets.symmetric(
+          horizontal: AppSizes.s12.w,
+          vertical: AppSizes.s8.h,
         ),
         dropdownIcon: const Icon(
           Icons.arrow_drop_down,
@@ -168,8 +169,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         ),
         pickerDialogStyle: PickerDialogStyle(
           backgroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(
-              vertical: AppSizes.s16, horizontal: AppSizes.s6),
+          padding: EdgeInsets.symmetric(
+              vertical: AppSizes.s16.h, horizontal: AppSizes.s6.w,),
         ),
         textAlign: TextAlign.start,
       ),

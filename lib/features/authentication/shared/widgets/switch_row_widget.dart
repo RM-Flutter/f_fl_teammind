@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
@@ -44,16 +45,16 @@ class SwitchRow extends StatelessWidget {
             leftText ?? AppStrings.byEmail.tr(),
             style: textStyle,
           ),
-          gapW8,
+          SizedBox(width: AppSizes.s8.w),
           CustomSwitchButton(
-            width: AppSizes.s50,
-            height: AppSizes.s20,
+            width: AppSizes.s50.w,
+            height: AppSizes.s20.h,
             padding: AppSizes.s3,
             value: value,
             inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
-          if(viewPhone == true)  gapW8,
+          if(viewPhone == true)  SizedBox(width: AppSizes.s8.w),
           if(viewPhone == true)  Text(
             rightText ?? AppStrings.byPhone.tr(),
             style: textStyle,
