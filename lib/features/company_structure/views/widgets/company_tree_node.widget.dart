@@ -3,6 +3,8 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:app_test/features/company_structure/data/models/company_tree_node.model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 
 class CompanyStructureNode extends StatelessWidget {
   final CompanyTreeNodeModel data;
@@ -57,17 +59,19 @@ class CompanyStructureNode extends StatelessWidget {
               child: Text(
                 data.name,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: isRootNode ? Colors.black : Colors.white,
-                    fontSize: AppSizes.s18),
+                style: (isRootNode
+                        ? AppStyles.blackContent(context)
+                        : AppStyles.whiteContent(context))
+                    .copyWith(fontSize: AppSizes.s18.sp),
               ),
             ),
             Text(
               data.jobTitle ?? '',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: isRootNode ? Colors.black : Colors.white,
-                  fontSize: AppSizes.s15),
+              style: (isRootNode
+                      ? AppStyles.blackContent(context)
+                      : AppStyles.whiteContent(context))
+                  .copyWith(fontSize: AppSizes.s15.sp),
             ),
           ],
         ),

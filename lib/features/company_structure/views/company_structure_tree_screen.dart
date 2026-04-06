@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'widgets/company_tree_node.widget.dart';
 
 class CompanyStructureTreeScreen extends StatefulWidget {
@@ -37,20 +39,22 @@ class _CompanyStructureTreeScreenState
             appBar: AppBarWithBookmark(
               surfaceTintColor: Colors.transparent,
               title: AppStrings.companyStructure.tr().toUpperCase(),
-              titleStyle: TextStyle(fontSize: 16,
-                  color: Color(AppColors.dark), fontWeight: FontWeight.w700),
+              titleStyle: AppStyles.content(context).copyWith(
+                  fontSize: 16.sp,
+                  color: Color(AppColors.dark),
+                  fontWeight: FontWeight.w700),
               leading: Padding(
-                padding: const EdgeInsets.all(AppSizes.s10),
+                padding: EdgeInsets.all(AppSizes.s10.w),
                 child: InkWell(
                   onTap: () =>  Navigator.pop(context),
                   child: Container(
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Color(AppColors.dark)),
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_back_sharp,
                       color: Colors.white,
-                      size: AppSizes.s18,
+                      size: AppSizes.s18.r,
                     ),
                   ),
                 ),
@@ -68,7 +72,7 @@ class _CompanyStructureTreeScreenState
               }
               return InteractiveViewer(
                 constrained: false,
-                boundaryMargin: const EdgeInsets.all(AppSizes.s18),
+                boundaryMargin: EdgeInsets.all(AppSizes.s18.w),
                 minScale: 0.01,
                 maxScale: 5.6,
                 child: GraphView(
