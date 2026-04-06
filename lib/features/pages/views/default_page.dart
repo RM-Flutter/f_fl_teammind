@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_images.dart';
@@ -102,17 +104,16 @@ class _DefaultPageState extends State<DefaultPage> {
             backgroundColor: Color(AppColors.white),
             appBar: AppBarWithBookmark(
               title: widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase():widget.type.toString().tr().toUpperCase(),
-              titleStyle: TextStyle(fontSize: 16,
-                  color: Color(AppColors.dark), fontWeight: FontWeight.w700),
+              titleStyle: AppStyles.darkHeading(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700),
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
             ),
             floatingActionButton: widget.type == "rmnotifications"? Container(
               padding: EdgeInsets.symmetric(
                   horizontal: LocalizationService.isArabic(context: context)
-                      ? 35
+                      ? 35.w
                       : 0),
-              width: double.infinity,
+              width: 1.sw,
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
                 heroTag: 'default_page_add_notification',
@@ -128,13 +129,13 @@ class _DefaultPageState extends State<DefaultPage> {
                   child: Image.asset(
                     AppImages.addFloatingActionButtonIcon,
                     color: AppThemeService.colorPalette.fabIconColor.color,
-                    width: AppSizes.s16,
-                    height: AppSizes.s16,
+                    width: AppSizes.s16.r,
+                    height: AppSizes.s16.r,
                   ),
                 ),
               ),
             )
-                :SizedBox.shrink(),
+                :const SizedBox.shrink(),
             body: RefreshIndicator.adaptive(
               onRefresh: ()async{
                 setState(() {
@@ -145,9 +146,9 @@ class _DefaultPageState extends State<DefaultPage> {
               child: ListView(
                 controller: _scrollController,
                 children: [
-                  const SizedBox(height: 10,),
+                  SizedBox(height: 10.h,),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
@@ -162,13 +163,13 @@ class _DefaultPageState extends State<DefaultPage> {
                             baseColor: Colors.grey[300]!,
                             highlightColor: Colors.grey[100]!,
                             child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                              padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                              margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
+                              padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
+                                borderRadius: BorderRadius.circular(AppSizes.s15.r),
                               ),
-                              height: 100,
+                              height: 100.h,
                             ),
                           );
                         } else {
@@ -182,10 +183,9 @@ class _DefaultPageState extends State<DefaultPage> {
                     ),
                   ),
                   if(!provider.isGetBlogLoading && provider.blogs.isEmpty) Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
                     child:  NoExistingPlaceholderScreen(
-                        height: LayoutService.getHeight(context) *
-                            0.6,
+                        height: 0.6.sh,
                         title: AppStrings.thereIsNoNotifications.tr()),
                   ),
                   if (provider.isGetBlogLoading && provider.currentPage != 1)

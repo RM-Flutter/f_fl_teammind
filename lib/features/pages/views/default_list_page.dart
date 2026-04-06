@@ -1,4 +1,6 @@
 
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -69,41 +71,42 @@ class _DefaultListPageState extends State<DefaultListPage> {
                   children: [
                     Container(
                       color: Colors.transparent,
-                      height: 90,
+                      height: 90.h,
                       width: double.infinity,
                       alignment: Alignment.center,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color:  Color(0xff224982)),
+                            icon: Icon(Icons.arrow_back, color:  const Color(0xff224982), size: 24.r,),
                             onPressed: () =>  Navigator.pop(context),
                           ),
                           Text(
-                            widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),                            style:  const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+                            widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),
+                            style: AppStyles.primaryHeading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
                           ),
                           IconButton(
-                            icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
+                            icon:  Icon(Icons.arrow_back, color: Colors.transparent, size: 24.r,),
                             onPressed: () {},
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSizes.s20),
+                    SizedBox(height: AppSizes.s20.h),
                     if(points.blogs.isEmpty)Container(
-                      height: MediaQuery.sizeOf(context).height * 0.8,
+                      height: 0.8.sh,
                       alignment: Alignment.center,
                       child: NoExistingPlaceholderScreen(
-                          height: LayoutService.getHeight(context) * 0.4,
+                          height: 0.4.sh,
                           title: AppStrings.noDataFounded.tr()),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
                         child: GridView.count(
                             crossAxisCount: 2,
-                            crossAxisSpacing: 12,
+                            crossAxisSpacing: 12.w,
                             childAspectRatio: 1/1.3,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -115,10 +118,10 @@ class _DefaultListPageState extends State<DefaultListPage> {
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(
                                   width: double.infinity,
-                                  height: 100, // Adjust height based on your UI
+                                  height: 100.h, // Adjust height based on your UI
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8), // Adjust as needed
+                                    borderRadius: BorderRadius.circular(8.r), // Adjust as needed
                                   ),
                                 ),
                               ):
@@ -176,43 +179,43 @@ class _DefaultListPageState extends State<DefaultListPage> {
             });
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0),
+        padding: EdgeInsets.symmetric(vertical: 0),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
             color: Colors.white,
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
                 color: Colors.black12,
-                blurRadius: 8,
-                spreadRadius: 1,
+                blurRadius: 8.r,
+                spreadRadius: 1.r,
               )
             ],
           ),
           child: Column(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
                 child:  CachedNetworkImage(
-                  height: 135,
+                  height: 135.h,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   imageUrl: src,
                   placeholder: (context, url) =>
                   const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) =>  const Icon(
+                  errorWidget: (context, url, error) =>  Icon(
                     Icons.image_not_supported_outlined,
-                    size: AppSizes.s32,
+                    size: AppSizes.s32.r,
                     color: Colors.white,
                   ),
                 ),), // Replace with project images
-              const SizedBox(height: 5,),
+              SizedBox(height: 5.h,),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.r),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 10, color: Color(0xFF090B60))),],
+                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 10.sp, color: const Color(0xFF090B60))),],
                 ),
               ),
             ],

@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -36,7 +38,7 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
         child: Column(
           children: [
             gapH24,
@@ -114,11 +116,11 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.s12, vertical: AppSizes.s18),
+          padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.s12.w, vertical: AppSizes.s18.h),
           decoration: BoxDecoration(
             color: const Color(AppColors.lightGreyE5).withOpacity(0.4),
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+            borderRadius: BorderRadius.circular(AppSizes.s8.r),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,10 +128,9 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               Expanded(
                 child: AutoSizeText(
                   title ?? "",
-                  style:  TextStyle(
+                  style: AppStyles.primaryContent(context).copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.s14,
-                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: AppSizes.s14.sp,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -139,11 +140,9 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               gapW16,
               AutoSizeText(
                 subtitle! + '' " " "${AppStrings.EGP.tr()}",
-                style: TextStyle(
+                style: AppStyles.blackContent(context).copyWith(
                   fontWeight: FontWeight.w400,
-                  fontSize: AppSizes.s12,
-                  // color: subtitleColor ?? Colors.black,
-                  color: Colors.black,
+                  fontSize: AppSizes.s12.sp,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

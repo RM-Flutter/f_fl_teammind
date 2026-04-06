@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/payrolls/payroll_details/views/widgets/view_pdf_screen.dart';
@@ -133,34 +135,34 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
         backgroundColor: Colors.white,
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(24.0.r),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (_isAuthenticating) ...[
                   const CircularProgressIndicator(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Text(
                     context.locale.languageCode == 'ar'
                         ? 'جارٍ التحقق من الهوية...'
                         : 'Authenticating...',
-                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                    style: AppStyles.blackContent(context).copyWith(fontSize: 16.sp),
                   ),
                 ] else if (_authError != null) ...[
-                  const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
-                  const SizedBox(height: 16),
+                  Icon(Icons.lock_outline, size: 64.r, color: Colors.grey),
+                  SizedBox(height: 16.h),
                   Text(
                     _authError!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                    style: AppStyles.blackContent(context).copyWith(fontSize: 16.sp),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   ElevatedButton.icon(
                     onPressed: _requireAuthentication,
                     icon: const Icon(Icons.refresh),
                     label: Text(context.locale.languageCode == 'ar' ? 'إعادة المحاولة' : 'Retry'),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
                     ),
                   ),
                   TextButton(
@@ -189,17 +191,17 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                       Expanded(
                           child:
                               Center(child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: kIsWeb ? 1100 : double.infinity,
+                                  constraints: BoxConstraints(
+                                    maxWidth: kIsWeb ? 1100.w : double.infinity,
                                   ),
                                   child: PayrollDetailsBodyWidget(payroll: widget.payroll)))),
-                      const SizedBox(height: 20,),
+                      SizedBox(height: 20.h,),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
+                        padding: EdgeInsets.only(bottom: 20.h),
                         child: Center(
                             child: CustomElevatedButton(
                                 backgroundColor: Theme.of(context).colorScheme.secondary,
-                                titleSize: AppSizes.s12,
+                                titleSize: AppSizes.s12.sp,
                                 title: AppStrings.downloadFile.tr().toUpperCase(),
                                 onPressed: () async{
                                   await viewModel.downloadPdf(context, widget.payroll!.id.toString(),

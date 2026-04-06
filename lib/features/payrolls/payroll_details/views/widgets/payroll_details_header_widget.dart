@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -19,18 +21,18 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.s300,
+      height: AppSizes.s300.h,
       clipBehavior: Clip.antiAlias,
-      width: LayoutService.getWidth(context),
+      width: 1.sw,
       decoration: BoxDecoration(
         image: const DecorationImage(
             image: AssetImage("assets/images/png/tasks-app-bar.png"),
             fit: BoxFit.fill,
             opacity: 0.4),
         color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28),
-            bottomRight: Radius.circular(AppSizes.s28)),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(AppSizes.s28.r),
+            bottomRight: Radius.circular(AppSizes.s28.r)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,26 +41,23 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: "${AppStrings.payroll.tr()} - ${PayrollRepo.formatDate(payroll?.dateTo, context)}",
-            titleStyle: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
+            titleStyle: AppStyles.whiteContent(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w400),
             centerTitle: true,
             routeName: AppRoutes.payrollDetails.name,
             defaultTitle: AppStrings.payroll.tr(),
             bookmarkIconColor: Colors.white,
             leading: Padding(
-              padding: const EdgeInsets.all(AppSizes.s10),
+              padding: EdgeInsets.all(AppSizes.s10.r),
               child: InkWell(
                 onTap: () => context.pop(),
                 child: Container(
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white.withOpacity(0.2)),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_back_sharp,
                     color: Colors.white,
-                    size: AppSizes.s18,
+                    size: AppSizes.s18.r,
                   ),
                 ),
               ),
@@ -67,11 +66,11 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
           gapH12,
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 1100.w : double.infinity,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -123,12 +122,12 @@ class PayrollHeaderTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: !kIsWeb ?LayoutService.getWidth(context) * 0.6 : LayoutService.getWidth(context) * 0.4,
+      width: !kIsWeb ? 0.6.sw : 0.4.sw,
       decoration: BoxDecoration(
           color: const Color(AppColors.navyBlue),
-          borderRadius: BorderRadius.circular(AppSizes.s6)),
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.s6, vertical: AppSizes.s12),
+          borderRadius: BorderRadius.circular(AppSizes.s6.r)),
+      padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.s6.w, vertical: AppSizes.s12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,14 +135,14 @@ class PayrollHeaderTileWidget extends StatelessWidget {
           Icon(
             icon,
             color: Theme.of(context).colorScheme.primary,
+            size: 20.r,
           ),
           gapW12,
           Expanded(
             child: AutoSizeText(
               title,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: AppSizes.s12,
+              style: AppStyles.whiteContent(context).copyWith(
+                  fontSize: AppSizes.s12.sp,
                   fontWeight: FontWeight.w500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -153,9 +152,8 @@ class PayrollHeaderTileWidget extends StatelessWidget {
           Expanded(
             child: AutoSizeText(
               subTitle,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: AppSizes.s12,
+              style: AppStyles.whiteContent(context).copyWith(
+                  fontSize: AppSizes.s12.sp,
                   fontWeight: FontWeight.w500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
@@ -20,16 +22,16 @@ class PayrollListItemWidget extends StatelessWidget {
               extra: payroll,
               pathParameters: {'lang': context.locale.languageCode}),
           child: Container(
-            padding: const EdgeInsets.symmetric(
-                vertical: AppSizes.s14, horizontal: AppSizes.s16),
+            padding: EdgeInsets.symmetric(
+                vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  blurRadius: 10.r,
+                  offset: Offset(0, 4.h),
                 )
               ],
               border: Border.all(color: Colors.grey.withOpacity(0.05)),
@@ -42,30 +44,31 @@ class PayrollListItemWidget extends StatelessWidget {
                  Image.asset(
                   "assets/images/new-cale.png",
                   color: Colors.black,
-                  // size: AppSizes.s24,
+                  width: 24.r,
+                  height: 24.r,
                 ),
                 gapW12,
                 Expanded(
                   child: Text(
                     PayrollRepo.formatDate(payroll.dateTo, context) ?? '',
-                    style: const TextStyle(
+                    style: AppStyles.content(context).copyWith(
                       fontWeight: FontWeight.w600,
-                      fontSize: AppSizes.s14,
+                      fontSize: AppSizes.s14.sp,
                       color: Colors.black,
                     ),
                   ),
                 ),
                 gapW8,
                 Container(
-                  height: AppSizes.s28,
-                  width: AppSizes.s28,
+                  height: AppSizes.s28.r,
+                  width: AppSizes.s28.r,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).colorScheme.primary),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_forward_outlined,
                     color: Colors.white,
-                    size: AppSizes.s12,
+                    size: AppSizes.s12.r,
                   ),
                 ),
               ],

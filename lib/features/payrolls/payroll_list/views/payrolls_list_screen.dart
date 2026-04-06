@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -58,19 +60,18 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                   widget.empName?.isNotEmpty == true &&
                   viewModel.userSettings?.userId.toString() != widget.empId
               ? PreferredSize(
-                  preferredSize: const Size.fromHeight(AppSizes.s40),
+                  preferredSize: Size.fromHeight(AppSizes.s40.h),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.s12, vertical: AppSizes.s6),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.s12.w, vertical: AppSizes.s6.h),
                     child: Container(
                       width: double.infinity,
                       alignment: Alignment.center,
                       child: Text(
                         widget.empName!,
-                        style: TextStyle(
+                        style: AppStyles.darkHeading(context).copyWith(
                             fontWeight: FontWeight.w600,
-                            color: Color(AppColors.dark),
-                            fontSize: AppSizes.s20),
+                            fontSize: AppSizes.s20.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -84,11 +85,11 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
               context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+              constraints: BoxConstraints(
+                maxWidth: kIsWeb ? 1100.w : double.infinity,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s12),
+                padding: EdgeInsets.all(AppSizes.s12.r),
                 child: SingleChildScrollView(
                   child: Consumer<PayrollsListViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -96,19 +97,18 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                           : viewModel.payrolls?.isEmpty == true ||
                                   viewModel.payrolls == null
                               ? NoExistingPlaceholderScreen(
-                                  height: LayoutService.getHeight(context) * 0.6,
+                                  height: 0.6.sh,
                                   title: AppStrings.noExistingPayrolls.tr())
                               : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             gapH12,
                        if(widget.empName == null) Text(gCache['name'], style:
-                        TextStyle(
-                            fontWeight: FontWeight.w600,fontSize: 20,
-                            color: Color(AppColors.dark)
+                        AppStyles.darkHeading(context).copyWith(
+                            fontWeight: FontWeight.w600,fontSize: 20.sp,
                         )
                           ,),
-                        const SizedBox(height: 20,),
+                        SizedBox(height: 20.h,),
                                   /// general screen message widget for other requests types
                                   // GeneralScreenMessageWidget(
                                   //     screenId: '/payrolls'),
