@@ -7,11 +7,13 @@ import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:app_test/features/evaluation/shared/widgets/profile_tile_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../core/models/settings/user_settings_2.model.dart';
 
@@ -48,10 +50,9 @@ class GeneralSectionWidget extends StatelessWidget {
       gCache = json.decode(json1String) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    final textStyle = const TextStyle(
+    final textStyle = AppStyles.primaryContent(context).copyWith(
       fontWeight: FontWeight.w700,
-      color: Color(0xff2F88FF),
-      fontSize: 14,
+      fontSize: 14.sp,
     );
     return SingleChildScrollView(
       child: Column(
@@ -62,25 +63,25 @@ class GeneralSectionWidget extends StatelessWidget {
           if (employee?.jobDescription != null &&
               employee?.jobDescription?.isNotEmpty == true) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Text(
                 AppStrings.jopDescription.tr().toUpperCase(),
                 style: textStyle,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Text(employee!.jobDescription!,
-              style: const TextStyle(
+              style: AppStyles.greyContent(context).copyWith(
                 fontWeight: FontWeight.w400,
-                color: Color(0xff666666),
-                fontSize: 13,
-                height: 1.5,
+                color: const Color(0xff666666),
+                fontSize: 13.sp,
+                height: 1.5.h,
               ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
           ],
           if ((employee?.hireDate != null &&
                   employee?.hireDate?.isNotEmpty == true) ||
@@ -92,13 +93,13 @@ class GeneralSectionWidget extends StatelessWidget {
               (employee?.weekends != null &&
                   employee?.weekends?.isNotEmpty == true)) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
               child: Text(
                 AppStrings.generalInfo.tr().toUpperCase(),
                 style: textStyle,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             //HIRE DATE
             if (employee?.hireDate != null &&
                 employee?.hireDate?.isNotEmpty == true)
@@ -107,7 +108,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.hireDate.tr().toUpperCase(),
                 trailingTitle: employee!.hireDate,
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
             //WORK HOURS TYPE
             if (employee?.workingHoursType != null &&
@@ -117,7 +118,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.workHoursType.tr().toUpperCase(),
                 trailingTitle: employee?.workingHoursType.toString().tr().toUpperCase() ?? '',
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
             if ((employee?.workingHoursType.toString().tr() == "عدد الساعات اليومية" ||
                 employee?.workingHoursType.toString().tr() == "According Hours Count" ) || (employee?.workingHoursType.toString().tr() == "ساعات حرة" ||
@@ -127,7 +128,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.hoursDailyCount.tr().toUpperCase(),
                 trailingTitle: employee!.workingHours!.dailyWorkingHours ?? '',
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
             // WORK HOURS
             if ((employee!.workingHours!.dailyWorkingHoursStart != null || employee!.workingHours!.dailyWorkingHoursEnd != null))
@@ -136,14 +137,14 @@ class GeneralSectionWidget extends StatelessWidget {
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursStart)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursStart.toString())
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),if ((employee!.workingHours!.dailyWorkingHoursFrom != null || employee!.workingHours!.dailyWorkingHoursTo != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursFrom)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursFrom.toString())
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
             if (employee?.workingHoursType.toString().tr() == "ساعات ثابتة" ||
                 employee?.workingHoursType.toString().tr() == "Fixed Hours" )
@@ -152,7 +153,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
                 trailingTitle: "${employee!.workingHours!.allowedDelayMinutes} ${AppStrings.minutes.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
             //WEEKENDS
             if (employee!.id.toString() != gCache['empId'].toString() && employee!.weekends != null&& employee!.weekends!.isNotEmpty )
@@ -161,7 +162,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: true,
                 title: AppStrings.weekends.tr().toUpperCase(),
                 weekends: employee!.weekends!.map((e) => e.toString().tr().toUpperCase()).toList(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
             if (employee!.id.toString() == gCache['empId'].toString() && us2Cache['weekend'] != null&&us2Cache['weekend']!.isNotEmpty )
               ProfileTile(
@@ -169,7 +170,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: true,
                 title: AppStrings.weekends.tr().toUpperCase(),
                 weekends: (us2Cache['weekend'] as List).map((e) => e.toString().tr().toUpperCase()).toList(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
               ),
           ],
         ],

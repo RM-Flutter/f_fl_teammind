@@ -63,6 +63,8 @@ class AppStyles {
     );
   }
 
+
+
   /// Hint Content style
   static TextStyle hintContent(BuildContext context) {
     return content(context).copyWith(

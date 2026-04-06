@@ -11,6 +11,7 @@ import 'package:app_test/core/widgets/loading_page.widget.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/request_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/requests_by_balance_emp_id_controller.dart';
@@ -77,7 +78,7 @@ class _RequestsByBalanceAndEmployeeIdModalState
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              gapH20,
+              SizedBox(height: 20.h),
               Consumer<RequestsByBalanceAndEmployeeIdViewModel>(
                   builder: (context, viewModel, child) => viewModel.isLoading
                       ? const LoadingPageWidget()

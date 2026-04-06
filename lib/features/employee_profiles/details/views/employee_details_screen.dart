@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/utils/tab_bar_widget.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/accounts_section_widget.dart';
@@ -16,6 +17,7 @@ import 'package:app_test/features/employee_profiles/details/views/widgets/reques
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../controller/employee_details_controller.dart';
 import '../../../../../core/widgets/details_loading/details_loading.widget.dart';
@@ -67,10 +69,6 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mainTextStyle = Theme.of(context)
-        .textTheme
-        .headlineSmall
-        ?.copyWith(fontSize: AppSizes.s10);
     return Scaffold(
       body: ChangeNotifierProvider<EmployeeDetailsViewModel>(
         create: (_) => viewModel,
@@ -101,29 +99,29 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ? const DetailsLoadingWidget()
                         : viewModel.employee == null
                         ?  NoExistingPlaceholderScreen(
-                        height: AppSizes.s300,
+                        height: AppSizes.s300.h,
                         title: AppStrings.thereIsNoEmployeeDataFound.tr() )
                         : Expanded(
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100 : double.infinity
+                              maxWidth: kIsWeb ? 1100.w : double.infinity
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSizes.s8,
-                                vertical: AppSizes.s12),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.s8.w,
+                                vertical: AppSizes.s12.h),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start, // 👈 Align start in column
                               children: [
                                 Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                                  margin: EdgeInsets.symmetric(horizontal: 4.w),
                                   decoration: BoxDecoration(
                                     color:  Theme.of(context).colorScheme.secondary,
-                                    borderRadius: BorderRadius.circular(AppSizes.s32),
+                                    borderRadius: BorderRadius.circular(AppSizes.s32.r),
                                   ),
-                                  height: 60,
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                                  height: 60.h,
+                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
                                   child: defaultTapBarItem(
                                     isVertical: false,
                                     items: taps,
@@ -140,9 +138,9 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                 Expanded(
                                   child: Padding(
                                     padding:
-                                    const EdgeInsets.symmetric(
-                                        horizontal: AppSizes.s8,
-                                        vertical: AppSizes.s8),
+                                    EdgeInsets.symmetric(
+                                        horizontal: AppSizes.s8.w,
+                                        vertical: AppSizes.s8.h),
                                     child: Column(
                                       children: [
                                         if(selectIndex == 0)  ContactsSectionWidget(
@@ -194,7 +192,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   else Center(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                          maxWidth: kIsWeb ? 1100 : double.infinity
+                          maxWidth: kIsWeb ? 1100.w : double.infinity
                       ),
                       child: ContactsSectionWidget(
                           employee:

@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/core/widgets/full_image_screen.dart';
@@ -12,6 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/models/settings/user_settings_2.model.dart';
@@ -26,26 +28,26 @@ class EmployeeDetailsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 350,
+      height: 350.h,
       width: LayoutService.getWidth(context),
       decoration: BoxDecoration(
         color: Color(AppColors.dark),
-        borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32)),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(AppSizes.s32.r),
+            bottomRight: Radius.circular(AppSizes.s32.r)),
       ),
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32)),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(AppSizes.s32.r),
+                bottomRight: Radius.circular(AppSizes.s32.r)),
             child: Image.asset(
               "assets/images/profile-app-bar.png",
               fit: BoxFit.cover,
               alignment: const Alignment(0.5, 0.0),
               width: double.infinity,
-              height: 350,
+              height: 350.h,
             ),
           ),
           Column(
@@ -54,26 +56,23 @@ class EmployeeDetailsHeader extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: AppStrings.employeeInfo.tr(),
-                titleStyle: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 centerTitle: true,
                 routeName: AppRoutes.employeeDetails.name,
                 defaultTitle: AppStrings.employeeInfo.tr(),
                 bookmarkIconColor: Colors.white,
                 leading: Padding(
-                  padding: const EdgeInsets.all(AppSizes.s10),
+                  padding: EdgeInsets.all(AppSizes.s10.r),
                   child: InkWell(
                     onTap: () => context.pop(),
                     child: Container(
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white.withOpacity(0.2)),
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_back_sharp,
                         color: Colors.white,
-                        size: AppSizes.s18,
+                        size: AppSizes.s18.sp,
                       ),
                     ),
                   ),
@@ -82,8 +81,8 @@ class EmployeeDetailsHeader extends StatelessWidget {
               gapH12,
               Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  constraints: BoxConstraints(
+                      maxWidth: kIsWeb ? 1100.w : double.infinity
                   ),
                   child: Column(
                     children: [
@@ -104,24 +103,24 @@ class EmployeeDetailsHeader extends StatelessWidget {
                           );
                         },
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(85),
+                          borderRadius: BorderRadius.circular(85.r),
                           child: CachedNetworkImage(
-                            width: 100,
-                            height: 100,
+                            width: 100.w,
+                            height: 100.h,
                             fit: BoxFit.cover,
                             imageUrl: employee!.avatar!,
                             placeholder: (context, url) =>
                             const ShimmerAnimatedLoading(),
-                            errorWidget: (context, url, error) => const Icon(
+                            errorWidget: (context, url, error) => Icon(
                               Icons.image_not_supported_outlined,
-                              size: AppSizes.s32,
+                              size: AppSizes.s32.sp,
                               color: Colors.white,
                             ),
                           ),
                         ),
                       )
                           : CircleAvatar(
-                        radius: 50,
+                        radius: 50.r,
                         child: Image.asset(
                           AppImages.profilePlaceHolder,
                           fit: BoxFit.cover,
@@ -130,24 +129,22 @@ class EmployeeDetailsHeader extends StatelessWidget {
                       gapH12,
                       Text(
                         employee?.name ?? '',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
+                        style: AppStyles.whiteHeading(context).copyWith(
+                            fontSize: 22.sp,
                             fontWeight: FontWeight.w700),
                       ),
                       Text(
                         employee?.jobTitle?.toUpperCase() ?? '',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
+                        style: AppStyles.whiteHeading(context).copyWith(
+                            fontSize: 14.sp,
                             letterSpacing: 1.2,
                             fontWeight: FontWeight.w600),
                       ) ,
                       if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
                         "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase()}",
-                        style: TextStyle(
+                        style: AppStyles.whiteContent(context).copyWith(
                             color: Colors.white.withOpacity(0.8),
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             letterSpacing: 1.2,
                             fontWeight: FontWeight.w400),
                       ) ,

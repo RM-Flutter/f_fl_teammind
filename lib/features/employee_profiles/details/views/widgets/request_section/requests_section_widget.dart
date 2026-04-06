@@ -9,6 +9,7 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'widgets/profile_balance/profile_balance_widget.dart';
 
@@ -32,7 +33,7 @@ class RequestsSectionWidget extends StatelessWidget {
         children: [
           gapH12,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
             child: ProfileBalanceWidget(
               balance: employee?.balance,
               empDepartmentId: employee?.departmentId?.toString(),
@@ -43,7 +44,7 @@ class RequestsSectionWidget extends StatelessWidget {
           Center(
               child: CustomElevatedButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  titleSize: AppSizes.s14,
+                  titleSize: AppSizes.s14.sp,
                   title: AppStrings.viewTheLatestReviews.tr().toUpperCase(),
                   onPressed: () async{
                     var mine;

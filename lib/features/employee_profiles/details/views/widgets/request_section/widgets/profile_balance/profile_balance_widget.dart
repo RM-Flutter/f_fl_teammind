@@ -4,12 +4,14 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'widgets/views/requests_by_balance_empid_modal.widget.dart';
 
 class ProfileBalanceWidget extends StatelessWidget {
@@ -37,7 +39,7 @@ class ProfileBalanceWidget extends StatelessWidget {
       final bal = entry.value;
 
       return Padding(
-        padding: EdgeInsets.only(right: paddingBetweenVocations!),
+        padding: EdgeInsets.only(right: paddingBetweenVocations!.w),
         child: BalanceCard(
           balance: bal,
           empDepartmentId: empDepartmentId,
@@ -50,7 +52,7 @@ class ProfileBalanceWidget extends StatelessWidget {
     }).toList();
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSizes.s32),
+      padding: EdgeInsets.only(bottom: AppSizes.s32.h),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -58,14 +60,14 @@ class ProfileBalanceWidget extends StatelessWidget {
               ? List.generate(
                   3,
                   (index) => Padding(
-                      padding: EdgeInsets.only(right: paddingBetweenVocations!),
+                      padding: EdgeInsets.only(right: paddingBetweenVocations!.w),
                       child: ShimmerAnimatedLoading(
                         width: (LayoutService.getWidth(context) -
-                                (AppSizes.s32 +
-                                    ((paddingBetweenVocations ?? AppSizes.s0) *
+                                (AppSizes.s32.w +
+                                    ((paddingBetweenVocations ?? AppSizes.s0).w *
                                         3))) /
                             3,
-                        height: AppSizes.s120,
+                        height: AppSizes.s120.h,
                       )))
               : balanceWidgets,
         ),
@@ -117,16 +119,15 @@ class BalanceCard extends StatelessWidget {
         }
       }
 
-      final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0) * 2);
+      final totalPadding = AppSizes.s32.w + ((paddingBetweenVocations ?? AppSizes.s0).w * 2);
       return (screenWidth - totalPadding) / crossAxisCount;
     }
 
     bool isTaken = balance.max == -1 && balance.available == -1;
-    const mainTextStyle = TextStyle(
+    final mainTextStyle = AppStyles.whiteContent(context).copyWith(
       fontWeight: FontWeight.normal,
-      fontSize: AppSizes.s12,
-      height: 1.0,
-      color: Colors.white,
+      fontSize: AppSizes.s12.sp,
+      height: 1.0.h,
     );
     return InkWell(
       //TODO: ADD REAL BALANCE ID AFTER ADDED FROM BACKEND
@@ -141,11 +142,11 @@ class BalanceCard extends StatelessWidget {
           : null,
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-        height: 140,
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        height: 140.h,
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
         decoration: BoxDecoration(
           color:  Theme.of(context).colorScheme.secondary,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,10 +160,9 @@ class BalanceCard extends StatelessWidget {
                   .toUpperCase()
                   .replaceAll(' ', '\n'),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                height: 1.1,
+              style: AppStyles.whiteContent(context).copyWith(
+                fontSize: 11.sp,
+                height: 1.1.h,
                 fontWeight: FontWeight.w700,
                 // fontWeight: FontWeight.w400,
               ),
@@ -176,25 +176,23 @@ class BalanceCard extends StatelessWidget {
                   (isTaken ? AppStrings.taken.tr() : AppStrings.remaining.tr())
                       .toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
+                  style: AppStyles.whiteContent(context).copyWith(
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w700,
                     // fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 Text(
                   '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}'
                       .toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+                  style: AppStyles.whiteContent(context).copyWith(
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 // Ensure the "FROM" line always takes space for alignment
                 Text(
                   (balance.max != -1 && balance.available != -1)
@@ -202,9 +200,8 @@ class BalanceCard extends StatelessWidget {
                           .toUpperCase()
                       : '',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
+                  style: AppStyles.whiteContent(context).copyWith(
+                    fontSize: 10.sp,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

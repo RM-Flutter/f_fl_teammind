@@ -6,6 +6,7 @@ import 'package:app_test/features/employee_profiles/shared/models/employee_profi
 import 'package:app_test/features/evaluation/shared/widgets/profile_tile_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class EvalutaionSectionWidget extends StatelessWidget {
@@ -36,16 +37,16 @@ class EvalutaionSectionWidget extends StatelessWidget {
                    gainedPoints: evaluations![index]['gainedPoints'],
                    totalPoints: evaluations![index]['totalPoints'],
                    title: "${evaluations![index]['title']}",
-                   icon: evaluations![index]['done'] == true ? const Icon(Icons.check_circle_outline, color: Colors.green,): Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Colors.black),
+                   icon: evaluations![index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 20.sp,): Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: Colors.black),
                    url: (evaluations![index]['submitUrl'] != null)? evaluations![index]['submitUrl'].toString() : null,
                  ),
-                 separatorBuilder: (context, index) => const SizedBox(height: 12,),
+                 separatorBuilder: (context, index) => SizedBox(height: 12.h,),
                  itemCount:evaluations!.length <= 6 ? evaluations!.length : 6),
-          if(evaluations!.isNotEmpty) const SizedBox(height: 24),
+          if(evaluations!.isNotEmpty) SizedBox(height: 24.h),
           if(evaluations!.isNotEmpty) Center(
               child: CustomElevatedButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  titleSize: AppSizes.s12,
+                  titleSize: AppSizes.s12.sp,
                   title: AppStrings.viewEvaluations.tr().toUpperCase(),
                   onPressed: ()async{
                     await context.pushNamed(

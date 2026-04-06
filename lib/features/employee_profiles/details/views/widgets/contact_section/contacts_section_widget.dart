@@ -6,6 +6,7 @@ import 'package:app_test/features/employee_profiles/shared/models/employee_profi
 import 'package:app_test/features/evaluation/shared/widgets/profile_tile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'widget/employee_social_icons_widget.dart';
 
@@ -31,7 +32,7 @@ class ContactsSectionWidget extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         horizontal: 0,
-        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 12,
+        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32.h : 12.h,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -85,7 +86,7 @@ class ContactsSectionWidget extends StatelessWidget {
           ),
         if (employee?.social != null)
           EmployeeSocialContacts(socialData: employee?.social),
-        SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s24 : 0),
+        SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s24.h : 0),
       ],
       ),
     );

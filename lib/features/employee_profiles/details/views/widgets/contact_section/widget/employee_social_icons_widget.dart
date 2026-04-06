@@ -5,6 +5,7 @@ import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,16 +50,16 @@ class EmployeeSocialContacts extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
-        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8 : 0,
+        horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16.w : 0,
+        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8.h : 0,
       ),
       margin: EdgeInsets.only(
-        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
+        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s16.h : 0,
       ),
       child: Wrap(
         alignment: WrapAlignment.center,
-        spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
-        runSpacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
+        spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12.w : AppSizes.s8.w,
+        runSpacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12.h : AppSizes.s8.h,
         children: [
           for (var entry in socialLinks.entries)
             if (entry.value?.isNotEmpty ?? false)
@@ -110,14 +111,14 @@ class SocailIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
+      margin: EdgeInsets.symmetric(horizontal: 4.w),
       child: InkWell(
         onTap: () async => UrlLauncherServiceEx.launch(
             context: context, url: url, mode: mode ?? LaunchMode.platformDefault),
         child: CircleAvatar(
           backgroundColor:  Theme.of(context).colorScheme.secondary,
-          radius: 18,
-          child: Center(child: FaIcon(icon, color: Colors.white, size: 16)),
+          radius: 18.r,
+          child: Center(child: FaIcon(icon, color: Colors.white, size: 16.sp)),
         ),
       ),
     );
