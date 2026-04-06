@@ -5,6 +5,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/evaluation/controller/evaluation_controller.dart';
@@ -14,6 +15,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_sizes.dart' show AppSizes;
@@ -55,10 +57,10 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+                  maxWidth: kIsWeb ? 1100.w : double.infinity
               ),
               child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s12),
+                padding: EdgeInsets.all(AppSizes.s12.w),
                 child: SingleChildScrollView(
                   child: Consumer<EvaluationController>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -72,12 +74,11 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) Text("", style:
-                            TextStyle(
-                                fontWeight: FontWeight.w600,fontSize: 20,
-                                color: Color(AppColors.dark)
+                            AppStyles.blackHeading(context).copyWith(
+                                fontWeight: FontWeight.w600,fontSize: 20.sp,
                             )
                               ,),
-                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) const SizedBox(height: 20,),
+                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) SizedBox(height: 20.h),
                             /// general screen message widget for other requests types
                             // GeneralScreenMessageWidget(
                             //     screenId: '/payrolls'),
@@ -94,11 +95,11 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                                     eva: viewModel.evaluations[index]['results'],
                                     title: "${viewModel.evaluations[index]['title']}",
                                     icon: (viewModel.evaluations[index]['done'] != null)?
-                                    viewModel.evaluations[index]['done'] == true ?const Icon(Icons.check_circle_outline, color: Colors.green,):const Icon(Icons.calendar_month, color: Colors.black,): const Icon(Icons.check_circle_outline, color: Colors.green,),
+                                    viewModel.evaluations[index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 24.sp): Icon(Icons.calendar_month, color: Color(AppColors.black), size: 24.sp): Icon(Icons.check_circle_outline, color: Colors.green, size: 24.sp),
                                     url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
                                   );
                                 },
-                                separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                separatorBuilder: (context, index) => SizedBox(height: 15.h),
                                 itemCount: viewModel.evaluations!.length)
                           ])),
                 ),

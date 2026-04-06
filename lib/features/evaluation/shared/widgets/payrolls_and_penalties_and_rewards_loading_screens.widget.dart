@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
@@ -13,44 +14,44 @@ class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
         (index) => Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(
-                  vertical: AppSizes.s14, horizontal: AppSizes.s16),
+              padding: EdgeInsets.symmetric(
+                  vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.s10),
+                borderRadius: BorderRadius.circular(AppSizes.s10.r),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color:
                         Theme.of(context).colorScheme.primary.withOpacity(0.2),
                     offset: const Offset(0, 0),
-                    blurRadius: 2.5,
+                    blurRadius: 2.5.r,
                   ),
                 ],
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ShimmerAnimatedLoading(
-                    width: AppSizes.s24,
-                    height: AppSizes.s24,
+                    width: AppSizes.s24.w,
+                    height: AppSizes.s24.h,
                   ),
-                  gapW8,
+                  SizedBox(width: 8.w),
                   Expanded(
                     child: ShimmerAnimatedLoading(
-                      height: AppSizes.s24,
+                      height: AppSizes.s24.h,
                     ),
                   ),
-                  gapW12,
+                  SizedBox(width: 12.w),
                   ShimmerAnimatedLoading(
-                    width: AppSizes.s28,
-                    height: AppSizes.s28,
+                    width: AppSizes.s28.w,
+                    height: AppSizes.s28.h,
                     circularRaduis: AppSizes.s50,
                   ),
                 ],
               ),
             ),
-            gapH20
+            SizedBox(height: 20.h)
           ],
         ),
       ),

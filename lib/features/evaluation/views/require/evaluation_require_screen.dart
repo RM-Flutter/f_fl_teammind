@@ -15,6 +15,7 @@ import 'package:app_test/features/evaluation/shared/widgets/profile_tile_widget.
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -57,17 +58,17 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
           onRefresh: () async => await viewModel.getEvaluationRequired(context),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+              constraints: BoxConstraints(
+                  maxWidth: kIsWeb ? 1100.w : double.infinity
               ),
               child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s12),
+                padding: EdgeInsets.all(AppSizes.s12.w),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       if(viewModel.evaluations.isEmpty == true)    CustomElevatedButton(
                           backgroundColor: Theme.of(context).colorScheme.primary,
-                          titleSize: AppSizes.s12,
+                          titleSize: AppSizes.s12.sp,
                           title: AppStrings.myEvaluations.tr().toUpperCase(),
                           onPressed: () async => await context.pushNamed(
                               AppRoutes.evaluationScreen.name,
@@ -79,7 +80,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                                 'lang': context.locale.languageCode,
                                 // "empName" : "unKnown"
                               })),
-                      if(viewModel.evaluations.isEmpty == true)   const SizedBox(height: 20,),
+                      if(viewModel.evaluations.isEmpty == true)   SizedBox(height: 20.h),
                       Consumer<EvaluationController>(
                           builder: (context, viewModel, child) => viewModel.isLoading
                               ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
@@ -90,7 +91,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                               : Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const SizedBox(height: 20,),
+                                SizedBox(height: 20.h),
                                 /// general screen message widget for other requests types
                                 // GeneralScreenMessageWidget(
                                 //     screenId: '/payrolls'),
@@ -104,15 +105,15 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                                         createAt: viewModel.evaluations[index]['created_at'],
                                         empName: viewModel.evaluations[index]['employee_name'],
                                         name: gCache['name'],
-                                        icon : viewModel.evaluations[index]['done']  == true?const Icon(Icons.check_circle_outline_rounded,
-                                            color: Colors.green, size: AppSizes.s24) : Icon(Icons.access_time,
-                                            color:  Color(AppColors.darkGrey), size: AppSizes.s24),
+                                        icon : viewModel.evaluations[index]['done']  == true? Icon(Icons.check_circle_outline_rounded,
+                                            color: Colors.green, size: AppSizes.s24.sp) : Icon(Icons.access_time,
+                                            color:  Color(AppColors.darkGrey), size: AppSizes.s24.sp),
                                         department: viewModel.evaluations[index]['department_name'],
                                         title: "${viewModel.evaluations[index]['title']}",
                                         url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
                                       );
                                     },
-                                    separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                    separatorBuilder: (context, index) => SizedBox(height: 15.h),
                                     itemCount: viewModel.evaluations.length),
 
                               ])),
