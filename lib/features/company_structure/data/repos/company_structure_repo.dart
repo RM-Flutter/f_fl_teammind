@@ -5,16 +5,16 @@ import 'package:app_test/core/services/backend_services/get_endpoint_service.dar
 import 'package:flutter/material.dart';
 
 abstract class CompanyStructureRepo {
-  static Future<OperationResult<Map<String, dynamic>>> getCompanyTreeStructure({
-    required BuildContext context,
-  }) async {
-    final url =
-        EndpointServices.getApiEndpoint(EndpointsNames.companyStructure).url;
-    final response = await DioApiService().get<Map<String, dynamic>>(url,
-        context: context,
-        allData: true,
-        dataKey: 'data',
-        checkOnTokenExpiration: false);
-    return response;
-  }
+ static Future<OperationResult<Map<String, dynamic>>> getCompanyTreeStructure({
+  required BuildContext context,
+ }) async {
+  final url =
+    EndpointServices.getApiEndpoint(EndpointsNames.companyStructure).url;
+  final response = await DioApiService().get<Map<String, dynamic>>(url,
+    context: context,
+    allData: true,
+    dataKey: 'data',
+    checkOnTokenExpiration: false);
+  return response;
+ }
 }
