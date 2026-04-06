@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
@@ -56,7 +57,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
           floatingActionButton: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:
-                    LocalizationService.isArabic(context: context) ? 35 : 0),
+                    LocalizationService.isArabic(context: context) ? 35.w : 0),
             child: MainAppFabWidget(
               requests: false,
               viewRequest: false,
@@ -67,7 +68,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
           onRefresh: () async => await viewModel.initializeFingerprintScreen(
               context: context, empId: widget.empId),
           body: Padding(
-            padding: const EdgeInsets.all(AppSizes.s12),
+            padding: EdgeInsets.all(AppSizes.s12.r),
             child: SingleChildScrollView(
               child: Consumer<FingerprintViewModel>(
                   builder: (context, viewModel, child) => viewModel.isLoading
@@ -75,7 +76,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                       : viewModel.fingerprints?.isEmpty == true ||
                               viewModel.fingerprints == null
                           ? NoExistingPlaceholderScreen(
-                              height: LayoutService.getHeight(context) * 0.6,
+                              height: 0.6.sh,
                               title: AppStrings.noFingerprintsYet.tr())
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,18 +90,17 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                                       child: Center(
                                         child: Text(
                                           widget.empName!,
-                                          style: TextStyle(
+                                          style: AppStyles.darkHeading(context).copyWith(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 22,
-                                              color: Color(AppColors.dark)),
+                                              fontSize: 22.sp),
                                         ),
                                       ),
                                     ),
                                   if (widget.empName != null &&
                                       widget.empName!.isNotEmpty &&
                                       widget.empName != "noName")
-                                    const SizedBox(
-                                      height: 20,
+                                    SizedBox(
+                                      height: 20.h,
                                     ),
 
                                   /// general screen message widget for other requests types

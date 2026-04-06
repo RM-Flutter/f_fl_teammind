@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,38 +39,38 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                 return Scaffold(
                   backgroundColor: const Color(0xffFFFFFF),
                   appBar: AppBar(
+                    surfaceTintColor: Colors.transparent,
                     backgroundColor: const Color(0xffFFFFFF),
                     leading: Padding(
-                      padding: const EdgeInsets.all(AppSizes.s10),
+                      padding: EdgeInsets.all(AppSizes.s10.r),
                       child: InkWell(
                         onTap: () =>  Navigator.pop(context),
                         child: Container(
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Color(AppColors.dark)),
-                          child:  const Icon(
+                          child: Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.white,
-                            size: AppSizes.s18,
+                            size: AppSizes.s18.r,
                           ),
                         ),
                       ),
                     ),
                     title: Text(
                       AppStrings.updatePassword.tr().toUpperCase(),
-                      style:  TextStyle(
-                          fontSize: AppSizes.s16,
-                          fontWeight: FontWeight.w700,
-                          color: Color(AppColors.dark)),
+                      style: AppStyles.darkHeading(context).copyWith(
+                          fontSize: AppSizes.s16.sp,
+                          fontWeight: FontWeight.w700),
                     ),
                   ),
                   body: Form(
                     key: formKey,
                     child: SingleChildScrollView(
                       child: SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 1,
+                        height: 1.sh,
                         child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15 ,vertical: 30),
+                            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 30.h),
                             child: Column(
                               children: [
                                 TextFormField(
@@ -90,7 +92,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                       ValidationService.validatePassword(value, login: true),
                                   obscureText: hidePassword,
                                 ),
-                                const SizedBox(height: 30,),
+                                SizedBox(height: 30.h),
                                 if(value.isLoading) const Center(child: CircularProgressIndicator(),),
                                 if(!value.isLoading) GestureDetector(
                                   onTap: (){
@@ -99,27 +101,25 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                     }
                                   },
                                   child: Container(
-                                    width: MediaQuery.sizeOf(context).width * 0.6,
-                                    height: 50,
+                                    width: 0.6.sw,
+                                    height: 50.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: Color(AppColors.primary),
-                                      borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(50.r),
                                     ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                                    padding: EdgeInsets.symmetric(horizontal: 40.w),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset("assets/images/svg/apply_filter.svg"),
-                                        const SizedBox(width: 15,),
+                                        SizedBox(width: 15.w,),
                                         Text(
                                           AppStrings.saveChanges.tr().toUpperCase(),
-                                          style:const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xffFFFFFF)
-                                          ),
+                                          style: AppStyles.whiteContent(context).copyWith(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w500),
                                         ),
                                       ],
                                     ),

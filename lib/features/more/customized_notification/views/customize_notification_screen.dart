@@ -1,5 +1,7 @@
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/more/user_device/controllers/user_device_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:provider/provider.dart';
@@ -31,19 +33,19 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
           const SizedBox.shrink() :
           Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(20.0.r),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0.r),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style:  const TextStyle(
-                      fontSize: 24,
+                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: AppStyles.primaryHeading(context).copyWith(
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xff0D3B6F)
+                      color: const Color(0xff0D3B6F)
                   ),),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -58,10 +60,10 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   if(value.isLoading2)const Center(child: CircularProgressIndicator(),),
                   if(!value.isLoading2)SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.6,
+                    width: 0.6.sw,
                     child: GestureDetector(
                       onTap: (){
                         value.getDeviceSysSet(
@@ -70,24 +72,24 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                         );
                       },
                       child: Container(
-                        height: 50,
+                        height: 50.h,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: const Color(0xff0D3B6F),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(50.r),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: 40.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset("assets/images/svg/apply_filter.svg"),
-                            const SizedBox(width: 15,),
+                            SizedBox(width: 15.w,),
                             Text(
                               AppStrings.saveChanges.tr().toUpperCase(),
-                              style:const TextStyle(
-                                  fontSize: 12,
+                              style: AppStyles.whiteContent(context).copyWith(
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xffFFFFFF)
+                                  color: const Color(0xffFFFFFF)
                               ),
                             ),
                           ],
@@ -123,10 +125,7 @@ class SwitchRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = isLoginPageStyle == true
-        ? Theme.of(context)
-        .textTheme
-        .labelLarge
-        ?.copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
+        ? AppStyles.content(context).copyWith(fontSize: AppSizes.s14.sp, fontWeight: FontWeight.w500)
         : Theme.of(context).textTheme.displaySmall;
 
     return Directionality(
@@ -135,8 +134,8 @@ class SwitchRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(AppStrings.deactivate.tr().toUpperCase(),
-              style:  const TextStyle(
-                  fontSize: 11, color: Color(0xff224982), fontWeight: FontWeight.w500)),
+              style: AppStyles.primaryContent(context).copyWith(
+                  fontSize: 11.sp, color: const Color(0xff224982), fontWeight: FontWeight.w500)),
           gapW8,
           Switch(
             value: value,
@@ -146,8 +145,8 @@ class SwitchRow extends StatelessWidget {
           ),
           gapW8,
           Text(AppStrings.activation.tr().toUpperCase(),
-              style:  const TextStyle(
-                  fontSize: 11, color: Color(0xff224982), fontWeight: FontWeight.w500)),
+              style: AppStyles.primaryContent(context).copyWith(
+                  fontSize: 11.sp, color: const Color(0xff224982), fontWeight: FontWeight.w500)),
 
         ],
       ),

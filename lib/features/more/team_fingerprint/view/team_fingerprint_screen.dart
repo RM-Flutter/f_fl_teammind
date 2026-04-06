@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
 import 'package:app_test/features/more/team_fingerprint/controller/team_finger_print_controller.dart';
@@ -56,10 +58,10 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+                  maxWidth: kIsWeb ? 1100.w : double.infinity
               ),
               child: Padding(
-                padding: const EdgeInsets.all(AppSizes.s12),
+                padding: EdgeInsets.all(AppSizes.s12.r),
                 child: SingleChildScrollView(
                   child: Consumer<TeamFingerPrintViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -67,7 +69,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                           : viewModel.employees?.isEmpty == true ||
                           viewModel.employees == null
                           ? NoExistingPlaceholderScreen(
-                          height: LayoutService.getHeight(context) * 0.6,
+                          height: 0.6.sh,
                           title: AppStrings.noEmployeesFounded.tr())
                           : Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,6 +91,11 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                   }
                                   return defaultTeamEmp(
                                     context,
+                                    viewModel.employees[index]['name'],
+                                    viewModel.employees[index]['department'],
+                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")? "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
+                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from_start'] != null || viewModel.employees[index]['working_hours']['working_hours_from_end'] != null|| viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
+                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_start']?.toString() ?? viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_end']?.toString()??viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
                                     onTap: ()async{
                                       await context.pushNamed(AppRoutes.fingerprintView.name,
                                           pathParameters: {
@@ -97,15 +104,9 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                             'lang': context.locale.languageCode
                                           });
                                     },
-                                    viewModel.employees[index]['name'],
-                                    viewModel.employees[index]['department'],
-                                    (viewModel.employees[index]['working_hours_type'] == "according_hours_count")? "${viewModel.employees[index]['working_hours']['daily_working_hours']} ${AppStrings.hours.tr()}":
-                                    (viewModel.employees[index]['working_hours'] != null && (viewModel.employees[index]['working_hours']['working_hours_from_start'] != null || viewModel.employees[index]['working_hours']['working_hours_from_end'] != null|| viewModel.employees[index]['working_hours']['working_hours_from'] != null || viewModel.employees[index]['working_hours']['working_hours_to'] != null))?
-                                    "${AppStrings.from.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_start']?.toString() ?? viewModel.employees[index]['working_hours']['working_hours_from']?.toString() ?? "0"} ${AppStrings.to.tr()} ${viewModel.employees[index]['working_hours']['working_hours_from_end']?.toString()??viewModel.employees[index]['working_hours']['working_hours_to']?.toString() ?? "0"}": "",
-
                                   );
                                 },
-                                separatorBuilder: (context, index) => const SizedBox(height: 15,),
+                                separatorBuilder: (context, index) => SizedBox(height: 15.h,),
                                 itemCount: viewModel.employees!.length)
                           ])),
                 ),
@@ -117,20 +118,20 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
   Widget defaultTeamEmp(context, t1, t2, t3, {onTap})=>InkWell(
     onTap: onTap,
     child: Container(
-      margin: const EdgeInsets.only(bottom: AppSizes.s10),
-      padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.s12, horizontal: AppSizes.s10),
+      margin: EdgeInsets.only(bottom: AppSizes.s10.h),
+      padding: EdgeInsets.symmetric(
+          vertical: AppSizes.s12.h, horizontal: AppSizes.s10.w),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.s8),
+          borderRadius: BorderRadius.circular(AppSizes.s8.r),
           border: Border.all(color: Colors.grey.withOpacity(0.1))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t1,style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(AppColors.dark))),
+          Text(t1,style: AppStyles.darkHeading(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp)),
           gapH8,
           Text(t2 != null ?"${t2} - ${t3}" : "${AppStrings.noDepartment.tr()} - ${t3}",
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Color(AppColors.darkGrey))),
+              style: AppStyles.subtitleContent(context).copyWith(fontWeight: FontWeight.w400, fontSize: 12.sp)),
 
         ],
       ),

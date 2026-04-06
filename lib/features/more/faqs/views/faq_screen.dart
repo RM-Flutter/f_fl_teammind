@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,20 +28,20 @@ class _FaqScreenState extends State<FaqScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,
-            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  TextStyle(fontSize: 16,
-                color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
+            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  AppStyles.darkHeading(context).copyWith(fontSize: 16.sp,
+                fontWeight: FontWeight.w700),),
             leading: Padding(
-              padding: const EdgeInsets.all(AppSizes.s10),
+              padding: EdgeInsets.all(AppSizes.s10.r),
               child: InkWell(
                 onTap: () =>  Navigator.pop(context),
                 child: Container(
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(AppColors.dark)),
-                  child:  const Icon(
+                  child: Icon(
                     Icons.arrow_back_sharp,
                     color: Colors.white,
-                    size: AppSizes.s18,
+                    size: AppSizes.s18.r,
                   ),
                 ),
               ),
@@ -47,7 +49,7 @@ class _FaqScreenState extends State<FaqScreen> {
             backgroundColor: Colors.transparent,
           ),
           body: (value.faqModel != null)?ListView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.r),
             itemCount: value.faqModel!.page!.questions!.length,
             itemBuilder: (context, index) {
               return FaqTile(
@@ -55,7 +57,7 @@ class _FaqScreenState extends State<FaqScreen> {
               );
             },
           ):ListView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.r),
             itemCount: 3,
             itemBuilder: (context, index) {
               return const FaqLoadingWidget();
@@ -93,51 +95,49 @@ class _FaqTileState extends State<FaqTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.0.h),
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF5F8FA), // Light blue background like in the image
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             // Top shadow
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              offset: const Offset(0, -1), // Slightly offset upwards
-              blurRadius: 4,
+              offset: Offset(0, -1.h), // Slightly offset upwards
+              blurRadius: 4.r,
               spreadRadius: 0,
             ),
             // Bottom shadow
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              offset: const Offset(0, 1), // Slightly offset downwards
-              blurRadius: 4,
+              offset: Offset(0, 1.h), // Slightly offset downwards
+              blurRadius: 4.r,
               spreadRadius: 0,
             ),
           ],
         ),
         child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
           title: Text(
             widget.item.question??"",
-            style:  const TextStyle(
-              fontSize: 16,
+            style: AppStyles.darkContent(context).copyWith(
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF1B1B1B),
             ),
           ),
           iconColor: Colors.grey,
           collapsedIconColor: Colors.grey,
-          childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          childrenPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           expandedAlignment: Alignment.centerLeft,
           collapsedBackgroundColor: Colors.transparent,
           children: [
             Text(
               widget.item.answer ?? "",
-              style:  const TextStyle(
-                fontSize: 12,
+              style: AppStyles.greyContent(context).copyWith(
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
-                color: Color(0xFF464646),
               ),
             ),
           ],

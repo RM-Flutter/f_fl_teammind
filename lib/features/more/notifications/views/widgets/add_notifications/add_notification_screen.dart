@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/services/universal_file.dart';
 
 import 'package:app_test/core/platform/platform_is.dart';
@@ -49,19 +51,19 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
           child: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity,
+                  constraints: BoxConstraints(
+                    maxWidth: kIsWeb ? 1100.w : double.infinity,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSizes.s16,
-                      horizontal: AppSizes.s12,
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppSizes.s16.h,
+                      horizontal: AppSizes.s12.w,
                     ),
                     child: Consumer<NotificationProviderModel>(
                       builder: (context, viewModel, child) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          gapH14,
+                          SizedBox(height: 14.h),
                           TextFormField(
                             controller: viewModel.titleArController,
                             validator: (String? value) {
@@ -75,7 +77,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               hintText: AppStrings.titleAr.tr(),
                             ),
                           ),
-                          gapH14,
+                          SizedBox(height: 14.h),
                           TextFormField(
                             controller: viewModel.titleEnController,
                             validator: (String? value) {
@@ -89,7 +91,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               hintText: AppStrings.titleEn.tr(),
                             ),
                           ),
-                          gapH14,
+                          SizedBox(height: 14.h),
                           defaultDropdownField(
                             value: viewModel.selectNotificationType,
                             title: viewModel.selectNotificationType ?? AppStrings.type.tr(),
@@ -99,10 +101,9 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                     value: e['value'].toString(),
                                     child: Text(
                                       e['name'].toString(),
-                                      style: TextStyle(
-                                        fontSize: 12,
+                                      style: AppStyles.darkContent(context).copyWith(
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w400,
-                                        color: Color(AppColors.almostBlack),
                                       ),
                                     ),
                                   ),
@@ -118,7 +119,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                           ),
                           if (viewModel.selectNotificationType == "some_employees" &&
                               viewModel.employees.isNotEmpty)
-                            gapH14,
+                            SizedBox(height: 14.h),
                           if (viewModel.selectNotificationType == "some_employees" &&
                               viewModel.employees.isNotEmpty)
                             GestureDetector(
@@ -131,28 +132,27 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   builder: (context) {
                                     return StatefulBuilder(
                                       builder: (context, setModalState) {
-                                        final maxHeight = MediaQuery.of(context).size.height * 0.7;
+                                        final maxHeight = 0.7.sh;
                                         return ConstrainedBox(
                                           constraints: BoxConstraints(maxHeight: maxHeight),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(16.0.r),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text(
                                                   AppStrings.employeeName.tr(),
-                                                  style: TextStyle(
-                                                      color: Color(AppColors.dark),
+                                                  style: AppStyles.darkHeading(context).copyWith(
                                                       fontWeight: FontWeight.w700,
-                                                      fontSize: 18),
+                                                      fontSize: 18.sp),
                                                 ),
-                                                const SizedBox(height: 10),
+                                                SizedBox(height: 10.h),
                                                 TextFormField(
                                                   decoration: InputDecoration(
                                                     hintText: AppStrings.searchByName.tr(),
-                                                    prefixIcon: const Icon(Icons.search),
+                                                    prefixIcon: Icon(Icons.search, size: 24.r),
                                                     border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(8),
+                                                      borderRadius: BorderRadius.circular(8.r),
                                                     ),
                                                   ),
                                                   onChanged: (value) {
@@ -167,7 +167,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     });
                                                   },
                                                 ),
-                                                const SizedBox(height: 10),
+                                                SizedBox(height: 10.h),
                                                 ConstrainedBox(
                                                   constraints:
                                                       BoxConstraints(maxHeight: maxHeight * 0.6),
@@ -179,7 +179,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                             tempSelectedIds.contains(employee['id']);
                                                         return CheckboxListTile(
                                                           value: isSelected,
-                                                          title: Text(employee['name']),
+                                                          title: Text(employee['name'], style: AppStyles.content(context).copyWith(fontSize: 14.sp)),
                                                           onChanged: (bool? value) {
                                                             setModalState(() {
                                                               if (value == true) {
@@ -194,7 +194,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 12),
+                                                SizedBox(height: 12.h),
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     Navigator.pop(
@@ -207,8 +207,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                   },
                                                   child: Text(
                                                     AppStrings.confirm.tr(),
-                                                    style: const TextStyle(
-                                                        fontSize: 16, fontWeight: FontWeight.w500),
+                                                    style: AppStyles.whiteContent(context).copyWith(
+                                                        fontSize: 16.sp, fontWeight: FontWeight.w500),
                                                   ),
                                                 ),
                                               ],
@@ -227,16 +227,16 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 }
                               },
                               child: Container(
-                                height: 65,
+                                height: 65.h,
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                     side: BorderSide(
                                       color: Color(AppColors.whiteGrey),
-                                      width: 1.0,
+                                      width: 1.0.w,
                                     ),
                                   ),
                                 ),
@@ -247,19 +247,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       viewModel.listIds.isEmpty
                                           ? AppStrings.employeeName.tr()
                                           : '${viewModel.listIds.length} ${AppStrings.selected.tr()}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(AppColors.almostBlack)),
+                                      style: AppStyles.darkContent(context).copyWith(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400),
                                     ),
-                                    const Icon(Icons.arrow_drop_down),
+                                    Icon(Icons.arrow_drop_down, size: 24.r),
                                   ],
                                 ),
                               ),
                             ),
                           if (viewModel.selectNotificationType == "departments" &&
                               viewModel.departments.isNotEmpty)
-                            gapH14,
+                            SizedBox(height: 14.h),
                           if (viewModel.selectNotificationType == "departments" &&
                               viewModel.departments.isNotEmpty)
                             GestureDetector(
@@ -270,22 +269,21 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   builder: (context) {
                                     return StatefulBuilder(
                                       builder: (context, setModalState) {
-                                        final maxHeight = MediaQuery.of(context).size.height * 0.7;
+                                        final maxHeight = 0.7.sh;
                                         return ConstrainedBox(
                                           constraints: BoxConstraints(maxHeight: maxHeight),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(16.0.r),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text(
                                                   AppStrings.departmentName.tr(),
-                                                  style: TextStyle(
-                                                      color: Color(AppColors.dark),
+                                                  style: AppStyles.darkHeading(context).copyWith(
                                                       fontWeight: FontWeight.w700,
-                                                      fontSize: 18),
+                                                      fontSize: 18.sp),
                                                 ),
-                                                const SizedBox(height: 12),
+                                                SizedBox(height: 12.h),
                                                 ConstrainedBox(
                                                   constraints:
                                                       BoxConstraints(maxHeight: maxHeight * 0.6),
@@ -298,7 +296,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                         return CheckboxListTile(
                                                           value: isSelected,
                                                           selectedTileColor: Color(AppColors.dark),
-                                                          title: Text(department['title']),
+                                                          title: Text(department['title'], style: AppStyles.content(context).copyWith(fontSize: 14.sp)),
                                                           onChanged: (bool? value) {
                                                             setModalState(() {
                                                               if (value == true) {
@@ -315,7 +313,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 12),
+                                                SizedBox(height: 12.h),
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     Navigator.pop(
@@ -327,8 +325,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                   },
                                                   child: Text(
                                                     AppStrings.confirm.tr(),
-                                                    style: const TextStyle(
-                                                        fontSize: 16, fontWeight: FontWeight.w500),
+                                                    style: AppStyles.whiteContent(context).copyWith(
+                                                        fontSize: 16.sp, fontWeight: FontWeight.w500),
                                                   ),
                                                 ),
                                               ],
@@ -348,16 +346,16 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 }
                               },
                               child: Container(
-                                height: 65,
+                                height: 65.h,
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                     side: BorderSide(
                                       color: Color(AppColors.whiteGrey),
-                                      width: 1.0,
+                                      width: 1.0.w,
                                     ),
                                   ),
                                 ),
@@ -368,17 +366,16 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                       viewModel.listIdsDepartment.isEmpty
                                           ? AppStrings.departmentName.tr()
                                           : '${viewModel.listIdsDepartment.length} ${AppStrings.selected.tr()}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(AppColors.almostBlack)),
+                                      style: AppStyles.darkContent(context).copyWith(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400),
                                     ),
-                                    const Icon(Icons.arrow_drop_down),
+                                    Icon(Icons.arrow_drop_down, size: 24.r),
                                   ],
                                 ),
                               ),
                             ),
-                          gapH14,
+                          SizedBox(height: 14.h),
                           TextFormField(
                             maxLines: 8,
                             validator: (String? value) {
@@ -393,7 +390,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               hintText: AppStrings.contentAr.tr(),
                             ),
                           ),
-                          gapH14,
+                          SizedBox(height: 14.h),
                           TextFormField(
                             maxLines: 8,
                             validator: (String? value) {
@@ -408,7 +405,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               hintText: AppStrings.contentEn.tr(),
                             ),
                           ),
-                          gapH14,
+                          SizedBox(height: 14.h),
                           GestureDetector(
                             onTap: () async {
                               await viewModel.getImage(context,
@@ -419,16 +416,16 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   list: viewModel.listAttachmentPersonalImage);
                             },
                             child: Container(
-                              height: 65,
+                              height: 65.h,
                               alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               decoration: ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.s10),
+                                  borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                   side: BorderSide(
                                     color: Color(AppColors.whiteGrey),
-                                    width: 1.0,
+                                    width: 1.0.w,
                                   ),
                                 ),
                               ),
@@ -437,15 +434,15 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 children: [
                                   Text(
                                     AppStrings.imageCover.tr(),
-                                    style: TextStyle(
-                                      fontSize: 12,
+                                    style: AppStyles.darkContent(context).copyWith(
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: Color(AppColors.almostBlack),
                                     ),
                                   ),
                                   Icon(
                                     Icons.ios_share,
                                     color: Colors.grey,
+                                    size: 24.r,
                                     // color: Theme.of(context).primaryColor,
                                   ),
                                 ],
@@ -454,15 +451,15 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                           ),
                           if (viewModel.listAttachmentPersonalImage.isNotEmpty)
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
                               child: GridView.builder(
                                 physics: const ClampingScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: viewModel.listAttachmentPersonalImage.length,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: kIsWeb ? 7 : 4,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10.w,
+                                  mainAxisSpacing: 10.h,
                                 ),
                                 itemBuilder: (c, i) {
                                   return buildCustomContainer(
@@ -479,18 +476,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 },
                               ),
                             ),
-                          gapH14,
+                          SizedBox(height: 14.h),
                           Container(
-                            height: 65,
+                            height: 65.h,
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
                             decoration: ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppSizes.s10),
+                                borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                 side: BorderSide(
                                   color: Color(AppColors.whiteGrey),
-                                  width: 1.0,
+                                  width: 1.0.w,
                                 ),
                               ),
                             ),
@@ -499,10 +496,9 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               children: [
                                 Text(
                                   AppStrings.allowComments.tr(),
-                                  style: TextStyle(
-                                    color: Color(AppColors.almostBlack),
+                                  style: AppStyles.darkContent(context).copyWith(
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                   ),
                                 ),
                                 GestureDetector(
@@ -512,16 +508,16 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                     });
                                   },
                                   child: Container(
-                                    width: 24,
-                                    height: 24,
+                                    width: 24.r,
+                                    height: 24.r,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: const Color(0xFF000080),
-                                        width: 2,
+                                        width: 2.w,
                                       ),
                                     ),
-                                    padding: const EdgeInsets.all(3),
+                                    padding: EdgeInsets.all(3.r),
                                     child: viewModel.allowComment
                                         ? Container(
                                             decoration: const BoxDecoration(
@@ -535,19 +531,19 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          SizedBox(height: 30.h),
                           if (viewModel.isLoading)
                             const Center(child: CircularProgressIndicator())
                           else
                             Center(
                               child: SizedBox(
-                                width: 164,
-                                height: 50,
+                                width: 164.w,
+                                height: 50.h,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF000080),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
+                                      borderRadius: BorderRadius.circular(25.r),
                                     ),
                                     elevation: 0,
                                   ),
@@ -559,9 +555,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   },
                                   child: Text(
                                     AppStrings.send.tr().toUpperCase(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
+                                    style: AppStyles.whiteContent(context).copyWith(
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -582,18 +577,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
 
   Widget buildCustomContainer({dynamic file, dynamic xFile, required VoidCallback onTap}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, bottom: 10),
+      padding: EdgeInsets.only(left: 10.w, bottom: 10.h),
       child: Stack(
         alignment: Alignment.topRight,
         children: [
           Container(
-            width: 70,
-            height: 70,
+            width: 70.r,
+            height: 70.r,
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
                   color: const Color(AppColors.darkBlue),
-                  width: 2
+                  width: 2.w
               ),
             ),
             child: (kIsWeb || PlatformIs.web)
@@ -619,9 +614,9 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
           ),
           GestureDetector(
             onTap: onTap,
-            child: const Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Icon(Icons.delete, color: Colors.red,),
+            child: Padding(
+              padding: EdgeInsets.all(5.0.r),
+              child: const Icon(Icons.delete, color: Colors.red,),
             ),
           )
         ],

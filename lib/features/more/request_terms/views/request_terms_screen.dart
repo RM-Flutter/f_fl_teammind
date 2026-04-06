@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -38,10 +40,10 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: kIsWeb ? 1100 : double.infinity,
+              maxWidth: kIsWeb ? 1100.w : double.infinity,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(AppSizes.s12),
+              padding: EdgeInsets.all(AppSizes.s12.r),
               child: Consumer<RequestTermsViewModel>(
                 builder: (context, viewModel, child) {
                   if (viewModel.isLoading) {
@@ -54,7 +56,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                     return Center(
                       child: Text(
                         'Error: ${viewModel.errorMessage}',
-                        style: const TextStyle(color: Colors.red),
+                        style: AppStyles.content(context).copyWith(color: Colors.red),
                       ),
                     );
                   }
@@ -62,18 +64,18 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                   final requestTypes = viewModel.requestTypes;
                   if (requestTypes == null || requestTypes.isEmpty) {
                     return NoExistingPlaceholderScreen(
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      height: 0.6.sh,
                       title: AppStrings.noRequestTypes.tr(),
                     );
                   }
 
-                  return Container(
-                    height: MediaQuery.sizeOf(context).height * 0.9,
+                  return SizedBox(
+                    height: 0.9.sh,
                     child: ListView.separated(
                       itemCount: requestTypes.length,
                       separatorBuilder: (context, index) => Divider(
-                        height: 32,
-                        thickness: 1,
+                        height: 32.h,
+                        thickness: 1.h,
                         color: Color(AppColors.lightGrey),
                       ),
                       itemBuilder: (context, index) {
@@ -98,14 +100,14 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         : requestType.title.en;
 
     return Container(
-      padding: const EdgeInsets.all(AppSizes.s20),
+      padding: EdgeInsets.all(AppSizes.s20.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.s12),
+        borderRadius: BorderRadius.circular(AppSizes.s12.r),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.lightGrey).withValues(alpha: 0.3),
-            blurRadius: AppSizes.s5,
+            blurRadius: AppSizes.s5.r,
             spreadRadius: 1,
           ),
         ],
@@ -116,31 +118,29 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
           // Request Type Title
           Text(
             title,
-            style: TextStyle(
-              fontSize: AppSizes.s20,
+            style: AppStyles.darkHeading(context).copyWith(
+              fontSize: AppSizes.s20.sp,
               fontWeight: FontWeight.bold,
-              color: Color(AppColors.dark),
             ),
           ),
-          const SizedBox(height: AppSizes.s16),
+          SizedBox(height: AppSizes.s16.h),
           
           // Conditions Header
           Text(
             AppStrings.conditionsForSubmission.tr().replaceAll('{requestType}', title),
-            style: TextStyle(
-              fontSize: AppSizes.s16,
+            style: AppStyles.darkHeading(context).copyWith(
+              fontSize: AppSizes.s16.sp,
               fontWeight: FontWeight.w600,
-              color: Color(AppColors.dark),
             ),
           ),
-          const SizedBox(height: AppSizes.s12),
+          SizedBox(height: AppSizes.s12.h),
           
           // Acceptance Time
           if (requestType.acceptanceTime != null) ...[
             _buildConditionItem(
               _getAcceptanceTimeText(requestType.acceptanceTime, lang),
             ),
-            const SizedBox(height: AppSizes.s8),
+            SizedBox(height: AppSizes.s8.h),
           ],
           
           // Attaching File
@@ -150,7 +150,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                   ? AppStrings.mustAttachFile.tr()
                   : AppStrings.preferAttachFile.tr(),
             ),
-            const SizedBox(height: AppSizes.s8),
+            SizedBox(height: AppSizes.s8.h),
           ],
           
           // Money Value
@@ -160,30 +160,30 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                   ? AppStrings.mustAttachMoneyValue.tr()
                   : AppStrings.preferAttachMoneyValue.tr(),
             ),
-            const SizedBox(height: AppSizes.s16),
+            SizedBox(height: AppSizes.s16.h),
           ],
           
           // Approval Section
           _buildSectionTitle(AppStrings.approvalSpecialist.tr()),
-          const SizedBox(height: AppSizes.s8),
+          SizedBox(height: AppSizes.s8.h),
           _buildConditionItem(
             AppStrings.approvalSpecialistDescription.tr(),
           ),
-          const SizedBox(height: AppSizes.s8),
+          SizedBox(height: AppSizes.s8.h),
           _buildConditionItem(
             AppStrings.multiLevelApprovalRequired.tr(),
           ),
-          const SizedBox(height: AppSizes.s16),
+          SizedBox(height: AppSizes.s16.h),
           
           // Additional Information
           _buildSectionTitle(AppStrings.additionalInformation.tr()),
-          const SizedBox(height: AppSizes.s8),
+          SizedBox(height: AppSizes.s8.h),
           
           // Balance Calculation Method
           _buildConditionItem(
             '${AppStrings.balanceCalculationMethod.tr()}: ${_getCountingTypeText(requestType.countingType, lang)}',
           ),
-          const SizedBox(height: AppSizes.s8),
+          SizedBox(height: AppSizes.s8.h),
           
           // Request Unit
           _buildConditionItem(
@@ -193,32 +193,18 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
           // Rules Message
           if (requestType.rulesMessage != null &&
               requestType.rulesMessage!.isNotEmpty) ...[
-            const SizedBox(height: AppSizes.s16),
+            SizedBox(height: AppSizes.s16.h),
             _buildSectionTitle(AppStrings.rulesMessage.tr()),
-            const SizedBox(height: AppSizes.s8),
+            SizedBox(height: AppSizes.s8.h),
             Text(
               requestType.rulesMessage!,
-              style: TextStyle(
-                fontSize: AppSizes.s14,
-                color: Color(AppColors.dark),
+              style: AppStyles.darkContent(context).copyWith(
+                fontSize: AppSizes.s14.sp,
                 height: 1.5,
               ),
             ),
           ],
           
-          // Auto Cancel Message (if enabled)
-          // Note: This would need to be added to the API response
-          // if (requestType.enableAutoCancel == true) ...[
-          //   const SizedBox(height: AppSizes.s16),
-          //   Text(
-          //     AppStrings.autoCancelMessage.tr(),
-          //     style: TextStyle(
-          //       fontSize: AppSizes.s14,
-          //       color: Color(AppColors.dark),
-          //       height: 1.5,
-          //     ),
-          //   ),
-          // ],
         ],
       ),
     );
@@ -227,10 +213,9 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
-        fontSize: AppSizes.s16,
+      style: AppStyles.darkHeading(context).copyWith(
+        fontSize: AppSizes.s16.sp,
         fontWeight: FontWeight.w600,
-        color: Color(AppColors.dark),
       ),
     );
   }
@@ -241,17 +226,15 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
       children: [
         Text(
           '• ',
-          style: TextStyle(
-            fontSize: AppSizes.s16,
-            color: Color(AppColors.dark),
+          style: AppStyles.darkContent(context).copyWith(
+            fontSize: AppSizes.s16.sp,
           ),
         ),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              fontSize: AppSizes.s14,
-              color: Color(AppColors.dark),
+            style: AppStyles.darkContent(context).copyWith(
+              fontSize: AppSizes.s14.sp,
               height: 1.5,
             ),
           ),

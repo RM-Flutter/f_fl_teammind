@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -91,7 +93,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
             title: AppStrings.notifications.tr(),
-            titleStyle: TextStyle(fontSize: 15, color: Color(AppColors.dark), fontWeight: FontWeight.w400),
+            titleStyle: AppStyles.darkHeading(context).copyWith(
+              fontSize: 15.sp, 
+              fontWeight: FontWeight.w400
+            ),
             backgroundColor: Colors.transparent,
             routeName: AppRoutes.notifications.name,
           ),
@@ -99,7 +104,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               gCache['is_manager_in'].isNotEmpty)?Container(
             padding: EdgeInsets.symmetric(
                 horizontal: LocalizationService.isArabic(context: context)
-                    ? 35
+                    ? 35.w
                     : 0),
             width: double.infinity,
             alignment: Alignment.bottomRight,
@@ -117,8 +122,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 child: Image.asset(
                   AppImages.addFloatingActionButtonIcon,
                   color: AppThemeService.colorPalette.fabIconColor.color,
-                  width: AppSizes.s16,
-                  height: AppSizes.s16,
+                  width: AppSizes.s16.r,
+                  height: AppSizes.s16.r,
                 ),
               ),
             ),
@@ -129,25 +134,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 CacheHelper.setBool("value", false);
               });
               await notificationProviderModel.getNotification(context, page: 1, forWho: "all");
-              // if(CacheHelper.getBool("value") != null){
-              //   if(CacheHelper.getBool("value") == false){
-              //     await notificationProviderModel.getNotification(context, page: 1, forWho: "all");
-              //   }else{
-              //     await notificationProviderModel.getNotification(context, page: 1, forWho: "department");
-              //   }
-              // }else{
-              //   await notificationProviderModel.getNotification(context, page: 1, forWho: "department");
-              // }
             },
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity
+                    maxWidth: kIsWeb ? 1100.w : double.infinity
                 ),
                 child: ListView(
                   controller: _scrollController,
                   children: [
-                    if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5,)
+                    if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5.h)
                     else  SwitchRowNotification(
                       isLoginPageStyle: false,
                       value: CacheHelper.getBool("value") ??value!,
@@ -161,9 +157,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 25,),
+                    SizedBox(height: 25.h),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
@@ -178,13 +174,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
                               child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                                padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                                margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
+                                padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(AppSizes.s15),
+                                  borderRadius: BorderRadius.circular(AppSizes.s15.r),
                                 ),
-                                height: 100,
+                                height: 100.h,
                               ),
                             );
                           } else {
@@ -197,17 +193,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     ),
                     if(!notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty) Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
                       child:  NoExistingPlaceholderScreen(
                           height: LayoutService.getHeight(context) *
                               0.6,
                           title: AppStrings.thereIsNoNotifications.tr()),
                     ),
-                    const SizedBox(height: 20,),
+                    SizedBox(height: 20.h),
                     if (notificationProviderModel.hasMoreNotifications && !notificationProviderModel.isGetNotificationLoading)
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.only(bottom: 30),
+                          padding: EdgeInsets.only(bottom: 30.h),
                           child: ElevatedButton(
                             onPressed: () {
                               if(CacheHelper.getBool("value") != null){
@@ -223,24 +219,27 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF000033), // Dark navy blue as in design
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                              padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 12.h),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(30.r),
                               ),
                             ),
                             child: Text(
                               AppStrings.loadMore.tr().toUpperCase(),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: AppStyles.whiteContent(context).copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.sp
+                              ),
                             ),
                           ),
                         ),
                       ),
                     if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage != 1)
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 30),
-                        child: Center(child: CircularProgressIndicator()),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 30.h),
+                        child: const Center(child: CircularProgressIndicator()),
                       ),
-                    const SizedBox(height: 20,),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),

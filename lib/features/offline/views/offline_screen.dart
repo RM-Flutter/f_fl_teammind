@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.service.dart';
 import 'package:app_test/features/offline/views/widgets/finger_print_offline_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
@@ -115,26 +117,26 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
             alignment: Alignment.topCenter,
             children: [
               Container(
-                height: MediaQuery.sizeOf(context).height * 1,
+                height: 1.sh,
               ),
               Stack(
                 children: [
                   // Background image
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(AppSizes.s32),
-                        bottomRight: Radius.circular(AppSizes.s32)),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(AppSizes.s32.r),
+                        bottomRight: Radius.circular(AppSizes.s32.r)),
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(AppSizes.s32),
-                            bottomRight: Radius.circular(AppSizes.s32)),
+                            bottomLeft: Radius.circular(AppSizes.s32.r),
+                            bottomRight: Radius.circular(AppSizes.s32.r)),
                       ),
                       child: Image.asset(
                         "assets/images/png/home_back.png",
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 300,
+                        height: 300.h,
                       ),
                     ),
                   ),
@@ -142,7 +144,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                   // Linear gradient overlay
                   Container(
                     width: double.infinity,
-                    height: 300,
+                    height: 300.h,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -161,33 +163,33 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 200),
+                padding: EdgeInsets.only(top: 200.h),
                 child: Container(
                   alignment: Alignment.center,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(15),
-                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15.r),
+                        topLeft: Radius.circular(15.r),
                       )),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SvgPicture.asset("assets/images/svg/wifi.svg",),
-                        const SizedBox(height: 25,),
-                        Text(AppStrings.youAreOffline.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
-                        const SizedBox(height: 15,),
-                        Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(AppColors.black)),),
-                        const SizedBox(height: 25,),
+                        SizedBox(height: 25.h,),
+                        Text(AppStrings.youAreOffline.tr(), style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
+                        SizedBox(height: 15.h,),
+                        Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: AppStyles.blackContent(context).copyWith(fontSize: 13.sp, fontWeight: FontWeight.w500),),
+                        SizedBox(height: 25.h,),
                         Consumer<ConnectionService>(
                           builder: (context, connectionService, _) {
                             return CustomElevatedButton(
                                 backgroundColor: Theme.of(context).colorScheme.secondary,
-                                titleSize: AppSizes.s12,
+                                titleSize: AppSizes.s12.sp,
                                 title: AppStrings.retry.tr().toUpperCase(),
                                 onPressed: () async {
                                   // Check connection immediately
@@ -203,12 +205,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             );
                           },
                         ),
-                        const SizedBox(height: 40,),
-                        if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(AppColors.dark)),),
-                        const SizedBox(height: 15,),
+                        SizedBox(height: 40.h,),
+                        if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
+                        SizedBox(height: 15.h,),
                         if (viewModel.usersFingerprints.isNotEmpty)
-                          Container(
-                            height: 50,
+                          SizedBox(
+                            height: 60.h,
                             child: ListView.builder(
                               itemCount: viewModel.usersFingerprints.length,
                               shrinkWrap: true,
@@ -284,24 +286,23 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                               },
                             ),
                           ),
-                        const SizedBox(height: 30,),
+                        SizedBox(height: 30.h,),
                         // Show saved fingerprints
                         if (viewModel.savedFingerprints != null &&
                             viewModel.savedFingerprints!.isNotEmpty)
                           Padding(
-                            padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+                            padding: EdgeInsets.symmetric(horizontal: 15.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   AppStrings.fingerprintsTitle.tr(),
-                                  style: TextStyle(
-                                    fontSize: 18,
+                                  style: AppStyles.darkHeading(context).copyWith(
+                                    fontSize: 18.sp,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(AppColors.dark),
                                   ),
                                 ),
-                                const SizedBox(height: 15,),
+                                SizedBox(height: 15.h,),
                                 if (viewModel.isLoadingFingerprints)
                                   const Center(
                                     child: Padding(
@@ -311,7 +312,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                   )
                                 else
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                                     child: FingerprintCardOffiline(
                                       fingerprint: viewModel.savedFingerprints,
                                       onDelete: (index) async {

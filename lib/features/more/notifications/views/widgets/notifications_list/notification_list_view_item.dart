@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +28,10 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
             (notification['main_thumbnail'] as List).isNotEmpty)
         ? ((notification['main_thumbnail'] as List)[0]['file'] ?? '')
         : '';
-    final double iconSize = (MediaQuery.sizeOf(context).width * 0.22).clamp(60.0, 84.0);
+    final double iconSize = (1.sw * 0.22).clamp(60.0, 84.0).r;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSizes.s12),
+      padding: EdgeInsets.only(bottom: AppSizes.s12.h),
       child: InkWell(
         onTap: () {
           setState(() {
@@ -41,19 +43,19 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 'id': notification['id'].toString(),
               });
         },
-        borderRadius: BorderRadius.circular(AppSizes.s15),
+        borderRadius: BorderRadius.circular(AppSizes.s15.r),
         child: Container(
           // no padding — icon fills full card height
           decoration: BoxDecoration(
             color: Color(AppColors.white),
-            borderRadius: BorderRadius.circular(AppSizes.s15),
-            border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
-            boxShadow: const [
+            borderRadius: BorderRadius.circular(AppSizes.s15.r),
+            border: Border.all(color: const Color(0xFFE8ECF0), width: 1.w),
+            boxShadow: [
               BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.03),
+                color: const Color.fromRGBO(0, 0, 0, 0.03),
                 spreadRadius: 0,
-                offset: Offset(0, 2),
-                blurRadius: 6,
+                offset: Offset(0, 2.h),
+                blurRadius: 6.r,
               )
             ],
           ),
@@ -61,7 +63,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
             children: [
               // Blue icon — fills card height, all corners rounded
               ClipRRect(
-                borderRadius: BorderRadius.circular(AppSizes.s15 - 1),
+                borderRadius: BorderRadius.circular((AppSizes.s15 - 1).r),
                 child: Container(
                   width: iconSize,
                   height: iconSize,
@@ -94,27 +96,27 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                         ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                  padding: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         DateFormat('dd/MM/yyyy', context.locale.languageCode)
                             .format(DateTime.parse(notification['created_at'])),
-                        style: const TextStyle(
-                          fontSize: 11,
+                        style: AppStyles.greyContent(context).copyWith(
+                          fontSize: 11.sp,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xFFB0B7C3),
+                          color: const Color(0xFFB0B7C3),
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         (notification['title'] ?? '').toString().toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: AppStyles.darkContent(context).copyWith(
+                          fontSize: 13.sp,
                           fontWeight: seen ? FontWeight.w400 : FontWeight.w700,
                           color: seen
                               ? Colors.black.withOpacity(0.5)
@@ -125,7 +127,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                   ),
                 ),
               ),
-              const SizedBox(width: AppSizes.s12),
+              SizedBox(width: AppSizes.s12.w),
             ],
           ),
         ),

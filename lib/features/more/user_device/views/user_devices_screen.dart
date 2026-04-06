@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -50,35 +52,35 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
               children: [
                 Container(
                   color: Colors.transparent,
-                  height: 90,
+                  height: 90.h,
                   width: double.infinity,
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Color(AppColors.dark)),
+                        icon: Icon(Icons.arrow_back, color: Color(AppColors.dark), size: 24.r,),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                       Text(
                         AppStrings.userDevices.tr().toUpperCase(),
-                        style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 16),
+                        style: AppStyles.darkHeading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
                       ),
                       IconButton(
-                          icon:  const Icon(Icons.arrow_back, color: Colors.transparent),
+                          icon: const Icon(Icons.arrow_back, color: Colors.transparent),
                           onPressed: (){}
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSizes.s20,),
+                SizedBox(height: AppSizes.s20.h,),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
-                    separatorBuilder: (context, index)=> const SizedBox(height: 18,),
+                    separatorBuilder: (context, index)=> SizedBox(height: 18.h,),
                     shrinkWrap: true,
                     reverse: false,
                     physics: const NeverScrollableScrollPhysics(),
@@ -90,56 +92,55 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                        padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                        margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
+                        padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppSizes.s15),
+                          borderRadius: BorderRadius.circular(AppSizes.s15.r),
                         ),
-                        height: 100,  // Adjust height to match your layout
+                        height: 100.h,  // Adjust height to match your layout
                       ),
                     ) :
                     InkWell(
                       onTap: () {
                       },
                       child: Container(
-                        padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                        padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
                         decoration: BoxDecoration(
                           color: Color(AppColors.textC5),
-                          borderRadius: BorderRadius.circular(AppSizes.s15),
-                          boxShadow: const [
+                          borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                          boxShadow: [
                             BoxShadow(
-                                color: Color.fromRGBO(0, 0, 0, 0.05),
+                                color: const Color.fromRGBO(0, 0, 0, 0.05),
                                 spreadRadius: 0,
-                                offset: Offset(0, 1),
-                                blurRadius: 10)
+                                offset: Offset(0, 1.h),
+                                blurRadius: 10.r)
                           ],
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg"),
-                            if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg"),
-                            const SizedBox(width: 15,),
+                            if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg", width: 24.r, height: 24.r,),
+                            if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg", width: 24.r, height: 24.r,),
+                            SizedBox(width: 15.w,),
                             SizedBox(
-                              width : MediaQuery.sizeOf(context).width * 0.5,
+                              width : 0.5.sw,
                               child: Text(
                                 "${value.devices[index]['browser'].toString()} (${value.devices[index]['os_version'].toString()})".toUpperCase(),
                                 maxLines: 2,
-                                style:  TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(AppColors.dark)),
+                                style: AppStyles.darkContent(context).copyWith(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600),
                               ),
                             ),
-                            const SizedBox(width: 15,),
+                            SizedBox(width: 15.w,),
                             if(appConfigServiceProvider.deviceInformation.deviceUniqueId == value.devices[index]['unique_id'].toString())Text(
                               AppStrings.currentDevice.tr(),
                               maxLines: 2,
-                              style:  const TextStyle(
-                                  fontSize: 12,
+                              style: AppStyles.content(context).copyWith(
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.green),
                             ),
@@ -159,14 +160,14 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                     ,
                   ),
                 ),
-                const SizedBox(height: AppSizes.s20,),
+                SizedBox(height: AppSizes.s20.h,),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child: Center(
                       child: (value.isDeleteLoading == false) ?CustomElevatedButton(
-                          titleSize: AppSizes.s14,
-                          width: LayoutService.getWidth(context),
-                          radius: AppSizes.s10,
+                          titleSize: AppSizes.s14.sp,
+                          width: 1.sw,
+                          radius: AppSizes.s10.r,
                           backgroundColor: const Color(0xffFF0000),
                           title: AppStrings.logoutFromAllDevices.tr(),
                           onPressed: () async => await value.deleteDevices(context: context, deviceId: null)

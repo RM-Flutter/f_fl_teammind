@@ -1,6 +1,8 @@
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -31,9 +33,9 @@ class FingerprintCardOffiline extends StatelessWidget {
         itemBuilder: (context, index) => InkWell(
           onTap: () {},
           child: Container(
-            padding: const EdgeInsets.all(AppSizes.s8),
+            padding: EdgeInsets.all(AppSizes.s8.w),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s10),
+              borderRadius: BorderRadius.circular(AppSizes.s10.r),
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
@@ -48,11 +50,11 @@ class FingerprintCardOffiline extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (fingerprint![index]['finger_day'] != null) Container(
-                  width: AppSizes.s50,
-                  padding: const EdgeInsets.all(AppSizes.s4),
+                  width: AppSizes.s50.w,
+                  padding: EdgeInsets.all(AppSizes.s4.w),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(AppSizes.s8),
+                    borderRadius: BorderRadius.circular(AppSizes.s8.r),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -61,21 +63,19 @@ class FingerprintCardOffiline extends StatelessWidget {
                       AutoSizeText(
                         DateService.getWeekdayName(fingerprint![index]['finger_day'], context) ?? '',
                         maxLines: 1,
-                        style: const TextStyle(
+                        style: AppStyles.whiteContent(context).copyWith(
                           fontWeight: FontWeight.w600,
-                          fontSize: AppSizes.s12,
-                          color: Colors.white,
+                          fontSize: AppSizes.s12.sp,
                         ),
                       ),
                       AutoSizeText(
                         DateService.getDaysInMonth(fingerprint![index]['finger_day'])
                             ?.toString() ??
                             ' - ',
-                        style: const TextStyle(
+                        style: AppStyles.whiteContent(context).copyWith(
                           fontWeight: FontWeight.w600,
-                          fontSize: AppSizes.s12,
+                          fontSize: AppSizes.s12.sp,
                           height: 1.5,
-                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -83,7 +83,7 @@ class FingerprintCardOffiline extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
+                    padding: EdgeInsets.symmetric(horizontal: AppSizes.s8.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -92,28 +92,27 @@ class FingerprintCardOffiline extends StatelessWidget {
                           _formatFingerprintDate(
                               fingerprint![index]['finger_day'].toString(),
                               context),
-                          style: TextStyle(
+                          style: AppStyles.content(context).copyWith(
                             fontWeight: FontWeight.w500,
-                            fontSize: AppSizes.s14,
+                            fontSize: AppSizes.s14.sp,
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                         Row(
                           children: [
                             Icon(
                               _getFingerprintTypeIcon(fingerprint![index]['type']),
-                              size: 16,
+                              size: 16.sp,
                               color: Theme.of(context).colorScheme.primary,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4.w),
                             Flexible(
                               child: Text(
                                 _getFingerprintTypeLabel(fingerprint![index]['type']),
-                                style: TextStyle(
-                                  fontSize: 12,
+                                style: AppStyles.primaryContent(context).copyWith(
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -130,10 +129,10 @@ class FingerprintCardOffiline extends StatelessWidget {
                   IconButton(
                     icon: deletingIndexes != null &&
                         deletingIndexes!.contains(index)
-                        ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
+                        ? SizedBox(
+                      width: 18.w,
+                      height: 18.h,
+                      child: const CircularProgressIndicator(
                         strokeWidth: 2,
                       ),
                     )
@@ -150,7 +149,7 @@ class FingerprintCardOffiline extends StatelessWidget {
             ),
           ),
         ),
-        separatorBuilder: (context, index) => const SizedBox(height: 15,),
+        separatorBuilder: (context, index) => SizedBox(height: 15.h,),
         itemCount: fingerprint!.length);
   }
 

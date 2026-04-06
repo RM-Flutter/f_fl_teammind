@@ -602,7 +602,7 @@ GoRouter goRouter(BuildContext context) {
                     });
                     return AppRouterTransitions.slideTransition(
                       key: state.pageKey,
-                      child: const FingerprintOfflineScreen(),
+                      child: const FingerPrintOffline(),
                       animation: animationController,
                       begin: begin ?? const Offset(1.0, 0.0),
                     );

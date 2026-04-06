@@ -1,5 +1,6 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
-
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -44,49 +45,48 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(AppSizes.s40),
-                          bottomRight: Radius.circular(AppSizes.s40),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(AppSizes.s40.r),
+                          bottomRight: Radius.circular(AppSizes.s40.r),
                         ),
                         child: Image.asset(
                           "assets/images/png/tasks-app-bar.png",
                           width: double.infinity,
-                          height: 280,
+                          height: 280.h,
                           fit: BoxFit.cover,
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).padding.top + 10,
-                        left: 15,
+                        top: MediaQuery.of(context).padding.top + 10.h,
+                        left: 15.w,
                         child: GestureDetector(
                           onTap: () => Navigator.pop(context),
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(8.r),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                            child: Icon(Icons.arrow_back, color: Colors.white, size: 20.r),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).padding.top + 15,
+                        top: MediaQuery.of(context).padding.top + 15.h,
                         left: 0,
                         right: 0,
                         child: Center(
                           child: Text(
                             AppStrings.aboutApplication.tr(),
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: AppStyles.whiteHeading(context).copyWith(
                               fontWeight: FontWeight.w700,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                             ),
                           ),
                         ),
                       ),
                       Positioned(
-                        bottom: 70,
+                        bottom: 70.h,
                         left: 0,
                         right: 0,
                         child: Center(
@@ -102,41 +102,41 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
                   // Description Content
                   Padding(
-                    padding: const EdgeInsets.all(25.0),
+                    padding: EdgeInsets.all(25.0.r),
                     child: Text(
                       AppStrings.aboutAppDescription.tr(),
                       textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 14.5,
+                      style: AppStyles.content(context).copyWith(
+                        fontSize: 14.5.sp,
                         height: 1.6,
-                        color: Color(0xFF333333),
+                        color: const Color(0xFF333333),
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
 
                   // FOLLOW US section
                   Text(
                     AppStrings.followUs.tr().toUpperCase(),
-                    style: TextStyle(
+                    style: AppStyles.heading(context).copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontWeight: FontWeight.w700,
-                      fontSize: 20,
+                      fontSize: 20.sp,
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   // Social Icons Row
                   if (gCache != null && gCache['company_contacts'] != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Wrap(
                         alignment: WrapAlignment.center,
-                        spacing: 12,
-                        runSpacing: 12,
+                        spacing: 12.w,
+                        runSpacing: 12.h,
                         children: [
                           if (gCache['company_contacts']['whatsapp'] != null && gCache['company_contacts']['whatsapp'] != "")
                             _buildSocialIcon("assets/images/svg/whatsapp.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['whatsapp']))),
@@ -153,12 +153,12 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ],
                       ),
                     ),
-                   const SizedBox(height: 40),
+                   SizedBox(height: 40.h),
 
                   // SEND BY EMAIL button
                   if (gCache != null && gCache['company_contacts'] != null && gCache['company_contacts']['email'] != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      padding: EdgeInsets.symmetric(horizontal: 50.w),
                       child: CustomElevatedButton(
                         backgroundColor:  Theme.of(context).colorScheme.secondary,
                         title: AppStrings.sendByEmail.tr().toUpperCase(),
@@ -174,7 +174,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       ),
                     ),
 
-                  const SizedBox(height: 50),
+                  SizedBox(height: 50.h),
                 ],
               ),
             ),
@@ -188,9 +188,9 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     return GestureDetector(
       onTap: tap,
       child: Container(
-        padding: const EdgeInsets.all(8),
-        height: 42,
-        width: 42,
+        padding: EdgeInsets.all(8.r),
+        height: 42.r,
+        width: 42.r,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color:  Theme.of(context).colorScheme.secondary,

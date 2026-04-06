@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FaqLoadingWidget extends StatelessWidget {
@@ -10,32 +11,32 @@ class FaqLoadingWidget extends StatelessWidget {
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
+        padding: EdgeInsets.only(bottom: 16.0.h),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: double.infinity,
-                height: 20,
+                height: 20.h,
                 color: Colors.white,
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
               ),
               Container(
                 width: double.infinity,
-                height: 15,
+                height: 15.h,
                 color: Colors.white,
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
               ),
               Container(
                 width: double.infinity,
-                height: 15,
+                height: 15.h,
                 color: Colors.white,
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
               ),
             ],
           ),

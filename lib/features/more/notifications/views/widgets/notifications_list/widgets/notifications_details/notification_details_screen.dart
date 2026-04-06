@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/widgets/comments/send_comment_widget.dart';
 import 'package:app_test/core/widgets/full_image_screen.dart';
@@ -78,13 +80,13 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           NotificationDetailsAppbarWidget(notificationSingleModel: value.notificationModel,),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 20.h),
                           Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
-                                  maxWidth: kIsWeb ? 800 : double.infinity
+                                  maxWidth: kIsWeb ? 800.w : double.infinity
                               ),
-                              child: Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Padding(padding: EdgeInsets.symmetric(horizontal: 15.w),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -100,7 +102,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                           "p": Style(
                                             color: const Color(0xFF666666),
                                             lineHeight: const LineHeight(1.6),
-                                            fontSize: FontSize(14),
+                                            fontSize: FontSize(14.sp),
                                             fontWeight: FontWeight.w400,
                                             textAlign: TextAlign.center,
                                           ),
@@ -109,7 +111,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                             textAlign: TextAlign.center,
                                           ),
                                         }),
-                                    SizedBox(height: 10,),
+                                    SizedBox(height: 10.h),
                                     if(value.notificationModel!.mainThumbnail != null &&value.notificationModel!.mainThumbnail!.isNotEmpty)Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
@@ -117,7 +119,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                           alignment: Alignment.bottomCenter,
                                           children: [
                                             SizedBox(
-                                              height: 300,
+                                              height: 300.h,
                                               child: PageView.builder(
                                                 controller: _controller,
                                                 itemCount: value.notificationModel!.mainThumbnail!.length,
@@ -138,14 +140,14 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                       );
                                                     },
                                                     child: CachedNetworkImage(
-                                                      width: MediaQuery.of(context).size.width,
+                                                      width: 1.sw,
                                                       fit: BoxFit.contain,
                                                       imageUrl: value.notificationModel!.mainThumbnail![index].file ?? "",
                                                       placeholder: (context, url) =>
                                                       const ShimmerAnimatedLoading(),
-                                                      errorWidget: (context, url, error) => const Icon(
+                                                      errorWidget: (context, url, error) => Icon(
                                                         Icons.image_not_supported_outlined,
-                                                        size: AppSizes.s32,
+                                                        size: AppSizes.s32.r,
                                                         color: Colors.white,
                                                       ),
                                                     ),
@@ -154,25 +156,25 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                               ),
                                             ),
                                             Padding(
-                                                padding: const EdgeInsets.only(bottom: 25, right: 40, left: 40),
+                                                padding: EdgeInsets.only(bottom: 25.h, right: 40.w, left: 40.w),
                                                 child: SizedBox(
-                                                  height: 20,
+                                                  height: 20.h,
                                                   child: ListView.separated(
                                                       shrinkWrap: true,
                                                       reverse: false,
-                                                      physics: ClampingScrollPhysics(),
+                                                      physics: const ClampingScrollPhysics(),
                                                       scrollDirection: Axis.horizontal,
                                                       padding: EdgeInsets.zero,
                                                       itemBuilder: (context, index) => AnimatedContainer(
-                                                        duration: Duration(milliseconds: 300),
-                                                        margin: EdgeInsets.symmetric(horizontal: 4),
-                                                        width: _currentIndex == index ? 12 : 8,
-                                                        height: _currentIndex == index ? 12 : 8,
+                                                        duration: const Duration(milliseconds: 300),
+                                                        margin: EdgeInsets.symmetric(horizontal: 4.w),
+                                                        width: _currentIndex == index ? 12.r : 8.r,
+                                                        height: _currentIndex == index ? 12.r : 8.r,
                                                         decoration: BoxDecoration(
                                                           shape: BoxShape.circle,
                                                           color: _currentIndex == index ? Color(AppColors.white) : Colors.grey,
                                                         ),
-                                                      ), separatorBuilder: (context, index) => SizedBox(width: 5,),
+                                                      ), separatorBuilder: (context, index) => SizedBox(width: 5.w),
                                                       itemCount: value.notificationModel!.mainThumbnail!.length),
                                                 )
                                             )
@@ -184,7 +186,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => FullScreenImageViewer(
-                                                    imageUrls: [""],
+                                                    imageUrls: const [""],
                                                     one:  true,
                                                     image: value.notificationModel!.mainThumbnail![0].file, initialIndex: 1, url: false,
 
@@ -197,33 +199,33 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                             imageUrl: value.notificationModel!.mainThumbnail![0].file ?? "",
                                             placeholder: (context, url) =>
                                             const ShimmerAnimatedLoading(),
-                                            errorWidget: (context, url, error) => const Icon(
+                                            errorWidget: (context, url, error) => Icon(
                                               Icons.image_not_supported_outlined,
-                                              size: AppSizes.s32,
+                                              size: AppSizes.s32.r,
                                               color: Colors.white,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 30),
+                                    SizedBox(height: 30.h),
                                     _buildSectionHeader(AppStrings.comments.tr()),
-                                    const SizedBox(height: 15),
+                                    SizedBox(height: 15.h),
                                     _buildCommentsList(values.comments),
-                                    const SizedBox(height: 30),
+                                    SizedBox(height: 30.h),
                                     _buildSectionHeader(AppStrings.addNewComment.tr()),
-                                    const SizedBox(height: 20),
+                                    SizedBox(height: 20.h),
                                     if (value.notificationModel!.commentStatus!.key == "enable")
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 20),
+                                        padding: EdgeInsets.only(bottom: 20.h),
                                         child: SendCommentWidget(widget.id, "rmnotifications"),
                                       )
                                     else
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 20),
+                                        padding: EdgeInsets.symmetric(vertical: 20.h),
                                         child: Text(
                                           AppStrings.theCommentOnThisRequestHasBeenClosedByTheAdmin.tr(),
-                                          style: const TextStyle(color: Colors.red, fontSize: 14, fontWeight: FontWeight.w500),
+                                          style: AppStyles.content(context).copyWith(color: Colors.red, fontSize: 14.sp, fontWeight: FontWeight.w500),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -248,19 +250,18 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
   Widget _buildSectionHeader(String title) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: Color(0xFFE8ECF0), thickness: 1)),
+        Expanded(child: Divider(color: const Color(0xFFE8ECF0), thickness: 1.h)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(horizontal: 15.w),
           child: Text(
             title.toUpperCase(),
-            style:  TextStyle(
-              fontSize: 14,
+            style:  AppStyles.primaryHeading(context).copyWith(
+              fontSize: 14.sp,
               fontWeight: FontWeight.w600,
-              color: (Theme.of(context).colorScheme.primary),
             ),
           ),
         ),
-        const Expanded(child: Divider(color: Color(0xFFE8ECF0), thickness: 1)),
+        Expanded(child: Divider(color: const Color(0xFFE8ECF0), thickness: 1.h)),
       ],
     );
   }
@@ -268,11 +269,11 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
   Widget _buildCommentsList(List<dynamic> comments) {
     if (comments.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: 20.h),
         child: Center(
           child: Text(
             AppStrings.noCommentsFound.tr(),
-            style: const TextStyle(color: Colors.grey, fontSize: 14),
+            style: AppStyles.greyContent(context).copyWith(fontSize: 14.sp),
           ),
         ),
       );
@@ -288,17 +289,17 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
         String formattedDate = DateFormat("dd/MM/yyyy hh:mm:ss a", context.locale.languageCode).format(utcDateTime);
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: 12.h),
+          padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(15.r),
             border: Border.all(color: const Color(0xFFF1F4F7)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.03),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                blurRadius: 10.r,
+                offset: Offset(0, 4.h),
               ),
             ],
           ),
@@ -306,37 +307,35 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(4), // Increased padding for better white ring
+                padding: EdgeInsets.all(4.r), // Increased padding for better white ring
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
-                  border: Border.all(color: const Color(0xFFF1F4F7), width: 1),
+                  border: Border.all(color: const Color(0xFFF1F4F7), width: 1.w),
                 ),
                 child: CircleAvatar(
-                  radius: 28,
+                  radius: 28.r,
                   backgroundColor: Colors.grey[200],
                   backgroundImage: CachedNetworkImageProvider(comment['user']['avatar'] ?? ""),
                 ),
               ),
-              const SizedBox(width: 15),
+              SizedBox(width: 15.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       comment['content'] ?? "",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF4A4A4A),
+                      style: AppStyles.darkContent(context).copyWith(
+                        fontSize: 13.sp,
                         height: 1.4,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     Text(
                       formattedDate,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Color(0xFFB0B7C3),
+                      style: AppStyles.greyContent(context).copyWith(
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

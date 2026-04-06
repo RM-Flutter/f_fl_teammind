@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/routing/app_router.dart';
@@ -6,6 +8,7 @@ import 'package:app_test/core/services/settings_service.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -56,12 +59,11 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(Icons.arrow_back, color: Color(AppColors.dark),)),
+                child: Icon(Icons.arrow_back, color: Color(AppColors.dark), size: 24.r,)),
             title: AppStrings.languageSettings.tr().toUpperCase(),
-            titleStyle: TextStyle(
-                fontSize: AppSizes.s16,
-                fontWeight: FontWeight.w700,
-                color: Color(AppColors.dark)),
+            titleStyle: AppStyles.darkHeading(context).copyWith(
+                fontSize: AppSizes.s16.sp,
+                fontWeight: FontWeight.w700),
             routeName: AppRoutes.langSettingScreen.name,
           ),
           body: SingleChildScrollView(
@@ -70,12 +72,10 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
               width: double.infinity,
               alignment: Alignment.center,
               child: SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 1,
-                  width: MediaQuery.of(context).size.width < 600
-                      ? double.infinity
-                      : 1100,
+                  height: 1.sh,
+                  width: kIsWeb ? 1100.w : 1.sw,
                   child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      padding: EdgeInsets.symmetric(vertical: 20.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -101,13 +101,13 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                 },
                                 child: Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                                  padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
                                   decoration: BoxDecoration(
                                       color: Color(AppColors.white),
                                       boxShadow: [
                                         BoxShadow(
                                           color: Color(AppColors.lightGrey).withOpacity(0.5),
-                                          blurRadius: AppSizes.s5,
+                                          blurRadius: AppSizes.s5.r,
                                           spreadRadius: 1,
                                         )
                                       ]
@@ -116,29 +116,29 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                        width: 24,
-                                        height: 24,
-                                        padding: const EdgeInsets.all(2),
+                                        width: 24.r,
+                                        height: 24.r,
+                                        padding: EdgeInsets.all(2.r),
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(color: Color(AppColors.primary)),
                                             color:(selectIndex == index)? Color(AppColors.primary) : Color(AppColors.white)
                                         ),
-                                        child: const Icon(Icons.check, color: Colors.white, size: 18,),
+                                        child: Icon(Icons.check, color: Colors.white, size: 18.r,),
                                       ),
-                                      const SizedBox(width: 15,),
-                                      Text((lang![index].contains("English language")||lang![index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style: TextStyle(color: Color(AppColors.almostBlack), fontWeight: FontWeight.w500, fontSize: 14),)
+                                      SizedBox(width: 15.w,),
+                                      Text((lang![index].contains("English language")||lang![index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp),)
                                       ,const Spacer(),
-                                      Text((lang![index].contains("en"))?"change".toUpperCase() : "تغيير", style: TextStyle(fontSize: 12 ,fontWeight: FontWeight.w500, color: Color(AppColors.primary)),)
+                                      Text((lang![index].contains("en"))?"change".toUpperCase() : "تغيير", style: AppStyles.primaryContent(context).copyWith(fontSize: 12.sp ,fontWeight: FontWeight.w500),)
                                     ],
                                   ),
                                 ),
                               ),
-                              separatorBuilder: (context, index) => const SizedBox(height: 19,),
+                              separatorBuilder: (context, index) => SizedBox(height: 19.h,),
                               padding: EdgeInsets.zero,
                               itemCount: lang!.length
                           ),
-                          const SizedBox(height: 40,),
+                          SizedBox(height: 40.h,),
                           // SizedBox(
                           //   width: MediaQuery.sizeOf(context).width * 0.6,
                           //   child: GestureDetector(

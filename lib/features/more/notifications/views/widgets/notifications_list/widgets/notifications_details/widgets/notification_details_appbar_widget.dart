@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/bookmark_widgets/bookmark_button.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -18,31 +20,31 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 300,
-      decoration: const BoxDecoration(
+      height: 300.h,
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32)),
+            bottomLeft: Radius.circular(AppSizes.s32.r),
+            bottomRight: Radius.circular(AppSizes.s32.r)),
       ),
       child: Stack(
         children: [
           // Background image using the Home screen asset
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32)),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(AppSizes.s32.r),
+                bottomRight: Radius.circular(AppSizes.s32.r)),
             child: Image.asset(
               "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
               width: double.infinity,
-              height: 300,
+              height: 300.h,
             ),
           ),
           // Content
           Positioned.fill(
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -57,15 +59,15 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.all(8.r),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.15),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.arrow_back,
                                   color: Colors.white,
-                                  size: 20,
+                                  size: 20.r,
                                 ),
                               ),
                             ),
@@ -78,9 +80,8 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                         ),
                         Text(
                           AppStrings.notificationInfo.tr(),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
+                          style: AppStyles.whiteHeading(context).copyWith(
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -88,19 +89,18 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                     ),
                     const Spacer(),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Text(
                         (notificationSingleModel?.title?.toString() ?? "").toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 26,
-                          color: Colors.white,
+                        style: AppStyles.whiteHeading(context).copyWith(
+                          fontSize: 26.sp,
                           fontWeight: FontWeight.w800,
                           height: 1.1,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -112,13 +112,13 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                   .format(DateTime.parse(notificationSingleModel!.createdAt.toString()))
                               : "",
                         ),
-                        const SizedBox(width: 15),
+                        SizedBox(width: 15.w),
                         _buildMetadataItem(
                           context,
                           icon: Icons.folder_open_outlined,
                           text: (notificationSingleModel?.ptype?.key ?? "").toUpperCase(),
                         ),
-                        const SizedBox(width: 15),
+                        SizedBox(width: 15.w),
                         GestureDetector(
                           onTap: () {
                              if (notificationSingleModel != null) {
@@ -151,13 +151,12 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: (Theme.of(context).colorScheme.primary), size: 16),
-        const SizedBox(width: 6),
+        Icon(icon, color: (Theme.of(context).colorScheme.primary), size: 16.r),
+        SizedBox(width: 6.w),
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 11,
-            color: Colors.white,
+          style: AppStyles.whiteContent(context).copyWith(
+            fontSize: 11.sp,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.2,
           ),

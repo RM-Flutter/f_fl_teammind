@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -24,11 +26,8 @@ class SwitchRowNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = isLoginPageStyle == true
-        ? Theme.of(context)
-        .textTheme
-        .labelLarge
-        ?.copyWith(fontSize: AppSizes.s12, fontWeight: FontWeight.w500, color: const Color(AppColors.grey51))
-        : Theme.of(context).textTheme.displaySmall;
+        ? AppStyles.greyContent(context).copyWith(fontSize: 12.sp, fontWeight: FontWeight.w500)
+        : AppStyles.primaryContent(context).copyWith(fontSize: 14.sp, fontWeight: FontWeight.w600);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -39,18 +38,18 @@ class SwitchRowNotification extends StatelessWidget {
             leftText ?? AppStrings.allNotifications.tr(),
             style: textStyle,
           ),
-          gapW8,
+          SizedBox(width: 8.w),
           CustomSwitchButton(
-            width: 60,
-            height: 30,
-            padding: 4,
-            circleSize: 22,
+            width: 60.w,
+            height: 30.h,
+            padding: 4.r,
+            circleSize: 22.r,
             value: value,
             activeColor:  Theme.of(context).colorScheme.primary,
             inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
-          gapW8,
+          SizedBox(width: 8.w),
           Text(
             rightText ?? AppStrings.myDepartment.tr(),
             style: textStyle,
