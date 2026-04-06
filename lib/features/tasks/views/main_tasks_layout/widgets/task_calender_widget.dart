@@ -1,5 +1,7 @@
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
@@ -37,34 +39,34 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                 viewModel.getTask(context, date: null);
               },
               child: Container(
-                height: 60,
-                width: 50,
-                margin: const EdgeInsets.only(left: 10),
+                height: 60.h,
+                width: 50.w,
+                margin: EdgeInsets.only(left: 10.w),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                   color: viewModel.selectedIndex == null ? Color(AppColors.primary) : Colors.white,
                   border: viewModel.selectedIndex == null ? null : Border.all(color: Colors.grey.shade300),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   AppStrings.all.tr(),
-                  style: TextStyle(
+                  style: AppStyles.blackContent(context).copyWith(
                     color: viewModel.selectedIndex == null ? Colors.white : Colors.black,
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
               ),
             ),
             Expanded(
               child: Container(
-                height: 100,
+                height: 100.h,
                 color: Colors.white,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   itemCount: monthDays.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 10),
+                  separatorBuilder: (_, __) => SizedBox(width: 10.w),
                   itemBuilder: (context, index) {
                     final date = monthDays[index];
                     return GestureDetector(
@@ -81,32 +83,33 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                         children: [
                           Text(
                             DateFormat.E('${CacheHelper.getString("lang")}').format(date),
-                            style: TextStyle(
+                            style: AppStyles.greyContent(context).copyWith(
                               color: Colors.grey[600],
                               fontWeight: FontWeight.w500,
+                              fontSize: 12.sp,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6.h),
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                            padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 12.w),
                             decoration: BoxDecoration(
                               color: index == viewModel.selectedIndex ? Colors.blue : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Column(
                               children: [
                                 Text(
                                   DateFormat.d('${CacheHelper.getString("lang")}').format(date),
-                                  style: TextStyle(
-                                    fontSize: 16,
+                                  style: AppStyles.blackContent(context).copyWith(
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
                                     color: index == viewModel.selectedIndex ? Colors.white : Colors.black,
                                   ),
                                 ),
                                 Text(
                                   DateFormat.MMM('${CacheHelper.getString("lang")}').format(date),
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                  style: AppStyles.greyContent(context).copyWith(
+                                    fontSize: 12.sp,
                                     color: index == viewModel.selectedIndex ? Colors.white70 : Colors.grey,
                                   ),
                                 ),

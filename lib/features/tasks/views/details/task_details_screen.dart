@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -66,10 +68,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             builder: (context, values, child) {
               return Scaffold(
                 floatingActionButton: value.getOneTaskModel != null && gCache != null ?(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)?Padding(
-                  padding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.05),
+                  padding: EdgeInsets.only(bottom: 0.05.sh),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
-                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35.w : 0),
+                    width: 1.sw,
                     alignment: Alignment.bottomRight,
                     child: FloatingActionButton(
                       heroTag: 'task_details_edit',
@@ -86,8 +88,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         child: SvgPicture.asset(
                           "assets/images/svg/edit.svg",
                           color: AppThemeService.colorPalette.fabIconColor.color,
-                          width: AppSizes.s16,
-                          height: AppSizes.s16,
+                          width: AppSizes.s16.r,
+                          height: AppSizes.s16.r,
                         ),
                       ),
                     ) ,
@@ -111,51 +113,50 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                         Center(
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                                maxWidth: kIsWeb ? 800 : double.infinity
+                            constraints: BoxConstraints(
+                                maxWidth: kIsWeb ? 800.w : double.infinity
                             ),
-                            child: Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Padding(padding: EdgeInsets.symmetric(horizontal: 15.w),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      const SizedBox(height: 20,),
+                                      SizedBox(height: 20.h,),
                                       Text(
                                         "${(value.getOneTaskModel!.task!.progress! % 1 == 0 ? value.getOneTaskModel!.task!.progress!.toInt().toString() : value.getOneTaskModel!.task!.progress!.toStringAsFixed(1))}% ${AppStrings.ofTaskHasBeenCompleted.tr()}",
-                                        style: const TextStyle(
+                                        style: AppStyles.blackContent(context).copyWith(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           color: Color(AppColors.darkBlueGrey),
                                         ),
                                       ),
-                                      const SizedBox(height: 10,),
+                                      SizedBox(height: 10.h,),
                                       LinearProgressIndicator(
                                         color: Color(AppColors.primary),
                                         value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
-                                        borderRadius: BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(5.r),
                                         backgroundColor: Colors.transparent,
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 20,),
+                                  SizedBox(height: 20.h,),
                                   Text(
                                     AppStrings.description.tr().toUpperCase(),
-                                    style: TextStyle(
+                                    style: AppStyles.primaryContent(context).copyWith(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: Color(AppColors.primary)),
+                                        fontSize: 14.sp),
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10.h,),
                                   Text(
                                     value.getOneTaskModel!.task!.content!,
-                                    style: TextStyle(
+                                    style: AppStyles.greyContent(context).copyWith(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 13,
+                                        fontSize: 13.sp,
                                         color: Color(AppColors.darkGrey)),
                                   ),
-                                  const SizedBox(height: 20,),
+                                  SizedBox(height: 20.h,),
                                   ListView.separated(
                                     padding: EdgeInsets.zero,
                                     reverse: false,
@@ -197,18 +198,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                 color: isCompleted
                                                     ?  (Theme.of(context).colorScheme.primary)
                                                     : Color(AppColors.whiteGrey),
-                                                width: 1,
+                                                width: 1.r,
                                               ),
                                             ),
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.stretch,
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                                                  padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
                                                   child: SvgPicture.asset(
                                                     icon['value']!,
-                                                    width: 24,
-                                                    height: 24,
+                                                    width: 24.r,
+                                                    height: 24.r,
                                   colorFilter: isCompleted
                                       ?  ColorFilter.mode((Theme.of(context).colorScheme.primary), BlendMode.srcIn)
                                       : null,
@@ -216,27 +217,27 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                 ),
                                                 Expanded(
                                                   child: Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                                    padding: EdgeInsets.symmetric(vertical: 12.h),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         Text(
                                                           subTask.name?.toUpperCase() ?? "",
-                                                          style: TextStyle(
+                                                          style: AppStyles.darkHeading(context).copyWith(
                                                             color: isCompleted
                                                                 ? Theme.of(context).colorScheme.secondary
                                                                 : Color(AppColors.dark),
-                                                            fontSize: 13,
+                                                            fontSize: 13.sp,
                                                             fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
-                                                        const SizedBox(height: 4),
+                                                        SizedBox(height: 4.h),
                                                         Text(
                                                           "${value.getOneTaskModel!.task!.createAt != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.createAt!)) : ""} : ${value.getOneTaskModel!.task!.dueDate != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.dueDate!)) : ""}",
-                                                          style: TextStyle(
+                                                          style: AppStyles.greyContent(context).copyWith(
                                                             color: Color(AppColors.darkGrey).withOpacity(0.7),
-                                                            fontSize: 10,
+                                                            fontSize: 10.sp,
                                                             fontWeight: FontWeight.w400,
                                                           ),
                                                         ),
@@ -246,40 +247,40 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                 ),
                                                 if (isCompleted)
                                                   Container(
-                                                    width: 40,
+                                                    width: 40.w,
                                                     decoration:  BoxDecoration(
                                                       color: (Theme.of(context).colorScheme.primary),
                                                       borderRadius: BorderRadius.zero,
                                                     ),
-                                                    child: const Center(
+                                                    child: Center(
                                                       child: Icon(
                                                         Icons.check,
                                                         color: Colors.white,
-                                                        size: 20,
+                                                        size: 20.r,
                                                       ),
                                                     ),
                                                   )
                                                 else if (indexSelect == index && value.isUpdateLoading == true)
-                                                  const SizedBox(
-                                                    width: 40,
+                                                  SizedBox(
+                                                    width: 40.w,
                                                     child: Center(
                                                       child: SizedBox(
-                                                        width: 20,
-                                                        height: 20,
-                                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                                        width: 20.r,
+                                                        height: 20.r,
+                                                        child: const CircularProgressIndicator(strokeWidth: 2),
                                                       ),
                                                     ),
                                                   )
                                                 else
                                                   Container(
-                                                    width: 40,
+                                                    width: 40.w,
                                                     alignment: Alignment.center,
                                                     child: Container(
-                                                      width: 20,
-                                                      height: 20,
+                                                      width: 20.r,
+                                                      height: 20.r,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        border: Border.all(color:  (Theme.of(context).colorScheme.primary), width: 1.5),
+                                                        border: Border.all(color:  (Theme.of(context).colorScheme.primary), width: 1.5.r),
                                                       ),
                                                     ),
                                                   ),
@@ -289,56 +290,56 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         ),
                                       );
                                     },
-                                    separatorBuilder: (context, index) => const SizedBox(height: 15),
+                                    separatorBuilder: (context, index) => SizedBox(height: 15.h),
                                     itemCount: value.getOneTaskModel!.task!.subTasks!.length,
                                   ),
-                                  const SizedBox(height: 15,),
+                                  SizedBox(height: 15.h,),
                                   if(value.getOneTaskModel!.task!.status == "open")GestureDetector(
                                     onTap: (){
                                       value.updateStatusTask(context, value.getOneTaskModel!.task!.id);
                                     },
                                     child: Container(
                                       padding: EdgeInsets.only(
-                                          left: LocalizationService.isArabic(context: context) ?0 :15,
-                                          right: LocalizationService.isArabic(context: context) ?15 :0
+                                          left: LocalizationService.isArabic(context: context) ?0 :15.w,
+                                          right: LocalizationService.isArabic(context: context) ?15.w :0
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(AppColors.green),
-                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color(AppColors.green),
+                                        borderRadius: BorderRadius.circular(5.r),
 
                                       ),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Padding(padding: const EdgeInsets.symmetric(vertical: 10),
+                                          Padding(padding: EdgeInsets.symmetric(vertical: 10.h),
                                             child: Text(AppStrings.closeMainTask.tr(),
-                                              style: TextStyle(color: Color(AppColors.white),fontSize: 12,fontWeight: FontWeight.w600),),
+                                              style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp,fontWeight: FontWeight.w600),),
                                           ),
                                           const Spacer(),
                                           Container(
                                             alignment: Alignment.center,
-                                            padding: const EdgeInsets.symmetric(horizontal: 5 ,vertical: 15),
+                                            padding: EdgeInsets.symmetric(horizontal: 5.w ,vertical: 15.h),
                                             decoration: BoxDecoration(
                                                 color: Colors.transparent,
                                                 borderRadius: BorderRadius.only(
-                                                  topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
-                                                  bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : const Radius.circular(4) ,
-                                                  topLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
-                                                  bottomLeft: LocalizationService.isArabic(context: context) ?const Radius.circular(5) : const Radius.circular(0) ,
+                                                  topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(4.r) ,
+                                                  bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(4.r) ,
+                                                  topLeft: LocalizationService.isArabic(context: context) ?Radius.circular(5.r) : const Radius.circular(0) ,
+                                                  bottomLeft: LocalizationService.isArabic(context: context) ?Radius.circular(5.r) : const Radius.circular(0) ,
                                                 )
                                             ),
-                                            child: (value.isLoading == true)? const CircularProgressIndicator(color: Colors.white,):const Icon(Icons.check, color: Colors.white,),
+                                            child: (value.isLoading == true)? SizedBox(width: 24.r, height: 24.r, child: const CircularProgressIndicator(color: Colors.white,)):Icon(Icons.check, color: Colors.white, size: 24.r,),
                                           )
                                         ],
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 20,),
+                                  SizedBox(height: 20.h,),
                                   Row(
                                     children: [
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          padding: EdgeInsets.symmetric(horizontal: 10.w),
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
@@ -346,11 +347,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           ),
                                         ),
                                       ),
-                                      Text(AppStrings.comments.tr().toUpperCase(), style: TextStyle(fontSize: 14,
-                                          fontWeight: FontWeight.bold, color: Color(AppColors.primary))),
+                                      Text(AppStrings.comments.tr().toUpperCase(), style: AppStyles.primaryContent(context).copyWith(fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold)),
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          padding: EdgeInsets.symmetric(horizontal: 10.w),
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
@@ -360,7 +361,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: 10.h,),
                                   CommentsWidget(
                                       "tasks",
                                       enable: "enable",
@@ -370,7 +371,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       scrollController: _scrollController,
                                       id : widget.id
                                   ),
-                                  const SizedBox(height: 15,),
+                                  SizedBox(height: 15.h,),
 
                                 ],
                               ),

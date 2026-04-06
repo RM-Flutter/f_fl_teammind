@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -61,17 +63,17 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity,
+                    maxWidth: kIsWeb ? 1100.w : double.infinity,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppSizes.s16, horizontal: AppSizes.s12),
+                    padding: EdgeInsets.symmetric(
+                        vertical: AppSizes.s16.h, horizontal: AppSizes.s12.w),
                     child: Consumer<TasksController>(
                       builder: (context, viewModel, child) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           gapH14,
-                          Text(AppStrings.mainData.tr(), style: TextStyle(color: Color(AppColors.primary), fontWeight: FontWeight.w600, fontSize: 14),),
+                          Text(AppStrings.mainData.tr(), style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp),),
                           gapH14,
                           TextField(
                             controller: viewModel.titleController,
@@ -106,7 +108,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               showModalBottomSheet(
                                 context: context,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
                                 ),
                                 builder: (context) {
                                   return StatefulBuilder(
@@ -115,10 +117,10 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(16.0.r),
                                             child: Text(
                                               AppStrings.employeeName.tr(),
-                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                              style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                           Expanded(
@@ -145,13 +147,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(16.0.r),
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
                                                 setState(() {});
                                               },
-                                              child: Text(AppStrings.send.tr(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),),
+                                              child: Text(AppStrings.send.tr(), style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp),),
                                             ),
                                           )
                                         ],
@@ -162,26 +164,18 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               );
                             },
                             child: Container(
-                              height: 65,
+                              height: 65.h,
                               alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
                               decoration: ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.s10),
+                                  borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                   side: BorderSide(
                                     color :Color(AppColors.whiteGrey),
-                                    width: 1.0,
+                                    width: 1.0.r,
                                   ),
                                 ),
-                                shadows: const [
-                                  BoxShadow(
-                                    color: Color(AppColors.black),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 1),
-                                    spreadRadius: 0,
-                                  )
-                                ],
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -189,8 +183,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                 children: [
                                   Text(
                                     viewModel.selectedEmployeeIds.isNotEmpty? "${viewModel.selectedEmployeeIds.length} ${AppStrings.selected.tr()}": AppStrings.employeeName.tr(),
-                                    style: TextStyle(
-                                        fontSize: 12,
+                                    style: AppStyles.greyContent(context).copyWith(
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w400,
                                         color: Color(AppColors.almostBlack)),
                                   ),
@@ -209,12 +203,12 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset(e['value']!, fit: BoxFit.scaleDown, width: 27, height: 24,),
-                                    const SizedBox(width: 10,),
+                                    SvgPicture.asset(e['value']!, fit: BoxFit.scaleDown, width: 27.r, height: 24.r,),
+                                    SizedBox(width: 10.w,),
                                     Text(
                                       e['name'].toString(),
-                                      style: TextStyle(
-                                          fontSize: 12,
+                                      style: AppStyles.greyContent(context).copyWith(
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
                                           color: Color(AppColors.almostBlack)
                                       ),),
@@ -240,8 +234,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               value: e['value'].toString(),
                               child: Text(
                                 e['name'].toString(),
-                                style: TextStyle(
-                                    fontSize: 12,
+                                style: AppStyles.greyContent(context).copyWith(
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Color(AppColors.almostBlack)
                                 ),),
@@ -259,15 +253,15 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             subTasks: viewModel.subTasks,
                           ),
                           gapH14,
-                          const SizedBox(height: 30,),
+                          SizedBox(height: 30.h,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               if(viewModel.isLoading == false) CustomElevatedButton(
                                 backgroundColor:
                                 Theme.of(context).colorScheme.primary,
-                                titleSize: AppSizes.s14,
-                                radius: AppSizes.s24,
+                                titleSize: AppSizes.s14.sp,
+                                radius: AppSizes.s24.r,
                                 title: AppStrings.updateTask.tr(),
                                 onPressed: () async {
                                   viewModel.updateTask(context, widget.id);

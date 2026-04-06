@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -62,21 +64,21 @@ class _TaskScreenState extends State<TaskScreen> {
           backgroundColor: Colors.white,
           pageContext: context,
           actions: [Padding(
-            padding: const EdgeInsets.all(AppSizes.s10),
+            padding: EdgeInsets.all(AppSizes.s10.r),
             child: InkWell(
               onTap: (){
                 viewModel.getTask(context, date: null);
               },
               child: Container(
-                height: 35,
-                width: 35,
+                height: 35.r,
+                width: 35.r,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(AppColors.dark)),
-                child: const Icon(
+                child: Icon(
                   Icons.refresh,
                   color: Colors.white,
-                  size: AppSizes.s18,
+                  size: AppSizes.s18.r,
                 ),
               ),
             ),
@@ -86,9 +88,9 @@ class _TaskScreenState extends State<TaskScreen> {
               ? Container(
             padding: EdgeInsets.symmetric(
                 horizontal: LocalizationService.isArabic(context: context)
-                    ? 35
+                    ? 35.w
                     : 0),
-            width: double.infinity,
+            width: 1.sw,
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               heroTag: 'tasks_add',
@@ -108,8 +110,8 @@ class _TaskScreenState extends State<TaskScreen> {
                 child: Image.asset(
                   AppImages.addFloatingActionButtonIcon,
                   color: AppThemeService.colorPalette.fabIconColor.color,
-                  width: AppSizes.s16,
-                  height: AppSizes.s16,
+                  width: AppSizes.s16.r,
+                  height: AppSizes.s16.r,
                 ),
               ),
             ),
@@ -123,12 +125,12 @@ class _TaskScreenState extends State<TaskScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+                maxWidth: kIsWeb ? 1100.w : double.infinity,
               ),
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
                     child: Consumer<TasksController>(
                         builder: (context, viewModel, child) => viewModel.isLoading
                             ? const LoadingPageWidget(
@@ -139,18 +141,17 @@ class _TaskScreenState extends State<TaskScreen> {
                           child: Column(
                             children: [
                               HorizontalCalendar(),
-                              const SizedBox(
-                                height: 20,
+                              SizedBox(
+                                height: 20.h,
                               ),
                               if (viewModel.tasks.isEmpty)
                                 NoExistingPlaceholderScreen(
-                                    height: LayoutService.getHeight(context) *
-                                        0.6,
+                                    height: 0.6.sh,
                                     title: AppStrings.thereIsNoTasks.tr()),
                               if (viewModel.tasks.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15.w),
                                   child: ListView.separated(
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
@@ -191,14 +192,14 @@ class _TaskScreenState extends State<TaskScreen> {
                                     },
                                     itemCount: viewModel.tasks.length,
                                     separatorBuilder: (context, index) =>
-                                        const SizedBox(height: 15),
+                                        SizedBox(height: 15.h),
                                   ),
                                 ),
-                              const SizedBox(height: 20),
+                              SizedBox(height: 20.h),
                               if (viewModel.hasMore && !viewModel.isLoadingMore)
                                 Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 30),
+                                    padding: EdgeInsets.only(bottom: 30.h),
                                     child: ElevatedButton(
                                       onPressed: () {
                                         viewModel.getTask(context, loadMore: true);
@@ -206,25 +207,25 @@ class _TaskScreenState extends State<TaskScreen> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Theme.of(context).colorScheme.secondary,
                                         foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 12),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 40.w, vertical: 12.h),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius: BorderRadius.circular(30.r),
                                         ),
                                       ),
                                       child: Text(
                                         AppStrings.loadMore.tr().toUpperCase(),
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                        style: AppStyles.whiteContent(context).copyWith(fontWeight: FontWeight.bold, fontSize: 14.sp),
                                       ),
                                     ),
                                   ),
                                 ),
                               if (viewModel.isLoadingMore)
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 30),
-                                  child: Center(child: CircularProgressIndicator()),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 30.h),
+                                  child: const Center(child: CircularProgressIndicator()),
                                 ),
-                              const SizedBox(height: 20),
+                              SizedBox(height: 20.h),
                             ],
                           ),
                         )),

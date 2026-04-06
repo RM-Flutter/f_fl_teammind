@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -77,24 +79,23 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
           children: [
             Text(
               AppStrings.taskList.tr(),
-              style: TextStyle(
+              style: AppStyles.primaryContent(context).copyWith(
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.primary),
-                fontSize: 14,
+                fontSize: 14.sp,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             ...tasksController.tasksList2.asMap().entries.map((entry) {
               final index = entry.key;
               final task = entry.value['name'];
 
               return Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
+                padding: EdgeInsets.only(bottom: 12.0.h),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: ListTile(
@@ -133,12 +134,13 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                             _controllers.removeAt(index);
                             setState(() {});
                           },
-                          child: const Icon(
+                          child: Icon(
                             Icons.delete,
                             color: Color(AppColors.red),
+                            size: 24.r,
                           ),
                         ),
-                        SizedBox(width: 15,),
+                        SizedBox(width: 15.w,),
                         GestureDetector(
                           onTap: () {
                             tasksController.tasksList2[index]['status'] = !tasksController.tasksList2[index]['status'];
@@ -151,6 +153,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                                 ? Icons.radio_button_checked
                                 : Icons.radio_button_unchecked,
                             color: Color(AppColors.primary),
+                            size: 24.r,
                           ),
                         ),
                       ],
@@ -160,14 +163,14 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
               );
             }),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.dark),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(30.r),
                 ),
               ),
               onPressed: () {
@@ -180,10 +183,10 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                   _controllers.add(TextEditingController(text: AppStrings.taskName.tr()));
                 });
               },
-              icon: const Icon(Icons.add, color: Colors.white),
+              icon: Icon(Icons.add, color: Colors.white, size: 16.r,),
               label: Text(
                 AppStrings.addOne.tr().toUpperCase(),
-                style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.w500),
+                style: AppStyles.whiteContent(context).copyWith(fontSize: 10.sp, fontWeight: FontWeight.w500),
               ),
             ),
           ],

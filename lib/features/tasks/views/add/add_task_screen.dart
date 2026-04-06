@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -42,12 +44,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             body: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity,
+                  constraints: BoxConstraints(
+                    maxWidth: kIsWeb ? 1100.w : double.infinity,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppSizes.s16, horizontal: AppSizes.s12),
+                    padding: EdgeInsets.symmetric(
+                        vertical: AppSizes.s16.h, horizontal: AppSizes.s12.w),
                     child: Consumer<TasksController>(
                       builder: (context, viewModel, child) => Form(
                         key: formKey,
@@ -57,10 +59,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             gapH14,
                             Text(
                               AppStrings.mainData.tr(),
-                              style: TextStyle(
-                                  color: Color(AppColors.primary),
+                              style: AppStyles.primaryContent(context).copyWith(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 14),
+                                  fontSize: 14.sp),
                             ),
                             gapH14,
                             TextFormField(
@@ -108,9 +109,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               onTap: () {
                                 showModalBottomSheet(
                                   context: context,
-                                  shape: const RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(16)),
+                                        top: Radius.circular(16.r)),
                                   ),
                                   builder: (context) {
                                     return StatefulBuilder(
@@ -120,11 +121,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                           children: [
                                             Padding(
                                               padding:
-                                                  const EdgeInsets.all(16.0),
+                                                  EdgeInsets.all(16.0.r),
                                               child: Text(
                                                 AppStrings.employeeName.tr(),
-                                                style: const TextStyle(
-                                                    fontSize: 18,
+                                                style: AppStyles.darkHeading(context).copyWith(
+                                                    fontSize: 18.sp,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
@@ -162,7 +163,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             ),
                                             Padding(
                                               padding:
-                                                  const EdgeInsets.all(16.0),
+                                                  EdgeInsets.all(16.0.r),
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -170,10 +171,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                 },
                                                 child: Text(
                                                     AppStrings.send.tr(),
-                                                    style: const TextStyle(
+                                                    style: AppStyles.blackContent(context).copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
-                                                        fontSize: 14)),
+                                                        fontSize: 14.sp)),
                                               ),
                                             )
                                           ],
@@ -184,28 +185,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 );
                               },
                               child: Container(
-                                height: 65,
+                                height: 65.h,
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 0),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w, vertical: 0),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(AppSizes.s10),
+                                        BorderRadius.circular(AppSizes.s10.r),
                                     side: BorderSide(
                                       color: Color(AppColors.whiteGrey),
-                                      width: 1.0,
+                                      width: 1.0.r,
                                     ),
                                   ),
-                                  // shadows: const [
-                                  //   BoxShadow(
-                                  //     color: Color(AppColors.black),
-                                  //     blurRadius: 10,
-                                  //     offset: Offset(0, 1),
-                                  //     spreadRadius: 0,
-                                  //   )
-                                  // ],
                                 ),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -215,8 +208,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       viewModel.selectedEmployeeIds.isNotEmpty
                                           ? "${viewModel.selectedEmployeeIds.length} ${AppStrings.selected.tr()}"
                                           : AppStrings.employeeName.tr(),
-                                      style: TextStyle(
-                                          fontSize: 12,
+                                      style: AppStyles.greyContent(context).copyWith(
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
                                           color: Color(AppColors.almostBlack)),
                                     ),
@@ -241,16 +234,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             SvgPicture.asset(
                                               e['value']!,
                                               fit: BoxFit.scaleDown,
-                                              width: 27,
-                                              height: 24,
+                                              width: 27.r,
+                                              height: 24.r,
                                             ),
-                                            const SizedBox(
-                                              width: 10,
+                                            SizedBox(
+                                              width: 10.w,
                                             ),
                                             Text(
                                               e['name'].toString(),
-                                              style: TextStyle(
-                                                  fontSize: 12,
+                                              style: AppStyles.greyContent(context).copyWith(
+                                                  fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: Color(
                                                       AppColors.almostBlack)),
@@ -279,8 +272,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       value: e['value'].toString(),
                                       child: Text(
                                         e['name'].toString(),
-                                        style: TextStyle(
-                                            fontSize: 12,
+                                        style: AppStyles.greyContent(context).copyWith(
+                                            fontSize: 12.sp,
                                             fontWeight: FontWeight.w400,
                                             color:
                                                 Color(AppColors.almostBlack)),
@@ -298,8 +291,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             gapH24,
                             AddNewTaskListWidget(),
                             gapH14,
-                            const SizedBox(
-                              height: 30,
+                            SizedBox(
+                              height: 30.h,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -307,8 +300,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 if (viewModel.isLoading == false)
                                   CustomElevatedButton(
                                     backgroundColor:  Theme.of(context).colorScheme.secondary,
-                                    titleSize: AppSizes.s14,
-                                    radius: AppSizes.s24,
+                                    titleSize: AppSizes.s14.sp,
+                                    radius: AppSizes.s24.r,
                                     title: AppStrings.addTask.tr().toUpperCase(),
                                     onPressed: () async {
                                       if (formKey.currentState!.validate()) {

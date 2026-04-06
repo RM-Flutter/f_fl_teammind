@@ -1,5 +1,7 @@
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,37 +36,37 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
         return "$days ${AppStrings.days.tr()}";
       }
     }
-    TextStyle style = TextStyle(
+    TextStyle style = AppStyles.whiteContent(context).copyWith(
       color: Colors.white.withOpacity(0.8),
-      fontSize: AppSizes.s12,
+      fontSize: AppSizes.s12.sp,
       fontWeight: FontWeight.w400,
     );
     return Container(
-      width: double.infinity,
-      height: 300,
-      decoration: const BoxDecoration(
+      width: 1.sw,
+      height: 300.h,
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32)),
+            bottomLeft: Radius.circular(AppSizes.s32.r),
+            bottomRight: Radius.circular(AppSizes.s32.r)),
       ),
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32)),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(AppSizes.s32.r),
+                bottomRight: Radius.circular(AppSizes.s32.r)),
             child: Image.asset(
               "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
               alignment: const Alignment(0.5, 0.0),
-              width: double.infinity,
-              height: 300,
+              width: 1.sw,
+              height: 300.h,
             ),
           ),
           Positioned.fill(
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -78,15 +80,15 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.all(8.r),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.15),
+                                  color: Colors.white.withOpacity(0.15),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.arrow_back,
                                   color: Colors.white,
-                                  size: 20,
+                                  size: 20.r,
                                 ),
                               ),
                             ),
@@ -94,9 +96,8 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                         ),
                         Text(
                           AppStrings.tasksInfo.tr(),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
+                          style: AppStyles.whiteHeading(context).copyWith(
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -105,20 +106,19 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                     const Spacer(flex: 2),
                     SvgPicture.asset(
                       "$assets",
-                      height: 50,
-                      width: 50,
+                      height: 50.r,
+                      width: 50.r,
                     ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 15.h),
                     Text(
                       taskName?.toUpperCase() ?? "",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
+                      style: AppStyles.whiteHeading(context).copyWith(
+                        fontSize: 24.sp,
                         fontWeight: FontWeight.w800,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

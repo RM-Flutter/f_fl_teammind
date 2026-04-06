@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/cache_constants.dart';
@@ -385,7 +387,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.cover),
                 const OverlayGradientWidget(),
                 Positioned(
-                  bottom: AppSizes.s48,
+                  bottom: AppSizes.s48.h,
                   left: AppSizes.s0,
                   right: AppSizes.s0,
                   child: Column(
@@ -393,17 +395,16 @@ class _SplashScreenState extends State<SplashScreen> {
                     children: [
                       DynamicImageWidget(
                         imageUrl: AppImages.logo,
-                        height: AppSizes.s75,
-                        width: AppSizes.s75,
+                        height: AppSizes.s75.r,
+                        width: AppSizes.s75.r,
                       ),
                       Text(
                         AppStrings.loading.tr(),
-                        style: LocalizationService.isArabic(context: context)
-                            ? Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(letterSpacing: 0)
-                            : Theme.of(context).textTheme.displayMedium,
+                        style: AppStyles.whiteHeading(context).copyWith(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: LocalizationService.isArabic(context: context) ? 0 : 1.2
+                        ),
                       )
                     ],
                   ),
