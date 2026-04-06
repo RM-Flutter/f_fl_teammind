@@ -102,8 +102,7 @@ class VacationListWidget extends StatelessWidget {
             child: Container(
               width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
               height: 120,
-              padding: const EdgeInsets.symmetric(
-                  vertical: AppSizes.s10, horizontal: AppSizes.s6),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(12),
@@ -114,26 +113,22 @@ class VacationListWidget extends StatelessWidget {
                 children: [
                   SvgPicture.asset("assets/images/svg/calendar.svg"),
                   gapH8,
-                  RichText(
+                  Text(
+                    AppStrings.viewOnCalendar.tr().toUpperCase(),
                     textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                        height: 1.0,
-                        letterSpacing: 0.5,
-                      ),
-                      children: const [
-                        TextSpan(text: 'VIEW ON\n'),
-                        TextSpan(text: 'CALENDAR'),
-                      ],
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      height: 1.0,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
               ),
             ),
-          )),
+          ),
+        ),
     );
 
     return Padding(
