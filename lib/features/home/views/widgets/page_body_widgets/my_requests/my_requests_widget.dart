@@ -66,7 +66,7 @@ class RequestsWidget extends StatelessWidget {
                     onPressed: () async =>
                         await pushToRequestsScreenWithRequestsType(
                             context: context, reqType: requestType),
-                    child: Text("VIEW ALL",
+                    child: Text(AppStrings.viewAll.tr(),
                         style: AppStyles.greyContent(context).copyWith(
                           fontSize: 12.sp,
                         )),

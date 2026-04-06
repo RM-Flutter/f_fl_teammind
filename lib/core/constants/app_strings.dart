@@ -1085,4 +1085,10 @@ abstract class AppStrings {
   static const removeExperience = "removeExperience";
   static const enterJobTitle = "enterJobTitle";
   static const loadMore = "loadMore";
+  static const viewArticlesShortcut = "viewArticlesShortcut";
+  static const viewPayrollShortcut = "viewPayrollShortcut";
+  static const myTeamRequestsShortcut = "myTeamRequestsShortcut";
+  static const viewTasksShortcut = "viewTasksShortcut";
+  static const addRequestsShortcut = "addRequestsShortcut";
+  static const myTasksHeader = "myTasks";
 }

@@ -138,37 +138,16 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                  var request = value.requests[index];
-                 var statusKey = request['pstatus'];
-                 if (statusKey == "hold") {
-                  return defaultRequestContainer(
+                 return defaultRequestContainer(
                     "mine",
                     id: request['id'],
-                    title: request['subject'],
-                    containerColor: Color(AppColors.primary),
-                    date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                      .format(DateTime.parse(request['created_at'].toString()))
-                      .toString(),
-                    status: request['pstatus'].toString().tr(),
-                    statusColor: Color(AppColors.white)
-                  );
-                 }else{
-                  return defaultRequestContainer(
-                    "mine",
-                    id: request['id'],
-                    containerColor: Color(AppColors.white),
+                    containerColor: Colors.white,
                     title: request['subject'],
                     date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                      .format(DateTime.parse(request['created_at'].toString()))
-                      .toString(),
+                      .format(DateTime.parse(request['created_at'].toString())),
                     status: request['pstatus'].toString().tr(),
-                    titleColor: Color(AppColors.primary),
-                    dateColor: Color(AppColors.darkGrey),
-                    statusColor: statusKey == "closed"
-                      ? const Color(AppColors.red)
-                      : Color(AppColors.primary)
+                    statusColor: Colors.transparent, // Handled internally
                   );
-                 }
-                 return const SizedBox.shrink(); // Return nothing for non-hold items in this section
                 },
                ),
                // "Other Requests" Text
@@ -188,22 +167,16 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                  var request = value.requestsTeam[index];
-                 var statusKey = request['pstatus'];
                  return defaultRequestContainer(
-                   "myTeam",
-                   id: request['id'],
-                   containerColor: Color(AppColors.white),
-                   title: request['subject'],
-                   date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                     .format(DateTime.parse(request['created_at'].toString()))
-                     .toString(),
-                   status: request['pstatus'].toString().tr(),
-                   titleColor: Color(AppColors.primary),
-                   dateColor: Color(AppColors.darkGrey),
-                   statusColor: statusKey == "closed"
-                     ? const Color(AppColors.red)
-                     : Color(AppColors.primary)
-                 );
+                    "myTeam",
+                    id: request['id'],
+                    containerColor: Colors.white,
+                    title: request['subject'],
+                    date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                      .format(DateTime.parse(request['created_at'].toString())),
+                    status: request['pstatus'].toString().tr(),
+                    statusColor: Colors.transparent, // Handled internally
+                  );
                 },
                ),
 
@@ -225,56 +198,130 @@ class _ComplainScreenState extends State<ComplainScreen> {
    } ,
   );
  }
- defaultRequestContainer(type,{title, containerColor, statusColor, status, date, titleColor, dateColor , id})=>
-   GestureDetector(
-    onTap: ()async{
-     await context.pushNamed(AppRoutes.complainDetails.name,
-       pathParameters: {'lang': context.locale.languageCode,
-        'id' : "${id}",
-        'type' : "$type"
-       });
-    },
-    child: Container(
-     padding: const EdgeInsets.all(12),
-     margin: const EdgeInsets.only(bottom: 16),
+  Widget defaultRequestContainer(String type, {
+    required dynamic title,
+    required Color containerColor,
+    required Color statusColor,
+    required String status,
+    required String date,
+    Color? titleColor,
+    Color? dateColor,
+    required dynamic id,
+  }) {
+    IconData statusIcon;
+    Color iconColor;
 
-     decoration: BoxDecoration(
-      boxShadow:  const [
-       BoxShadow(
-        blurRadius: AppSizes.s8,
-        spreadRadius: 1,
-       )
-      ],
-      color: containerColor,
-      borderRadius: BorderRadius.circular(12),
-     ),
-     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-       Text(
-        "$title".toUpperCase(),
-        style: AppStyles.content(context).copyWith(fontSize: 14.sp,
-         fontWeight: FontWeight.w500,
-         color: titleColor??Color(AppColors.white))),
-       const SizedBox(height: 8),
-       Row(
-        children: [
-         Icon(Icons.circle, color: statusColor, size: 10),
-         const SizedBox(width: 6),
-         Text(
-          "$status".toUpperCase(),
-          style: AppStyles.content(context).copyWith(fontSize: 12.sp,
-           fontWeight: FontWeight.w500,
-           color: titleColor??Color(AppColors.white))),
-         const SizedBox(width: 30,),
-         Text(
-          "$date".toUpperCase(),
-          style: AppStyles.content(context).copyWith(color: dateColor??Color(AppColors.grey50), fontWeight: FontWeight.w500, fontSize: 12.sp)),
+    // Map status to icons and colors
+    switch (status.toLowerCase()) {
+      case 'hold':
+      case 'معلق':
+        statusIcon = Icons.pause_circle_filled_rounded;
+        iconColor = Colors.orange;
+        break;
+      case 'closed':
+      case 'مغلق':
+        statusIcon = Icons.cancel_rounded;
+        iconColor = Colors.red;
+        break;
+      case 'open':
+      case 'مفتوح':
+        statusIcon = Icons.info_outline_rounded;
+        iconColor = Color(AppColors.primary);
+        break;
+      default:
+        statusIcon = Icons.info_outline_rounded;
+        iconColor = Color(AppColors.primary);
+    }
+
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSizes.s16.h),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSizes.s14.h,
+        horizontal: AppSizes.s16.w,
+      ),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        shadows: [
+          BoxShadow(
+            color: Color(AppColors.lightGrey).withOpacity(0.5),
+            blurRadius: AppSizes.s5.r,
+            spreadRadius: 1,
+          )
         ],
-       ),
-      ],
-     ),
-    ),
-   );
+      ),
+      child: InkWell(
+        onTap: () async {
+          await context.pushNamed(
+            AppRoutes.complainDetails.name,
+            pathParameters: {
+              'lang': context.locale.languageCode,
+              'id': "$id",
+              'type': type
+            },
+          );
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "$title",
+                    style: AppStyles.blackContent(context).copyWith(
+                      fontWeight: FontWeight.w400,
+                      fontSize: AppSizes.s16.sp,
+                      letterSpacing: 0.5,
+                      height: 1.1,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    children: [
+                      Text(
+                        status,
+                        style: AppStyles.greyContent(context).copyWith(
+                          fontSize: 12.sp,
+                          color: iconColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w),
+                        child: Text("|", style: TextStyle(color: Colors.grey.withOpacity(0.3))),
+                      ),
+                      Opacity(
+                        opacity: 0.7,
+                        child: Text(
+                          date,
+                          style: AppStyles.greyContent(context).copyWith(
+                            color: Color(AppColors.grey50),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: AppSizes.s8.w),
+            Icon(
+              statusIcon,
+              color: iconColor,
+              size: 24.r,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 }

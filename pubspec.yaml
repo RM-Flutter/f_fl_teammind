@@ -185,3 +185,9 @@ flutter:
     - family: Ibrand
       fonts:
         - asset: assets/fonts/ibrand/Ibrand-Regular.otf
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/cairo/Cairo-Bold.ttf
+        - asset: assets/fonts/cairo/Cairo-SemiBold.ttf
+        - asset: assets/fonts/cairo/Cairo-Medium.ttf
+        - asset: assets/fonts/cairo/Cairo-Regular.ttf

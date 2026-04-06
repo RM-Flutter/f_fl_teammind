@@ -67,7 +67,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                               color: Colors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.arrow_back, color: Colors.white, size: 20.r),
+                            child: Icon(context.locale.languageCode == "en" ? Icons.arrow_back : Icons.arrow_forward, color: Colors.white, size: 20.r),
                           ),
                         ),
                       ),
@@ -107,7 +107,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       AppStrings.aboutAppDescription.tr(),
                       textAlign: TextAlign.start,
                       style: AppStyles.content(context).copyWith(
-                        fontSize: 14.5.sp,
+                        fontSize: 13.sp,
                         height: 1.6,
                         color: const Color(0xFF333333),
                         fontWeight: FontWeight.w400,
@@ -123,7 +123,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     style: AppStyles.heading(context).copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                       fontWeight: FontWeight.w700,
-                      fontSize: 20.sp,
+                      fontSize: 16.sp,
                     ),
                   ),
 
@@ -188,14 +188,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     return GestureDetector(
       onTap: tap,
       child: Container(
-        padding: EdgeInsets.all(8.r),
-        height: 42.r,
-        width: 42.r,
+        padding: EdgeInsets.all(5.r),
+        height: 30.r,
+        width: 30.r,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color:  Theme.of(context).colorScheme.secondary,
         ),
-        child: SvgPicture.asset(ico, color: Colors.white),
+        child: SvgPicture.asset(ico, color: Colors.white, width: 15.r, height: 15.r),
       ),
     );
   }

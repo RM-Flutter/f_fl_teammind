@@ -1061,5 +1061,11 @@
   "showComments": "Show Comments",
   "pleaseEnterAComment": "Please Enter A Comment",
   "somethingWentWrong": "Something Went Wrong",
-  "enterYourCouponCodeHereToGetPointsFromOrientPaintsProducts": "Enter your coupon code here to get points from Orient Paints products"
+  "enterYourCouponCodeHereToGetPointsFromOrientPaintsProducts": "Enter your coupon code here to get points from Orient Paints products",
+  "viewArticlesShortcut": "VIEW\nARTICLES",
+  "viewPayrollShortcut": "VIEW\nPAYROLL",
+  "myTeamRequestsShortcut": "MY TEAM\nREQUESTS",
+  "viewTasksShortcut": "VIEW\nTASKS",
+  "addRequestsShortcut": "ADD\nREQUESTS",
+  "myTasks": "My Tasks"
 }

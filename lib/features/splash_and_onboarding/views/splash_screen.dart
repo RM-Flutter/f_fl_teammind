@@ -1,10 +1,6 @@
-import 'package:app_test/core/utils/app_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
-
 import 'package:app_test/core/constants/cache_constants.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/features/splash_and_onboarding/views/onboarding_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +22,6 @@ import 'package:app_test/core/services/internet_check.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/domain_selection_service.dart';
 import 'package:app_test/features/splash_and_onboarding/controller/splash_onboarding_controller.dart';
-
 import '../../../core/utils/overlay_gradient_widget.dart';
 
 
@@ -387,7 +382,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.cover),
                 const OverlayGradientWidget(),
                 Positioned(
-                  bottom: AppSizes.s48.h,
+                  bottom: AppSizes.s48,
                   left: AppSizes.s0,
                   right: AppSizes.s0,
                   child: Column(
@@ -395,16 +390,17 @@ class _SplashScreenState extends State<SplashScreen> {
                     children: [
                       DynamicImageWidget(
                         imageUrl: AppImages.logo,
-                        height: AppSizes.s75.r,
-                        width: AppSizes.s75.r,
+                        height: AppSizes.s75,
+                        width: AppSizes.s75,
                       ),
                       Text(
                         AppStrings.loading.tr(),
-                        style: AppStyles.whiteHeading(context).copyWith(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: LocalizationService.isArabic(context: context) ? 0 : 1.2
-                        ),
+                        style: LocalizationService.isArabic(context: context)
+                            ? Theme.of(context)
+                            .textTheme
+                            .displayMedium
+                            ?.copyWith(letterSpacing: 0)
+                            : Theme.of(context).textTheme.displayMedium,
                       )
                     ],
                   ),

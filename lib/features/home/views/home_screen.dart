@@ -283,10 +283,10 @@ class _HomeScreenState extends State<HomeScreen> {
         viewModel.myRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myRequests);
     }
-    // if (viewModel.myTeamRequests != null &&
-    //     viewModel.myTeamRequests?.isNotEmpty == true) {
-    //   widgetsWithData.add(HomeWidgetType.myTeamRequests);
-    // }
+    if (viewModel.myTeamRequests != null &&
+        viewModel.myTeamRequests?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.myTeamRequests);
+    }
     if (viewModel.otherDepartmentRequests != null &&
         viewModel.otherDepartmentRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.otherDepartmentRequests);
@@ -299,9 +299,9 @@ class _HomeScreenState extends State<HomeScreen> {
         viewModel.notifications?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.notifications);
     }
-    // if (viewModel.myTasks != null && viewModel.myTasks?.isNotEmpty == true) {
-    //   widgetsWithData.add(HomeWidgetType.myTasks);
-    // }
+    if (viewModel.myTasks != null && viewModel.myTasks?.isNotEmpty == true) {
+      widgetsWithData.add(HomeWidgetType.myTasks);
+    }
 
     // Add widgets that have data, following the saved order
     for (final widgetType in _widgetOrder) {
@@ -461,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildShortcutActions(BuildContext context) {
     final List<Map<String, dynamic>> items = [
       {
-        'title': 'ADD\nREQUESTS',
+        'title': AppStrings.addRequestsShortcut.tr(),
         'icon': 'assets/images/add-request.png',
         'onTap': () => context.pushNamed(AppRoutes.addRequest.name,
                 pathParameters: {
@@ -470,13 +470,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 })
       },
       {
-        'title': 'VIEW\nTASKS',
+        'title': AppStrings.viewTasksShortcut.tr(),
         'icon': 'assets/images/view-tasks.png',
         'onTap': () => context.pushNamed(AppRoutes.taskScreen.name,
             pathParameters: {'lang': context.locale.languageCode})
       },
       {
-        'title': 'MY TEAM\nREQUESTS',
+        'title': AppStrings.myTeamRequestsShortcut.tr(),
         'icon': 'assets/images/my-team-request.png',
         'onTap': () => context.pushNamed(AppRoutes.requests2.name,
             pathParameters: {
@@ -485,14 +485,14 @@ class _HomeScreenState extends State<HomeScreen> {
             })
       },
       {
-        'title': 'VIEW\nPAYROLL',
+        'title': AppStrings.viewPayrollShortcut.tr(),
         'icon': 'assets/images/view-payroll.png',
         'onTap': () => context.pushNamed(AppRoutes.payrollsList.name,
             extra: {'employeeName': null, 'employeeId': null},
             pathParameters: {'lang': context.locale.languageCode})
       },
       {
-        'title': 'VIEW\nARTICLES',
+        'title': AppStrings.viewArticlesShortcut.tr(),
         'icon': 'assets/images/view-articles.png',
         'onTap': () => context.pushNamed(AppRoutes.defaultPage.name,
             pathParameters: {
@@ -558,7 +558,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "My Tasks",
+                AppStrings.myTasksHeader.tr(),
                 style: AppStyles.primaryHeading(context).copyWith(
                   fontSize: 19.sp,
                   fontWeight: FontWeight.w700,
@@ -568,7 +568,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => context.pushNamed(AppRoutes.taskScreen.name,
                     pathParameters: {'lang': context.locale.languageCode}),
                 child: Text(
-                  "VIEW ALL",
+                  AppStrings.viewAll.tr(),
                   style: AppStyles.greyContent(context).copyWith(
                     fontSize: 12.sp,
                   ),
