@@ -263,7 +263,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         "📅 ${AppStrings.publicHolidays.tr()}",
-                                        style: AppStyles.darkHeading(context).copyWith(
+                                        style: AppStyles.heading(context).copyWith(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20.sp
                                         ),

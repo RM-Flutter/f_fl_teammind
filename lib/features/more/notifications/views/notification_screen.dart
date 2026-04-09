@@ -93,7 +93,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
             title: AppStrings.notifications.tr(),
-            titleStyle: AppStyles.darkHeading(context).copyWith(
+            titleStyle: AppStyles.heading(context).copyWith(
               fontSize: 15.sp, 
               fontWeight: FontWeight.w400
             ),

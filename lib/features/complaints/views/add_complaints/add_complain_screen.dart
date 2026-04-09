@@ -297,7 +297,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
      return Scaffold(
       appBar: AppBarWithBookmark(
        title: AppStrings.newRequest.tr().toUpperCase(),
-       titleStyle: AppStyles.darkHeading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
+       titleStyle: AppStyles.heading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
        backgroundColor: Colors.white,
        elevation: 0,
        centerTitle: true,

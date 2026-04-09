@@ -60,7 +60,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
       child: TemplatePage(
           pageContext: context,
           title: AppStrings.newRequest.tr(),
-          titleStyle: AppStyles.darkHeading(context).copyWith(
+          titleStyle: AppStyles.heading(context).copyWith(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
           ),

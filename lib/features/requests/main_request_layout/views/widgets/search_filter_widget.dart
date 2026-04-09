@@ -249,7 +249,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           children: [
                                             Text(
                                               AppStrings.requests.tr().toUpperCase(),
-                                              style: AppStyles.darkHeading(context).copyWith(
+                                              style: AppStyles.heading(context).copyWith(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 18.sp
                                               ),

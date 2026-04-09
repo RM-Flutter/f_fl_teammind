@@ -52,7 +52,7 @@ class DefaultDetails extends StatelessWidget {
                               ),
                               Text(
                                 type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : type.toString().tr().toUpperCase(),
-                                style: AppStyles.primaryHeading(context).copyWith(color: const Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16.sp),
+                                style: AppStyles.heading(context).copyWith(color: const Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16.sp),
                               ),
                               IconButton(
                                   icon: Icon(Icons.arrow_back, color: Colors.transparent, size: 24.r,),
@@ -113,7 +113,7 @@ class DefaultDetails extends StatelessWidget {
                         gapH14,
                         Text(
                           value.getOneBlogModel!.item!.title ?? "",
-                          style: AppStyles.darkHeading(context).copyWith(
+                          style: AppStyles.heading(context).copyWith(
                               fontSize: AppSizes.s16.sp,
                               fontWeight: FontWeight.bold,
                               color: Color(AppColors.c1)),

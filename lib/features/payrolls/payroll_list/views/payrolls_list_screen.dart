@@ -69,7 +69,7 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                       alignment: Alignment.center,
                       child: Text(
                         widget.empName!,
-                        style: AppStyles.darkHeading(context).copyWith(
+                        style: AppStyles.heading(context).copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: AppSizes.s20.sp),
                         maxLines: 1,
@@ -104,7 +104,7 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                           children: [
                             gapH12,
                        if(widget.empName == null) Text(gCache['name'], style:
-                        AppStyles.darkHeading(context).copyWith(
+                        AppStyles.heading(context).copyWith(
                             fontWeight: FontWeight.w600,fontSize: 20.sp,
                         )
                           ,),

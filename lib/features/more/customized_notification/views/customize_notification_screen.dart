@@ -40,7 +40,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: AppStyles.primaryHeading(context).copyWith(
+                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xff0D3B6F)

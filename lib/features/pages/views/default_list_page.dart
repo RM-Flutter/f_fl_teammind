@@ -83,7 +83,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
                           ),
                           Text(
                             widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),
-                            style: AppStyles.primaryHeading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                            style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
                           ),
                           IconButton(
                             icon:  Icon(Icons.arrow_back, color: Colors.transparent, size: 24.r,),

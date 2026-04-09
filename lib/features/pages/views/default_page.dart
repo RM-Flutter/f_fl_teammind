@@ -104,7 +104,7 @@ class _DefaultPageState extends State<DefaultPage> {
             backgroundColor: Color(AppColors.background),
             appBar: AppBarWithBookmark(
               title: widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase():widget.type.toString().tr().toUpperCase(),
-              titleStyle: AppStyles.darkHeading(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700),
+              titleStyle: AppStyles.heading(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700),
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
             ),

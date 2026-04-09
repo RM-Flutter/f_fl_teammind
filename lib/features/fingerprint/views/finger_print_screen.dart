@@ -76,7 +76,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                       children: [
                         AutoSizeText(
                           "",
-                          style: AppStyles.primaryHeading(context).copyWith(
+                          style: AppStyles.heading(context).copyWith(
                               fontWeight: FontWeight.w600,
                               fontSize: AppSizes.s20.sp),
                           maxLines: 1,

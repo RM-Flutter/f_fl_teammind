@@ -72,7 +72,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                           LocalizationService.isArabic(context: context)
                               ? rewardAndPenalty.titleAr ?? ''
                               : rewardAndPenalty.titleEn ?? '',
-                          style: AppStyles.darkHeading(context).copyWith(
+                          style: AppStyles.heading(context).copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: AppSizes.s14.sp,
                           ),

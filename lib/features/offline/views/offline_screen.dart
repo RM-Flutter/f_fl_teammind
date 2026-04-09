@@ -181,7 +181,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                       children: [
                         SvgPicture.asset("assets/images/svg/wifi.svg",),
                         SizedBox(height: 25.h,),
-                        Text(AppStrings.youAreOffline.tr(), style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
+                        Text(AppStrings.youAreOffline.tr(), style: AppStyles.heading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
                         SizedBox(height: 15.h,),
                         Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: AppStyles.blackContent(context).copyWith(fontSize: 13.sp, fontWeight: FontWeight.w500),),
                         SizedBox(height: 25.h,),
@@ -206,7 +206,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                           },
                         ),
                         SizedBox(height: 40.h,),
-                        if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
+                        if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
                         SizedBox(height: 15.h,),
                         if (viewModel.usersFingerprints.isNotEmpty)
                           SizedBox(
@@ -297,7 +297,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                               children: [
                                 Text(
                                   AppStrings.fingerprintsTitle.tr(),
-                                  style: AppStyles.darkHeading(context).copyWith(
+                                  style: AppStyles.heading(context).copyWith(
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w700,
                                   ),

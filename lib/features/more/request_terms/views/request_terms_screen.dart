@@ -118,7 +118,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
           // Request Type Title
           Text(
             title,
-            style: AppStyles.darkHeading(context).copyWith(
+            style: AppStyles.heading(context).copyWith(
               fontSize: AppSizes.s20.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -128,7 +128,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
           // Conditions Header
           Text(
             AppStrings.conditionsForSubmission.tr().replaceAll('{requestType}', title),
-            style: AppStyles.darkHeading(context).copyWith(
+            style: AppStyles.heading(context).copyWith(
               fontSize: AppSizes.s16.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -213,7 +213,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: AppStyles.darkHeading(context).copyWith(
+      style: AppStyles.heading(context).copyWith(
         fontSize: AppSizes.s16.sp,
         fontWeight: FontWeight.w600,
       ),

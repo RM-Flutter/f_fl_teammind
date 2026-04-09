@@ -86,7 +86,7 @@ class TaskListTileWidget extends StatelessWidget {
                           children: [
                             Text(
                               title,
-                              style: AppStyles.darkHeading(context).copyWith(
+                              style: AppStyles.heading(context).copyWith(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13.sp,
                               ),

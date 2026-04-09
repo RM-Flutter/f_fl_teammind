@@ -74,7 +74,7 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) Text("", style:
-                            AppStyles.blackHeading(context).copyWith(
+                            AppStyles.heading(context).copyWith(
                                 fontWeight: FontWeight.w600,fontSize: 20.sp,
                             )
                               ,),

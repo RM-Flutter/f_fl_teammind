@@ -66,7 +66,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = AppStyles.darkHeading(context).copyWith(
+    final textStyle = AppStyles.heading(context).copyWith(
       fontWeight: FontWeight.w600,
       color: Theme.of(context).colorScheme.secondary,
       fontSize: AppSizes.s14.sp,

@@ -58,7 +58,7 @@ class RequestsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(getRequestsTypeStr(),
-                      style: AppStyles.primaryHeading(context).copyWith(
+                      style: AppStyles.heading(context).copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w700,
                       ),),

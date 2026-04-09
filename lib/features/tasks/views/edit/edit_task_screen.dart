@@ -120,7 +120,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                             padding: EdgeInsets.all(16.0.r),
                                             child: Text(
                                               AppStrings.employeeName.tr(),
-                                              style: AppStyles.darkHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                                              style: AppStyles.heading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                           Expanded(

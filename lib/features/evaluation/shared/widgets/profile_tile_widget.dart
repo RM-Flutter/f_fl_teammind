@@ -177,7 +177,7 @@ class ProfileTileEva extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(AppStrings.evaluationsInfo.tr(),style: AppStyles.blackHeading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.w600),),
+              Text(AppStrings.evaluationsInfo.tr(),style: AppStyles.heading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.w600),),
                SizedBox(height: 15.h,),
                Container(
                  width: double.infinity,

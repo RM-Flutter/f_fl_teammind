@@ -40,7 +40,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
             SizedBox(height: 30.h),
             SvgPicture.asset("assets/images/svg/success_reqs.svg", width: 100.r, height: 100.r),
             SizedBox(height: 15.h,),
-            Text(AppStrings.success.tr().toUpperCase(), style: AppStyles.darkHeading(context).copyWith(
+            Text(AppStrings.success.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
             )),

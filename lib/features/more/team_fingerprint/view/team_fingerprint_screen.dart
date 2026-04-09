@@ -128,7 +128,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t1,style: AppStyles.darkHeading(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp)),
+          Text(t1,style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp)),
           gapH8,
           Text(t2 != null ?"${t2} - ${t3}" : "${AppStrings.noDepartment.tr()} - ${t3}",
               style: AppStyles.subtitleContent(context).copyWith(fontWeight: FontWeight.w400, fontSize: 12.sp)),

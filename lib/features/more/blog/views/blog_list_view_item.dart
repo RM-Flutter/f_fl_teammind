@@ -86,7 +86,7 @@ class BlogListViewItem extends StatelessWidget {
                     child: Text(
                         blog[index]['title'].toString().toUpperCase(),
                         maxLines: 2,
-                        style: AppStyles.primaryHeading(context).copyWith(
+                        style: AppStyles.heading(context).copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xff0D3B6F)),

@@ -68,7 +68,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
              Spacer(),
              Text(
               AppStrings.myRequests.tr().toUpperCase(),
-              style: AppStyles.whiteHeading(context).copyWith(fontSize: 20.sp,
+              style: AppStyles.heading(context).copyWith(fontSize: 20.sp,
                fontWeight: FontWeight.w700),
               textAlign: TextAlign.center),
              Spacer(),

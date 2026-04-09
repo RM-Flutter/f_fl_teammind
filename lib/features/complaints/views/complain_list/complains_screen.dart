@@ -71,7 +71,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
      backgroundColor: Colors.white,
      appBar: AppBarWithBookmark(
       title: AppStrings.ticketSystem.tr().toUpperCase(),
-      titleStyle: AppStyles.darkHeading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
+      titleStyle: AppStyles.heading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
       centerTitle: true,
       backgroundColor: Color(AppColors.background),
       elevation: 0,

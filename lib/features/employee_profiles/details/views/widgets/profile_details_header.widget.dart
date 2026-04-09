@@ -56,7 +56,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: AppStrings.employeeInfo.tr(),
-                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w600),
+                titleStyle: AppStyles.heading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 centerTitle: true,
                 routeName: AppRoutes.employeeDetails.name,
                 defaultTitle: AppStrings.employeeInfo.tr(),
@@ -129,13 +129,13 @@ class EmployeeDetailsHeader extends StatelessWidget {
                       gapH12,
                       Text(
                         employee?.name ?? '',
-                        style: AppStyles.whiteHeading(context).copyWith(
+                        style: AppStyles.heading(context).copyWith(
                             fontSize: 22.sp,
                             fontWeight: FontWeight.w700),
                       ),
                       Text(
                         employee?.jobTitle?.toUpperCase() ?? '',
-                        style: AppStyles.whiteHeading(context).copyWith(
+                        style: AppStyles.heading(context).copyWith(
                             fontSize: 14.sp,
                             letterSpacing: 1.2,
                             fontWeight: FontWeight.w600),

@@ -487,7 +487,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       (gCache['name'] ?? '').toUpperCase(),
                       maxLines: 1,
                       textAlign: TextAlign.center,
-                      style: AppStyles.primaryHeading(context).copyWith(
+                      style: AppStyles.heading(context).copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w700,
                       ),

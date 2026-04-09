@@ -59,7 +59,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     ),
                     title: Text(
                       AppStrings.updatePassword.tr().toUpperCase(),
-                      style: AppStyles.darkHeading(context).copyWith(
+                      style: AppStyles.heading(context).copyWith(
                           fontSize: AppSizes.s16.sp,
                           fontWeight: FontWeight.w700),
                     ),

@@ -124,7 +124,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                   EdgeInsets.all(16.0.r),
                                               child: Text(
                                                 AppStrings.employeeName.tr(),
-                                                style: AppStyles.darkHeading(context).copyWith(
+                                                style: AppStyles.heading(context).copyWith(
                                                     fontSize: 18.sp,
                                                     fontWeight:
                                                         FontWeight.bold),

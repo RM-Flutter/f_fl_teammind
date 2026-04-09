@@ -38,7 +38,7 @@ class NotificationsSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppStrings.myNotifications.tr(),
-                      style: AppStyles.primaryHeading(context).copyWith(
+                      style: AppStyles.heading(context).copyWith(
                         fontSize: 16.sp, 
                         fontWeight: FontWeight.w700,
                         // تحسين الخطوط في الويب

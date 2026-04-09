@@ -61,7 +61,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                 },
                 child: Icon(Icons.arrow_back, color: Color(AppColors.titleText), size: 24.r,)),
             title: AppStrings.languageSettings.tr().toUpperCase(),
-            titleStyle: AppStyles.darkHeading(context).copyWith(
+            titleStyle: AppStyles.heading(context).copyWith(
                 fontSize: AppSizes.s16.sp,
                 fontWeight: FontWeight.w700),
             routeName: AppRoutes.langSettingScreen.name,

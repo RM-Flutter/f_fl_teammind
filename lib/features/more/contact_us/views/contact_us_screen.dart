@@ -72,7 +72,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     ),
                     title: Text(
                       AppStrings.contactUs.tr().toUpperCase(),
-                      style: AppStyles.whiteHeading(context).copyWith(
+                      style: AppStyles.heading(context).copyWith(
                         fontWeight: FontWeight.w700,
                         fontSize: 16.sp,
                       ),
@@ -107,7 +107,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                     children: [
                                       Text(
                                         AppStrings.phone.tr().toUpperCase(),
-                                        style: AppStyles.whiteHeading(context).copyWith(
+                                        style: AppStyles.heading(context).copyWith(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 18.sp),
                                       ),
@@ -193,7 +193,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                       children: [
                                         Text(
                                           AppStrings.address.tr().toUpperCase(),
-                                          style: AppStyles.whiteHeading(context).copyWith(
+                                          style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 18.sp),
                                         ),
@@ -219,7 +219,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       [index]
                                                       ['title']['ar']
                                                           : gCache['company_contacts']['branches'][index]['title']['en'],
-                                                      style: AppStyles.whiteHeading(context).copyWith(
+                                                      style: AppStyles.heading(context).copyWith(
                                                           fontWeight:
                                                           FontWeight.w700,
                                                           fontSize: 14.sp),
@@ -311,7 +311,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                       children: [
                                         Text(
                                           AppStrings.email.tr().toUpperCase(),
-                                          style: AppStyles.whiteHeading(context).copyWith(
+                                          style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 18.sp),
                                         ),
@@ -359,7 +359,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                   children: [
                                     Text(
                                       AppStrings.followUs.tr().toUpperCase(),
-                                      style: AppStyles.whiteHeading(context).copyWith(
+                                      style: AppStyles.heading(context).copyWith(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16.sp),
                                     ),

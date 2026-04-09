@@ -78,7 +78,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         child: Center(
                           child: Text(
                             AppStrings.aboutApplication.tr(),
-                            style: AppStyles.whiteHeading(context).copyWith(
+                            style: AppStyles.heading(context).copyWith(
                               fontWeight: FontWeight.w700,
                               fontSize: 18.sp,
                             ),

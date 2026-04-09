@@ -80,7 +80,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                       alignment: Alignment.center,
                       child: Text(
                         widget.empName!,
-                        style: AppStyles.darkHeading(context).copyWith(
+                        style: AppStyles.heading(context).copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: AppSizes.s20.sp),
                         maxLines: 1,
@@ -121,7 +121,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                           viewModel.rewardsAndPenalties?.isEmpty == false)
                                         Text(
                                           AppStrings.myRewardsAndPenalties.tr(),
-                                          style: AppStyles.darkHeading(context).copyWith(
+                                          style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16.sp),
                                         ),
@@ -140,7 +140,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                               gCache['is_manager_in'].isNotEmpty))
                                         Text(
                                           AppStrings.teamRewardsAndPenalties.tr(),
-                                          style: AppStyles.darkHeading(context).copyWith(
+                                          style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16.sp),
                                         ),

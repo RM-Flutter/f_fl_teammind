@@ -90,7 +90,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                                       child: Center(
                                         child: Text(
                                           widget.empName!,
-                                          style: AppStyles.darkHeading(context).copyWith(
+                                          style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 22.sp),
                                         ),

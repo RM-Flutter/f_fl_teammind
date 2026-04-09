@@ -224,7 +224,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                       children: [
                                                         Text(
                                                           subTask.name?.toUpperCase() ?? "",
-                                                          style: AppStyles.darkHeading(context).copyWith(
+                                                          style: AppStyles.heading(context).copyWith(
                                                             color: isCompleted
                                                                 ? Theme.of(context).colorScheme.secondary
                                                                 : Color(AppColors.titleText),

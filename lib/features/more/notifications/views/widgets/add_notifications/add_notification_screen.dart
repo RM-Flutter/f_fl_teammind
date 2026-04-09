@@ -154,7 +154,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                               children: [
                                                 Text(
                                                   AppStrings.employeeName.tr(),
-                                                  style: AppStyles.darkHeading(context).copyWith(
+                                                  style: AppStyles.heading(context).copyWith(
                                                       fontWeight: FontWeight.w700,
                                                       fontSize: 18.sp),
                                                 ),
@@ -291,7 +291,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                               children: [
                                                 Text(
                                                   AppStrings.departmentName.tr(),
-                                                  style: AppStyles.darkHeading(context).copyWith(
+                                                  style: AppStyles.heading(context).copyWith(
                                                       fontWeight: FontWeight.w700,
                                                       fontSize: 18.sp),
                                                 ),

@@ -66,7 +66,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                       ),
                       Text(
                         AppStrings.userDevices.tr().toUpperCase(),
-                        style: AppStyles.darkHeading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                        style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
                       ),
                       IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.transparent),

@@ -28,7 +28,7 @@ class _FaqScreenState extends State<FaqScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,
-            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  AppStyles.darkHeading(context).copyWith(fontSize: 16.sp,
+            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  AppStyles.heading(context).copyWith(fontSize: 16.sp,
                 fontWeight: FontWeight.w700),),
             leading: Padding(
               padding: EdgeInsets.all(AppSizes.s10.r),
