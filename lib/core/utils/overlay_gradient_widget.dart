@@ -14,8 +14,8 @@ class OverlayGradientWidget extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Color(AppColors.dark).withOpacity(0.5),
-            Color(AppColors.dark),
+            Color(AppColors.titleText).withOpacity(0.5),
+            Color(AppColors.titleText),
           ],
         ),
       ),

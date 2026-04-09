@@ -110,7 +110,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: Color(AppColors.whiteGrey)),
+                    border: Border.all(color: Color(AppColors.border)),
                   ),
                   child: ListTile(
                     title: TextField(
@@ -126,7 +126,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                         hintStyle: AppStyles.greyContent(context).copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
-                            color: Color(AppColors.almostBlack)),
+                            color: Color(AppColors.overlay)),
                         contentPadding: EdgeInsets.zero,
                         disabledBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -157,7 +157,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.dark),
+                backgroundColor: Color(AppColors.titleText),
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.r),

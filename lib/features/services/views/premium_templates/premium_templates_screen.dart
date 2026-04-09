@@ -169,7 +169,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                       _applyFilter();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.dark),
+                      backgroundColor: Color(AppColors.titleText),
                       foregroundColor: Colors.white,
                       minimumSize: const Size(150, 45),
                       shape: RoundedRectangleBorder(
@@ -258,7 +258,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -267,7 +267,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           ),
           title: AppStrings.premiumTemplates2.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -290,7 +290,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                           prefixIcon: const Icon(Icons.search),
                           hintText: AppStrings.searchByName.tr(),
                           fillColor:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                          Color(AppColors.buttons).withValues(alpha: 0.05),
                           suffixIcon: IconButton(
                               icon: const Icon(Icons.close),
                               onPressed: (){
@@ -435,7 +435,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    color: Color(AppColors.buttons),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ClipRRect(
@@ -445,7 +445,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             imageUrl: imageUrl,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
-                              color: Theme.of(context).primaryColor,
+                              color: Color(AppColors.buttons),
                               child: const Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
@@ -454,7 +454,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
-                              color: Theme.of(context).primaryColor,
+                              color: Color(AppColors.buttons),
                               child: const Icon(
                                 Icons.image,
                                 color: Colors.white,
@@ -463,7 +463,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             ),
                           )
                         : Container(
-                            color: Theme.of(context).primaryColor,
+                            color: Color(AppColors.buttons),
                             child: _getFileTypeIcon(fileType),
                           ),
                   ),
@@ -494,7 +494,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                         Text(
                           file.title!,
                           style: TextStyle(
-                            color: Color(AppColors.dark),
+                            color: Color(AppColors.titleText),
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -538,7 +538,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                       CircularProgressIndicator(
                         value: progress,
                         backgroundColor: Colors.white.withValues(alpha: 0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                         strokeWidth: 4,
                       ),
                       const SizedBox(height: 12),

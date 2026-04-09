@@ -93,7 +93,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             if (isRequired)
@@ -130,7 +130,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),
@@ -175,7 +175,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -235,7 +235,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -293,7 +293,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -342,7 +342,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -390,7 +390,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -436,7 +436,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),

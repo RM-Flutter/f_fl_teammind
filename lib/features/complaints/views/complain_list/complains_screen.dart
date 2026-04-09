@@ -73,7 +73,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
       title: AppStrings.ticketSystem.tr().toUpperCase(),
       titleStyle: AppStyles.darkHeading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
       centerTitle: true,
-      backgroundColor: Color(AppColors.white),
+      backgroundColor: Color(AppColors.background),
       elevation: 0,
       routeName: AppRoutes.complainScreen.name),
      floatingActionButton: FloatingActionButton(
@@ -84,7 +84,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
        await value.getRequest(context, page: 1);
        await value.getRequestMine(context, page: 1);
       },
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Color(AppColors.buttons),
       child: const Icon(Icons.add, color: Colors.white)),
      body: (value.isGetRequestLoading == true && value.currentPage == 1)
        ? ListView.builder(
@@ -157,7 +157,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                  AppStrings.otherRequests.tr().toUpperCase(),
                  style: AppStyles.blackContent(context).copyWith(fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
-                  color: Color(AppColors.dark))),
+                  color: Color(AppColors.titleText))),
                ),
                if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true)) ListView.builder(
                 itemCount: value.requestsTeam.length,
@@ -226,11 +226,11 @@ class _ComplainScreenState extends State<ComplainScreen> {
       case 'open':
       case 'مفتوح':
         statusIcon = Icons.info_outline_rounded;
-        iconColor = Theme.of(context).primaryColor;
+        iconColor = Color(AppColors.buttons);
         break;
       default:
         statusIcon = Icons.info_outline_rounded;
-        iconColor = Theme.of(context).primaryColor;
+        iconColor = Color(AppColors.buttons);
     }
 
     return Container(
@@ -246,7 +246,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
         ),
         shadows: [
           BoxShadow(
-            color: Color(AppColors.lightGrey).withOpacity(0.5),
+            color: Color(AppColors.disableButton).withOpacity(0.5),
             blurRadius: AppSizes.s5.r,
             spreadRadius: 1,
           )
@@ -301,7 +301,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                         child: Text(
                           date,
                           style: AppStyles.greyContent(context).copyWith(
-                            color: Color(AppColors.grey50),
+                            color: Color(AppColors.divider),
                             fontWeight: FontWeight.w400,
                             fontSize: 12.sp,
                           ),

@@ -49,7 +49,7 @@ class _CompanyStructureTreeScreenState
          child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Color(AppColors.dark)),
+            color: Color(AppColors.titleText)),
           child: Icon(
            Icons.arrow_back_sharp,
            color: Colors.white,

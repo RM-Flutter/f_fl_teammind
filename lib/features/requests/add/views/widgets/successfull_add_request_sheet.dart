@@ -69,7 +69,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                             context.goNamed(AppRoutes.home.name,
                                 pathParameters: {'lang': context.locale.languageCode,});
                           },
-                          backgroundColor: Color(AppColors.dark),
+                          backgroundColor: Color(AppColors.titleText),
                           title: AppStrings.goToHome.tr().toUpperCase(),
                           titleWidget: Text(
                             AppStrings.goToHome.tr().toUpperCase(),
@@ -102,7 +102,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                                 });
                           },
                           width: !kIsWeb? 0.45.sw : null,
-                          backgroundColor: Color(AppColors.dark),
+                          backgroundColor: Color(AppColors.titleText),
                           title: title ?? AppStrings.goToRequest.tr().toUpperCase(),
                           titleWidget: Text(
                             (title ?? AppStrings.goToRequest.tr()).toUpperCase(),

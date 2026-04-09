@@ -44,7 +44,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                 margin: EdgeInsets.only(left: 10.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: viewModel.selectedIndex == null ? Theme.of(context).primaryColor : Colors.white,
+                  color: viewModel.selectedIndex == null ? Color(AppColors.buttons) : Colors.white,
                   border: viewModel.selectedIndex == null ? null : Border.all(color: Colors.grey.shade300),
                 ),
                 alignment: Alignment.center,

@@ -82,7 +82,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         });
                         await value.getOneTask(context, widget.id);
                       }, // Icon inside FAB
-                      backgroundColor: Theme.of(context).primaryColor, // Optional: change color
+                      backgroundColor: Color(AppColors.buttons), // Optional: change color
                       tooltip: 'Add',
                       child: Center(
                         child: SvgPicture.asset(
@@ -134,7 +134,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                       SizedBox(height: 10.h,),
                                       LinearProgressIndicator(
-                                        color: Theme.of(context).primaryColor,
+                                        color: Color(AppColors.buttons),
                                         value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
                                         borderRadius: BorderRadius.circular(5.r),
                                         backgroundColor: Colors.transparent,
@@ -154,7 +154,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     style: AppStyles.greyContent(context).copyWith(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 13.sp,
-                                        color: Color(AppColors.darkGrey)),
+                                        color: Color(AppColors.subTitleText)),
                                   ),
                                   SizedBox(height: 20.h,),
                                   ListView.separated(
@@ -197,7 +197,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                               border: Border.all(
                                                 color: isCompleted
                                                     ?  (Theme.of(context).colorScheme.primary)
-                                                    : Color(AppColors.whiteGrey),
+                                                    : Color(AppColors.border),
                                                 width: 1.r,
                                               ),
                                             ),
@@ -227,7 +227,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                           style: AppStyles.darkHeading(context).copyWith(
                                                             color: isCompleted
                                                                 ? Theme.of(context).colorScheme.secondary
-                                                                : Color(AppColors.dark),
+                                                                : Color(AppColors.titleText),
                                                             fontSize: 13.sp,
                                                             fontWeight: FontWeight.bold,
                                                           ),
@@ -236,7 +236,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                         Text(
                                                           "${value.getOneTaskModel!.task!.createAt != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.createAt!)) : ""} : ${value.getOneTaskModel!.task!.dueDate != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.dueDate!)) : ""}",
                                                           style: AppStyles.greyContent(context).copyWith(
-                                                            color: Color(AppColors.darkGrey).withOpacity(0.7),
+                                                            color: Color(AppColors.subTitleText).withOpacity(0.7),
                                                             fontSize: 10.sp,
                                                             fontWeight: FontWeight.w400,
                                                           ),
@@ -342,7 +342,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
+                                                border: Border.all(strokeAlign: 1, color: Color(AppColors.divider))
                                             ),
                                           ),
                                         ),
@@ -354,7 +354,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
+                                                border: Border.all(strokeAlign: 1, color: Color(AppColors.divider))
                                             ),
                                           ),
                                         ),

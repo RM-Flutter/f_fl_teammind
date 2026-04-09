@@ -128,7 +128,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             if (isRequired)
@@ -166,7 +166,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -215,7 +215,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),
@@ -260,7 +260,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),
@@ -327,7 +327,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),
@@ -437,7 +437,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             IconButton(
@@ -711,7 +711,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             IconButton(
@@ -837,7 +837,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             IconButton(
@@ -949,7 +949,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             IconButton(

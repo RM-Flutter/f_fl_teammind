@@ -150,9 +150,9 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Color(AppColors.dark)
+                          Color(AppColors.titleText)
                               .withOpacity(0.9), // Top - darker
-                          Color(AppColors.dark)
+                          Color(AppColors.titleText)
                               .withOpacity(0.0), // Bottom - transparent
                         ],
                       ),
@@ -348,7 +348,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
             FloatingActionButton(
               heroTag: hero,
               onPressed: onPress,
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Color(AppColors.buttons),
               child: Icon(
                 icon,
                 color: Colors.white,

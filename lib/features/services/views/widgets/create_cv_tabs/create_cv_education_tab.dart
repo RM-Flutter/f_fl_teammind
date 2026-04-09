@@ -26,7 +26,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(AppColors.dark),
+                  color: Color(AppColors.titleText),
                 ),
               ),
               IconButton(

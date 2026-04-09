@@ -186,7 +186,7 @@ class FreeServicesHeaderWidget extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w300,
                                       fontSize: 15,
-                                      color: Color(AppColors.white),
+                                      color: Color(AppColors.background),
                                     ),
                                   ),
                                 ],

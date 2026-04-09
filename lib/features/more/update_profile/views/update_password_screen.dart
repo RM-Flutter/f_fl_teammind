@@ -48,7 +48,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(AppColors.dark)),
+                              color: Color(AppColors.titleText)),
                           child: Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.white,
@@ -105,7 +105,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                     height: 50.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Color(AppColors.buttons),
                                       borderRadius: BorderRadius.circular(50.r),
                                     ),
                                     padding: EdgeInsets.symmetric(horizontal: 40.w),

@@ -13,7 +13,7 @@ class PdfViewerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(
         AppStrings.pdfViewer.tr().toUpperCase(),
-        style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20),
+        style: TextStyle(color: Color(AppColors.titleText), fontWeight: FontWeight.bold, fontSize: 20),
       ),),
       body: localFilePath == null
           ? Center(child: CircularProgressIndicator())

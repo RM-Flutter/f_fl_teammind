@@ -76,7 +76,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                       separatorBuilder: (context, index) => Divider(
                         height: 32.h,
                         thickness: 1.h,
-                        color: Color(AppColors.lightGrey),
+                        color: Color(AppColors.disableButton),
                       ),
                       itemBuilder: (context, index) {
                         final requestType = requestTypes[index];
@@ -106,7 +106,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         borderRadius: BorderRadius.circular(AppSizes.s12.r),
         boxShadow: [
           BoxShadow(
-            color: Color(AppColors.lightGrey).withValues(alpha: 0.3),
+            color: Color(AppColors.disableButton).withValues(alpha: 0.3),
             blurRadius: AppSizes.s5.r,
             spreadRadius: 1,
           ),

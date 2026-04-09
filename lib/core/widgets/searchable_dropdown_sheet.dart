@@ -133,8 +133,8 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                                 fontWeight:
                                     sel ? FontWeight.w600 : FontWeight.normal,
                                 color: sel
-                                    ? Theme.of(context).primaryColor
-                                    : Color(AppColors.almostBlack),
+                                    ? Color(AppColors.buttons)
+                                    : Color(AppColors.overlay),
                               ),
                             ),
                             onTap: () {
@@ -160,7 +160,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
     final border = OutlineInputBorder(
       borderRadius: widget.borderRadius ?? BorderRadius.circular(AppSizes.s10),
       borderSide: widget.borderSide ??
-          BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+          BorderSide(color: Color(AppColors.border), width: 1.0),
     );
     final display = _displayText();
     final h = widget.height ?? 65.0;
@@ -207,10 +207,10 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
             : Text(
                 display,
                 style: widget.hintStyle?.copyWith(
-                      color: Color(AppColors.almostBlack),
+                      color: Color(AppColors.overlay),
                     ) ??
                     TextStyle(
-                      color: Color(AppColors.almostBlack),
+                      color: Color(AppColors.overlay),
                       fontSize: 14,
                     ),
               ),

@@ -69,7 +69,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                 Container(
                   padding: EdgeInsets.zero,
                   alignment: Alignment.topCenter,
-                  color: Color(AppColors.dark),
+                  color: Color(AppColors.titleText),
                   child: SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.25,
                     child: Image.asset(
@@ -84,11 +84,11 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                     // height: MediaQuery.sizeOf(context).height * 0.66,
                     decoration: ShapeDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment(0, 0),
-                        end: Alignment(1, 0),
-                        colors: [Color(AppColors.white), Color(AppColors.whiteBlue)],
+                        begin: const Alignment(0, 0),
+                        end: const Alignment(1, 0),
+                        colors: [Color(AppColors.background), Color(AppColors.cardBackground)],
                       ),
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(40),
                           topRight: Radius.circular(40),
@@ -107,7 +107,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                               children: [
                                 Center(
                                   child: ConstrainedBox(
-                                    constraints: BoxConstraints(
+                                    constraints: const BoxConstraints(
                                       maxWidth: kIsWeb ? 1070 : double.infinity,
                                     ),
                                     child: Container(
@@ -116,7 +116,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).primaryColor)),
+                                              color: Color(AppColors.buttons))),
                                     ),
                                   ),
                                 ),
@@ -170,7 +170,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                               const SizedBox(height : 15),
                                 Center(
                                   child: ConstrainedBox(
-                                    constraints: BoxConstraints(
+                                    constraints: const BoxConstraints(
                                       maxWidth: kIsWeb ? 1070 : double.infinity,
                                     ),
                                     child: Container(
@@ -179,7 +179,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).primaryColor)),
+                                              color: Color(AppColors.buttons))),
                                     ),
                                   ),
                                 ),
@@ -191,7 +191,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return CustomizeNotificationScreen();
+                                          return const CustomizeNotificationScreen();
                                         });
                                   },
                                 ),
@@ -291,7 +291,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                               .textTheme
                               .titleMedium
                               ?.copyWith(
-                            color: Color(AppColors.dark),
+                            color: Color(AppColors.titleText),
                             // fontSize: 16,
           
                             // fontWeight: FontWeight.w700,
@@ -306,7 +306,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                             .textTheme
                             .bodySmall
                             ?.copyWith(
-                          color: Color(AppColors.grey4F),
+                          color: const Color(AppColors.grey4F),
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                           // height: 0,
@@ -348,7 +348,7 @@ class DefaultListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxWidth: kIsWeb ? 1100 : double.infinity,
         ),
         child: Container(
@@ -357,7 +357,7 @@ class DefaultListTile extends StatelessWidget {
           child: ListTile(
             leading: SvgPicture.asset(
               src,
-              color: Theme.of(context).primaryColor,
+              color: Color(AppColors.buttons),
               fit: BoxFit.scaleDown,
               width: 20, height: 20,
             ),

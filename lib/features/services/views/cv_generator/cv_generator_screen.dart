@@ -54,7 +54,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.dark),
+              color: Color(AppColors.titleText),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -63,7 +63,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
         ),
         title: AppStrings.cvGenerator2.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.dark),
+          color: Color(AppColors.titleText),
           fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
@@ -96,7 +96,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                   ElevatedButton(
                     onPressed: () => _navigateTo(AppRoutes.updateMyInfoScreen.name),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.dark),
+                      backgroundColor: Color(AppColors.titleText),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -119,7 +119,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                   ElevatedButton(
                     onPressed: _navigateToCreateCV,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -145,7 +145,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
             padding: const EdgeInsets.only(bottom: 20, right: 10, left: 10),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 borderRadius: BorderRadius.circular(35)
               ),
               padding: const EdgeInsets.all(16),
@@ -158,7 +158,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SelectTemplateScreen(),));
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(AppColors.dark),
+                        foregroundColor: Color(AppColors.titleText),
                         side: const BorderSide(color: Colors.transparent, width: 2),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -186,7 +186,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SelectTemplateScreen(),));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Color(AppColors.buttons),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(

@@ -9,7 +9,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
-      color: Color(AppColors.titleTextColor),
+      color: Color(AppColors.titleText),
       fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
@@ -37,7 +37,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
       fontSize: isArabic ? 14.sp : 16.sp,
-      color: Color(AppColors.dark),
+      color: Color(AppColors.titleText),
     );
   }
 
@@ -54,7 +54,7 @@ class AppStyles {
   static TextStyle primaryHeading(BuildContext context) {
     bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
-      color: Theme.of(context).primaryColor,
+      color: Color(AppColors.buttons),
       fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
@@ -62,7 +62,7 @@ class AppStyles {
   /// Grey Heading style
   static TextStyle greyHeading(BuildContext context) {
     return heading(context).copyWith(
-      color: Color(AppColors.grey70),
+      color: Color(AppColors.iconSecondary),
     );
   }
 
@@ -99,21 +99,21 @@ class AppStyles {
   /// Hint Content style
   static TextStyle hintContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.greyA3),
+      color: Color(AppColors.hintText),
     );
   }
 
   /// Subtitle Content style
   static TextStyle subtitleContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.darkGrey),
+      color: Color(AppColors.subTitleText),
     );
   }
 
   /// Primary color Content style (often used for links/buttons)
   static TextStyle primaryContent(BuildContext context) {
     return content(context).copyWith(
-      color: Theme.of(context).primaryColor,
+      color: Color(AppColors.buttons),
     );
   }
   static TextStyle secoundaryContent(BuildContext context) {
@@ -139,7 +139,7 @@ class AppStyles {
   /// Dark Content style
   static TextStyle darkContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.dark),
+      color: Color(AppColors.titleText),
     );
   }
 
@@ -152,7 +152,7 @@ class AppStyles {
 
   static TextStyle almostBlackContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.almostBlack),
+      color: Color(AppColors.overlay),
     );
   }
 
@@ -166,7 +166,7 @@ class AppStyles {
   /// Grey 50 Content style
   static TextStyle grey50Content(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.grey50),
+      color: Color(AppColors.divider),
     );
   }
 
@@ -185,22 +185,22 @@ class AppStyles {
   }
 
   /// Grey 33 Content style
-  static TextStyle grey33Content(BuildContext context) {
+  static TextStyle bodyTextContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.grey33),
+      color: Color(AppColors.bodyText),
     );
   }
 
   /// Grey 70 Content style
   static TextStyle grey70Content(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.grey70),
+      color: Color(AppColors.iconSecondary),
     );
   }
 
   static TextStyle blackWithObacityContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.blackWithObacity),
+      color: Color(AppColors.shadow),
     );
   }
 

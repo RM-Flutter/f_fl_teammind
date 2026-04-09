@@ -29,11 +29,11 @@ class UpdateApp{
               return WillPopScope(
                 onWillPop: () async => false,
                 child: AlertDialog(
-                  backgroundColor: Color(AppColors.white),
+                  backgroundColor: Color(AppColors.background),
                   title: Center(
                     child: Text(
                       LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update",
-                      style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),
+                      style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.titleText)),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -82,10 +82,10 @@ class UpdateApp{
               return WillPopScope(
                 onWillPop: () async => true,
                 child: AlertDialog(
-                  backgroundColor: Color(AppColors.white),
+                  backgroundColor: Color(AppColors.background),
                   title: Center(
                       child: Text(AppStrings.available_update.tr(),
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.dark)),
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.titleText)),
                         textAlign: TextAlign.center,)
                   ),
                   content: Column(

@@ -15,6 +15,8 @@ abstract class AppColors {
     0xffB9C0C9,
   );
 
+
+
   // Text Colors
   static int get titleTextColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('titleTextColor'),
@@ -32,19 +34,15 @@ abstract class AppColors {
     DynamicAppConfigService.getColorValue('hintTextColor'),
     0xFFA3A3A3,
   );
-  static int get linkTextColor => DynamicAppConfigService.hexToInt(
-    DynamicAppConfigService.getColorValue('linkTextColor'),
-    0xFF3389EE,
-  );
+  // static int get linkTextColor => DynamicAppConfigService.hexToInt(
+  //   DynamicAppConfigService.getColorValue('linkTextColor'),
+  //   0xFF3389EE,
+  // );
 
   // Background Colors
   static int get backgroundColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('backgroundColor'),
     0xffFFFFFF,
-  );
-  static int get surfaceF3 => DynamicAppConfigService.hexToInt(
-    DynamicAppConfigService.getColorValue('surfaceF3'),
-    0xFFF3F3F3,
   );
   static int get scaffoldBackgroundColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('scaffoldBackgroundColor'),
@@ -59,6 +57,7 @@ abstract class AppColors {
     0xffFFFFFF,
   );
 
+
   // AppBar Colors
   static int get appBarColor => DynamicAppConfigService.hexToInt(
     DynamicAppConfigService.getColorValue('appBarColor'),
@@ -72,6 +71,8 @@ abstract class AppColors {
     DynamicAppConfigService.getColorValue('appBarIconColor'),
     0xffFFFFFF,
   );
+
+
 
   // Border Colors
   static int get borderColor => DynamicAppConfigService.hexToInt(
@@ -114,6 +115,8 @@ abstract class AppColors {
     DynamicAppConfigService.getColorValue('infoColor'),
     0xff3282B8,
   );
+
+
 
   // Input Field Colors
   static int get inputFillColor => DynamicAppConfigService.hexToInt(
@@ -172,33 +175,82 @@ abstract class AppColors {
   );
 
   // ============================================
-  // الألوان القديمة (Legacy Aliases - للتوافق)
+  // Used Color in features
   // ============================================
 
   static const int oC2Color = 0xffAE702B;
+
+  // Buttons
   static int get  buttons => buttonColor;
-  static int get buttonSecondary => buttonSecondaryColor;
+  static int get secondaryButton => buttonSecondaryColor;
+  static int get disableButton => buttonDisabledColor;
+
+
+  // Texts
+  static int get titleText => titleTextColor;
+  static int get bodyText => bodyTextColor;
+  static int get subTitleText => subtitleTextColor;
+  static int get hintText => hintTextColor;
+
+  // Background
+  static int get background => backgroundColor;
+  static int get scaffoldBackGround => scaffoldBackgroundColor;
+  static int get cardBackground => cardBackgroundColor;
+  static int get modalBackground => modalBackgroundColor;
+
+  // Appbar
+  static int get appBar => appBarColor;
+  static int get appBarText => appBarTextColor;
+  static int get appBarIcon => appBarIconColor;
+
+
+  // Borders
+  static int get border => borderColor;
+  static int get divider => dividerColor;
+  static int get focusedBorder => focusedBorderColor;
+
+
+  // icons
+  static int get icon => iconColor;
+  static int get iconSecondary => iconSecondaryColor;
+
+  // status
+  static int get successGreen => successColor;
+  static int get warningYellow => warningColor;
+  static int get failureRed => errorColor;
+  static int get helpBlue => infoColor;
+
+  // input fields
+  static int get inputFill => inputFillColor;
+  static int get inputBorder => inputBorderColor;
+  static int get inputFocusedBorder => inputFocusedBorderColor;
+  static int get inputErrorBorder => inputErrorBorderColor;
+
+  // shadows
+  static int get shadow => shadowColor;
+  static int get overlay => overlayColor;
+
+  // taps
+  static int get tabActive => tabActiveColor;
+  static int get tabInactive => tabInactiveColor;
+  static int get navBar => navBarColor;
+  static int get navBarActive => navBarActiveColor;
+
+  // Chips
+  static int get chipBackground => chipBackgroundColor;
+  static int get chipText => chipTextColor;
+
+
+  // normal colors (here not come from back-end, static colors)
   static const int black = 0xff000000;
-  static int get blackWithObacity => shadowColor;
-  static int get white => backgroundColor;
-  static int get dark => titleTextColor;
   static const int realDark = 0xff09051C;
   static const int red = 0xFFBD1316;
-  static int get grey50 => dividerColor;
-  static int get grey33 => bodyTextColor;
   static const int pink = 0xFFff1493;
-  static int get whiteBlue => cardBackgroundColor;
-  static int get darkGrey => subtitleTextColor;
-  static int get whiteGrey => borderColor;
-  static int get lightGrey => buttonDisabledColor;
-  static int get almostBlack => overlayColor;
   static const int grey46 = 0xff464646;
   static const int grey3B = 0xFF3B3B3B;
-  static int get grey70 => iconSecondaryColor;
   static const int grey4F = 0xff4F4F4F;
   static const int darkBlue = 0xFF011A51;
   static const int grey52 = 0xff525252;
-  static int get greyA3 => hintTextColor;
   static const int pureRed = 0xffFF0000;
   static const int darkBlueGrey = 0xff31394D;
   static const int green = 0xff09814D;
@@ -210,17 +262,13 @@ abstract class AppColors {
   static const int grey40 = 0xff404040;
   static const int pinkLight = 0xFFFF007A;
   static const int blueLight = 0xFF00A1FF;
-  static int get lightBlueBg => scaffoldBackgroundColor;
   static const int almostBlack1B = 0xFF1B1B1B;
   static const int grey51 = 0xFF515151;
   static const int lightGreyEF = 0xFFEFEFEF;
   static const int greyA7 = 0xFFA7A7A7;
   static const int grey67 = 0xFF676D75;
   static const int pinkEE = 0xFFEE3F80;
-  static int get helpBlue => infoColor;
-  static int get failureRed => errorColor;
-  static int get successGreen => successColor;
-  static int get warningYellow => warningColor;
+
   static const int lightBlue = 0xff3AC0E5;
   static const int purple = 0xff9C4995;
 

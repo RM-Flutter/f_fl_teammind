@@ -278,7 +278,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                         }
                       },
                       child: SvgPicture.asset("assets/images/svg/image.svg",
-                          color:  Theme.of(context).primaryColor,
+                          color:  Color(AppColors.buttons),
                           width: 20,
                           height: 20),
                     ),
@@ -291,10 +291,10 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                           ? Text(
                         '$_elapsedTime s',
                         style:  TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+                            fontSize: 16, fontWeight: FontWeight.bold, color: Color(AppColors.buttons)),
                       )
                           : SvgPicture.asset("assets/images/svg/voice.svg",
-                          color:  Theme.of(context).primaryColor,
+                          color:  Color(AppColors.buttons),
                           width: 20,
                           height: 20),
                     ),
@@ -307,7 +307,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
               width: 48,
               height: 48,
               decoration:  BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Color(AppColors.buttons),
                 shape: BoxShape.circle,
               ),
               child: Material(

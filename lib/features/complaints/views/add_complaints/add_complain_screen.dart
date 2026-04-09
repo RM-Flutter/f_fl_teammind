@@ -37,7 +37,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //       appBar: AppBar(
 //        title: Text(
 //         AppStrings.newRequest.tr().toUpperCase(),
-//         style: AppStyles.blackContent(context).copyWith(color: Color(AppColors.dark), fontWeight: FontWeight.bold, fontSize: 20.sp),
+//         style: AppStyles.blackContent(context).copyWith(color: Color(AppColors.titleText), fontWeight: FontWeight.bold, fontSize: 20.sp),
 //        ),
 //        backgroundColor: Colors.white,
 //        elevation: 0,
@@ -307,7 +307,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
          Navigator.pop(context);
         }),
        routeName: AppRoutes.newComplainScreen.name),
-      backgroundColor: Color(AppColors.white),
+      backgroundColor: Color(AppColors.background),
       body: Container(
        width: double.infinity,
        alignment: Alignment.center,
@@ -329,7 +329,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                e['title'].toString(),
                style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp,
                  fontWeight: FontWeight.w400,
-                 color: Color(AppColors.almostBlack)
+                 color: Color(AppColors.overlay)
                ))),
              ).toList(),
              onChanged: (String? values) {
@@ -387,11 +387,11 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                 right: 16, left: 16, top: 16, bottom: 10
               ),
               decoration: ShapeDecoration(
-               color: Color(AppColors.white),
+               color: Color(AppColors.background),
                shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(
-                 color: Color(AppColors.whiteGrey),
+                 color: Color(AppColors.border),
                  width: 1.0,
                 ),
                ),

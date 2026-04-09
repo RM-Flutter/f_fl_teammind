@@ -88,7 +88,7 @@ Widget defaultTap2BarItem({
               ? 200
               : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9),
           decoration: BoxDecoration(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             borderRadius: BorderRadius.circular(25),
           ),
           child: ListView.builder(
@@ -114,7 +114,7 @@ Widget defaultTap2BarItem({
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: (provider.selectedIndex == index)
-                      ? Theme.of(context).primaryColor
+                      ? Color(AppColors.buttons)
                       : Colors.transparent,
                 ),
                 child: Text(

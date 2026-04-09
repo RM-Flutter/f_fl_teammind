@@ -73,7 +73,7 @@ class _MoreScreenState extends State<MoreScreen> {
             Container(
               padding: EdgeInsets.zero,
               alignment: Alignment.topCenter,
-              color: Color(AppColors.dark),
+              color: Color(AppColors.titleText),
               child: SizedBox(
                 height: 0.25.sh,
                 child: Image.asset(
@@ -90,7 +90,7 @@ class _MoreScreenState extends State<MoreScreen> {
                   gradient: LinearGradient(
                     begin: const Alignment(0, 0),
                     end: const Alignment(1, 0),
-                    colors: [Color(AppColors.white), Color(AppColors.whiteBlue)],
+                    colors: [Color(AppColors.background), Color(AppColors.cardBackground)],
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -538,7 +538,7 @@ class DefaultListTile extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 4.h),
           leading: SvgPicture.asset(
             src,
-            color: Theme.of(context).primaryColor,
+            color: Color(AppColors.buttons),
             fit: BoxFit.scaleDown,
             width: 20.r,
             height: 20.r,

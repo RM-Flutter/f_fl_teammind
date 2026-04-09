@@ -65,7 +65,7 @@ class _SmartCardCompanyDetailScreenState
       builder: (ctx) => Container(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
-          color: Color(AppColors.modalBackgroundColor),
+          color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -88,7 +88,7 @@ class _SmartCardCompanyDetailScreenState
                 Expanded(
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                     ),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: url));
@@ -110,7 +110,7 @@ class _SmartCardCompanyDetailScreenState
                       }
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                     ),
                     icon: const Icon(Icons.open_in_browser, size: 16),
                     label: Text(AppStrings.openInBrowser.tr(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),),
@@ -136,7 +136,7 @@ class _SmartCardCompanyDetailScreenState
       builder: (ctx) => Container(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
-          color: Color(AppColors.modalBackgroundColor),
+          color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -162,7 +162,7 @@ class _SmartCardCompanyDetailScreenState
               child: FilledButton.icon(
                 onPressed: () => _downloadQr(ctx),
                 style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Color(AppColors.buttons),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 icon: SvgPicture.asset("assets/images/svg/downloadQr.svg"),
@@ -215,7 +215,7 @@ class _SmartCardCompanyDetailScreenState
           padding: EdgeInsets.only(bottom: bottomInset),
           child: Container(
             decoration: BoxDecoration(
-              color: Color(AppColors.modalBackgroundColor),
+              color: Color(AppColors.modalBackground),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(24)),
             ),
@@ -232,11 +232,11 @@ class _SmartCardCompanyDetailScreenState
                   decoration: InputDecoration(
                     labelText: AppStrings.profileName.tr(),
                     labelStyle: TextStyle(
-                      color: Color(AppColors.hintTextColor),
+                      color: Color(AppColors.hintText),
                       fontSize: 12,
                     ),
                     filled: true,
-                    fillColor: Color(AppColors.cardBackgroundColor),
+                    fillColor: Color(AppColors.cardBackground),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(color: Colors.black),
@@ -263,7 +263,7 @@ class _SmartCardCompanyDetailScreenState
                       );
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                     child: Text(
@@ -292,7 +292,7 @@ class _SmartCardCompanyDetailScreenState
       builder: (ctx) => Container(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
         decoration: BoxDecoration(
-          color: Color(AppColors.modalBackgroundColor),
+          color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -330,7 +330,7 @@ class _SmartCardCompanyDetailScreenState
                 );
               },
               style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Color(AppColors.buttons),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               icon: const Icon(Icons.contact_support),
@@ -368,7 +368,7 @@ class _SmartCardCompanyDetailScreenState
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -383,7 +383,7 @@ class _SmartCardCompanyDetailScreenState
           ),
           title: AppStrings.smartCard2.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
@@ -398,7 +398,7 @@ class _SmartCardCompanyDetailScreenState
               return FloatingActionButton(
                 heroTag: 'smart_card_company_free',
                 onPressed: vm.isLoading ? null : _showFreeCompanySheet,
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Color(AppColors.buttons),
                 child: const Icon(Icons.add, color: Colors.white),
               );
             }
@@ -406,7 +406,7 @@ class _SmartCardCompanyDetailScreenState
               return FloatingActionButton(
                 heroTag: 'smart_card_company_add',
                 onPressed: vm.isLoading ? null : () => _showAddProfileSheet(vm),
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Color(AppColors.buttons),
                 child: vm.isLoading
                     ? const SizedBox(
                         width: 24,
@@ -422,7 +422,7 @@ class _SmartCardCompanyDetailScreenState
             return FloatingActionButton(
               heroTag: 'smart_card_company_add_employees',
               onPressed: vm.isLoading ? null : () => _showAddProfileSheet(vm),
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Color(AppColors.buttons),
               child: vm.isLoading
                   ? const SizedBox(
                       width: 24,

@@ -59,7 +59,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Color(AppColors.dark), size: 24.r,),
+                        icon: Icon(Icons.arrow_back, color: Color(AppColors.titleText), size: 24.r,),
                         onPressed: () {
                           Navigator.pop(context);
                         },

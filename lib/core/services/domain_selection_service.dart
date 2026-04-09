@@ -305,7 +305,7 @@ class DomainSelectionService {
             backgroundColor: Colors.white,
             title: Text(
               AppStrings.enterYourDomain.tr(),
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color(AppColors.dark)),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color(AppColors.titleText)),
             ),
             content: SizedBox(
               width: double.maxFinite,
@@ -351,7 +351,7 @@ class DomainSelectionService {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: Color(AppColors.dark),
+                          color: Color(AppColors.titleText),
                         ),
                       ),
                       const SizedBox(height: 8),

@@ -207,7 +207,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                 borderRadius: isWeb
                                     ? BorderRadius.circular(35.r)
                                     : BorderRadius.vertical(top: Radius.circular(35.r)),
-                                color: Color(AppColors.white)
+                                color: Color(AppColors.background)
                             ),
                             width: double.infinity,
                             height: isWeb
@@ -230,7 +230,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                         width: 63.w,
                                         height: 5.h,
                                         decoration: BoxDecoration(
-                                            color: Color(AppColors.lightGrey),
+                                            color: Color(AppColors.disableButton),
                                             borderRadius: BorderRadius.circular(100.r)
                                         ),
                                       ) ,
@@ -265,7 +265,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
                                           height: 65.h,
                                           borderRadius: BorderRadius.circular(10.r),
-                                          borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                          borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                           contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                           fieldSuffixIcon: InkWell(
                                             onTap: () async {
@@ -338,7 +338,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
                                             height: 65.h,
                                             borderRadius: BorderRadius.circular(10.r),
-                                            borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                            borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                             contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                             onChanged: (value){
                                               viewModel.selectedDepartment = value;
@@ -371,7 +371,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
                                             height: 65.h,
                                             borderRadius: BorderRadius.circular(10.r),
-                                            borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                            borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                             contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                             onChanged: (value){
                                               viewModel.selectedEmployee = value;
@@ -391,7 +391,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
                                           height: 65.h,
                                           borderRadius: BorderRadius.circular(10.r),
-                                          borderSide: BorderSide(color: Color(AppColors.whiteGrey), width: 1.0),
+                                          borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                           contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                           onChanged: (value) =>
                                               viewModels.selectInsteadOfHolidays(context,
@@ -489,7 +489,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 height: 50.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  color: Color(AppColors.dark),
+                                                  color: Color(AppColors.titleText),
                                                   borderRadius: BorderRadius.circular(50.r),
                                                 ),
                                                 padding: EdgeInsets.symmetric(horizontal: 40.w),
@@ -517,9 +517,9 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 height: 50.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  color: Color(AppColors.white),
+                                                  color: Color(AppColors.background),
                                                   borderRadius: BorderRadius.circular(50.r),
-                                                  border: Border.all(color: Color(AppColors.dark), width: 1.w),
+                                                  border: Border.all(color: Color(AppColors.titleText), width: 1.w),
                                                 ),
                                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                                                 child: Text(
@@ -563,7 +563,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       alignment: Alignment.center,
       padding:const EdgeInsets.symmetric(horizontal: 10,),
       decoration: BoxDecoration(
-        color:Color(AppColors.white),
+        color:Color(AppColors.background),
         borderRadius: BorderRadius.circular(3),
         border: Border.all(color: Colors.grey.withOpacity(0.3)),
       ),
@@ -576,7 +576,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               fontFamily: "Poppins",
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Color(AppColors.almostBlack)
+              color: Color(AppColors.overlay)
           ),
           hintStyle:const TextStyle(
               fontFamily: "Poppins",
@@ -601,7 +601,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   })=> Text(
     title.toUpperCase(),
     style: TextStyle(
-        color: Color(AppColors.dark),
+        color: Color(AppColors.titleText),
         fontWeight: FontWeight.w500,
         fontSize: 10
     ),
@@ -614,8 +614,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       decoration: BoxDecoration(
         color:  color,
         boxShadow: [
-          (color == Color(AppColors.white))? BoxShadow(
-            color: Color(AppColors.lightGrey).withOpacity(0.7),
+          (color == Color(AppColors.background))? BoxShadow(
+            color: Color(AppColors.disableButton).withOpacity(0.7),
             blurRadius: 0.5,
             spreadRadius: 0.5,
           ): const BoxShadow(
@@ -635,10 +635,10 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       decoration: BoxDecoration(
         color: colors,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color:Color(AppColors.lightGrey)),
+        border: Border.all(color:Color(AppColors.disableButton)),
       ),
       child: Text(AppStrings.all.tr(), style: (colors != Colors.black)?
-      Theme.of(context).textTheme.bodySmall : Theme.of(context).textTheme.bodySmall!.copyWith(color: Color(AppColors.white))),
+      Theme.of(context).textTheme.bodySmall : Theme.of(context).textTheme.bodySmall!.copyWith(color: Color(AppColors.background))),
     ) : Container();
   }
 }

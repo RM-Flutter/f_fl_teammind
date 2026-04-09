@@ -172,7 +172,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                   side: BorderSide(
-                                    color :Color(AppColors.whiteGrey),
+                                    color :Color(AppColors.border),
                                     width: 1.0.r,
                                   ),
                                 ),
@@ -186,7 +186,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                     style: AppStyles.greyContent(context).copyWith(
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w400,
-                                        color: Color(AppColors.almostBlack)),
+                                        color: Color(AppColors.overlay)),
                                   ),
                                 ],
                               ),
@@ -210,7 +210,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                       style: AppStyles.greyContent(context).copyWith(
                                           fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
-                                          color: Color(AppColors.almostBlack)
+                                          color: Color(AppColors.overlay)
                                       ),),
                                   ],
                                 )
@@ -237,7 +237,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                 style: AppStyles.greyContent(context).copyWith(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: Color(AppColors.almostBlack)
+                                    color: Color(AppColors.overlay)
                                 ),),
                             ),
                             ).toList(),

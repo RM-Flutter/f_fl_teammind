@@ -74,7 +74,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 width: 35.r,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(AppColors.dark)),
+                    color: Color(AppColors.titleText)),
                 child: Icon(
                   Icons.refresh,
                   color: Colors.white,
@@ -103,7 +103,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 viewModel.currentPage = 1;
                 await viewModel.getTask(context, date: null);
               },
-              backgroundColor: Theme.of(context).primaryColor, // Optional: change color
+              backgroundColor: Color(AppColors.buttons), // Optional: change color
               tooltip: 'Add',
               child: Center(
                 child: Image.asset(

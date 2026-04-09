@@ -30,7 +30,7 @@ class NotificationsSection extends StatelessWidget {
           alignment: Alignment.topCenter,
           padding: EdgeInsets.symmetric(
               horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
-          color: Color(AppColors.dark),
+          color: Color(AppColors.titleText),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

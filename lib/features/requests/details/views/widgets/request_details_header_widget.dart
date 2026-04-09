@@ -244,7 +244,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(28.r),
               bottomRight: Radius.circular(28.r),
@@ -318,7 +318,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                         ? Colors.red
                                         : request.status == "approved"
                                         ? Colors.green
-                                        : Color(AppColors.darkGrey),
+                                        : Color(AppColors.subTitleText),
                                     textColor: Colors.white,
                                     toastLength: Toast.LENGTH_LONG,
                                     gravity: ToastGravity.TOP,
@@ -439,7 +439,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                       },
                                       imgPath: Icons.clear,
                                       background: const Color(AppColors.darkRed),
-                                      imgColor: Color(AppColors.white),
+                                      imgColor: Color(AppColors.background),
                                       title: AppStrings.requestedToIgnore.tr().toUpperCase(),
                                     ),
                                 ],
@@ -568,7 +568,7 @@ class _DownloadProgressDialog extends StatelessWidget {
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
                   backgroundColor: Colors.grey.shade300,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttonSecondary)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.secondaryButton)),
                   minHeight: 8.h,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
@@ -613,7 +613,7 @@ class InfoTileWidget extends StatelessWidget {
         this.trailing,
         this.imgColor});
 
-  Color get _imgColor => imgColor ?? Color(AppColors.buttonSecondary);
+  Color get _imgColor => imgColor ?? Color(AppColors.secondaryButton);
 
   @override
   Widget build(BuildContext context) {
@@ -641,13 +641,13 @@ class InfoTileWidget extends StatelessWidget {
                         imagePath!,
                         width: 14.r,
                         height: 14.r,
-                        color: isHighLight == true ? Color(AppColors.white) : _imgColor,
+                        color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       )
                     else if (imgPath != null)
                       Icon(
                         imgPath,
                         size: 20.r,
-                        color: isHighLight == true ? Color(AppColors.white) : _imgColor,
+                        color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       ),
                     SizedBox(width: 12.w),
                     Expanded(

@@ -63,7 +63,7 @@ class RequestCard extends StatelessWidget {
         ),
         shadows: [
           BoxShadow(
-            color: Color(AppColors.lightGrey).withOpacity(0.5),
+            color: Color(AppColors.disableButton).withOpacity(0.5),
             blurRadius: AppSizes.s5.r,
             spreadRadius: 1,
           )

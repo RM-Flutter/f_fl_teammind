@@ -91,7 +91,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                       'type': 'mine',
                       'lang': context.locale.languageCode
                     }), // Icon inside FAB
-                    backgroundColor: Theme.of(context).primaryColor, // Optional: change color
+                    backgroundColor: Color(AppColors.buttons), // Optional: change color
                     tooltip: 'Add',
                     child: Center(
                       child: Image.asset(
@@ -150,7 +150,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                               Container(
                                 height: 0.6.sh,
                                 child: SfCalendar(
-                                  backgroundColor: Color(AppColors.white),
+                                  backgroundColor: Color(AppColors.background),
                                   key: UniqueKey(),
                                   view: viewModel.calendarView ?? CalendarView.month,
                                   dataSource: RequestDataSource(_buildCalendarAppointments(context, requests, gCache), context.locale.languageCode),
@@ -205,8 +205,8 @@ class RequestsCalendarScreen extends StatelessWidget {
                                     // إذا كانت الخلفية خضراء (approved) أو رمادية (waiting) -> نص أبيض
                                     // خلاف ذلك -> النص الأزرق
                                     final textColor = (backgroundColor == Color(AppColors.green) ||
-                                        backgroundColor == Color(AppColors.darkGrey))
-                                        ? Color(AppColors.white)
+                                        backgroundColor == Color(AppColors.subTitleText))
+                                        ? Color(AppColors.background)
                                         : Theme.of(context).colorScheme.primary;
 
                                     return GestureDetector(
@@ -343,7 +343,7 @@ class RequestDataSource extends CalendarDataSource {
       case 'approved':
         return Color(AppColors.green);
       default:
-        return Color(AppColors.darkGrey);
+        return Color(AppColors.subTitleText);
     }
   }
 }

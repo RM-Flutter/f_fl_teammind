@@ -28,7 +28,7 @@ class ServiceCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor ?? Color(AppColors.dark),
+          color: backgroundColor ?? Color(AppColors.titleText),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -51,7 +51,7 @@ class ServiceCard extends StatelessWidget {
               Icon(
                 icon,
                 size: 28,
-                color: Color(AppColors.white),
+                color: Color(AppColors.background),
               ),
             const SizedBox(height: 10),
             Padding(
@@ -64,7 +64,7 @@ class ServiceCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Color(AppColors.white),
+                  color: Color(AppColors.background),
                 ),
               ),
             ),

@@ -86,7 +86,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -95,7 +95,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
           ),
           title: AppStrings.createCV.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -136,7 +136,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
                     child: ElevatedButton(
                       onPressed: viewModel.isSubmitting ? null : _submitCV,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.dark),
+                        backgroundColor: Color(AppColors.titleText),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
@@ -174,7 +174,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: Color(AppColors.dark),
+        color: Color(AppColors.titleText),
         borderRadius: BorderRadius.circular(AppSizes.s30),
       ),
       height: AppSizes.s55,

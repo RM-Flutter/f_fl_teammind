@@ -63,7 +63,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                    pathParameters: {'lang': context.locale.languageCode,});
                 }
                },
-               child: Icon(Icons.arrow_back, color: Color(AppColors.white),)),
+               child: Icon(Icons.arrow_back, color: Color(AppColors.background),)),
              SizedBox(width: 20,),
              Spacer(),
              Text(

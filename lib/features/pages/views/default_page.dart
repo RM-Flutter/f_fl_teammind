@@ -101,7 +101,7 @@ class _DefaultPageState extends State<DefaultPage> {
         }
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Color(AppColors.white),
+            backgroundColor: Color(AppColors.background),
             appBar: AppBarWithBookmark(
               title: widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase():widget.type.toString().tr().toUpperCase(),
               titleStyle: AppStyles.darkHeading(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700),
@@ -122,7 +122,7 @@ class _DefaultPageState extends State<DefaultPage> {
                     pathParameters: {
                       'lang': context.locale.languageCode
                     }), // Icon inside FAB
-                backgroundColor: Theme.of(context).primaryColor, // Optional: change color
+                backgroundColor: Color(AppColors.buttons), // Optional: change color
                 tooltip: 'Add',
                 child: Center(
                   child: Image.asset(

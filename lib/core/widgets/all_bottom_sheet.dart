@@ -236,7 +236,7 @@ Future<void> defaultActionBottomSheet2({
                                       style:  TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 12,
-                                          color: Color(AppColors.grey50)),),
+                                          color: Color(AppColors.divider)),),
                                     const Spacer(),
                                     GestureDetector(
                                       onTap: () {
@@ -499,7 +499,7 @@ defaultActionBottomSheet(
                       style:  TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 20,
-                        color: Color(AppColors.dark),
+                        color: Color(AppColors.titleText),
                       ),
                     ),
                     const SizedBox(height: 15),
@@ -584,7 +584,7 @@ defaultActionBottomSheet(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              color: Theme.of(context).primaryColor),
+                              color: Color(AppColors.buttons)),
                           child: (buttonWidget != null)
                               ? buttonWidget
                               : Text(

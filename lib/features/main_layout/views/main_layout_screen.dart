@@ -66,7 +66,7 @@ class MainLayoutScreen extends StatelessWidget {
         unselectedLabelStyle: AppStyles.greyContent(context).copyWith(
           fontSize: 10.sp,
         ),
-        selectedItemColor: Color(AppColors.dark),
+        selectedItemColor: Color(AppColors.titleText),
         elevation: 0,
         type: BottomNavigationBarType.fixed,
         items: bottomNavigationBarItems.map((element) {
@@ -87,7 +87,7 @@ class MainLayoutScreen extends StatelessWidget {
               padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  Color(AppColors.dark),
+                  Color(AppColors.titleText),
                   BlendMode.srcIn,
                 ),
                 child: SvgPicture.asset(

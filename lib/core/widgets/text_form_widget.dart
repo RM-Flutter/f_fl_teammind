@@ -151,7 +151,7 @@ Widget defaultDropdownField(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.s10),
         side: BorderSide(
-          color: borderColor ?? Color(AppColors.whiteGrey),
+          color: borderColor ?? Color(AppColors.border),
           width: 1.0,
         ),
       ),
@@ -180,7 +180,7 @@ Widget defaultDropdownField(
           style:textStyle??  TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Color(AppColors.almostBlack)),
+              color: Color(AppColors.overlay)),
         ),
         items: items,
         underline: const SizedBox.shrink(),
@@ -216,7 +216,7 @@ Widget defaultTextFormField({
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.s8),
         side: BorderSide(
-          color: borderColor ?? Color(AppColors.whiteGrey),
+          color: borderColor ?? Color(AppColors.border),
           width: 1.0,
         ),
       ),
@@ -243,7 +243,7 @@ Widget defaultTextFormField({
 
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            color: Color(AppColors.almostBlack)),
+            color: Color(AppColors.overlay)),
         hintStyle: const TextStyle(
 
             fontSize: 12,

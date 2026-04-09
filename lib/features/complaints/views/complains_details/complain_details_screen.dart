@@ -68,7 +68,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
      return Consumer<CommentProvider>(
       builder: (context, values, child) {
        return Scaffold(
-        backgroundColor: Color(AppColors.white),
+        backgroundColor: Color(AppColors.background),
         body: (value.getOneRequestModel != null && value.isGetRequestCommentLoading != true
           &&!value.isGetRequestCommentLoading)?RefreshIndicator.adaptive(
          onRefresh: ()async{
@@ -127,22 +127,22 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                      fontSize: FontSize(12.sp), // Adjust font size for better visibility
                      fontWeight: FontWeight.w400,
                     ), "ul": Style(
-                     color: AppStyles.grey33Content(context).color,
+                     color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
                      fontSize: FontSize(18.sp), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),"li": Style(
-                     color: AppStyles.grey33Content(context).color,
+                     color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
                      fontSize: FontSize(18.sp), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),"ol": Style(
-                     color: AppStyles.grey33Content(context).color,
+                     color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
                      fontSize: FontSize(18.sp), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),"*": Style(
-                     color: AppStyles.grey33Content(context).color,
+                     color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
                      fontSize: FontSize(14.sp), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
@@ -209,7 +209,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                            height: _currentIndex == index ? 12 : 8,
                            decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _currentIndex == index ? Color(AppColors.white) : Colors.grey,
+                            color: _currentIndex == index ? Color(AppColors.background) : Colors.grey,
                            ),
                           ), separatorBuilder: (context, index) => SizedBox(width: 5,),
                           itemCount: value.getOneRequestModel!.complain!.mainThumbnail!.length),
@@ -253,7 +253,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                      padding: EdgeInsets.symmetric(horizontal: 10),
                      child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
+                        border: Border.all(strokeAlign: 1, color: Color(AppColors.divider))
                       ),
                      ),
                     ),
@@ -265,7 +265,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                      padding: EdgeInsets.symmetric(horizontal: 10),
                      child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(strokeAlign: 1, color: Color(AppColors.grey50))
+                        border: Border.all(strokeAlign: 1, color: Color(AppColors.divider))
                       ))),
                    ),
                   ],

@@ -47,7 +47,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
         child: Container(
           // no padding — icon fills full card height
           decoration: BoxDecoration(
-            color: Color(AppColors.white),
+            color: Color(AppColors.background),
             borderRadius: BorderRadius.circular(AppSizes.s15.r),
             border: Border.all(color: const Color(0xFFE8ECF0), width: 1.w),
             boxShadow: [
@@ -67,7 +67,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 child: Container(
                   width: iconSize,
                   height: iconSize,
-                  color: Theme.of(context).primaryColor,
+                  color: Color(AppColors.buttons),
                   child: imageUrl.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: imageUrl,
@@ -120,7 +120,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                           fontWeight: seen ? FontWeight.w400 : FontWeight.w700,
                           color: seen
                               ? Colors.black.withOpacity(0.5)
-                              : Color(AppColors.dark),
+                              : Color(AppColors.titleText),
                         ),
                       ),
                     ],

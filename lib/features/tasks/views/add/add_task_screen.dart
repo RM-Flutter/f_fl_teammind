@@ -195,7 +195,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     borderRadius:
                                         BorderRadius.circular(AppSizes.s10.r),
                                     side: BorderSide(
-                                      color: Color(AppColors.whiteGrey),
+                                      color: Color(AppColors.border),
                                       width: 1.0.r,
                                     ),
                                   ),
@@ -211,7 +211,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       style: AppStyles.greyContent(context).copyWith(
                                           fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
-                                          color: Color(AppColors.almostBlack)),
+                                          color: Color(AppColors.overlay)),
                                     ),
                                   ],
                                 ),
@@ -246,7 +246,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                   fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: Color(
-                                                      AppColors.almostBlack)),
+                                                      AppColors.overlay)),
                                             ),
                                           ],
                                         )),
@@ -276,7 +276,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             fontSize: 12.sp,
                                             fontWeight: FontWeight.w400,
                                             color:
-                                                Color(AppColors.almostBlack)),
+                                                Color(AppColors.overlay)),
                                       ),
                                     ),
                                   )

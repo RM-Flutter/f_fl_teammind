@@ -12,57 +12,57 @@ abstract class AppThemeService {
   static final ColorPalette colorPalette = ColorPalette(
     name: 'Main Theme',
     // application primary colors
-    primaryColor: ColorValue(light: Color(AppColors.buttonColor), dark: Color(AppColors.buttonColor)),
+    primaryColor: ColorValue(light: Color(AppColors.buttons), dark: Color(AppColors.buttons)),
 
 
-    secondaryColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    secondaryColor: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
     tertiaryColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     // application background colors
-    primaryColorBackground: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    primaryColorBackground: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
     secondaryColorBackground: ColorValue(light: const Color(AppColors.pink), dark: const Color(AppColors.pink)),
-    tertiaryColorBackground: ColorValue(light: Color(AppColors.white), dark: Color(AppColors.white)),
+    tertiaryColorBackground: ColorValue(light: Color(AppColors.background), dark: Color(AppColors.background)),
     // application texts colors
-    primaryTextColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
-    secondaryTextColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    primaryTextColor: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
+    secondaryTextColor: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
     tertiaryTextColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     quaternaryTextColor: ColorValue(
-        light: Color(AppColors.darkGrey),
-        dark: Color(AppColors.darkGrey)),
+        light: Color(AppColors.subTitleText),
+        dark: Color(AppColors.subTitleText)),
     quinaryTextColor: ColorValue(
-        light: Color(AppColors.white),
-        dark: Color(AppColors.white)),
+        light: Color(AppColors.background),
+        dark: Color(AppColors.background)),
     //scaffold colors
     appBarBackgroundColor: ColorValue(
         light: const Color(AppColors.black),
         dark: const Color(AppColors.black)),
     bodyBackgroundColor: ColorValue(
-        light: Color(AppColors.white),
-        dark: Color(AppColors.white)),
+        light: Color(AppColors.background),
+        dark: Color(AppColors.background)),
     btmAppBarBackgroundColor: ColorValue(
-        light: Color(AppColors.white),
-        dark: Color(AppColors.white)),
+        light: Color(AppColors.background),
+        dark: Color(AppColors.background)),
     fabBackgroundColor: ColorValue(
         light: const Color(AppColors.pink),
         dark: const Color(AppColors.pink)),
     fabIconColor: ColorValue(
-        light: Color(AppColors.white),
-        dark: Color(AppColors.white)),
+        light: Color(AppColors.background),
+        dark: Color(AppColors.background)),
     // input colors
     inputBorderColor: ColorValue(
-        light: Color(AppColors.grey50),
-        dark: Color(AppColors.grey50)),
+        light: Color(AppColors.divider),
+        dark: Color(AppColors.divider)),
     inputFillColor: ColorValue(
-        light: Color(AppColors.white),
-        dark: Color(AppColors.white)),
+        light: Color(AppColors.background),
+        dark: Color(AppColors.background)),
     inputHintColor: ColorValue(
-        light: Color(AppColors.blackWithObacity),
-        dark: Color(AppColors.blackWithObacity)),
+        light: Color(AppColors.shadow),
+        dark: Color(AppColors.shadow)),
     inputLabelColor: ColorValue(
-        light: Color(AppColors.grey50),
-        dark: Color(AppColors.grey50)),
+        light: Color(AppColors.divider),
+        dark: Color(AppColors.divider)),
     inputTextColor: ColorValue(
-        light: Color(AppColors.blackWithObacity),
-        dark: Color(AppColors.blackWithObacity)),
+        light: Color(AppColors.shadow),
+        dark: Color(AppColors.shadow)),
   );
   static TextTheme _textTheme(
       {required bool isDark, required BuildContext context}) =>
@@ -113,7 +113,7 @@ abstract class AppThemeService {
           // --> used for the title of modal sheet
             fontWeight: FontWeight.bold,
             fontSize: AppSizes.s20,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             // تحسين الخطوط في الويب
             letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.5 : null),
         bodySmall: TextStyle(

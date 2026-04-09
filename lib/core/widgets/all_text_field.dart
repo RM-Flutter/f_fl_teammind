@@ -115,7 +115,7 @@ Widget defaultDropdownField(
         dropdownColor: Colors.white,
         icon:  Icon(
           Icons.arrow_drop_down_sharp,
-          color: Theme.of(context).primaryColor,
+          color: Color(AppColors.buttons),
         ),
         isExpanded: isExpanded ?? true,
         value: value,

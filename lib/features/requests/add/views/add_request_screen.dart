@@ -268,7 +268,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                   vertical: 6.h, horizontal: 16.w),
                               width: 1.sw,
                               decoration: BoxDecoration(
-                                  color: Color(AppColors.dark),
+                                  color: Color(AppColors.titleText),
                                   borderRadius: BorderRadius.circular(50.r)),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,7 +285,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                     SizedBox(width: 8.w),
                                     CustomRequestDetailsButton(
                                       title: AppStrings.sendRequest.tr(),
-                                      color: Theme.of(context).primaryColor,
+                                      color: Color(AppColors.buttons),
                                       onPressed: () async =>
                                           viewModel.createNewRequest(context: context),
                                     )

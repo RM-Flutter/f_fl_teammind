@@ -158,7 +158,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                 Text(
                                   comments[index]['content'] ?? "",
                                   style: TextStyle(
-                                      color: Color(AppColors.dark),
+                                      color: Color(AppColors.titleText),
                                       fontSize: 12,
                                       height: 1.4,
                                       fontWeight: FontWeight.w400),
@@ -173,7 +173,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                          color: Theme.of(context).primaryColor.withOpacity(0.2),
+                                          color: Color(AppColors.buttons).withOpacity(0.2),
                                           width: 1),
                                     ),
                                     child: ClipRRect(
@@ -224,7 +224,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 10,
-                                    color: Color(AppColors.darkGrey)),
+                                    color: Color(AppColors.subTitleText)),
                               ),
                             ],
                           ),
@@ -270,7 +270,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(50),
                         border:
-                        Border.all(color: Color(AppColors.dark))),
+                        Border.all(color: Color(AppColors.titleText))),
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -280,7 +280,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Color(AppColors.dark)),
+                              color: Color(AppColors.titleText)),
                         ),
                       ],
                     ),

@@ -134,8 +134,8 @@ class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
             buttonStyle: ElevatedButton.styleFrom(
               fixedSize: Size(double.infinity, 50.h),alignment: Alignment.center,
               shadowColor: Colors.transparent,
-              backgroundColor:Color(AppColors.dark),
-              foregroundColor: Color(AppColors.dark),
+              backgroundColor:Color(AppColors.titleText),
+              foregroundColor: Color(AppColors.titleText),
               disabledForegroundColor: Colors.transparent,
               elevation: 2,
               shape: RoundedRectangleBorder(

@@ -115,7 +115,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           //     shape: RoundedRectangleBorder(
                           //       borderRadius: BorderRadius.circular(AppSizes.s8.r),
                           //       side: BorderSide(
-                          //         color: Color(AppColors.whiteGrey),
+                          //         color: Color(AppColors.border),
                           //         width: 1.0,
                           //       ),
                           //     ),

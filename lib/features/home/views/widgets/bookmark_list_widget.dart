@@ -148,7 +148,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
               style: TextStyle(
                 fontSize: AppSizes.s19,
                 fontWeight: FontWeight.w700,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
           ),
@@ -179,7 +179,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
         margin: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
         padding: const EdgeInsets.all(AppSizes.s12),
         decoration: BoxDecoration(
-          color: Color(AppColors.dark),
+          color: Color(AppColors.titleText),
           borderRadius: BorderRadius.circular(AppSizes.s12),
           boxShadow: [
             BoxShadow(
@@ -197,7 +197,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
                   ? _getIconByName(bookmark.iconName!)
                   : _getIconForRoute(bookmark.routeName),
               size: 32,
-              color: Color(AppColors.white),
+              color: Color(AppColors.background),
             ),
             const SizedBox(height: AppSizes.s8),
             Flexible(
@@ -209,7 +209,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: Color(AppColors.white),
+                  color: Color(AppColors.background),
                 ),
               ),
             ),

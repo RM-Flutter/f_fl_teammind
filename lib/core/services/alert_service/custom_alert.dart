@@ -207,7 +207,7 @@ class CustomAlert extends StatelessWidget {
                                     ? size.height * 0.03
                                     : size.height * 0.025),
                             fontWeight: FontWeight.w600,
-                            color: Color(AppColors.white),
+                            color: Color(AppColors.background),
                           ),
                         ),
                       ),
@@ -238,7 +238,7 @@ class CustomAlert extends StatelessWidget {
                       message,
                       style: TextStyle(
                         fontSize: messageFontSize ?? size.height * 0.016,
-                        color: Color(AppColors.white),
+                        color: Color(AppColors.background),
                       ),
                     ),
                   ),

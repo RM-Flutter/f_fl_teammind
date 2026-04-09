@@ -10,7 +10,7 @@ Widget buildActionCard({
   required VoidCallback onTap,
   bool isDestructive = false,
 }) {
-  final bg = isDestructive ? Colors.red : Color(AppColors.dark);
+  final bg = isDestructive ? Colors.red : Color(AppColors.titleText);
   return InkWell(
     onTap: onTap,
     borderRadius: BorderRadius.circular(12),

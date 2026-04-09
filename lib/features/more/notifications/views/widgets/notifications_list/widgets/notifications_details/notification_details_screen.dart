@@ -73,7 +73,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
               return Consumer<CommentProvider>(
                 builder: (context, values, child) {
                   return Scaffold(
-                    backgroundColor: Color(AppColors.white),
+                    backgroundColor: Color(AppColors.background),
                     body: (value.notificationModel != null && value.isGetNotificationCommentLoading != true
                         &&!value.isGetNotificationCommentLoading)?SingleChildScrollView(
                       child: Column(
@@ -172,7 +172,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                         height: _currentIndex == index ? 12.r : 8.r,
                                                         decoration: BoxDecoration(
                                                           shape: BoxShape.circle,
-                                                          color: _currentIndex == index ? Color(AppColors.white) : Colors.grey,
+                                                          color: _currentIndex == index ? Color(AppColors.background) : Colors.grey,
                                                         ),
                                                       ), separatorBuilder: (context, index) => SizedBox(width: 5.w),
                                                       itemCount: value.notificationModel!.mainThumbnail!.length),

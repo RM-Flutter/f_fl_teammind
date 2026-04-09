@@ -26,8 +26,8 @@ class AdBannerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(AppColors.dark),
-              Color(AppColors.dark).withValues(alpha: 0.8),
+              Color(AppColors.titleText),
+              Color(AppColors.titleText).withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -35,7 +35,7 @@ class AdBannerWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Color(AppColors.dark).withValues(alpha: 0.3),
+              color: Color(AppColors.titleText).withValues(alpha: 0.3),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),

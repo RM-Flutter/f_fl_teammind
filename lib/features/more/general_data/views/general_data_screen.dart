@@ -21,7 +21,7 @@ class GeneralDataScreen extends StatelessWidget {
         builder: (context, value, child) {
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            backgroundColor: Color(AppColors.white),
+            backgroundColor: Color(AppColors.background),
             body: (!value.isLoading)?Container(
                 width: 1.sw,
                 height: 1.sh,
@@ -40,7 +40,7 @@ class GeneralDataScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.arrow_back, color: Color(AppColors.dark), size: 24.r,),
+                              icon: Icon(Icons.arrow_back, color: Color(AppColors.titleText), size: 24.r,),
                               onPressed: () {
                                 Navigator.pop(context);
                               },

@@ -247,7 +247,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                     side: BorderSide(
-                                      color: Color(AppColors.whiteGrey),
+                                      color: Color(AppColors.border),
                                       width: 1.0.w,
                                     ),
                                   ),
@@ -307,7 +307,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                             .contains(department['id']);
                                                         return CheckboxListTile(
                                                           value: isSelected,
-                                                          selectedTileColor: Color(AppColors.dark),
+                                                          selectedTileColor: Color(AppColors.titleText),
                                                           title: Text(department['title'], style: AppStyles.content(context).copyWith(fontSize: 14.sp)),
                                                           onChanged: (bool? value) {
                                                             setModalState(() {
@@ -366,7 +366,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                     side: BorderSide(
-                                      color: Color(AppColors.whiteGrey),
+                                      color: Color(AppColors.border),
                                       width: 1.0.w,
                                     ),
                                   ),
@@ -444,7 +444,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                   side: BorderSide(
-                                    color: Color(AppColors.whiteGrey),
+                                    color: Color(AppColors.border),
                                     width: 1.0.w,
                                   ),
                                 ),
@@ -463,7 +463,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                     Icons.ios_share,
                                     color: Colors.grey,
                                     size: 24.r,
-                                    // color: Theme.of(context).primaryColor,
+                                    // color: Color(AppColors.buttons),
                                   ),
                                 ],
                               ),
@@ -506,7 +506,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(AppSizes.s10.r),
                                 side: BorderSide(
-                                  color: Color(AppColors.whiteGrey),
+                                  color: Color(AppColors.border),
                                   width: 1.0.w,
                                 ),
                               ),

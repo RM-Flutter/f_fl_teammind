@@ -56,7 +56,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
       builder: (ctx) => Container(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
-          color: Color(AppColors.modalBackgroundColor),
+          color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -92,7 +92,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       }
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -121,7 +121,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       // Contact - يمكن ربطه بشاشة تواصل أو رقم
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Color(AppColors.dark),
+                      backgroundColor: Color(AppColors.titleText),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -158,7 +158,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -173,7 +173,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           ),
           title: AppStrings.smartCard2.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
@@ -189,7 +189,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
               heroTag: 'smart_card_add_profile',
               onPressed:
                   vm.isLoading ? null : () => _showCreateProfileBottomSheet(vm),
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Color(AppColors.buttons),
               child: vm.isLoading
                   ? const SizedBox(
                       width: 24,
@@ -465,7 +465,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           padding: EdgeInsets.only(bottom: bottomInset),
           child: Container(
             decoration: BoxDecoration(
-              color: Color(AppColors.modalBackgroundColor),
+              color: Color(AppColors.modalBackground),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(24)),
             ),
@@ -492,12 +492,12 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                   decoration: InputDecoration(
                     labelText: AppStrings.profileName.tr(),
                     labelStyle: TextStyle(
-                      color: Color(AppColors.hintTextColor),
+                      color: Color(AppColors.hintText),
                       fontSize: 12,
                       letterSpacing: 0.5,
                     ),
                     filled: true,
-                    fillColor: Color(AppColors.cardBackgroundColor),
+                    fillColor: Color(AppColors.cardBackground),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(color: Colors.black),
@@ -520,7 +520,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       await _handleCreateProfile(ctx, vm, nameController.text);
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
@@ -580,7 +580,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           padding: EdgeInsets.only(bottom: bottomInset),
           child: Container(
             decoration: BoxDecoration(
-              color: Color(AppColors.modalBackgroundColor),
+              color: Color(AppColors.modalBackground),
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(24)),
             ),
@@ -607,12 +607,12 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                   decoration: InputDecoration(
                     labelText: AppStrings.companyName.tr(),
                     labelStyle: TextStyle(
-                      color: Color(AppColors.hintTextColor),
+                      color: Color(AppColors.hintText),
                       fontSize: 12,
                       letterSpacing: 0.5,
                     ),
                     filled: true,
-                    fillColor: Color(AppColors.cardBackgroundColor),
+                    fillColor: Color(AppColors.cardBackground),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(color: Colors.black),
@@ -635,7 +635,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       await _handleCreateCompany(ctx, vm, nameController.text);
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
@@ -713,7 +713,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
+            color: isSelected ? Color(AppColors.buttons) : Colors.grey[300]!,
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: [

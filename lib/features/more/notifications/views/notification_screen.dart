@@ -89,7 +89,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
         }
         return Scaffold(
-          backgroundColor: Color(AppColors.white),
+          backgroundColor: Color(AppColors.background),
           appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
             title: AppStrings.notifications.tr(),
@@ -115,7 +115,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   pathParameters: {
                     'lang': context.locale.languageCode
                   }), // Icon inside FAB
-              backgroundColor: Theme.of(context).primaryColor, // Optional: change color
+              backgroundColor: Color(AppColors.buttons), // Optional: change color
               tooltip: 'Add',
               child: Center(
                 child: Image.asset(

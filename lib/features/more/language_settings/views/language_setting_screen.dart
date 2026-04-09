@@ -52,14 +52,14 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
     return ChangeNotifierProvider(create: (context) => LangControllerProvider(),
       child: Consumer<LangControllerProvider>(builder: (context, value, child) {
         return Scaffold(
-          backgroundColor: Color(AppColors.white),
+          backgroundColor: Color(AppColors.background),
           appBar: AppBarWithBookmark(
-            backgroundColor: Color(AppColors.white),
+            backgroundColor: Color(AppColors.background),
             leading: GestureDetector(
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(Icons.arrow_back, color: Color(AppColors.dark), size: 24.r,)),
+                child: Icon(Icons.arrow_back, color: Color(AppColors.titleText), size: 24.r,)),
             title: AppStrings.languageSettings.tr().toUpperCase(),
             titleStyle: AppStyles.darkHeading(context).copyWith(
                 fontSize: AppSizes.s16.sp,
@@ -103,10 +103,10 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                   width: double.infinity,
                                   padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
                                   decoration: BoxDecoration(
-                                      color: Color(AppColors.white),
+                                      color: Color(AppColors.background),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Color(AppColors.lightGrey).withOpacity(0.5),
+                                          color: Color(AppColors.disableButton).withOpacity(0.5),
                                           blurRadius: AppSizes.s5.r,
                                           spreadRadius: 1,
                                         )
@@ -121,8 +121,8 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                         padding: EdgeInsets.all(2.r),
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            border: Border.all(color: Theme.of(context).primaryColor),
-                                            color:(selectIndex == index)? Theme.of(context).primaryColor : Color(AppColors.white)
+                                            border: Border.all(color: Color(AppColors.buttons)),
+                                            color:(selectIndex == index)? Color(AppColors.buttons) : Color(AppColors.background)
                                         ),
                                         child: Icon(Icons.check, color: Colors.white, size: 18.r,),
                                       ),
@@ -149,7 +149,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                           //       height: 50,
                           //       alignment: Alignment.center,
                           //       decoration: BoxDecoration(
-                          //         color: Color(AppColors.dark),
+                          //         color: Color(AppColors.titleText),
                           //         borderRadius: BorderRadius.circular(50),
                           //       ),
                           //       padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -163,7 +163,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                           //             style:TextStyle(
                           //                 fontSize: 12,
                           //                 fontWeight: FontWeight.w500,
-                          //                 color: Color(AppColors.white)
+                          //                 color: Color(AppColors.background)
                           //             ),
                           //           ),
                           //         ],

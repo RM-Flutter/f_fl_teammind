@@ -99,7 +99,7 @@ class CVJobInfoTab extends StatelessWidget {
       child: Text(
         '• $title',
         style: TextStyle(
-          color: Color(AppColors.dark),
+          color: Color(AppColors.titleText),
           fontSize: 14,
           fontWeight: FontWeight.w600,
         ),

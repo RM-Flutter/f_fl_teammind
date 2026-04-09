@@ -446,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Icon(
                     Icons.drag_handle,
-                    color: Color(AppColors.dark),
+                    color: Color(AppColors.titleText),
                     size: 24.r,
                   ),
                 ),

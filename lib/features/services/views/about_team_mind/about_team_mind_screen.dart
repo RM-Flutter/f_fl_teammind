@@ -167,7 +167,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.dark),
+              color: Color(AppColors.titleText),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -176,7 +176,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
         ),
         title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.dark),
+          color: Color(AppColors.titleText),
           fontSize: 20,
         ),
         centerTitle: true,
@@ -293,17 +293,17 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                                           imageUrl: thumbUrl,
                                           fit: BoxFit.cover,
                                           placeholder: (_, __) => Container(
-                                            color: Color(AppColors.dark).withOpacity(0.1),
+                                            color: Color(AppColors.titleText).withOpacity(0.1),
                                             child: const Center(child: CircularProgressIndicator()),
                                           ),
                                           errorWidget: (_, __, ___) => Container(
-                                            color: Color(AppColors.dark).withOpacity(0.1),
+                                            color: Color(AppColors.titleText).withOpacity(0.1),
                                             child: const Icon(Icons.videocam_off, size: 48),
                                           ),
                                         );
                                       }
                                       return Container(
-                                        color: Color(AppColors.dark).withOpacity(0.1),
+                                        color: Color(AppColors.titleText).withOpacity(0.1),
                                       );
                                     },
                                   ),
@@ -343,7 +343,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColor,
+                                  backgroundColor: Color(AppColors.buttons),
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
@@ -361,7 +361,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                               child: ElevatedButton(
                                 onPressed: () async => _downloadAndOpenPdf(),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColor,
+                                  backgroundColor: Color(AppColors.buttons),
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(

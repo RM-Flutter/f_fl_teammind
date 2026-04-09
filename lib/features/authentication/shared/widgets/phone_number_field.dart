@@ -162,9 +162,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         dropdownDecoration: BoxDecoration(
           border: LocalizationService.isArabic(context: context)
               ? Border(
-              left: BorderSide(color: Color(AppColors.grey50), width: 1.4))
+              left: BorderSide(color: Color(AppColors.divider), width: 1.4))
               : Border(
-            right: BorderSide(color: Color(AppColors.grey50), width: 1.4),
+            right: BorderSide(color: Color(AppColors.divider), width: 1.4),
           ),
         ),
         pickerDialogStyle: PickerDialogStyle(

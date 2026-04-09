@@ -27,7 +27,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 borderRadius: BorderRadius.circular(30.r),
               ),
               height: 52.h,

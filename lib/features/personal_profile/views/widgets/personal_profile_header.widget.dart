@@ -150,7 +150,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                     children: [
                       Container(
                           decoration: BoxDecoration(
-                            color: Color(AppColors.greyA3).withOpacity(0.1),
+                            color: Color(AppColors.hintText).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(AppSizes.s15.r),
                           ),
                           child: Center(
@@ -174,7 +174,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       ),
                       Container(
                           decoration: BoxDecoration(
-                            color: Color(AppColors.greyA3).withOpacity(0.1),
+                            color: Color(AppColors.hintText).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(AppSizes.s15.r),
                           ),
                           child: Center(
@@ -313,7 +313,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                              color: Color(AppColors.dark),
+                              color: Color(AppColors.titleText),
                               width: AppSizes.s2.r),
                         ),
                         child: GestureDetector(
@@ -377,13 +377,13 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                           height: 40.r,
                           padding: const EdgeInsets.all(0),
                           decoration: BoxDecoration(
-                              color: Color(AppColors.white),
+                              color: Color(AppColors.background),
                               shape: BoxShape.circle
                           ),
                           child: IconButton(
                               icon: Icon(
                                 Icons.camera_alt,
-                                color: Color(AppColors.dark),
+                                color: Color(AppColors.titleText),
                                 size: AppSizes.s20.r,
                               ),
                               onPressed: () async {

@@ -57,7 +57,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -66,7 +66,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
           ),
           title: AppStrings.selectTemplate.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -141,7 +141,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: selectedTemplateIndex == index
-                            ? Theme.of(context).primaryColor
+                            ? Color(AppColors.buttons)
                             : Colors.grey[400],
                       ),
                     );
@@ -155,7 +155,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                         ? null
                         : () => vm.onGenerateCv(context, templates[selectedTemplateIndex]),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.dark),
+                      backgroundColor: Color(AppColors.titleText),
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
@@ -204,7 +204,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: isSelected
-            ? Border.all(color: Theme.of(context).primaryColor, width: 3)
+            ? Border.all(color: Color(AppColors.buttons), width: 3)
             : Border.all(color: Colors.grey[300]!, width: 1),
         boxShadow: [
           BoxShadow(
@@ -227,7 +227,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                           fit: BoxFit.contain,
                           width: double.infinity,
                           placeholder: (context, url) => Container(
-                            color: Theme.of(context).primaryColor,
+                            color: Color(AppColors.buttons),
                             child: const Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
@@ -262,7 +262,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                     child: Text(
                       template.slug!,
                       style: TextStyle(
-                        color: Color(AppColors.dark),
+                        color: Color(AppColors.titleText),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -287,7 +287,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       CircularProgressIndicator(
                         value: vm.downloadProgress[template.id],
                         backgroundColor: Colors.white.withValues(alpha: 0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                         strokeWidth: 4,
                       ),
                       const SizedBox(height: 12),

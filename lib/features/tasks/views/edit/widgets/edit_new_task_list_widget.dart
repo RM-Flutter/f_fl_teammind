@@ -152,7 +152,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                             tasksController.tasksList2[index]["status"] == true
                                 ? Icons.radio_button_checked
                                 : Icons.radio_button_unchecked,
-                            color: Theme.of(context).primaryColor,
+                            color: Color(AppColors.buttons),
                             size: 24.r,
                           ),
                         ),
@@ -167,7 +167,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.dark),
+                backgroundColor: Color(AppColors.titleText),
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.r),

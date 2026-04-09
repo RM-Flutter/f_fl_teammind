@@ -58,11 +58,11 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                           controller: viewModel.searchController,
                           onChanged: viewModel.updateSearchQuery,
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search, color: Color(AppColors.subtitleTextColor), size: 20.sp),
+                              prefixIcon: Icon(Icons.search, color: Color(AppColors.subTitleText), size: 20.sp),
                               hintText: AppStrings.searchByName.tr(),
                               hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14.sp),
                               filled: true,
-                              fillColor: Color(AppColors.scaffoldBackgroundColor),
+                              fillColor: Color(AppColors.scaffoldBackGround),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.r),
                                 borderSide: BorderSide.none,
@@ -77,7 +77,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                               ),
                               suffixIcon: viewModel.searchController.text.isNotEmpty 
                                   ? IconButton(
-                                      icon: Icon(Icons.close, color: Color(AppColors.subtitleTextColor), size: 20.sp),
+                                      icon: Icon(Icons.close, color: Color(AppColors.subTitleText), size: 20.sp),
                                       onPressed: viewModel.releaseSearchValuesAndFilters)
                                   : null,
                               isDense: true,
@@ -219,7 +219,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                             },
                                           ),
                                            Divider(
-                                            color: Color(AppColors.dividerColor).withOpacity(.3),
+                                            color: Color(AppColors.divider).withOpacity(.3),
                                             height: 1.h,
                                             indent: 16.w,
                                             endIndent: 16.w,

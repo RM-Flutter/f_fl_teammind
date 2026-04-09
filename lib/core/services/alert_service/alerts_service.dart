@@ -59,7 +59,7 @@ abstract class AlertsService {
           context: context,
           title: title,
           message: message,
-          color: Color(AppColors.lightGrey),
+          color: Color(AppColors.disableButton),
           type: AlertType.warning,
         );
       }
@@ -126,7 +126,7 @@ abstract class AlertsService {
             children: <Widget>[
               CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor),
+                    Color(AppColors.buttons)),
               ),
               const SizedBox(width: AppSizes.s15),
               Text(title.isEmpty ? 'Loading ...' : '$title, please wait')
@@ -170,7 +170,7 @@ abstract class AlertsService {
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0)),
-            color: Color(AppColors.white),
+            color: Color(AppColors.background),
             child: SizedBox(
               width: PlatformIs.mobile ? AppSizes.s320 : AppSizes.s600,
               child: Column(
@@ -204,7 +204,7 @@ abstract class AlertsService {
                     child: Text(
                       message,
                       style: TextStyle(
-                          fontSize: AppSizes.s18, color: Color(AppColors.darkGrey)),
+                          fontSize: AppSizes.s18, color: Color(AppColors.subTitleText)),
                       textAlign: TextAlign.center,
                       softWrap: true,
                       maxLines: 4,
@@ -266,14 +266,14 @@ abstract class AlertsService {
                         child: MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50.0)),
-                          color: Color(AppColors.white),
+                          color: Color(AppColors.background),
                           onPressed: () {
                             Navigator.of(dialogContext).pop(false);
                             return;
                           },
                           child: Text(AppStrings.no.tr(),
                               style:
-                              TextStyle(color: Theme.of(context).primaryColor)),
+                              TextStyle(color: Color(AppColors.buttons))),
                         ),
                       ),
                     ],

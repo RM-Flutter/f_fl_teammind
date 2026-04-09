@@ -102,7 +102,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             if (isRequired)
@@ -140,7 +140,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: Color(
-                AppColors.dark),
+                AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),
@@ -185,7 +185,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -245,7 +245,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -303,7 +303,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -352,7 +352,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -400,7 +400,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             const Text(
@@ -446,7 +446,7 @@ class UpdateEmployeePersonalTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
           ),
         ),
         const SizedBox(height: 8),

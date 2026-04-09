@@ -379,7 +379,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -388,7 +388,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           ),
           title: AppStrings.updateMyInfo.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.dark),
+            color: Color(AppColors.titleText),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -449,7 +449,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                                       right: 0,
                                       child: CircleAvatar(
                                         radius: 16,
-                                        backgroundColor: Color(AppColors.dark),
+                                        backgroundColor: Color(AppColors.titleText),
                                         child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
                                       ),
                                     ),
@@ -482,7 +482,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                     child: ElevatedButton(
                       onPressed: vm.isSubmitting ? null : _saveToSmartCard,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.dark),
+                        backgroundColor: Color(AppColors.titleText),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(200, 50),
                         shape: RoundedRectangleBorder(
@@ -521,7 +521,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
     return Container(
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
-        color: Color(AppColors.dark),
+        color: Color(AppColors.titleText),
         borderRadius: BorderRadius.circular(AppSizes.s30),
       ),
       height: AppSizes.s55,
@@ -671,7 +671,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.dark),
+                color: Color(AppColors.titleText),
               ),
             ),
             if (isRequired)

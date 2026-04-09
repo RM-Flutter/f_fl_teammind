@@ -62,7 +62,7 @@ class _SmartCardProfileDetailScreenState
       builder: (ctx) => Container(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
-          color: Color(AppColors.modalBackgroundColor),
+          color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -85,7 +85,7 @@ class _SmartCardProfileDetailScreenState
                 Expanded(
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                     ),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: url));
@@ -107,7 +107,7 @@ class _SmartCardProfileDetailScreenState
                       }
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(AppColors.buttons),
                     ),
                     icon: const Icon(Icons.open_in_browser, size: 16),
                     label: Text(AppStrings.openInBrowser.tr(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),),
@@ -133,7 +133,7 @@ class _SmartCardProfileDetailScreenState
       builder: (ctx) => Container(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
-          color: Color(AppColors.modalBackgroundColor),
+          color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -159,7 +159,7 @@ class _SmartCardProfileDetailScreenState
               child: FilledButton.icon(
                 onPressed: () => _downloadQr(ctx),
                 style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Color(AppColors.buttons),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 icon: SvgPicture.asset("assets/images/svg/downloadQr.svg"),
@@ -225,7 +225,7 @@ class _SmartCardProfileDetailScreenState
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(AppStrings.deleteProfile.tr(), style: TextStyle(color: Theme.of(context).primaryColor),),
+        title: Text(AppStrings.deleteProfile.tr(), style: TextStyle(color: Color(AppColors.buttons)),),
         content: Text(
           widget.isPersonal
               ? AppStrings.deleteSmartCardProfileConfirm.tr()
@@ -278,7 +278,7 @@ class _SmartCardProfileDetailScreenState
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.dark),
+              color: Color(AppColors.titleText),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -293,7 +293,7 @@ class _SmartCardProfileDetailScreenState
         ),
         title: AppStrings.smartCard2.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.dark),
+          color: Color(AppColors.titleText),
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),

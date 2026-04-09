@@ -86,7 +86,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                 left: 24.w, right: 24.w, bottom: 32.h, top: 8.h),
                             width: 1.sw,
                             decoration: BoxDecoration(
-                                color: Color(AppColors.dark),
+                                color: Color(AppColors.titleText),
                                 borderRadius: BorderRadius.circular(50.r)),
                             child: Row(children: [
                               if (viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
@@ -140,7 +140,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                 left: 24.w, right: 24.w, bottom: 32.h, top: 8.h),
                             width: 1.sw,
                             decoration: BoxDecoration(
-                                color: Color(AppColors.dark),
+                                color: Color(AppColors.titleText),
                                 borderRadius: BorderRadius.circular(50.r)),
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -208,7 +208,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
                               horizontal: AppSizes.s12,
                               vertical: AppSizes.s20,
                             ),
-                            color: Color(AppColors.dark),
+                            color: Color(AppColors.titleText),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -218,7 +218,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
                                     Text(
                                       AppStrings.myNotifications.tr(),
                                       style: TextStyle(
-                                        color: Color(AppColors.white),
+                                        color: Color(AppColors.background),
                                         fontSize: 19,
                                         fontWeight: FontWeight.w700,
                                       ),

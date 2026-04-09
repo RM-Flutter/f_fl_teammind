@@ -165,7 +165,7 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: Color(AppColors.buttons),
             borderRadius: BorderRadius.circular(16),
           ),
           child: DefaultTextStyle(
@@ -793,7 +793,7 @@ abstract class MainFabServices {
             onPressed: () => Navigator.of(ctx, rootNavigator: true).pop(),
             child: Text(
               'OK',
-              style: TextStyle(color: Color(AppColors.dark)),
+              style: TextStyle(color: Color(AppColors.titleText)),
             ),
           ),
         ],
@@ -880,7 +880,7 @@ abstract class MainFabServices {
                 Text(
                   title,
                   style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700, color: Color(AppColors.dark), fontSize: 18),
+                      ?.copyWith(fontWeight: FontWeight.w700, color: Color(AppColors.titleText), fontSize: 18),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -892,7 +892,7 @@ abstract class MainFabServices {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(AppColors.dark)),
+                      backgroundColor: MaterialStateProperty.all(Color(AppColors.titleText)),
                     ),
                     onPressed: () => Navigator.of(sheetContext, rootNavigator: true).pop(true),
                     child: Text(
@@ -909,7 +909,7 @@ abstract class MainFabServices {
                       onPressed: () => Navigator.of(sheetContext, rootNavigator: true).pop(false),
                       child: Text(
                         cancelLabel,
-                        style: theme.textTheme.headlineSmall?.copyWith(color: Color(AppColors.dark)) ?? TextStyle(color: Color(AppColors.dark)),
+                        style: theme.textTheme.headlineSmall?.copyWith(color: Color(AppColors.titleText)) ?? TextStyle(color: Color(AppColors.titleText)),
                       ),
                     ),
                   ),
@@ -1197,7 +1197,7 @@ abstract class MainFabServices {
       context: context,
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
-        title: Text(isArabic ? 'تقرير التحقق' : 'Verification Report', style: TextStyle(color: Color(AppColors.dark), fontWeight: FontWeight.w700),),
+        title: Text(isArabic ? 'تقرير التحقق' : 'Verification Report', style: TextStyle(color: Color(AppColors.titleText), fontWeight: FontWeight.w700),),
         content: SingleChildScrollView(
           child: Text(buffer.toString(), style: TextStyle(color: Color(AppColors.black), fontWeight: FontWeight.w500),),
         ),
@@ -1445,7 +1445,7 @@ abstract class MainFabServices {
           context: context,
           useRootNavigator: true,
           builder: (dialogContext) => AlertDialog(
-            title: Text(isArabic ? 'فشل التحدي' : 'Challenge Failed', style: TextStyle(color: Color(AppColors.dark)),),
+            title: Text(isArabic ? 'فشل التحدي' : 'Challenge Failed', style: TextStyle(color: Color(AppColors.titleText)),),
             content: Text(
                 isArabic
                     ? 'فشل التحدي: $challengeName\n\nهل تريد المحاولة مرة أخرى؟'
@@ -1458,13 +1458,13 @@ abstract class MainFabServices {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(false),
-                      child: Text(isArabic ? 'إلغاء' : 'Cancel', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.dark))),
+                      child: Text(isArabic ? 'إلغاء' : 'Cancel', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.titleText))),
                     ),
                   ),
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(true),
-                      child: Text(isArabic ? 'إعادة المحاولة' : 'Retry', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.dark))),
+                      child: Text(isArabic ? 'إعادة المحاولة' : 'Retry', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.titleText))),
                     ),
                   ),
                 ],
