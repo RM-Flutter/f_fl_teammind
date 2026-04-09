@@ -180,7 +180,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                           //update profile button
                                           gapH18,
                                           Center(
-                                            child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
+                                            child: CustomElevatedButton( isOutlined: true,titleColor: Theme.of(context).primaryColor,
                                                 radius: AppSizes.s10.r,
                                                 titleSize: AppSizes.s14.sp,
                                                 title: AppStrings.updateProfile.tr(),
@@ -214,7 +214,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     ),
                                     gapH18,
                                     Center(
-                                      child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
+                                      child: CustomElevatedButton( isOutlined: true,titleColor: Theme.of(context).primaryColor,
                                           radius: AppSizes.s10.r,
                                           titleSize: AppSizes.s14.sp,
                                           backgroundColor: UserSettingConst.userSettings
@@ -224,7 +224,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                   .userSettings?.email !=
                                                   null
                                               ? Colors.yellow
-                                              : Color(AppColors.primary),
+                                              : Theme.of(context).primaryColor,
                                           title: UserSettingConst.userSettings
                                               ?.emailVerifiedAt ==
                                               null &&
@@ -269,7 +269,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     ),
                                     gapH18,
                                     Center(
-                                      child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
+                                      child: CustomElevatedButton( isOutlined: true,titleColor: Theme.of(context).primaryColor,
                                           titleSize: AppSizes.s14.sp,
                                           radius: AppSizes.s10.r,
                                           backgroundColor: UserSettingConst.userSettings
@@ -279,7 +279,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                   .userSettings?.phone !=
                                                   null
                                               ? Colors.yellow
-                                              : Color(AppColors.primary),
+                                              : Theme.of(context).primaryColor,
                                           title: UserSettingConst.userSettings
                                               ?.phoneVerifiedAt ==
                                               null &&
@@ -426,7 +426,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                         gapH18,
                                         Center(
                                           child: CustomElevatedButton( isOutlined: true,
-                                              titleColor: Color(AppColors.primary),
+                                              titleColor: Theme.of(context).primaryColor,
                                               radius: AppSizes.s10.r,
                                               titleSize: AppSizes.s14.sp,
                                               title: AppStrings.updateProfile.tr(),
@@ -467,16 +467,16 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                           child: CustomElevatedButton(
                                               titleColor:UserSettingConst.userSettings?.emailVerifiedAt == null && UserSettingConst.userSettings?.email != null
                                                   ? Colors.yellow
-                                                  : Color(AppColors.primary),
+                                                  : Theme.of(context).primaryColor,
                                               outlineColor:UserSettingConst.userSettings?.emailVerifiedAt == null && UserSettingConst.userSettings?.email != null
                                                   ? Colors.yellow
-                                                  : Color(AppColors.primary),
+                                                  : Theme.of(context).primaryColor,
                                               isOutlined: true,
                                               radius: AppSizes.s10.r,
                                               titleSize: AppSizes.s14.sp,
                                               backgroundColor: UserSettingConst.userSettings?.emailVerifiedAt == null && UserSettingConst.userSettings?.email != null
                                                   ? Colors.yellow
-                                                  : Color(AppColors.primary),
+                                                  : Theme.of(context).primaryColor,
                                               title: UserSettingConst.userSettings?.emailVerifiedAt == null && UserSettingConst.userSettings?.email != null
                                                   ? AppStrings.emailVerification.tr()
                                                   : AppStrings.updateEmail.tr(),
@@ -526,10 +526,10 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                           child: CustomElevatedButton(
                                               titleColor:UserSettingConst.userSettings?.phoneVerifiedAt == null && UserSettingConst.userSettings?.phone != null
                                                   ? Colors.yellow
-                                                  : Color(AppColors.primary),
+                                                  : Theme.of(context).primaryColor,
                                               outlineColor:UserSettingConst.userSettings?.phoneVerifiedAt == null && UserSettingConst.userSettings?.phone != null
                                                   ? Colors.yellow
-                                                  : Color(AppColors.primary),
+                                                  : Theme.of(context).primaryColor,
                                               isOutlined: true,
                                               titleSize: AppSizes.s14.sp,
                                               radius: AppSizes.s10.r,
@@ -540,7 +540,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                       .userSettings?.phone !=
                                                       null
                                                   ? Colors.yellow
-                                                  : Color(AppColors.primary),
+                                                  : Theme.of(context).primaryColor,
                                               title: UserSettingConst.userSettings
                                                   ?.phoneVerifiedAt ==
                                                   null &&
@@ -601,7 +601,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                       ),
 
                                       if( us1Cache!= null && us1Cache['tfa'] == true) Center(
-                                        child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.primary),
+                                        child: CustomElevatedButton( isOutlined: true,titleColor: Theme.of(context).primaryColor,
                                           titleSize: AppSizes.s14.sp,
                                           width: 1.sw,
                                           radius: AppSizes.s10.r,

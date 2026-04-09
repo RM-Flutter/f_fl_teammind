@@ -54,7 +54,7 @@ class AppStyles {
   static TextStyle primaryHeading(BuildContext context) {
     bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
-      color: Color(AppColors.primary),
+      color: Theme.of(context).primaryColor,
       fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
@@ -113,7 +113,7 @@ class AppStyles {
   /// Primary color Content style (often used for links/buttons)
   static TextStyle primaryContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.primary),
+      color: Theme.of(context).primaryColor,
     );
   }
   static TextStyle secoundaryContent(BuildContext context) {

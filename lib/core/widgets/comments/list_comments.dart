@@ -217,7 +217,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 border: Border.all(
-                                                    color: Color(AppColors.primary),
+                                                    color: Theme.of(context).primaryColor,
                                                     width: 2
                                                 ),
                                               ),

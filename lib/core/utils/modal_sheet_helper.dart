@@ -59,7 +59,7 @@ abstract class ModalSheetHelper {
                           Flexible(
                             child: Text(title!,
                                 style: Theme.of(dialogContext).textTheme.headlineLarge!.copyWith(
-                                  color: Color(AppColors.primary),
+                                  color: Theme.of(context).primaryColor,
                                 )),
                           ),
                           if(viewProfile == true) CustomElevatedButton(
@@ -132,7 +132,7 @@ abstract class ModalSheetHelper {
                       Center(
                         child: Text(title!,
                             style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                              color: Color(AppColors.primary),
+                              color: Theme.of(context).primaryColor,
                             )),
                       ),
                       if(viewProfile == true) 

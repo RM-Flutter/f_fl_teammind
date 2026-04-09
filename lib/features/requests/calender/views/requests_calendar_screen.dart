@@ -91,7 +91,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                       'type': 'mine',
                       'lang': context.locale.languageCode
                     }), // Icon inside FAB
-                    backgroundColor: Color(AppColors.primary), // Optional: change color
+                    backgroundColor: Theme.of(context).primaryColor, // Optional: change color
                     tooltip: 'Add',
                     child: Center(
                       child: Image.asset(

@@ -119,7 +119,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                   ElevatedButton(
                     onPressed: _navigateToCreateCV,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.primary),
+                      backgroundColor: Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -186,7 +186,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SelectTemplateScreen(),));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.primary),
+                        backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(

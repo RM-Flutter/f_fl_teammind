@@ -343,7 +343,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(AppColors.primary),
+                                  backgroundColor: Theme.of(context).primaryColor,
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
@@ -361,7 +361,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                               child: ElevatedButton(
                                 onPressed: () async => _downloadAndOpenPdf(),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(AppColors.primary),
+                                  backgroundColor: Theme.of(context).primaryColor,
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(

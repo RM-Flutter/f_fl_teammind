@@ -67,7 +67,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 child: Container(
                   width: iconSize,
                   height: iconSize,
-                  color: Color(AppColors.primary),
+                  color: Theme.of(context).primaryColor,
                   child: imageUrl.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: imageUrl,

@@ -133,7 +133,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                                 fontWeight:
                                     sel ? FontWeight.w600 : FontWeight.normal,
                                 color: sel
-                                    ? Color(AppColors.primary)
+                                    ? Theme.of(context).primaryColor
                                     : Color(AppColors.almostBlack),
                               ),
                             ),

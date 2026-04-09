@@ -278,6 +278,7 @@ Future<void> defaultActionBottomSheet2({
                                       ),
                                     ),
                                     defaultDropdownField(
+                                        context: context,
                                         items: dropDownItems,
                                         title: dropDownTitle,
                                         value: dropDownValue,
@@ -526,6 +527,7 @@ defaultActionBottomSheet(
                             ),
                           ),
                           defaultDropdownField(
+                              context: context,
                               items: dropDownItems,
                               title: dropDownTitle,
                               value: dropDownValue,
@@ -582,7 +584,7 @@ defaultActionBottomSheet(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              color: Color(AppColors.primary)),
+                              color: Theme.of(context).primaryColor),
                           child: (buttonWidget != null)
                               ? buttonWidget
                               : Text(
@@ -858,6 +860,7 @@ Future<void> defaultActionBottomSheetPoints({
                                       ),
                                     ),
                                     defaultDropdownField(
+                                        context: context,
                                         items: dropDownItems,
                                         title: dropDownTitle,
                                         value: dropDownValue,

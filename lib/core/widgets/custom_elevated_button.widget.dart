@@ -112,14 +112,14 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
                 ElevatedButton.styleFrom(
                   backgroundColor: widget.isOutlined == true
                       ? Colors.transparent // 👈 Transparent
-                      : widget.backgroundColor ?? Color(AppColors.primary),
+                      : widget.backgroundColor ?? Theme.of(context).primaryColor,
                   foregroundColor: widget.isOutlined == true
-                      ? Color(AppColors.primary) // 👈 Text بلون الـ primary
+                      ? Theme.of(context).primaryColor // 👈 Text بلون الـ primary
                       : Colors.white,
                   disabledForegroundColor: Colors.white,
                   elevation: widget.isOutlined == true ? 0 : 2,
                   side: widget.isOutlined == true
-                      ? BorderSide(color: widget.outlineColor ??Color( AppColors.primary), width: 2)
+                      ? BorderSide(color: widget.outlineColor ??Theme.of(context).primaryColor, width: 2)
                       : null,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(

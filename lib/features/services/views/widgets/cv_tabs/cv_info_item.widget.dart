@@ -69,7 +69,7 @@ class CVInfoItem extends StatelessWidget {
               child: Text(
                 value!,
                 style: TextStyle(
-                  color: Color(AppColors.primary),
+                  color: Theme.of(context).primaryColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),

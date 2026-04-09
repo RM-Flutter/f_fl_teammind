@@ -348,7 +348,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
             FloatingActionButton(
               heroTag: hero,
               onPressed: onPress,
-              backgroundColor: Color(AppColors.primary),
+              backgroundColor: Theme.of(context).primaryColor,
               child: Icon(
                 icon,
                 color: Colors.white,

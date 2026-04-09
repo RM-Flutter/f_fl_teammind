@@ -538,7 +538,7 @@ class DefaultListTile extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 4.h),
           leading: SvgPicture.asset(
             src,
-            color: Color(AppColors.primary),
+            color: Theme.of(context).primaryColor,
             fit: BoxFit.scaleDown,
             width: 20.r,
             height: 20.r,

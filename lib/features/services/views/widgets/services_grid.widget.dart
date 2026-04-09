@@ -29,7 +29,7 @@ class ServicesGridWidget extends StatelessWidget {
                   child: ServiceCard(
                     title: AppStrings.myCV.tr(),
                     icon: Icons.description_outlined,
-                    iconColor: Color(AppColors.primary),
+                    iconColor: Theme.of(context).primaryColor,
                     onTap: () => onServiceTap?.call('my_cv'),
                   ),
                 ),

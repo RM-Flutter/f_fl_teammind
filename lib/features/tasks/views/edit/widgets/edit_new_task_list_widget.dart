@@ -152,7 +152,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                             tasksController.tasksList2[index]["status"] == true
                                 ? Icons.radio_button_checked
                                 : Icons.radio_button_unchecked,
-                            color: Color(AppColors.primary),
+                            color: Theme.of(context).primaryColor,
                             size: 24.r,
                           ),
                         ),

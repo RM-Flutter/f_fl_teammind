@@ -87,6 +87,7 @@ Widget defaultDropdownField(
     bool? isExpanded,
     Color? borderColor,
     required items,
+      context,
     required void Function(String?)? onChanged}) {
   return Container(
     height: 60,
@@ -114,7 +115,7 @@ Widget defaultDropdownField(
         dropdownColor: Colors.white,
         icon:  Icon(
           Icons.arrow_drop_down_sharp,
-          color: Color(AppColors.primary),
+          color: Theme.of(context).primaryColor,
         ),
         isExpanded: isExpanded ?? true,
         value: value,

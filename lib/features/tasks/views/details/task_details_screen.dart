@@ -82,7 +82,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         });
                         await value.getOneTask(context, widget.id);
                       }, // Icon inside FAB
-                      backgroundColor: Color(AppColors.primary), // Optional: change color
+                      backgroundColor: Theme.of(context).primaryColor, // Optional: change color
                       tooltip: 'Add',
                       child: Center(
                         child: SvgPicture.asset(
@@ -134,7 +134,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                       SizedBox(height: 10.h,),
                                       LinearProgressIndicator(
-                                        color: Color(AppColors.primary),
+                                        color: Theme.of(context).primaryColor,
                                         value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
                                         borderRadius: BorderRadius.circular(5.r),
                                         backgroundColor: Colors.transparent,

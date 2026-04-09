@@ -103,8 +103,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 viewModel.currentPage = 1;
                 await viewModel.getTask(context, date: null);
               },
-              backgroundColor: Color(
-                  AppColors.primary), // Optional: change color
+              backgroundColor: Theme.of(context).primaryColor, // Optional: change color
               tooltip: 'Add',
               child: Center(
                 child: Image.asset(

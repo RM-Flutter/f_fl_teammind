@@ -12,7 +12,9 @@ abstract class AppThemeService {
   static final ColorPalette colorPalette = ColorPalette(
     name: 'Main Theme',
     // application primary colors
-    primaryColor: ColorValue(light: Color(AppColors.primary), dark: Color(AppColors.primary)),
+    primaryColor: ColorValue(light: Color(AppColors.buttonColor), dark: Color(AppColors.buttonColor)),
+
+
     secondaryColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
     tertiaryColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     // application background colors

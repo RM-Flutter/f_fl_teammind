@@ -92,7 +92,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       }
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Color(AppColors.primary),
+                      backgroundColor: Theme.of(context).primaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -189,7 +189,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
               heroTag: 'smart_card_add_profile',
               onPressed:
                   vm.isLoading ? null : () => _showCreateProfileBottomSheet(vm),
-              backgroundColor: Color(AppColors.primary),
+              backgroundColor: Theme.of(context).primaryColor,
               child: vm.isLoading
                   ? const SizedBox(
                       width: 24,
@@ -520,7 +520,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       await _handleCreateProfile(ctx, vm, nameController.text);
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Color(AppColors.primary),
+                      backgroundColor: Theme.of(context).primaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
@@ -635,7 +635,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       await _handleCreateCompany(ctx, vm, nameController.text);
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Color(AppColors.primary),
+                      backgroundColor: Theme.of(context).primaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
@@ -713,7 +713,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? Color(AppColors.primary) : Colors.grey[300]!,
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: [

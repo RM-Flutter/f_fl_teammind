@@ -568,7 +568,7 @@ class _DownloadProgressDialog extends StatelessWidget {
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
                   backgroundColor: Colors.grey.shade300,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.blue)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttonSecondary)),
                   minHeight: 8.h,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
@@ -613,7 +613,7 @@ class InfoTileWidget extends StatelessWidget {
         this.trailing,
         this.imgColor});
 
-  Color get _imgColor => imgColor ?? Color(AppColors.blue);
+  Color get _imgColor => imgColor ?? Color(AppColors.buttonSecondary);
 
   @override
   Widget build(BuildContext context) {

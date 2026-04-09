@@ -116,7 +116,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: Color(AppColors.primary))),
+                                              color: Theme.of(context).primaryColor)),
                                     ),
                                   ),
                                 ),
@@ -179,7 +179,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              color: Color(AppColors.primary))),
+                                              color: Theme.of(context).primaryColor)),
                                     ),
                                   ),
                                 ),
@@ -357,7 +357,7 @@ class DefaultListTile extends StatelessWidget {
           child: ListTile(
             leading: SvgPicture.asset(
               src,
-              color: Color(AppColors.primary),
+              color: Theme.of(context).primaryColor,
               fit: BoxFit.scaleDown,
               width: 20, height: 20,
             ),

@@ -56,7 +56,7 @@ class TaskListTileWidget extends StatelessWidget {
                 ? null : null,
             border: Border.all(
               color: (complete == "completed" || complete == "closed")
-                  ? Color(AppColors.primary)
+                  ? Theme.of(context).primaryColor
                   : Colors.grey.shade300,
               width: 1.0.r,
             ),
@@ -156,7 +156,7 @@ class TaskListTileWidget extends StatelessWidget {
                   width: 45.w,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Color(AppColors.primary),
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.only(
                       topRight: LocalizationService.isArabic(context: context)
                           ? const Radius.circular(0)

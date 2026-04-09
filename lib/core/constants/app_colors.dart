@@ -176,8 +176,8 @@ abstract class AppColors {
   // ============================================
 
   static const int oC2Color = 0xffAE702B;
-  static int get primary => buttonColor;
-  static int get blue => buttonSecondaryColor;
+  static int get  buttons => buttonColor;
+  static int get buttonSecondary => buttonSecondaryColor;
   static const int black = 0xff000000;
   static int get blackWithObacity => shadowColor;
   static int get white => backgroundColor;

@@ -105,7 +105,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                     height: 50.h,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
-                                      color: Color(AppColors.primary),
+                                      color: Theme.of(context).primaryColor,
                                       borderRadius: BorderRadius.circular(50.r),
                                     ),
                                     padding: EdgeInsets.symmetric(horizontal: 40.w),

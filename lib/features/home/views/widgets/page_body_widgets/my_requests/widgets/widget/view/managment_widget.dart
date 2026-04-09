@@ -63,7 +63,7 @@ class _ManagementResponseModalState extends State<ManagementModule> {
               Center(
                 child: CustomElevatedButton(
                   buttonStyle: ElevatedButton.styleFrom(
-                    backgroundColor: Color(AppColors.blue),
+                    backgroundColor: Color(AppColors.buttonSecondary),
                   ),
                   title: AppStrings.sendRequest.tr(),
                   onPressed: () async => await viewModel.sendManagerAction(

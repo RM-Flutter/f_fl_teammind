@@ -109,7 +109,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       'lang': context.locale.languageCode
                     });
                   }, // Icon inside FAB
-                  backgroundColor: Color(AppColors.primary), // Optional: change color
+                  backgroundColor: Theme.of(context).primaryColor, // Optional: change color
                   tooltip: 'Add',
                   child: Center(
                     child: Image.asset(
@@ -217,7 +217,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       );
                     }
                   },
-                  backgroundColor: Color(AppColors.primary), // Optional: change color
+                  backgroundColor: Theme.of(context).primaryColor, // Optional: change color
                   tooltip: 'Filter',
                   child: Center(
                     child: Image.asset(

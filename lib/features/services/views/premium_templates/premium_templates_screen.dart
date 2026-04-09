@@ -435,7 +435,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: Color(AppColors.primary),
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: ClipRRect(
@@ -445,7 +445,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             imageUrl: imageUrl,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
-                              color: Color(AppColors.primary),
+                              color: Theme.of(context).primaryColor,
                               child: const Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
@@ -454,7 +454,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
-                              color: Color(AppColors.primary),
+                              color: Theme.of(context).primaryColor,
                               child: const Icon(
                                 Icons.image,
                                 color: Colors.white,
@@ -463,7 +463,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             ),
                           )
                         : Container(
-                            color: Color(AppColors.primary),
+                            color: Theme.of(context).primaryColor,
                             child: _getFileTypeIcon(fileType),
                           ),
                   ),
@@ -538,7 +538,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                       CircularProgressIndicator(
                         value: progress,
                         backgroundColor: Colors.white.withValues(alpha: 0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.primary)),
+                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                         strokeWidth: 4,
                       ),
                       const SizedBox(height: 12),

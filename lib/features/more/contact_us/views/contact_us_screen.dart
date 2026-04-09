@@ -578,7 +578,7 @@ class _ContactScreenState extends State<ContactScreen> {
           height: 30.r,
           width: 30.r,
           decoration: BoxDecoration(
-              shape: BoxShape.circle, color: Color(AppColors.primary)),
+              shape: BoxShape.circle, color: Theme.of(context).primaryColor),
           child: SvgPicture.asset(src, color: Colors.white),
         ),
       );

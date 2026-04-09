@@ -121,8 +121,8 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                         padding: EdgeInsets.all(2.r),
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            border: Border.all(color: Color(AppColors.primary)),
-                                            color:(selectIndex == index)? Color(AppColors.primary) : Color(AppColors.white)
+                                            border: Border.all(color: Theme.of(context).primaryColor),
+                                            color:(selectIndex == index)? Theme.of(context).primaryColor : Color(AppColors.white)
                                         ),
                                         child: Icon(Icons.check, color: Colors.white, size: 18.r,),
                                       ),

@@ -143,7 +143,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
             ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(null),
-            child: Text(AppStrings.cancel.tr(), style: TextStyle(color: Color(AppColors.blue), fontSize: 16),),
+            child: Text(AppStrings.cancel.tr(), style: TextStyle(color: Color(AppColors.buttonSecondary), fontSize: 16),),
           ),
           TextButton(
             onPressed: () {
@@ -232,7 +232,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
     
     // Use custom icon color if provided, otherwise use default colors
     final defaultColor = isCurrentlyBookmarked
-        ? Color(AppColors.primary)
+        ? Theme.of(context).primaryColor
         : Color(AppColors.dark);
     final iconColorToUse = widget.iconColor ?? defaultColor;
     

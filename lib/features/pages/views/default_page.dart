@@ -122,8 +122,7 @@ class _DefaultPageState extends State<DefaultPage> {
                     pathParameters: {
                       'lang': context.locale.languageCode
                     }), // Icon inside FAB
-                backgroundColor: Color(
-                    AppColors.primary), // Optional: change color
+                backgroundColor: Theme.of(context).primaryColor, // Optional: change color
                 tooltip: 'Add',
                 child: Center(
                   child: Image.asset(

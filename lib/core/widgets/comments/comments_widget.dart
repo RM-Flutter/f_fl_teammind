@@ -173,7 +173,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                          color: Color(AppColors.primary).withOpacity(0.2),
+                                          color: Theme.of(context).primaryColor.withOpacity(0.2),
                                           width: 1),
                                     ),
                                     child: ClipRRect(

@@ -152,7 +152,7 @@ class ProfileTileEva extends StatelessWidget {
                       SizedBox(width: 12.w),
                       if(isViewArrow == true) const Spacer(),
                      if(isViewArrow == true) CircleAvatar(
-                        backgroundColor: Color(AppColors.blue),
+                        backgroundColor: Color(AppColors.buttonSecondary),
                         radius: 12.r,
                         child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
                       )
@@ -184,7 +184,7 @@ class ProfileTileEva extends StatelessWidget {
                  alignment: Alignment.center,
                  height: 40.h,
                  decoration: BoxDecoration(
-                   color: Color(AppColors.blue),
+                   color: Color(AppColors.buttonSecondary),
                    borderRadius: BorderRadius.circular(10.r)
                  ),
                  child: Text(
@@ -272,7 +272,7 @@ class ProfileTileNotTap extends StatelessWidget {
           SizedBox(width: 12.w),
           if(isViewArrow == true) const Spacer(),
           if(isViewArrow == true) CircleAvatar(
-            backgroundColor: Color(AppColors.blue),
+            backgroundColor: Color(AppColors.buttonSecondary),
             radius: 12.r,
             child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
           )
@@ -346,7 +346,7 @@ class ProfileTileEvaReq extends StatelessWidget {
             SizedBox(width: 12.w),
             if(isViewArrow == true) const Spacer(),
             if(isViewArrow == true) CircleAvatar(
-              backgroundColor: Color(AppColors.blue),
+              backgroundColor: Color(AppColors.buttonSecondary),
               radius: 12.r,
               child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
             )
@@ -418,7 +418,7 @@ class ProfileTilePay extends StatelessWidget {
             SizedBox(width: 12.w),
             if(isViewArrow == true) const Spacer(),
             if(isViewArrow == true) CircleAvatar(
-              backgroundColor: Color(AppColors.blue),
+              backgroundColor: Color(AppColors.buttonSecondary),
               radius: 12.r,
               child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
             )

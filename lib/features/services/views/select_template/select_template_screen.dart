@@ -141,7 +141,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: selectedTemplateIndex == index
-                            ? Color(AppColors.primary)
+                            ? Theme.of(context).primaryColor
                             : Colors.grey[400],
                       ),
                     );
@@ -204,7 +204,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: isSelected
-            ? Border.all(color: Color(AppColors.primary), width: 3)
+            ? Border.all(color: Theme.of(context).primaryColor, width: 3)
             : Border.all(color: Colors.grey[300]!, width: 1),
         boxShadow: [
           BoxShadow(
@@ -227,7 +227,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                           fit: BoxFit.contain,
                           width: double.infinity,
                           placeholder: (context, url) => Container(
-                            color: Color(AppColors.primary),
+                            color: Theme.of(context).primaryColor,
                             child: const Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
@@ -287,7 +287,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       CircularProgressIndicator(
                         value: vm.downloadProgress[template.id],
                         backgroundColor: Colors.white.withValues(alpha: 0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.primary)),
+                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                         strokeWidth: 4,
                       ),
                       const SizedBox(height: 12),

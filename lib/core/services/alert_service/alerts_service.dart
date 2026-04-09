@@ -273,7 +273,7 @@ abstract class AlertsService {
                           },
                           child: Text(AppStrings.no.tr(),
                               style:
-                              TextStyle(color: Color(AppColors.primary))),
+                              TextStyle(color: Theme.of(context).primaryColor)),
                         ),
                       ),
                     ],

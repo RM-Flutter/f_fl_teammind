@@ -84,7 +84,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
        await value.getRequest(context, page: 1);
        await value.getRequestMine(context, page: 1);
       },
-      backgroundColor: Color(AppColors.primary),
+      backgroundColor: Theme.of(context).primaryColor,
       child: const Icon(Icons.add, color: Colors.white)),
      body: (value.isGetRequestLoading == true && value.currentPage == 1)
        ? ListView.builder(
@@ -226,11 +226,11 @@ class _ComplainScreenState extends State<ComplainScreen> {
       case 'open':
       case 'مفتوح':
         statusIcon = Icons.info_outline_rounded;
-        iconColor = Color(AppColors.primary);
+        iconColor = Theme.of(context).primaryColor;
         break;
       default:
         statusIcon = Icons.info_outline_rounded;
-        iconColor = Color(AppColors.primary);
+        iconColor = Theme.of(context).primaryColor;
     }
 
     return Container(

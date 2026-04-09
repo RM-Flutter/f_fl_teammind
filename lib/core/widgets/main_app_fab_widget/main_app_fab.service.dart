@@ -165,7 +165,7 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: BoxDecoration(
-            color: Color(AppColors.primary),
+            color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(16),
           ),
           child: DefaultTextStyle(

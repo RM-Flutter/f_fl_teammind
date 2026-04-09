@@ -114,7 +114,7 @@ Widget defaultTap2BarItem({
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: (provider.selectedIndex == index)
-                      ? Color(AppColors.primary)
+                      ? Theme.of(context).primaryColor
                       : Colors.transparent,
                 ),
                 child: Text(
