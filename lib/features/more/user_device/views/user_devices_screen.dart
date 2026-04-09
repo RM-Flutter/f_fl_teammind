@@ -139,10 +139,10 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                             if(appConfigServiceProvider.deviceInformation.deviceUniqueId == value.devices[index]['unique_id'].toString())Text(
                               AppStrings.currentDevice.tr(),
                               maxLines: 2,
-                              style: AppStyles.content(context).copyWith(
+                              style: AppStyles.greenContent(context).copyWith(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.green),
+                              ),
                             ),
                             const Spacer(),
                             if(appConfigServiceProvider.deviceInformation.deviceUniqueId != value.devices[index]['unique_id'].toString())GestureDetector(

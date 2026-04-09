@@ -143,11 +143,11 @@ class HomeAppbarWidget extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.6,
                           child: Text(
-                            getVerificationStatus(us1Cache),   style: AppStyles.content(context).copyWith(color: Colors.red, fontSize: 14.sp),
+                            getVerificationStatus(us1Cache),   style: AppStyles.redContent(context).copyWith(fontSize: 14.sp),
                           ),
                         ),
                         const Spacer(),
-                        Text(AppStrings.activeNow.tr(), style: AppStyles.content(context).copyWith(fontSize: 12.sp, color: Colors.green),),
+                        Text(AppStrings.activeNow.tr(), style: AppStyles.greenContent(context).copyWith(fontSize: 12.sp)),
                       ],
                     ),
                   ),
@@ -220,17 +220,15 @@ class HomeAppbarWidget extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: AppStyles.whiteHeading(context).copyWith(fontSize: 24.sp)),
                                    Text(AppStrings.niceToMeetYou.tr().toUpperCase(),
-                                       maxLines: 2,
-                                       overflow: TextOverflow.ellipsis,
                                        style: AppStyles.whiteContent(context).copyWith(
                                            fontWeight: FontWeight.w400,
                                            letterSpacing: 0.5,
-                                           fontSize: 15.5.sp
+                                           fontSize: 13.sp
                                        )),
                                 ],
                               ),
                             ),
-                            const Spacer(),
+                            SizedBox(width: 10.w),
                             if (us1Cache != null)
                               Stack(
                                 children: [

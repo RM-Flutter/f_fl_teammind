@@ -12,29 +12,17 @@ abstract class AppThemeService {
   static final ColorPalette colorPalette = ColorPalette(
     name: 'Main Theme',
     // application primary colors
-    primaryColor: ColorValue(
-        light: Color(AppColors.primary), dark: Color(AppColors.primary)),
-    secondaryColor: ColorValue(
-        light: Color(AppColors.dark), dark: Color(AppColors.dark)),
-    tertiaryColor: ColorValue(
-        light: const Color(AppColors.black), dark: const Color(AppColors.black)),
+    primaryColor: ColorValue(light: Color(AppColors.primary), dark: Color(AppColors.primary)),
+    secondaryColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    tertiaryColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     // application background colors
-    primaryColorBackground: ColorValue(
-        light: Color(AppColors.dark), dark: Color(AppColors.dark)),
-    secondaryColorBackground: ColorValue(
-        light: const Color(AppColors.pink), dark: const Color(AppColors.pink)),
-    tertiaryColorBackground: ColorValue(
-        light: Color(AppColors.white), dark: Color(AppColors.white)),
+    primaryColorBackground: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    secondaryColorBackground: ColorValue(light: const Color(AppColors.pink), dark: const Color(AppColors.pink)),
+    tertiaryColorBackground: ColorValue(light: Color(AppColors.white), dark: Color(AppColors.white)),
     // application texts colors
-    primaryTextColor: ColorValue(
-        light: Color(AppColors.dark),
-        dark: Color(AppColors.dark)),
-    secondaryTextColor: ColorValue(
-        light: Color(AppColors.dark),
-        dark: Color(AppColors.dark)),
-    tertiaryTextColor: ColorValue(
-        light: const Color(AppColors.black),
-        dark: const Color(AppColors.black)),
+    primaryTextColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    secondaryTextColor: ColorValue(light: Color(AppColors.dark), dark: Color(AppColors.dark)),
+    tertiaryTextColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     quaternaryTextColor: ColorValue(
         light: Color(AppColors.darkGrey),
         dark: Color(AppColors.darkGrey)),

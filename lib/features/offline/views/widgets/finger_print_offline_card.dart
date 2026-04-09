@@ -92,10 +92,9 @@ class FingerprintCardOffiline extends StatelessWidget {
                           _formatFingerprintDate(
                               fingerprint![index]['finger_day'].toString(),
                               context),
-                          style: AppStyles.content(context).copyWith(
+                          style: AppStyles.secoundaryContent(context).copyWith(
                             fontWeight: FontWeight.w500,
                             fontSize: AppSizes.s14.sp,
-                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                         SizedBox(height: 4.h),

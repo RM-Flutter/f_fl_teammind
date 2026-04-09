@@ -75,6 +75,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             },
                             decoration: InputDecoration(
                               hintText: AppStrings.titleAr.tr(),
+                              hintStyle: AppStyles.darkContent(context).copyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                           SizedBox(height: 14.h),
@@ -89,10 +93,18 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             },
                             decoration: InputDecoration(
                               hintText: AppStrings.titleEn.tr(),
+                              hintStyle: AppStyles.darkContent(context).copyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 14.h),
-                          defaultDropdownField(
+                      SizedBox(height: 14.h),
+                      defaultDropdownField(
+                          textStyle: AppStyles.darkContent(context).copyWith(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                             value: viewModel.selectNotificationType,
                             title: viewModel.selectNotificationType ?? AppStrings.type.tr(),
                             items: viewModel.notificationsType
@@ -388,6 +400,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             controller: viewModel.contentArController,
                             decoration: InputDecoration(
                               hintText: AppStrings.contentAr.tr(),
+                              hintStyle: AppStyles.darkContent(context).copyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                           SizedBox(height: 14.h),
@@ -403,9 +419,13 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             controller: viewModel.contentEnController,
                             decoration: InputDecoration(
                               hintText: AppStrings.contentEn.tr(),
-                            ),
+                              hintStyle: AppStyles.darkContent(context).copyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
                           ),
-                          SizedBox(height: 14.h),
+                        ),
+                        SizedBox(height: 14.h),
                           GestureDetector(
                             onTap: () async {
                               await viewModel.getImage(context,

@@ -51,10 +51,9 @@ class PayrollListItemWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     PayrollRepo.formatDate(payroll.dateTo, context) ?? '',
-                    style: AppStyles.content(context).copyWith(
+                    style: AppStyles.blackContent(context).copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: AppSizes.s14.sp,
-                      color: Colors.black,
                     ),
                   ),
                 ),

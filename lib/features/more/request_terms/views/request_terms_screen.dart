@@ -56,7 +56,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                     return Center(
                       child: Text(
                         'Error: ${viewModel.errorMessage}',
-                        style: AppStyles.content(context).copyWith(color: Colors.red),
+                        style: AppStyles.redContent(context),
                       ),
                     );
                   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_colors.dart';
 
 class AppStyles {
@@ -9,34 +10,52 @@ class AppStyles {
     return TextStyle(
       fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
       color: Color(AppColors.titleTextColor),
+      fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
 
-  /// White Heading style
+  /// White Heading styleclass AppStyles {
+  //   /// Base Heading style (Ibrand for EN / Montserrat-Arabic for AR)
+  //   static TextStyle heading(BuildContext context) {
+  //     bool isArabic = context.locale.languageCode == 'ar';
+  //     return TextStyle(
+  //       fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
+  //       color: Color(AppColors.titleTextColor),
+  //       fontSize: isArabic ? 14.sp : 16.sp,
+  //     );
+  //   }
   static TextStyle whiteHeading(BuildContext context) {
+    bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
       color: Colors.white,
+      fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
 
   /// Dark Heading style
   static TextStyle darkHeading(BuildContext context) {
+    bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
+      fontSize: isArabic ? 14.sp : 16.sp,
       color: Color(AppColors.dark),
     );
   }
 
   /// Black Heading style
   static TextStyle blackHeading(BuildContext context) {
+    bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
       color: Colors.black,
+      fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
 
   /// Primary Heading style
   static TextStyle primaryHeading(BuildContext context) {
+    bool isArabic = context.locale.languageCode == 'ar';
     return heading(context).copyWith(
       color: Color(AppColors.primary),
+      fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
 
@@ -63,6 +82,18 @@ class AppStyles {
     );
   }
 
+  static TextStyle greenContent(BuildContext context) {
+    return content(context).copyWith(
+      color: Colors.green,
+    );
+  }
+
+  static TextStyle redContent(BuildContext context) {
+    return content(context).copyWith(
+      color: Colors.red,
+    );
+  }
+
 
 
   /// Hint Content style
@@ -83,6 +114,11 @@ class AppStyles {
   static TextStyle primaryContent(BuildContext context) {
     return content(context).copyWith(
       color: Color(AppColors.primary),
+    );
+  }
+  static TextStyle secoundaryContent(BuildContext context) {
+    return content(context).copyWith(
+      color: Theme.of(context).colorScheme.secondary,
     );
   }
 
@@ -110,7 +146,7 @@ class AppStyles {
   /// Almost Black Content style (1B variant)
   static TextStyle almostBlack1BContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.almostBlack1B),
+      color: const Color(AppColors.almostBlack1B),
     );
   }
 
@@ -123,7 +159,7 @@ class AppStyles {
   /// Dark Blue Content style
   static TextStyle darkBlueContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.darkBlue),
+      color: const Color(AppColors.darkBlue),
     );
   }
 
@@ -167,5 +203,21 @@ class AppStyles {
       color: Color(AppColors.blackWithObacity),
     );
   }
+
+
+  static TextStyle aboutUsContent(BuildContext context) {
+    return content(context).copyWith(
+      color: const Color(0xFF333333),
+    );
+  }
+
+
+  static TextStyle c1Content(BuildContext context) {
+    return content(context).copyWith(
+      color: const Color(AppColors.c1),
+    );
+  }
+
+
 }
 

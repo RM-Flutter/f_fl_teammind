@@ -106,10 +106,9 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     child: Text(
                       AppStrings.aboutAppDescription.tr(),
                       textAlign: TextAlign.start,
-                      style: AppStyles.content(context).copyWith(
-                        fontSize: 13.sp,
-                        height: 1.6,
-                        color: const Color(0xFF333333),
+                      style: AppStyles.aboutUsContent(context).copyWith(
+                        fontSize: 11.sp,
+                        height: 1.4,
                         fontWeight: FontWeight.w400,
                       ),
                     ),

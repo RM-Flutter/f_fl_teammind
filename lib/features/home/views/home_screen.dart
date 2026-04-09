@@ -535,7 +535,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     maxLines: 2,
                     style: AppStyles.whiteContent(context).copyWith(
                       fontSize: 12.0.sp,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w400,
                       height: 1.1,
                     ),
                   ),
@@ -560,7 +560,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 AppStrings.myTasksHeader.tr(),
                 style: AppStyles.primaryHeading(context).copyWith(
-                  fontSize: 19.sp,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -570,7 +570,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   AppStrings.viewAll.tr(),
                   style: AppStyles.greyContent(context).copyWith(
-                    fontSize: 12.sp,
+                    fontSize: 10.sp,
                   ),
                 ),
               ),

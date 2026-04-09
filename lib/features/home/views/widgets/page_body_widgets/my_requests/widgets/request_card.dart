@@ -108,7 +108,7 @@ class RequestCard extends StatelessWidget {
                         requestId: request.typeId != null ? request.typeId?.toString() : "") ??
                         '',
                     style: AppStyles.blackContent(context).copyWith(
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.bold,
                       fontSize: AppSizes.s16.sp,
                       letterSpacing: 0.75,
                       height: 1.1,

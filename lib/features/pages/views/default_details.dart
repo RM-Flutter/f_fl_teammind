@@ -83,27 +83,33 @@ class DefaultDetails extends StatelessWidget {
                           children: [
                             Text(
                               (value.getOneBlogModel!.item!.createdAt != null )?value.getOneBlogModel!.item!.createdAt! : "",
-                              style: AppStyles.content(context).copyWith(
+                              style: AppStyles.c1Content(context).copyWith(
                                   fontSize: AppSizes.s10.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: Color(AppColors.c1)),
+                              ),
                             ),
                             SizedBox(width: 20.w,),
-                            if(value.getOneBlogModel!.item!.category!.title != null)Row(
+
+                                if(value.getOneBlogModel!.item!.category!.title
+                                != null) Row(
                               children: [
-                                Icon(Icons.category, color: Colors.black, size: 16.r,),
+                                Icon(Icons.category, color: Colors.black,
+                                  size: 16.r,),
                                 SizedBox(width: 5.w,),
                                 Text(
-                                  value.getOneBlogModel!.item!.category!.title!.toUpperCase(),
-                                  style: AppStyles.content(context).copyWith(
-                                      fontSize: AppSizes.s10.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(AppColors.c1)),
+                                  value.getOneBlogModel!.item!.category!.title!
+                                      .toUpperCase(),
+                                  style: AppStyles.c1Content(context).copyWith(
+                                    fontSize: AppSizes.s10.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
-                            )
-                          ],
-                        ),
+                                )
+                              ],
+                            ),
                         gapH14,
                         Text(
                           value.getOneBlogModel!.item!.title ?? "",

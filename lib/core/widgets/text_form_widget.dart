@@ -140,6 +140,7 @@ Widget defaultDropdownField(
       IconData? icon,
       bool? hasShadows = false,
       required items,
+      TextStyle? textStyle,
       required void Function(String?)? onChanged}) {
   return Container(
     height: 65,
@@ -176,7 +177,7 @@ Widget defaultDropdownField(
         value: value,
         hint: Text(
           title!,
-          style: TextStyle(
+          style:textStyle??  TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Color(AppColors.almostBlack)),

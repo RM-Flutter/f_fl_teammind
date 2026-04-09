@@ -39,7 +39,7 @@ class NotificationsSection extends StatelessWidget {
                 children: [
                   Text(AppStrings.myNotifications.tr(),
                       style: AppStyles.primaryHeading(context).copyWith(
-                        fontSize: 19.sp, 
+                        fontSize: 16.sp, 
                         fontWeight: FontWeight.w700,
                         // تحسين الخطوط في الويب
                         letterSpacing: kIsWeb ? 0.3 : null,
@@ -55,7 +55,7 @@ class NotificationsSection extends StatelessWidget {
                     child: Text(
                       AppStrings.viewAll.tr(),
                       style: AppStyles.greyContent(context).copyWith(
-                        fontSize: 12.sp,
+                        fontSize: 10.sp,
                       ),
                     ),
                   ),

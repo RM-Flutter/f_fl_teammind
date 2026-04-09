@@ -59,7 +59,7 @@ class RequestsWidget extends StatelessWidget {
                 children: [
                   Text(getRequestsTypeStr(),
                       style: AppStyles.primaryHeading(context).copyWith(
-                        fontSize: 19.sp,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w700,
                       ),),
                   TextButton(
@@ -68,7 +68,7 @@ class RequestsWidget extends StatelessWidget {
                             context: context, reqType: requestType),
                     child: Text(AppStrings.viewAll.tr(),
                         style: AppStyles.greyContent(context).copyWith(
-                          fontSize: 12.sp,
+                          fontSize: 10.sp,
                         )),
                   ),
                 ],

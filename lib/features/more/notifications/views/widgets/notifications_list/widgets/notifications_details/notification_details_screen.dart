@@ -225,7 +225,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                         padding: EdgeInsets.symmetric(vertical: 20.h),
                                         child: Text(
                                           AppStrings.theCommentOnThisRequestHasBeenClosedByTheAdmin.tr(),
-                                          style: AppStyles.content(context).copyWith(color: Colors.red, fontSize: 14.sp, fontWeight: FontWeight.w500),
+                                          style: AppStyles.redContent(context).copyWith( fontSize: 14.sp, fontWeight: FontWeight.w500),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),

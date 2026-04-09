@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -244,8 +245,7 @@ class VacationCard extends StatelessWidget {
                   : vocation.value.title!.en! ?? '-')
                   .replaceAll(' ', '\n'),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
+              style: AppStyles.whiteContent(context).copyWith(
                 fontSize: 13,
                 height: 1.1,
                 fontWeight: FontWeight.w400,

@@ -124,10 +124,6 @@ class SwitchRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = isLoginPageStyle == true
-        ? AppStyles.content(context).copyWith(fontSize: AppSizes.s14.sp, fontWeight: FontWeight.w500)
-        : Theme.of(context).textTheme.displaySmall;
-
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Row(
