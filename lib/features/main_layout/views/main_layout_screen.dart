@@ -53,17 +53,17 @@ class MainLayoutScreen extends StatelessWidget {
     final viewModel = Provider.of<MainLayoutController>(context);
     viewModel.currentPage = currentNavPage;
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Color(AppColors.scaffoldBackGround),
       // floatingActionButton: const MainAppFabWidget(),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).navigationBarTheme.backgroundColor,
+        backgroundColor: Color(AppColors.navBar),
         showUnselectedLabels: true,
         showSelectedLabels: true,
-        selectedLabelStyle: AppStyles.darkContent(context).copyWith(
+        selectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
           fontSize: 11.sp,
           fontWeight: FontWeight.w600,
         ),
-        unselectedLabelStyle: AppStyles.greyContent(context).copyWith(
+        unselectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
           fontSize: 10.sp,
         ),
         selectedItemColor: Color(AppColors.titleText),
@@ -78,7 +78,7 @@ class MainLayoutScreen extends StatelessWidget {
                 height: 24.r,
                 width: 24.r,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.tertiary,
+                  Color(AppColors.tabInactive),
                   BlendMode.srcIn,
                 ),
               ),

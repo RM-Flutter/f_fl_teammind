@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
           await Future.delayed(const Duration(milliseconds: 200));
         },
         child: CoreMobileScaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.scaffoldBackGround),
           controller: viewModel.homeScrollController,
           headers: [
             CoreHeader.transform(
@@ -361,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _isDragging = true;
               return Material(
                 elevation: 8,
-                shadowColor: Colors.black.withValues(alpha: 0.4),
+                shadowColor: Color(AppColors.shadow).withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(AppSizes.s12.r),
                 child: child,
               );
@@ -434,11 +434,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.95),
+                    color: Color(AppColors.background).withValues(alpha: 0.95),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.15),
+                        color: Color(AppColors.shadow).withValues(alpha: 0.15),
                         blurRadius: 6.r,
                         offset: Offset(0, 2.h),
                       ),
@@ -516,7 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 105.w,
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF090B60), // Dark Blue from Figma
+                color: Color(AppColors.cardBackground),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Column(
@@ -526,14 +526,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     items[index]['icon'],
                     height: 28.r,
                     width: 28.r,
-                    color: Colors.white,
+                    color: Color(AppColors.icon),
                   ),
                   SizedBox(height: 12.h),
                   Text(
                     items[index]['title'],
                     textAlign: TextAlign.center,
                     maxLines: 2,
-                    style: AppStyles.whiteContent(context).copyWith(
+                    style: AppStyles.titleTextContent(context).copyWith(
                       fontSize: 12.0.sp,
                       fontWeight: FontWeight.w400,
                       height: 1.1,
@@ -569,7 +569,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     pathParameters: {'lang': context.locale.languageCode}),
                 child: Text(
                   AppStrings.viewAll.tr(),
-                  style: AppStyles.greyContent(context).copyWith(
+                  style: AppStyles.titleTextContent(context).copyWith(
                     fontSize: 10.sp,
                   ),
                 ),

@@ -57,8 +57,8 @@ class RequestsWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(getRequestsTypeStr(),
-                      style: AppStyles.heading(context).copyWith(
+                   Text(getRequestsTypeStr(),
+                      style: AppStyles.titleTextContent(context).copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w700,
                       ),),
@@ -67,7 +67,7 @@ class RequestsWidget extends StatelessWidget {
                         await pushToRequestsScreenWithRequestsType(
                             context: context, reqType: requestType),
                     child: Text(AppStrings.viewAll.tr(),
-                        style: AppStyles.greyContent(context).copyWith(
+                        style: AppStyles.titleTextContent(context).copyWith(
                           fontSize: 10.sp,
                         )),
                   ),

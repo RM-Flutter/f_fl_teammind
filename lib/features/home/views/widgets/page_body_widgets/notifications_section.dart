@@ -30,7 +30,7 @@ class NotificationsSection extends StatelessWidget {
           alignment: Alignment.topCenter,
           padding: EdgeInsets.symmetric(
               horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
-          color: Color(AppColors.titleText),
+          color: Colors.transparent,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -38,7 +38,7 @@ class NotificationsSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(AppStrings.myNotifications.tr(),
-                      style: AppStyles.heading(context).copyWith(
+                      style: AppStyles.titleTextContent(context).copyWith(
                         fontSize: 16.sp, 
                         fontWeight: FontWeight.w700,
                         // تحسين الخطوط في الويب
@@ -54,7 +54,7 @@ class NotificationsSection extends StatelessWidget {
                     },
                     child: Text(
                       AppStrings.viewAll.tr(),
-                      style: AppStyles.greyContent(context).copyWith(
+                      style: AppStyles.titleTextContent(context).copyWith(
                         fontSize: 10.sp,
                       ),
                     ),

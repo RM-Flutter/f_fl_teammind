@@ -57,7 +57,7 @@ class RequestCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
       decoration: ShapeDecoration(
-        color: Theme.of(context).cardTheme.color,
+        color: Color(AppColors.cardBackground),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.r),
         ),
@@ -107,7 +107,7 @@ class RequestCard extends StatelessWidget {
                         context: context,
                         requestId: request.typeId != null ? request.typeId?.toString() : "") ??
                         '',
-                    style: AppStyles.blackContent(context).copyWith(
+                    style: AppStyles.titleTextContent(context).copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: AppSizes.s16.sp,
                       letterSpacing: 0.75,
@@ -125,7 +125,7 @@ class RequestCard extends StatelessWidget {
                           : (DateFormat('yyyy-MM-dd').format(DateTime.parse(request.from)) == DateFormat('yyyy-MM-dd').format(DateTime.parse(request.to)))
                           ? '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} (${request.duration} ${request.durationType.toString().tr()})'
                           : '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.to)} (${request.duration} ${request.durationType.toString().tr()})',
-                      style: AppStyles.greyContent(context).copyWith(
+                      style: AppStyles.titleTextContent(context).copyWith(
                         fontWeight: FontWeight.w400,
                         fontSize: AppSizes.s12.sp,
                         letterSpacing: 0.5,
@@ -138,7 +138,7 @@ class RequestCard extends StatelessWidget {
                   if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment)
                     Text(
                       "${request.employeeName ?? ""} - ${request.departmentName ?? ""}",
-                      style: AppStyles.grey70Content(context).copyWith(
+                      style: AppStyles.titleTextContent(context).copyWith(
                         fontWeight: FontWeight.w600, 
                         fontSize: 12.sp
                       ),
