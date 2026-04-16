@@ -18,6 +18,8 @@ import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/app_styles.dart';
 import '../../create_account/views/create_account_screen.dart';
 import '../../forgot_password/views/forget_password_screen.dart';
 import '../data/login_repo.dart';
@@ -124,8 +126,8 @@ class AuthenticationController extends ChangeNotifier {
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 5,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
+              backgroundColor: Color(AppColors.failureRed),
+              textColor: Color(AppColors.appBarText),
               fontSize: 16.0
           );
           return;
@@ -137,8 +139,8 @@ class AuthenticationController extends ChangeNotifier {
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 5,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
+              backgroundColor: Color(AppColors.failureRed),
+              textColor: Color(AppColors.appBarText),
               fontSize: 16.0
           );
           return;
@@ -180,8 +182,8 @@ class AuthenticationController extends ChangeNotifier {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
+            backgroundColor: Color(AppColors.failureRed),
+            textColor: Color(AppColors.appBarText),
             fontSize: 16.0
         );
       }
@@ -318,7 +320,7 @@ class AuthenticationController extends ChangeNotifier {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.s12),
               ),
-              backgroundColor: Colors.white,
+              backgroundColor: Color(AppColors.background),
               insetPadding: const EdgeInsets.all(AppSizes.s16),
               titlePadding: const EdgeInsets.all(AppSizes.s16),
               contentPadding: const EdgeInsets.all(AppSizes.s12),
@@ -327,14 +329,14 @@ class AuthenticationController extends ChangeNotifier {
                 children: [
                   Text(
                     AppStrings.twoFactorVerification.tr(),
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: AppStyles.titleTextContent(context),
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
-                        color: Colors.red,
+                        color: Color(AppColors.failureRed),
                       ))
                 ],
               ),
@@ -352,7 +354,7 @@ class AuthenticationController extends ChangeNotifier {
                       children: [
                         Text(
                           AppStrings.pleaseSelectAMethod.tr(),
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          style: AppStyles.bodyTextContent(context).copyWith(
                               fontWeight: FontWeight.bold, fontSize: AppSizes.s16),
                           textAlign: TextAlign.center,
                         ),
@@ -392,8 +394,8 @@ class AuthenticationController extends ChangeNotifier {
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
+                                          backgroundColor: Color(AppColors.failureRed),
+                                          textColor: Color(AppColors.appBarText),
                                           fontSize: 16.0
                                       );
                                     }
@@ -417,10 +419,7 @@ class AuthenticationController extends ChangeNotifier {
                           children: [
                             Text(
                               AppStrings.twoFAVerificationCodeSent.tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(
+                              style: AppStyles.titleTextContent(context).copyWith(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppSizes.s16),
                               textAlign: TextAlign.center,
@@ -428,10 +427,7 @@ class AuthenticationController extends ChangeNotifier {
                             gapH12,
                             Text(
                               AppStrings.aVerificationCodeHasBeenSent.tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(color: Colors.black),
+                              style: AppStyles.bodyTextContent(context),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -476,8 +472,8 @@ class AuthenticationController extends ChangeNotifier {
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
+                                      backgroundColor: Color(AppColors.failureRed),
+                                      textColor: Color(AppColors.appBarText),
                                       fontSize: 16.0
                                   );
                                   return;
@@ -491,20 +487,13 @@ class AuthenticationController extends ChangeNotifier {
                           children: [
                             Text(
                               AppStrings.didnotReciveCode.tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(color: Colors.black),
+                              style: AppStyles.bodyTextContent(context),
                               textAlign: TextAlign.center,
                             ),
                             TextButton(
                               child: Text(
                                 AppStrings.resendCode.tr(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                    color: Colors.black,
+                                style: AppStyles.bodyTextContent(context).copyWith(
                                     fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
@@ -525,8 +514,8 @@ class AuthenticationController extends ChangeNotifier {
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
+                                      backgroundColor: Color(AppColors.failureRed),
+                                      textColor: Color(AppColors.appBarText),
                                       fontSize: 16.0
                                   );
                                 }
@@ -565,7 +554,7 @@ class AuthenticationController extends ChangeNotifier {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.s12),
               ),
-              backgroundColor: Colors.white,
+              backgroundColor: Color(AppColors.background),
               insetPadding: const EdgeInsets.all(AppSizes.s16),
               titlePadding: const EdgeInsets.all(AppSizes.s16),
               contentPadding: const EdgeInsets.all(AppSizes.s12),
@@ -574,14 +563,14 @@ class AuthenticationController extends ChangeNotifier {
                 children: [
                   Text(
                     AppStrings.accountVerification.tr(),
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: AppStyles.titleTextContent(context).copyWith(fontSize: 14),
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.cancel_outlined,
                         size: AppSizes.s32,
-                        color: Colors.red,
+                        color: Color(AppColors.failureRed),
                       ))
                 ],
               ),
@@ -599,7 +588,7 @@ class AuthenticationController extends ChangeNotifier {
                       children: [
                         Text(
                           AppStrings.pleaseSelectAMethod.tr(),
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          style: AppStyles.bodyTextContent(context).copyWith(
                               fontWeight: FontWeight.bold, fontSize: AppSizes.s17),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -639,8 +628,8 @@ class AuthenticationController extends ChangeNotifier {
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
+                                          backgroundColor: Color(AppColors.failureRed),
+                                          textColor: Color(AppColors.appBarText),
                                           fontSize: 16.0
                                       );
                                     }
@@ -665,22 +654,15 @@ class AuthenticationController extends ChangeNotifier {
                           children: [
                             Text(
                               AppStrings.verificationCodeSent.tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(
+                              style: AppStyles.titleTextContent(context).copyWith(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: AppSizes.s18,
-                                  color: Colors.black),
+                                  fontSize: AppSizes.s18),
                               textAlign: TextAlign.center,
                             ),
                             gapH16,
                             Text(
                               AppStrings.aVerificationCodeHasBeenSent.tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(color: Colors.black),
+                              style: AppStyles.bodyTextContent(context),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -726,8 +708,8 @@ class AuthenticationController extends ChangeNotifier {
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
+                                      backgroundColor: Color(AppColors.failureRed),
+                                      textColor: Color(AppColors.appBarText),
                                       fontSize: 16.0
                                   );
                                   return;
@@ -741,20 +723,13 @@ class AuthenticationController extends ChangeNotifier {
                           children: [
                             Text(
                               AppStrings.didnotReciveCode.tr(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall
-                                  ?.copyWith(color: Colors.black),
+                              style: AppStyles.bodyTextContent(context),
                               textAlign: TextAlign.center,
                             ),
                             TextButton(
                               child: Text(
                                 AppStrings.resendCode.tr(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall
-                                    ?.copyWith(
-                                    color: Colors.black,
+                                style: AppStyles.bodyTextContent(context).copyWith(
                                     fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
@@ -770,8 +745,8 @@ class AuthenticationController extends ChangeNotifier {
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
+                                      backgroundColor: Color(AppColors.failureRed),
+                                      textColor: Color(AppColors.appBarText),
                                       fontSize: 16.0
                                   );
                                 }else{
@@ -781,8 +756,8 @@ class AuthenticationController extends ChangeNotifier {
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
-                                      backgroundColor: Colors.green,
-                                      textColor: Colors.white,
+                                      backgroundColor: Color(AppColors.successGreen),
+                                      textColor: Color(AppColors.appBarText),
                                       fontSize: 16.0
                                   );
                                 }

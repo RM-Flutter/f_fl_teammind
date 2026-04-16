@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config_service.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../data/repo/forgot_password_repo.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 
@@ -70,8 +71,8 @@ class ForgotPasswordController extends ChangeNotifier {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
+            backgroundColor: Color(AppColors.failureRed),
+            textColor: Color(AppColors.appBarText),
             fontSize: 16.0
         );
         return;
@@ -80,8 +81,8 @@ class ForgotPasswordController extends ChangeNotifier {
       showToast(
         AppStrings.formIsInvalid.tr(),
         context: context,
-        backgroundColor: Colors.red,
-        textStyle: AppStyles.whiteContent(context),
+        backgroundColor: Color(AppColors.failureRed),
+        textStyle: AppStyles.bodyTextContent(context).copyWith(color: Color(AppColors.appBarText)),
         duration: const Duration(seconds: 5),
         position: StyledToastPosition.bottom,
       );
@@ -130,8 +131,8 @@ class ForgotPasswordController extends ChangeNotifier {
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
+          backgroundColor: Color(AppColors.failureRed),
+          textColor: Color(AppColors.appBarText),
           fontSize: 16.0
       );
       return;
@@ -166,8 +167,8 @@ class ForgotPasswordController extends ChangeNotifier {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
+            backgroundColor: Color(AppColors.failureRed),
+            textColor: Color(AppColors.appBarText),
             fontSize: 16.0
         );
         return;

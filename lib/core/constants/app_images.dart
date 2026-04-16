@@ -137,4 +137,9 @@ abstract class AppImages {
       '$_penaltiesAndRewardsImagesDirectory/penalty.png';
   static const String reward =
       '$_penaltiesAndRewardsImagesDirectory/reward.png';
+
+  // default asset fallbacks (for Image.asset)
+  static const String defaultLogo = '$_generalImagesDirectory/logo.png';
+  static const String defaultLoginBackground = '$_loginImagesDirectory/login_background.png';
+  static const String defaultLoginBackgroundWeb = '$_loginImagesDirectory/login-bg.jpg';
 }

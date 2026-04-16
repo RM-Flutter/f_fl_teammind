@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 
+import '../../../../core/constants/app_colors.dart';
+
 class VerificationTileWidget extends StatelessWidget {
   final Map<String, dynamic> method;
   final VoidCallback onSelected;
@@ -56,20 +58,20 @@ class VerificationTileWidget extends StatelessWidget {
       child: ListTile(
           leading: Icon(
             iconData,
-            color: Theme.of(context).colorScheme.primary,
+            color: Color(AppColors.icon),
           ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 description,
-                style: AppStyles.content(context).copyWith(fontWeight: FontWeight.bold),
+                style: AppStyles.titleTextContent(context).copyWith(fontWeight: FontWeight.bold),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
                 subDiscription,
-                style: AppStyles.greyContent(context),
+                style: AppStyles.subTitleContent(context),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -77,7 +79,7 @@ class VerificationTileWidget extends StatelessWidget {
           ),
           trailing: Icon(
             Icons.arrow_forward,
-            color: Theme.of(context).colorScheme.secondary,
+            color: Color(AppColors.iconSecondary),
           ),
           onTap: () => onSelected.call()),
     );

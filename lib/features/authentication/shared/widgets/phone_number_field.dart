@@ -97,7 +97,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         decoration: InputDecoration(
           errorText: widget.phoneError,
           hintText: AppStrings.yourPhone.tr().toUpperCase(),
-          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+          hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
           counter: const SizedBox.shrink(),
         ),
         initialCountryCode: detectedCountryCode ?? widget.initialCountry ?? "EG",
@@ -156,7 +156,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           Icons.arrow_drop_down,
         ),
         dropdownTextStyle:
-        AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.bold),
+        AppStyles.bodyTextContent(context).copyWith(fontWeight: FontWeight.bold),
         dropdownIconPosition: intl_phone_field.IconPosition.trailing,
         showCursor: true,
         dropdownDecoration: BoxDecoration(
@@ -168,7 +168,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           ),
         ),
         pickerDialogStyle: PickerDialogStyle(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           padding: EdgeInsets.symmetric(
               vertical: AppSizes.s16.h, horizontal: AppSizes.s6.w,),
         ),

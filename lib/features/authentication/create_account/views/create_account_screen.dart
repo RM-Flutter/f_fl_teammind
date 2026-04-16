@@ -54,19 +54,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             phoneError: viewModel.phoneError,
                             countryCodeController: viewModel.countryCodeController,
                           ),
-                          // SizedBox(height: AppSizes.s4.h),
-                          // SwitchRow(
-                          //   value: false,
-                          //   onChanged: (newValue) => setState(() {}),
-                          //   leftText: AppStrings.smsActive.tr(),
-                          //   rightText: AppStrings.whatsAppActive.tr(),
-                          // ),
                           SizedBox(height: AppSizes.s20.h),
                           TextFormField(
                             controller: viewModel.emailController,
                             decoration: InputDecoration(
                               hintText: AppStrings.yourEmail.tr().toUpperCase(),
-                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                              hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                               errorText: viewModel.emailError,
                             ),
                             validator: (val) => ValidationService.validateEmail(val),
@@ -76,7 +69,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             controller: viewModel.passwordController,
                             decoration: InputDecoration(
                               hintText: AppStrings.password.tr().toUpperCase(),
-                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                              hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                               errorText: viewModel.passwordError,
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -98,55 +91,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             controller: viewModel.nameController,
                             decoration: InputDecoration(
                               hintText: AppStrings.yourName.tr().toUpperCase(),
-                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                              hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                               errorText: viewModel.nameError,
                             ),
                             validator: (val) => ValidationService.validateRequired(val, AppStrings.yourName.tr()),
                           ),
-                          // const SizedBox(height: 10,),
-                          // Container(
-                          //   height: 55,
-                          //   alignment: LocalizationService.isArabic(context: context)
-                          //       ?Alignment.centerRight : Alignment.centerLeft,
-                          //   margin: const EdgeInsets.symmetric(vertical: AppSizes.s10.h,),
-                          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                          //   decoration: ShapeDecoration(
-                          //     color: AppThemeService.colorPalette.tertiaryColorBackground.color,
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(AppSizes.s8.r),
-                          //       side: BorderSide(
-                          //         color: Color(AppColors.border),
-                          //         width: 1.0,
-                          //       ),
-                          //     ),
-                          //     shadows: const [
-                          //       BoxShadow(
-                          //         color: AppColors.black,
-                          //         blurRadius: 10,
-                          //         offset: Offset(0, 1),
-                          //         spreadRadius: 0,
-                          //       )
-                          //     ],
-                          //   ),
-                          //   child: Directionality(
-                          //     textDirection: LocalizationService.isArabic(context: context)
-                          //         ? TextDirection.rtl
-                          //         : TextDirection.ltr,
-                          //     child: Text(
-                          //          "${CacheHelper.getString("role")}".tr(),
-                          //       style: TextStyle(
-                          //           fontSize: 16,
-                          //           fontWeight: FontWeight.w400,
-                          //           color:const Color(0xff000000)
-                          //               .withOpacity(0.74)),
-                          //     ),
-                          //   ),
-                          // ),
                           SizedBox(height: AppSizes.s28.h),
                           Center(
                               child: viewModel.isEmailRegister == false ?CustomElevatedButton(
                                   isPrimaryBackground: false,
                                   title: AppStrings.create.tr(),
+                                  titleSize: 14.sp,
                                   onPressed: () async {
                                     if(viewModel.phoneController.text.isEmpty){
                                       Fluttertoast.showToast(
@@ -154,8 +109,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
+                                           backgroundColor: Color(AppColors.failureRed),
+                                           textColor: Color(AppColors.appBarText),
                                           fontSize: 16.0
                                       );
                                       return;

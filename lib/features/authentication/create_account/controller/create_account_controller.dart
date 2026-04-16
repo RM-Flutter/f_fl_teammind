@@ -8,6 +8,7 @@ import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../../core/constants/app_colors.dart';
 import '../data/repo/create_account_repo.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 
@@ -75,8 +76,8 @@ class CreateAccountController extends ChangeNotifier {
         showToast(
           AppStrings.formIsInvalid.tr(),
           context: context,
-          backgroundColor: Colors.red,
-          textStyle: AppStyles.whiteContent(context),
+          backgroundColor: Color(AppColors.failureRed),
+          textStyle: AppStyles.bodyTextContent(context).copyWith(color: Color(AppColors.appBarText)),
           duration: const Duration(seconds: 5),
           position: StyledToastPosition.bottom,
         );
@@ -125,8 +126,8 @@ class CreateAccountController extends ChangeNotifier {
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 5,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
+          backgroundColor: Color(AppColors.successGreen),
+          textColor: Color(AppColors.appBarText),
           fontSize: 16.0
       );
       if(mak == null) Navigator.pop(context, result);

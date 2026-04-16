@@ -6,8 +6,8 @@ import '../../../../core/constants/app_colors.dart';
 class CustomSwitchButton extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
-  final Color activeColor;
-  final Color inactiveColor;
+  final Color? activeColor;
+  final Color? inactiveColor;
   final Duration animationDuration;
   final double width;
   final double height;
@@ -18,8 +18,8 @@ class CustomSwitchButton extends StatefulWidget {
     super.key,
     required this.value,
     required this.onChanged,
-    this.activeColor = const Color(AppColors.lightBlue),
-    this.inactiveColor = Colors.grey,
+    this.activeColor,
+    this.inactiveColor,
     this.animationDuration = const Duration(milliseconds: 300),
     this.width = 45.0,
     this.height = 28.0,
@@ -75,6 +75,9 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
 
   @override
   Widget build(BuildContext context) {
+    final effectiveActiveColor = widget.activeColor ?? Color(AppColors.buttons);
+    final effectiveInactiveColor = widget.inactiveColor ?? Color(AppColors.tabInactive);
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -93,8 +96,8 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.0),
               color: _circleAnimation.value == Alignment.centerLeft
-                  ? widget.inactiveColor
-                  : widget.activeColor,
+                  ? effectiveInactiveColor
+                  : effectiveActiveColor,
             ),
             child: Padding(
               padding: EdgeInsets.all(widget.padding),
@@ -103,9 +106,9 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
                 child: Container(
                   width: widget.circleSize,
                   height: widget.circleSize,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white,
+                    color: Color(AppColors.appBarText),
                   ),
                 ),
               ),

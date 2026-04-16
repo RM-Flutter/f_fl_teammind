@@ -5,6 +5,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/app_styles.dart';
 import 'custom_switch_button.dart';
 
 
@@ -30,11 +31,9 @@ class SwitchRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = isLoginPageStyle == true
-        ? Theme.of(context)
-        .textTheme
-        .labelLarge
-        ?.copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
-        : Theme.of(context).textTheme.displaySmall;
+        ? AppStyles.titleTextContent(context)
+        .copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
+        : AppStyles.subTitleContent(context);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -51,7 +50,7 @@ class SwitchRow extends StatelessWidget {
             height: AppSizes.s20.h,
             padding: AppSizes.s3,
             value: value,
-            inactiveColor: const Color(AppColors.navyBlue),
+            inactiveColor: Color(AppColors.tabInactive),
             onChanged: onChanged,
           ),
           if(viewPhone == true)  SizedBox(width: AppSizes.s8.w),
