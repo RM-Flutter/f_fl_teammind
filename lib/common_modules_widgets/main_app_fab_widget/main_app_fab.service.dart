@@ -1236,7 +1236,34 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       return null;
     }
     debugPrint("📸 Loading FaceNet model...");
-    await _loadModel();
+    try {
+      await _loadModel();
+    } catch (e, st) {
+      debugPrint('❌ FaceNet model load failed: $e\n$st');
+      if (context.mounted) {
+        final String hint = PlatformIs.iOS
+            ? _localized(
+                context,
+                en:
+                    'Face verification uses TensorFlow Lite; it failed to load on this iPhone. Rebuild iOS (pod install) or use Android until the model runs on iOS.',
+                ar:
+                    'التحقق من الوجه يعتمد على TensorFlow Lite؛ فشل التحميل على هذا الآيفون. أعدي بناء iOS (pod install) أو استخدمي أندرويد حتى يعمل النموذج على iOS.',
+              )
+            : _localized(
+                context,
+                en:
+                    'Face verification could not start because the AI model failed to load on this device.',
+                ar:
+                    'تعذر بدء التحقق من الوجه لأن نموذج الذكاء الاصطناعي فشل في التحميل على هذا الجهاز.',
+              );
+        AlertsService.error(
+          context: context,
+          title: AppStrings.failed.tr(),
+          message: hint,
+        );
+      }
+      return null;
+    }
     debugPrint("📸 FaceNet model loaded");
 
     if (!context.mounted) {
@@ -2053,7 +2080,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       debugPrint('Error Adding Bluetooth Fingerprint: $e');
       AlertsService.error(
         context: context,
-        message:  AppStrings.noInternetConnection.tr(),
+        message: _friendlyFingerprintErrorMessage(context, e),
         title: AppStrings.failed.tr(),
       );
     }
@@ -2066,6 +2093,19 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   // Adding Fingerprint Using Wifi
   static Future<void> addFingerprintUsingWiFi({required BuildContext context,}) async {
     try {
+      if (PlatformIs.iOS || PlatformIs.web) {
+        AlertsService.warning(
+          context: context,
+          title: AppStrings.warning.tr(),
+          message: _localized(
+            context,
+            en: 'Wi-Fi scanning is not supported on iOS.',
+            ar: 'مسح الشبكات عبر الواي فاي غير مدعوم على الآيفون.',
+          ),
+        );
+        return;
+      }
+
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       final status = await WiFiScan.instance.canStartScan();
       if (status != CanStartScan.yes) {
@@ -2093,11 +2133,22 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       // Check for Wi-Fi scan permissions
 
       // Start scanning for Wi-Fi networks
-      await WiFiScan.instance.startScan();
-
-      // Get the list of Wi-Fi networks
-      final List<WiFiAccessPoint> wifiNetworks =
-      await WiFiScan.instance.getScannedResults();
+      final List<WiFiAccessPoint> wifiNetworks;
+      try {
+        await WiFiScan.instance.startScan();
+        wifiNetworks = await WiFiScan.instance.getScannedResults();
+      } catch (e) {
+        AlertsService.warning(
+          context: context,
+          title: AppStrings.warning.tr(),
+          message: _localized(
+            context,
+            en: 'Failed to scan Wi-Fi networks.',
+            ar: 'تعذر مسح شبكات الواي فاي.',
+          ),
+        );
+        return;
+      }
 
       if (wifiNetworks.isEmpty) {
         AlertsService.warning(
@@ -2362,7 +2413,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       if (context.mounted) {
         AlertsService.error(
             context: context,
-            message: AppStrings.noInternetConnection.tr(),
+            message: _friendlyFingerprintErrorMessage(context, e),
             title: AppStrings.failed.tr());
       }
       return;
@@ -2532,9 +2583,66 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           'Error Happeded While Adding Fingerprint Using Qrcode! Error :-> $e');
       AlertsService.error(
           context: context,
-          message: AppStrings.noInternetConnection.tr(),
+          message: _friendlyFingerprintErrorMessage(context, e),
           title: AppStrings.failed.tr());
     }
+  }
+
+  static String _friendlyFingerprintErrorMessage(BuildContext context, Object e) {
+    final msg = e.toString().toLowerCase();
+
+    if (msg.contains('socket') ||
+        msg.contains('failed host lookup') ||
+        msg.contains('connection') ||
+        msg.contains('network')) {
+      return AppStrings.noInternetConnection.tr();
+    }
+
+    if (msg.contains('tflite') ||
+        msg.contains('tensorflow') ||
+        msg.contains('interpreter') ||
+        msg.contains('facenet') ||
+        msg.contains('mlkit') ||
+        msg.contains('google_mlkit')) {
+      return _localized(
+        context,
+        en:
+            'Face verification failed to start (AI model error). On iPhone, rebuild the app after pod install; or try from Android.',
+        ar:
+            'فشل بدء التحقق من الوجه (خطأ في نموذج الذكاء الاصطناعي). على الآيفون أعدي البناء بعد pod install؛ أو جرّبي من أندرويد.',
+      );
+    }
+
+    if (msg.contains('camera') ||
+        msg.contains('permission') ||
+        msg.contains('denied') ||
+        msg.contains('unauthorized') ||
+        msg.contains('restricted') ||
+        msg.contains('permanentlydenied') ||
+        msg.contains('nscamera') ||
+        msg.contains('location') ||
+        msg.contains('geolocator') ||
+        msg.contains('locationpermission')) {
+      return _localized(
+        context,
+        en: 'Required permission was not granted. Please allow permissions and try again.',
+        ar: 'لم يتم منح الصلاحية المطلوبة. يرجى السماح بالصلاحيات ثم المحاولة مرة أخرى.',
+      );
+    }
+
+    if (msg.contains('bluetooth')) {
+      return _localized(
+        context,
+        en: 'Bluetooth is not available right now. Please enable it and try again.',
+        ar: 'البلوتوث غير متاح الآن. يرجى تفعيله ثم المحاولة مرة أخرى.',
+      );
+    }
+
+    return _localized(
+      context,
+      en: 'Could not complete fingerprint now. Please try again.',
+      ar: 'تعذر إتمام البصمة الآن. يرجى المحاولة مرة أخرى.',
+    );
   }
 
   static Future<String?> _scanQrcodeToGetSecretKeyString(

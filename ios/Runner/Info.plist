@@ -1,86 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
-		<string>Team Mind</string>
-		<key>NSCameraUsageDescription</key>
-		<string>This app needs camera access to scan QR codes</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>This app needs photos access to get QR code from photo library</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>employees</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>LSRequiresIPhoneOS</key>
-		<true/>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		</array>
-		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>sms</string>
-			<string>tel</string>
-			<string>mailto</string>
-			<string>http</string>
-			<string>https</string>
-			<string>maps</string>
-		</array>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>We need your location to access Wi-Fi information.</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>We need your location to access Wi-Fi information.</string>
-		<key>NSFaceIDUsageDescription</key>
-		<string>Why is my app authenticating using face ID?</string>
-		<key>NSLocationAlwaysUsageDescription</key>
-		<string>We need your location to provide better services even when the app is in the background.</string>
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>location</string>
-		</array>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>We need access to your photo library to let you select and upload photos.</string>
-		<key>NSCameraUsageDescription</key>
-		<string>We need access to your camera.</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>We need access to your microphone to let you record audio with your videos.</string>
-		<key>UIStatusBarHidden</key>
-		<true/>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
-		<key>io.flutter.embedded_views_preview</key>
-		<true/>
-		<key>NSBluetoothAlwaysUsageDescription</key>
-		<string>Need BLE permission</string>
-		<key>NSBluetoothPeripheralUsageDescription</key>
-		<string>Need BLE permission</string>
-	</dict>
+<dict>
+	<key>NSCameraUsageDescription</key>
+	<string>We use your camera to scan QR codes displayed on the attendance device so employees can securely check in and check out.</string>
+
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We save images to your device when capturing or updating profile and verification photos within the app.</string>
+
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>We use Bluetooth to connect and communicate with attendance devices to verify employee check-ins.</string>
+
+	<key>NFCReaderUsageDescription</key>
+	<string>We use NFC to read employee cards for quick and secure attendance tracking.</string>
+
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+
+	<key>CFBundleDisplayName</key>
+	<string>Team Mind</string>
+
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+
+	<key>CFBundleName</key>
+	<string>Team Mind</string>
+
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+
+	<key>CFBundleSignature</key>
+	<string>????</string>
+
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+		<string>mailto</string>
+		<string>http</string>
+		<string>https</string>
+		<string>maps</string>
+	</array>
+
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We use Bluetooth to connect to nearby attendance devices to verify employee presence and check-in status.</string>
+
+	<key>NSFaceIDUsageDescription</key>
+	<string>We use Face ID to securely verify your identity before allowing attendance check-in and access to your account.</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location while using the app to verify that you are within your assigned workplace when checking in or out.</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We use your microphone to record audio when required for specific features such as submitting voice notes or verification within the app.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We use your photo library to allow you to select and upload a profile picture or verification image.</string>
+
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>fetch</string>
+	</array>
+
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+
+	<key>UIStatusBarHidden</key>
+	<true/>
+
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+
+</dict>
 </plist>

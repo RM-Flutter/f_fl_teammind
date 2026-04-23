@@ -39,6 +39,9 @@ abstract class PushNotificationService {
   static bool _isTokenInit = false;
   static int _tries = 0;
 
+  /// True after [init] completed; used to avoid duplicate foreground UI on iOS.
+  static bool get isReady => _isInitialized;
+
   /// Initializes the push notification service.
   /// Sets up listeners for different states of the application.
   static Future<void> init(
@@ -60,10 +63,11 @@ abstract class PushNotificationService {
 
       fcm = FirebaseMessaging.instance;
 
-      // Set foreground notification options
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-        alert: true,
+      // Set foreground notification options.
+      // iOS: alert=true shows the system banner in addition to our in-app TimeoutMessage → duplicate.
+      // Keep badge/sound; in-app UI is handled in handleOnNotificationReceived.
+      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        alert: !PlatformIs.iOS,
         badge: true,
         sound: true,
       );

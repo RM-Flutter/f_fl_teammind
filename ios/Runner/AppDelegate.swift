@@ -32,7 +32,7 @@ import UIKit
         result(false)
 
       case "isDeviceRooted":
-        result(isDeviceJailbroken())
+        result(self.isDeviceJailbroken())
 
       default:
         result(FlutterMethodNotImplemented)

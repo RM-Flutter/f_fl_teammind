@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rmemp/platform/platform_is.dart';
+import 'notification_service/notification.service.dart' show PushNotificationService;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -83,6 +85,13 @@ class NotificationService {
       debugPrint("🔔 Foreground Notification: ${message.notification?.title}");
       // Filter out notifications with no title or body
       if (_shouldShowNotification(message)) {
+        // iOS after login: PushNotificationService shows in-app UI (TimeoutMessage).
+        // NotificationService also used to show a local notification → duplicate.
+        if (PlatformIs.iOS && PushNotificationService.isReady) {
+          debugPrint(
+              '🔔 iOS: skipping NotificationService local notification (PushNotificationService handles foreground UI).');
+          return;
+        }
         _showNotification(message);
       } else {
         debugPrint("⚠️ Skipping notification: No valid title or body");
