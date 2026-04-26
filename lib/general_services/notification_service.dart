@@ -85,9 +85,12 @@ class NotificationService {
       debugPrint("🔔 Foreground Notification: ${message.notification?.title}");
       // Filter out notifications with no title or body
       if (_shouldShowNotification(message)) {
-        // iOS after login: PushNotificationService shows in-app UI (TimeoutMessage).
-        // NotificationService also used to show a local notification → duplicate.
-        if (PlatformIs.iOS && PushNotificationService.isReady) {
+        // iOS: if payload already has a system notification and push service is ready,
+        // avoid adding another local notification.
+        // For data-only payloads (message.notification == null), still show local.
+        if (PlatformIs.iOS &&
+            PushNotificationService.isReady &&
+            message.notification != null) {
           debugPrint(
               '🔔 iOS: skipping NotificationService local notification (PushNotificationService handles foreground UI).');
           return;

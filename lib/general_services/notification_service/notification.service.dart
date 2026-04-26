@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:rmemp/general_services/backend_services/api_service/dio_api_service/shared.dart';
 
 import '../../constants/app_images.dart';
-import '../../platform/platform_is.dart';
 import '../backend_services/api_service/dio_api_service/dio_api.service.dart';
 import 'timeout_message.service.dart';
 
@@ -64,10 +63,10 @@ abstract class PushNotificationService {
       fcm = FirebaseMessaging.instance;
 
       // Set foreground notification options.
-      // iOS: alert=true shows the system banner in addition to our in-app TimeoutMessage → duplicate.
-      // Keep badge/sound; in-app UI is handled in handleOnNotificationReceived.
+      // Keep iOS alert enabled so push notifications are still visible in
+      // foreground when the payload contains a notification object.
       await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-        alert: !PlatformIs.iOS,
+        alert: true,
         badge: true,
         sound: true,
       );

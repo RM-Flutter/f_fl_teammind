@@ -1,8 +1,14 @@
 // Stub implementation for web platform
+import 'dart:io';
+
 class Interpreter {
   Interpreter._();
   
   static Future<Interpreter> fromAsset(String assetPath) {
+    throw UnsupportedError('tflite_flutter is not supported on web platform');
+  }
+
+  static Interpreter fromFile(File modelFile) {
     throw UnsupportedError('tflite_flutter is not supported on web platform');
   }
   
