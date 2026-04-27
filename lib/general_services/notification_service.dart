@@ -58,7 +58,11 @@ class NotificationService {
   void _initializeLocalNotifications(BuildContext? context) {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iOSSettings = DarwinInitializationSettings();
+    const iOSSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
     const settings = InitializationSettings(android: androidSettings, iOS: iOSSettings);
 
     flutterLocalNotificationsPlugin.initialize(
@@ -129,8 +133,6 @@ class NotificationService {
   }
 
   void _showNotification(RemoteMessage message) async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
     // Get title and body (should already be validated by _shouldShowNotification)
     final title = message.data['title'] ?? message.notification?.title ?? '';
     final body = message.data['body'] ?? message.notification?.body ?? '';
@@ -156,7 +158,13 @@ class NotificationService {
             icon: '@drawable/notif_icon',
           );
     
-    const iOSDetails = DarwinNotificationDetails();
+    const iOSDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      sound: 'default',
+      interruptionLevel: InterruptionLevel.active,
+    );
     final details = NotificationDetails(android: androidDetails, iOS: iOSDetails);
 
     try {

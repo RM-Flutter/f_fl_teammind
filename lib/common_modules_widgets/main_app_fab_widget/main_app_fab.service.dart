@@ -434,7 +434,9 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     if (PlatformIs.web) {
       throw UnsupportedError('Face recognition is not supported on web platform');
     }
+
     if (_modelLoaded && _interpreter != null) return;
+
     Object? lastError;
 
     Future<void> markLoaded(Interpreter interpreter, String strategy) async {
@@ -443,34 +445,14 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       debugPrint("✅ FaceNet model loaded successfully ($strategy)");
     }
 
-    // Strategy 1: default loading from Flutter assets.
-    try {
-      final interpreter =
-          await Interpreter.fromAsset('assets/models/facenet.tflite');
-      await markLoaded(interpreter, 'fromAsset-default');
-      return;
-    } catch (e) {
-      lastError = e;
-      debugPrint("❌ FaceNet load attempt failed (fromAsset-default): $e");
-    }
-
-    // Strategy 2: try fallback key without the assets/ prefix.
-    // Some iOS builds resolve Flutter asset keys differently.
-    try {
-      final interpreter = await Interpreter.fromAsset('facenet.tflite');
-      await markLoaded(interpreter, 'fromAsset-fallback-key');
-      return;
-    } catch (e) {
-      lastError = e;
-      debugPrint("❌ FaceNet load attempt failed (fromAsset-fallback-key): $e");
-    }
-
-    // Strategy 3: copy asset into a temp file and load from file path.
-    // This avoids iOS asset-key resolution issues with some builds.
+    // 🔥 Strategy 1 (PRIMARY): load using fromFile (best for iOS)
     try {
       final modelData = await rootBundle.load('assets/models/facenet.tflite');
+
       final tempDir = await getTemporaryDirectory();
       final modelFile = File(p.join(tempDir.path, 'facenet_runtime.tflite'));
+
+      // write only if not exists or different size
       if (!await modelFile.exists() ||
           await modelFile.length() != modelData.lengthInBytes) {
         await modelFile.writeAsBytes(
@@ -478,17 +460,38 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           flush: true,
         );
       }
+
       final interpreter = Interpreter.fromFile(modelFile);
-      await markLoaded(interpreter, 'fromFile-temp-copy');
+      await markLoaded(interpreter, 'fromFile-primary');
       return;
     } catch (e) {
       lastError = e;
-      debugPrint("❌ FaceNet load attempt failed (fromFile-temp-copy): $e");
+      debugPrint("❌ FaceNet load failed (fromFile-primary): $e");
+    }
+
+    // 🔁 Strategy 2: fallback to asset (sometimes works on Android)
+    try {
+      final interpreter =
+      await Interpreter.fromAsset('assets/models/facenet.tflite');
+      await markLoaded(interpreter, 'fromAsset-default');
+      return;
+    } catch (e) {
+      lastError = e;
+      debugPrint("❌ FaceNet load failed (fromAsset-default): $e");
+    }
+
+    // 🔁 Strategy 3: fallback بدون assets/ prefix
+    try {
+      final interpreter = await Interpreter.fromAsset('facenet.tflite');
+      await markLoaded(interpreter, 'fromAsset-fallback-key');
+      return;
+    } catch (e) {
+      lastError = e;
+      debugPrint("❌ FaceNet load failed (fromAsset-fallback-key): $e");
     }
 
     throw Exception('FaceNet model load failed on this device: $lastError');
   }
-
   static List<List<List<List<double>>>> _preprocessImage(img.Image image) {
     final input = List.generate(1, (_) =>
         List.generate(160, (_) =>
