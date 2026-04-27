@@ -430,6 +430,28 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   static Interpreter? _interpreter;
   static bool _modelLoaded = false;
 
+  /// [MCarlomagno/FaceRecognitionAuth] MobileFaceNet: 112×112 input, 192-D embedding, TFLite builtins.
+  static const String _faceTfliteAsset = 'assets/models/mobilefacenet.tflite';
+  static int _faceInputSize = 112;
+  static int _faceEmbeddingDim = 192;
+
+  static void _applyFaceModelTensorShapes(Interpreter i) {
+    try {
+      final inShape = i.getInputTensor(0).shape;
+      if (inShape.length == 4) {
+        _faceInputSize = inShape[1];
+      }
+      final outShape = i.getOutputTensor(0).shape;
+      if (outShape.length == 2) {
+        _faceEmbeddingDim = outShape[1];
+      } else if (outShape.length == 1) {
+        _faceEmbeddingDim = outShape[0];
+      }
+    } catch (e) {
+      debugPrint('⚠️ face model tensor shape read failed, using defaults: $e');
+    }
+  }
+
   static Future<void> _loadModel() async {
     if (PlatformIs.web) {
       throw UnsupportedError('Face recognition is not supported on web platform');
@@ -440,17 +462,19 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     Object? lastError;
 
     Future<void> markLoaded(Interpreter interpreter, String strategy) async {
+      _applyFaceModelTensorShapes(interpreter);
       _interpreter = interpreter;
       _modelLoaded = true;
-      debugPrint("✅ FaceNet model loaded successfully ($strategy)");
+      debugPrint("✅ Face embedding model loaded ($strategy) "
+          "input=${_faceInputSize}x$_faceInputSize, dim=$_faceEmbeddingDim");
     }
 
     // 🔥 Strategy 1 (PRIMARY): load using fromFile (best for iOS)
     try {
-      final modelData = await rootBundle.load('assets/models/facenet.tflite');
+      final modelData = await rootBundle.load(_faceTfliteAsset);
 
       final tempDir = await getTemporaryDirectory();
-      final modelFile = File(p.join(tempDir.path, 'facenet_runtime.tflite'));
+      final modelFile = File(p.join(tempDir.path, 'mobilefacenet_runtime.tflite'));
 
       // write only if not exists or different size
       if (!await modelFile.exists() ||
@@ -466,39 +490,40 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       return;
     } catch (e) {
       lastError = e;
-      debugPrint("❌ FaceNet load failed (fromFile-primary): $e");
+      debugPrint("❌ Face embedding model load failed (fromFile-primary): $e");
     }
 
     // 🔁 Strategy 2: fallback to asset (sometimes works on Android)
     try {
       final interpreter =
-      await Interpreter.fromAsset('assets/models/facenet.tflite');
+      await Interpreter.fromAsset(_faceTfliteAsset);
       await markLoaded(interpreter, 'fromAsset-default');
       return;
     } catch (e) {
       lastError = e;
-      debugPrint("❌ FaceNet load failed (fromAsset-default): $e");
+      debugPrint("❌ Face embedding model load failed (fromAsset-default): $e");
     }
 
-    // 🔁 Strategy 3: fallback بدون assets/ prefix
+    // 🔁 Strategy 3: asset key بدون "assets/" prefix
     try {
-      final interpreter = await Interpreter.fromAsset('facenet.tflite');
+      final interpreter = await Interpreter.fromAsset('mobilefacenet.tflite');
       await markLoaded(interpreter, 'fromAsset-fallback-key');
       return;
     } catch (e) {
       lastError = e;
-      debugPrint("❌ FaceNet load failed (fromAsset-fallback-key): $e");
+      debugPrint("❌ Face embedding model load failed (fromAsset-fallback-key): $e");
     }
 
-    throw Exception('FaceNet model load failed on this device: $lastError');
+    throw Exception('Face embedding model load failed on this device: $lastError');
   }
   static List<List<List<List<double>>>> _preprocessImage(img.Image image) {
+    final s = _faceInputSize;
     final input = List.generate(1, (_) =>
-        List.generate(160, (_) =>
-            List.generate(160, (_) => List.filled(3, 0.0))));
+        List.generate(s, (_) =>
+            List.generate(s, (_) => List.filled(3, 0.0))));
 
-    for (int y = 0; y < 160; y++) {
-      for (int x = 0; x < 160; x++) {
+    for (int y = 0; y < s; y++) {
+      for (int x = 0; x < s; x++) {
         final pixel = image.getPixel(x, y); // Pixel object
         final r = pixel.r;
         final g = pixel.g;
@@ -625,7 +650,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         width: width,
         height: height,
       );
-      final resized = img.copyResizeCropSquare(cropped, size: 160);
+      final resized = img.copyResizeCropSquare(cropped, size: _faceInputSize);
       final double sharpness = _computeSharpness(resized);
 
       List<double>? embedding;
@@ -637,7 +662,8 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           await _loadModel();
         }
         final input = _preprocessImage(resized);
-        final output = List.generate(1, (_) => List.filled(512, 0.0));
+        final output =
+            List.generate(1, (_) => List.filled(_faceEmbeddingDim, 0.0));
         _interpreter!.run(input, output);
         embedding =
         List<double>.from(output[0].map((e) => (e as num).toDouble()));
@@ -1641,7 +1667,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           await _deleteFileIfExists(capturedImageFile!);
           return null;
         }
-        embedding = List.filled(512, 0.0);
+        embedding = List.filled(_faceEmbeddingDim, 0.0);
       } else {
         embedding = analysis.embedding!;
       }
@@ -2649,6 +2675,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         msg.contains('tensorflow') ||
         msg.contains('interpreter') ||
         msg.contains('facenet') ||
+        msg.contains('mobilefacenet') ||
         msg.contains('mlkit') ||
         msg.contains('google_mlkit')) {
       return _localized(
