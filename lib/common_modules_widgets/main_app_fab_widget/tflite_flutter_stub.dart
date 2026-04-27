@@ -1,5 +1,6 @@
 // Stub implementation for web platform
 import 'dart:io';
+import 'dart:typed_data';
 
 class Interpreter {
   Interpreter._();
@@ -9,6 +10,10 @@ class Interpreter {
   }
 
   static Interpreter fromFile(File modelFile) {
+    throw UnsupportedError('tflite_flutter is not supported on web platform');
+  }
+
+  static Interpreter fromBuffer(Uint8List buffer) {
     throw UnsupportedError('tflite_flutter is not supported on web platform');
   }
   

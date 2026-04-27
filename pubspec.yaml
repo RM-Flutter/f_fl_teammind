@@ -1,7 +1,7 @@
 name: rmemp
 description: "Attendance System for Companies."
 publish_to: 'none'
-version: 3.0.1+8
+version: 3.0.1+9
 
 environment:
   sdk: ^3.11.0

@@ -501,33 +501,24 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           "input=${_faceInputSize}x$_faceInputSize, dim=$_faceEmbeddingDim");
     }
 
-    // 🔥 Strategy 1 (PRIMARY): load using fromFile (best for iOS)
+    // 🔥 Strategy 1 (PRIMARY): asset bytes + Interpreter.fromBuffer.
+    // On iOS, fromFile() calls TfLiteModelCreateFromFile which is often missing
+    // from dlsym with static CocoaPods linkage ("symbol not found"). fromBuffer
+    // uses TfLiteModelCreate and works on iOS and Android.
     try {
       final modelData = await rootBundle.load(_faceTfliteAsset);
-
-      final tempDir = await getTemporaryDirectory();
-      final modelFile = File(p.join(tempDir.path, 'mobilefacenet_runtime.tflite'));
-
-      // write only if not exists or different size
-      if (!await modelFile.exists() ||
-          await modelFile.length() != modelData.lengthInBytes) {
-        await modelFile.writeAsBytes(
-          modelData.buffer.asUint8List(),
-          flush: true,
-        );
-      }
-
-      final interpreter = Interpreter.fromFile(modelFile);
+      final bytes = modelData.buffer.asUint8List();
+      final interpreter = Interpreter.fromBuffer(bytes);
       _iosDebugFaceTfliteToast(
         modelPath: _faceTfliteAsset,
         inputShape: _iosReadTensorShape(interpreter, input: true),
         outputShape: _iosReadTensorShape(interpreter, input: false),
       );
-      await markLoaded(interpreter, 'fromFile-primary');
+      await markLoaded(interpreter, 'fromBuffer-primary');
       return;
     } catch (e) {
       lastError = e;
-      debugPrint("❌ Face embedding model load failed (fromFile-primary): $e");
+      debugPrint("❌ Face embedding model load failed (fromBuffer-primary): $e");
       _iosDebugFaceTfliteToast(
         modelPath: _faceTfliteAsset,
         error: e,
