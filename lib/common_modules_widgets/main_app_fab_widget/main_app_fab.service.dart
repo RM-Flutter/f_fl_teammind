@@ -432,25 +432,8 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
 
   /// [MCarlomagno/FaceRecognitionAuth] MobileFaceNet: 112×112 input, 192-D embedding, TFLite builtins.
   static const String _faceTfliteAsset = 'assets/models/mobilefacenet.tflite';
-  static int _faceInputSize = 112;
-  static int _faceEmbeddingDim = 192;
-
-  static void _applyFaceModelTensorShapes(Interpreter i) {
-    try {
-      final inShape = i.getInputTensor(0).shape;
-      if (inShape.length == 4) {
-        _faceInputSize = inShape[1];
-      }
-      final outShape = i.getOutputTensor(0).shape;
-      if (outShape.length == 2) {
-        _faceEmbeddingDim = outShape[1];
-      } else if (outShape.length == 1) {
-        _faceEmbeddingDim = outShape[0];
-      }
-    } catch (e) {
-      debugPrint('⚠️ face model tensor shape read failed, using defaults: $e');
-    }
-  }
+  static const int _faceInputSize = 112;
+  static const int _faceEmbeddingDim = 192;
 
   static Future<void> _loadModel() async {
     if (PlatformIs.web) {
@@ -462,7 +445,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     Object? lastError;
 
     Future<void> markLoaded(Interpreter interpreter, String strategy) async {
-      _applyFaceModelTensorShapes(interpreter);
       _interpreter = interpreter;
       _modelLoaded = true;
       debugPrint("✅ Face embedding model loaded ($strategy) "
