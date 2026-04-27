@@ -1,17 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:rmemp/platform/platform_is.dart';
-import 'notification_service/notification.service.dart' show PushNotificationService;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
-import 'package:rmemp/modules/home/view_models/home.viewmodel.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../constants/general_listener.dart';
-import '../constants/update_app.dart';
-import '../routing/app_router.dart';
 import 'backend_services/api_service/dio_api_service/shared.dart';
 
 class NotificationService {
@@ -42,17 +33,6 @@ class NotificationService {
     } catch (e) {
       debugPrint("⚠️ Failed to request native permissions: $e");
     }
-  }
-
-  void _showWebToast(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 
   void _initializeLocalNotifications(BuildContext? context) {
@@ -89,16 +69,8 @@ class NotificationService {
       debugPrint("🔔 Foreground Notification: ${message.notification?.title}");
       // Filter out notifications with no title or body
       if (_shouldShowNotification(message)) {
-        // iOS: if payload already has a system notification and push service is ready,
-        // avoid adding another local notification.
-        // For data-only payloads (message.notification == null), still show local.
-        if (PlatformIs.iOS &&
-            PushNotificationService.isReady &&
-            message.notification != null) {
-          debugPrint(
-              '🔔 iOS: skipping NotificationService local notification (PushNotificationService handles foreground UI).');
-          return;
-        }
+        // iOS foreground pushes may appear silently depending on payload/presentation.
+        // Always issue a local notification here to guarantee audible alert.
         _showNotification(message);
       } else {
         debugPrint("⚠️ Skipping notification: No valid title or body");
@@ -162,7 +134,6 @@ class NotificationService {
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
-      sound: 'default',
       interruptionLevel: InterruptionLevel.active,
     );
     final details = NotificationDetails(android: androidDetails, iOS: iOSDetails);
