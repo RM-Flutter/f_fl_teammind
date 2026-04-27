@@ -435,6 +435,56 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   static const int _faceInputSize = 112;
   static const int _faceEmbeddingDim = 192;
 
+  /// Temporary iOS-only diagnostics (remove when no longer needed).
+  /// Uses [dynamic] so real `tflite_flutter` tensor APIs are not required on the stub `Interpreter` type.
+  static String _iosReadTensorShape(Interpreter interpreter, {required bool input}) {
+    try {
+      final dynamic d = interpreter;
+      final dynamic tensor =
+          input ? d.getInputTensor(0) : d.getOutputTensor(0);
+      final shape = tensor.shape as List<dynamic>;
+      return shape.toString();
+    } catch (e) {
+      return '? ($e)';
+    }
+  }
+
+  static void _iosDebugFaceTfliteToast({
+    required String modelPath,
+    String inputShape = 'N/A',
+    String outputShape = 'N/A',
+    Object? error,
+  }) {
+    if (!PlatformIs.iOS) return;
+
+    final err = error == null ? '' : '\nERROR: $error';
+    final snackLines =
+        'LOADING MODEL: $modelPath\nINPUT SHAPE: $inputShape\nOUTPUT SHAPE: $outputShape$err';
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = rootNavigatorKey.currentContext;
+      if (ctx != null && ctx.mounted) {
+        ScaffoldMessenger.maybeOf(ctx)?.showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 10),
+            behavior: SnackBarBehavior.floating,
+            content: Text(
+              snackLines,
+              style: const TextStyle(fontSize: 12, height: 1.25),
+            ),
+          ),
+        );
+      }
+      Fluttertoast.showToast(
+        msg: snackLines.replaceAll('\n', ' | '),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 8,
+        fontSize: 11,
+      );
+    });
+  }
+
   static Future<void> _loadModel() async {
     if (PlatformIs.web) {
       throw UnsupportedError('Face recognition is not supported on web platform');
@@ -468,11 +518,20 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       }
 
       final interpreter = Interpreter.fromFile(modelFile);
+      _iosDebugFaceTfliteToast(
+        modelPath: _faceTfliteAsset,
+        inputShape: _iosReadTensorShape(interpreter, input: true),
+        outputShape: _iosReadTensorShape(interpreter, input: false),
+      );
       await markLoaded(interpreter, 'fromFile-primary');
       return;
     } catch (e) {
       lastError = e;
       debugPrint("❌ Face embedding model load failed (fromFile-primary): $e");
+      _iosDebugFaceTfliteToast(
+        modelPath: _faceTfliteAsset,
+        error: e,
+      );
     }
 
     // 🔁 Strategy 2: fallback to asset (sometimes works on Android)
