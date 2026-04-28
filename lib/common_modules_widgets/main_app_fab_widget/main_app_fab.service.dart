@@ -2390,6 +2390,13 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
   static double? lat;
   static double? long;
 
+  static double? _safeParseCoordinate(String? raw) {
+    if (raw == null) return null;
+    final normalized = raw.trim().replaceAll(',', '.');
+    if (normalized.isEmpty) return null;
+    return double.tryParse(normalized);
+  }
+
   static Future<void> getCurrentLocation(context) async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -2423,8 +2430,8 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         timeLimit: const Duration(seconds: 25),
       );
 
-      double lat = position.latitude;
-      double long = position.longitude;
+      lat = position.latitude;
+      long = position.longitude;
       print('📍 Latitude: $lat, Longitude: $long');
       CacheHelper.setString(key: "lat", value: lat.toString());
       CacheHelper.setString(key: "long", value: long.toString());
@@ -2517,11 +2524,27 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           },
           onRightActionPressed: ()async{
             try {
+              final cachedLat = _safeParseCoordinate(CacheHelper.getString('lat'));
+              final cachedLong = _safeParseCoordinate(CacheHelper.getString('long'));
+              final latToSend = cachedLat ?? lat;
+              final longToSend = cachedLong ?? long;
+              if (latToSend == null || longToSend == null) {
+                AlertsService.error(
+                  context: context,
+                  message: _localized(
+                    context,
+                    en: 'Unable to read GPS coordinates. Please enable Location and try again.',
+                    ar: 'تعذر قراءة إحداثيات الموقع. يرجى تفعيل الموقع والمحاولة مرة أخرى.',
+                  ),
+                  title: AppStrings.failed.tr(),
+                );
+                return;
+              }
               result = await FingerprintService.addGPSFingerprint(
                   context: context,
                   type: 'fp_navigate',
-                  lat: double.parse(CacheHelper.getString('lat') ?? '0'),
-                  long: double.parse(CacheHelper.getString('long') ?? '0'),
+                  lat: latToSend,
+                  long: longToSend,
                   files: uploadFaceFiles,
                   noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 
