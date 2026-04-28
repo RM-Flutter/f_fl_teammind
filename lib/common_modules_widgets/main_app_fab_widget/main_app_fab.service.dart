@@ -800,6 +800,32 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     }
   }
 
+  static Future<bool> _ensureMicrophonePermission() async {
+    try {
+      final permission = permission_handler.Permission.microphone;
+      var status = await permission.status;
+      if (status.isGranted || status.isLimited) return true;
+
+      if (status.isDenied) {
+        status = await permission.request();
+        if (status.isGranted || status.isLimited) return true;
+      }
+
+      return false;
+    } catch (e) {
+      debugPrint('⚠️ Microphone permission check failed: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> _ensureFaceCapturePermissions() async {
+    final cameraGranted = await _ensureCameraPermission();
+    final micGranted = await _ensureMicrophonePermission();
+    debugPrint(
+        '📸 iOS permissions -> camera: $cameraGranted, microphone: $micGranted');
+    return cameraGranted && micGranted;
+  }
+
   static Future<String?> _recordVerificationVideo(
       BuildContext context) async {
     final hasPermission = await _ensureCameraPermission();
@@ -1419,18 +1445,20 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
           "📸 Skipping instruction sheet (fingerprint_liveness_challenges_enabled is off; face challenge/profile verification alone do not show it).");
     }
 
-    // Ensure camera permission before opening camera screen
-    debugPrint("📸 Checking camera permission...");
-    final hasPermission = await _ensureCameraPermission();
-    debugPrint("📸 Camera permission: $hasPermission");
+    // Ensure camera/microphone permissions before opening camera screen.
+    debugPrint("📸 Checking camera + microphone permissions...");
+    final hasPermission = await _ensureFaceCapturePermissions();
+    debugPrint("📸 Face capture permissions granted: $hasPermission");
     if (!hasPermission) {
       // Use rootNavigatorKey.currentContext if context is not mounted
       final warningContext = rootNavigatorKey.currentContext ?? context;
       if (warningContext.mounted) {
         _showWarning(
           warningContext,
-          en: 'Camera permission is required for face verification.',
-          ar: 'إذن الكاميرا مطلوب للتحقق من الوجه.',
+          en:
+              'Camera and microphone permissions are required for face verification on iPhone.',
+          ar:
+              'إذنا الكاميرا والمايك مطلوبان للتحقق من الوجه على الآيفون.',
         );
       }
       return null;
@@ -1682,9 +1710,10 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     List<double>? embedding;
 
     try {
+      final needEmbedding = AppConstants.fingerprintFaceProfileVerificationEnabled;
       final analysis = await _processFace(
         imageFile: capturedImageFile!,
-        withEmbedding: true,
+        withEmbedding: needEmbedding,
       );
 
       if (analysis == null || !analysis.hasFace || !analysis.hasEmbedding) {
@@ -2703,23 +2732,12 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       return AppStrings.noInternetConnection.tr();
     }
 
-    if (msg.contains('tflite') ||
-        msg.contains('tensorflow') ||
-        msg.contains('interpreter') ||
-        msg.contains('facenet') ||
-        msg.contains('mobilefacenet') ||
-        msg.contains('mlkit') ||
-        msg.contains('google_mlkit')) {
-      return _localized(
-        context,
-        en:
-            'Face verification failed to start (AI model error). On iPhone, rebuild the app after pod install; or try from Android.',
-        ar:
-            'فشل بدء التحقق من الوجه (خطأ في نموذج الذكاء الاصطناعي). على الآيفون أعدي البناء بعد pod install؛ أو جرّبي من أندرويد.',
-      );
-    }
-
     if (msg.contains('camera') ||
+        msg.contains('microphone') ||
+        msg.contains('mic') ||
+        msg.contains('audio') ||
+        msg.contains('avcapture') ||
+        msg.contains('avaudio') ||
         msg.contains('permission') ||
         msg.contains('denied') ||
         msg.contains('unauthorized') ||
@@ -2733,6 +2751,22 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
         context,
         en: 'Required permission was not granted. Please allow permissions and try again.',
         ar: 'لم يتم منح الصلاحية المطلوبة. يرجى السماح بالصلاحيات ثم المحاولة مرة أخرى.',
+      );
+    }
+
+    if (msg.contains('tflite') ||
+        msg.contains('tensorflow') ||
+        msg.contains('interpreter') ||
+        msg.contains('facenet') ||
+        msg.contains('mobilefacenet') ||
+        msg.contains('mlkit') ||
+        msg.contains('google_mlkit')) {
+      return _localized(
+        context,
+        en:
+            'Face verification failed to start (AI model error). On iPhone, rebuild the app after pod install; or try from Android.',
+        ar:
+            'فشل بدء التحقق من الوجه (خطأ في نموذج الذكاء الاصطناعي). على الآيفون أعدي البناء بعد pod install؛ أو جرّبي من أندرويد.',
       );
     }
 
