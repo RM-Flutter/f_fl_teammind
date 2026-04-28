@@ -1366,36 +1366,69 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       );
       return null;
     }
-    debugPrint("📸 Loading FaceNet model...");
-    try {
-      await _loadModel();
-    } catch (e, st) {
-      debugPrint('❌ FaceNet model load failed: $e\n$st');
-      if (context.mounted) {
-        final String hint = PlatformIs.iOS
-            ? _localized(
-                context,
-                en:
-                    'Face verification uses TensorFlow Lite; it failed to load on this iPhone. Rebuild iOS (pod install) or use Android until the model runs on iOS.',
-                ar:
-                    'التحقق من الوجه يعتمد على TensorFlow Lite؛ فشل التحميل على هذا الآيفون. أعدي بناء iOS (pod install) أو استخدمي أندرويد حتى يعمل النموذج على iOS.',
-              )
-            : _localized(
-                context,
-                en:
-                    'Face verification could not start because the AI model failed to load on this device.',
-                ar:
-                    'تعذر بدء التحقق من الوجه لأن نموذج الذكاء الاصطناعي فشل في التحميل على هذا الجهاز.',
-              );
-        AlertsService.error(
-          context: context,
-          title: AppStrings.failed.tr(),
-          message: hint,
+
+    // Ensure camera/microphone permissions first (before any model loading).
+    debugPrint("📸 Checking camera + microphone permissions...");
+    final hasPermission = await _ensureFaceCapturePermissions();
+    debugPrint("📸 Face capture permissions granted: $hasPermission");
+    if (!hasPermission) {
+      final warningContext = rootNavigatorKey.currentContext ?? context;
+      if (warningContext.mounted) {
+        _showWarning(
+          warningContext,
+          en:
+              'Camera and microphone permissions are required for face verification on iPhone.',
+          ar:
+              'إذنا الكاميرا والمايك مطلوبان للتحقق من الوجه على الآيفون.',
         );
       }
       return null;
     }
-    debugPrint("📸 FaceNet model loaded");
+
+    bool effectiveProfileVerificationEnabled =
+        AppConstants.fingerprintFaceProfileVerificationEnabled;
+    if (effectiveProfileVerificationEnabled) {
+      debugPrint("📸 Loading face embedding model...");
+      try {
+        await _loadModel();
+        debugPrint("📸 Face embedding model loaded");
+      } catch (e, st) {
+        debugPrint('❌ Face embedding model load failed: $e\n$st');
+        // iOS fallback: allow attendance flow to continue with image capture only.
+        // This prevents blocking fingerprint when TensorFlow symbols are unavailable.
+        if (PlatformIs.iOS) {
+          effectiveProfileVerificationEnabled = false;
+          if (context.mounted) {
+            _showWarning(
+              context,
+              en:
+                  'Face model is unavailable on this iPhone now. Continuing without profile-face matching.',
+              ar:
+                  'نموذج التحقق بالوجه غير متاح حاليًا على هذا الآيفون. سيتم المتابعة بدون مطابقة الوجه مع البروفايل.',
+            );
+          }
+        } else {
+          if (context.mounted) {
+            final String hint = _localized(
+              context,
+              en:
+                  'Face verification could not start because the AI model failed to load on this device.',
+              ar:
+                  'تعذر بدء التحقق من الوجه لأن نموذج الذكاء الاصطناعي فشل في التحميل على هذا الجهاز.',
+            );
+            AlertsService.error(
+              context: context,
+              title: AppStrings.failed.tr(),
+              message: hint,
+            );
+          }
+          return null;
+        }
+      }
+    } else {
+      debugPrint(
+          "📸 Skipping face embedding model load (profile verification is disabled)");
+    }
 
     if (!context.mounted) {
       debugPrint("❌ Context not mounted after loading model");
@@ -1443,25 +1476,6 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     } else {
       debugPrint(
           "📸 Skipping instruction sheet (fingerprint_liveness_challenges_enabled is off; face challenge/profile verification alone do not show it).");
-    }
-
-    // Ensure camera/microphone permissions before opening camera screen.
-    debugPrint("📸 Checking camera + microphone permissions...");
-    final hasPermission = await _ensureFaceCapturePermissions();
-    debugPrint("📸 Face capture permissions granted: $hasPermission");
-    if (!hasPermission) {
-      // Use rootNavigatorKey.currentContext if context is not mounted
-      final warningContext = rootNavigatorKey.currentContext ?? context;
-      if (warningContext.mounted) {
-        _showWarning(
-          warningContext,
-          en:
-              'Camera and microphone permissions are required for face verification on iPhone.',
-          ar:
-              'إذنا الكاميرا والمايك مطلوبان للتحقق من الوجه على الآيفون.',
-        );
-      }
-      return null;
     }
 
     final List<LivenessChallengeReport> reports = [];
@@ -1710,7 +1724,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     List<double>? embedding;
 
     try {
-      final needEmbedding = AppConstants.fingerprintFaceProfileVerificationEnabled;
+      final needEmbedding = effectiveProfileVerificationEnabled;
       final analysis = await _processFace(
         imageFile: capturedImageFile!,
         withEmbedding: needEmbedding,
@@ -1718,7 +1732,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
 
       if (analysis == null || !analysis.hasFace || !analysis.hasEmbedding) {
         hideProcessingDialog();
-        if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+        if (effectiveProfileVerificationEnabled) {
           _showWarning(
             context,
             en: 'Face not detected in captured image. Please try again.',
@@ -1732,7 +1746,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       } else {
         embedding = analysis.embedding!;
       }
-      if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+      if (effectiveProfileVerificationEnabled) {
         similarity = await _calculateSimilarityWithProfile(context, embedding);
       } else {
         similarity = 1.0;
@@ -1741,7 +1755,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
       hideProcessingDialog();
     }
 
-    if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+    if (effectiveProfileVerificationEnabled) {
       if (similarity == null) {
         debugPrint('Similarity calculation returned null');
         await _deleteFileIfExists(capturedImageFile!);
@@ -1776,7 +1790,7 @@ static Future<bool> _ensureDeviceSecurityForFingerprint(
     // نظهر رسالة "identity / face verification successful" فقط
     // لو اللّيفنس والتطابق مع صورة البروفايل مفعّلين معاً
     if (AppConstants.fingerprintLivenessChallengesEnabled &&
-        AppConstants.fingerprintFaceProfileVerificationEnabled) {
+        effectiveProfileVerificationEnabled) {
       AlertsService.success(
         context: context,
         title: AppStrings.success.tr(),

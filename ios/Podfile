@@ -25,9 +25,11 @@ end
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
 flutter_ios_podfile_setup
-$static_framework = true
 target 'Runner' do
-  use_frameworks! :linkage => :static
+  # tflite_flutter (FFI) resolves TensorFlowLiteC symbols from DynamicLibrary.process() on iOS.
+  # With static linkage, symbols like TfLiteModelCreate are often not visible to dlsym.
+  # Dynamic frameworks make these symbols available at runtime.
+  use_frameworks! :linkage => :dynamic
   use_modular_headers!
 
   # Keep TensorFlow Lite pods on the same version used by tflite_flutter.
