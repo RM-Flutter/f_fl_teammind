@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/widgets/cv_info_item.widget.dart' show CVInfoItem;
-import 'package:app_test/features/services/models/cv_data.model.dart';
-import 'package:app_test/features/services/view_models/my_cv.viewmodel.dart';
+import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/widgets/cv_info_item_widget.dart' show CVInfoItem;
+import 'package:app_test/features/services/models/cv_data_model.dart';
+import 'package:app_test/features/services/view_models/my_cv_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

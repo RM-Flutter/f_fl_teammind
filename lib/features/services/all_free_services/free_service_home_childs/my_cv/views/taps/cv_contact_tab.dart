@@ -1,8 +1,8 @@
-import 'package:app_test/features/services/models/cv_data.model.dart';
-import 'package:app_test/features/services/view_models/my_cv.viewmodel.dart';
+import 'package:app_test/features/services/models/cv_data_model.dart';
+import 'package:app_test/features/services/view_models/my_cv_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'widgets/cv_info_item.widget.dart';
+import 'widgets/cv_info_item_widget.dart';
 
 class CVContactTab extends StatelessWidget {
   final CVDataModel? cvData;

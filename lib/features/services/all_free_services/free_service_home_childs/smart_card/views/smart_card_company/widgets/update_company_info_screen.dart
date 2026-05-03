@@ -7,8 +7,8 @@ import 'package:app_test/core/utils/animated_custom_dropdown/custom_dropdown.dar
 import 'package:app_test/core/utils/tab_bar_widget.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/services/models/smart_card_profile_models.dart';
-import 'package:app_test/features/services/services/cv_reference_data.service.dart';
-import 'package:app_test/features/services/services/smart_card.service.dart';
+import 'package:app_test/features/services/services/cv_reference_data_service.dart';
+import 'package:app_test/features/services/services/smart_card_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

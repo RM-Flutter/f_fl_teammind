@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:provider/provider.dart';
-import '../models/cv_data.model.dart';
-import '../services/cv_reference_data.service.dart';
+import '../models/cv_data_model.dart';
+import '../services/cv_reference_data_service.dart';
 
 enum ImageSourceType { profile, newImage, none }
 

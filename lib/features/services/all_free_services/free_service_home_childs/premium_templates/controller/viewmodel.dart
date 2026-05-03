@@ -1,5 +1,5 @@
 import 'package:app_test/core/services/crud_operation.dart';
-import 'package:app_test/features/services/models/premium_file.model.dart';
+import 'package:app_test/features/services/models/premium_file_model.dart';
 import 'package:flutter/material.dart';
 
 class PremiumFilesViewModel extends ChangeNotifier {

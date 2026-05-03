@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/animated_custom_dropdown/custom_dropdown.dart';
-import 'package:app_test/features/services/models/cv_data.model.dart';
+import 'package:app_test/features/services/models/cv_data_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/features/services/view_models/create_cv.viewmodel.dart';
+import 'package:app_test/features/services/view_models/create_cv_view_model.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
   final CreateCVViewModel viewModel;

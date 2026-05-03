@@ -1,9 +1,9 @@
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/widgets/cv_info_item.widget.dart' show CVInfoItem;
+import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/widgets/cv_info_item_widget.dart' show CVInfoItem;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/features/services/models/cv_data.model.dart';
-import 'package:app_test/features/services/view_models/my_cv.viewmodel.dart';
+import 'package:app_test/features/services/models/cv_data_model.dart';
+import 'package:app_test/features/services/view_models/my_cv_view_model.dart';
 
 class CVJobInfoTab extends StatelessWidget {
   final CVDataModel? cvData;

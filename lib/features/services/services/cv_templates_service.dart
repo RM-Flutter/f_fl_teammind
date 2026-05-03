@@ -3,7 +3,7 @@ import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import '../models/cv_template.model.dart';
+import '../models/cv_template_model.dart';
 
 /// CV templates and print CV API using DioHelper (res-cv-templates, emp_requests/v1/cv/print).
 class CvTemplatesService {

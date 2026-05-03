@@ -6,7 +6,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
-import 'package:app_test/features/services/models/premium_file.model.dart';
+import 'package:app_test/features/services/models/premium_file_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../core/constants/app_sizes.dart' show AppSizes;
 import '../controller/viewmodel.dart';
-import 'widgets/premium_templates_loading.widget.dart';
+import 'widgets/premium_templates_loading_widget.dart';
 
 class PremiumTemplatesScreen extends StatefulWidget {
   const PremiumTemplatesScreen({super.key});

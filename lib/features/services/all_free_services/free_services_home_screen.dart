@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:app_test/features/services/all_free_services/free_service_home_widgets/free_service_grid/services_grid.widget.dart';
-import 'package:app_test/features/services/all_free_services/free_service_home_widgets/free_service_more/widgets/free_services_header.widget.dart';
+import 'package:app_test/features/services/all_free_services/free_service_home_widgets/free_service_grid/services_grid_widget.dart';
+import 'package:app_test/features/services/all_free_services/free_service_home_widgets/free_service_more/widgets/free_services_header_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +11,7 @@ import '../../../core/utils/base_page/mobile.scaffold.dart';
 import '../../../core/utils/base_page/mobile_header.dart';
 import '../../../core/widgets/webview_offers.dart';
 import '../../home/views/widgets/page_body_widgets/notifications_section.dart';
-import '../view_models/free_services.viewmodel.dart';
+import '../view_models/free_services_view_model.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routing/app_router.dart';

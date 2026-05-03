@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_strings.dart';
-import 'widgets/service_card.widget.dart';
+import 'widgets/service_card_widget.dart';
 
 class ServicesGridWidget extends StatelessWidget {
   final String? userPhotoUrl;

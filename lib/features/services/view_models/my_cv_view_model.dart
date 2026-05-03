@@ -10,7 +10,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:flutter/material.dart';
 
-import '../models/cv_data.model.dart';
+import '../models/cv_data_model.dart';
 
 enum ImageSourceType { profile, newImage, none }
 

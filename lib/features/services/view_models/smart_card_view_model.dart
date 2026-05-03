@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/smart_card_profile_models.dart';
-import '../services/smart_card.service.dart';
+import '../services/smart_card_service.dart';
 
 class SmartCardViewModel extends ChangeNotifier {
   bool isLoading = false;

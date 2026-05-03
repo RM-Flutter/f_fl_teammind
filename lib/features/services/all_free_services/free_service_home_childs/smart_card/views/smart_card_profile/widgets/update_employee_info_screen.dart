@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_education_tab.dart';
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_job_info_tab.dart';
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_personal_tab.dart';
-import 'package:app_test/features/services/models/cv_data.model.dart';
-import 'package:app_test/features/services/view_models/create_cv.viewmodel.dart';
+import 'package:app_test/features/services/models/cv_data_model.dart';
+import 'package:app_test/features/services/view_models/create_cv_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -17,7 +17,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/tab_bar_widget.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/services/models/smart_card_profile_models.dart';
-import 'package:app_test/features/services/services/smart_card.service.dart';
+import 'package:app_test/features/services/services/smart_card_service.dart';
 
 class UpdateEmployeeInfoScreen extends StatefulWidget {
   final Map<String, dynamic> employee;

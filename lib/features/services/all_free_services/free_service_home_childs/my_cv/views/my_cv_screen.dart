@@ -11,7 +11,7 @@ import 'package:app_test/features/services/all_free_services/free_service_home_c
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/cv_education_tab.dart';
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/cv_job_info_tab.dart';
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/my_cv/views/taps/cv_personal_tab.dart';
-import 'package:app_test/features/services/view_models/my_cv.viewmodel.dart';
+import 'package:app_test/features/services/view_models/my_cv_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

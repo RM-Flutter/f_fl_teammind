@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:app_test/features/services/view_models/create_cv.viewmodel.dart';
+import 'package:app_test/features/services/view_models/create_cv_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

@@ -14,7 +14,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/services/all_free_services/free_service_home_childs/smart_card/views/common_ui/build_action_card.dart';
-import 'package:app_test/features/services/services/smart_card.service.dart';
+import 'package:app_test/features/services/services/smart_card_service.dart';
 
 class SmartCardProfileDetailScreen extends StatefulWidget {
   final Map<String, dynamic> employee;

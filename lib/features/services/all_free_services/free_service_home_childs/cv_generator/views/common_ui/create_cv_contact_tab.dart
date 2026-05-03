@@ -1,4 +1,4 @@
-import 'package:app_test/features/services/view_models/create_cv.viewmodel.dart';
+import 'package:app_test/features/services/view_models/create_cv_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../../core/constants/app_colors.dart';
