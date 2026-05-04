@@ -4,8 +4,8 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/user_consts.dart';
-import '../../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../shared/models/employee_profile_model.dart';
 import '../../shared/repos/employee_repo.dart';
 

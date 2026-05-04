@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../controller/employee_details_controller.dart';
-import '../../../../../core/widgets/details_loading/details_loading.widget.dart';
+import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
 
 class EmployeeDetailsScreen extends StatefulWidget {
   var id;

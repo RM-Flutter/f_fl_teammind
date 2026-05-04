@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 class EmployeeDetailsHeader extends StatelessWidget {
   const EmployeeDetailsHeader({
     super.key,
