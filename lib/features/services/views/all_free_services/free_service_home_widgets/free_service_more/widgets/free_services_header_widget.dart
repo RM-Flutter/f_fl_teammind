@@ -65,10 +65,12 @@ class FreeServicesHeaderWidget extends StatelessWidget {
         children: [
           // Background image
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(AppSizes.s32),
-              bottomRight: Radius.circular(AppSizes.s32),
-            ),
+            borderRadius: isExpanded
+                ? const BorderRadius.only(
+                    bottomLeft: Radius.circular(AppSizes.s32),
+                    bottomRight: Radius.circular(AppSizes.s32),
+                  )
+                : BorderRadius.zero,
             child: Image.asset(
               "assets/images/png/team-mind-home.jpg",
               fit: BoxFit.cover,
@@ -82,13 +84,13 @@ class FreeServicesHeaderWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 25 + MediaQuery.of(context).padding.top,
+                    top: (isExpanded ? 25 : 10) + MediaQuery.of(context).padding.top,
                     right: LocalizationService.isArabic(context: context) ? 15 : 0,
                     left: LocalizationService.isArabic(context: context) ? 0 : 15,
                   ),
                   child: Column(
                     children: [
-                      gapH18,
+                      if (isExpanded) gapH18,
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
