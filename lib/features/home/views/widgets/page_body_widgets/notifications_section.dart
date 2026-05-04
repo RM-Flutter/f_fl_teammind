@@ -15,9 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:app_test/features/more/notifications/views/notification_screen.dart';
+
 class NotificationsSection extends StatelessWidget {
   final List<NotificationModel> notifications;
-  const NotificationsSection({super.key, required this.notifications});
+  final bool isFreeService;
+  const NotificationsSection({super.key, required this.notifications, this.isFreeService = false});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class NotificationsSection extends StatelessWidget {
           alignment: Alignment.topCenter,
           padding: EdgeInsets.symmetric(
               horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
-          color: Colors.transparent,
+          color: isFreeService ? Color(AppColors.titleText) : Colors.transparent,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -41,21 +44,32 @@ class NotificationsSection extends StatelessWidget {
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontSize: 16.sp, 
                         fontWeight: FontWeight.w700,
+                        color: isFreeService ? Color(AppColors.pink) : null,
                         // تحسين الخطوط في الويب
                         letterSpacing: kIsWeb ? 0.3 : null,
                       )),
                   GestureDetector(
                     onTap: () {
-                      Provider.of<MainLayoutController>(context, listen: false)
-                          .onItemTapped(
-                        context: context,
-                        page: NavbarPages.page,
-                      );
+                      if (isFreeService) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationScreen(true),
+                          ),
+                        );
+                      } else {
+                        Provider.of<MainLayoutController>(context, listen: false)
+                            .onItemTapped(
+                          context: context,
+                          page: NavbarPages.page,
+                        );
+                      }
                     },
                     child: Text(
                       AppStrings.viewAll.tr(),
                       style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 10.sp,
+                        fontSize: 12.sp,
+                        color: isFreeService ? Colors.white.withValues(alpha: 0.8) : null,
                       ),
                     ),
                   ),

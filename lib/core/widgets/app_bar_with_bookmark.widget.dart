@@ -40,9 +40,15 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context) {
-    final routerState = GoRouterState.of(context);
-    final currentRouteName = routeName ?? routerState.name ?? '';
-    final currentRoutePath = routerState.uri.toString();
+    GoRouterState? routerState;
+    try {
+      routerState = GoRouterState.of(context);
+    } catch (e) {
+      // Ignore if GoRouterState is not available (e.g. when pushed via normal Navigator)
+    }
+    
+    final currentRouteName = routeName ?? routerState?.name ?? '';
+    final currentRoutePath = routerState?.uri.toString() ?? '';
     final bookmarkTitle = defaultTitle ?? title ?? '';
 
     // Collect filter state for requests screen

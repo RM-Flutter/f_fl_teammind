@@ -61,9 +61,6 @@ class FreeServicesHeaderWidget extends StatelessWidget {
               )
             : null,
       ),
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
-      ),
       child: Stack(
         children: [
           // Background image
@@ -85,7 +82,7 @@ class FreeServicesHeaderWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 25,
+                    top: 25 + MediaQuery.of(context).padding.top,
                     right: LocalizationService.isArabic(context: context) ? 15 : 0,
                     left: LocalizationService.isArabic(context: context) ? 0 : 15,
                   ),

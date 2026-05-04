@@ -44,8 +44,13 @@ class _BookmarkButtonState extends State<BookmarkButton> {
     Map<String, dynamic>? finalStateData = widget.stateData;
     
     // Get current route state to access pathParameters
-    final routerState = GoRouterState.of(context);
-    final pathParams = routerState.pathParameters;
+    GoRouterState? routerState;
+    try {
+      routerState = GoRouterState.of(context);
+    } catch (e) {
+      // Ignore if GoRouterState is not available
+    }
+    final pathParams = routerState?.pathParameters ?? {};
     
     // Collect pathParameters (like 'id') for details screens
     if (pathParams.isNotEmpty) {
@@ -183,7 +188,13 @@ class _BookmarkButtonState extends State<BookmarkButton> {
               .id
           : BookmarkService.generateId(),
       routeName: widget.routeName,
-      routePath: widget.routePath ?? GoRouterState.of(context).uri.toString(),
+      routePath: widget.routePath ?? (() {
+        try {
+          return GoRouterState.of(context).uri.toString();
+        } catch (_) {
+          return '';
+        }
+      })(),
       title: title.isEmpty ? widget.defaultTitle : title,
       iconName: widget.iconName,
       stateData: finalStateData,

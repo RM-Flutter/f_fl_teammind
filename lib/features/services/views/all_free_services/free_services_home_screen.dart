@@ -12,6 +12,7 @@ import 'package:app_test/core/utils/base_page/mobile_header.dart';
 import 'package:app_test/core/widgets/webview_offers.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/notifications_section.dart';
 import 'package:app_test/features/services/controllers/free_services_view_model.dart';
+import 'package:app_test/features/more/notifications/views/notification_screen.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -198,6 +199,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
                             viewModel.notifications?.isNotEmpty == true)
                           NotificationsSection(
                             notifications: viewModel.notifications!,
+                            isFreeService: true,
                           )
                         else
                           Container(
@@ -216,16 +218,26 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
                                     Text(
                                       AppStrings.myNotifications.tr(),
                                       style: TextStyle(
-                                        color: Color(AppColors.background),
+                                        color: Color(AppColors.pink),
                                         fontSize: 19,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    Text(
-                                      AppStrings.viewAll.tr(),
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.7),
-                                        fontSize: 12,
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const NotificationScreen(true),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        AppStrings.viewAll.tr(),
+                                        style: TextStyle(
+                                          color: Colors.white.withValues(alpha: 0.7),
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
                                   ],

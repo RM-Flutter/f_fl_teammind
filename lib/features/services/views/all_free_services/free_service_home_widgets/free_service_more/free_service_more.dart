@@ -98,7 +98,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.15,
+                          height: MediaQuery.sizeOf(context).height * 0.10,
                         ),
                         Expanded(
                           child: Padding(
@@ -111,6 +111,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                       maxWidth: kIsWeb ? 1070 : double.infinity,
                                     ),
                                     child: Container(
+                                      padding: const EdgeInsetsDirectional.only(start: 16),
                                       alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                       child: Text(AppStrings.functionality.tr().toUpperCase(),
                                           style: TextStyle(
@@ -167,13 +168,14 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                     );
                                   },
                                 ),
-                              const SizedBox(height : 15),
+                              const SizedBox(height : 35),
                                 Center(
                                   child: ConstrainedBox(
                                     constraints: const BoxConstraints(
                                       maxWidth: kIsWeb ? 1070 : double.infinity,
                                     ),
                                     child: Container(
+                                      padding: const EdgeInsetsDirectional.only(start: 16),
                                       alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                       child: Text(AppStrings.myAccount.tr().toUpperCase(),
                                           style: TextStyle(
@@ -351,26 +353,33 @@ class DefaultListTile extends StatelessWidget {
         constraints: const BoxConstraints(
           maxWidth: kIsWeb ? 1100 : double.infinity,
         ),
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          padding: EdgeInsets.zero,
-          child: ListTile(
-            leading: SvgPicture.asset(
-              src,
-              color: Color(AppColors.buttons),
-              fit: BoxFit.scaleDown,
-              width: 20, height: 20,
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 2),
+              padding: EdgeInsets.zero,
+              child: ListTile(
+                leading: SvgPicture.asset(
+                  src,
+                  color: Color(AppColors.buttons),
+                  fit: BoxFit.scaleDown,
+                  width: 20, height: 20,
+                ),
+                title: Text(
+                  title.toUpperCase(),
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+                onTap: onTap ?? () {},
+              ),
             ),
-            title: Text(
-              title!.toUpperCase() ?? "",
-              style: Theme.of(context).textTheme.labelSmall,
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: Color(AppColors.divider).withValues(alpha: 0.5),
+              indent: 20,
+              endIndent: 20,
             ),
-            // trailing: Icon(
-            //   Icons.arrow_forward_ios,
-            //   color: Theme.of(context).colorScheme.primary,
-            // ),
-            onTap: onTap ?? () {}, // Add your onTap functionality here
-          ),
+          ],
         ),
       ),
     );
