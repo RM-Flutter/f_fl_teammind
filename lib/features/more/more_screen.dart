@@ -157,6 +157,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                     extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
                                     pathParameters: {'lang': context.locale.languageCode})
                             ),
+                            DefaultListTile(
+                              title: AppStrings.overtimeRequests.tr(),
+                              src: AppIcons.tasks, // Reusing an existing icon
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.overtimeRequestsScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) SizedBox(height : 15.h),
                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Padding(
                              padding: EdgeInsets.symmetric(horizontal: 24.w),

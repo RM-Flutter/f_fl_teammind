@@ -30,6 +30,7 @@ class AppStyles {
     );
   }
 
+
   static TextStyle greenContent(BuildContext context) {
     return content(context).copyWith(
       color: Colors.green,

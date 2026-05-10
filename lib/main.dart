@@ -12,6 +12,7 @@ import 'package:app_test/features/more/notifications/controllers/notification_co
 import 'app.dart';
 import 'core/services/fcm_token.service.dart';
 import 'features/more/user_device/controllers/user_device_controller.dart';
+import 'features/overtime_requests/controllers/overtime_requests_controller.dart';
 import 'core/services/app_config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -93,6 +94,8 @@ void main() async {
           ChangeNotifierProvider(create: (context) => CommentProvider()),
           ChangeNotifierProvider(
               create: (context) => NotificationProviderModel()),
+          ChangeNotifierProvider(
+              create: (context) => OvertimeRequestsProvider()),
         ],
         child: MyApp(),
       )));

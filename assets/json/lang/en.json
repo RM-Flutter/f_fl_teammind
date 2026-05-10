@@ -1067,5 +1067,20 @@
   "myTeamRequestsShortcut": "MY TEAM\nREQUESTS",
   "viewTasksShortcut": "VIEW\nTASKS",
   "addRequestsShortcut": "ADD\nREQUESTS",
-  "myTasks": "My Tasks"
+  "myTasks": "My Tasks",
+  "overtimeRequests": "Overtime Requests",
+  "overtime": "Overtime",
+  "durationHours": "Duration (Hours)",
+  "approve": "Approve",
+  "reject": "Reject",
+  "hrApprovedStatus": "HR Approved",
+  "managerApprovedStatus": "Manager Approved",
+  "pendingStatus": "Pending",
+  "rejectedStatus": "Rejected",
+  "enterMinutes": "Enter Minutes",
+  "durationMinutes": "Duration (Minutes)",
+  "duration": "Duration",
+  "employee": "Employee",
+  "addOvertimeRequest": "Add Overtime Request",
+  "selectDate": "Select Date"
 }

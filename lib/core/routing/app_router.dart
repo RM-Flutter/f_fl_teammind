@@ -58,6 +58,10 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/get_team_mind_system/views/widgets/youtube_video_player/youtube_video_player_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/cv_generator_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_widgets/free_service_more/free_service_more.dart';
+import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
+import 'package:app_test/features/overtime_requests/views/overtime_requests_screen.dart';
+import 'package:app_test/features/overtime_requests/views/overtime_request_details_screen.dart';
+import 'package:app_test/features/overtime_requests/views/add_overtime_request_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_services_home_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/my_cv_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/personality_test/views/personality_test_screen.dart';
@@ -168,6 +172,9 @@ enum AppRoutes {
   personalityTestScreen,
   aboutTeamMindScreen,
   youtubeVideoScreen,
+  overtimeRequestsScreen,
+  overtimeRequestDetailsScreen,
+  addOvertimeRequestScreen,
 }
 
 const TestVSync ticker = TestVSync();
@@ -338,6 +345,37 @@ GoRouter goRouter(BuildContext context) {
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
                   );
+                },
+              ),
+              GoRoute(
+                path: 'overtime-requests',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.overtimeRequestsScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return MaterialPage(child: const OvertimeRequestsScreen());
+                },
+              ),
+              GoRoute(
+                path: 'add-overtime-request',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.addOvertimeRequestScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return MaterialPage(child: const AddOvertimeRequestScreen());
+                },
+              ),
+              GoRoute(
+                path: 'overtime-request-details',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.overtimeRequestDetailsScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  final request = state.extra as OvertimeRequestModel;
+                  return MaterialPage(child: OvertimeRequestDetailsScreen(request: request));
                 },
               )
             ],

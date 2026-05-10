@@ -1067,5 +1067,20 @@
   "myTeamRequestsShortcut": "طلبات\nفريقي",
   "viewTasksShortcut": "عرض\nالمهام",
   "addRequestsShortcut": "إضافة\nطلبات",
-  "myTasks": "مهامي"
+  "myTasks": "مهامي",
+  "overtimeRequests": "طلبات الوقت الإضافي",
+  "overtime": "الوقت الإضافي",
+  "durationHours": "المدة (ساعات)",
+  "approve": "موافقة",
+  "reject": "رفض",
+  "selectDate": "اختر التاريخ",
+  "hrApprovedStatus": "موافقة HR",
+  "managerApprovedStatus": "موافقة المدير",
+  "pendingStatus": "انتظار",
+  "rejectedStatus": "مرفوض",
+  "enterMinutes": "أدخل الدقائق",
+  "durationMinutes": "المدة (دقائق)",
+  "duration": "المدة",
+  "employee": "الموظف",
+  "addOvertimeRequest": "إضافة طلب عمل إضافي"
 }

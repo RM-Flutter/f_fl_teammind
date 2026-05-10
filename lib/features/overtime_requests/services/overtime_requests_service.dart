@@ -1,0 +1,91 @@
+import 'package:app_test/core/models/operation_result.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api_service.dart';
+import 'package:flutter/material.dart';
+
+class OvertimeRequestsService {
+  static const String baseUrl = 'https://lab.r-m.dev/api/rm_fingerprint/v1/overtime_requests';
+
+  static Future<OperationResult<Map<String, dynamic>>> getOvertimeRequests({
+    required BuildContext context,
+    String? employeeProfileId,
+  }) async {
+    String url = baseUrl;
+    if (employeeProfileId != null && employeeProfileId.isNotEmpty) {
+      url += '?employee_profile_id=$employeeProfileId';
+    }
+
+    final response = await DioApiService().get<Map<String, dynamic>>(
+      url,
+      context: context,
+      dataKey: '',
+      allData: true,
+      checkOnTokenExpiration: true,
+    );
+    return response;
+  }
+
+  static Future<OperationResult<Map<String, dynamic>>> addOvertimeRequest({
+    required BuildContext context,
+    required String date,
+    required String overtime,
+  }) async {
+    final Map<String, String> requestData = {
+      'date': date,
+      'overtime': overtime,
+    };
+
+    final response = await DioApiService().postWithFormData<Map<String, dynamic>>(
+      baseUrl,
+      requestData,
+      files: [],
+      dataKey: '',
+      context: context,
+      allData: true,
+    );
+    return response;
+  }
+
+  static Future<OperationResult<Map<String, dynamic>>> updateStatus({
+    required BuildContext context,
+    required String requestId,
+    required String status,
+    required String managerReply,
+  }) async {
+    final url = '$baseUrl/$requestId/update_status';
+    final Map<String, String> requestData = {
+      'status': status,
+      'the_manager_reply': managerReply,
+    };
+
+    final response = await DioApiService().postWithFormData<Map<String, dynamic>>(
+      url,
+      requestData,
+      files: [],
+      dataKey: '',
+      context: context,
+      allData: true,
+    );
+    return response;
+  }
+
+  static Future<OperationResult<Map<String, dynamic>>> updateOvertime({
+    required BuildContext context,
+    required String requestId,
+    required String overtime,
+  }) async {
+    final url = '$baseUrl/$requestId/update_overtime';
+    final Map<String, String> requestData = {
+      'overtime': overtime,
+    };
+
+    final response = await DioApiService().postWithFormData<Map<String, dynamic>>(
+      url,
+      requestData,
+      files: [],
+      dataKey: '',
+      context: context,
+      allData: true,
+    );
+    return response;
+  }
+}

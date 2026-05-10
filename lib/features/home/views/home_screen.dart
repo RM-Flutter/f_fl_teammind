@@ -376,9 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildReorderableWidgetItem(
-      HomeWidgetType widgetType, HomeController viewModel, int index) {
-    Widget content;
+  Widget _buildReorderableWidgetItem(HomeWidgetType widgetType, HomeController viewModel, int index) {Widget content;
     switch (widgetType) {
       case HomeWidgetType.myRequests:
         content = RequestsWidget(
@@ -458,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildShortcutActions(BuildContext context) {
+  Widget  _buildShortcutActions(BuildContext context) {
     final List<Map<String, dynamic>> items = [
       {
         'title': AppStrings.addRequestsShortcut.tr(),
@@ -516,7 +514,8 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 105.w,
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
-                color: Color(AppColors.cardBackground),
+                // color: Color(AppColors.cardBackground),
+                color: const Color(0xFF090B60), // Dark Blue from Figma
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Column(
@@ -526,7 +525,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     items[index]['icon'],
                     height: 28.r,
                     width: 28.r,
-                    color: Color(AppColors.icon),
+                    // color: Color(AppColors.icon,),
+                    color: Colors.white,
                   ),
                   SizedBox(height: 12.h),
                   Text(
@@ -537,6 +537,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 12.0.sp,
                       fontWeight: FontWeight.w400,
                       height: 1.1,
+                        color: Colors.white
                     ),
                   ),
                 ],
