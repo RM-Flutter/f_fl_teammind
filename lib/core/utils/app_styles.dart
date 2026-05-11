@@ -14,6 +14,15 @@ class AppStyles {
     );
   }
 
+  static TextStyle whiteHeading(BuildContext context) {
+    bool isArabic = context.locale.languageCode == 'ar';
+    return TextStyle(
+      fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
+      color: Colors.white,
+      fontSize: isArabic ? 14.sp : 16.sp,
+    );
+  }
+
   /// Base Content style (Poppins for EN / Cairo for AR)
   static TextStyle content(BuildContext context) {
     bool isArabic = context.locale.languageCode == 'ar';

@@ -454,7 +454,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                 centerTitle: true,
                 routeName: AppRoutes.overtimeRequestDetailsScreen.name,
                 title: AppStrings.details.tr(),
-                titleStyle: AppStyles.heading(context).copyWith(fontSize: 20.sp),
+                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 12.sp),
                 bookmarkIconColor: Colors.white,
                 leading: Padding(
                   padding: EdgeInsets.all(10.r),

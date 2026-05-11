@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -15,64 +14,71 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
-  var rewardAndpenalty;
-    RewardAndPenaltyDetailsModalSheet(
-      {super.key, required this.rewardAndpenalty});
+class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
+  final dynamic rewardAndPenalty;
+  
+  const RewardsAndPenaltiesDetailsModal({super.key, required this.rewardAndPenalty});
 
   @override
   Widget build(BuildContext context) {
     String? formatDateString(String? dateString) {
-      if (dateString == null) return null;
-      DateTime dateTime = DateFormat('yyyy-MM-dd', "en").parse(dateString);
-      String formattedDate = DateFormat('EEEE, dd MMM yyyy',LocalizationService.isArabic(context: context) ? "ar" : "en").format(dateTime);
-      return formattedDate;
-    }     String? formatDateString2(String? dateString) {
-      if (dateString == null) return null;
-      DateTime dateTime = DateFormat('yyyy-MM-dd', "en").parse(dateString);
-      String formattedDate = DateFormat('MMM yyyy',LocalizationService.isArabic(context: context) ? "ar" : "en").format(dateTime);
-      return formattedDate;
+      if (dateString == null || dateString.isEmpty) return null;
+      try {
+        DateTime dateTime = DateTime.parse(dateString);
+        return DateFormat('EEEE, dd MMM yyyy', LocalizationService.isArabic(context: context) ? "ar" : "en").format(dateTime);
+      } catch (e) {
+        return dateString;
+      }
     }
 
-    // الحصول على معلومات المستخدم الحالي
+    String? formatDateString2(String? dateString) {
+      if (dateString == null || dateString.isEmpty) return null;
+      try {
+        DateTime dateTime = DateTime.parse(dateString);
+        return DateFormat('MMM yyyy', LocalizationService.isArabic(context: context) ? "ar" : "en").format(dateTime);
+      } catch (e) {
+        return dateString;
+      }
+    }
+
     var jsonString = CacheHelper.getString("US1");
-    var gCache;
-    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>;
+    Map<String, dynamic>? gCache;
+    if (jsonString != null && jsonString.isNotEmpty) {
+      try {
+        gCache = json.decode(jsonString) as Map<String, dynamic>;
+      } catch (_) {}
     }
 
-    // التحقق من الشروط لعرض زر الشكوى
     bool canShowComplaintButton = false;
-    if (gCache != null && rewardAndpenalty.employeeId != null && gCache['employee_profile_id'] != null) {
-      // 1. التحقق من أن المستخدم هو صاحب العقوبة
-      final bool isOwner = rewardAndpenalty.employeeId.toString() == gCache['employee_profile_id'].toString();
+    if (gCache != null && rewardAndPenalty.employeeId != null && gCache['employee_profile_id'] != null) {
+      final bool isOwner = rewardAndPenalty.employeeId.toString() == gCache['employee_profile_id'].toString();
+      final typeKey = rewardAndPenalty.type?.key?.toLowerCase() ?? '';
+      final bool isPenalty = !typeKey.contains('reward') && !typeKey.contains('bonus');
       
-      // 2. التحقق من أن النوع هو penalty وليس reward
-      final bool isPenalty = rewardAndpenalty.type?.value?.toLowerCase().contains('reward') != true;
-      
-      // 3. التحقق من أن لم يمر أكثر من شهرين على العقوبة
       bool isWithinTwoMonths = false;
       try {
-        String? dateToCheck = rewardAndpenalty.createdAt ?? rewardAndpenalty.dueDate;
+        String? dateToCheck = rewardAndPenalty.createdAt ?? rewardAndPenalty.dueDate;
         if (dateToCheck != null && dateToCheck.isNotEmpty) {
-          DateTime penaltyDate = DateFormat('yyyy-MM-dd', "en").parse(dateToCheck);
+          DateTime penaltyDate = DateTime.parse(dateToCheck);
           DateTime now = DateTime.now();
-          Duration difference = now.difference(penaltyDate);
-          // التحقق من أن الفرق أقل من شهرين (حوالي 60 يوم)
-          isWithinTwoMonths = difference.inDays < 60;
+          isWithinTwoMonths = now.difference(penaltyDate).inDays < 60;
         }
-      } catch (e) {
-        // في حالة وجود خطأ في parsing التاريخ، لا نعرض الزر
-        isWithinTwoMonths = false;
-      }
+      } catch (_) {}
       
       canShowComplaintButton = isOwner && isPenalty && isWithinTwoMonths;
     }
+
+    final typeValue = rewardAndPenalty.type?.value ?? "";
+    final categoryValue = rewardAndPenalty.category?.value ?? "";
+    final amount = rewardAndPenalty.amount?.toString() ?? "0";
+    final actionKey = rewardAndPenalty.action?.key ?? "";
+    final payrollDate = rewardAndPenalty.payroll?.dateFrom;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         gapH16,
+        if (rewardAndPenalty.profile?.name != null)
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(AppSizes.s10.r),
@@ -82,7 +88,7 @@ class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                rewardAndpenalty.profile?.name ?? '',
+                rewardAndPenalty.profile!.name!,
                 style: AppStyles.whiteContent(context).copyWith(
                     fontWeight: FontWeight.w500,
                     fontSize: AppSizes.s12.sp),
@@ -90,53 +96,53 @@ class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
             ),
           ),
         gapH12,
-        if (rewardAndpenalty.type?.value?.isNotEmpty ?? false)
+        
+        if (typeValue.isNotEmpty)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.requestType.tr()}: ',
-              subtitle: rewardAndpenalty.type!.key!.toString().tr()),
+              subtitle: typeValue),
 
-        if (rewardAndpenalty.amount != null)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.amounts.tr()}: ',
-              subtitle: "${rewardAndpenalty.amount?.toString()} ${rewardAndpenalty.category.key.toString().tr()}" ?? ''),
+        RewardAndPenaltyRowTile(
+            title: '${AppStrings.amounts.tr()}: ',
+            subtitle: "$amount $categoryValue"),
 
-        if (rewardAndpenalty.dueDate?.isNotEmpty ?? false)
+        if (rewardAndPenalty.dueDate != null)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.dueDate.tr()}: ',
-              subtitle: formatDateString2(rewardAndpenalty.dueDate) ?? ''),
-        if (rewardAndpenalty.createdAt?.isNotEmpty ?? false)
+              subtitle: formatDateString2(rewardAndPenalty.dueDate) ?? ''),
+              
+        if (rewardAndPenalty.createdAt != null)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.createdAt.tr()}: ',
-              subtitle: formatDateString(rewardAndpenalty.createdAt) ?? ''),
-        if (rewardAndpenalty.action != null)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.applied.tr()}: ',
-              subtitle: rewardAndpenalty.action.key == "applied" ? "${AppStrings.yes.tr()} (${rewardAndpenalty.payroll != null ?rewardAndpenalty.payroll.dateFrom : AppStrings.thereIsNoSalary.tr()})" : AppStrings.no.tr()
-          ),
-          // if(rewardAndpenalty.action.key != "applied")
-          // RewardAndPenaltyRowTile(
-          //     title: '${AppStrings.salaryDate.tr()}: ',
-          //     subtitle: rewardAndpenalty.payroll != null ? rewardAndpenalty.payroll.dateFrom :  AppStrings.thereIsNoSalary.tr()
-          // ),
-        if (rewardAndpenalty.manager != null && rewardAndpenalty.manager?.name?.isNotEmpty ?? false)
+              subtitle: formatDateString(rewardAndPenalty.createdAt) ?? ''),
+              
+        RewardAndPenaltyRowTile(
+            title: '${AppStrings.applied.tr()}: ',
+            subtitle: actionKey == "applied" 
+                ? "${AppStrings.yes.tr()} (${payrollDate ?? AppStrings.thereIsNoSalary.tr()})" 
+                : AppStrings.no.tr()
+        ),
+
+        if (rewardAndPenalty.manager?.name != null)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.from.tr()}: ',
-              subtitle: rewardAndpenalty.manager?.name?.toString() ?? ''),
-        if (rewardAndpenalty.reason?.isNotEmpty ?? false)
+              subtitle: rewardAndPenalty.manager!.name!),
+              
+        if (rewardAndPenalty.reason != null && rewardAndPenalty.reason!.isNotEmpty)
           RewardAndPenaltyRowTile(
-              title: '${AppStrings.reason.tr()}: ', subtitle: rewardAndpenalty.reason!),
+              title: '${AppStrings.reason.tr()}: ', 
+              subtitle: rewardAndPenalty.reason!),
         
-        // زر الشكوى - يظهر فقط للعقوبات التي تستوفي الشروط
         if (canShowComplaintButton) ...[
           gapH24,
           CustomElevatedButton(
             titleSize: AppSizes.s10.sp,
             buttonStyle: ElevatedButton.styleFrom(
-              fixedSize: Size(double.infinity, 50.h),alignment: Alignment.center,
+              fixedSize: Size(double.infinity, 50.h),
+              alignment: Alignment.center,
               shadowColor: Colors.transparent,
-              backgroundColor:Color(AppColors.titleText),
-              foregroundColor: Color(AppColors.titleText),
-              disabledForegroundColor: Colors.transparent,
+              backgroundColor: Color(AppColors.titleText),
+              foregroundColor: Colors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.s28.r),
@@ -149,6 +155,7 @@ class RewardAndPenaltyDetailsModalSheet extends StatelessWidget {
             title: AppStrings.complaint.tr(),
           ),
         ],
+        gapH24,
       ],
     );
   }
@@ -184,7 +191,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                   children: [
                     titleWidget,
                     AutoSizeText(subtitle,
-                        style: textStyle.copyWith(color: Color(AppColors.black),fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                        style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14.sp, fontWeight: FontWeight.w600)),
                   ],
                 )
               : Row(
@@ -194,7 +201,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                     titleWidget,
                     Expanded(
                       child: AutoSizeText(subtitle,
-                          style: textStyle.copyWith(color: Color(AppColors.black),fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                          style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14.sp, fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),

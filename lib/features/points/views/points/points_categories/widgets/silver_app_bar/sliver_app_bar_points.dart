@@ -184,7 +184,7 @@ Widget defaultFillImageAppbar({
             bottomRight: Radius.circular(30),
             bottomLeft: Radius.circular(30)),
         child: Image.asset(
-          "assets/images/png/point_background.png",
+          "assets/images/png/points_back.png",
           fit: BoxFit.cover,
         )),
   );

@@ -80,7 +80,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                         ),
                         Text(
                           AppStrings.notificationInfo.tr(),
-                          style: AppStyles.heading(context).copyWith(
+                          style: AppStyles.whiteHeading(context).copyWith(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -92,7 +92,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Text(
                         (notificationSingleModel?.title?.toString() ?? "").toUpperCase(),
-                        style: AppStyles.heading(context).copyWith(
+                        style: AppStyles.whiteHeading(context).copyWith(
                           fontSize: 26.sp,
                           fontWeight: FontWeight.w800,
                           height: 1.1,

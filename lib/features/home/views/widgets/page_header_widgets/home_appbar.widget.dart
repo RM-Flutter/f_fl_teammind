@@ -218,7 +218,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                       minFontSize: 20,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppStyles.heading(context).copyWith(fontSize: 24.sp)),
+                                      style: AppStyles.whiteHeading(context).copyWith(fontSize: 24.sp)),
                                    Text(AppStrings.niceToMeetYou.tr().toUpperCase(),
                                        style: AppStyles.whiteContent(context).copyWith(
                                            fontWeight: FontWeight.w400,

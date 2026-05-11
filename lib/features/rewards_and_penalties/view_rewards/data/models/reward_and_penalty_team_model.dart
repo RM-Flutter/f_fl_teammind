@@ -137,13 +137,15 @@ class Type {
 class Payroll {
   final int? id;
   final String? dateFrom;
+  final String? currency;
 
-  Payroll({this.id, this.dateFrom});
+  Payroll({this.id, this.dateFrom, this.currency});
 
   factory Payroll.fromJson(Map<String, dynamic> json) {
     return Payroll(
       id: json['id'] as int?,
       dateFrom: json['date_from'] as String?,
+      currency: json['currency'] as String?,
     );
   }
 }

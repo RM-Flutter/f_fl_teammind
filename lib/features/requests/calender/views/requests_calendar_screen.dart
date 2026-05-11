@@ -69,7 +69,6 @@ class RequestsCalendarScreen extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    // ضبط locale للأرقام بناءً على لغة التطبيق
     final currentLang = context.locale.languageCode;
     Intl.defaultLocale = currentLang;
 
@@ -147,7 +146,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                           padding: EdgeInsets.all(12.r),
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                 height: 0.6.sh,
                                 child: SfCalendar(
                                   backgroundColor: Color(AppColors.background),
@@ -179,13 +178,12 @@ class RequestsCalendarScreen extends StatelessWidget {
                                             : EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(4.r),
-                                          color: Color(AppColors.green),
+                                          color: const Color(AppColors.green),
                                         ),
                                         child: Text(
                                           displayTitle,
                                           textAlign: TextAlign.center,
                                           maxLines: (kIsWeb || PlatformIs.web) ? 1 : 1,
-
                                           overflow: TextOverflow.visible,
                                           style: AppStyles.whiteContent(context).copyWith(
                                             fontSize: (kIsWeb || PlatformIs.web) ? 12.sp : 13.sp,
@@ -201,12 +199,9 @@ class RequestsCalendarScreen extends StatelessWidget {
                                     if (!canShow) return const SizedBox.shrink();
 
                                     final backgroundColor = viewModel.getStatusColor(status);
-                                    // تحديد لون النص بناءً على لون الخلفية
-                                    // إذا كانت الخلفية خضراء (approved) أو رمادية (waiting) -> نص أبيض
-                                    // خلاف ذلك -> النص الأزرق
-                                    final textColor = (backgroundColor == Color(AppColors.green) ||
+                                    final textColor = (backgroundColor == const Color(AppColors.green) ||
                                         backgroundColor == Color(AppColors.subTitleText))
-                                        ? Color(AppColors.background)
+                                        ? Colors.white
                                         : Theme.of(context).colorScheme.primary;
 
                                     return GestureDetector(
@@ -273,7 +268,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                               (holiday) {
                                             final name = _titleByLang(holiday['name'], context.locale.languageCode);
                                             return ListTile(
-                                              leading: Icon(Icons.event, color: Color(AppColors.green)),
+                                              leading: const Icon(Icons.event, color: Color(AppColors.green)),
                                               title: Text(name.isEmpty ? 'Holiday' : name, style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold),),
                                               subtitle: Text(
                                                 "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr().toUpperCase()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
@@ -337,11 +332,11 @@ class RequestDataSource extends CalendarDataSource {
   Color getColor(int index) {
     final item = appointments![index];
     if (item is Map && item['_isHoliday'] == true) {
-      return Color(AppColors.green); // Holiday color
+      return const Color(AppColors.green); // Holiday color
     }
     switch ((item.status as String).toLowerCase().trim()) {
       case 'approved':
-        return Color(AppColors.green);
+        return const Color(AppColors.green);
       default:
         return Color(AppColors.subTitleText);
     }

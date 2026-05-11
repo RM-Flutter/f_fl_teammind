@@ -31,9 +31,9 @@ class NotificationsSection extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.symmetric(
-              horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
-          color: isFreeService ? Color(AppColors.titleText) : Colors.transparent,
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
+          // color: isFreeService ? Color(AppColors.titleText) : Colors.transparent,
+          color:  Color(AppColors.titleText),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -44,8 +44,8 @@ class NotificationsSection extends StatelessWidget {
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontSize: 16.sp, 
                         fontWeight: FontWeight.w700,
-                        color: isFreeService ? Color(AppColors.pink) : null,
-                        // تحسين الخطوط في الويب
+                        // color: isFreeService ? const Color(AppColors.pink) : null,
+                        color: isFreeService ? const Color(AppColors.pink) : Colors.white,
                         letterSpacing: kIsWeb ? 0.3 : null,
                       )),
                   GestureDetector(
@@ -69,7 +69,8 @@ class NotificationsSection extends StatelessWidget {
                       AppStrings.viewAll.tr(),
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontSize: 12.sp,
-                        color: isFreeService ? Colors.white.withValues(alpha: 0.8) : null,
+                        // color: isFreeService ? Colors.white.withValues(alpha: 0.8) : null,
+                        color:  Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ),

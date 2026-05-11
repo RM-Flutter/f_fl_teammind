@@ -96,7 +96,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                         ),
                         Text(
                           AppStrings.tasksInfo.tr(),
-                          style: AppStyles.heading(context).copyWith(
+                          style: AppStyles.whiteHeading(context).copyWith(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -112,7 +112,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                     SizedBox(height: 15.h),
                     Text(
                       taskName?.toUpperCase() ?? "",
-                      style: AppStyles.heading(context).copyWith(
+                      style: AppStyles.whiteHeading(context).copyWith(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w800,
                       ),

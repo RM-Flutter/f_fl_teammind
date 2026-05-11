@@ -273,7 +273,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                     title: AppSettingsService.getRequestTitleFromGenenralSettings(
                         context: context, requestId: request.typeId.toString()) ??
                         '',
-                    titleStyle: AppStyles.heading(context).copyWith(fontSize: 20.sp),
+                    titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20.sp),
                     bookmarkIconColor: Colors.white,
                     leading: Padding(
                       padding: EdgeInsets.all(10.r),
@@ -543,7 +543,7 @@ class _DownloadProgressDialog extends StatelessWidget {
             Expanded(
               child: Text(
                 AppStrings.downloadFile.tr(),
-                style: AppStyles.heading(context).copyWith(fontSize: 18.sp),
+                style: AppStyles.whiteHeading(context).copyWith(fontSize: 18.sp),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

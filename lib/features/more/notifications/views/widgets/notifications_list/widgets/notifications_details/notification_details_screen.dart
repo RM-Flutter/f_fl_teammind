@@ -255,7 +255,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           child: Text(
             title.toUpperCase(),
-            style:  AppStyles.heading(context).copyWith(
+            style:  AppStyles.whiteHeading(context).copyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
             ),

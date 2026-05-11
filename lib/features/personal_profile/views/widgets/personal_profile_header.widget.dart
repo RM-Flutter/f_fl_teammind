@@ -428,7 +428,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                   children: [
                     AutoSizeText(
                       widget.title,
-                      style: AppStyles.heading(context).copyWith(
+                      style: AppStyles.whiteHeading(context).copyWith(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w700,
                       ),
