@@ -31,7 +31,7 @@ class SwitchRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = isLoginPageStyle == true
-        ? AppStyles.titleTextContent(context)
+        ? AppStyles.whiteHeading(context)
         .copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
         : AppStyles.subTitleContent(context);
 

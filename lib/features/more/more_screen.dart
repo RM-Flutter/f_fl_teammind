@@ -102,7 +102,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 0.11.sh,
+                      height: 0.14.sh,
                     ),
                     Expanded(
                       child: Padding(

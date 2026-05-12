@@ -10,6 +10,7 @@ import 'package:app_test/features/rewards_and_penalties/view_rewards/views/widge
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+
 class RewardAndPenaltyCardWidget extends StatelessWidget {
   final dynamic rewardAndPenalty;
   const RewardAndPenaltyCardWidget({super.key, required this.rewardAndPenalty});

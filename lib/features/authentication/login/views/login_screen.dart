@@ -133,8 +133,8 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                           AutoSizeText(
                             "${AppStrings.loginTo.tr()}\n${AppStrings.yourAccount.tr()}",
                             textAlign: TextAlign.center,
-                            style: AppStyles.heading(context).copyWith(
-                              fontSize: 29.sp,
+                            style: AppStyles.whiteHeading(context).copyWith(
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w400,
                               height: 1.1,
                             ),

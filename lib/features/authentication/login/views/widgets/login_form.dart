@@ -36,6 +36,7 @@ class _LoginFormState extends State<LoginForm> {
               isLoginPageStyle: true,
               value: viewModel.isPhoneLogin,
               onChanged: (newValue) => viewModel.toggleLoginMethod(),
+
             );
           },
         ),
@@ -96,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
               },
               child: Text(
                 AppStrings.forgetPassword.tr(),
-                style: AppStyles.subTitleContent(context).copyWith(
+                style: AppStyles.whiteHeading(context).copyWith(
                   fontSize: 13.sp
                 ),
               ),
