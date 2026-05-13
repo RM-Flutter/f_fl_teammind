@@ -17,6 +17,7 @@ import '../../more/notifications/views/widgets/switch_row_notification.dart';
 import '../controllers/overtime_requests_controller.dart';
 import '../models/overtime_request_model.dart';
 import '../../../../core/services/requests_services.dart';
+import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 class OvertimeRequestsScreen extends StatefulWidget {
   const OvertimeRequestsScreen({super.key});
@@ -120,7 +121,10 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
               ],
               Expanded(
                 child: list.isEmpty
-                    ? Center(child: Text(AppStrings.noDataFounded.tr(), style: AppStyles.primaryContent(context)))
+                    ? NoExistingPlaceholderScreen(
+                        height: 300.h,
+                        title: AppStrings.noDataFounded.tr(),
+                      )
                     : ListView.builder(
                         padding: EdgeInsets.only(top: 8.h, bottom: 80.h),
                         itemCount: list.length,

@@ -74,34 +74,35 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
         create: (_) => viewModel,
         child: Consumer<EmployeeDetailsViewModel>(
             builder: (context, viewModel, child) {
+              if (viewModel.isLoading) {
+                return const DetailsLoadingWidget();
+              }
+              
+              if (viewModel.employee == null) {
+                return NoExistingPlaceholderScreen(
+                  height: AppSizes.s300.h,
+                  title: AppStrings.thereIsNoEmployeeDataFound.tr(),
+                );
+              }
+
+              bool hasFullAccess = ((viewModel.employee?.id != null && viewModel.currentUserSettings?.empId != null) &&
+                      (viewModel.employee?.id == viewModel.currentUserSettings?.empId)) ||
+                  (viewModel.currentUserSettings?.isManagerIn != null &&
+                      (viewModel.currentUserSettings?.isManagerIn?.isNotEmpty ?? false) &&
+                      (viewModel.currentUserSettings!.isManagerIn!.contains(viewModel.employee?.departmentId) == true)) ||
+                  (viewModel.currentUserSettings?.isHr != null && (viewModel.currentUserSettings?.isHr == true)) ||
+                  (viewModel.currentUserSettings?.topManagement != null &&
+                      (viewModel.currentUserSettings?.topManagement == true)) ||
+                  (viewModel.currentUserSettings?.isTeamleaderIn != null &&
+                      (viewModel.currentUserSettings?.isTeamleaderIn?.isNotEmpty ?? false) &&
+                      (viewModel.currentUserSettings!.isTeamleaderIn!.contains(viewModel.employee!.departmentId) == true));
+
               return Column(
                 children: [
                   // Page Header
-                  viewModel.employee == null
-                      ? const DetailsLoadingWidget()
-                      : EmployeeDetailsHeader(employee: viewModel.employee),
-                  if (viewModel.employee != null && (!viewModel.isLoading) &&(viewModel.employee != null)&&
-                      ((viewModel.employee?.id != null && viewModel.currentUserSettings?.empId != null)&&
-                          (viewModel.employee?.id == viewModel.currentUserSettings?.empId) ) ||
-                      //if the current user is manager || the current user is leader of the opened employee profile
-                      (viewModel.currentUserSettings?.isManagerIn != null && (viewModel.currentUserSettings?.isManagerIn?.isNotEmpty ?? false) &&(viewModel.currentUserSettings!.isManagerIn!.contains(viewModel.employee?.departmentId) == true)) ||
-                      (viewModel.currentUserSettings?.isHr !=
-                          null &&
-                          (viewModel.currentUserSettings?.isHr== true)) ||
-                      (viewModel.currentUserSettings?.topManagement !=
-                          null &&
-                          (viewModel.currentUserSettings?.topManagement== true)) ||
-                      (viewModel.currentUserSettings?.isTeamleaderIn !=
-                          null &&
-                          (viewModel.currentUserSettings?.isTeamleaderIn?.isNotEmpty ?? false)  &&
-                          (viewModel.employee != null && viewModel.currentUserSettings!.isTeamleaderIn!.contains(viewModel.employee!.departmentId) == true)))
-                    viewModel.isLoading
-                        ? const DetailsLoadingWidget()
-                        : viewModel.employee == null
-                        ?  NoExistingPlaceholderScreen(
-                        height: AppSizes.s300.h,
-                        title: AppStrings.thereIsNoEmployeeDataFound.tr() )
-                        : Expanded(
+                  EmployeeDetailsHeader(employee: viewModel.employee),
+                  if (hasFullAccess)
+                    Expanded(
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
@@ -112,7 +113,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                 horizontal: AppSizes.s8.w,
                                 vertical: AppSizes.s12.h),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start, // 👈 Align start in column
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 4.w),

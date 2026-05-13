@@ -15,12 +15,14 @@ class NoExistingPlaceholderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
+      width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           DynamicImageWidget(
-            imageUrl: AppImages.logo,
+            // imageUrl: AppImages.logo,
+            imageUrl:              'assets/images/app_logos.png',
             width: AppSizes.s100,
             height: AppSizes.s100,
             fit: BoxFit.cover,

@@ -2,8 +2,10 @@ import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app_test/core/constants/app_constants.dart';
+
 class OvertimeRequestsService {
-  static const String baseUrl = 'https://lab.r-m.dev/api/rm_fingerprint/v1/overtime_requests';
+  static String get baseUrl => '${AppConstants.baseUrl}/rm_fingerprint/v1/overtime_requests';
 
   static Future<OperationResult<Map<String, dynamic>>> getOvertimeRequests({
     required BuildContext context,

@@ -262,18 +262,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildReorderableWidgets(HomeController viewModel) {
-    // Check if all data is null
-    if ((viewModel.myRequests == null) &&
-        (viewModel.myTeamRequests == null) &&
-        (viewModel.otherDepartmentRequests == null) &&
-        (viewModel.allCompanyRequests == null) &&
-        (viewModel.notifications == null) &&
-        (viewModel.myTasks == null)) {
-      return NoExistingPlaceholderScreen(
-          height: LayoutService.getHeight(context) * 0.4,
-          title: AppStrings.thereIsNoRequestsAndNotifications.tr());
-    }
-
     // Build list of available widgets based on data
     _availableWidgets = <HomeWidgetType>[];
     final widgetsWithData = <HomeWidgetType>[];
@@ -317,12 +305,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    if (_availableWidgets.isEmpty) {
-      return NoExistingPlaceholderScreen(
-          height: LayoutService.getHeight(context) * 0.4,
-          title: AppStrings.thereIsNoRequestsAndNotifications.tr());
-    }
-
     return Column(
       children: [
         // General Screen Message Widget (always at top, not reorderable)
@@ -336,42 +318,47 @@ class _HomeScreenState extends State<HomeScreen> {
         //   ),
         // ),
         SizedBox(height: AppSizes.s4.h),
-        // Reorderable widgets
-        Listener(
-          onPointerMove: (event) {
-            if (_isDragging) {
-              _handlePointerMove(event);
-            }
-          },
-          onPointerUp: (event) {
-            _isDragging = false;
-            _autoScrollTimer?.cancel();
-          },
-          onPointerCancel: (event) {
-            _isDragging = false;
-            _autoScrollTimer?.cancel();
-          },
-          child: ReorderableListView(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            onReorder: _onReorder,
-            padding: EdgeInsets.zero,
-            buildDefaultDragHandles: false,
-            proxyDecorator: (child, index, animation) {
-              _isDragging = true;
-              return Material(
-                elevation: 8,
-                shadowColor: Color(AppColors.shadow).withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(AppSizes.s12.r),
-                child: child,
-              );
+        if (_availableWidgets.isEmpty)
+          NoExistingPlaceholderScreen(
+              height: LayoutService.getHeight(context) * 0.4,
+              title: AppStrings.thereIsNoRequestsAndNotifications.tr())
+        else
+          // Reorderable widgets
+          Listener(
+            onPointerMove: (event) {
+              if (_isDragging) {
+                _handlePointerMove(event);
+              }
             },
-            children: List.generate(_availableWidgets.length, (index) {
-              final widgetType = _availableWidgets[index];
-              return _buildReorderableWidgetItem(widgetType, viewModel, index);
-            }),
+            onPointerUp: (event) {
+              _isDragging = false;
+              _autoScrollTimer?.cancel();
+            },
+            onPointerCancel: (event) {
+              _isDragging = false;
+              _autoScrollTimer?.cancel();
+            },
+            child: ReorderableListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              onReorder: _onReorder,
+              padding: EdgeInsets.zero,
+              buildDefaultDragHandles: false,
+              proxyDecorator: (child, index, animation) {
+                _isDragging = true;
+                return Material(
+                  elevation: 8,
+                  shadowColor: Color(AppColors.shadow).withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(AppSizes.s12.r),
+                  child: child,
+                );
+              },
+              children: List.generate(_availableWidgets.length, (index) {
+                final widgetType = _availableWidgets[index];
+                return _buildReorderableWidgetItem(widgetType, viewModel, index);
+              }),
+            ),
           ),
-        ),
       ],
     );
   }
