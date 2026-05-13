@@ -2297,8 +2297,8 @@ abstract class MainFabServices {
               result = await FingerprintService.addGPSFingerprint(
                   context: context,
                   type: 'fp_navigate',
-                  lat: double.parse(CacheHelper.getString('lat') ?? '0'),
-                  long: double.parse(CacheHelper.getString('long') ?? '0'),
+                  lat: double.tryParse(CacheHelper.getString('lat') ?? '0') ?? 0.0,
+                  long: double.tryParse(CacheHelper.getString('long') ?? '0') ?? 0.0,
                   files: uploadFaceFiles,
                   noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 

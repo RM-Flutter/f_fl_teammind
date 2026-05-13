@@ -94,7 +94,6 @@ class MainAppFabWidget extends StatelessWidget {
     );
   }
 }
-
 /* OLD ACTION BUTTONS
 class HomeFloatingActionsButtons extends StatelessWidget {
   const HomeFloatingActionsButtons({

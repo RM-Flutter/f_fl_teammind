@@ -63,9 +63,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
             child: MainAppFabWidget(requests: false,viewRequest: false,),
           ),
           pageContext: context,
-          bottomAppbarWidget: widget.empId != null &&
-                  widget.empId?.isNotEmpty == true &&
-                  viewModel.userSettings?.userId.toString() != widget.empId
+          bottomAppbarWidget: widget.empId != null && widget.empId?.isNotEmpty == true && viewModel.userSettings?.userId.toString() != widget.empId
               ? PreferredSize(
                   preferredSize: Size.fromHeight(AppSizes.s40.h),
                   child: Padding(
@@ -89,8 +87,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                 )
               : null,
           title: locale.tr(AppStrings.fingerprintsTitle),
-          onRefresh: () async => await viewModel.initializeFingerprintScreen(
-              context: context, empId: widget.empId),
+          onRefresh: () async => await viewModel.initializeFingerprintScreen(context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
