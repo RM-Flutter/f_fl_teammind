@@ -31,6 +31,8 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routing/app_router.dart';
 import '../../tasks/views/main_tasks_layout/widgets/task_list_tile_widget.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -266,12 +268,28 @@ class _HomeScreenState extends State<HomeScreen> {
     _availableWidgets = <HomeWidgetType>[];
     final widgetsWithData = <HomeWidgetType>[];
 
+    var jsonString = CacheHelper.getString("US1");
+    if (jsonString.isNotEmpty) {
+      try {
+        var gCache = json.decode(jsonString) as Map<String, dynamic>;
+        UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+      } catch (e) {
+        debugPrint('Error decoding US1: $e');
+      }
+    }
+
+    bool isManager = UserSettingConst.userSettings?.isManagerIn?.isNotEmpty == true;
+    bool isTeamLeader = UserSettingConst.userSettings?.isTeamleaderIn?.isNotEmpty == true;
+    bool isHR = UserSettingConst.userSettings?.isHr == true;
+    bool topManagement = UserSettingConst.userSettings?.topManagement == true;
+    bool canSeeTeamRequests = isManager || isHR || topManagement || isTeamLeader;
+
     // First, collect all widgets that have data
     if (viewModel.myRequests != null &&
         viewModel.myRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myRequests);
     }
-    if (viewModel.myTeamRequests != null &&
+    if (canSeeTeamRequests && viewModel.myTeamRequests != null &&
         viewModel.myTeamRequests?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myTeamRequests);
     }
@@ -444,6 +462,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget  _buildShortcutActions(BuildContext context) {
+    var jsonString = CacheHelper.getString("US1");
+    if (jsonString.isNotEmpty) {
+      try {
+        var gCache = json.decode(jsonString) as Map<String, dynamic>;
+        UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+      } catch (e) {
+        debugPrint('Error decoding US1: $e');
+      }
+    }
+
+    bool isManager = UserSettingConst.userSettings?.isManagerIn?.isNotEmpty == true;
+    bool isTeamLeader = UserSettingConst.userSettings?.isTeamleaderIn?.isNotEmpty == true;
+    bool isHR = UserSettingConst.userSettings?.isHr == true;
+    bool topManagement = UserSettingConst.userSettings?.topManagement == true;
+    bool canSeeTeamRequests = isManager || isHR || topManagement || isTeamLeader;
+
     final List<Map<String, dynamic>> items = [
       {
         'title': AppStrings.addRequestsShortcut.tr(),
@@ -460,15 +494,16 @@ class _HomeScreenState extends State<HomeScreen> {
         'onTap': () => context.pushNamed(AppRoutes.taskScreen.name,
             pathParameters: {'lang': context.locale.languageCode})
       },
-      {
-        'title': AppStrings.myTeamRequestsShortcut.tr(),
-        'icon': 'assets/images/my-team-request.png',
-        'onTap': () => context.pushNamed(AppRoutes.requests2.name,
-            pathParameters: {
-              'type': GetRequestsTypes.myTeam.name,
-              'lang': context.locale.languageCode
-            })
-      },
+      if (canSeeTeamRequests)
+        {
+          'title': AppStrings.myTeamRequestsShortcut.tr(),
+          'icon': 'assets/images/my-team-request.png',
+          'onTap': () => context.pushNamed(AppRoutes.requests2.name,
+              pathParameters: {
+                'type': GetRequestsTypes.myTeam.name,
+                'lang': context.locale.languageCode
+              })
+        },
       {
         'title': AppStrings.viewPayrollShortcut.tr(),
         'icon': 'assets/images/view-payroll.png',

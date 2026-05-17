@@ -262,10 +262,6 @@ class AddNewRequestController extends ChangeNotifier {
     // check if the type is days then show the date range picker
     await _selectDateRange(context);
     if (selectedDateOrDatetimeRange == null) {
-      AlertsService.warning(
-          context: context,
-          message: AppStrings.pleaseSelectRequestDuration.tr(),
-          title: AppStrings.warning.tr());
       return;
     }
     controller.text = formatDateTimeRange(context,selectedDateOrDatetimeRange!);

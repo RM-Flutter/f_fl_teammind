@@ -38,33 +38,25 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     await _getEmployeeData(context: context, employeeId: employeeId);
     updateLoadingStatus(laodingValue: false);
   }
- getSaleryAdvance(BuildContext context, {bool getTeam = true, empId})async{
-    isLoading = true;
-    notifyListeners();
+  Future<void> getSaleryAdvance(BuildContext context, {bool getTeam = true, empId}) async {
     await DioHelper.getData(
         url: "/emp-salary-advances/entities-operations",
       query: {
-          // "get_team" : getTeam,
-          // "with" : "payroll_id",
           "emp_id" : empId
       },
       context: context,
     ).then((v){
       if(v.data['status'] == true){
         salaryAdvances = v.data['data'];
-        isLoading = false;
-        notifyListeners();
       }
     }).catchError((error){
-      isLoading = false;
-      notifyListeners();
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
       }
     });
-}
+  }
   Future<void> _getEmployeeData(
       {required BuildContext context, required String employeeId}) async {
     try {
@@ -79,9 +71,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
           "error while getting Employee Details  ${err.toString()} at :- $t");
     }
   }
-  getTeamEvaluation(context, empId){
-    isLoading = true;
-    notifyListeners();
+  Future<void> getTeamEvaluation(context, empId) async {
     var jsonString;
     var gCache;
     jsonString = CacheHelper.getString("US1");
@@ -89,9 +79,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    debugPrint("EMD ID IS --> ${empId.toString()}");
-    debugPrint("EMD ID TWO IS --> ${gCache['employee_profile_id'].toString()}");
-    DioHelper.getData(
+    await DioHelper.getData(
       context: context,
         url: (gCache['employee_profile_id'].toString() == empId.toString())? "/rm_evaluation/v1/evaluation/emp_evaluations":"/rm_evaluation/v1/evaluation/emp_evaluations",
         query: (gCache['employee_profile_id'].toString() != empId.toString())?{
@@ -103,11 +91,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
           }else{
             debugPrint('false');
           }
-          isLoading = false;
-          notifyListeners();
     }).catchError((error){
-      isLoading = false;
-      notifyListeners();
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {

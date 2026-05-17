@@ -52,26 +52,36 @@ class ProfileTile extends StatelessWidget {
               style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 13.sp),
               ),
             )
-          : icon != null && trailingTitle != null
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    icon ?? const SizedBox.shrink(),
-                    SizedBox(width: 12.w),
-                    Text(title,
-                    style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
-                    const Spacer(),
-                    if(isList == false)
-                      AutoSizeText(
-                        trailingTitle ?? '',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),
-                        textAlign: TextAlign.end,
-                      ),
-                    if(isList == true)Container(
-                      alignment: Alignment.centerRight,
-                      height: 15.h,
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  icon!,
+                  SizedBox(width: 12.w),
+                ],
+                Expanded(
+                  flex: 3,
+                  child: Text(title,
+                  style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
+                ),
+                SizedBox(width: 8.w),
+                if (isList == false && trailingTitle != null)
+                  Expanded(
+                    flex: 4,
+                    child: AutoSizeText(
+                      trailingTitle!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                if (isList == true && weekends != null)
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      alignment: LocalizationService.isArabic(context: context) ? Alignment.centerLeft : Alignment.centerRight,
+                      height: 18.h,
                       child: ListView.separated(
                           padding: EdgeInsets.zero,
                           scrollDirection: Axis.horizontal,
@@ -84,14 +94,14 @@ class ProfileTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: AppStyles.blackContent(context).copyWith(
                                 fontWeight: FontWeight.w700, fontSize: 14.sp),
-                            textAlign: TextAlign.end,
+                            textAlign: LocalizationService.isArabic(context: context) ? TextAlign.end : TextAlign.start,
                           ),
                           separatorBuilder: (context, index) => SizedBox(width: 4.w,child: Text(index == weekends!.length - 1 ? "" : ",", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),),),
                           itemCount: weekends!.length),
-                    )
-                  ],
-                )
-              : const SizedBox.shrink(),
+                    ),
+                  )
+              ],
+            ),
     );
   }
 }

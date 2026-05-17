@@ -503,12 +503,23 @@ abstract class AppSettingsService {
   /// used to get request title
   static String? getRequestTitleFromGenenralSettings(
       {String? requestId, required BuildContext context}) {
-    GeneralSettingsModel? generalSettingss;
-    if (UserSettingConst.generalSettingsModel != null && UserSettingConst.generalSettingsModel!.requestTypes!.keys.contains(requestId) ?? false) {
+    if (UserSettingConst.generalSettingsModel == null) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        try {
+          var decoded = json.decode(jsonString);
+          UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(decoded);
+        } catch (e) {
+          debugPrint("Error parsing USG cache: $e");
+        }
+      }
+    }
+
+    if (UserSettingConst.generalSettingsModel != null && UserSettingConst.generalSettingsModel!.requestTypes != null && UserSettingConst.generalSettingsModel!.requestTypes!.keys.contains(requestId)) {
       if(LocalizationService.isArabic(context: context)){
-        return UserSettingConst.generalSettingsModel!.requestTypes?[requestId]?.title!.ar;
+        return UserSettingConst.generalSettingsModel!.requestTypes![requestId]?.title?.ar;
       }else{
-        return UserSettingConst.generalSettingsModel!.requestTypes?[requestId]?.title!.en;
+        return UserSettingConst.generalSettingsModel!.requestTypes![requestId]?.title?.en;
       }
     }
     return null;

@@ -41,9 +41,13 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     final jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty) {
       gCache = json.decode(jsonString);
-      currentUserId = gCache!['id'];
-      if (currentUserId == null && gCache!['employee_profile_id'] != null) {
+      // Use employee_profile_id first (matches what the API stores on the request)
+      if (gCache!['employee_profile_id'] != null) {
         currentUserId = int.tryParse(gCache!['employee_profile_id'].toString());
+      }
+      // Fallback to user id if employee_profile_id is missing
+      if (currentUserId == null && gCache!['id'] != null) {
+        currentUserId = int.tryParse(gCache!['id'].toString());
       }
     }
   }
@@ -162,15 +166,20 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
 
                       // Complaint Button
                       if (isMyRequest && (widget.request.status == 'rejected' || widget.request.status == 'refused')) ...[
-                        Center(
-                          child: CustomRequestDetailsButton(
-                            title: AppStrings.complaint.tr(),
-                            onPressed: () async {
-                               context.pushNamed(
-                                  AppRoutes.newComplainScreen.name,
-                                  pathParameters: {'lang': context.locale.languageCode}
-                               );
-                            },
+                        SizedBox(
+                          height: 55.h,
+                          child: Row(
+                            children: [
+                              CustomRequestDetailsButton(
+                                title: AppStrings.complaint.tr(),
+                                onPressed: () async {
+                                   context.pushNamed(
+                                      AppRoutes.newComplainScreen.name,
+                                      pathParameters: {'lang': context.locale.languageCode}
+                                   );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ]
@@ -249,17 +258,6 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
             borderRadius: BorderRadius.circular(8.r),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20.r,
-                  backgroundColor: Color(AppColors.buttons).withOpacity(0.1),
-                  backgroundImage: (reply.managerPhoto != null && reply.managerPhoto!.isNotEmpty)
-                      ? CachedNetworkImageProvider(reply.managerPhoto!)
-                      : null,
-                  child: (reply.managerPhoto == null || reply.managerPhoto!.isEmpty)
-                      ? Icon(Icons.person, size: 22.r, color: Color(AppColors.buttons))
-                      : null,
-                ),
-                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -70,26 +70,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                   widget.empName != null &&
                   widget.empName?.isNotEmpty == true &&
                   UserSettingConst.userSettings?.userId.toString() != widget.empId
-              ? PreferredSize(
-                  preferredSize: Size.fromHeight(AppSizes.s40.h),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.s12.w, vertical: AppSizes.s6.h),
-                    child: Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        widget.empName!,
-                        style: AppStyles.heading(context).copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: AppSizes.s20.sp),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                )
+              ? null
               : null,
           pageContext: context,
           title: AppStrings.rewardsAndPenalties.tr(),
@@ -157,6 +138,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                             (rewardAndPenalty) =>
                                                 RewardAndPenaltyCardWidget(
                                                   rewardAndPenalty: rewardAndPenalty,
+                                                  isTeam: true,
                                                 )),
                                     ])),
                 ),

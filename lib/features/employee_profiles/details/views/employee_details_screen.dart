@@ -138,50 +138,35 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                         horizontal: AppSizes.s8.w,
                                         vertical: AppSizes.s8.h),
-                                    child: Column(
-                                      children: [
-                                        if(selectIndex == 0)  ContactsSectionWidget(
-                                            employee:
-                                            viewModel.employee),
-
-                                        //GENERAL SECTION
-                                        if(selectIndex == 1)   SingleChildScrollView(
-                                          child: SizedBox(
-                                            height: MediaQuery.sizeOf(context).height * 0.5,
-                                            child: GeneralSectionWidget(
-                                                employee:
-                                                viewModel.employee),
-                                          ),
-                                        ),
-                                        //ACCOUNTS
-                                        if(selectIndex == 2) AccountsSectionWidget(
-                                          employee: viewModel.employee,
-                                          salaryAdvance: viewModel.salaryAdvances ?? [],
-                                        ),
-                                        //REQUESTS SECTION
-                                        if(selectIndex == 3)   RequestsSectionWidget(
-                                            employee:
-                                            viewModel.employee),
-                                        if(selectIndex == 4) EvalutaionSectionWidget( employee:
-                                        viewModel.employee,
-                                          evaluations: viewModel.evaluations,
-                                          id : viewModel.employee!.id.toString(),
-                                          empName : viewModel.employee!.name.toString(),
-                                        ),
-                                        if(selectIndex == 5) SizedBox(
-                                          child: SizedBox(
-                                            height: MediaQuery.sizeOf(context).height * 0.5,
-                                            child: AssetsSectionWidget( employee:
-                                            viewModel.employee,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
+                                    child: Builder(
+                                      builder: (context) {
+                                        if (selectIndex == 0) {
+                                          return ContactsSectionWidget(employee: viewModel.employee);
+                                        } else if (selectIndex == 1) {
+                                          return GeneralSectionWidget(employee: viewModel.employee);
+                                        } else if (selectIndex == 2) {
+                                          return AccountsSectionWidget(
+                                            employee: viewModel.employee,
+                                            salaryAdvance: viewModel.salaryAdvances ?? [],
+                                          );
+                                        } else if (selectIndex == 3) {
+                                          return RequestsSectionWidget(employee: viewModel.employee);
+                                        } else if (selectIndex == 4) {
+                                          return EvalutaionSectionWidget(
+                                            employee: viewModel.employee,
+                                            evaluations: viewModel.evaluations,
+                                            id: viewModel.employee!.id.toString(),
+                                            empName: viewModel.employee!.name.toString(),
+                                          );
+                                        } else if (selectIndex == 5) {
+                                          return AssetsSectionWidget(employee: viewModel.employee);
+                                        }
+                                        return const SizedBox.shrink();
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],

@@ -171,7 +171,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                 },
                                                 child: Text(
                                                     AppStrings.send.tr(),
-                                                    style: AppStyles.blackContent(context).copyWith(
+                                                    style: AppStyles.whiteContent(context).copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontSize: 14.sp)),
