@@ -23,6 +23,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
 
     _audioPlayer.setUrl(widget.audioUrl);
     _audioPlayer.durationStream.listen((d) {
+      if (!mounted) return;
       if (d != null) {
         setState(() {
           _duration = d;
@@ -31,12 +32,14 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
     });
 
     _audioPlayer.positionStream.listen((p) {
+      if (!mounted) return;
       setState(() {
         _position = p;
       });
     });
 
     _audioPlayer.playerStateStream.listen((state) {
+      if (!mounted) return;
       setState(() {
         _isPlaying = state.playing;
       });

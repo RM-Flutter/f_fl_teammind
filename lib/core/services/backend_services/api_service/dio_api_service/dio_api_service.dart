@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,10 +22,13 @@ import '../../../telegram_error_service.dart';
 import '../../api_service_helpers.dart';
 import '../../backend_services_interface.dart';
 import 'dio_adapter_reset.dart' as adapter_reset;
+import 'dio.dart';
 
 class DioApiService implements BackEndServicesInterface {
   static final DioApiService _singleton = DioApiService._internal();
   late Dio _dio;
+
+  Dio get _effectiveDio => DioHelper.dio ?? _dio;
 
   factory DioApiService() {
     return _singleton;
@@ -42,6 +46,7 @@ class DioApiService implements BackEndServicesInterface {
         // Follow redirects
         followRedirects: true,
         maxRedirects: 5,
+        receiveDataWhenStatusError: true,
       ),
     );
 
@@ -288,7 +293,7 @@ class DioApiService implements BackEndServicesInterface {
         bool? allData = false,
         required BuildContext context}) async {
     try {
-      final response = await _dio.get(
+      final response = await _effectiveDio.get(
         url,
         data: data,
         queryParameters: queryParameters,
@@ -386,7 +391,7 @@ class DioApiService implements BackEndServicesInterface {
         bool? checkOnTokenExpiration = true,
       }) async {
     try {
-      final response = await _dio.post(
+      final response = await _effectiveDio.post(
         url,
         data: jsonEncode(data),
         options: Options(
@@ -476,16 +481,35 @@ class DioApiService implements BackEndServicesInterface {
       if (files.isNotEmpty) {
         for (var file in files) {
           for (var fileItem in file.files) {
-            if (fileItem.bytes != null) {
+            Uint8List? fileBytes = fileItem.bytes;
+            if (fileBytes == null && fileItem.path != null) {
+              try {
+                final localFile = File(fileItem.path!);
+                if (localFile.existsSync()) {
+                  fileBytes = localFile.readAsBytesSync();
+                }
+              } catch (e) {
+                debugPrint('Error reading bytes from file path: $e');
+              }
+            }
+
+            if (fileBytes != null) {
               String mimeType =
                   lookupMimeType(fileItem.name) ?? 'application/octet-stream';
+
+              MediaType mediaType;
+              try {
+                mediaType = MediaType.parse(mimeType);
+              } catch (_) {
+                mediaType = MediaType('application', 'octet-stream');
+              }
 
               formData.files.add(MapEntry(
                 fileFieldName ?? 'files[]',
                 MultipartFile.fromBytes(
-                  fileItem.bytes!,
+                  fileBytes,
                   filename: fileItem.name,
-                  contentType: MediaType.parse(mimeType),
+                  contentType: mediaType,
                 ),
               ));
             }
@@ -498,7 +522,7 @@ class DioApiService implements BackEndServicesInterface {
       headers.remove('Content-Type'); // Let Dio handle it for FormData
       
       // Send the request
-      final response = await _dio.post(
+      final response = await _effectiveDio.post(
         _getUri(url).toString(),
         data: formData,
         options: Options(headers: headers),

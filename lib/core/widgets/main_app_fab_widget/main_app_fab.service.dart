@@ -18,6 +18,7 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart'
@@ -1957,20 +1958,45 @@ abstract class MainFabServices {
           return StreamBuilder<List<ScanResult>>(
             stream: FlutterBluePlus.scanResults,
             builder: (context, snapshot) {
-              final results = snapshot.data?.where((r) => r.device.name.isNotEmpty).toList() ?? [];
+              final uniqueResults = <String, ScanResult>{};
+              final results = snapshot.data ?? [];
+              
+              String getDeviceName(ScanResult r) {
+                try {
+                  if (r.advertisementData.advName.isNotEmpty) return r.advertisementData.advName;
+                } catch (_) {}
+                try {
+                  // Fallback for older versions of flutter_blue_plus
+                  if ((r.advertisementData as dynamic).localName.isNotEmpty) return (r.advertisementData as dynamic).localName;
+                } catch (_) {}
+                try {
+                  if (r.device.platformName.isNotEmpty) return r.device.platformName;
+                } catch (_) {}
+                return r.device.name;
+              }
 
-              if (results.isEmpty) {
+              for (var r in results) {
+                final name = getDeviceName(r);
+                if (name.isNotEmpty) {
+                  uniqueResults[r.device.remoteId.toString()] = r;
+                }
+              }
+              final uniqueList = uniqueResults.values.toList();
+
+              if (uniqueList.isEmpty) {
                 return  Center(child: Text('${AppStrings.scanningForDevices.tr()}'));
               }
               return ListView.builder(
-                itemCount: results.length,
+                itemCount: uniqueList.length,
                 itemBuilder: (context, index) {
-                  final result = results[index];
+                  final result = uniqueList[index];
+                  final name = getDeviceName(result);
                   return ListTile(
                     title: Text(
-                      result.device.name.isEmpty ? AppStrings.unknownDevice.tr() : result.device.name,
+                      name.isEmpty ? AppStrings.unknownDevice.tr() : name,
                       style: const TextStyle(color: Colors.black),
                     ),
+                    subtitle: Text(result.device.remoteId.toString(), style: const TextStyle(color: Colors.grey, fontSize: 12)),
                     onTap: ()async{
                       await FlutterBluePlus.stopScan();
                       Navigator.pop(context, result);
@@ -2044,16 +2070,6 @@ abstract class MainFabServices {
   static Future<void> addFingerprintUsingWiFi({required BuildContext context,}) async {
     try {
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
-      final status = await WiFiScan.instance.canStartScan();
-      if (status != CanStartScan.yes) {
-        AlertsService.warning(
-          context: context,
-          message: AppStrings.pleaseEnableWifiFirst.tr(),
-          title: AppStrings.warning.tr(),
-        );
-        AppSettings.openAppSettings(type: AppSettingsType.wifi);
-        return;
-      }
       _CapturedFaceData? capturedFace;
       final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
       if (showFaceVerify) {
@@ -2067,37 +2083,63 @@ abstract class MainFabServices {
       uploadFaceImage && capturedFace != null
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
-      // Check for Wi-Fi scan permissions
 
-      // Start scanning for Wi-Fi networks
-      await WiFiScan.instance.startScan();
+      List<Map<String, String>> availableNetworks = [];
 
-      // Get the list of Wi-Fi networks
-      final List<WiFiAccessPoint> wifiNetworks =
-      await WiFiScan.instance.getScannedResults();
+      try {
+        final status = await WiFiScan.instance.canStartScan();
+        if (status == CanStartScan.yes) {
+          await WiFiScan.instance.startScan();
+        } else {
+          debugPrint('⚠️ WiFi scan not started. Status: $status. Proceeding with cached/current results...');
+        }
+        final scanned = await WiFiScan.instance.getScannedResults();
+        for (var net in scanned) {
+          if (net.ssid != null && net.ssid.isNotEmpty) {
+            availableNetworks.add({'ssid': net.ssid, 'bssid': net.bssid});
+          }
+        }
+      } catch (e) {
+        debugPrint('⚠️ Error scanning WiFi: $e');
+      }
 
-      if (wifiNetworks.isEmpty) {
+      // Always try to add the currently connected network as a fallback (especially for iOS or throttled Android)
+      try {
+        final networkInfo = NetworkInfo();
+        final String? wifiName = await networkInfo.getWifiName(); // SSID
+        final String? wifiBSSID = await networkInfo.getWifiBSSID(); // MAC Address
+        
+        if (wifiBSSID != null && wifiBSSID.isNotEmpty && wifiBSSID != "02:00:00:00:00:00") {
+          final formattedName = (wifiName != null && wifiName.isNotEmpty) ? wifiName.replaceAll('"', '') : 'Connected Network';
+          final exists = availableNetworks.any((net) => net['bssid'] == wifiBSSID);
+          if (!exists) {
+            availableNetworks.insert(0, {'ssid': formattedName, 'bssid': wifiBSSID});
+          }
+        }
+      } catch (e) {
+        debugPrint('⚠️ Error getting connected WiFi: $e');
+      }
+
+      if (availableNetworks.isEmpty) {
         AlertsService.warning(
           context: context,
-          message: AppStrings.noWiFiNetworksFound.tr(),
+          message: AppStrings.pleaseEnableWifiFirst.tr(),
           title: AppStrings.warning.tr(),
         );
+        AppSettings.openAppSettings(type: AppSettingsType.wifi);
         return;
       }
 
       // Show available Wi-Fi networks in a popup or sheet
-      final List<WiFiAccessPoint> filteredNetworks = wifiNetworks
-          .where((net) => net.ssid != null && net.ssid.trim().isNotEmpty)
-          .toList();
-      final selectedNetwork = await showModalBottomSheet<WiFiAccessPoint>(
+      final selectedNetwork = await showModalBottomSheet<Map<String, String>>(
         context: context,
         builder: (context) {
           return ListView.builder(
-            itemCount: filteredNetworks.length,
+            itemCount: availableNetworks.length,
             itemBuilder: (context, index) {
-              final network = filteredNetworks[index];
+              final network = availableNetworks[index];
               return ListTile(
-                title: Text(network.ssid != null && network.ssid.toString().isNotEmpty ? network.ssid : AppStrings.unknownDevice.tr()),
+                title: Text(network['ssid'] ?? AppStrings.unknownDevice.tr()),
                 onTap: () => Navigator.pop(context, network),
               );
             },
@@ -2108,8 +2150,8 @@ abstract class MainFabServices {
       if (selectedNetwork == null) return;
 
       // Prepare the data to send to the server
-      final wifiData = {'mac_address': selectedNetwork.bssid};
-      print( "mac_address -> ${selectedNetwork.bssid}");
+      final wifiData = {'mac_address': selectedNetwork['bssid']};
+      print( "mac_address -> ${selectedNetwork['bssid']}");
       var result;
       customAlertDialogWithTwoButtons(
           context,
@@ -2124,7 +2166,7 @@ abstract class MainFabServices {
             try {
               result = await FingerprintService.addWifiFingerprint(
                   context: context,
-                  data: selectedNetwork.bssid.toString(),
+                  data: selectedNetwork['bssid'].toString(),
                   files:  uploadFaceFiles,
                   noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 

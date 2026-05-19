@@ -525,9 +525,9 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.requestsById.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = (state.extra as Map<String, dynamic>)['offset'] as Offset?;
-                  String? userId = (state.extra
-                  as Map<String, dynamic>)['userId'] as String?;
+                  final extra = state.extra is Map<String, dynamic> ? state.extra as Map<String, dynamic> : null;
+                  Offset? begin = extra?['offset'] as Offset?;
+                  String? userId = extra?['userId'] as String?;
                   String? id = state.pathParameters['id'];
                   final type = state.pathParameters['type'] ?? '';
                   final animationController = AnimationController(
@@ -1622,12 +1622,10 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.rewardsAndPenalties.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = (state.extra
-                  as Map<String, dynamic>)['offset'] as Offset?;
-                  String? employeeName = (state.extra
-                  as Map<String, dynamic>)['employeeName'] as String?;
-                  String? employeeId = (state.extra
-                  as Map<String, dynamic>)['employeeId'] as String?;
+                  final extra = state.extra is Map<String, dynamic> ? state.extra as Map<String, dynamic> : null;
+                  Offset? begin = extra?['offset'] as Offset?;
+                  String? employeeName = extra?['employeeName'] as String?;
+                  String? employeeId = extra?['employeeId'] as String?;
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1757,12 +1755,10 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.payrollsList.name,
         pageBuilder: (context, state) {
-          Offset? begin =
-          (state.extra as Map<String, dynamic>)['offset'] as Offset?;
-          String? employeeName = (state.extra
-          as Map<String, dynamic>)['employeeName'] as String?;
-          String? employeeId =
-          (state.extra as Map<String, dynamic>)['employeeId'] as String?;
+          final extra = state.extra is Map<String, dynamic> ? state.extra as Map<String, dynamic> : null;
+          Offset? begin = extra?['offset'] as Offset?;
+          String? employeeName = extra?['employeeName'] as String?;
+          String? employeeId = extra?['employeeId'] as String?;
           final animationController = AnimationController(
             vsync: ticker,
           );

@@ -143,7 +143,7 @@ abstract class LocationService {
       debugPrint('⚠️ Error checking fake GPS: $e');
       debugPrint('Stack trace: $stackTrace');
       return {
-        'isFakeGPS': true,
+        'isFakeGPS': false,
         'isMockLocation': false,
         'message': 'Error checking GPS: $e',
       };

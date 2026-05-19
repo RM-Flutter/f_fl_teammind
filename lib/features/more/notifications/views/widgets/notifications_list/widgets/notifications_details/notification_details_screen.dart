@@ -18,6 +18,8 @@ import 'package:app_test/features/more/notifications/controllers/notification_co
 import 'package:app_test/features/more/notifications/views/widgets/notifications_list/widgets/notifications_details/widgets/notification_details_loading_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
+import '../../../../../../../../core/widgets/comments/comments_widget.dart';
+
 
 
 
@@ -208,27 +210,13 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 30.h),
-                                    _buildSectionHeader(AppStrings.comments.tr()),
-                                    SizedBox(height: 15.h),
-                                    _buildCommentsList(values.comments),
-                                    SizedBox(height: 30.h),
-                                    _buildSectionHeader(AppStrings.addNewComment.tr()),
-                                    SizedBox(height: 20.h),
-                                    if (value.notificationModel!.commentStatus!.key == "enable")
-                                      Padding(
-                                        padding: EdgeInsets.only(bottom: 20.h),
-                                        child: SendCommentWidget(widget.id, "rmnotifications"),
-                                      )
-                                    else
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 20.h),
-                                        child: Text(
-                                          AppStrings.theCommentOnThisRequestHasBeenClosedByTheAdmin.tr(),
-                                          style: AppStyles.redContent(context).copyWith( fontSize: 14.sp, fontWeight: FontWeight.w500),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
+                                    CommentsWidget(
+                                      "rmnotifications",
+                                      id: widget.id,
+                                      comments: values.comments,
+                                      enable: value.notificationModel!.commentStatus!.key,
+                                      // isNotificationDetails: true,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -244,108 +232,6 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
           );
         } ,
       ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Row(
-      children: [
-        Expanded(child: Divider(color: const Color(0xFFE8ECF0), thickness: 1.h)),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w),
-          child: Text(
-            title.toUpperCase(),
-            style:  AppStyles.whiteHeading(context).copyWith(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        Expanded(child: Divider(color: const Color(0xFFE8ECF0), thickness: 1.h)),
-      ],
-    );
-  }
-
-  Widget _buildCommentsList(List<dynamic> comments) {
-    if (comments.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.h),
-        child: Center(
-          child: Text(
-            AppStrings.noCommentsFound.tr(),
-            style: AppStyles.greyContent(context).copyWith(fontSize: 14.sp),
-          ),
-        ),
-      );
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      itemCount: comments.length,
-      itemBuilder: (context, index) {
-        final comment = comments[index];
-        DateTime utcDateTime = DateTime.parse("${comment['created_at']}");
-        String formattedDate = DateFormat("dd/MM/yyyy hh:mm:ss a", context.locale.languageCode).format(utcDateTime);
-
-        return Container(
-          margin: EdgeInsets.only(bottom: 12.h),
-          padding: EdgeInsets.all(12.r),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.r),
-            border: Border.all(color: const Color(0xFFF1F4F7)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.03),
-                blurRadius: 10.r,
-                offset: Offset(0, 4.h),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.all(4.r), // Increased padding for better white ring
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: const Color(0xFFF1F4F7), width: 1.w),
-                ),
-                child: CircleAvatar(
-                  radius: 28.r,
-                  backgroundColor: Colors.grey[200],
-                  backgroundImage: CachedNetworkImageProvider(comment['user']['avatar'] ?? ""),
-                ),
-              ),
-              SizedBox(width: 15.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      comment['content'] ?? "",
-                      style: AppStyles.darkContent(context).copyWith(
-                        fontSize: 13.sp,
-                        height: 1.4,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      formattedDate,
-                      style: AppStyles.greyContent(context).copyWith(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

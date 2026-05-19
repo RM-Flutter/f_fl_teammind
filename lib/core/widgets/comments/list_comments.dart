@@ -223,6 +223,8 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                               ),
                                               child: GestureDetector(
                                                 onTap: (){
+                                                  final String rawFileUrl = value.comments[index]['images'][0]['file'] ?? '';
+                                                  final String cleanFileUrl = rawFileUrl.replaceAll(RegExp(r'\s+'), '');
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -231,28 +233,34 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                                         imageUrls: [""],
                                                         one: true,
                                                         url: false,
-                                                        image: value.comments[index]['images'][0]['file'],
+                                                        image: cleanFileUrl,
                                                       ),
                                                     ),
                                                   );
                                                 },
-                                                child: CachedNetworkImage(
-                                                  imageUrl: value.comments[index]['images'][0]['file'],
-                                                  fit: BoxFit.cover,
-                                                  width: 94,
-                                                  height: 94,
-                                                  placeholder: (context, url) =>
-                                                  const ShimmerAnimatedLoading(),
-                                                  errorWidget: (context, url, error) => const Icon(
-                                                    Icons.image_not_supported_outlined,
-                                                    size: AppSizes.s32,
-                                                    color: Colors.white,
-                                                  ),
+                                                child: Builder(
+                                                  builder: (context) {
+                                                    final String rawUrl = value.comments[index]['images'][0]['thumbnail'] ?? value.comments[index]['images'][0]['file'] ?? '';
+                                                    final String cleanUrl = rawUrl.replaceAll(RegExp(r'\s+'), '');
+                                                    return CachedNetworkImage(
+                                                      imageUrl: cleanUrl,
+                                                      fit: BoxFit.cover,
+                                                      width: 94,
+                                                      height: 94,
+                                                      placeholder: (context, url) =>
+                                                      const ShimmerAnimatedLoading(),
+                                                      errorWidget: (context, url, error) => const Icon(
+                                                        Icons.image_not_supported_outlined,
+                                                        size: AppSizes.s32,
+                                                        color: Colors.white,
+                                                      ),
+                                                    );
+                                                  }
                                                 ),
                                               )
                                           ),
                                           if(value.comments[index]['sounds'].isNotEmpty)VoiceMessageWidget(
-                                            audioUrl: value.comments[index]['sounds'][0]['file'] ,
+                                            audioUrl: value.comments[index]['sounds'][0]['file']?.replaceAll(RegExp(r'\s+'), '') ?? '',
                                           )
                                         ],
                                       ),
