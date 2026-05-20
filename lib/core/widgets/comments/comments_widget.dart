@@ -154,6 +154,18 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              if (comments[index]['user']?['name'] != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 4.0),
+                                  child: Text(
+                                    comments[index]['user']['name'] ?? "",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                               if (comments[index]['content'] != null)
                                 Text(
                                   comments[index]['content'] ?? "",
