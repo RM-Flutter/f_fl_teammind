@@ -307,7 +307,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                             .contains(department['id']);
                                                         return CheckboxListTile(
                                                           value: isSelected,
-                                                          selectedTileColor: Color(AppColors.titleText),
+                                                          selectedTileColor: Color(AppColors.secondaryButton),
                                                           title: Text(department['title'], style: AppStyles.content(context).copyWith(fontSize: 14.sp)),
                                                           onChanged: (bool? value) {
                                                             setModalState(() {

@@ -127,7 +127,7 @@ class AuthenticationController extends ChangeNotifier {
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 5,
               backgroundColor: Color(AppColors.failureRed),
-              textColor: Color(AppColors.appBarText),
+              textColor: Color(0xffffffff),
               fontSize: 16.0
           );
           return;
@@ -140,7 +140,7 @@ class AuthenticationController extends ChangeNotifier {
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 5,
               backgroundColor: Color(AppColors.failureRed),
-              textColor: Color(AppColors.appBarText),
+              textColor: Color(0xffffffff),
               fontSize: 16.0
           );
           return;
@@ -183,7 +183,7 @@ class AuthenticationController extends ChangeNotifier {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
             backgroundColor: Color(AppColors.failureRed),
-            textColor: Color(AppColors.appBarText),
+            textColor: Color(0xffffffff),
             fontSize: 16.0
         );
       }
@@ -395,7 +395,7 @@ class AuthenticationController extends ChangeNotifier {
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
                                           backgroundColor: Color(AppColors.failureRed),
-                                          textColor: Color(AppColors.appBarText),
+                                          textColor: Color(0xffffffff),
                                           fontSize: 16.0
                                       );
                                     }
@@ -473,7 +473,7 @@ class AuthenticationController extends ChangeNotifier {
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
                                       backgroundColor: Color(AppColors.failureRed),
-                                      textColor: Color(AppColors.appBarText),
+                                      textColor: Color(0xffffffff),
                                       fontSize: 16.0
                                   );
                                   return;
@@ -515,7 +515,7 @@ class AuthenticationController extends ChangeNotifier {
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
                                       backgroundColor: Color(AppColors.failureRed),
-                                      textColor: Color(AppColors.appBarText),
+                                      textColor: Color(0xffffffff),
                                       fontSize: 16.0
                                   );
                                 }
@@ -629,7 +629,7 @@ class AuthenticationController extends ChangeNotifier {
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
                                           backgroundColor: Color(AppColors.failureRed),
-                                          textColor: Color(AppColors.appBarText),
+                                          textColor: Color(0xffffffff),
                                           fontSize: 16.0
                                       );
                                     }
@@ -709,7 +709,7 @@ class AuthenticationController extends ChangeNotifier {
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
                                       backgroundColor: Color(AppColors.failureRed),
-                                      textColor: Color(AppColors.appBarText),
+                                      textColor: Color(0xffffffff),
                                       fontSize: 16.0
                                   );
                                   return;
@@ -746,7 +746,7 @@ class AuthenticationController extends ChangeNotifier {
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
                                       backgroundColor: Color(AppColors.failureRed),
-                                      textColor: Color(AppColors.appBarText),
+                                      textColor: Color(0xffffffff),
                                       fontSize: 16.0
                                   );
                                 }else{
@@ -757,7 +757,7 @@ class AuthenticationController extends ChangeNotifier {
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 5,
                                       backgroundColor: Color(AppColors.successGreen),
-                                      textColor: Color(AppColors.appBarText),
+                                      textColor: Color(0xffffffff),
                                       fontSize: 16.0
                                   );
                                 }

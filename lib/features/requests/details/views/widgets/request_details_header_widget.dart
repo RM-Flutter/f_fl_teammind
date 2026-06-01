@@ -233,7 +233,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
   @override
   Widget build(BuildContext context) {
-    final mainColor = Theme.of(context).colorScheme.primary;
+    final mainColor = Color(AppColors.buttons);
 
     final request = widget.request;
 
@@ -244,7 +244,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(28.r),
               bottomRight: Radius.circular(28.r),
@@ -318,7 +318,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                         ? Colors.red
                                         : request.status == "approved"
                                         ? Colors.green
-                                        : Color(AppColors.subTitleText),
+                                        : Color(0xff606060),
                                     textColor: Colors.white,
                                     toastLength: Toast.LENGTH_LONG,
                                     gravity: ToastGravity.TOP,
@@ -568,7 +568,7 @@ class _DownloadProgressDialog extends StatelessWidget {
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
                   backgroundColor: Colors.grey.shade300,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.secondaryButton)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                   minHeight: 8.h,
                   borderRadius: BorderRadius.circular(4.r),
                 ),
@@ -613,7 +613,7 @@ class InfoTileWidget extends StatelessWidget {
         this.trailing,
         this.imgColor});
 
-  Color get _imgColor => imgColor ?? Color(AppColors.secondaryButton);
+  Color get _imgColor => imgColor ?? Color(AppColors.buttons);
 
   @override
   Widget build(BuildContext context) {

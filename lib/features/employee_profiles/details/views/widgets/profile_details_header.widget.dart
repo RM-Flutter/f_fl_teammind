@@ -31,7 +31,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
       height: 350.h,
       width: LayoutService.getWidth(context),
       decoration: BoxDecoration(
-        color: Color(AppColors.titleText),
+        color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s32.r),
             bottomRight: Radius.circular(AppSizes.s32.r)),

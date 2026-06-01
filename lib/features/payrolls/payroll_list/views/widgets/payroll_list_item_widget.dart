@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -63,7 +64,7 @@ class PayrollListItemWidget extends StatelessWidget {
                   width: AppSizes.s28.r,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.primary),
+                      color: Color(AppColors.buttons)),
                   child: Icon(
                     Icons.arrow_forward_outlined,
                     color: Colors.white,

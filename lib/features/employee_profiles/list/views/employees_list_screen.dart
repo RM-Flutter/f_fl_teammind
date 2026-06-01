@@ -58,7 +58,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                           controller: viewModel.searchController,
                           onChanged: viewModel.updateSearchQuery,
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search, color: Color(AppColors.subTitleText), size: 20.sp),
+                              prefixIcon: Icon(Icons.search, color: Color(0xff606060), size: 20.sp),
                               hintText: AppStrings.searchByName.tr(),
                               hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14.sp),
                               filled: true,
@@ -77,7 +77,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                               ),
                               suffixIcon: viewModel.searchController.text.isNotEmpty 
                                   ? IconButton(
-                                      icon: Icon(Icons.close, color: Color(AppColors.subTitleText), size: 20.sp),
+                                      icon: Icon(Icons.close, color: Color(0xff606060), size: 20.sp),
                                       onPressed: viewModel.releaseSearchValuesAndFilters)
                                   : null,
                               isDense: true,

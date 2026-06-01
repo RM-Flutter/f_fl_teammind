@@ -77,7 +77,7 @@ class CreateCVContactTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
               ),
             ),
             if (isRequired)

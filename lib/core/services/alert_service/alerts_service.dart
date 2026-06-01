@@ -204,7 +204,7 @@ abstract class AlertsService {
                     child: Text(
                       message,
                       style: TextStyle(
-                          fontSize: AppSizes.s18, color: Color(AppColors.subTitleText)),
+                          fontSize: AppSizes.s18, color: Color(0xff606060)),
                       textAlign: TextAlign.center,
                       softWrap: true,
                       maxLines: 4,
@@ -241,7 +241,7 @@ abstract class AlertsService {
                           child: CustomElevatedButton(
                             width: AppSizes.s100,
                             backgroundColor:
-                            Theme.of(context).colorScheme.primary,
+                            Color(AppColors.buttons),
                             titleSize: AppSizes.s18,
                             title: AppStrings.yes.tr().toUpperCase(),
                             onPressed: onTap ??

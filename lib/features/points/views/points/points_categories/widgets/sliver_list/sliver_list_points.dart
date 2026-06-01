@@ -88,7 +88,7 @@ Widget defaultTap2BarItem({
               ? 200
               : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9),
           decoration: BoxDecoration(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.circular(25),
           ),
           child: ListView.builder(

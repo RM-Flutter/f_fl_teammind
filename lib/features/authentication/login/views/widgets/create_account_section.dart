@@ -44,21 +44,21 @@ class CreateAccountSection extends StatelessWidget {
                 onPressed: () => viewModel.showCreateAccountModal(context: context),
                 buttonStyle: ElevatedButton.styleFrom(
                   shadowColor: Color(AppColors.shadow),
-                  foregroundColor: Color(AppColors.appBarText),
+                  foregroundColor: Color(0xffffffff),
                   backgroundColor: Colors.transparent,
                   elevation: 2,
 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppSizes.s28.r),
                     side: BorderSide(
-                      color: Color(AppColors.appBarText),
+                      color: Color(0xffffffff),
                     ),
                   ),
                 ),
                 titleWidget: Text(
                   AppStrings.createNewAccount.tr(),
                   style: AppStyles.titleTextContent(context).copyWith(
-                    color: Color(AppColors.appBarText),
+                    color: Color(0xffffffff),
                     fontWeight: FontWeight.w400,
                     fontSize: 14.sp,
                   ),

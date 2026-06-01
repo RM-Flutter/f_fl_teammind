@@ -122,7 +122,7 @@ class _LoginFormState extends State<LoginForm> {
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 5,
                     backgroundColor: Color(AppColors.failureRed),
-                    textColor: Color(AppColors.appBarText),
+                    textColor: Color(0xffffffff),
                     fontSize: 16.0);
                 return;
               }
@@ -133,7 +133,7 @@ class _LoginFormState extends State<LoginForm> {
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 5,
                     backgroundColor: Color(AppColors.failureRed),
-                    textColor: Color(AppColors.appBarText),
+                    textColor: Color(0xffffffff),
                     fontSize: 16.0);
                 return;
               }

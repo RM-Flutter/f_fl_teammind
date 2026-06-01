@@ -67,7 +67,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                   child: Column(
                     children: [
                       if(viewModel.evaluations.isEmpty == true)    CustomElevatedButton(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Color(AppColors.buttons),
                           titleSize: AppSizes.s12.sp,
                           title: AppStrings.myEvaluations.tr().toUpperCase(),
                           onPressed: () async => await context.pushNamed(
@@ -107,7 +107,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                                         name: gCache['name'],
                                         icon : viewModel.evaluations[index]['done']  == true? Icon(Icons.check_circle_outline_rounded,
                                             color: Colors.green, size: AppSizes.s24.sp) : Icon(Icons.access_time,
-                                            color:  Color(AppColors.subTitleText), size: AppSizes.s24.sp),
+                                            color:  const Color(0xff606060), size: AppSizes.s24.sp),
                                         department: viewModel.evaluations[index]['department_name'],
                                         title: "${viewModel.evaluations[index]['title']}",
                                         url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,

@@ -9,7 +9,8 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
-      color: Color(AppColors.titleText),
+      // color: Color(AppColors.secondaryButton),
+      color: Colors.black,
       fontSize: isArabic ? 14.sp : 16.sp,
     );
   }
@@ -28,7 +29,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Cairo' : 'Poppins',
-      color: Color(AppColors.bodyTextColor),
+      color: const Color(0xff333333),
     );
   }
 
@@ -55,19 +56,20 @@ class AppStyles {
   /// Hint Content style
   static TextStyle hintContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.hintText),
+      color: const Color(0xFFA3A3A3),
     );
   }
 
   /// Subtitle Content style
   static TextStyle subtitleContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.subTitleText),
+      color: const Color(0xff606060),
     );
   }
 
   /// Primary color Content style (often used for links/buttons)
-  static TextStyle primaryContent(BuildContext context) {
+  static TextStyle
+  primaryContent(BuildContext context) {
     return content(context).copyWith(
       color: Color(AppColors.buttons),
     );
@@ -75,7 +77,7 @@ class AppStyles {
 
   static TextStyle secoundaryContent(BuildContext context) {
     return content(context).copyWith(
-      color: Theme.of(context).colorScheme.secondary,
+      color: Color(AppColors.secondaryButton),
     );
   }
 
@@ -96,7 +98,7 @@ class AppStyles {
   /// Dark Content style
   static TextStyle darkContent(BuildContext context) {
     return content(context).copyWith(
-      color: Color(AppColors.titleText),
+      color: Colors.black,
     );
   }
 
@@ -113,19 +115,6 @@ class AppStyles {
     );
   }
 
-  /// Dark Blue Content style
-  static TextStyle darkBlueContent(BuildContext context) {
-    return content(context).copyWith(
-      color: const Color(AppColors.darkBlue),
-    );
-  }
-
-  /// Grey 50 Content style
-  static TextStyle grey50Content(BuildContext context) {
-    return content(context).copyWith(
-      color: Color(AppColors.divider),
-    );
-  }
 
   /// oC2 Content style
   static TextStyle oC2Content(BuildContext context) {
@@ -140,21 +129,7 @@ class AppStyles {
       color: const Color(AppColors.grey52),
     );
   }
-
-  /// Grey 33 Content style
-  // static TextStyle bodyTextContent(BuildContext context) {
-  //   return content(context).copyWith(
-  //     color: Color(AppColors.bodyText),
-  //   );
-  // }
-
-  /// Grey 70 Content style
-  static TextStyle grey70Content(BuildContext context) {
-    return content(context).copyWith(
-      color: Color(AppColors.iconSecondary),
-    );
-  }
-
+  
   static TextStyle blackWithObacityContent(BuildContext context) {
     return content(context).copyWith(
       color: Color(AppColors.shadow),
@@ -182,7 +157,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Cairo' : 'Poppins',
-      color: Color(AppColors.titleText),
+      color: Colors.black,
     );
   }
 
@@ -190,7 +165,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Cairo' : 'Poppins',
-      color: Color(AppColors.bodyText),
+      color: const Color(0xff333333),
     );
   }
 
@@ -198,7 +173,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Cairo' : 'Poppins',
-      color: Color(AppColors.subTitleText),
+      color: const Color(0xff606060),
     );
   }
 
@@ -206,7 +181,7 @@ class AppStyles {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
       fontFamily: isArabic ? 'Cairo' : 'Poppins',
-      color: Color(AppColors.hintText),
+      color: const Color(0xFFA3A3A3),
     );
   }
 

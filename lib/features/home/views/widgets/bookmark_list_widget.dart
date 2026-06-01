@@ -148,7 +148,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
               style: TextStyle(
                 fontSize: AppSizes.s19,
                 fontWeight: FontWeight.w700,
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
               ),
             ),
           ),
@@ -179,7 +179,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
         margin: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
         padding: const EdgeInsets.all(AppSizes.s12),
         decoration: BoxDecoration(
-          color: Color(AppColors.titleText),
+          color: Color(AppColors.secondaryButton),
           borderRadius: BorderRadius.circular(AppSizes.s12),
           boxShadow: [
             BoxShadow(

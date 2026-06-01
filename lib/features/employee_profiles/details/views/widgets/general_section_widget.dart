@@ -75,11 +75,12 @@ class GeneralSectionWidget extends StatelessWidget {
               child: Text(employee!.jobDescription!,
               style: AppStyles.greyContent(context).copyWith(
                 fontWeight: FontWeight.w400,
-                color: const Color(0xff666666),
+                color:  const Color(0xff666666),
                 fontSize: 13.sp,
                 height: 1.5.h,
               ),
               ),
+
             ),
             SizedBox(height: 24.h),
           ],
@@ -108,7 +109,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.hireDate.tr().toUpperCase(),
                 trailingTitle: employee!.hireDate,
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
             //WORK HOURS TYPE
             if (employee?.workingHoursType != null &&
@@ -118,7 +119,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.workHoursType.tr().toUpperCase(),
                 trailingTitle: employee?.workingHoursType.toString().tr().toUpperCase() ?? '',
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
             if ((employee?.workingHoursType.toString().tr() == "عدد الساعات اليومية" ||
                 employee?.workingHoursType.toString().tr() == "According Hours Count" ) || (employee?.workingHoursType.toString().tr() == "ساعات حرة" ||
@@ -128,7 +129,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.hoursDailyCount.tr().toUpperCase(),
                 trailingTitle: employee!.workingHours!.dailyWorkingHours ?? '',
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
             // WORK HOURS
             if ((employee!.workingHours!.dailyWorkingHoursStart != null || employee!.workingHours!.dailyWorkingHoursEnd != null))
@@ -137,14 +138,14 @@ class GeneralSectionWidget extends StatelessWidget {
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursStart)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursStart.toString())
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),if ((employee!.workingHours!.dailyWorkingHoursFrom != null || employee!.workingHours!.dailyWorkingHoursTo != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursFrom)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursFrom.toString())
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
             if (employee?.workingHoursType.toString().tr() == "ساعات ثابتة" ||
                 employee?.workingHoursType.toString().tr() == "Fixed Hours" )
@@ -153,7 +154,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
                 trailingTitle: "${employee!.workingHours!.allowedDelayMinutes} ${AppStrings.minutes.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
             //WEEKENDS
             if (employee!.id.toString() != gCache['empId'].toString() && employee!.weekends != null&& employee!.weekends!.isNotEmpty )
@@ -162,7 +163,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: true,
                 title: AppStrings.weekends.tr().toUpperCase(),
                 weekends: employee!.weekends!.map((e) => e.toString().tr().toUpperCase()).toList(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
             if (employee!.id.toString() == gCache['empId'].toString() && us2Cache['weekend'] != null&&us2Cache['weekend']!.isNotEmpty )
               ProfileTile(
@@ -170,7 +171,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: true,
                 title: AppStrings.weekends.tr().toUpperCase(),
                 weekends: (us2Cache['weekend'] as List).map((e) => e.toString().tr().toUpperCase()).toList(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: const Color(0xff2F88FF)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
               ),
           ],
         ],

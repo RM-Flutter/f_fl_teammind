@@ -40,7 +40,7 @@ class GeneralDataScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.arrow_back, color: Color(AppColors.titleText), size: 24.r,),
+                              icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24.r,),
                               onPressed: () {
                                 Navigator.pop(context);
                               },

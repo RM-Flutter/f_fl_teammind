@@ -232,7 +232,7 @@ class _SmartCardCompanyDetailScreenState
                   decoration: InputDecoration(
                     labelText: AppStrings.profileName.tr(),
                     labelStyle: TextStyle(
-                      color: Color(AppColors.hintText),
+                      color: Color(0xFFA3A3A3),
                       fontSize: 12,
                     ),
                     filled: true,
@@ -368,7 +368,7 @@ class _SmartCardCompanyDetailScreenState
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -383,7 +383,7 @@ class _SmartCardCompanyDetailScreenState
           ),
           title: AppStrings.smartCard2.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -39,7 +40,7 @@ class FingerprintCardOffiline extends StatelessWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                  color: Color(AppColors.buttons).withOpacity(0.2),
                   offset: const Offset(0, 0),
                   blurRadius: 2.5,
                 ),
@@ -53,7 +54,7 @@ class FingerprintCardOffiline extends StatelessWidget {
                   width: AppSizes.s50.w,
                   padding: EdgeInsets.all(AppSizes.s4.w),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Color(AppColors.buttons),
                     borderRadius: BorderRadius.circular(AppSizes.s8.r),
                   ),
                   child: Column(
@@ -103,7 +104,7 @@ class FingerprintCardOffiline extends StatelessWidget {
                             Icon(
                               _getFingerprintTypeIcon(fingerprint![index]['type']),
                               size: 16.sp,
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Color(AppColors.buttons),
                             ),
                             SizedBox(width: 4.w),
                             Flexible(

@@ -118,7 +118,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 4.w),
                                   decoration: BoxDecoration(
-                                    color:  Theme.of(context).colorScheme.secondary,
+                                    color:  Color(AppColors.secondaryButton),
                                     borderRadius: BorderRadius.circular(AppSizes.s32.r),
                                   ),
                                   height: 60.h,

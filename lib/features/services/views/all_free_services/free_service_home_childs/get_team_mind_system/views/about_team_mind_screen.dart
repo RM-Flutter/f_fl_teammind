@@ -167,7 +167,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -176,7 +176,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
         ),
         title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.titleText),
+          color: Color(AppColors.secondaryButton),
           fontSize: 20,
         ),
         centerTitle: true,
@@ -293,17 +293,17 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                                           imageUrl: thumbUrl,
                                           fit: BoxFit.cover,
                                           placeholder: (_, __) => Container(
-                                            color: Color(AppColors.titleText).withOpacity(0.1),
+                                            color: Color(AppColors.secondaryButton).withOpacity(0.1),
                                             child: const Center(child: CircularProgressIndicator()),
                                           ),
                                           errorWidget: (_, __, ___) => Container(
-                                            color: Color(AppColors.titleText).withOpacity(0.1),
+                                            color: Color(AppColors.secondaryButton).withOpacity(0.1),
                                             child: const Icon(Icons.videocam_off, size: 48),
                                           ),
                                         );
                                       }
                                       return Container(
-                                        color: Color(AppColors.titleText).withOpacity(0.1),
+                                        color: Color(AppColors.secondaryButton).withOpacity(0.1),
                                       );
                                     },
                                   ),

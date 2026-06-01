@@ -122,7 +122,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
         (gCache!['is_teamleader_in'] != null && gCache!['is_teamleader_in'].isNotEmpty)
     );
 
-    final mainColor = Theme.of(context).colorScheme.primary;
+    final mainColor = Color(AppColors.buttons);
 
     return Scaffold(
       backgroundColor: Color(AppColors.background),
@@ -211,7 +211,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
           style: AppStyles.primaryContent(context).copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 16.sp,
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
           ),
         ),
       ],
@@ -430,7 +430,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
       width: 1.sw,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: Color(AppColors.titleText),
+        color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(28.r),
           bottomRight: Radius.circular(28.r),
@@ -600,7 +600,7 @@ class InfoTileWidget extends StatelessWidget {
     this.imgColor,
   });
 
-  Color get _imgColor => imgColor ?? Color(AppColors.secondaryButton);
+  Color get _imgColor => imgColor ?? Color(AppColors.buttons);
 
   @override
   Widget build(BuildContext context) {

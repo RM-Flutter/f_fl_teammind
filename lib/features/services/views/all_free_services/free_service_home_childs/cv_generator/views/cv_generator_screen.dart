@@ -54,7 +54,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -63,7 +63,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
         ),
         title: AppStrings.cvGenerator2.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.titleText),
+          color: Color(AppColors.secondaryButton),
           fontSize: 18,
           fontWeight: FontWeight.w500,
         ),
@@ -96,7 +96,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                   ElevatedButton(
                     onPressed: () => _navigateTo(AppRoutes.updateMyInfoScreen.name),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.titleText),
+                      backgroundColor: Color(AppColors.secondaryButton),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -145,7 +145,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
             padding: const EdgeInsets.only(bottom: 20, right: 10, left: 10),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 borderRadius: BorderRadius.circular(35)
               ),
               padding: const EdgeInsets.all(16),
@@ -158,7 +158,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SelectTemplateScreen(),));
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(AppColors.titleText),
+                        foregroundColor: Color(AppColors.secondaryButton),
                         side: const BorderSide(color: Colors.transparent, width: 2),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(

@@ -300,7 +300,7 @@ class AddNewRequestController extends ChangeNotifier {
             data: Theme.of(context).copyWith(
               timePickerTheme: TimePickerThemeData(
                 helpTextStyle: TextStyle(            // Style applied here
-                  color: Color(AppColors.titleText),
+                  color: Color(AppColors.secondaryButton),
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -320,7 +320,7 @@ class AddNewRequestController extends ChangeNotifier {
             data: Theme.of(context).copyWith(
               timePickerTheme: TimePickerThemeData(
                 helpTextStyle: TextStyle(            // Style applied here
-                  color: Color(AppColors.titleText),
+                  color: Color(AppColors.secondaryButton),
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),

@@ -72,7 +72,7 @@ class ForgotPasswordController extends ChangeNotifier {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
             backgroundColor: Color(AppColors.failureRed),
-            textColor: Color(AppColors.appBarText),
+            textColor: Color(0xffffffff),
             fontSize: 16.0
         );
         return;
@@ -82,7 +82,7 @@ class ForgotPasswordController extends ChangeNotifier {
         AppStrings.formIsInvalid.tr(),
         context: context,
         backgroundColor: Color(AppColors.failureRed),
-        textStyle: AppStyles.bodyTextContent(context).copyWith(color: Color(AppColors.appBarText)),
+        textStyle: AppStyles.bodyTextContent(context).copyWith(color: Color(0xffffffff)),
         duration: const Duration(seconds: 5),
         position: StyledToastPosition.bottom,
       );
@@ -132,7 +132,7 @@ class ForgotPasswordController extends ChangeNotifier {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 5,
           backgroundColor: Color(AppColors.failureRed),
-          textColor: Color(AppColors.appBarText),
+          textColor: Color(0xffffffff),
           fontSize: 16.0
       );
       return;
@@ -168,7 +168,7 @@ class ForgotPasswordController extends ChangeNotifier {
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
             backgroundColor: Color(AppColors.failureRed),
-            textColor: Color(AppColors.appBarText),
+            textColor: Color(0xffffffff),
             fontSize: 16.0
         );
         return;

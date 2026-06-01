@@ -116,7 +116,7 @@ class SocailIconButton extends StatelessWidget {
         onTap: () async => UrlLauncherServiceEx.launch(
             context: context, url: url, mode: mode ?? LaunchMode.platformDefault),
         child: CircleAvatar(
-          backgroundColor:  Theme.of(context).colorScheme.secondary,
+          backgroundColor:  Color(AppColors.secondaryButton),
           radius: 18.r,
           child: Center(child: FaIcon(icon, color: Colors.white, size: 16.sp)),
         ),

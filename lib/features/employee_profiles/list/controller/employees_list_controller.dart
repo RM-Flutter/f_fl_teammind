@@ -159,7 +159,7 @@ class EmployeesListViewModel extends ChangeNotifier {
           gapH32,
           Center(
               child: CustomElevatedButton(
-                backgroundColor: Color(AppColors.titleText),
+                backgroundColor: Color(AppColors.secondaryButton),
                   title: AppStrings.filter.tr().toUpperCase(),
                   onPressed: () async => Navigator.pop(context))),
         ],

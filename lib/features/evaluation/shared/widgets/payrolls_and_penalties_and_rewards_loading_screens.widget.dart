@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 
@@ -22,7 +23,7 @@ class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                        Color(AppColors.buttons).withOpacity(0.2),
                     offset: const Offset(0, 0),
                     blurRadius: 2.5.r,
                   ),

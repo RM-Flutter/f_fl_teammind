@@ -105,7 +105,7 @@ class VacationListWidget extends StatelessWidget {
               height: 120,
               padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: Color(AppColors.buttons),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -231,7 +231,7 @@ class VacationCard extends StatelessWidget {
         height: 120,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary, // Match BalanceCard color
+          color: Color(AppColors.secondaryButton), // Match BalanceCard color
           borderRadius: BorderRadius.circular(12), // Match BalanceCard radius
         ),
         child: Column(

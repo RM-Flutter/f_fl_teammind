@@ -154,7 +154,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     style: AppStyles.greyContent(context).copyWith(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 13.sp,
-                                        color: Color(AppColors.subTitleText)),
+                                        color: Color(0xff606060)),
                                   ),
                                   SizedBox(height: 20.h,),
                                   ListView.separated(
@@ -196,7 +196,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                               borderRadius: BorderRadius.zero,
                                               border: Border.all(
                                                 color: isCompleted
-                                                    ?  (Theme.of(context).colorScheme.primary)
+                                                    ?  (Color(AppColors.buttons))
                                                     : Color(AppColors.border),
                                                 width: 1.r,
                                               ),
@@ -211,7 +211,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                     width: 24.r,
                                                     height: 24.r,
                                   colorFilter: isCompleted
-                                      ?  ColorFilter.mode((Theme.of(context).colorScheme.primary), BlendMode.srcIn)
+                                      ?  ColorFilter.mode((Color(AppColors.buttons)), BlendMode.srcIn)
                                       : null,
                                                   ),
                                                 ),
@@ -226,8 +226,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                           subTask.name?.toUpperCase() ?? "",
                                                           style: AppStyles.heading(context).copyWith(
                                                             color: isCompleted
-                                                                ? Theme.of(context).colorScheme.secondary
-                                                                : Color(AppColors.titleText),
+                                                                ? Color(AppColors.secondaryButton)
+                                                                : Color(AppColors.secondaryButton),
                                                             fontSize: 13.sp,
                                                             fontWeight: FontWeight.bold,
                                                           ),
@@ -236,7 +236,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                         Text(
                                                           "${value.getOneTaskModel!.task!.createAt != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.createAt!)) : ""} : ${value.getOneTaskModel!.task!.dueDate != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.dueDate!)) : ""}",
                                                           style: AppStyles.greyContent(context).copyWith(
-                                                            color: Color(AppColors.subTitleText).withOpacity(0.7),
+                                                            color: Color(0xff606060).withOpacity(0.7),
                                                             fontSize: 10.sp,
                                                             fontWeight: FontWeight.w400,
                                                           ),
@@ -249,7 +249,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                   Container(
                                                     width: 40.w,
                                                     decoration:  BoxDecoration(
-                                                      color: (Theme.of(context).colorScheme.primary),
+                                                      color: (Color(AppColors.buttons)),
                                                       borderRadius: BorderRadius.zero,
                                                     ),
                                                     child: Center(
@@ -280,7 +280,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                       height: 20.r,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        border: Border.all(color:  (Theme.of(context).colorScheme.primary), width: 1.5.r),
+                                                        border: Border.all(color:  (Color(AppColors.buttons)), width: 1.5.r),
                                                       ),
                                                     ),
                                                   ),

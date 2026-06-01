@@ -167,7 +167,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.titleText),
+                backgroundColor: Color(AppColors.secondaryButton),
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.r),

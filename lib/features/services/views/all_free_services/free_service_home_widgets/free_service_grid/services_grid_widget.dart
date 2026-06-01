@@ -43,7 +43,7 @@ class ServicesGridWidget extends StatelessWidget {
                     icon: Icons.credit_card,
                     showProfileAvatar: false,
                     avatarUrl: userPhotoUrl,
-                    iconColor: Color(AppColors.titleText),
+                    iconColor: Color(AppColors.secondaryButton),
                     onTap: () => onServiceTap?.call('smart_card'),
                   ),
                 ),
@@ -152,7 +152,7 @@ class ServicesGridWidget extends StatelessWidget {
                   child: ServiceCard(
                     title: AppStrings.getTeamMindSystem.tr(),
                     icon: Icons.groups_outlined,
-                    iconColor: Color(AppColors.titleText),
+                    iconColor: Color(AppColors.secondaryButton),
                     onTap: () => onServiceTap?.call('team_mind_system'),
                   ),
                 ),

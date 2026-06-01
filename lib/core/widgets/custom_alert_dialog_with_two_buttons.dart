@@ -45,7 +45,7 @@ Future<void> customAlertDialogWithTwoButtons(
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               fontWeight: FontWeight.w700,
               fontSize: 18),
         ),

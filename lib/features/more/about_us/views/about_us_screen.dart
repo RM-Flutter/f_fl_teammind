@@ -120,7 +120,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   Text(
                     AppStrings.followUs.tr().toUpperCase(),
                     style: AppStyles.heading(context).copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Color(AppColors.secondaryButton),
                       fontWeight: FontWeight.w700,
                       fontSize: 16.sp,
                     ),
@@ -159,7 +159,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 50.w),
                       child: CustomElevatedButton(
-                        backgroundColor:  Theme.of(context).colorScheme.secondary,
+                        backgroundColor:  Color(AppColors.secondaryButton),
                         title: AppStrings.sendByEmail.tr().toUpperCase(),
                         onPressed: () async {
                           values.sendMailToCompany(
@@ -192,7 +192,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
         width: 30.r,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color:  Theme.of(context).colorScheme.secondary,
+          color:  Color(AppColors.secondaryButton),
         ),
         child: SvgPicture.asset(ico, color: Colors.white, width: 15.r, height: 15.r),
       ),

@@ -139,7 +139,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.arrow_back, color: Color(AppColors.background), size: 18),
@@ -148,7 +148,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
         ),
         title: AppStrings.personalityTest2.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.titleText),
+          color: Color(AppColors.secondaryButton),
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
@@ -171,7 +171,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
           Text(
             AppStrings.personalityTest.tr(),
             style: TextStyle(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
@@ -185,7 +185,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
                 .replaceAll('{current}', '${currentQuestionIndex + 1}')
                 .replaceAll('{total}', '${questions.length}'),
             style: TextStyle(
-              color: Color(AppColors.subTitleText),
+              color: Color(0xff606060),
               fontSize: 14,
             ),
           ),
@@ -204,7 +204,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
           Text(
             question['question'],
             style: TextStyle(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               fontSize: 18,
               fontWeight: FontWeight.w600,
               height: 1.4,
@@ -239,7 +239,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
                     style: TextStyle(
                       color: answers[currentQuestionIndex] == index
                           ? Color(AppColors.buttons)
-                          : Color(AppColors.titleText),
+                          : Color(AppColors.secondaryButton),
                       fontSize: 15,
                     ),
                   ),
@@ -288,7 +288,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
             Text(
               personalityResult ?? '',
               style: TextStyle(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
@@ -301,7 +301,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
                   .replaceAll('{type}', personalityResult ?? ''),
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(AppColors.subTitleText),
+                color: Color(0xff606060),
                 fontSize: 14,
                 height: 1.5,
               ),

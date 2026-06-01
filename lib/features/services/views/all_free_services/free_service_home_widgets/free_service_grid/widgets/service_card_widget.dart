@@ -28,7 +28,7 @@ class ServiceCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor ?? Color(AppColors.titleText),
+          color: backgroundColor ?? Color(AppColors.secondaryButton),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(

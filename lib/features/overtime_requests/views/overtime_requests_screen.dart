@@ -187,7 +187,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                     style: AppStyles.primaryContent(context).copyWith(
                       fontSize: 15.sp, 
                       fontWeight: FontWeight.bold,
-                      color: Color(AppColors.titleText)
+                      color: Color(AppColors.secondaryButton)
                     ),
                   ),
                 ],

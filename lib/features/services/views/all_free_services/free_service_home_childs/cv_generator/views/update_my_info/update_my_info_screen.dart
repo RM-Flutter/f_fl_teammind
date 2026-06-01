@@ -77,7 +77,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -86,7 +86,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
           ),
           title: AppStrings.updateMyInfo.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -145,7 +145,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.titleText),
+                        backgroundColor: Color(AppColors.secondaryButton),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(200, 50),
                         shape: RoundedRectangleBorder(
@@ -183,7 +183,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
     return  Container(
       margin: EdgeInsets.zero, // ← key part
       decoration: BoxDecoration(
-        color: Color(AppColors.titleText),
+        color: Color(AppColors.secondaryButton),
         borderRadius:
         BorderRadius.circular(
             AppSizes.s30),

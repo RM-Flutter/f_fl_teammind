@@ -259,7 +259,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             children: [
                               if(viewModel.isLoading == false) CustomElevatedButton(
                                 backgroundColor:
-                                Theme.of(context).colorScheme.primary,
+                                Color(AppColors.buttons),
                                 titleSize: AppSizes.s14.sp,
                                 radius: AppSizes.s24.r,
                                 title: AppStrings.updateTask.tr(),

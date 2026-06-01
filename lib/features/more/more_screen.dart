@@ -73,7 +73,7 @@ class _MoreScreenState extends State<MoreScreen> {
             Container(
               padding: EdgeInsets.zero,
               alignment: Alignment.topCenter,
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               child: SizedBox(
                 height: 0.25.sh,
                 child: Image.asset(
@@ -376,6 +376,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                 child: Text(AppStrings.myAccount.tr().toUpperCase(),
                                     style: AppStyles.primaryContent(context).copyWith(
+
                                         fontSize: 13.sp,
                                         fontWeight: FontWeight.w600)),
                               ),

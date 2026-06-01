@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class CustomRequestsPageButton extends StatelessWidget {
             vertical: 14.h,
             horizontal: 12.w,
           ),
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Color(AppColors.buttons),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),

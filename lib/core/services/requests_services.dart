@@ -101,7 +101,7 @@ abstract class RequestsServices {
       default:
         return Icon(
           Icons.more_horiz,
-          color: iconColor ?? Theme.of(context).colorScheme.secondary,
+          color: iconColor ?? Color(AppColors.secondaryButton),
           size: iconSize ?? AppSizes.s24,
         );
     }

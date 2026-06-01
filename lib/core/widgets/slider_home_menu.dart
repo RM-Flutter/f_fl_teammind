@@ -135,7 +135,7 @@ class SliderHomeMenu2 extends StatelessWidget {
           height: cardWidth * 0.4,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.circular(15),
           ),
           child: SvgPicture.asset(src),

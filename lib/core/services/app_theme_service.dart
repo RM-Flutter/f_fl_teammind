@@ -15,19 +15,19 @@ abstract class AppThemeService {
     primaryColor: ColorValue(light: Color(AppColors.buttons), dark: Color(AppColors.buttons)),
 
 
-    secondaryColor: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
+    secondaryColor: ColorValue(light: Color(AppColors.secondaryButton), dark: Color(AppColors.secondaryButton)),
     tertiaryColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     // application background colors
-    primaryColorBackground: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
+    primaryColorBackground: ColorValue(light: Color(AppColors.secondaryButton), dark: Color(AppColors.secondaryButton)),
     secondaryColorBackground: ColorValue(light: const Color(AppColors.pink), dark: const Color(AppColors.pink)),
     tertiaryColorBackground: ColorValue(light: Color(AppColors.background), dark: Color(AppColors.background)),
     // application texts colors
-    primaryTextColor: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
-    secondaryTextColor: ColorValue(light: Color(AppColors.titleText), dark: Color(AppColors.titleText)),
+    primaryTextColor: ColorValue(light: Color(AppColors.secondaryButton), dark: Color(AppColors.secondaryButton)),
+    secondaryTextColor: ColorValue(light: Color(AppColors.secondaryButton), dark: Color(AppColors.secondaryButton)),
     tertiaryTextColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
     quaternaryTextColor: ColorValue(
-        light: Color(AppColors.subTitleText),
-        dark: Color(AppColors.subTitleText)),
+        light: Color(0xff606060),
+        dark: Color(0xff606060)),
     quinaryTextColor: ColorValue(
         light: Color(AppColors.background),
         dark: Color(AppColors.background)),
@@ -113,7 +113,7 @@ abstract class AppThemeService {
           // --> used for the title of modal sheet
             fontWeight: FontWeight.bold,
             fontSize: AppSizes.s20,
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             // تحسين الخطوط في الويب
             letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.5 : null),
         bodySmall: TextStyle(

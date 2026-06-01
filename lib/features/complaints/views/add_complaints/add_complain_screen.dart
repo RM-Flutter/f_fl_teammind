@@ -37,7 +37,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //       appBar: AppBar(
 //        title: Text(
 //         AppStrings.newRequest.tr().toUpperCase(),
-//         style: AppStyles.blackContent(context).copyWith(color: Color(AppColors.titleText), fontWeight: FontWeight.bold, fontSize: 20.sp),
+//         style: AppStyles.blackContent(context).copyWith(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.bold, fontSize: 20.sp),
 //        ),
 //        backgroundColor: Colors.white,
 //        elevation: 0,

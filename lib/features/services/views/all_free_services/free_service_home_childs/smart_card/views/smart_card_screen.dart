@@ -121,7 +121,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       // Contact - يمكن ربطه بشاشة تواصل أو رقم
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: Color(AppColors.titleText),
+                      backgroundColor: Color(AppColors.secondaryButton),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -158,7 +158,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -173,7 +173,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           ),
           title: AppStrings.smartCard2.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
@@ -492,7 +492,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                   decoration: InputDecoration(
                     labelText: AppStrings.profileName.tr(),
                     labelStyle: TextStyle(
-                      color: Color(AppColors.hintText),
+                      color: Color(0xFFA3A3A3),
                       fontSize: 12,
                       letterSpacing: 0.5,
                     ),
@@ -607,7 +607,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                   decoration: InputDecoration(
                     labelText: AppStrings.companyName.tr(),
                     labelStyle: TextStyle(
-                      color: Color(AppColors.hintText),
+                      color: Color(0xFFA3A3A3),
                       fontSize: 12,
                       letterSpacing: 0.5,
                     ),

@@ -170,7 +170,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                 Text(
                                   comments[index]['content'] ?? "",
                                   style: TextStyle(
-                                      color: Color(AppColors.titleText),
+                                      color: Color(AppColors.secondaryButton),
                                       fontSize: 12,
                                       height: 1.4,
                                       fontWeight: FontWeight.w400),
@@ -236,7 +236,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 10,
-                                    color: Color(AppColors.subTitleText)),
+                                    color: Color(0xff606060)),
                               ),
                             ],
                           ),
@@ -282,7 +282,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(50),
                         border:
-                        Border.all(color: Color(AppColors.titleText))),
+                        Border.all(color: Color(AppColors.secondaryButton))),
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -292,7 +292,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Color(AppColors.titleText)),
+                              color: Color(AppColors.secondaryButton)),
                         ),
                       ],
                     ),

@@ -8,6 +8,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../constants/app_colors.dart';
 import 'bottom_sheet/finger_print_details_modal_sheet_widget.dart';
 
 class FingerprintCard extends StatelessWidget {
@@ -75,7 +76,7 @@ class FingerprintCard extends StatelessWidget {
                 width: AppSizes.s50,
                 padding: const EdgeInsets.all(AppSizes.s4),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(AppSizes.s8),
                 ),
                 child: Column(
@@ -114,7 +115,7 @@ class FingerprintCard extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: AppSizes.s14,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Color(AppColors.secondaryButton),
                     ),
                   ),
                   if (formatFingerDatetime(fingerprint.fingerDateTime) != null)

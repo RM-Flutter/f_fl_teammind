@@ -84,7 +84,7 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
             padding: EdgeInsets.all(AppSizes.s10.r),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSizes.s8.r),
-              color: Theme.of(context).colorScheme.primary,
+              color: Color(AppColors.buttons),
             ),
             child: Center(
               child: Text(
@@ -141,7 +141,7 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
               fixedSize: Size(double.infinity, 50.h),
               alignment: Alignment.center,
               shadowColor: Colors.transparent,
-              backgroundColor: Color(AppColors.titleText),
+              backgroundColor: Color(AppColors.secondaryButton),
               foregroundColor: Colors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(

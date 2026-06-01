@@ -115,8 +115,8 @@ class RequestsCalendarScreen extends StatelessWidget {
                               view['name'],
                               style: AppStyles.darkContent(context).copyWith(
                                   color: viewModel.calendarView == view['value']
-                                      ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.primary,
+                                      ? Color(AppColors.secondaryButton)
+                                      : Color(AppColors.buttons),
                                   fontSize: 14.sp,
                                   fontWeight:
                                   viewModel.calendarView == view['value']
@@ -129,7 +129,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                       icon: Icon(
                         Icons.preview_outlined,
                         size: 32.r,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Color(AppColors.buttons),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.r),
@@ -200,9 +200,9 @@ class RequestsCalendarScreen extends StatelessWidget {
 
                                     final backgroundColor = viewModel.getStatusColor(status);
                                     final textColor = (backgroundColor == const Color(AppColors.green) ||
-                                        backgroundColor == Color(AppColors.subTitleText))
+                                        backgroundColor == Color(0xff606060))
                                         ? Colors.white
-                                        : Theme.of(context).colorScheme.primary;
+                                        : Color(AppColors.buttons);
 
                                     return GestureDetector(
                                       onTap: () async {
@@ -338,7 +338,7 @@ class RequestDataSource extends CalendarDataSource {
       case 'approved':
         return const Color(AppColors.green);
       default:
-        return Color(AppColors.subTitleText);
+        return Color(0xff606060);
     }
   }
 }

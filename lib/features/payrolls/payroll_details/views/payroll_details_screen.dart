@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../controller/payroll_details_controller.dart';
 import 'widgets/payroll_details_body_widget.dart';
 import 'widgets/payroll_details_header_widget.dart';
@@ -59,7 +60,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                 padding: EdgeInsets.only(bottom: 20.h),
                 child: Center(
                   child: CustomElevatedButton(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Color(AppColors.secondaryButton),
                     titleSize: AppSizes.s12.sp,
                     title: AppStrings.downloadFile.tr().toUpperCase(),
                     onPressed: () async {

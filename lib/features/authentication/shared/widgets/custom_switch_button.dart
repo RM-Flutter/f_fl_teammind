@@ -108,7 +108,7 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
                   height: widget.circleSize,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(AppColors.appBarText),
+                    color: Color(0xffffffff),
                   ),
                 ),
               ),

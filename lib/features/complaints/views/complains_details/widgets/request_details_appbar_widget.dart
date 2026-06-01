@@ -32,7 +32,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
       image: AssetImage("assets/images/png/home_back.png"),
       fit: BoxFit.cover,
       opacity: 0.4),
-    color: Theme.of(context).colorScheme.secondary,
+    color: Color(AppColors.secondaryButton),
     borderRadius: BorderRadius.only(
       bottomLeft: Radius.circular(AppSizes.s28.r),
       bottomRight: Radius.circular(AppSizes.s28.r)),

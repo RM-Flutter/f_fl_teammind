@@ -150,7 +150,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                     children: [
                       Container(
                           decoration: BoxDecoration(
-                            color: Color(AppColors.hintText).withOpacity(0.1),
+                            color: const Color(0xFFA3A3A3).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(AppSizes.s15.r),
                           ),
                           child: Center(
@@ -174,7 +174,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       ),
                       Container(
                           decoration: BoxDecoration(
-                            color: Color(AppColors.hintText).withOpacity(0.1),
+                            color: const Color(0xFFA3A3A3).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(AppSizes.s15.r),
                           ),
                           child: Center(
@@ -228,7 +228,7 @@ class PersonalProfileHeaderBackgroundWidget extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Theme.of(context).colorScheme.primary,
+                        Color(AppColors.buttons),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5],
@@ -244,7 +244,7 @@ class PersonalProfileHeaderBackgroundWidget extends StatelessWidget {
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                         colors: [
-                          Theme.of(context).colorScheme.primary,
+                          Color(AppColors.buttons),
                           Colors.transparent,
                         ],
                         stops: const [0.0, 0.5],
@@ -313,7 +313,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                              color: Color(AppColors.titleText),
+                              color: Color(AppColors.secondaryButton),
                               width: AppSizes.s2.r),
                         ),
                         child: GestureDetector(
@@ -383,7 +383,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                           child: IconButton(
                               icon: Icon(
                                 Icons.camera_alt,
-                                color: Color(AppColors.titleText),
+                                color: Color(AppColors.secondaryButton),
                                 size: AppSizes.s20.r,
                               ),
                               onPressed: () async {

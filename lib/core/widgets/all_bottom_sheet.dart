@@ -496,12 +496,13 @@ defaultActionBottomSheet(
                     const SizedBox(height: 20),
                     Text(
                       title!.toUpperCase(),
-                      style:  TextStyle(
+                      style:   TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 20,
-                        color: Color(AppColors.titleText),
+                        color: Color(AppColors.secondaryButton),
                       ),
                     ),
+
                     const SizedBox(height: 15),
                     Text(
                       subTitle!,
@@ -815,7 +816,7 @@ Future<void> defaultActionBottomSheetPoints({
                                 child: Row(
                                   children: [
                                     Text(code.toString(),
-                                      style:  TextStyle(
+                                      style:  const TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 12,
                                           color: Color(AppColors.gray1)),),
@@ -849,7 +850,7 @@ Future<void> defaultActionBottomSheetPoints({
                                 Stack(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(top: 0.5),
+                                      padding: const EdgeInsets.only(top: 0.5),
                                       child: Container(
                                         height: 49,
                                         decoration: BoxDecoration(

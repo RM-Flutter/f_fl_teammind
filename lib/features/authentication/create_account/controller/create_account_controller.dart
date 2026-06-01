@@ -77,7 +77,7 @@ class CreateAccountController extends ChangeNotifier {
           AppStrings.formIsInvalid.tr(),
           context: context,
           backgroundColor: Color(AppColors.failureRed),
-          textStyle: AppStyles.bodyTextContent(context).copyWith(color: Color(AppColors.appBarText)),
+          textStyle: AppStyles.bodyTextContent(context).copyWith(color: const Color(0xffffffff)),
           duration: const Duration(seconds: 5),
           position: StyledToastPosition.bottom,
         );
@@ -127,7 +127,7 @@ class CreateAccountController extends ChangeNotifier {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 5,
           backgroundColor: Color(AppColors.successGreen),
-          textColor: Color(AppColors.appBarText),
+          textColor: const Color(0xffffffff),
           fontSize: 16.0
       );
       if(mak == null) Navigator.pop(context, result);

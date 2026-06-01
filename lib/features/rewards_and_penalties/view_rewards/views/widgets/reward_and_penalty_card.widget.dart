@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
@@ -76,7 +77,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                   width: AppSizes.s28,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.primary),
+                      color: Color(AppColors.buttons)),
                   child: const Icon(
                     Icons.arrow_forward_outlined,
                     color: Colors.white,

@@ -175,7 +175,7 @@ class OnBoardingScreen extends StatelessWidget {
                                         Text(
                                           (title ?? '').split(' ').map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}').join(' '),
                                           style: AppStyles.heading(context).copyWith(
-                                                color: const Color(0xFF3489EF),
+                                                color:  Color(AppColors.buttons),
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 24.sp,
                                               ),

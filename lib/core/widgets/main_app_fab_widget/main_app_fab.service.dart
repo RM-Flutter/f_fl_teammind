@@ -794,7 +794,7 @@ abstract class MainFabServices {
             onPressed: () => Navigator.of(ctx, rootNavigator: true).pop(),
             child: Text(
               'OK',
-              style: TextStyle(color: Color(AppColors.titleText)),
+              style: TextStyle(color: Color(AppColors.secondaryButton)),
             ),
           ),
         ],
@@ -881,7 +881,7 @@ abstract class MainFabServices {
                 Text(
                   title,
                   style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700, color: Color(AppColors.titleText), fontSize: 18),
+                      ?.copyWith(fontWeight: FontWeight.w700, color: Color(AppColors.secondaryButton), fontSize: 18),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -893,7 +893,7 @@ abstract class MainFabServices {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(AppColors.titleText)),
+                      backgroundColor: MaterialStateProperty.all(Color(AppColors.secondaryButton)),
                     ),
                     onPressed: () => Navigator.of(sheetContext, rootNavigator: true).pop(true),
                     child: Text(
@@ -910,7 +910,7 @@ abstract class MainFabServices {
                       onPressed: () => Navigator.of(sheetContext, rootNavigator: true).pop(false),
                       child: Text(
                         cancelLabel,
-                        style: theme.textTheme.headlineSmall?.copyWith(color: Color(AppColors.titleText)) ?? TextStyle(color: Color(AppColors.titleText)),
+                        style: theme.textTheme.headlineSmall?.copyWith(color: Color(AppColors.secondaryButton)) ?? TextStyle(color: Color(AppColors.secondaryButton)),
                       ),
                     ),
                   ),
@@ -1198,7 +1198,7 @@ abstract class MainFabServices {
       context: context,
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
-        title: Text(isArabic ? 'تقرير التحقق' : 'Verification Report', style: TextStyle(color: Color(AppColors.titleText), fontWeight: FontWeight.w700),),
+        title: Text(isArabic ? 'تقرير التحقق' : 'Verification Report', style: TextStyle(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.w700),),
         content: SingleChildScrollView(
           child: Text(buffer.toString(), style: TextStyle(color: Color(AppColors.black), fontWeight: FontWeight.w500),),
         ),
@@ -1446,7 +1446,7 @@ abstract class MainFabServices {
           context: context,
           useRootNavigator: true,
           builder: (dialogContext) => AlertDialog(
-            title: Text(isArabic ? 'فشل التحدي' : 'Challenge Failed', style: TextStyle(color: Color(AppColors.titleText)),),
+            title: Text(isArabic ? 'فشل التحدي' : 'Challenge Failed', style: TextStyle(color: Color(AppColors.secondaryButton)),),
             content: Text(
                 isArabic
                     ? 'فشل التحدي: $challengeName\n\nهل تريد المحاولة مرة أخرى؟'
@@ -1459,13 +1459,13 @@ abstract class MainFabServices {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(false),
-                      child: Text(isArabic ? 'إلغاء' : 'Cancel', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.titleText))),
+                      child: Text(isArabic ? 'إلغاء' : 'Cancel', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.secondaryButton))),
                     ),
                   ),
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(true),
-                      child: Text(isArabic ? 'إعادة المحاولة' : 'Retry', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.titleText))),
+                      child: Text(isArabic ? 'إعادة المحاولة' : 'Retry', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.secondaryButton))),
                     ),
                   ),
                 ],

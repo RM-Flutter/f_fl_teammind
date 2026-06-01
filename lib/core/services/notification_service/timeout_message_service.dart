@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:app_test/main.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 
+import '../../constants/app_colors.dart';
+
 class TimeoutMessage {
   static int currentMessageId = 0;
   static OverlayEntry? _activeOverlay;
@@ -159,7 +161,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                 padding: const EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
-                color: Theme.of(context).colorScheme.primary,
+                color: Color(AppColors.buttons),
                 elevation: 10.0,
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
@@ -176,7 +178,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                       Text(widget.title,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.secondary)),
+                              color: Color(AppColors.secondaryButton))),
                       const SizedBox(
                         height: 5,
                       ),

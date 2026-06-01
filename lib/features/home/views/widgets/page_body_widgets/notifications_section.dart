@@ -32,8 +32,8 @@ class NotificationsSection extends StatelessWidget {
         child: Container(
           alignment: Alignment.topCenter,
           padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
-          // color: isFreeService ? Color(AppColors.titleText) : Colors.transparent,
-          color:  Color(AppColors.titleText),
+          // color: isFreeService ? Color(AppColors.secondaryButton) : Colors.transparent,
+          color:  Color(AppColors.secondaryButton),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

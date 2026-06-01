@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -45,7 +46,7 @@ class EvalutaionSectionWidget extends StatelessWidget {
           if(evaluations!.isNotEmpty) SizedBox(height: 24.h),
           if(evaluations!.isNotEmpty) Center(
               child: CustomElevatedButton(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  backgroundColor: Color(AppColors.secondaryButton),
                   titleSize: AppSizes.s12.sp,
                   title: AppStrings.viewEvaluations.tr().toUpperCase(),
                   onPressed: ()async{

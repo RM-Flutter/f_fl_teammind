@@ -66,12 +66,12 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Color(AppColors.titleText)),
+            icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton)),
             onPressed: _goBack,
           ),
           title: AppStrings.myCV2.tr().toUpperCase(),
           titleStyle: TextStyle(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -179,7 +179,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
     return  Container(
       margin: EdgeInsets.zero, // ← key part
       decoration: BoxDecoration(
-        color: Color(AppColors.titleText),
+        color: Color(AppColors.secondaryButton),
         borderRadius:
         BorderRadius.circular(
             AppSizes.s30),

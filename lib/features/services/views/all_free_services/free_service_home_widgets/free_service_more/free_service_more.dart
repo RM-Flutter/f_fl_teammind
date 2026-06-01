@@ -69,7 +69,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                 Container(
                   padding: EdgeInsets.zero,
                   alignment: Alignment.topCenter,
-                  color: Color(AppColors.titleText),
+                  color: Color(AppColors.secondaryButton),
                   child: SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.25,
                     child: Image.asset(
@@ -293,7 +293,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                               .textTheme
                               .titleMedium
                               ?.copyWith(
-                            color: Color(AppColors.titleText),
+                            color: Color(AppColors.secondaryButton),
                             // fontSize: 16,
           
                             // fontWeight: FontWeight.w700,

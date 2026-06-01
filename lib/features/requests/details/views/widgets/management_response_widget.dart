@@ -34,7 +34,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3489EF),
+                  color: const Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
@@ -69,13 +69,13 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    icon: Icon(Icons.arrow_drop_down, color: const Color(0xFF3489EF), size: 24.r),
+                    icon: Icon(Icons.arrow_drop_down, color:  Color(AppColors.buttons), size: 24.r),
                     hint: Text(
                       (viewModel.selectedRequestStatus ?? AppStrings.requestType.tr()).toUpperCase(),
                       style: AppStyles.darkContent(context).copyWith(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF090B60),
+                        color: Color(AppColors.secondaryButton),
                       ),
                     ),
                     items: viewModel.availableActions.map((e) => DropdownMenuItem(
@@ -85,7 +85,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                         style: AppStyles.darkContent(context).copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF090B60)
+                            color: Color(AppColors.secondaryButton)
                         ),),
                     )).toList(),
                     onChanged: (String? values) {
@@ -103,14 +103,14 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 style: AppStyles.darkContent(context).copyWith(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF090B60),
+                  color: Color(AppColors.secondaryButton),
                 ),
                 decoration: InputDecoration(
                   hintText: AppStrings.reason.tr().toUpperCase(),
                   hintStyle: AppStyles.darkContent(context).copyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF090B60),
+                    color: Color(AppColors.secondaryButton),
                   ),
                   filled: true,
                   fillColor: const Color(0xFFF3F3F3),
@@ -133,7 +133,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
               Center(
                 child: CustomElevatedButton(
                   buttonStyle: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Color(AppColors.secondaryButton),
                   ),
                   title: AppStrings.sendRequest.tr().toUpperCase(),
                   titleWidget: Text(

@@ -449,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Icon(
                     Icons.drag_handle,
-                    color: Color(AppColors.titleText),
+                    color: Color(AppColors.secondaryButton),
                     size: 24.r,
                   ),
                 ),
@@ -537,7 +537,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
                 // color: Color(AppColors.cardBackground),
-                color: const Color(0xFF090B60), // Dark Blue from Figma
+                color: Color(AppColors.secondaryButton), // Dark Blue from Figma
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Column(

@@ -107,7 +107,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
               : AppStrings.addBookmark.tr(),
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
           ),
         ),
         content: TextField(
@@ -148,7 +148,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
             ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(null),
-            child: Text(AppStrings.cancel.tr(), style: TextStyle(color: Color(AppColors.secondaryButton), fontSize: 16),),
+            child: Text(AppStrings.cancel.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16),),
           ),
           TextButton(
             onPressed: () {
@@ -244,7 +244,7 @@ class _BookmarkButtonState extends State<BookmarkButton> {
     // Use custom icon color if provided, otherwise use default colors
     final defaultColor = isCurrentlyBookmarked
         ? Color(AppColors.buttons)
-        : Color(AppColors.titleText);
+        : Color(AppColors.secondaryButton);
     final iconColorToUse = widget.iconColor ?? defaultColor;
     
     return IconButton(

@@ -77,7 +77,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
             appBar: AppBar(
               surfaceTintColor: Colors.transparent,
               title:  Text(AppStrings.comments.tr().toUpperCase(), style: TextStyle(fontSize: 16,
-                  color: Color(AppColors.titleText), fontWeight: FontWeight.w700),),
+                  color: Color(AppColors.secondaryButton), fontWeight: FontWeight.w700),),
               backgroundColor: Colors.transparent,
             ),
             // floatingActionButton: (gCache['is_teamleader_in'].isNotEmpty ||
@@ -193,7 +193,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                             child: Text(
                                                 value.comments[index]['user']['name'] ?? "", maxLines: 1,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w700, fontSize: 12,color: Color(AppColors.titleText)
+                                                    fontWeight: FontWeight.w700, fontSize: 12,color: Color(AppColors.secondaryButton)
                                                 )
                                             ),
                                           ),
@@ -202,7 +202,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                             child: Text(
                                                 "${DateFormat("dd/MM/yyyy hh:mm a", context.locale.languageCode).format(DateTime.parse("${value.comments[index]['created_at']}"))}", maxLines: 1,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w500, fontSize: 12,color: Color(AppColors.subTitleText)
+                                                    fontWeight: FontWeight.w500, fontSize: 12,color: Color(0xff606060)
                                                 )
                                             ),
                                           ),

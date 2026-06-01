@@ -68,7 +68,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
   Widget build(BuildContext context) {
     final textStyle = AppStyles.heading(context).copyWith(
       fontWeight: FontWeight.w600,
-      color: Theme.of(context).colorScheme.secondary,
+      color: Color(AppColors.secondaryButton),
       fontSize: AppSizes.s14.sp,
     );
     return ChangeNotifierProvider<PersonalProfileController>(
@@ -325,7 +325,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                         inactiveTrackColor: Colors.white,
                                         inactiveThumbColor: Colors.grey,
                                         activeColor: Colors.white,
-                                        activeTrackColor: Color(AppColors.titleText),
+                                        activeTrackColor: Color(AppColors.secondaryButton),
                                         value: fa,
                                         onChanged: (v) async{
                                           setState(() {
@@ -344,7 +344,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                       width: 1.sw,
                                       radius: AppSizes.s10.r,
                                       backgroundColor:
-                                      Theme.of(context).colorScheme.primary,
+                                      Color(AppColors.buttons),
                                       title: AppStrings.enable2fa.tr(),
                                       onPressed: () async =>
                                       await viewModel.activate2FA(
@@ -587,7 +587,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                             inactiveTrackColor: Colors.white,
                                             inactiveThumbColor: Colors.grey,
                                             activeColor: Colors.white,
-                                            activeTrackColor: Color(AppColors.titleText),
+                                            activeTrackColor: Color(AppColors.secondaryButton),
                                             onChanged: (v) async{
                                               setState(() {
                                                 fa = v;
@@ -606,7 +606,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                           width: 1.sw,
                                           radius: AppSizes.s10.r,
                                           backgroundColor:
-                                          Theme.of(context).colorScheme.primary,
+                                          Color(AppColors.buttons),
                                           title: AppStrings.enable2fa.tr(),
                                           onPressed: () async =>
                                           await viewModel.activate2FA(
@@ -658,7 +658,7 @@ class CustomDivider extends StatelessWidget {
       children: [
         gapH20,
         Divider(
-          color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+          color: Color(AppColors.secondaryButton).withOpacity(0.2),
           height: AppSizes.s6,
           thickness: AppSizes.s2,
         ),

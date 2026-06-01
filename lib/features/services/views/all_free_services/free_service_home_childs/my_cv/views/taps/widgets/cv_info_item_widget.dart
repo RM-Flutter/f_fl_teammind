@@ -29,7 +29,7 @@ class CVInfoItem extends StatelessWidget {
               Text(
                 '• ',
                 style: TextStyle(
-                  color: Color(AppColors.titleText),
+                  color: Color(AppColors.secondaryButton),
                   fontSize: 13,
                 ),
               ),
@@ -37,7 +37,7 @@ class CVInfoItem extends StatelessWidget {
                 child: RichText(
                   text: TextSpan(
                     style: TextStyle(
-                      color: Color(AppColors.titleText),
+                      color: Color(AppColors.secondaryButton),
                       fontSize: 13,
                       height: 1.4,
                     ),

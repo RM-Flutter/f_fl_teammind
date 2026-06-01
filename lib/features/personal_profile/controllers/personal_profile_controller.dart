@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -367,7 +368,7 @@ class PersonalProfileController extends ChangeNotifier {
           insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           title: Text(
             AppStrings.fa_activated.tr(),
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            style: TextStyle(color: Color(AppColors.buttons)),
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -428,7 +429,7 @@ class PersonalProfileController extends ChangeNotifier {
                     style: Theme.of(context)
                         .textTheme
                         .displaySmall
-                        ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                        ?.copyWith(color: Color(AppColors.buttons)),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();

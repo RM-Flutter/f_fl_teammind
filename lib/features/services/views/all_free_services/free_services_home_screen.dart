@@ -209,7 +209,7 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
                               horizontal: AppSizes.s12,
                               vertical: AppSizes.s20,
                             ),
-                            color: Color(AppColors.titleText),
+                            color: Color(AppColors.secondaryButton),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

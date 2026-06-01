@@ -52,7 +52,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
     }
     final textStyle = AppStyles.heading(context).copyWith(
         fontWeight: FontWeight.w400,
-        color: Theme.of(context).colorScheme.primary,
+        color: Color(AppColors.buttons),
         fontSize: 16.sp,
     );
     return ChangeNotifierProvider<AddNewRequestController>(
@@ -268,7 +268,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                   vertical: 6.h, horizontal: 16.w),
                               width: 1.sw,
                               decoration: BoxDecoration(
-                                  color: Color(AppColors.titleText),
+                                  color: Color(AppColors.secondaryButton),
                                   borderRadius: BorderRadius.circular(50.r)),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

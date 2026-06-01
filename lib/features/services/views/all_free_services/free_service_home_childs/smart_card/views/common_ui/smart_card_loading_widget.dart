@@ -60,7 +60,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: BoxDecoration(
-        color: Color(AppColors.titleText).withValues(alpha: 0.06),
+        color: Color(AppColors.secondaryButton).withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(12),
       ),
       child: const Column(

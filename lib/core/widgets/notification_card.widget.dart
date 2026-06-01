@@ -70,7 +70,7 @@ class _NotificationCardState extends State<NotificationCard> {
                     width: AppSizes.s75,
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Color(AppColors.secondaryButton),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(AppSizes.s15),
                       ),

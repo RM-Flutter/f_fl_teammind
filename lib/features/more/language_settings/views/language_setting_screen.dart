@@ -59,7 +59,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(Icons.arrow_back, color: Color(AppColors.titleText), size: 24.r,)),
+                child: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24.r,)),
             title: AppStrings.languageSettings.tr().toUpperCase(),
             titleStyle: AppStyles.heading(context).copyWith(
                 fontSize: AppSizes.s16.sp,
@@ -149,7 +149,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                           //       height: 50,
                           //       alignment: Alignment.center,
                           //       decoration: BoxDecoration(
-                          //         color: Color(AppColors.titleText),
+                          //         color: Color(AppColors.secondaryButton),
                           //         borderRadius: BorderRadius.circular(50),
                           //       ),
                           //       padding: const EdgeInsets.symmetric(horizontal: 40),

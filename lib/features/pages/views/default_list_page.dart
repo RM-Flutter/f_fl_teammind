@@ -1,4 +1,5 @@
 
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -215,7 +216,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 10.sp, color: const Color(0xFF090B60))),],
+                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 10.sp, color: Color(AppColors.secondaryButton))),],
                 ),
               ),
             ],

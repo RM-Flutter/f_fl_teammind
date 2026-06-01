@@ -29,7 +29,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
             image: AssetImage("assets/images/png/tasks-app-bar.png"),
             fit: BoxFit.fill,
             opacity: 0.4),
-        color: Theme.of(context).colorScheme.secondary,
+        color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s28.r),
             bottomRight: Radius.circular(AppSizes.s28.r)),
@@ -134,7 +134,7 @@ class PayrollHeaderTileWidget extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Theme.of(context).colorScheme.primary,
+            color: Color(AppColors.buttons),
             size: 20.r,
           ),
           gapW12,

@@ -45,7 +45,7 @@ class SwitchRowNotification extends StatelessWidget {
             padding: 4.r,
             circleSize: 22.r,
             value: value,
-            activeColor:  Theme.of(context).colorScheme.primary,
+            activeColor:  Color(AppColors.buttons),
             inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),

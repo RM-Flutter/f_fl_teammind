@@ -26,8 +26,8 @@ class CustomRequestDetailsButton extends StatelessWidget {
         buttonStyle: ElevatedButton.styleFrom(
           fixedSize: const Size(double.infinity, double.infinity),alignment: Alignment.center,
           shadowColor: Colors.transparent,
-          backgroundColor:color?? Color(AppColors.titleText),
-          foregroundColor: color??Color(AppColors.titleText),
+          backgroundColor:color?? Color(AppColors.secondaryButton),
+          foregroundColor: color??Color(AppColors.secondaryButton),
           disabledForegroundColor: Colors.transparent,
           elevation: 2,
           shape: RoundedRectangleBorder(

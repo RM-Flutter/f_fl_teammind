@@ -33,7 +33,7 @@ class UpdateApp{
                   title: Center(
                     child: Text(
                       LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update",
-                      style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.titleText)),
+                      style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.secondaryButton)),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -85,7 +85,7 @@ class UpdateApp{
                   backgroundColor: Color(AppColors.background),
                   title: Center(
                       child: Text(AppStrings.available_update.tr(),
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.titleText)),
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.secondaryButton)),
                         textAlign: TextAlign.center,)
                   ),
                   content: Column(

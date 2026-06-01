@@ -57,7 +57,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -66,7 +66,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
           ),
           title: AppStrings.selectTemplate.tr(),
           titleStyle: TextStyle(
-            color: Color(AppColors.titleText),
+            color: Color(AppColors.secondaryButton),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
@@ -155,7 +155,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                         ? null
                         : () => vm.onGenerateCv(context, templates[selectedTemplateIndex]),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.titleText),
+                      backgroundColor: Color(AppColors.secondaryButton),
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
@@ -262,7 +262,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                     child: Text(
                       template.slug!,
                       style: TextStyle(
-                        color: Color(AppColors.titleText),
+                        color: Color(AppColors.secondaryButton),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),

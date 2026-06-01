@@ -291,7 +291,7 @@ class _FilterChip extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(2.r),
                 decoration: BoxDecoration(
-                  color: Color(AppColors.titleText),
+                  color: Color(AppColors.secondaryButton),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

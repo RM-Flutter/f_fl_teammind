@@ -92,7 +92,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                 style: AppStyles.titleTextContent(context).copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 15.sp,
-                  color: Color(AppColors.titleText).withOpacity(0.8),
+                  color: Color(AppColors.secondaryButton).withOpacity(0.8),
                 ),
               ),
             ],
@@ -134,7 +134,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                   primary: Color(AppColors.buttons),
                   onPrimary: Colors.white,
                   surface: Colors.white,
-                  onSurface: Color(AppColors.titleText),
+                  onSurface: Color(AppColors.secondaryButton),
                 ),
               ),
               child: child!,

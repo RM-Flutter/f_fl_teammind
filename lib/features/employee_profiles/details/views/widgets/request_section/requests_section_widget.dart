@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
@@ -43,7 +44,7 @@ class RequestsSectionWidget extends StatelessWidget {
           gapH24,
           Center(
               child: CustomElevatedButton(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  backgroundColor: Color(AppColors.secondaryButton),
                   titleSize: AppSizes.s14.sp,
                   title: AppStrings.viewTheLatestReviews.tr().toUpperCase(),
                   onPressed: () async{

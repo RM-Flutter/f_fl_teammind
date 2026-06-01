@@ -154,7 +154,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Color(AppColors.titleText),
+              color: Color(AppColors.secondaryButton),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
@@ -163,7 +163,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
         ),
         title: AppStrings.vacationCalc2.tr(),
         titleStyle: TextStyle(
-          color: Color(AppColors.titleText),
+          color: Color(AppColors.secondaryButton),
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
@@ -256,7 +256,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
               child: ElevatedButton(
                 onPressed: _calculateDays,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(AppColors.titleText),
+                  backgroundColor: Color(AppColors.secondaryButton),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -284,7 +284,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
                     child: Text(
                       AppStrings.holidayBalance.tr(),
                       style: TextStyle(
-                        color: Color(AppColors.titleText),
+                        color: Color(AppColors.secondaryButton),
                         fontSize: 14,
                         height: 1.4,
                       ),
@@ -293,7 +293,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
                   Text(
                     calculatedBalance!.toStringAsFixed(1),
                     style: TextStyle(
-                      color: Color(AppColors.titleText),
+                      color: Color(AppColors.secondaryButton),
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),

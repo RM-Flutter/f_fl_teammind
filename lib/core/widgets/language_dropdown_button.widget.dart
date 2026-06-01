@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/user_consts.dart';
 import '../models/settings/general_settings.model.dart';
@@ -42,8 +43,8 @@ class LanguageDropdownButton extends StatelessWidget {
                 locale == "ar" ? "عربي" : "English",
                 style: TextStyle(
                     color: context.locale.languageCode == locale
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
+                        ? Color(AppColors.secondaryButton)
+                        : Color(AppColors.buttons),
                     fontSize: AppSizes.s14,
                     fontWeight: context.locale.languageCode == locale
                         ? FontWeight.bold
@@ -62,7 +63,7 @@ class LanguageDropdownButton extends StatelessWidget {
             Positioned.fill(
               child: Icon(
                 Icons.language,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Color(AppColors.secondaryButton),
                 size: AppSizes.s36,
               ),
             ),

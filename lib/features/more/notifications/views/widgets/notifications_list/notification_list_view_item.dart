@@ -120,7 +120,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                           fontWeight: seen ? FontWeight.w400 : FontWeight.w700,
                           color: seen
                               ? Colors.black.withOpacity(0.5)
-                              : Color(AppColors.titleText),
+                              : Color(AppColors.secondaryButton),
                         ),
                       ),
                     ],

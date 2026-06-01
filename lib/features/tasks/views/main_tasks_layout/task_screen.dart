@@ -74,7 +74,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 width: 35.r,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(AppColors.titleText)),
+                    color: Color(AppColors.secondaryButton)),
                 child: Icon(
                   Icons.refresh,
                   color: Colors.white,
@@ -204,7 +204,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         viewModel.getTask(context, loadMore: true);
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                                        backgroundColor: Color(AppColors.secondaryButton),
                                         foregroundColor: Colors.white,
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 40.w, vertical: 12.h),

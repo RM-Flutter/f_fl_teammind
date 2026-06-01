@@ -43,7 +43,7 @@ class TemplatePage extends StatelessWidget {
         titleStyle: titleStyle ?? TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w700,
-          color: Color(AppColors.titleText)
+          color: Color(AppColors.secondaryButton)
         ),
         bottom: bottomAppbarWidget,
         routeName: routeName,
@@ -56,7 +56,7 @@ class TemplatePage extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(AppColors.titleText)),
+                        color: Color(AppColors.secondaryButton)),
                     child: const Icon(
                       Icons.arrow_back_sharp,
                       color: Colors.white,

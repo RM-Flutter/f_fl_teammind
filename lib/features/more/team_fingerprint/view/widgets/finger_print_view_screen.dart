@@ -108,7 +108,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                                   //     screenId: '/fingerprints'),
                                   // if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
                                   //     child: CustomElevatedButton(
-                                  //         backgroundColor: Theme.of(context).colorScheme.primary,
+                                  //         backgroundColor: Color(AppColors.buttons),
                                   //         titleSize: AppSizes.s12,
                                   //         title: AppStrings.showOfflineFingerprints.tr().toUpperCase(),
                                   //         onPressed: () async{

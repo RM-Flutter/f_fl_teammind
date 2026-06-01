@@ -157,7 +157,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                  AppStrings.otherRequests.tr().toUpperCase(),
                  style: AppStyles.blackContent(context).copyWith(fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
-                  color: Color(AppColors.titleText))),
+                  color: Color(AppColors.secondaryButton))),
                ),
                if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true)) ListView.builder(
                 itemCount: value.requestsTeam.length,

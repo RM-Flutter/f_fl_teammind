@@ -489,7 +489,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 height: 50.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  color: Color(AppColors.titleText),
+                                                  color: Color(AppColors.secondaryButton),
                                                   borderRadius: BorderRadius.circular(50.r),
                                                 ),
                                                 padding: EdgeInsets.symmetric(horizontal: 40.w),
@@ -519,7 +519,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.background),
                                                   borderRadius: BorderRadius.circular(50.r),
-                                                  border: Border.all(color: Color(AppColors.titleText), width: 1.w),
+                                                  border: Border.all(color: Color(AppColors.secondaryButton), width: 1.w),
                                                 ),
                                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                                                 child: Text(
@@ -601,7 +601,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   })=> Text(
     title.toUpperCase(),
     style: TextStyle(
-        color: Color(AppColors.titleText),
+        color: Color(AppColors.secondaryButton),
         fontWeight: FontWeight.w500,
         fontSize: 10
     ),

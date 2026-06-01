@@ -32,7 +32,7 @@ class RequestsCalendarViewModel extends ChangeNotifier {
       case 'approved':
         return const Color(AppColors.green);
       case 'waiting_seen' || 'waiting_cancel'|| 'waiting':
-        return Color(AppColors.subTitleText);
+        return Color(0xff606060);
       default:
         return Colors.transparent;
     }

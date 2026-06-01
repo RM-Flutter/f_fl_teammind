@@ -27,7 +27,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color(AppColors.titleText),
+                color: Color(AppColors.secondaryButton),
                 borderRadius: BorderRadius.circular(30.r),
               ),
               height: 52.h,
@@ -38,7 +38,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 indicatorPadding: EdgeInsets.symmetric(horizontal: 4.w),
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
-                  color: const Color(0xFF3489EF),
+                  color:  Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(30.r),
                 ),
                 labelColor: Colors.white,

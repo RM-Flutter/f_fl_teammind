@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_sizes.dart';
 
 class FingerprintCardOffline extends StatelessWidget {
@@ -28,7 +29,7 @@ class FingerprintCardOffline extends StatelessWidget {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                  color: Color(AppColors.buttons).withOpacity(0.2),
                   offset: const Offset(0, 0),
                   blurRadius: 2.5.r,
                 ),
@@ -42,7 +43,7 @@ class FingerprintCardOffline extends StatelessWidget {
                     width: AppSizes.s50.w,
                     padding: EdgeInsets.all(AppSizes.s4.w),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Color(AppColors.buttons),
                       borderRadius: BorderRadius.circular(AppSizes.s8.r),
                     ),
                     child: Column(

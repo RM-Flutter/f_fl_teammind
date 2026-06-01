@@ -27,7 +27,7 @@ Widget defaultTapBarItem({
         height: !useVertical ? 50 : null,
         width: totalWidth,
         decoration: BoxDecoration(
-          color:  Theme.of(context).colorScheme.secondary,
+          color:  Color(AppColors.secondaryButton),
           borderRadius: BorderRadius.circular(32),
         ),
         child: SizedBox(
@@ -61,7 +61,7 @@ Widget defaultTapBarItem({
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: (selectIndex == index || selectName == items[index])
-                      ? const Color(0xff2F88FF)
+                      ?  Color(AppColors.buttons)
                       : Colors.transparent,
                 ),
                 child: Text(

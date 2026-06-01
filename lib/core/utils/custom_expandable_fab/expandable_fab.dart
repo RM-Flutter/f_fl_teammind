@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import '../../constants/app_colors.dart';
 import '../../constants/app_images.dart';
 import '../../constants/app_sizes.dart';
 
@@ -82,7 +83,7 @@ class ExpandableFabState extends State<ExpandableFab>
               padding: const EdgeInsets.all(AppSizes.s8),
               child: Icon(
                 Icons.close,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Color(AppColors.secondaryButton),
               ),
             ),
           ),
@@ -104,7 +105,7 @@ class ExpandableFabState extends State<ExpandableFab>
         duration: const Duration(milliseconds: 250),
         child: FloatingActionButton(
           heroTag: 'expandable_fab_main',
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Color(AppColors.buttons),
           onPressed: _toggle,
           child: Center(
             child: Image.asset(
