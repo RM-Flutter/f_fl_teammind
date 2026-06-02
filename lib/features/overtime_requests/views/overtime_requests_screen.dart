@@ -176,12 +176,12 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
             if (isForDepartment && displayName != null) ...[
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 12.r,
-                    backgroundColor: Color(AppColors.buttons).withOpacity(0.1),
-                    child: Icon(Icons.person, size: 14.r, color: Color(AppColors.buttons)),
-                  ),
-                  SizedBox(width: 8.w),
+                  // CircleAvatar(
+                  //   radius: 12.r,
+                  //   backgroundColor: Color(AppColors.buttons).withOpacity(0.1),
+                  //   child: Icon(Icons.person, size: 14.r, color: Color(AppColors.buttons)),
+                  // ),
+                  // SizedBox(width: 8.w),
                   Text(
                     displayName,
                     style: AppStyles.primaryContent(context).copyWith(

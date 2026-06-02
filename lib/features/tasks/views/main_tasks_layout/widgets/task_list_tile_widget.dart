@@ -77,7 +77,12 @@ class TaskListTileWidget extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(assetName, width: 24.r, height: 24.r,),
+                      SvgPicture.asset(
+                        assetName, 
+                        width: 24.r, 
+                        height: 24.r,
+                        colorFilter: ColorFilter.mode(Color(AppColors.buttons), BlendMode.srcIn),
+                      ),
                       SizedBox(width: 12.w),
                       Expanded(
                         child: Column(

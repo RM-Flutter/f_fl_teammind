@@ -244,7 +244,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Colors.transparent,
+            color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(28.r),
               bottomRight: Radius.circular(28.r),
@@ -356,6 +356,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                 children: [
                                   // Date tile with formatting
                                   InfoTileWidget(
+                                    background: Color(AppColors.secondaryButton),
                                     imagePath: 'assets/images/new-cale.png',
                                     title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
                                         DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
@@ -370,7 +371,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     isFullRow: true,
                                     trailing: InfoTileWidget(
                                         width: 100.w,
-                                        background: const Color(AppColors.black).withOpacity(0.08),
+                                        background: Color(AppColors.secondaryButton),
                                         imgPath: Icons.access_time,
                                         title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
                                   ),
@@ -609,7 +610,7 @@ class InfoTileWidget extends StatelessWidget {
         this.width,
         this.onTap,
         required this.title,
-        this.background = const Color(AppColors.navyBlue),
+        this.background,
         this.trailing,
         this.imgColor});
 
@@ -617,6 +618,7 @@ class InfoTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color effectiveBackground = background ?? const Color(AppColors.navyBlue);
     return GestureDetector(
       onTap: onTap ?? (){},
       child: Container(
@@ -624,7 +626,7 @@ class InfoTileWidget extends StatelessWidget {
             ? (1.sw - 116.w) / 2
             : 1.sw - 97.w,
         decoration: BoxDecoration(
-            color: isHighLight == true ? _imgColor : background,
+            color: isHighLight == true ? _imgColor : effectiveBackground,
             borderRadius: BorderRadius.circular(10.r)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

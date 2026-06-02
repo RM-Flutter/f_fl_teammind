@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
       width: 1.sw,
       height: 300.h,
       decoration: BoxDecoration(
+        color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s32.r),
             bottomRight: Radius.circular(AppSizes.s32.r)),
@@ -56,8 +58,8 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                 bottomLeft: Radius.circular(AppSizes.s32.r),
                 bottomRight: Radius.circular(AppSizes.s32.r)),
             child: Image.asset(
-              "assets/images/png/tasks-app-bar.png",
-              fit: BoxFit.cover,
+              "assets/images/request-app-bar.png",
+              fit: BoxFit.fill,
               alignment: const Alignment(0.5, 0.0),
               width: 1.sw,
               height: 300.h,
@@ -108,6 +110,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
                       "$assets",
                       height: 50.r,
                       width: 50.r,
+                      colorFilter: ColorFilter.mode(Color(AppColors.buttons), BlendMode.srcIn),
                     ),
                     SizedBox(height: 15.h),
                     Text(

@@ -160,29 +160,79 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarWithBookmark(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: 130, // Fixed height to show the background properly
             decoration: BoxDecoration(
               color: Color(AppColors.secondaryButton),
-              shape: BoxShape.circle,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(28),
+                bottomRight: Radius.circular(28),
+              ),
             ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(28),
+                    bottomRight: Radius.circular(28),
+                  ),
+                  child: Image.asset(
+                    "assets/images/request-app-bar.png",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 130,
+                  ),
+                ),
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(AppColors.secondaryButton).withValues(alpha: 0.9),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(28),
+                        bottomRight: Radius.circular(28),
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top), // Pad for status bar
+                    child: AppBarWithBookmark(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      leading: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: InkWell(
+                          onTap: _goBack,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.arrow_back_sharp, color: Colors.white, size: 18),
+                          ),
+                        ),
+                      ),
+                      title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
+                      titleStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                      centerTitle: true,
+                      routeName: AppRoutes.aboutTeamMindScreen.name,
+                      bookmarkIconColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: _goBack,
-        ),
-        title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
-        titleStyle: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 20,
-        ),
-        centerTitle: true,
-        routeName: AppRoutes.aboutTeamMindScreen.name,
-      ),
-      body: _loading
+          Expanded(
+            child: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
               ? Center(
@@ -381,6 +431,9 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                     ],
                   ),
                 ),
+          ),
+        ],
+      ),
     );
   }
 }

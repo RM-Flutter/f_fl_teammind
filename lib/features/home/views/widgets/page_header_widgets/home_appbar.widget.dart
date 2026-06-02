@@ -91,6 +91,9 @@ class HomeAppbarWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
+        color: isExpanded == true 
+            ? Color(AppColors.secondaryButton)
+            : Color(AppColors.secondaryButton).withValues(alpha: 0.95),
         borderRadius: isExpanded == true
             ? BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s32.r),
@@ -102,7 +105,8 @@ class HomeAppbarWidget extends StatelessWidget {
           Stack(
             children: [
               // Background image
-              ClipRRect(
+              if (isExpanded == true)
+                ClipRRect(
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(AppSizes.s32.r),
                     bottomRight: Radius.circular(AppSizes.s32.r)),
@@ -113,7 +117,7 @@ class HomeAppbarWidget extends StatelessWidget {
                         bottomRight: Radius.circular(AppSizes.s32.r)),
                   ),
                     child: Image.asset(
-                      "assets/images/png/team-mind-home.jpg",
+                      "assets/images/png/home-app-bar.png",
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: 300.0.h,

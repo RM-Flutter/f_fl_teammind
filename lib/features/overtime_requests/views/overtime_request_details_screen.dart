@@ -542,12 +542,13 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                           runSpacing: 12.h,
                           children: [
                             InfoTileWidget(
+                              background: Color(AppColors.secondaryButton),
                               imgPath: Icons.calendar_month,
                               title: widget.request.date ?? "",
                               isFullRow: true,
                               trailing: InfoTileWidget(
                                 width: 100.w,
-                                background: const Color(AppColors.black).withOpacity(0.08),
+                                background: Color(AppColors.secondaryButton).withOpacity(0.08),
                                 imgPath: Icons.access_time,
                                 title: formatDuration(widget.request.overtime),
                               ),

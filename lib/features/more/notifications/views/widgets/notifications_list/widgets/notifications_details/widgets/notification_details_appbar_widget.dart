@@ -22,6 +22,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
       width: double.infinity,
       height: 300.h,
       decoration: BoxDecoration(
+        color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(AppSizes.s32.r),
             bottomRight: Radius.circular(AppSizes.s32.r)),
@@ -38,6 +39,16 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
               fit: BoxFit.cover,
               width: double.infinity,
               height: 300.h,
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(AppColors.secondaryButton).withValues(alpha: 0.9),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(AppSizes.s32.r),
+                    bottomRight: Radius.circular(AppSizes.s32.r)),
+              ),
             ),
           ),
           // Content

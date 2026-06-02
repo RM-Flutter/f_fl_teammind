@@ -49,11 +49,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           bottomLeft: Radius.circular(AppSizes.s40.r),
                           bottomRight: Radius.circular(AppSizes.s40.r),
                         ),
-                        child: Image.asset(
-                          "assets/images/png/tasks-app-bar.png",
-                          width: double.infinity,
-                          height: 280.h,
-                          fit: BoxFit.cover,
+                        child: Container(
+                          color: Color(AppColors.secondaryButton),
+                          child: Image.asset(
+                            "assets/images/png/home-app-bar.png",
+                            width: double.infinity,
+                            height: 280.h,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -85,18 +88,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 70.h,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Image.asset(
-                            "assets/images/team-mind-logo.png",
-                            // height: 100,
-                            // fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
+
                     ],
                   ),
 

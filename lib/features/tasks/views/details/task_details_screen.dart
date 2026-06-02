@@ -210,9 +210,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                     icon['value']!,
                                                     width: 24.r,
                                                     height: 24.r,
-                                  colorFilter: isCompleted
-                                      ?  ColorFilter.mode((Color(AppColors.buttons)), BlendMode.srcIn)
-                                      : null,
+                                                    colorFilter: ColorFilter.mode(Color(AppColors.buttons), BlendMode.srcIn),
                                                   ),
                                                 ),
                                                 Expanded(
@@ -225,9 +223,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                         Text(
                                                           subTask.name?.toUpperCase() ?? "",
                                                           style: AppStyles.heading(context).copyWith(
-                                                            color: isCompleted
-                                                                ? Color(AppColors.secondaryButton)
-                                                                : Color(AppColors.secondaryButton),
+                                                            color: Colors.black,
                                                             fontSize: 13.sp,
                                                             fontWeight: FontWeight.bold,
                                                           ),
