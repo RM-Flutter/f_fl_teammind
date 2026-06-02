@@ -22,6 +22,7 @@ import 'app_config_service.dart';
 import 'backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'backend_services/get_endpoint_service.dart';
 import 'localization_service.dart';
+import 'dynamic_app_config_service.dart';
 
 
 enum SettingsType {
@@ -266,6 +267,7 @@ abstract class AppSettingsService {
         });}
       if((need == null || need.contains('general_settings')) &&result.data!['general_settings'] != null && result.data!['general_settings'] ['status']  != false && CacheHelper.getString("USG") != null && CacheHelper.getString("USG") != ""){
         CacheHelper.deleteData(key: "USG");
+        DynamicAppConfigService.clearCache();
       }
       var prefs = await SharedPreferences.getInstance();
       if((need == null || need.contains('user_settings')) && result.data!['user_settings'] != null){
@@ -283,6 +285,7 @@ abstract class AppSettingsService {
         prefs = await SharedPreferences.getInstance();
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
+        DynamicAppConfigService.clearCache();
         AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null){
@@ -405,7 +408,10 @@ abstract class AppSettingsService {
         CacheHelper.deleteData(key: "US2").then((v){
           print("DELETED FROM CACHE SUCCESS");
         });}
-      if(result.data!['general_settings'] != null &&result.data!['general_settings'] ['status']  != false && CacheHelper.getString("USG") != null && CacheHelper.getString("USG") != ""){CacheHelper.deleteData(key: "USG");}
+      if(result.data!['general_settings'] != null &&result.data!['general_settings'] ['status']  != false && CacheHelper.getString("USG") != null && CacheHelper.getString("USG") != ""){
+        CacheHelper.deleteData(key: "USG");
+        DynamicAppConfigService.clearCache();
+      }
       var prefs = await SharedPreferences.getInstance();
       if(result.data!['user_settings'] != null){
         if (result.data!['user_settings']['data'] != null){
@@ -420,6 +426,7 @@ abstract class AppSettingsService {
         prefs = await SharedPreferences.getInstance();
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
+        DynamicAppConfigService.clearCache();
       }
       if(result.data!['user2_settings'] != null){
         if (result.data!['user2_settings']['data'] != null){

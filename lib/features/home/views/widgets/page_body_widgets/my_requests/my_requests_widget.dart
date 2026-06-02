@@ -59,8 +59,9 @@ class RequestsWidget extends StatelessWidget {
                 children: [
                    Text(getRequestsTypeStr(),
                       style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
                       ),),
                   TextButton(
                     onPressed: () async =>
@@ -73,7 +74,7 @@ class RequestsWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 10.h),
               ...requests.map(
                 (req) => RequestCard(
                   request: req,

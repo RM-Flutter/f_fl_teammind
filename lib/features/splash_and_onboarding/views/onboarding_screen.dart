@@ -223,9 +223,7 @@ class OnBoardingScreen extends StatelessWidget {
                                         style: AppStyles.blackContent(context).copyWith(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16.sp,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary)),
+                                            color: Color(AppColors.secondaryButton))),
                                   ),
                                 ],
                               ),

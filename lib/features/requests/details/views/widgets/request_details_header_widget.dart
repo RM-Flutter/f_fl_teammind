@@ -244,7 +244,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Color(AppColors.secondaryButton),
+            color: Colors.transparent,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(28.r),
               bottomRight: Radius.circular(28.r),

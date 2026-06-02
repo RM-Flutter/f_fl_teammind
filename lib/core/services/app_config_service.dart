@@ -227,18 +227,21 @@ class   AppConfigService extends ChangeNotifier {
           _generalSettigns = data;
           _userSettings = dataS1;
           _user2Settings = dataS2;
+          notifyListeners();
           return;
         }
       case SettingsType.userSettings|| SettingsType.startupSettings:
         if (dataS1 != null) {
           print("Done S1");
           _userSettings = dataS1;
+          notifyListeners();
         }
         return;
       case SettingsType.user2Settings|| SettingsType.startupSettings:
         if (dataS2 != null) {
           print("Done S2");
           _user2Settings = dataS2;
+          notifyListeners();
         }
         return;
     }

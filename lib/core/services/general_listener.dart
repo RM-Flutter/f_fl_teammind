@@ -135,7 +135,7 @@ class GeneralListener {
                             ? popup['title']['ar']
                             : popup['title']['en'] ?? "",
                         style: TextStyle(
-                          color: Color(AppColors.secondaryButton),
+                          color: Color(AppColors.black),
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
@@ -152,7 +152,7 @@ class GeneralListener {
                             ? popup['content']['ar']
                             : popup['content']['en'] ?? "",
                         style: TextStyle(
-                          color: Color(AppColors.secondaryButton),
+                          color: Color(AppColors.black),
                           fontSize: 14,
                         ),
                         textAlign: TextAlign.center,
@@ -173,7 +173,7 @@ class GeneralListener {
                 },
                 child: Text(
                   AppStrings.go.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(AppColors.secondaryButton)),
                 ),
               ),
             TextButton(

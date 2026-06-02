@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
+import 'package:provider/provider.dart';
+import 'core/services/app_config_service.dart';
+
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   NotificationService? notificationService;
@@ -29,18 +32,22 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp.router(
-          title: 'Team Mind',
-          restorationScopeId: 'app',
-          routerConfig: appGoRouter,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          debugShowCheckedModeBanner: false,
-          themeMode: ThemeMode.light,
-          theme: AppThemeService.getTheme(isDark: false, context: context),
-          darkTheme: AppThemeService.getTheme(isDark: true, context: context),
-          scrollBehavior: PlatformIs.web ? AppScrollBehavior() : null,
+        return Consumer<AppConfigService>(
+          builder: (context, appConfig, child) {
+            return MaterialApp.router(
+              title: 'Team Mind',
+              restorationScopeId: 'app',
+              routerConfig: appGoRouter,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              debugShowCheckedModeBanner: false,
+              themeMode: ThemeMode.light,
+              theme: AppThemeService.getTheme(isDark: false, context: context),
+              darkTheme: AppThemeService.getTheme(isDark: true, context: context),
+              scrollBehavior: PlatformIs.web ? AppScrollBehavior() : null,
+            );
+          },
         );
       },
     );
