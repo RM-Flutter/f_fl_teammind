@@ -116,11 +116,15 @@ class HomeAppbarWidget extends StatelessWidget {
                         bottomLeft: Radius.circular(AppSizes.s32.r),
                         bottomRight: Radius.circular(AppSizes.s32.r)),
                   ),
-                    child: Image.asset(
-                      "assets/images/png/home-app-bar.png",
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 300.0.h,
+                    child: Opacity(
+                      opacity: 0.7,
+                      child: Image.asset(
+                        "assets/images/png/home-app-bar.png",
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 300.0.h,
+
+                      ),
                     ),
                 ),
               ),
