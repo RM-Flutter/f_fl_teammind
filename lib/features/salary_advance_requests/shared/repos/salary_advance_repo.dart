@@ -146,4 +146,33 @@ class SalaryAdvanceRepo {
       allData: true,
     );
   }
+
+  // Update Request
+  static Future<OperationResult<Map<String, dynamic>>> updateSalaryAdvanceRequest({
+    required BuildContext context,
+    required int id,
+    required String total,
+    required String howLongToPay,
+    required String from,
+    List<FilePickerResult> files = const [],
+  }) async {
+    final baseUrl = EndpointServices.getApiEndpoint(EndpointsNames.salaryAdvanceUpdate).url;
+    final url = '$baseUrl/$id';
+
+    Map<String, String> data = {
+      'total': total,
+      'how_long_to_pay': howLongToPay,
+      'from': from,
+    };
+
+    return await DioApiService().postWithFormData<Map<String, dynamic>>(
+      url,
+      data,
+      dataKey: 'data',
+      files: files,
+      fileFieldName: 'files[]',
+      context: context,
+      allData: true,
+    );
+  }
 }

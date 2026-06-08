@@ -82,7 +82,14 @@ class ReportAttachmentModel {
 
   factory ReportAttachmentModel.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic>? decodedImageList;
-    if (json['image_list'] != null && json['image_list'] is String) {
+    // Support both salary-advance format (thumbnail/href direct) and daily-report format (image_list JSON)
+    if (json['thumbnail'] != null) {
+      // Salary advance format: thumbnail and href at top level
+      decodedImageList = {
+        'thumbnail': json['thumbnail'].toString(),
+        'original': (json['href'] ?? json['url'] ?? json['thumbnail']).toString(),
+      };
+    } else if (json['image_list'] != null && json['image_list'] is String) {
       try {
         decodedImageList = jsonDecode(json['image_list']);
       } catch (e) {
@@ -91,7 +98,7 @@ class ReportAttachmentModel {
     }
     return ReportAttachmentModel(
       id: json['id'],
-      fileType: json['file_type'],
+      fileType: json['file_type'] ?? _guessFileType(json['thumbnail']?.toString() ?? json['file_name']?.toString() ?? ''),
       fileName: json['file_name'],
       url: json['url'],
       size: json['size'] != null ? double.tryParse(json['size'].toString()) : null,
@@ -110,6 +117,12 @@ class ReportAttachmentModel {
       'title': title,
       'image_list': imageList,
     };
+  }
+
+  static String _guessFileType(String path) {
+    final ext = path.split('.').last.toLowerCase().split('?').first;
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(ext)) return ext;
+    return 'file';
   }
 }
 

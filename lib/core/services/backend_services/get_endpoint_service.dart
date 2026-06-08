@@ -291,6 +291,10 @@ abstract class EndpointServices {
         return EndPoint(
             name: name,
             url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests'); // Will append ID/review
+      case EndpointsNames.salaryAdvanceUpdate:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests'); // Will append ID
 
     }
   }

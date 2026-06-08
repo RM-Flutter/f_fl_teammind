@@ -13,6 +13,7 @@ import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalti
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 
 import '../controllers/salary_advance_details_controller.dart';
+import 'update_salary_advance_screen.dart';
 
 class SalaryAdvanceDetailsScreen extends StatefulWidget {
   final int requestId;
@@ -377,6 +378,60 @@ class _SalaryAdvanceDetailsScreenState
     }
 
     List<Widget> buttons = [];
+
+    // Edit Button for Employee (owner) or Manager/HR
+    if (controller.canEdit) {
+      buttons.add(
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(AppColors.buttonColor),
+                Color(AppColors.buttonSecondaryColor),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [
+              BoxShadow(
+                color: Color(AppColors.buttonColor).withOpacity(0.25),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.edit_note_rounded, color: Colors.white),
+            label: Text(
+              'edit_request'.tr(),
+              style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: EdgeInsets.symmetric(vertical: 14.h),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.r)),
+            ),
+            onPressed: () async {
+              final updated = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  builder: (_) => UpdateSalaryAdvanceScreen(
+                    existingRequest: controller.requestDetails!,
+                  ),
+                ),
+              );
+              if (updated == true && mounted) {
+                viewModel.fetchDetails(context, widget.requestId);
+              }
+            },
+          ),
+        ),
+      );
+    }
 
     // Delete Button for Employee
     if (controller.canDelete) {

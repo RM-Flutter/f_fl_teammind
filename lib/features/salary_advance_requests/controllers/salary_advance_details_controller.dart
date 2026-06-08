@@ -29,6 +29,15 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     return true;
   }
 
+  bool get canEdit {
+    if (requestDetails == null || userSettings == null) return false;
+    // The employee can edit their own request
+    final isOwner = userSettings!.empId.toString() ==
+        requestDetails!.employeeId?.toString();
+    // Manager and HR can also edit any request
+    return isOwner || isManagerOrHr;
+  }
+
   bool get canDelete {
     if (requestDetails == null) return false;
     if (requestDetails?.createdAt == null) return false;

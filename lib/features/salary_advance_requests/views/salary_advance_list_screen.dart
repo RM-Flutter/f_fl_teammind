@@ -110,7 +110,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
       );
     }
 
-    return _buildListView(controller.personalRequests!, isIncoming: false);
+    return _buildListView(controller, controller.personalRequests!, isIncoming: false);
   }
 
   Widget _buildIncomingList(SalaryAdvanceListController controller) {
@@ -125,10 +125,14 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
       );
     }
 
-    return _buildListView(controller.incomingRequests!, isIncoming: true);
+    return _buildListView(controller, controller.incomingRequests!, isIncoming: true);
   }
 
-  Widget _buildListView(List<SalaryAdvanceRequestModel> requests, {required bool isIncoming}) {
+  Widget _buildListView(
+      SalaryAdvanceListController controller,
+      List<SalaryAdvanceRequestModel> requests,
+      {required bool isIncoming}) {
+
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -137,19 +141,29 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
         child: Padding(
           padding: EdgeInsets.all(AppSizes.s12.r),
           child: RefreshIndicator.adaptive(
-            onRefresh: () => Provider.of<SalaryAdvanceListController>(context, listen: false).initializeScreen(context),
+            onRefresh: () => controller.initializeScreen(context),
             child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: requests.length,
-            itemBuilder: (context, index) {
-              return SalaryAdvanceListItemWidget(
-                request: requests[index],
-                isIncoming: isIncoming,
-              );
-            },
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: requests.length,
+              itemBuilder: (context, index) {
+                final request = requests[index];
+
+                // Personal list → always editable (it's the owner's request)
+                // Incoming list → editable only if manager/HR
+                final canEdit =
+                    isIncoming ? controller.isManagerOrHr : true;
+
+                return SalaryAdvanceListItemWidget(
+                  request: request,
+                  isIncoming: isIncoming,
+                  canEdit: canEdit,
+                  onRefresh: () => controller.initializeScreen(context),
+                );
+              },
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

@@ -65,7 +65,8 @@ enum EndpointsNames {
   salaryAdvanceIncoming,
   salaryAdvanceDetails,
   salaryAdvanceReview,
-  salaryAdvanceDelete
+  salaryAdvanceDelete,
+  salaryAdvanceUpdate
 }
 
 class EndPoint {
