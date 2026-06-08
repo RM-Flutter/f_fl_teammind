@@ -59,7 +59,13 @@ enum EndpointsNames {
   removeAccount,
   empEvaluation,
   summaryReport,
-  activateTfa, myStores, myOrdersOdoo, myOrders, avaialbleProducts, calculateOrder, completeOrder, showTeam, topRated, team, teamJoin, teamApproveRequest, leaveTeam, deleteMember
+  activateTfa, myStores, myOrdersOdoo, myOrders, avaialbleProducts, calculateOrder, completeOrder, showTeam, topRated, team, teamJoin, teamApproveRequest, leaveTeam, deleteMember,
+  salaryAdvanceCreate,
+  salaryAdvancePersonal,
+  salaryAdvanceIncoming,
+  salaryAdvanceDetails,
+  salaryAdvanceReview,
+  salaryAdvanceDelete
 }
 
 class EndPoint {

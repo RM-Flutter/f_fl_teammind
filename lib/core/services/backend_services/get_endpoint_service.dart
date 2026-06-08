@@ -270,6 +270,28 @@ abstract class EndpointServices {
         return EndPoint(
             name: name,
             url: '${AppConstants.baseUrl}/rm_users/v1/get_device_token');
+      case EndpointsNames.salaryAdvanceCreate:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests');
+      case EndpointsNames.salaryAdvancePersonal:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests/personal');
+      case EndpointsNames.salaryAdvanceIncoming:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests/incoming');
+      case EndpointsNames.salaryAdvanceDetails:
+      case EndpointsNames.salaryAdvanceDelete:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests'); // Will append ID
+      case EndpointsNames.salaryAdvanceReview:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests'); // Will append ID/review
+
     }
   }
 }

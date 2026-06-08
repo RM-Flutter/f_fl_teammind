@@ -99,6 +99,16 @@ class DioApiService implements BackEndServicesInterface {
 
   // Get user-friendly error message
   String _getErrorMessage(DioException error) {
+    if (error.response?.data != null && error.response!.data is Map) {
+      try {
+        final parsed = ApiServiceHelpers.parseResponse(
+            responseJsonData: error.response!.data, dataKey: 'data');
+        if (parsed.message != null && parsed.message!.isNotEmpty && parsed.message != 'No Server Error!') {
+          return parsed.message!;
+        }
+      } catch (_) {}
+    }
+
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -210,6 +220,10 @@ class DioApiService implements BackEndServicesInterface {
         return OperationResult<T>(success: false, message: respond);
 
       default:
+        if (response.data is Map && response.data['message'] != null) {
+          return ApiServiceHelpers.parseResponse<T>(
+             responseJsonData: response.data, dataKey: dataKey, allData: allData);
+        }
         respond = 'Unknown Error';
         return OperationResult<T>(
             success: false, message: 'Result code = ${response.statusCode}');
@@ -536,6 +550,13 @@ class DioApiService implements BackEndServicesInterface {
           allData: allData,
         );
       } else {
+        if (response.data is Map && response.data['message'] != null) {
+          return ApiServiceHelpers.parseResponse<T>(
+            responseJsonData: response.data,
+            dataKey: dataKey,
+            allData: allData,
+          );
+        }
         return OperationResult<T>(
           success: false,
           message: 'Result code = ${response.statusCode}',
@@ -569,6 +590,13 @@ class DioApiService implements BackEndServicesInterface {
       }
 
       // Handle connection errors
+      if (e.response?.data is Map && (e.response!.data as Map)['message'] != null) {
+        return ApiServiceHelpers.parseResponse<T>(
+          responseJsonData: e.response!.data,
+          dataKey: dataKey,
+          allData: allData,
+        );
+      }
       String errorMessage = _getErrorMessage(e);
       return OperationResult(
         success: false,

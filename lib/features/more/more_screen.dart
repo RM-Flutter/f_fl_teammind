@@ -132,6 +132,15 @@ class _MoreScreenState extends State<MoreScreen> {
                               }),
                             ),
                             DefaultListTile(
+                              title: AppStrings.salaryAdvanceRequests.tr(),
+                              src: AppIcons.payroll,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.salaryAdvanceList.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
+                            DefaultListTile(
                               title: AppStrings.tasks.tr(),
                               src: AppIcons.tasks,
                               onTap: () async => await context.pushNamed(

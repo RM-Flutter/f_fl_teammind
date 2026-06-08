@@ -347,6 +347,7 @@ abstract class AppStrings {
   static const EGP = "EGP";
   static const totalSalary = "totalSalary";
   static const salaryAdvance = "salaryAdvance";
+  static const salaryAdvanceRequests = "salary_advance_requests";
   static const totalSpecialAndBonuses = "totalSpecialAndBonuses";
   static const jobTitle = "jobTitle";
   static const netSalary = "netSalary";

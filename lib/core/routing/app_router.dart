@@ -66,6 +66,9 @@ import 'package:app_test/features/daily_reports/models/daily_report_model.dart';
 import 'package:app_test/features/daily_reports/views/daily_reports_list_screen.dart';
 import 'package:app_test/features/daily_reports/views/daily_report_details_screen.dart';
 import 'package:app_test/features/daily_reports/views/add_edit_daily_report_screen.dart';
+import 'package:app_test/features/salary_advance_requests/views/salary_advance_list_screen.dart';
+import 'package:app_test/features/salary_advance_requests/views/salary_advance_details_screen.dart';
+import 'package:app_test/features/salary_advance_requests/views/create_salary_advance_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_services_home_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/my_cv_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/personality_test/views/personality_test_screen.dart';
@@ -182,6 +185,9 @@ enum AppRoutes {
   dailyReportsListScreen,
   dailyReportDetailsScreen,
   addEditDailyReportScreen,
+  salaryAdvanceList,
+  salaryAdvanceDetails,
+  salaryAdvanceCreate,
 }
 
 const TestVSync ticker = TestVSync();
@@ -415,6 +421,37 @@ GoRouter goRouter(BuildContext context) {
                   if (lang != null) context.setLocale(Locale(lang));
                   final report = state.extra as DailyReportModel;
                   return MaterialPage(child: DailyReportDetailsScreen(report: report));
+                },
+              ),
+              GoRoute(
+                path: 'salary-advance-requests',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.salaryAdvanceList.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return const MaterialPage(child: SalaryAdvanceListScreen());
+                },
+              ),
+              GoRoute(
+                path: 'salary-advance-details/:id',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.salaryAdvanceDetails.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  final id = int.parse(state.pathParameters['id']!);
+                  return MaterialPage(child: SalaryAdvanceDetailsScreen(requestId: id));
+                },
+              ),
+              GoRoute(
+                path: 'salary-advance-create',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.salaryAdvanceCreate.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return const MaterialPage(child: CreateSalaryAdvanceScreen());
                 },
               )
             ],
