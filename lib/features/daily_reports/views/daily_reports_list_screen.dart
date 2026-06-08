@@ -39,35 +39,110 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
     });
   }
 
-  void _deleteReport(BuildContext context, DailyReportModel report, DailyReportsProvider provider) async {
+  void _deleteReport(BuildContext context, DailyReportModel report,
+      DailyReportsProvider provider) async {
     bool confirm = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        title: Row(
-          children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28.r),
-            SizedBox(width: 10.w),
-            Text(AppStrings.deleteReport.tr()),
-          ],
-        ),
-        content: Text(AppStrings.confirmDeleteReport.tr(), style: const TextStyle(height: 1.5)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false), 
-            child: Text(AppStrings.cancel.tr(), style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.bold))
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          context: context,
+          builder: (context) => Dialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            child: Container(
+              padding: EdgeInsets.all(AppSizes.s24.r),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 30,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16.r),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.delete_outline_rounded,
+                        color: Colors.red.shade400, size: 36.r),
+                  ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    AppStrings.deleteReport.tr(),
+                    style: AppStyles.heading(context).copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Color(AppColors.titleTextColor),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    AppStrings.confirmDeleteReport.tr(),
+                    style: AppStyles.content(context).copyWith(
+                      fontSize: 14.sp,
+                      color: Colors.grey.shade600,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 28.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                            ),
+                          ),
+                          child: Text(
+                            AppStrings.cancel.tr(),
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red.shade500,
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text(
+                            AppStrings.delete.tr(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            onPressed: () => Navigator.pop(context, true), 
-            child: Text(AppStrings.delete.tr(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
           ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
 
     if (confirm) {
       await provider.deleteReport(context, report.id.toString());
@@ -160,10 +235,8 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
 
   Widget _buildReportCard(DailyReportModel report, DailyReportsProvider provider, {required bool isIncoming}) {
     String? displayName = report.employeeProfile?.name;
-    bool canEdit = !isIncoming && report.createdAt != null && 
-        DateTime.now().year == report.createdAt!.year && 
-        DateTime.now().month == report.createdAt!.month && 
-        DateTime.now().day == report.createdAt!.day;
+    // Only the owner can edit their own reports (which are in the personal list, i.e., !isIncoming)
+    bool canEdit = !isIncoming;
 
     return Container(
       margin: EdgeInsets.only(bottom: AppSizes.s16.h, left: 16.w, right: 16.w),

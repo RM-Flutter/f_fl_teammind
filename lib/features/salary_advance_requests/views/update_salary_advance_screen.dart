@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -170,6 +172,117 @@ class _UpdateSalaryAdvanceScreenState
                         ),
                       ),
                       SizedBox(height: 28.h),
+
+                      // ─── Existing Attachments Section ───
+                      if (widget.existingRequest.attachments != null &&
+                          widget.existingRequest.attachments!.isNotEmpty) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.attachment_rounded,
+                                color: Color(AppColors.buttons), size: 18.sp),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'attachments'.tr(),
+                              style: AppStyles.heading(context)
+                                  .copyWith(fontSize: 15.sp),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        Wrap(
+                          spacing: 12.w,
+                          runSpacing: 12.h,
+                          children: widget.existingRequest.attachments!
+                              .map((attachment) {
+                            final isImage = attachment.fileType?.toLowerCase() == 'png' ||
+                                attachment.fileType?.toLowerCase() == 'jpg' ||
+                                attachment.fileType?.toLowerCase() == 'jpeg';
+
+                            if (isImage &&
+                                attachment.imageList != null &&
+                                attachment.imageList!['thumbnail'] != null) {
+                              final String imageUrl = attachment.imageList!['thumbnail'];
+                              return GestureDetector(
+                                onTap: () {
+                                  final originalUrl = attachment.imageList!['original'] ?? imageUrl;
+                                  launchUrl(Uri.parse(originalUrl), mode: LaunchMode.externalApplication);
+                                },
+                                child: Container(
+                                  width: 80.w,
+                                  height: 80.w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                        color: Colors.grey.shade300, width: 1),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Container(
+                                        color: Colors.grey.shade100,
+                                        child: const Center(
+                                            child: CircularProgressIndicator(strokeWidth: 2)),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        color: Colors.grey.shade100,
+                                        child: const Icon(Icons.broken_image,
+                                            color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            // Non-image file or fallback
+                            return GestureDetector(
+                              onTap: () {
+                                if (attachment.url != null) {
+                                  launchUrl(Uri.parse(attachment.url!), mode: LaunchMode.externalApplication);
+                                }
+                              },
+                              child: Container(
+                                width: 80.w,
+                                height: 80.w,
+                                decoration: BoxDecoration(
+                                  color: Color(AppColors.buttonSecondaryColor)
+                                      .withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                      color: Color(AppColors.buttonSecondaryColor)
+                                          .withOpacity(0.2),
+                                      width: 1),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.insert_drive_file_rounded,
+                                        color: Color(AppColors.buttonSecondaryColor),
+                                        size: 24.sp),
+                                    SizedBox(height: 4.h),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                                      child: Text(
+                                        attachment.fileName ?? 'File',
+                                        style: AppStyles.content(context).copyWith(
+                                          fontSize: 10.sp,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 28.h),
+                      ],
 
                       // ─── New Attachments Section ───
                       Row(
