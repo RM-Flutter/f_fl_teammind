@@ -4,14 +4,14 @@ abstract class AppColors {
 
   static int get buttonColor =>
       DynamicAppConfigService.hexToInt(
-        DynamicAppConfigService.getColorValue('buttonColor'),
+        DynamicAppConfigService.getColorValue('secondary'),
         0xFF3389EE,
       );
 
   static int get buttonSecondaryColor =>
       DynamicAppConfigService.hexToInt(
-        DynamicAppConfigService.getColorValue('buttonSecondaryColor'),
-        0xFF3489EF,
+        DynamicAppConfigService.getColorValue('primary'),
+        0xFF090B60,
       );
 
   static int get buttonDisabledColor =>

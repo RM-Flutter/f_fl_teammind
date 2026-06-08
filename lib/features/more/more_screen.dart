@@ -166,6 +166,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
+                            DefaultListTile(
+                              title: AppStrings.dailyReports.tr(),
+                              src: AppIcons.tasks,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.dailyReportsListScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) SizedBox(height : 15.h),
                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Padding(
                              padding: EdgeInsets.symmetric(horizontal: 24.w),

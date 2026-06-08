@@ -117,7 +117,7 @@ class HomeAppbarWidget extends StatelessWidget {
                         bottomRight: Radius.circular(AppSizes.s32.r)),
                   ),
                     child: Opacity(
-                      opacity: 0.7,
+                      opacity: 0.5,
                       child: Image.asset(
                         "assets/images/png/home-app-bar.png",
                         fit: BoxFit.cover,
@@ -128,6 +128,7 @@ class HomeAppbarWidget extends StatelessWidget {
                     ),
                 ),
               ),
+
               // Your content goes here, if any
             ],
           ),

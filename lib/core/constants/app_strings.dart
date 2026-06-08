@@ -1106,4 +1106,34 @@ abstract class AppStrings {
   static const viewTasksShortcut = "viewTasksShortcut";
   static const addRequestsShortcut = "addRequestsShortcut";
   static const myTasksHeader = "myTasks";
+
+  // Daily Reports Feature
+  static const dailyReports = "dailyReports";
+  static const reportDetails = "reportDetails";
+  static const accomplishments = "accomplishments";
+  static const inProgressTasks = "inProgressTasks";
+  static const blockersAndProblems = "blockersAndProblems";
+  static const attachments = "attachments";
+  static const addReport = "addReport";
+  static const editReport = "editReport";
+  static const createDailyReport = "createDailyReport";
+  static const saveReport = "saveReport";
+  static const deleteReport = "deleteReport";
+  static const confirmDeleteReport = "confirmDeleteReport";
+  static const detailCompletedTasks = "detailCompletedTasks";
+  static const detailOngoingTasks = "detailOngoingTasks";
+  static const describeBlockers = "describeBlockers";
+  static const uploadScreenshots = "uploadScreenshots";
+  // static const uploadScreenshots = "uploadScreenshots";
+  static const tapToBrowseFiles = "tapToBrowseFiles";
+  static const updateReport = "updateReport";
+  static const fieldIsRequired = "fieldIsRequired";
+  static const whatHaveYouDoneToday = "whatHaveYouDoneToday";
+  static const whatAreYouCurrentlyWorkingOn = "whatAreYouCurrentlyWorkingOn";
+  static const anyIssuesYouFaced = "anyIssuesYouFaced";
+  static const incomingReports = "incomingReports";
+  static const personalReports = "personalReports";
+  static const noAccomplishmentsRecorded = "noAccomplishmentsRecorded";
+  static const noOngoingTasksRecorded = "noOngoingTasksRecorded";
+  static const noProblemsRecorded = "noProblemsRecorded";
 }
