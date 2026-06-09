@@ -130,15 +130,33 @@ class SalaryAdvanceRepo {
     );
   }
 
-  // Delete Request
-  static Future<OperationResult<Map<String, dynamic>>> deleteRequest({
+  // Cancel Request
+  static Future<OperationResult<Map<String, dynamic>>> cancelRequest({
     required BuildContext context,
     required int id,
   }) async {
     final baseUrl = EndpointServices.getApiEndpoint(EndpointsNames.salaryAdvanceDelete).url;
-    final url = '$baseUrl/$id';
+    final url = '$baseUrl/$id/cancel';
 
-    return await DioApiService().delete<Map<String, dynamic>>(
+    return await DioApiService().post<Map<String, dynamic>>(
+      url,
+      {},
+      dataKey: 'data',
+      context: context,
+      allData: true,
+    );
+  }
+
+  // Remove Attachment
+  static Future<OperationResult<Map<String, dynamic>>> removeAttachment({
+    required BuildContext context,
+    required int requestId,
+    required int attachmentId,
+  }) async {
+    final baseUrl = EndpointServices.getApiEndpoint(EndpointsNames.salaryAdvanceDetails).url;
+    final url = '$baseUrl/$requestId/remove-attachment/$attachmentId';
+
+    return await DioApiService().post<Map<String, dynamic>>(
       url,
       {},
       dataKey: 'data',

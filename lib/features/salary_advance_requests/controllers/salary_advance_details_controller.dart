@@ -32,21 +32,33 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
   bool get canEdit {
     if (requestDetails == null || userSettings == null) return false;
 
+    final status = requestDetails!.status?.toLowerCase();
+    if (status == 'cancelled' || status == 'canceled' || status == 'approved') {
+      return false;
+    }
+
     final isOwner = userSettings!.empId.toString() ==
         requestDetails!.employeeId?.toString();
     
-    // Both owner and Manager/HR can edit
-    return isOwner || isManagerOrHr;
+    final isHr = userSettings?.isHr == true;
+
+    return isOwner || isHr;
   }
 
-  bool get canDelete {
+  bool get canCancel {
     if (requestDetails == null || userSettings == null) return false;
 
-    // Only the owner can delete their own request
+    final status = requestDetails!.status?.toLowerCase();
+    if (status == 'cancelled' || status == 'canceled' || status == 'approved') {
+      return false;
+    }
+
     final isOwner = userSettings!.empId.toString() ==
         requestDetails!.employeeId?.toString();
     
-    return isOwner;
+    final isHr = userSettings?.isHr == true;
+
+    return isOwner || isHr;
   }
 
   void _loadUserSettings() {
@@ -121,14 +133,14 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> deleteRequest(BuildContext context) async {
+  Future<bool> cancelRequest(BuildContext context) async {
     if (requestDetails == null) return false;
 
     isActionLoading = true;
     notifyListeners();
 
     try {
-      final result = await SalaryAdvanceRepo.deleteRequest(context: context, id: requestDetails!.id!);
+      final result = await SalaryAdvanceRepo.cancelRequest(context: context, id: requestDetails!.id!);
       if (result.success) {
         return true;
       } else {
@@ -141,11 +153,56 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
         }
       }
     } catch (e) {
-      debugPrint("Error deleting request: $e");
+      debugPrint("Error cancelling request: $e");
       if (context.mounted) {
         AlertsService.error(
           context: context, 
           message: 'error_occurred'.tr(), 
+          title: 'error'.tr(),
+        );
+      }
+    } finally {
+      isActionLoading = false;
+      notifyListeners();
+    }
+    return false;
+  }
+
+  Future<bool> removeAttachment(BuildContext context, int attachmentId) async {
+    if (requestDetails == null) return false;
+
+    isActionLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await SalaryAdvanceRepo.removeAttachment(
+        context: context,
+        requestId: requestDetails!.id!,
+        attachmentId: attachmentId,
+      );
+      if (result.success) {
+        var dataMap = result.data?['data'] as Map<String, dynamic>?;
+        if (dataMap != null) {
+          requestDetails = SalaryAdvanceRequestModel.fromJson(dataMap);
+        } else {
+          await fetchDetails(context, requestDetails!.id!);
+        }
+        return true;
+      } else {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context,
+            message: result.message ?? 'error_occurred'.tr(),
+            title: 'error'.tr(),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint("Error removing attachment: $e");
+      if (context.mounted) {
+        AlertsService.error(
+          context: context,
+          message: 'error_occurred'.tr(),
           title: 'error'.tr(),
         );
       }

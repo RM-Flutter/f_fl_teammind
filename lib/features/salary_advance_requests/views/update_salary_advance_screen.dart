@@ -9,7 +9,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
-
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import '../controllers/update_salary_advance_controller.dart';
 import '../shared/models/salary_advance_request_model.dart';
 
@@ -174,8 +174,7 @@ class _UpdateSalaryAdvanceScreenState
                       SizedBox(height: 28.h),
 
                       // ─── Existing Attachments Section ───
-                      if (widget.existingRequest.attachments != null &&
-                          widget.existingRequest.attachments!.isNotEmpty) ...[
+                      if (controller.existingAttachments.isNotEmpty) ...[
                         Row(
                           children: [
                             Icon(Icons.attachment_rounded,
@@ -192,17 +191,23 @@ class _UpdateSalaryAdvanceScreenState
                         Wrap(
                           spacing: 12.w,
                           runSpacing: 12.h,
-                          children: widget.existingRequest.attachments!
+                          children: controller.existingAttachments
                               .map((attachment) {
                             final isImage = attachment.fileType?.toLowerCase() == 'png' ||
                                 attachment.fileType?.toLowerCase() == 'jpg' ||
-                                attachment.fileType?.toLowerCase() == 'jpeg';
+                                attachment.fileType?.toLowerCase() == 'jpeg' ||
+                                attachment.fileType?.toLowerCase() == 'webp' ||
+                                attachment.fileType?.toLowerCase() == 'gif' ||
+                                (attachment.imageList != null &&
+                                    attachment.imageList!['thumbnail'] != null);
+
+                            Widget attachmentCard;
 
                             if (isImage &&
                                 attachment.imageList != null &&
                                 attachment.imageList!['thumbnail'] != null) {
                               final String imageUrl = attachment.imageList!['thumbnail'];
-                              return GestureDetector(
+                              attachmentCard = GestureDetector(
                                 onTap: () {
                                   final originalUrl = attachment.imageList!['original'] ?? imageUrl;
                                   launchUrl(Uri.parse(originalUrl), mode: LaunchMode.externalApplication);
@@ -234,51 +239,89 @@ class _UpdateSalaryAdvanceScreenState
                                   ),
                                 ),
                               );
+                            } else {
+                              // Non-image file or fallback
+                              attachmentCard = GestureDetector(
+                                onTap: () {
+                                  if (attachment.url != null) {
+                                    launchUrl(Uri.parse(attachment.url!), mode: LaunchMode.externalApplication);
+                                  }
+                                },
+                                child: Container(
+                                  width: 80.w,
+                                  height: 80.w,
+                                  decoration: BoxDecoration(
+                                    color: Color(AppColors.buttonSecondaryColor)
+                                        .withOpacity(0.05),
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                        color: Color(AppColors.buttonSecondaryColor)
+                                            .withOpacity(0.2),
+                                        width: 1),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.insert_drive_file_rounded,
+                                          color: Color(AppColors.buttonSecondaryColor),
+                                          size: 24.sp),
+                                      SizedBox(height: 4.h),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                                        child: Text(
+                                          attachment.fileName ?? 'File',
+                                          style: AppStyles.content(context).copyWith(
+                                            fontSize: 10.sp,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
                             }
 
-                            // Non-image file or fallback
-                            return GestureDetector(
-                              onTap: () {
-                                if (attachment.url != null) {
-                                  launchUrl(Uri.parse(attachment.url!), mode: LaunchMode.externalApplication);
-                                }
-                              },
-                              child: Container(
-                                width: 80.w,
-                                height: 80.w,
-                                decoration: BoxDecoration(
-                                  color: Color(AppColors.buttonSecondaryColor)
-                                      .withOpacity(0.05),
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(
-                                      color: Color(AppColors.buttonSecondaryColor)
-                                          .withOpacity(0.2),
-                                      width: 1),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.insert_drive_file_rounded,
-                                        color: Color(AppColors.buttonSecondaryColor),
-                                        size: 24.sp),
-                                    SizedBox(height: 4.h),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 4.w),
-                                      child: Text(
-                                        attachment.fileName ?? 'File',
-                                        style: AppStyles.content(context).copyWith(
-                                          fontSize: 10.sp,
-                                          color: Colors.grey.shade700,
+                            if (controller.isHr) {
+                              return Stack(
+                                children: [
+                                  attachmentCard,
+                                  Positioned(
+                                    top: 2.r,
+                                    right: 2.r,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        final confirm = await AlertsService.customConfirm(
+                                          context: context,
+                                          title: 'remove_attachment'.tr(),
+                                          message: 'remove_attachment_confirm'.tr(),
+                                        );
+                                        if (confirm == true && context.mounted) {
+                                          await controller.deleteExistingAttachment(context, attachment.id!);
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(3.r),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center,
+                                        child: const Icon(
+                                          Icons.close_rounded,
+                                          color: Colors.white,
+                                          size: 14,
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return attachmentCard;
+                            }
                           }).toList(),
                         ),
                         SizedBox(height: 28.h),

@@ -85,13 +85,13 @@ abstract class RequestsServices {
       case 'approved':
         return Icon(Icons.check_circle_outline_rounded,
             color: iconColor ?? Colors.green, size: iconSize ?? AppSizes.s24);
-      case 'refused' || 'canceled':
+      case 'refused' || 'canceled' || 'cancelled' || 'rejected':
         return Icon(Icons.cancel_outlined,
             color: iconColor ?? Colors.red, size: iconSize ?? AppSizes.s24);
       case 'seen':
         return Icon(Icons.access_time,
             color: iconColor ?? Colors.blue, size: iconSize ?? AppSizes.s24);
-      case 'waiting_seen' || 'waiting_cancel'|| 'waiting':
+      case 'waiting_seen' || 'waiting_cancel'|| 'waiting' || 'pending':
         return Image.asset(
           'assets/images/waiting_icon.png',
           color: iconColor,

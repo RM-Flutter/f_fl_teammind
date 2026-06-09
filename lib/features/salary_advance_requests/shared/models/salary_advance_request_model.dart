@@ -15,6 +15,7 @@ class SalaryAdvanceRequestModel {
   ProfileModel? employeeProfile;
   ProfileModel? managerProfile;
   List<ReportAttachmentModel>? attachments;
+  String? status;
   String? createdAt;
   String? updatedAt;
 
@@ -33,6 +34,7 @@ class SalaryAdvanceRequestModel {
     this.employeeProfile,
     this.managerProfile,
     this.attachments,
+    this.status,
     this.createdAt,
     this.updatedAt,
   });
@@ -60,6 +62,7 @@ class SalaryAdvanceRequestModel {
             .map((e) => ReportAttachmentModel.fromJson(e))
             .toList()
         : null;
+    status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -84,6 +87,7 @@ class SalaryAdvanceRequestModel {
       data['manager_profile'] = managerProfile!.toJson();
     }
     data['attachments'] = attachments?.map((e) => e.toJson()).toList();
+    data['status'] = status;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     return data;

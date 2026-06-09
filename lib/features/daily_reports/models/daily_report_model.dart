@@ -89,6 +89,12 @@ class ReportAttachmentModel {
         'thumbnail': json['thumbnail'].toString(),
         'original': (json['href'] ?? json['url'] ?? json['thumbnail']).toString(),
       };
+    } else if (json['href'] != null) {
+      // Direct href format (salary-advance)
+      decodedImageList = {
+        'thumbnail': json['href'].toString(),
+        'original': json['href'].toString(),
+      };
     } else if (json['image_list'] != null && json['image_list'] is String) {
       try {
         decodedImageList = jsonDecode(json['image_list']);
@@ -96,11 +102,17 @@ class ReportAttachmentModel {
         decodedImageList = null;
       }
     }
+    String? fType = json['file_type'];
+    final guessedType = _guessFileType(json['href']?.toString() ?? json['thumbnail']?.toString() ?? json['file_name']?.toString() ?? json['url']?.toString() ?? '');
+    if (fType == null || fType.toLowerCase() == 'file' || fType.toLowerCase() == 'document') {
+      fType = guessedType;
+    }
+
     return ReportAttachmentModel(
       id: json['id'],
-      fileType: json['file_type'] ?? _guessFileType(json['thumbnail']?.toString() ?? json['file_name']?.toString() ?? ''),
-      fileName: json['file_name'],
-      url: json['url'],
+      fileType: fType,
+      fileName: json['file_name'] ?? (json['href'] != null ? json['href'].toString().split('/').last : null),
+      url: json['url'] ?? json['href'],
       size: json['size'] != null ? double.tryParse(json['size'].toString()) : null,
       title: json['title'],
       imageList: decodedImageList,

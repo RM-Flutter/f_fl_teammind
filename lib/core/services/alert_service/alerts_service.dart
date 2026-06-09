@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/app_colors.dart';
 import 'custom_alert.dart';
 
@@ -326,5 +329,119 @@ abstract class AlertsService {
       default:
         return SizedBox(child: body);
     }
+  }
+
+  static Future<bool> customConfirm({
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+        ),
+        elevation: 10,
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(24.w, 32.h, 24.w, 24.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Top Alert/Warning Icon
+              Container(
+                padding: EdgeInsets.all(16.r),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFEF2F2), // Light red background
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  AppImages.alertsWarning,
+                  width: 36.r,
+                  height: 36.r,
+                  colorFilter: const ColorFilter.mode(
+                    Color(0xFFDC2626), // Premium red color
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1F2937), // Dark slate grey for readable title
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 12.h),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: const Color(0xFF4B5563), // Clean medium grey for readability
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 32.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF3F4F6), // Premium light grey background
+                        foregroundColor: const Color(0xFF374151), // Dark grey text
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                      ),
+                      child: Text(
+                        'no'.tr(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(AppColors.buttons), // App burgundy/red button color
+                        foregroundColor: Colors.white, // White text
+                        elevation: 0,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                      ),
+                      child: Text(
+                        'yes'.tr(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    return result ?? false;
   }
 }

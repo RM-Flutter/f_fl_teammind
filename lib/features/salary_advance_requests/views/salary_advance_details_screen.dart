@@ -11,6 +11,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 
 import '../controllers/salary_advance_details_controller.dart';
 import 'update_salary_advance_screen.dart';
@@ -67,7 +68,7 @@ class _SalaryAdvanceDetailsScreenState
                                       controller.requestDetails!.attachments!
                                           .isNotEmpty) ...[
                                     SizedBox(height: 24.h),
-                                    _buildAttachmentsSection(controller
+                                    _buildAttachmentsSection(controller, controller
                                         .requestDetails!.attachments!),
                                   ],
                                   SizedBox(height: 20.h),
@@ -435,8 +436,8 @@ class _SalaryAdvanceDetailsScreenState
       );
     }
 
-    // Delete Button
-    if (controller.canDelete) {
+    // Cancel Button (replacing Delete)
+    if (controller.canCancel) {
       if (actionButtons.isNotEmpty) {
         actionButtons.add(SizedBox(width: 12.w));
       }
@@ -455,9 +456,9 @@ class _SalaryAdvanceDetailsScreenState
               ],
             ),
             child: ElevatedButton.icon(
-              icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 20),
+              icon: const Icon(Icons.cancel_outlined, color: Colors.white, size: 20),
               label: Text(
-                'delete_request'.tr(),
+                'cancel_request'.tr(),
                 style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
@@ -471,9 +472,16 @@ class _SalaryAdvanceDetailsScreenState
                     borderRadius: BorderRadius.circular(14.r)),
               ),
               onPressed: () async {
-                bool success = await controller.deleteRequest(context);
-                if (success && mounted) {
-                  context.pop(true); // Return true to refresh list
+                final confirm = await AlertsService.customConfirm(
+                  context: context,
+                  title: 'cancel_request'.tr(),
+                  message: 'cancel_request_confirm'.tr(),
+                );
+                if (confirm == true && mounted) {
+                  bool success = await controller.cancelRequest(context);
+                  if (success && mounted) {
+                    context.pop(true); // Return true to refresh list
+                  }
                 }
               },
             ),
@@ -539,7 +547,7 @@ class _SalaryAdvanceDetailsScreenState
     );
   }
 
-  Widget _buildAttachmentsSection(List<ReportAttachmentModel> attachments) {
+  Widget _buildAttachmentsSection(SalaryAdvanceDetailsController controller, List<ReportAttachmentModel> attachments) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -589,7 +597,7 @@ class _SalaryAdvanceDetailsScreenState
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12.w,
-                mainAxisSpacing: 12.h,
+                // runSpacing: 12.h,
                 childAspectRatio: 1.1,
               ),
               itemCount: attachments.length,
@@ -597,13 +605,24 @@ class _SalaryAdvanceDetailsScreenState
                 final attachment = attachments[index];
                 final isImage = attachment.fileType?.toLowerCase() == 'png' ||
                     attachment.fileType?.toLowerCase() == 'jpg' ||
-                    attachment.fileType?.toLowerCase() == 'jpeg';
+                    attachment.fileType?.toLowerCase() == 'jpeg' ||
+                    attachment.fileType?.toLowerCase() == 'webp' ||
+                    attachment.fileType?.toLowerCase() == 'gif' ||
+                    (attachment.imageList != null &&
+                        attachment.imageList!['thumbnail'] != null);
+
+                final status = controller.requestDetails?.status?.toLowerCase();
+                final isPending = status != 'approved' && status != 'cancelled' && status != 'canceled';
+                final isHr = controller.userSettings?.isHr == true;
+                final showDeleteIcon = isPending && isHr;
+
+                Widget cardChild;
 
                 if (isImage &&
                     attachment.imageList != null &&
                     attachment.imageList!['thumbnail'] != null) {
                   final String imageUrl = attachment.imageList!['thumbnail'];
-                  return GestureDetector(
+                  cardChild = GestureDetector(
                     onTap: () {
                       showGeneralDialog(
                         context: context,
@@ -713,7 +732,7 @@ class _SalaryAdvanceDetailsScreenState
                     ),
                   );
                 } else {
-                  return Container(
+                  cardChild = Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF9FAFB),
                       borderRadius: BorderRadius.circular(16.r),
@@ -749,6 +768,44 @@ class _SalaryAdvanceDetailsScreenState
                       ],
                     ),
                   );
+                }
+
+                if (showDeleteIcon) {
+                  return Stack(
+                    children: [
+                      Positioned.fill(child: cardChild),
+                      Positioned(
+                        top: 6.r,
+                        right: 6.r,
+                        child: GestureDetector(
+                          onTap: () async {
+                            final confirm = await AlertsService.customConfirm(
+                              context: context,
+                              title: 'remove_attachment'.tr(),
+                              message: 'remove_attachment_confirm'.tr(),
+                            );
+                            if (confirm == true && context.mounted) {
+                              await controller.removeAttachment(context, attachment.id!);
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(4.r),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return cardChild;
                 }
               },
             ),

@@ -65,12 +65,27 @@ class _SalaryAdvanceListItemWidgetState
         widget.request.hrApproved == true &&
         widget.request.managerApproved == true);
 
-    String status = isApproved ? 'approved' : 'waiting';
-    Color statusColor = status == 'approved'
-        ? Color(AppColors.successGreen)
-        : Color(AppColors.warningYellow);
-    String statusText =
-        status == 'approved' ? 'approved'.tr() : 'pending'.tr();
+    String status = widget.request.status?.toLowerCase() ?? (isApproved ? 'approved' : 'pending');
+    Color statusColor;
+    String statusText;
+
+    switch (status) {
+      case 'approved':
+        statusColor = Color(AppColors.successGreen);
+        statusText = 'approved'.tr();
+        break;
+      case 'rejected':
+        statusColor = Color(AppColors.failureRed);
+        statusText = 'rejected'.tr();
+        break;
+      case 'cancelled' || 'canceled':
+        statusColor = Color(AppColors.failureRed);
+        statusText = 'cancelled'.tr();
+        break;
+      default:
+        statusColor = Color(AppColors.warningYellow);
+        statusText = 'pending'.tr();
+    }
 
     return GestureDetector(
       onTapDown: (_) {
@@ -257,8 +272,8 @@ class _SalaryAdvanceListItemWidgetState
                           ),
                         ),
 
-                        // Edit button — shown only when canEdit is true
-                        if (widget.canEdit) ...[
+                        // Edit button — shown only when canEdit is true and status is editable
+                        if (widget.canEdit && status != 'approved' && status != 'cancelled' && status != 'canceled') ...[
                           SizedBox(height: 8.h),
                           GestureDetector(
                             onTap: () async {
