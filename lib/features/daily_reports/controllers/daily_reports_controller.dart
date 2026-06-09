@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../models/daily_report_model.dart';
 import '../services/daily_reports_service.dart';
 
@@ -133,9 +135,24 @@ class DailyReportsProvider extends ChangeNotifier {
       if (response.success) {
         success = true;
         await fetchReports(context);
+      } else {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context, 
+            message: response.message ?? 'error_occurred'.tr(),
+            title: 'error'.tr(),
+          );
+        }
       }
     } catch (e) {
       debugPrint("Error updating daily report: $e");
+      if (context.mounted) {
+        AlertsService.error(
+          context: context, 
+          message: 'error_occurred'.tr(),
+          title: 'error'.tr(),
+        );
+      }
     }
     isActionLoading = false;
     notifyListeners();
@@ -154,9 +171,24 @@ class DailyReportsProvider extends ChangeNotifier {
       if (response.success) {
         success = true;
         await fetchReports(context);
+      } else {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context, 
+            message: response.message ?? 'error_occurred'.tr(),
+            title: 'error'.tr(),
+          );
+        }
       }
     } catch (e) {
       debugPrint("Error deleting daily report: $e");
+      if (context.mounted) {
+        AlertsService.error(
+          context: context, 
+          message: 'error_occurred'.tr(),
+          title: 'error'.tr(),
+        );
+      }
     }
     isActionLoading = false;
     notifyListeners();

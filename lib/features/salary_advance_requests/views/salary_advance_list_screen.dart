@@ -148,10 +148,8 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
               itemBuilder: (context, index) {
                 final request = requests[index];
 
-                // Personal list → always editable (it's the owner's request)
-                // Incoming list → editable only if manager/HR
-                final canEdit =
-                    isIncoming ? controller.isManagerOrHr : true;
+                // Owner can edit their own (personal list), Manager/HR can edit incoming
+                final canEdit = isIncoming ? controller.isManagerOrHr : true;
 
                 return SalaryAdvanceListItemWidget(
                   request: request,

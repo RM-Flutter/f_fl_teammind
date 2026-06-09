@@ -378,73 +378,114 @@ class _SalaryAdvanceDetailsScreenState
     }
 
     List<Widget> buttons = [];
+    List<Widget> actionButtons = [];
 
-    // Edit Button for Employee (owner) or Manager/HR
+    // Edit Button
     if (controller.canEdit) {
-      buttons.add(
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(AppColors.buttonColor),
-                Color(AppColors.buttonSecondaryColor),
+      actionButtons.add(
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(AppColors.buttonColor),
+                  Color(AppColors.buttonSecondaryColor),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(14.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(AppColors.buttonColor).withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
               ],
             ),
-            borderRadius: BorderRadius.circular(14.r),
-            boxShadow: [
-              BoxShadow(
-                color: Color(AppColors.buttonColor).withOpacity(0.25),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 20),
+              label: Text(
+                'edit_request'.tr(),
+                style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
-            ],
-          ),
-          child: ElevatedButton.icon(
-            icon: const Icon(Icons.edit_note_rounded, color: Colors.white),
-            label: Text(
-              'edit_request'.tr(),
-              style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              padding: EdgeInsets.symmetric(vertical: 14.h),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.r)),
-            ),
-            onPressed: () async {
-              final updated = await Navigator.of(context).push<bool>(
-                MaterialPageRoute(
-                  builder: (_) => UpdateSalaryAdvanceScreen(
-                    existingRequest: controller.requestDetails!,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r)),
+              ),
+              onPressed: () async {
+                final updated = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                    builder: (_) => UpdateSalaryAdvanceScreen(
+                      existingRequest: controller.requestDetails!,
+                    ),
                   ),
-                ),
-              );
-              if (updated == true && mounted) {
-                viewModel.fetchDetails(context, widget.requestId);
-              }
-            },
+                );
+                if (updated == true && mounted) {
+                  viewModel.fetchDetails(context, widget.requestId);
+                }
+              },
+            ),
           ),
         ),
       );
     }
 
-    // Delete Button for Employee
+    // Delete Button
     if (controller.canDelete) {
+      if (actionButtons.isNotEmpty) {
+        actionButtons.add(SizedBox(width: 12.w));
+      }
+      actionButtons.add(
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.red.shade500,
+              borderRadius: BorderRadius.circular(14.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.red.withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 20),
+              label: Text(
+                'delete_request'.tr(),
+                style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r)),
+              ),
+              onPressed: () async {
+                bool success = await controller.deleteRequest(context);
+                if (success && mounted) {
+                  context.pop(true); // Return true to refresh list
+                }
+              },
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (actionButtons.isNotEmpty) {
       buttons.add(
-        CustomElevatedButton(
-          title: 'delete_request'.tr(),
-          backgroundColor: Colors.red,
-          onPressed: () async {
-            bool success = await controller.deleteRequest(context);
-            if (success && mounted) {
-              context.pop(true); // Return true to refresh list
-            }
-          },
+        Row(
+          children: actionButtons,
         ),
       );
     }

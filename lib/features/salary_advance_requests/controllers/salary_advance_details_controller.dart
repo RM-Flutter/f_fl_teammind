@@ -31,37 +31,22 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
 
   bool get canEdit {
     if (requestDetails == null || userSettings == null) return false;
-    // The employee can edit their own request
+
     final isOwner = userSettings!.empId.toString() ==
         requestDetails!.employeeId?.toString();
-    // Manager and HR can also edit any request
+    
+    // Both owner and Manager/HR can edit
     return isOwner || isManagerOrHr;
   }
 
   bool get canDelete {
-    if (requestDetails == null) return false;
-    if (requestDetails?.createdAt == null) return false;
+    if (requestDetails == null || userSettings == null) return false;
 
-    // A request cannot be deleted if a new day has started (after 12:00 AM of the next day)
-    try {
-      DateTime createdDate = DateTime.parse(requestDetails!.createdAt!);
-      DateTime now = DateTime.now();
-      
-      // If year, month, or day is different, it means the day has changed
-      if (now.year != createdDate.year || 
-          now.month != createdDate.month || 
-          now.day != createdDate.day) {
-        return false;
-      }
-      if (userSettings?.empId != null && requestDetails?.employeeId != null) {
-        if (userSettings!.empId.toString() != requestDetails!.employeeId.toString()) {
-          return false;
-        }
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
+    // Only the owner can delete their own request
+    final isOwner = userSettings!.empId.toString() ==
+        requestDetails!.employeeId?.toString();
+    
+    return isOwner;
   }
 
   void _loadUserSettings() {

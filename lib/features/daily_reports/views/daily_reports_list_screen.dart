@@ -236,7 +236,11 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
   Widget _buildReportCard(DailyReportModel report, DailyReportsProvider provider, {required bool isIncoming}) {
     String? displayName = report.employeeProfile?.name;
     // Only the owner can edit their own reports (which are in the personal list, i.e., !isIncoming)
-    bool canEdit = !isIncoming;
+    // AND it must be on the same day it was created.
+    bool canEdit = !isIncoming && report.createdAt != null &&
+        DateTime.now().year == report.createdAt!.year &&
+        DateTime.now().month == report.createdAt!.month &&
+        DateTime.now().day == report.createdAt!.day;
 
     return Container(
       margin: EdgeInsets.only(bottom: AppSizes.s16.h, left: 16.w, right: 16.w),
