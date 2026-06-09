@@ -8,6 +8,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/services/requests_services.dart';
+import '../../../../core/widgets/glassmorphism_card.widget.dart';
 import '../../shared/models/salary_advance_request_model.dart';
 import '../update_salary_advance_screen.dart';
 
@@ -94,14 +95,17 @@ class _SalaryAdvanceListItemWidgetState
       },
       onTapUp: (_) => _animationController.reverse(),
       onTapCancel: () => _animationController.reverse(),
-      onTap: () {
-        context.pushNamed(
+      onTap: () async {
+        final updated = await context.pushNamed<bool>(
           AppRoutes.salaryAdvanceDetails.name,
           pathParameters: {
             'id': widget.request.id.toString(),
             'lang': context.locale.languageCode,
           },
         );
+        if (updated == true) {
+          widget.onRefresh?.call();
+        }
       },
       child: AnimatedBuilder(
         animation: _scaleAnimation,
@@ -109,14 +113,12 @@ class _SalaryAdvanceListItemWidgetState
           scale: _scaleAnimation.value,
           child: child,
         ),
-        child: Container(
-          margin:
-              EdgeInsets.only(bottom: AppSizes.s16.h, left: 4.w, right: 4.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-            border:
-                Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: AppSizes.s16.h, left: 4.w, right: 4.w),
+          child: GlassmorphismCard(
+            padding: EdgeInsets.zero,
+            backgroundColor: Colors.white,
+            opacity: 0.8,
             boxShadow: [
               BoxShadow(
                 color: Color(AppColors.buttonColor).withOpacity(0.08),
@@ -125,8 +127,7 @@ class _SalaryAdvanceListItemWidgetState
                 spreadRadius: -5,
               ),
             ],
-          ),
-          child: Column(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ─── Incoming: Employee name header ───
@@ -338,6 +339,7 @@ class _SalaryAdvanceListItemWidgetState
               ),
             ],
           ),
+        ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,6 +10,8 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
+import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import '../controllers/update_salary_advance_controller.dart';
 import '../shared/models/salary_advance_request_model.dart';
@@ -47,20 +50,18 @@ class _UpdateSalaryAdvanceScreenState
             title: 'edit_salary_advance'.tr(),
             body: SingleChildScrollView(
               padding: EdgeInsets.all(AppSizes.s16.r),
-              child: Container(
+              child: GlassmorphismCard(
                 padding: EdgeInsets.all(AppSizes.s24.r),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(AppColors.buttonColor).withOpacity(0.08),
-                      blurRadius: 30,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 15),
-                    )
-                  ],
-                ),
+                backgroundColor: Colors.white,
+                opacity: 0.9,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(AppColors.buttonColor).withOpacity(0.08),
+                    blurRadius: 30,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 15),
+                  )
+                ],
                 child: Form(
                   key: controller.formKey,
                   child: Column(
@@ -136,40 +137,73 @@ class _UpdateSalaryAdvanceScreenState
                       SizedBox(height: 20.h),
 
                       // ─── From Date ───
-                      InkWell(
+                      _buildTextField(
+                        context: context,
+                        controller: controller.fromDateController,
+                        hintText: 'from_date_yyyy_mm'.tr(),
+                        keyboardType: TextInputType.text,
+                        readOnly: true,
+                        prefixIcon: Icon(Icons.calendar_month,
+                            color: Color(AppColors.buttons)),
+                        validator: (v) => (v == null || v.isEmpty)
+                            ? 'field_required'.tr()
+                            : null,
                         onTap: () async {
-                          final pickedDate = await showDatePicker(
+                          DateTime? pickedDate;
+                          await showModalBottomSheet(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
-                            builder: (ctx, child) => Theme(
-                              data: Theme.of(ctx).copyWith(
-                                colorScheme: ColorScheme.light(
-                                    primary: Color(AppColors.buttons)),
-                              ),
-                              child: child!,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
                             ),
+                            builder: (BuildContext builder) {
+                              DateTime tempPickedDate = DateTime.now();
+                              return Container(
+                                height: 300.h,
+                                padding: EdgeInsets.only(top: 10.h),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: Text('cancel_request'.tr().split(' ')[0], style: TextStyle(color: Color(AppColors.failureRed), fontSize: 16.sp)),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              pickedDate = tempPickedDate;
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('submit'.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: CupertinoDatePicker(
+                                        mode: CupertinoDatePickerMode.monthYear,
+                                        initialDateTime: DateTime.now(),
+                                        minimumDate: DateTime(2000),
+                                        maximumDate: DateTime(2100),
+                                        onDateTimeChanged: (DateTime newDate) {
+                                          tempPickedDate = newDate;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           );
+
                           if (pickedDate != null) {
                             controller.setFromDate(
-                                '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}');
+                                '${pickedDate!.year}-${pickedDate!.month.toString().padLeft(2, '0')}');
                           }
                         },
-                        child: IgnorePointer(
-                          child: _buildTextField(
-                            context: context,
-                            controller: controller.fromDateController,
-                            hintText: 'from_date_yyyy_mm'.tr(),
-                            keyboardType: TextInputType.text,
-                            readOnly: true,
-                            prefixIcon: Icon(Icons.calendar_month,
-                                color: Color(AppColors.buttons)),
-                            validator: (v) => (v == null || v.isEmpty)
-                                ? 'field_required'.tr()
-                                : null,
-                          ),
-                        ),
                       ),
                       SizedBox(height: 28.h),
 
@@ -508,11 +542,13 @@ class _UpdateSalaryAdvanceScreenState
     required Widget prefixIcon,
     required String? Function(String?) validator,
     bool readOnly = false,
+    VoidCallback? onTap,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       readOnly: readOnly,
+      onTap: onTap,
       validator: validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       style:

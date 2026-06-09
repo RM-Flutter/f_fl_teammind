@@ -23,6 +23,12 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
 
   bool get canReview {
     if (requestDetails == null || !isManagerOrHr) return false;
+    
+    final status = requestDetails!.status?.toLowerCase();
+    if (status == 'cancelled' || status == 'canceled' || status == 'approved' || status == 'rejected') {
+      return false;
+    }
+    
     // Assuming if the logged-in user is HR or Manager they can review.
     // Real implementation might need to check if they are the direct manager
     // or if HR is requested to approve.
@@ -33,7 +39,7 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     if (requestDetails == null || userSettings == null) return false;
 
     final status = requestDetails!.status?.toLowerCase();
-    if (status == 'cancelled' || status == 'canceled' || status == 'approved') {
+    if (status == 'cancelled' || status == 'canceled' || status == 'approved' || status == 'rejected') {
       return false;
     }
 
@@ -49,7 +55,7 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     if (requestDetails == null || userSettings == null) return false;
 
     final status = requestDetails!.status?.toLowerCase();
-    if (status == 'cancelled' || status == 'canceled' || status == 'approved') {
+    if (status == 'cancelled' || status == 'canceled' || status == 'approved' || status == 'rejected') {
       return false;
     }
 

@@ -12,6 +12,7 @@ import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 
 import '../controllers/salary_advance_details_controller.dart';
 import 'update_salary_advance_screen.dart';
@@ -29,6 +30,7 @@ class SalaryAdvanceDetailsScreen extends StatefulWidget {
 class _SalaryAdvanceDetailsScreenState
     extends State<SalaryAdvanceDetailsScreen> {
   late final SalaryAdvanceDetailsController viewModel;
+  bool wasUpdated = false;
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _SalaryAdvanceDetailsScreenState
           return TemplatePage(
             pageContext: context,
             title: 'request_details'.tr(),
+            popResult: wasUpdated,
             body: controller.isLoading
                 ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
                 : controller.requestDetails == null
@@ -159,19 +162,17 @@ class _SalaryAdvanceDetailsScreenState
 
   Widget _buildInfoCard(SalaryAdvanceDetailsController controller) {
     final request = controller.requestDetails!;
-    return Container(
+    return GlassmorphismCard(
       padding: EdgeInsets.all(AppSizes.s20.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          )
-        ],
-      ),
+      backgroundColor: Colors.white,
+      opacity: 0.9,
+      boxShadow: [
+        BoxShadow(
+          color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        )
+      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,8 +205,15 @@ class _SalaryAdvanceDetailsScreenState
             _buildDetailRow(
                 'employee_name'.tr(), request.employeeProfile!.name ?? '',
                 icon: Icons.person_outline),
-          _buildDetailRow('created_at'.tr(), request.createdAt ?? '',
-              icon: Icons.access_time),
+          _buildDetailRow(
+            'createdAt'.tr(),
+            request.createdAt != null && request.createdAt!.length >= 7
+                ? (request.createdAt!.contains(' ') 
+                    ? request.createdAt!.split(' ')[0].substring(0, 7) // Extract YYYY-MM if it's "YYYY-MM-DD HH:MM:SS"
+                    : request.createdAt!.substring(0, 7))
+                : (request.createdAt ?? ''),
+            icon: Icons.access_time,
+          ),
         ],
       ),
     );
@@ -213,19 +221,17 @@ class _SalaryAdvanceDetailsScreenState
 
   Widget _buildApprovalsCard(SalaryAdvanceDetailsController controller) {
     final request = controller.requestDetails!;
-    return Container(
+    return GlassmorphismCard(
       padding: EdgeInsets.all(AppSizes.s20.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          )
-        ],
-      ),
+      backgroundColor: Colors.white,
+      opacity: 0.9,
+      boxShadow: [
+        BoxShadow(
+          color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        )
+      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -427,6 +433,9 @@ class _SalaryAdvanceDetailsScreenState
                   ),
                 );
                 if (updated == true && mounted) {
+                  setState(() {
+                    wasUpdated = true;
+                  });
                   viewModel.fetchDetails(context, widget.requestId);
                 }
               },
@@ -506,9 +515,11 @@ class _SalaryAdvanceDetailsScreenState
           controller.requestDetails?.employeeApproved == true &&
               controller.requestDetails?.hrApproved == true &&
               controller.requestDetails?.managerApproved == true;
+      bool isCancelled = controller.requestDetails?.status?.toLowerCase() == 'cancelled' || controller.requestDetails?.status?.toLowerCase() == 'canceled';
+      bool isRejected = controller.requestDetails?.status?.toLowerCase() == 'rejected';
 
-      // Show approve and reject only if it's not fully approved
-      if (!isFullyApproved) {
+      // Show approve and reject only if it's not fully approved, not cancelled, and not rejected
+      if (!isFullyApproved && !isCancelled && !isRejected) {
         buttons.add(
           Row(
             children: [
@@ -517,7 +528,10 @@ class _SalaryAdvanceDetailsScreenState
                   title: 'approve'.tr(),
                   backgroundColor: Colors.green,
                   onPressed: () async {
-                    await controller.reviewRequest(context, 'approved');
+                    bool success = await controller.reviewRequest(context, 'approved');
+                    if (success && mounted) {
+                      setState(() { wasUpdated = true; });
+                    }
                   },
                 ),
               ),
@@ -527,7 +541,10 @@ class _SalaryAdvanceDetailsScreenState
                   title: 'reject'.tr(),
                   backgroundColor: Colors.red,
                   onPressed: () async {
-                    await controller.reviewRequest(context, 'rejected');
+                    bool success = await controller.reviewRequest(context, 'rejected');
+                    if (success && mounted) {
+                      setState(() { wasUpdated = true; });
+                    }
                   },
                 ),
               ),
@@ -548,19 +565,16 @@ class _SalaryAdvanceDetailsScreenState
   }
 
   Widget _buildAttachmentsSection(SalaryAdvanceDetailsController controller, List<ReportAttachmentModel> attachments) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
+    return GlassmorphismCard(
+      backgroundColor: Colors.white,
+      opacity: 0.9,
+      boxShadow: [
+        BoxShadow(
+          color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        ),
+      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -785,7 +799,12 @@ class _SalaryAdvanceDetailsScreenState
                               message: 'remove_attachment_confirm'.tr(),
                             );
                             if (confirm == true && context.mounted) {
-                              await controller.removeAttachment(context, attachment.id!);
+                              bool success = await controller.removeAttachment(context, attachment.id!);
+                              if (success && context.mounted) {
+                                setState(() {
+                                  wasUpdated = true;
+                                });
+                              }
                             }
                           },
                           child: Container(

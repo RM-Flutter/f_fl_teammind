@@ -151,11 +151,25 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                 // Owner can edit their own (personal list), Manager/HR can edit incoming
                 final canEdit = isIncoming ? controller.isManagerOrHr : true;
 
-                return SalaryAdvanceListItemWidget(
-                  request: request,
-                  isIncoming: isIncoming,
-                  canEdit: canEdit,
-                  onRefresh: () => controller.initializeScreen(context),
+                return TweenAnimationBuilder<double>(
+                  duration: Duration(milliseconds: 400 + (index * 100).clamp(0, 500)),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  curve: Curves.easeOutQuart,
+                  builder: (context, value, child) {
+                    return Transform.translate(
+                      offset: Offset(0, 50 * (1 - value)),
+                      child: Opacity(
+                        opacity: value,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: SalaryAdvanceListItemWidget(
+                    request: request,
+                    isIncoming: isIncoming,
+                    canEdit: canEdit,
+                    onRefresh: () => controller.initializeScreen(context),
+                  ),
                 );
               },
             ),

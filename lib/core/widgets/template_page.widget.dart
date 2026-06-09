@@ -14,6 +14,7 @@ class TemplatePage extends StatelessWidget {
   final PreferredSizeWidget? bottomAppbarWidget;
   final String? routeName;
   final TextStyle? titleStyle;
+  final dynamic popResult;
 
   /// used if you want to active [PULLTOREFRESH] option to page.
   final Future<void> Function()? onRefresh;
@@ -28,6 +29,7 @@ class TemplatePage extends StatelessWidget {
       this.floatingActionButton,
       this.titleStyle,
       this.onRefresh,
+      this.popResult,
       this.routeName});
 
   @override
@@ -52,7 +54,7 @@ class TemplatePage extends StatelessWidget {
             ? Padding(
                 padding: const EdgeInsets.all(AppSizes.s10),
                 child: InkWell(
-                  onTap: () => pageContext.pop(),
+                  onTap: () => pageContext.pop(popResult),
                   child: Container(
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,

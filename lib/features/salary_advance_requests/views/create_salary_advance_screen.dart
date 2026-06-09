@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
+import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 
 import '../controllers/create_salary_advance_controller.dart';
 
@@ -40,20 +42,18 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
             title: 'create_salary_advance'.tr(),
             body: SingleChildScrollView(
               padding: EdgeInsets.all(AppSizes.s16.r),
-              child: Container(
+              child: GlassmorphismCard(
                 padding: EdgeInsets.all(AppSizes.s24.r),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(AppColors.buttonColor).withOpacity(0.08),
-                      blurRadius: 30,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 15),
-                    )
-                  ],
-                ),
+                backgroundColor: Colors.white,
+                opacity: 0.9,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(AppColors.buttonColor).withOpacity(0.08),
+                    blurRadius: 30,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 15),
+                  )
+                ],
                 child: Form(
                   key: controller.formKey,
                   child: Column(
@@ -85,45 +85,75 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                         },
                       ),
                       SizedBox(height: 20.h),
-                      InkWell(
+                      _buildTextField(
+                        controller: controller.fromDateController,
+                        hintText: 'from_date_yyyy_mm'.tr(),
+                        keyboardType: TextInputType.text,
+                        prefixIcon: Icon(Icons.calendar_month, color: Color(AppColors.buttons)),
+                        readOnly: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'field_required'.tr();
+                          }
+                          return null;
+                        },
                         onTap: () async {
-                          final pickedDate = await showDatePicker(
+                          DateTime? pickedDate;
+                          await showModalBottomSheet(
                             context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
-                            builder: (context, child) {
-                              return Theme(
-                                data: Theme.of(context).copyWith(
-                                  colorScheme: ColorScheme.light(
-                                    primary: Color(AppColors.buttons),
-                                  ),
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                            ),
+                            builder: (BuildContext builder) {
+                              DateTime tempPickedDate = DateTime.now();
+                              return Container(
+                                height: 300.h,
+                                padding: EdgeInsets.only(top: 10.h),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: Text('cancel_request'.tr().split(' ')[0], style: TextStyle(color: Color(AppColors.failureRed), fontSize: 16.sp)),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              pickedDate = tempPickedDate;
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('submit'.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: CupertinoDatePicker(
+                                        mode: CupertinoDatePickerMode.monthYear,
+                                        initialDateTime: DateTime.now(),
+                                        minimumDate: DateTime(2000),
+                                        maximumDate: DateTime(2100),
+                                        onDateTimeChanged: (DateTime newDate) {
+                                          tempPickedDate = newDate;
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: child!,
                               );
                             },
                           );
+
                           if (pickedDate != null) {
                             // Format as YYYY-MM
-                            String formattedDate = "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}";
+                            String formattedDate = "${pickedDate!.year}-${pickedDate!.month.toString().padLeft(2, '0')}";
                             controller.setFromDate(formattedDate);
                           }
                         },
-                        child: IgnorePointer(
-                          child: _buildTextField(
-                            controller: controller.fromDateController,
-                            hintText: 'from_date_yyyy_mm'.tr(),
-                            keyboardType: TextInputType.text,
-                            prefixIcon: Icon(Icons.calendar_month, color: Color(AppColors.buttons)),
-                            readOnly: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'field_required'.tr();
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
                       ),
                     SizedBox(height: 16.h),
                     Text(
@@ -263,11 +293,13 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
     required Widget prefixIcon,
     required String? Function(String?) validator,
     bool readOnly = false,
+    VoidCallback? onTap,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       readOnly: readOnly,
+      onTap: onTap,
       validator: validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       style: AppStyles.content(context).copyWith(fontWeight: FontWeight.w600),
