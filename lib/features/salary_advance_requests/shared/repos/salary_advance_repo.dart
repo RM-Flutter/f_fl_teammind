@@ -154,12 +154,13 @@ class SalaryAdvanceRepo {
     required int attachmentId,
   }) async {
     final baseUrl = EndpointServices.getApiEndpoint(EndpointsNames.salaryAdvanceDetails).url;
-    final url = '$baseUrl/$requestId/remove-attachment/$attachmentId';
+    final url = '$baseUrl/$requestId/attachments/$attachmentId';
 
-    return await DioApiService().post<Map<String, dynamic>>(
+    return await DioApiService().postWithFormData<Map<String, dynamic>>(
       url,
-      {},
+      {}, // Empty map for FormData
       dataKey: 'data',
+      files: [],
       context: context,
       allData: true,
     );

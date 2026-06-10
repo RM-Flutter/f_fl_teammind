@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -163,11 +164,19 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                     SizedBox(height: 8.h),
                       InkWell(
                         onTap: () async {
-                          FilePickerResult? result = await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.image,
-                          );
-                          if (result != null) {
+                          final ImagePicker picker = ImagePicker();
+                          final List<XFile> images = await picker.pickMultiImage();
+                          
+                          if (images.isNotEmpty) {
+                            List<PlatformFile> platformFiles = [];
+                            for (var file in images) {
+                              platformFiles.add(PlatformFile(
+                                name: file.name,
+                                path: file.path,
+                                size: await file.length(),
+                              ));
+                            }
+                            FilePickerResult result = FilePickerResult(platformFiles);
                             controller.addAttachment(result);
                           }
                         },

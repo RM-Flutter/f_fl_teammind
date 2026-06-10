@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -379,12 +380,19 @@ class _UpdateSalaryAdvanceScreenState
                       InkWell(
                         borderRadius: BorderRadius.circular(16.r),
                         onTap: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.image,
-                          );
-                          if (result != null) {
+                          final ImagePicker picker = ImagePicker();
+                          final List<XFile> images = await picker.pickMultiImage();
+                          
+                          if (images.isNotEmpty) {
+                            List<PlatformFile> platformFiles = [];
+                            for (var file in images) {
+                              platformFiles.add(PlatformFile(
+                                name: file.name,
+                                path: file.path,
+                                size: await file.length(),
+                              ));
+                            }
+                            FilePickerResult result = FilePickerResult(platformFiles);
                             controller.addAttachment(result);
                           }
                         },
