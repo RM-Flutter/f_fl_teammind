@@ -17,9 +17,15 @@ class SalaryAdvanceListController extends ChangeNotifier {
 
   bool get isManagerOrHr {
     if (userSettings == null) return false;
+    
+    final hasManagerRole = userSettings?.role?.map((e) => e.toLowerCase()).contains('manager') == true;
+    final isTeamLeader = userSettings?.isTeamleaderIn != null && userSettings!.isTeamleaderIn!.isNotEmpty;
+
     return userSettings?.topManagement == true || 
            userSettings?.isHr == true || 
-           (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty);
+           (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty) ||
+           hasManagerRole ||
+           isTeamLeader;
   }
 
   bool isIncomingView = false;
