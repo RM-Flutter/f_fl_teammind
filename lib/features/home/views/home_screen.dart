@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    viewModel = HomeController();
+    viewModel = Provider.of<HomeController>(context, listen: false);
     viewModel.getHome(context);
     CacheConsts.initUSG();
     String? jsonString;
@@ -200,7 +200,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _autoScrollTimer?.cancel();
-    viewModel.dispose();
     super.dispose();
   }
 

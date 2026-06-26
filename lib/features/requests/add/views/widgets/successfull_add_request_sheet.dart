@@ -66,6 +66,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: CustomElevatedButton(
                           onPressed: () async {
+                            value.getHome(context);
                             context.goNamed(AppRoutes.home.name,
                                 pathParameters: {'lang': context.locale.languageCode,});
                           },
