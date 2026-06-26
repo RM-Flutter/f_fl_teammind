@@ -96,12 +96,15 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                     horizontal: 8, vertical: 8),
                 child: TabBarView(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        request.reason ?? '',
-                        textAlign: TextAlign.center,
-                        style: AppStyles.darkContent(context).copyWith(fontSize: 14),
+                    SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 20),
+                        child: Text(
+                          request.reason ?? '',
+                          textAlign: TextAlign.center,
+                          style: AppStyles.darkContent(context).copyWith(fontSize: 14),
+                        ),
                       ),
                     ),
                     Padding(

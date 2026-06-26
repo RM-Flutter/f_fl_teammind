@@ -596,7 +596,7 @@ class InfoTileWidget extends StatelessWidget {
   final Color? background;
   final Color? imgColor;
   final String title;
-  var width;
+  final double? width;
   var onTap;
   final bool? isFullRow;
   final bool? isHighLight;
@@ -622,9 +622,9 @@ class InfoTileWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap ?? (){},
       child: Container(
-        width: width != null ? width : isFullRow == false
+        width: width != null ? width! : (isFullRow == false
             ? (1.sw - 116) / 2
-            : 1.sw - 97,
+            : 1.sw - 97),
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : effectiveBackground,
             borderRadius: BorderRadius.circular(10)),
