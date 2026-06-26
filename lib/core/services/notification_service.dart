@@ -82,7 +82,12 @@ class NotificationService {
     }
   }
 
+  static bool _isForegroundListenerAttached = false;
+  static bool _isBackgroundListenerAttached = false;
+
   void _setupForegroundMessages() {
+    if (_isForegroundListenerAttached) return;
+    _isForegroundListenerAttached = true;
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint("🔔 Foreground Notification: ${message.notification?.title}");
       // Filter out notifications with no title or body
@@ -109,6 +114,8 @@ class NotificationService {
   }
 
   void _setupBackgroundMessages(BuildContext? context) {
+    if (_isBackgroundListenerAttached) return;
+    _isBackgroundListenerAttached = true;
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       _handleMessage(message.data['endpoint'], context);
     });
