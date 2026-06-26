@@ -60,11 +60,11 @@ class MainLayoutScreen extends StatelessWidget {
         showUnselectedLabels: true,
         showSelectedLabels: true,
         selectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
-          fontSize: 11.sp,
+          fontSize: 11,
           fontWeight: FontWeight.w600,
         ),
         unselectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
-          fontSize: 10.sp,
+          fontSize: 10,
         ),
         selectedItemColor: Color(AppColors.secondaryButton),
         elevation: 0,
@@ -72,11 +72,11 @@ class MainLayoutScreen extends StatelessWidget {
         items: bottomNavigationBarItems.map((element) {
           return BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
+              padding: EdgeInsets.only(top: 8, bottom: 12),
               child: SvgPicture.asset(
                 element.icon,
-                height: 24.r,
-                width: 24.r,
+                height: 24,
+                width: 24,
                 colorFilter: ColorFilter.mode(
                   Color(AppColors.tabInactive),
                   BlendMode.srcIn,
@@ -84,7 +84,7 @@ class MainLayoutScreen extends StatelessWidget {
               ),
             ),
             activeIcon: Padding(
-              padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
+              padding: EdgeInsets.only(top: 8, bottom: 12),
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
                   Color(AppColors.secondaryButton),
@@ -92,8 +92,8 @@ class MainLayoutScreen extends StatelessWidget {
                 ),
                 child: SvgPicture.asset(
                   element.icon,
-                  height: 24.r,
-                  width: 24.r,
+                  height: 24,
+                  width: 24,
                 ),
               ),
             ),

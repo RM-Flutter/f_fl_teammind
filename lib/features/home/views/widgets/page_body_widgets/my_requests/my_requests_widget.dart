@@ -50,7 +50,7 @@ class RequestsWidget extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: 24.w, vertical: 6.h),
+          horizontal: 24, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -59,7 +59,7 @@ class RequestsWidget extends StatelessWidget {
                 children: [
                    Text(getRequestsTypeStr(),
                       style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),),
@@ -69,12 +69,12 @@ class RequestsWidget extends StatelessWidget {
                             context: context, reqType: requestType),
                     child: Text(AppStrings.viewAll.tr(),
                         style: AppStyles.titleTextContent(context).copyWith(
-                          fontSize: 10.sp,
+                          fontSize: 10,
                         )),
                   ),
                 ],
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 10),
               ...requests.map(
                 (req) => RequestCard(
                   request: req,

@@ -19,7 +19,7 @@ class SummaryReportsModal extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 16.h),
+        SizedBox(height: 16),
         Container(
           height: 0.4.sh,
           child: ListView.builder(
@@ -27,32 +27,32 @@ class SummaryReportsModal extends StatelessWidget {
             itemBuilder: (context, index) {
               final report = summaryReports[index];
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.h),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(AppColors.lightGreyEF),
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: ListTile(
                     title: Row(
                       children: [
-                        Icon(Icons.calendar_month, color: Colors.black, size: 20.r),
-                        SizedBox(width: 15.w),
+                        Icon(Icons.calendar_month, color: Colors.black, size: 20),
+                        SizedBox(width: 15),
                         Text(
                           '${report.month.toString().tr() ?? ''} - ${LocalizationService.isArabic(context: context) ? StringConvert.sanitizeDateStringArabic(report.year.toString()) : StringConvert.sanitizeDateString(report.year.toString())}',
-                          style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13.sp),
+                          style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13),
                         ),
                       ],
                     ),
                     trailing:
-                    Text('${report.duration} ${AppStrings.days.tr()}',  style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13.sp),),
+                    Text('${report.duration} ${AppStrings.days.tr()}',  style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13),),
                   ),
                 ),
               );
             },
           ),
         ),
-        SizedBox(height: 16.h)
+        SizedBox(height: 16)
       ],
     );
   }

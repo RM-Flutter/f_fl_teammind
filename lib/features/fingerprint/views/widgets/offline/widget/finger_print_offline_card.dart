@@ -23,15 +23,15 @@ class FingerprintCardOffline extends StatelessWidget {
         itemBuilder: (context, index) => InkWell(
           onTap: () {},
           child: Container(
-            padding: EdgeInsets.all(AppSizes.s8.w),
+            padding: EdgeInsets.all(AppSizes.s8),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s10.r),
+              borderRadius: BorderRadius.circular(AppSizes.s10),
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Color(AppColors.buttons).withOpacity(0.2),
                   offset: const Offset(0, 0),
-                  blurRadius: 2.5.r,
+                  blurRadius: 2.5,
                 ),
               ],
             ),
@@ -40,11 +40,11 @@ class FingerprintCardOffline extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (fingerprint![index]['finger_day'] != null)Container(
-                    width: AppSizes.s50.w,
-                    padding: EdgeInsets.all(AppSizes.s4.w),
+                    width: AppSizes.s50,
+                    padding: EdgeInsets.all(AppSizes.s4),
                     decoration: BoxDecoration(
                       color: Color(AppColors.buttons),
-                      borderRadius: BorderRadius.circular(AppSizes.s8.r),
+                      borderRadius: BorderRadius.circular(AppSizes.s8),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -55,7 +55,7 @@ class FingerprintCardOffline extends StatelessWidget {
                           maxLines: 1,
                           style: AppStyles.whiteContent(context).copyWith(
                             fontWeight: FontWeight.w600,
-                            fontSize: AppSizes.s12.sp,
+                            fontSize: AppSizes.s12,
                           ),
                         ),
                         AutoSizeText(
@@ -64,20 +64,20 @@ class FingerprintCardOffline extends StatelessWidget {
                               ' - ',
                           style: AppStyles.whiteContent(context).copyWith(
                             fontWeight: FontWeight.w600,
-                            fontSize: AppSizes.s12.sp,
-                            height: 1.5.h,
+                            fontSize: AppSizes.s12,
+                            height: 1.5,
                           ),
                         ),
                       ],
                     ),
                   ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: AppSizes.s8.w),
+                  margin: EdgeInsets.symmetric(horizontal: AppSizes.s8),
                   child: AutoSizeText(
                     _formatFingerprintDate(fingerprint![index]['finger_day'].toString(), context),
                     style: AppStyles.primaryContent(context).copyWith(
                       fontWeight: FontWeight.w500,
-                      fontSize: AppSizes.s14.sp,
+                      fontSize: AppSizes.s14,
                     ),
                   ),
                 ),
@@ -85,7 +85,7 @@ class FingerprintCardOffline extends StatelessWidget {
             ),
           ),
         ),
-        separatorBuilder: (context, index) => SizedBox(height: 15.h,),
+        separatorBuilder: (context, index) => SizedBox(height: 15,),
         itemCount: fingerprint!.length);
   }
 

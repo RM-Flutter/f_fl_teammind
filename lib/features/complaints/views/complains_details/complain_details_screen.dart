@@ -98,53 +98,53 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                    style: {
                     "h1":Style(
                      color: AppStyles.oC2Content(context).color,
-                     fontSize: FontSize(26.sp),
+                     fontSize: FontSize(26),
                      fontWeight: FontWeight.w500,
                     ),"h2":Style(
                      color: AppStyles.oC2Content(context).color,
-                     fontSize: FontSize(24.sp),
+                     fontSize: FontSize(24),
                      fontWeight: FontWeight.w500,
                     ),"h3":Style(
                      color: AppStyles.oC2Content(context).color,
-                     fontSize: FontSize(22.sp),
+                     fontSize: FontSize(22),
                      fontWeight: FontWeight.w500,
                     ),"h4":Style(
                      color: AppStyles.oC2Content(context).color,
-                     fontSize: FontSize(20.sp),
+                     fontSize: FontSize(20),
                      fontWeight: FontWeight.w500,
                     ),"h5":Style(
                      color: AppStyles.oC2Content(context).color,
-                     fontSize: FontSize(18.sp),
+                     fontSize: FontSize(18),
                      fontWeight: FontWeight.w500,
                     ),"h6":Style(
                      color: AppStyles.oC2Content(context).color,
-                     fontSize: FontSize(16.sp),
+                     fontSize: FontSize(16),
                      fontWeight: FontWeight.w500,
                     ),
                     "p": Style(
                      color: AppStyles.grey52Content(context).color,
                      lineHeight: LineHeight(1.5),
-                     fontSize: FontSize(12.sp), // Adjust font size for better visibility
+                     fontSize: FontSize(12), // Adjust font size for better visibility
                      fontWeight: FontWeight.w400,
                     ), "ul": Style(
                      color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
-                     fontSize: FontSize(18.sp), // Adjust font size for better visibility
+                     fontSize: FontSize(18), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),"li": Style(
                      color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
-                     fontSize: FontSize(18.sp), // Adjust font size for better visibility
+                     fontSize: FontSize(18), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),"ol": Style(
                      color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
-                     fontSize: FontSize(18.sp), // Adjust font size for better visibility
+                     fontSize: FontSize(18), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),"*": Style(
                      color: AppStyles.bodyTextContent(context).color,
                      lineHeight: LineHeight(1.5),
-                     fontSize: FontSize(14.sp), // Adjust font size for better visibility
+                     fontSize: FontSize(14), // Adjust font size for better visibility
                      fontWeight: FontWeight.w500,
                     ),
                    }),
@@ -258,7 +258,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                      ),
                     ),
                    ),
-                   Text(AppStrings.lastedComments.tr().toUpperCase(), style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp,
+                   Text(AppStrings.lastedComments.tr().toUpperCase(), style: AppStyles.darkContent(context).copyWith(fontSize: 14,
                      fontWeight: FontWeight.w500)),
                    Expanded(
                     child: Padding(

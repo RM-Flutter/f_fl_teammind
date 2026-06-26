@@ -37,7 +37,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //       appBar: AppBar(
 //        title: Text(
 //         AppStrings.newRequest.tr().toUpperCase(),
-//         style: AppStyles.blackContent(context).copyWith(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.bold, fontSize: 20.sp),
+//         style: AppStyles.blackContent(context).copyWith(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.bold, fontSize: 20),
 //        ),
 //        backgroundColor: Colors.white,
 //        elevation: 0,
@@ -71,7 +71,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //                value: e['id'].toString(),
 //                child: Text(
 //                 e['title'].toString(),
-//                 style: AppStyles.blackContent(context).copyWith(//                   fontSize: 12.sp,
+//                 style: AppStyles.blackContent(context).copyWith(//                   fontSize: 12,
 //                   fontWeight: FontWeight.w400,
 //                   color: Color(0xff464646)
 //                 )),
@@ -123,7 +123,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //                  timeInSecForIosWeb: 1,
 //                  backgroundColor: Colors.green,
 //                  textColor: Colors.white,
-//                  fontSize: 16.0.sp,
+//                  fontSize: 16.0,
 //                );
 //               },
 //               child: Container(
@@ -158,7 +158,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //                    Text(
 //                     AppStrings.uploadImage.tr(),
 //                     style: AppStyles.whiteContent(context).copyWith(//
-//                       fontSize: 12.sp,
+//                       fontSize: 12,
 //                       fontWeight: FontWeight.w400,
 //                       color: Color(0xff191C1F)
 //                     ),
@@ -180,7 +180,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 //                         timeInSecForIosWeb: 1,
 //                         backgroundColor: Colors.green,
 //                         textColor: Colors.white,
-//                         fontSize: 16.0.sp,
+//                         fontSize: 16.0,
 //                       );
 //                      },
 //                      title: AppStrings.image.tr().toUpperCase(),
@@ -297,7 +297,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
      return Scaffold(
       appBar: AppBarWithBookmark(
        title: AppStrings.newRequest.tr().toUpperCase(),
-       titleStyle: AppStyles.heading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
+       titleStyle: AppStyles.heading(context).copyWith(fontSize: 20, fontWeight: FontWeight.bold),
        backgroundColor: Colors.white,
        elevation: 0,
        centerTitle: true,
@@ -327,7 +327,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
               value: e['id'].toString(),
               child: Text(
                e['title'].toString(),
-               style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp,
+               style: AppStyles.whiteContent(context).copyWith(fontSize: 12,
                  fontWeight: FontWeight.w400,
                  color: Color(AppColors.overlay)
                ))),
@@ -377,7 +377,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                 timeInSecForIosWeb: 1,
                 backgroundColor: Colors.green,
                 textColor: Colors.white,
-                fontSize: 16.0.sp,
+                fontSize: 16.0,
               );
              },
              child: Container(
@@ -403,7 +403,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                  children: [
                   Text(
                    AppStrings.uploadImage.tr(),
-                   style: AppStyles.almostBlackContent(context).copyWith(fontSize: 12.sp,
+                   style: AppStyles.almostBlackContent(context).copyWith(fontSize: 12,
                      fontWeight: FontWeight.w400,
                    )),
                   const Spacer(),
@@ -423,7 +423,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                        timeInSecForIosWeb: 1,
                        backgroundColor: Colors.green,
                        textColor: Colors.white,
-                       fontSize: 16.0.sp);
+                       fontSize: 16.0);
                     },
                     title: AppStrings.image.tr().toUpperCase(),
                     width: 100,

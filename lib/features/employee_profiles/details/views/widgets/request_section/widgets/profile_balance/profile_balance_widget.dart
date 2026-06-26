@@ -52,7 +52,7 @@ class ProfileBalanceWidget extends StatelessWidget {
     }).toList();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.s32.h),
+      padding: EdgeInsets.only(bottom: AppSizes.s32),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -63,11 +63,11 @@ class ProfileBalanceWidget extends StatelessWidget {
                       padding: EdgeInsets.only(right: paddingBetweenVocations!.w),
                       child: ShimmerAnimatedLoading(
                         width: (LayoutService.getWidth(context) -
-                                (AppSizes.s32.w +
+                                (AppSizes.s32 +
                                     ((paddingBetweenVocations ?? AppSizes.s0).w *
                                         3))) /
                             3,
-                        height: AppSizes.s120.h,
+                        height: AppSizes.s120,
                       )))
               : balanceWidgets,
         ),
@@ -119,15 +119,15 @@ class BalanceCard extends StatelessWidget {
         }
       }
 
-      final totalPadding = AppSizes.s32.w + ((paddingBetweenVocations ?? AppSizes.s0).w * 2);
+      final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0).w * 2);
       return (screenWidth - totalPadding) / crossAxisCount;
     }
 
     bool isTaken = balance.max == -1 && balance.available == -1;
     final mainTextStyle = AppStyles.whiteContent(context).copyWith(
       fontWeight: FontWeight.normal,
-      fontSize: AppSizes.s12.sp,
-      height: 1.0.h,
+      fontSize: AppSizes.s12,
+      height: 1.0,
     );
     return InkWell(
       //TODO: ADD REAL BALANCE ID AFTER ADDED FROM BACKEND
@@ -142,11 +142,11 @@ class BalanceCard extends StatelessWidget {
           : null,
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-        height: 140.h,
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+        height: 140,
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
           color:  Color(AppColors.secondaryButton),
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -161,8 +161,8 @@ class BalanceCard extends StatelessWidget {
                   .replaceAll(' ', '\n'),
               textAlign: TextAlign.center,
               style: AppStyles.whiteContent(context).copyWith(
-                fontSize: 11.sp,
-                height: 1.1.h,
+                fontSize: 11,
+                height: 1.1,
                 fontWeight: FontWeight.w700,
                 // fontWeight: FontWeight.w400,
               ),
@@ -177,22 +177,22 @@ class BalanceCard extends StatelessWidget {
                       .toUpperCase(),
                   textAlign: TextAlign.center,
                   style: AppStyles.whiteContent(context).copyWith(
-                    fontSize: 11.sp,
+                    fontSize: 11,
                     fontWeight: FontWeight.w700,
                     // fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4),
                 Text(
                   '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}'
                       .toUpperCase(),
                   textAlign: TextAlign.center,
                   style: AppStyles.whiteContent(context).copyWith(
-                    fontSize: 18.sp,
+                    fontSize: 18,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4),
                 // Ensure the "FROM" line always takes space for alignment
                 Text(
                   (balance.max != -1 && balance.available != -1)
@@ -201,7 +201,7 @@ class BalanceCard extends StatelessWidget {
                       : '',
                   textAlign: TextAlign.center,
                   style: AppStyles.whiteContent(context).copyWith(
-                    fontSize: 10.sp,
+                    fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

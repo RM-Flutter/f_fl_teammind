@@ -80,7 +80,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
               
               if (viewModel.employee == null) {
                 return NoExistingPlaceholderScreen(
-                  height: AppSizes.s300.h,
+                  height: AppSizes.s300,
                   title: AppStrings.thereIsNoEmployeeDataFound.tr(),
                 );
               }
@@ -106,23 +106,23 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100.w : double.infinity
+                              maxWidth: kIsWeb ? 1100 : double.infinity
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: AppSizes.s8.w,
-                                vertical: AppSizes.s12.h),
+                                horizontal: AppSizes.s8,
+                                vertical: AppSizes.s12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 4.w),
+                                  margin: EdgeInsets.symmetric(horizontal: 4),
                                   decoration: BoxDecoration(
                                     color:  Color(AppColors.secondaryButton),
-                                    borderRadius: BorderRadius.circular(AppSizes.s32.r),
+                                    borderRadius: BorderRadius.circular(AppSizes.s32),
                                   ),
-                                  height: 60.h,
-                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+                                  height: 60,
+                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                                   child: defaultTapBarItem(
                                     isVertical: false,
                                     items: taps,
@@ -139,8 +139,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                 Expanded(
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: AppSizes.s8.w,
-                                        vertical: AppSizes.s8.h),
+                                        horizontal: AppSizes.s8,
+                                        vertical: AppSizes.s8),
                                     child: Builder(
                                       builder: (context) {
                                         if (selectIndex == 0) {
@@ -178,7 +178,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   else Center(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                          maxWidth: kIsWeb ? 1100.w : double.infinity
+                          maxWidth: kIsWeb ? 1100 : double.infinity
                       ),
                       child: ContactsSectionWidget(
                           employee:

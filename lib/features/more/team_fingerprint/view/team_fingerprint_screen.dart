@@ -58,10 +58,10 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : double.infinity
+                  maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12.r),
+                padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Consumer<TeamFingerPrintViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -106,7 +106,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
                                     },
                                   );
                                 },
-                                separatorBuilder: (context, index) => SizedBox(height: 15.h,),
+                                separatorBuilder: (context, index) => SizedBox(height: 15,),
                                 itemCount: viewModel.employees!.length)
                           ])),
                 ),
@@ -118,20 +118,20 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
   Widget defaultTeamEmp(context, t1, t2, t3, {onTap})=>InkWell(
     onTap: onTap,
     child: Container(
-      margin: EdgeInsets.only(bottom: AppSizes.s10.h),
+      margin: EdgeInsets.only(bottom: AppSizes.s10),
       padding: EdgeInsets.symmetric(
-          vertical: AppSizes.s12.h, horizontal: AppSizes.s10.w),
+          vertical: AppSizes.s12, horizontal: AppSizes.s10),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.s8.r),
+          borderRadius: BorderRadius.circular(AppSizes.s8),
           border: Border.all(color: Colors.grey.withOpacity(0.1))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t1,style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp)),
+          Text(t1,style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14)),
           gapH8,
           Text(t2 != null ?"${t2} - ${t3}" : "${AppStrings.noDepartment.tr()} - ${t3}",
-              style: AppStyles.subtitleContent(context).copyWith(fontWeight: FontWeight.w400, fontSize: 12.sp)),
+              style: AppStyles.subtitleContent(context).copyWith(fontWeight: FontWeight.w400, fontSize: 12)),
 
         ],
       ),

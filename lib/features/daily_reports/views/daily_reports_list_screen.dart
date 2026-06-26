@@ -47,10 +47,10 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             child: Container(
-              padding: EdgeInsets.all(AppSizes.s24.r),
+              padding: EdgeInsets.all(AppSizes.s24),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(24.r),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -63,65 +63,65 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(16.r),
+                    padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.red.shade50,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(Icons.delete_outline_rounded,
-                        color: Colors.red.shade400, size: 36.r),
+                        color: Colors.red.shade400, size: 36),
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 20),
                   Text(
                     AppStrings.deleteReport.tr(),
                     style: AppStyles.heading(context).copyWith(
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(AppColors.titleTextColor),
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 12),
                   Text(
                     AppStrings.confirmDeleteReport.tr(),
                     style: AppStyles.content(context).copyWith(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                       color: Colors.grey.shade600,
                       height: 1.5,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 28.h),
+                  SizedBox(height: 28),
                   Row(
                     children: [
                       Expanded(
                         child: TextButton(
                           onPressed: () => Navigator.pop(context, false),
                           style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            padding: EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.r),
+                              borderRadius: BorderRadius.circular(14),
                             ),
                           ),
                           child: Text(
                             AppStrings.cancel.tr(),
                             style: TextStyle(
                               color: Colors.grey.shade700,
-                              fontSize: 15.sp,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: 12),
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red.shade500,
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            padding: EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14.r),
+                              borderRadius: BorderRadius.circular(14),
                             ),
                           ),
                           onPressed: () => Navigator.pop(context, true),
@@ -129,7 +129,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                             AppStrings.delete.tr(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 15.sp,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -166,7 +166,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
           floatingActionButton: provider.isManagerOrHr && provider.isForDepartment ? null : FloatingActionButton.extended(
             heroTag: 'add_daily_report',
             backgroundColor: Color(AppColors.buttons),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 4,
             onPressed: () {
                context.pushNamed(
@@ -180,12 +180,12 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                });
             },
             icon: const Icon(Icons.add, color: Colors.white),
-            label: Text(AppStrings.addReport.tr(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
+            label: Text(AppStrings.addReport.tr(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
           ),
           body: Column(
             children: [
               if (provider.isManagerOrHr) ...[
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
                 SwitchRowNotification(
                   value: provider.isForDepartment,
                   leftText: AppStrings.personalReports.tr(),
@@ -194,7 +194,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     provider.toggleDepartmentView(val, context);
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
               ],
               Expanded(
                 child: provider.isLoading 
@@ -213,7 +213,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
   Widget _buildList(List<DailyReportModel> list, DailyReportsProvider provider, {required bool isIncoming}) {
     if (list.isEmpty) {
       return NoExistingPlaceholderScreen(
-        height: 300.h,
+        height: 300,
         title: AppStrings.noDataFounded.tr(),
       );
     }
@@ -222,7 +222,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
         await provider.fetchReports(context, isIncoming: isIncoming);
       },
       child: ListView.builder(
-        padding: EdgeInsets.only(top: 16.h, bottom: 100.h),
+        padding: EdgeInsets.only(top: 16, bottom: 100),
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         itemCount: list.length,
         itemBuilder: (context, index) {
@@ -243,10 +243,10 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
         DateTime.now().day == report.createdAt!.day;
 
     return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.s16.h, left: 16.w, right: 16.w),
+      margin: EdgeInsets.only(bottom: AppSizes.s16, left: 16, right: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.buttons).withOpacity(0.06),
@@ -260,7 +260,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(20),
           onTap: () {
             context.pushNamed(
                AppRoutes.dailyReportDetailsScreen.name,
@@ -269,7 +269,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
             );
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -279,14 +279,14 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.all(10.r),
+                          padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttons).withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(Icons.calendar_month_rounded, color: Color(AppColors.buttons), size: 20.r),
+                          child: Icon(Icons.calendar_month_rounded, color: Color(AppColors.buttons), size: 20),
                         ),
-                        SizedBox(width: 12.w),
+                        SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -296,16 +296,16 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                                 : "No Date",
                               style: AppStyles.titleTextContent(context).copyWith(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14.sp,
+                                fontSize: 14,
                                 color: Color(AppColors.secondaryButton),
                               )
                             ),
                             if (displayName != null) ...[
-                              SizedBox(height: 2.h),
+                              SizedBox(height: 2),
                               Text(
                                 displayName,
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 12,
                                   color: Colors.grey.shade600,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -321,12 +321,12 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                         children: [
                           IconButton(
                             icon: Container(
-                              padding: EdgeInsets.all(6.r),
+                              padding: EdgeInsets.all(6),
                               decoration: BoxDecoration(
                                 color: Color(AppColors.buttons).withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.edit_rounded, color: Color(AppColors.buttons), size: 16.r)
+                              child: Icon(Icons.edit_rounded, color: Color(AppColors.buttons), size: 16)
                             ),
                             onPressed: () {
                               context.pushNamed(
@@ -343,31 +343,31 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                           ),
                           IconButton(
                             icon: Container(
-                              padding: EdgeInsets.all(6.r),
+                              padding: EdgeInsets.all(6),
                               decoration: BoxDecoration(
                                 color: Colors.red.withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.delete_outline_rounded, color: Colors.red, size: 16.r)
+                              child: Icon(Icons.delete_outline_rounded, color: Colors.red, size: 16)
                             ),
                             onPressed: () => _deleteReport(context, report, provider),
                           ),
                         ],
                       )
                     else
-                      Icon(Icons.arrow_forward_ios_rounded, size: 14.r, color: Colors.grey.shade300)
+                      Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey.shade300)
                   ],
                 ),
                 if (report.done != null && report.done!.isNotEmpty) ...[
                   Padding(
-                    padding: EdgeInsets.only(top: 16.h, bottom: 12.h),
+                    padding: EdgeInsets.only(top: 16, bottom: 12),
                     child: Divider(height: 1, color: Colors.grey.shade100),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.check_circle_rounded, color: Colors.green.shade400, size: 18.r),
-                      SizedBox(width: 8.w),
+                      Icon(Icons.check_circle_rounded, color: Colors.green.shade400, size: 18),
+                      SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           report.done!, 
@@ -375,7 +375,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                           overflow: TextOverflow.ellipsis,
                           style: AppStyles.titleTextContent(context).copyWith(
                             fontWeight: FontWeight.w400,
-                            fontSize: 13.sp,
+                            fontSize: 13,
                             color: Colors.grey.shade700,
                             height: 1.4,
                           )

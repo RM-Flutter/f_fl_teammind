@@ -11,32 +11,32 @@ class FaqLoadingWidget extends StatelessWidget {
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: Padding(
-        padding: EdgeInsets.only(bottom: 16.0.h),
+        padding: EdgeInsets.only(bottom: 16.0),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: double.infinity,
-                height: 20.h,
+                height: 20,
                 color: Colors.white,
-                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
               Container(
                 width: double.infinity,
-                height: 15.h,
+                height: 15,
                 color: Colors.white,
-                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               ),
               Container(
                 width: double.infinity,
-                height: 15.h,
+                height: 15,
                 color: Colors.white,
-                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               ),
             ],
           ),

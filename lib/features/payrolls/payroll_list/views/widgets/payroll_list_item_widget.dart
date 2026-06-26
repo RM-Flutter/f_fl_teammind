@@ -24,15 +24,15 @@ class PayrollListItemWidget extends StatelessWidget {
               pathParameters: {'lang': context.locale.languageCode}),
           child: Container(
             padding: EdgeInsets.symmetric(
-                vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
+                vertical: AppSizes.s14, horizontal: AppSizes.s16),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10.r,
-                  offset: Offset(0, 4.h),
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
                 )
               ],
               border: Border.all(color: Colors.grey.withOpacity(0.05)),
@@ -45,8 +45,8 @@ class PayrollListItemWidget extends StatelessWidget {
                  Image.asset(
                   "assets/images/new-cale.png",
                   color: Colors.black,
-                  width: 24.r,
-                  height: 24.r,
+                  width: 24,
+                  height: 24,
                 ),
                 gapW12,
                 Expanded(
@@ -54,21 +54,21 @@ class PayrollListItemWidget extends StatelessWidget {
                     PayrollRepo.formatDate(payroll.dateTo, context) ?? '',
                     style: AppStyles.blackContent(context).copyWith(
                       fontWeight: FontWeight.w600,
-                      fontSize: AppSizes.s14.sp,
+                      fontSize: AppSizes.s14,
                     ),
                   ),
                 ),
                 gapW8,
                 Container(
-                  height: AppSizes.s28.r,
-                  width: AppSizes.s28.r,
+                  height: AppSizes.s28,
+                  width: AppSizes.s28,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(AppColors.buttons)),
                   child: Icon(
                     Icons.arrow_forward_outlined,
                     color: Colors.white,
-                    size: AppSizes.s12.r,
+                    size: AppSizes.s12,
                   ),
                 ),
               ],

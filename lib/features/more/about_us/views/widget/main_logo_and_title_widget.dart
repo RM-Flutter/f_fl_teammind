@@ -10,14 +10,14 @@ class MainLogoAndTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 30.h),
+        SizedBox(height: 30),
         Center(
           child: SizedBox(
-            height: 177.h,
+            height: 177,
             child: ClipRRect(
               borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(60.r),
-                bottomLeft: Radius.circular(60.r),
+                bottomRight: Radius.circular(60),
+                bottomLeft: Radius.circular(60),
               ),
               child: DynamicImageWidget(
                 imageUrl: AppImages.logo,

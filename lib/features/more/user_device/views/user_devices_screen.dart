@@ -52,21 +52,21 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
               children: [
                 Container(
                   color: Colors.transparent,
-                  height: 90.h,
+                  height: 90,
                   width: double.infinity,
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24.r,),
+                        icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24,),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                       Text(
                         AppStrings.userDevices.tr().toUpperCase(),
-                        style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                        style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.transparent),
@@ -75,12 +75,12 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: AppSizes.s20.h,),
+                SizedBox(height: AppSizes.s20,),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: ListView.separated(
                     padding: EdgeInsets.zero,
-                    separatorBuilder: (context, index)=> SizedBox(height: 18.h,),
+                    separatorBuilder: (context, index)=> SizedBox(height: 18,),
                     shrinkWrap: true,
                     reverse: false,
                     physics: const NeverScrollableScrollPhysics(),
@@ -92,14 +92,14 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
                       child: Container(
-                        margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
+                        margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
                         padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
+                            horizontal: AppSizes.s15, vertical: AppSizes.s12),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                          borderRadius: BorderRadius.circular(AppSizes.s15),
                         ),
-                        height: 100.h,  // Adjust height to match your layout
+                        height: 100,  // Adjust height to match your layout
                       ),
                     ) :
                     InkWell(
@@ -107,40 +107,40 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                       },
                       child: Container(
                         padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
+                            horizontal: AppSizes.s15, vertical: AppSizes.s12),
                         decoration: BoxDecoration(
                           color: Color(AppColors.textC5),
-                          borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                          borderRadius: BorderRadius.circular(AppSizes.s15),
                           boxShadow: [
                             BoxShadow(
                                 color: const Color.fromRGBO(0, 0, 0, 0.05),
                                 spreadRadius: 0,
-                                offset: Offset(0, 1.h),
-                                blurRadius: 10.r)
+                                offset: Offset(0, 1),
+                                blurRadius: 10)
                           ],
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg", width: 24.r, height: 24.r,),
-                            if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg", width: 24.r, height: 24.r,),
-                            SizedBox(width: 15.w,),
+                            if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg", width: 24, height: 24,),
+                            if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg", width: 24, height: 24,),
+                            SizedBox(width: 15,),
                             SizedBox(
                               width : 0.5.sw,
                               child: Text(
                                 "${value.devices[index]['browser'].toString()} (${value.devices[index]['os_version'].toString()})".toUpperCase(),
                                 maxLines: 2,
                                 style: AppStyles.darkContent(context).copyWith(
-                                    fontSize: 12.sp,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w600),
                               ),
                             ),
-                            SizedBox(width: 15.w,),
+                            SizedBox(width: 15,),
                             if(appConfigServiceProvider.deviceInformation.deviceUniqueId == value.devices[index]['unique_id'].toString())Text(
                               AppStrings.currentDevice.tr(),
                               maxLines: 2,
                               style: AppStyles.greenContent(context).copyWith(
-                                  fontSize: 12.sp,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -160,14 +160,14 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                     ,
                   ),
                 ),
-                SizedBox(height: AppSizes.s20.h,),
+                SizedBox(height: AppSizes.s20,),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Center(
                       child: (value.isDeleteLoading == false) ?CustomElevatedButton(
-                          titleSize: AppSizes.s14.sp,
+                          titleSize: AppSizes.s14,
                           width: 1.sw,
-                          radius: AppSizes.s10.r,
+                          radius: AppSizes.s10,
                           backgroundColor: const Color(0xffFF0000),
                           title: AppStrings.logoutFromAllDevices.tr(),
                           onPressed: () async => await value.deleteDevices(context: context, deviceId: null)

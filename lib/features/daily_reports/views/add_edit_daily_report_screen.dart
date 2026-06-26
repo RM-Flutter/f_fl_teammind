@@ -92,7 +92,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
         builder: (context, provider, child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
             child: Form(
               key: _formKey,
               child: Column(
@@ -105,7 +105,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                     iconColor: Colors.green.shade500,
                     child: _buildTextField(_doneController, AppStrings.detailCompletedTasks.tr()),
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 20),
                   _buildCardSection(
                     title: AppStrings.inProgressTasks.tr(),
                     subtitle: AppStrings.whatAreYouCurrentlyWorkingOn.tr(),
@@ -113,7 +113,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                     iconColor: Colors.blue.shade500,
                     child: _buildTextField(_inProgressController, AppStrings.detailOngoingTasks.tr()),
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 20),
                   _buildCardSection(
                     title: AppStrings.blockersAndProblems.tr(),
                     subtitle: AppStrings.anyIssuesYouFaced.tr(),
@@ -121,14 +121,14 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                     iconColor: Colors.orange.shade500,
                     child: _buildTextField(_problemsController, AppStrings.describeBlockers.tr()),
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 20),
                   _buildCardSection(
                     title: AppStrings.attachments.tr(),
                     subtitle: AppStrings.uploadScreenshots.tr(),
                     icon: Icons.attach_file_rounded,
                     iconColor: Color(AppColors.buttons),
                     child: Padding(
-                      padding: EdgeInsets.all(16.r),
+                      padding: EdgeInsets.all(16),
                       child: Column(
                         children: [
                           if (selectedFiles.isNotEmpty) ...[
@@ -136,36 +136,36 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: selectedFiles.length,
-                              separatorBuilder: (context, index) => SizedBox(height: 10.h),
+                              separatorBuilder: (context, index) => SizedBox(height: 10),
                               itemBuilder: (context, index) {
                                 final file = selectedFiles[index].files.first;
                                 return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(12.r),
+                                    borderRadius: BorderRadius.circular(12),
                                     border: Border.all(color: Colors.grey.shade200),
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.insert_drive_file_rounded, color: Colors.grey.shade600, size: 24.r),
-                                      SizedBox(width: 12.w),
+                                      Icon(Icons.insert_drive_file_rounded, color: Colors.grey.shade600, size: 24),
+                                      SizedBox(width: 12),
                                       Expanded(
                                         child: Text(
                                           file.name, 
                                           maxLines: 1, 
                                           overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500)
+                                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)
                                         ),
                                       ),
                                       IconButton(
                                         icon: Container(
-                                          padding: EdgeInsets.all(4.r),
+                                          padding: EdgeInsets.all(4),
                                           decoration: BoxDecoration(
                                             color: Colors.red.withOpacity(0.1),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: Icon(Icons.close_rounded, color: Colors.red, size: 16.r)
+                                          child: Icon(Icons.close_rounded, color: Colors.red, size: 16)
                                         ),
                                         onPressed: () {
                                           setState(() {
@@ -178,29 +178,29 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                                 );
                               },
                             ),
-                            SizedBox(height: 16.h),
+                            SizedBox(height: 16),
                           ],
                           InkWell(
                             onTap: _pickFiles,
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(12),
                             child: Container(
                               width: double.infinity,
-                              padding: EdgeInsets.symmetric(vertical: 16.h),
+                              padding: EdgeInsets.symmetric(vertical: 16),
                               decoration: BoxDecoration(
                                 color: Color(AppColors.buttons).withOpacity(0.05),
-                                borderRadius: BorderRadius.circular(12.r),
+                                borderRadius: BorderRadius.circular(12),
                                 border: Border.all(color: Color(AppColors.buttons).withOpacity(0.2), style: BorderStyle.solid),
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.cloud_upload_rounded, color: Color(AppColors.buttons), size: 32.r),
-                                  SizedBox(height: 8.h),
+                                  Icon(Icons.cloud_upload_rounded, color: Color(AppColors.buttons), size: 32),
+                                  SizedBox(height: 8),
                                   Text(
                                     AppStrings.tapToBrowseFiles.tr(),
                                     style: TextStyle(
                                       color: Color(AppColors.buttons),
-                                      fontSize: 13.sp,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -212,9 +212,9 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 48.h),
+                  SizedBox(height: 48),
                   _buildSubmitButton(provider, isEditing),
-                  SizedBox(height: 40.h),
+                  SizedBox(height: 40),
                 ],
               ),
             ),
@@ -234,7 +234,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -248,18 +248,18 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(8.r),
+                  padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: iconColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12.r),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(icon, size: 20.r, color: iconColor),
+                  child: Icon(icon, size: 20, color: iconColor),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -267,15 +267,15 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                       title,
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         color: Color(AppColors.secondaryButton),
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 2),
                     Text(
                       subtitle,
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         color: Colors.grey.shade500,
                         fontWeight: FontWeight.w400,
                       ),
@@ -303,13 +303,13 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
       },
       maxLines: 4,
       minLines: 2,
-      style: TextStyle(fontSize: 14.sp, color: Colors.black87, height: 1.5),
+      style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13.sp),
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
         filled: true,
         fillColor: Colors.transparent,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: InputBorder.none,
         enabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
@@ -320,9 +320,9 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
   Widget _buildSubmitButton(DailyReportsProvider provider, bool isEditing) {
     return Container(
       width: double.infinity,
-      height: 55.h,
+      height: 55,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.buttons).withOpacity(0.3),
@@ -337,7 +337,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
           backgroundColor: Color(AppColors.buttons),
           foregroundColor: Colors.white,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
         child: provider.isActionLoading
             ? const SizedBox(
@@ -349,7 +349,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                 isEditing ? AppStrings.updateReport.tr() : AppStrings.saveReport.tr(),
                 style: AppStyles.whiteContent(context).copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   letterSpacing: 0.5,
                 ),
               ),

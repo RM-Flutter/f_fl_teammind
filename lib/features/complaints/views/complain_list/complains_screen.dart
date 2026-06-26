@@ -71,7 +71,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
      backgroundColor: Colors.white,
      appBar: AppBarWithBookmark(
       title: AppStrings.ticketSystem.tr().toUpperCase(),
-      titleStyle: AppStyles.heading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
+      titleStyle: AppStyles.heading(context).copyWith(fontSize: 20, fontWeight: FontWeight.bold),
       centerTitle: true,
       backgroundColor: Color(AppColors.background),
       elevation: 0,
@@ -97,11 +97,11 @@ class _ComplainScreenState extends State<ComplainScreen> {
        baseColor: Colors.grey[300]!,
        highlightColor: Colors.grey[100]!,
        child: Container(
-        margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h,),
-        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h,),
+        margin: EdgeInsets.symmetric(vertical: AppSizes.s12,),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12,),
         decoration: BoxDecoration(
          color: Colors.white,
-         borderRadius: BorderRadius.circular(AppSizes.s15.r),
+         borderRadius: BorderRadius.circular(AppSizes.s15),
         ),
         height: 100,
        ),
@@ -155,7 +155,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                  AppStrings.otherRequests.tr().toUpperCase(),
-                 style: AppStyles.blackContent(context).copyWith(fontSize: 18.sp,
+                 style: AppStyles.blackContent(context).copyWith(fontSize: 18,
                   fontWeight: FontWeight.w500,
                   color: Color(AppColors.secondaryButton))),
                ),
@@ -234,20 +234,20 @@ class _ComplainScreenState extends State<ComplainScreen> {
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.s16.h),
+      margin: EdgeInsets.only(bottom: AppSizes.s16),
       padding: EdgeInsets.symmetric(
-        vertical: AppSizes.s14.h,
-        horizontal: AppSizes.s16.w,
+        vertical: AppSizes.s14,
+        horizontal: AppSizes.s16,
       ),
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10),
         ),
         shadows: [
           BoxShadow(
             color: Color(AppColors.disableButton).withOpacity(0.5),
-            blurRadius: AppSizes.s5.r,
+            blurRadius: AppSizes.s5,
             spreadRadius: 1,
           )
         ],
@@ -274,26 +274,26 @@ class _ComplainScreenState extends State<ComplainScreen> {
                     "$title",
                     style: AppStyles.blackContent(context).copyWith(
                       fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.s16.sp,
+                      fontSize: AppSizes.s16,
                       letterSpacing: 0.5,
                       height: 1.1,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 6.h),
+                  SizedBox(height: 6),
                   Row(
                     children: [
                       Text(
                         status,
                         style: AppStyles.greyContent(context).copyWith(
-                          fontSize: 12.sp,
+                          fontSize: 12,
                           color: iconColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text("|", style: TextStyle(color: Colors.grey.withOpacity(0.3))),
                       ),
                       Opacity(
@@ -303,7 +303,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                           style: AppStyles.greyContent(context).copyWith(
                             color: Color(AppColors.divider),
                             fontWeight: FontWeight.w400,
-                            fontSize: 12.sp,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -312,11 +312,11 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 ],
               ),
             ),
-            SizedBox(width: AppSizes.s8.w),
+            SizedBox(width: AppSizes.s8),
             Icon(
               statusIcon,
               color: iconColor,
-              size: 24.r,
+              size: 24,
             ),
           ],
         ),

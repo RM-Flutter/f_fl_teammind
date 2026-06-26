@@ -43,14 +43,14 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
       child: TemplatePage(
           backgroundColor: Colors.white,
           bottomAppbarWidget: PreferredSize(
-            preferredSize: Size.fromHeight(AppSizes.s70.h),
+            preferredSize: Size.fromHeight(AppSizes.s70),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100.w : double.infinity
+                    maxWidth: kIsWeb ? 1100 : double.infinity
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w, vertical: AppSizes.s12.h),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s12),
                   child: Row(
                     children: [
                       Expanded(
@@ -58,38 +58,38 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                           controller: viewModel.searchController,
                           onChanged: viewModel.updateSearchQuery,
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search, color: Color(0xff606060), size: 20.sp),
+                              prefixIcon: Icon(Icons.search, color: Color(0xff606060), size: 20),
                               hintText: AppStrings.searchByName.tr(),
-                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14.sp),
+                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14),
                               filled: true,
                               fillColor: Color(AppColors.scaffoldBackGround),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.r),
+                                borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.r),
+                                borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.r),
+                                borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                               suffixIcon: viewModel.searchController.text.isNotEmpty 
                                   ? IconButton(
-                                      icon: Icon(Icons.close, color: Color(0xff606060), size: 20.sp),
+                                      icon: Icon(Icons.close, color: Color(0xff606060), size: 20),
                                       onPressed: viewModel.releaseSearchValuesAndFilters)
                                   : null,
                               isDense: true,
-                              contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w)),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12)),
                         ),
                       ),
-                      SizedBox(width: 4.w),
+                      SizedBox(width: 4),
                       IconButton(
                         icon: Image.asset(
                           AppImages.profileFilter,
-                          width: AppSizes.s22.w,
-                          height: AppSizes.s22.h,
+                          width: AppSizes.s22,
+                          height: AppSizes.s22,
                           fit: BoxFit.cover,
                         ),
                         onPressed: () async =>
@@ -110,10 +110,10 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
               Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100.w : double.infinity
+                      maxWidth: kIsWeb ? 1100 : double.infinity
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                     child: Consumer<EmployeesListViewModel>(
                         builder: (context, viewModel, child) => viewModel.isLoading
                             ? const LoadingPageWidget(
@@ -132,19 +132,19 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                       return Column(
                                         children: [
                                           ListTile(
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                                             leading: employee.avatar != null && employee.avatar!.isNotEmpty
                                                 ? CircleAvatar(
-                                                    radius: 25.r,
+                                                    radius: 25,
                                                     backgroundColor: Colors.transparent,
                                                     child: Center(
                                                       child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50.r),
+                                                        borderRadius: BorderRadius.circular(50),
                                                         child: CachedNetworkImage(
                                                             imageUrl: employee.avatar!,
                                                             fit: BoxFit.cover,
-                                                            width: 50.w,
-                                                            height: 50.h,
+                                                            width: 50,
+                                                            height: 50,
                                                             placeholder: (context,
                                                                     url) =>
                                                                 const ShimmerAnimatedLoading(
@@ -156,27 +156,27 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                                 Image.asset(
                                                                   "assets/images/user.png",
                                                                   fit: BoxFit.cover,
-                                                                  width: 50.w,
-                                                                  height: 50.h,
+                                                                  width: 50,
+                                                                  height: 50,
                                                                 )),
                                                       ),
                                                     ),
                                                   )
                                                 : CircleAvatar(
-                                                    radius: 25.r,
+                                                    radius: 25,
                                                     backgroundColor: Colors.transparent,
                                                     child: Image.asset(
                                                       "assets/images/user.png",
                                                       fit: BoxFit.cover,
-                                                      width: 50.w,
-                                                      height: 50.h,
+                                                      width: 50,
+                                                      height: 50,
                                                     ),
                                                   ),
                                             title: Text(
                                               employee.name ?? '',
                                               style: AppStyles.blackContent(context).copyWith(
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: 15.sp,
+                                                fontSize: 15,
                                               ),
                                             ),
                                             subtitle: Column(
@@ -187,12 +187,12 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                   Text(
                                                     employee.jobTitle!,
                                                     style: AppStyles.greyContent(context).copyWith(
-                                                      fontSize: 12.sp,
+                                                      fontSize: 12,
                                                       fontWeight: FontWeight.w400,
                                                     ),
                                                   ),
                                                 if (employee.phone != null && employee.phone.toString().isNotEmpty) ... [
-                                                  SizedBox(height: 3.h),
+                                                  SizedBox(height: 3),
                                                   Text(
                                                     employee.countryKey != null
                                                         ? LocalizationService.isArabic(context: context)
@@ -200,7 +200,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                         : '(+${employee.countryKey ?? ''}) ${employee.phone.toString()}'
                                                         : '${employee.phone.toString()}',
                                                     style: AppStyles.greyContent(context).copyWith(
-                                                      fontSize: 12.sp,
+                                                      fontSize: 12,
                                                       fontWeight: FontWeight.w400,
                                                     ),
                                                   ),
@@ -220,9 +220,9 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                           ),
                                            Divider(
                                             color: Color(AppColors.divider).withOpacity(.3),
-                                            height: 1.h,
-                                            indent: 16.w,
-                                            endIndent: 16.w,
+                                            height: 1,
+                                            indent: 16,
+                                            endIndent: 16,
                                           )
                                         ],
                                       );

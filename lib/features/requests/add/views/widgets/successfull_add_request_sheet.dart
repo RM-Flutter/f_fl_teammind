@@ -26,38 +26,38 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
         constraints: isWeb
             ? BoxConstraints(
           maxHeight: 0.6.sh,
-          maxWidth: 500.w,
+          maxWidth: 500,
         )
             : null,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: isWeb
-              ? BorderRadius.circular(30.r)
-              : BorderRadius.vertical(top: Radius.circular(30.r)),
+              ? BorderRadius.circular(30)
+              : BorderRadius.vertical(top: Radius.circular(30)),
         ),
         child: Column(
           children: [
-            SizedBox(height: 30.h),
-            SvgPicture.asset("assets/images/svg/success_reqs.svg", width: 100.r, height: 100.r),
-            SizedBox(height: 15.h,),
+            SizedBox(height: 30),
+            SvgPicture.asset("assets/images/svg/success_reqs.svg", width: 100, height: 100),
+            SizedBox(height: 15,),
             Text(AppStrings.success.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(
-                fontSize: 24.sp,
+                fontSize: 24,
                 fontWeight: FontWeight.w700,
             )),
             Padding(
-              padding: EdgeInsets.all(15.r),
+              padding: EdgeInsets.all(15),
               child: Text(
                 AppStrings.yourRequestHasBeenSubmittedSuccessfully.tr().toUpperCase(),
                 textAlign: TextAlign.center,
                 style: AppStyles.blackWithObacityContent(context).copyWith(
                     fontWeight: FontWeight.w400,
-                    fontSize: 14.sp
+                    fontSize: 14
                 ),
               ),
             ),
             const Spacer(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -74,7 +74,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                           titleWidget: Text(
                             AppStrings.goToHome.tr().toUpperCase(),
                             style: AppStyles.whiteContent(context).copyWith(
-                              fontSize: 12.sp,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -83,7 +83,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                           isFuture: false),
                     ),
                   ),
-                  SizedBox(width: kIsWeb ? 10.w : 5.w,),
+                  SizedBox(width: kIsWeb ? 10 : 5,),
                   Flexible(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
@@ -107,7 +107,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                           titleWidget: Text(
                             (title ?? AppStrings.goToRequest.tr()).toUpperCase(),
                             style: AppStyles.whiteContent(context).copyWith(
-                              fontSize: 12.sp,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -118,7 +118,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
           ],
         ),
       );

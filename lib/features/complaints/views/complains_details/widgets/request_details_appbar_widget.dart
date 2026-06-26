@@ -23,7 +23,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
  @override
  Widget build(BuildContext context) {
   return Container(
-   height: AppSizes.s220.h,
+   height: AppSizes.s220,
    clipBehavior: Clip.antiAlias,
    alignment: Alignment.center,
    width: LayoutService.getWidth(context),
@@ -34,8 +34,8 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
       opacity: 0.4),
     color: Color(AppColors.secondaryButton),
     borderRadius: BorderRadius.only(
-      bottomLeft: Radius.circular(AppSizes.s28.r),
-      bottomRight: Radius.circular(AppSizes.s28.r)),
+      bottomLeft: Radius.circular(AppSizes.s28),
+      bottomRight: Radius.circular(AppSizes.s28)),
    ),
    child: Center(
     child: Stack(
@@ -44,7 +44,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
       Padding(
        padding: EdgeInsets.symmetric(horizontal: 20),
        child: SizedBox(
-        height: AppSizes.s200.h,
+        height: AppSizes.s200,
         child: SingleChildScrollView(
          child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -68,7 +68,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
              Spacer(),
              Text(
               AppStrings.myRequests.tr().toUpperCase(),
-              style: AppStyles.whiteHeading(context).copyWith(fontSize: 20.sp,
+              style: AppStyles.whiteHeading(context).copyWith(fontSize: 20,
                fontWeight: FontWeight.w700),
               textAlign: TextAlign.center),
              Spacer(),
@@ -90,7 +90,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
               children: [
                Text(
                 getOneRequestModel!.complain!.subject!.toUpperCase(),
-                style: AppStyles.whiteContent(context).copyWith(fontSize: 16.sp,
+                style: AppStyles.whiteContent(context).copyWith(fontSize: 16,
                   
                  fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center),
@@ -103,7 +103,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                   child: Text(
                    DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(getOneRequestModel!.complain!.createdAt.toString())).toString(),
                    textAlign: TextAlign.center,
-                   style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp,
+                   style: AppStyles.whiteContent(context).copyWith(fontSize: 12,
                      
                     fontWeight: FontWeight.w500)),
                  ),
@@ -118,7 +118,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                      textAlign: TextAlign.center,
                      maxLines: 2,
                      style: AppStyles.whiteContent(context).copyWith(overflow: TextOverflow.ellipsis,
-                      fontSize: 12.sp,
+                      fontSize: 12,
                        
                       fontWeight: FontWeight.w500)),
                    ),
@@ -141,7 +141,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                     child: Text(
                      getOneRequestModel!.complain!.pstatus!.tr().toUpperCase() ?? "",
                      textAlign: TextAlign.center,
-                     style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp,
+                     style: AppStyles.whiteContent(context).copyWith(fontSize: 12,
                        
                       fontWeight: FontWeight.w500)),
                    ),

@@ -104,14 +104,14 @@ class _DefaultPageState extends State<DefaultPage> {
             backgroundColor: Color(AppColors.background),
             appBar: AppBarWithBookmark(
               title: widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase():widget.type.toString().tr().toUpperCase(),
-              titleStyle: AppStyles.heading(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700),
+              titleStyle: AppStyles.heading(context).copyWith(fontSize: 16, fontWeight: FontWeight.w700),
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
             ),
             floatingActionButton: widget.type == "rmnotifications"? Container(
               padding: EdgeInsets.symmetric(
                   horizontal: LocalizationService.isArabic(context: context)
-                      ? 35.w
+                      ? 35
                       : 0),
               width: 1.sw,
               alignment: Alignment.bottomRight,
@@ -128,8 +128,8 @@ class _DefaultPageState extends State<DefaultPage> {
                   child: Image.asset(
                     AppImages.addFloatingActionButtonIcon,
                     color: AppThemeService.colorPalette.fabIconColor.color,
-                    width: AppSizes.s16.r,
-                    height: AppSizes.s16.r,
+                    width: AppSizes.s16,
+                    height: AppSizes.s16,
                   ),
                 ),
               ),
@@ -145,9 +145,9 @@ class _DefaultPageState extends State<DefaultPage> {
               child: ListView(
                 controller: _scrollController,
                 children: [
-                  SizedBox(height: 10.h,),
+                  SizedBox(height: 10,),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    padding: EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
@@ -162,13 +162,13 @@ class _DefaultPageState extends State<DefaultPage> {
                             baseColor: Colors.grey[300]!,
                             highlightColor: Colors.grey[100]!,
                             child: Container(
-                              margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
-                              padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
+                              margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
+                              padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                                borderRadius: BorderRadius.circular(AppSizes.s15),
                               ),
-                              height: 100.h,
+                              height: 100,
                             ),
                           );
                         } else {
@@ -182,7 +182,7 @@ class _DefaultPageState extends State<DefaultPage> {
                     ),
                   ),
                   if(!provider.isGetBlogLoading && provider.blogs.isEmpty) Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    padding: EdgeInsets.symmetric(horizontal: 15),
                     child:  NoExistingPlaceholderScreen(
                         height: 0.6.sh,
                         title: AppStrings.thereIsNoNotifications.tr()),

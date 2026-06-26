@@ -21,7 +21,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.s300.h,
+      height: AppSizes.s300,
       clipBehavior: Clip.antiAlias,
       width: 1.sw,
       decoration: BoxDecoration(
@@ -31,8 +31,8 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
             opacity: 0.4),
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28.r),
-            bottomRight: Radius.circular(AppSizes.s28.r)),
+            bottomLeft: Radius.circular(AppSizes.s28),
+            bottomRight: Radius.circular(AppSizes.s28)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,13 +41,13 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: "${AppStrings.payroll.tr()} - ${PayrollRepo.formatDate(payroll?.dateTo, context)}",
-            titleStyle: AppStyles.whiteContent(context).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w400),
+            titleStyle: AppStyles.whiteContent(context).copyWith(fontSize: 16, fontWeight: FontWeight.w400),
             centerTitle: true,
             routeName: AppRoutes.payrollDetails.name,
             defaultTitle: AppStrings.payroll.tr(),
             bookmarkIconColor: Colors.white,
             leading: Padding(
-              padding: EdgeInsets.all(AppSizes.s10.r),
+              padding: EdgeInsets.all(AppSizes.s10),
               child: InkWell(
                 onTap: () => context.pop(),
                 child: Container(
@@ -57,7 +57,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
                   child: Icon(
                     Icons.arrow_back_sharp,
                     color: Colors.white,
-                    size: AppSizes.s18.r,
+                    size: AppSizes.s18,
                   ),
                 ),
               ),
@@ -67,10 +67,10 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
           Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100.w : double.infinity,
+                maxWidth: kIsWeb ? 1100 : double.infinity,
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -125,9 +125,9 @@ class PayrollHeaderTileWidget extends StatelessWidget {
       width: !kIsWeb ? 0.6.sw : 0.4.sw,
       decoration: BoxDecoration(
           color: const Color(AppColors.navyBlue),
-          borderRadius: BorderRadius.circular(AppSizes.s6.r)),
+          borderRadius: BorderRadius.circular(AppSizes.s6)),
       padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.s6.w, vertical: AppSizes.s12.h),
+          horizontal: AppSizes.s6, vertical: AppSizes.s12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -135,14 +135,14 @@ class PayrollHeaderTileWidget extends StatelessWidget {
           Icon(
             icon,
             color: Color(AppColors.buttons),
-            size: 20.r,
+            size: 20,
           ),
           gapW12,
           Expanded(
             child: AutoSizeText(
               title,
               style: AppStyles.whiteContent(context).copyWith(
-                  fontSize: AppSizes.s12.sp,
+                  fontSize: AppSizes.s12,
                   fontWeight: FontWeight.w500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -153,7 +153,7 @@ class PayrollHeaderTileWidget extends StatelessWidget {
             child: AutoSizeText(
               subTitle,
               style: AppStyles.whiteContent(context).copyWith(
-                  fontSize: AppSizes.s12.sp,
+                  fontSize: AppSizes.s12,
                   fontWeight: FontWeight.w500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

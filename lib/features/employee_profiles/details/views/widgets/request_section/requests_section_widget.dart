@@ -34,7 +34,7 @@ class RequestsSectionWidget extends StatelessWidget {
         children: [
           gapH12,
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: ProfileBalanceWidget(
               balance: employee?.balance,
               empDepartmentId: employee?.departmentId?.toString(),
@@ -45,7 +45,7 @@ class RequestsSectionWidget extends StatelessWidget {
           Center(
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),
-                  titleSize: AppSizes.s14.sp,
+                  titleSize: AppSizes.s14,
                   title: AppStrings.viewTheLatestReviews.tr().toUpperCase(),
                   onPressed: () async{
                     var mine;

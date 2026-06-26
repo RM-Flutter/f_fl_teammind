@@ -31,7 +31,7 @@ class NotificationsSection extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w, vertical: AppSizes.s20.h),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s20),
           // color: isFreeService ? Color(AppColors.secondaryButton) : Colors.transparent,
           color:  Color(AppColors.secondaryButton),
           child: Column(
@@ -42,7 +42,7 @@ class NotificationsSection extends StatelessWidget {
                 children: [
                   Text(AppStrings.myNotifications.tr(),
                       style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 16.sp, 
+                        fontSize: 16, 
                         fontWeight: FontWeight.w700,
                         // color: isFreeService ? const Color(AppColors.pink) : null,
                         color: isFreeService ? const Color(AppColors.pink) : Colors.white,
@@ -68,7 +68,7 @@ class NotificationsSection extends StatelessWidget {
                     child: Text(
                       AppStrings.viewAll.tr(),
                       style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         // color: isFreeService ? Colors.white.withValues(alpha: 0.8) : null,
                         color:  Colors.white.withValues(alpha: 0.8),
                       ),
@@ -76,7 +76,7 @@ class NotificationsSection extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 15.h,),
+              SizedBox(height: 15,),
               ListView.separated(
                 padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
@@ -85,7 +85,7 @@ class NotificationsSection extends StatelessWidget {
                   itemBuilder: (context, index) => NotificationCard(
                     notification: notifications[index],
                   ),
-                  separatorBuilder: (context, index) => SizedBox(height: 8.h,),
+                  separatorBuilder: (context, index) => SizedBox(height: 8,),
                   itemCount: (notifications.length > 8)? 8 : notifications.length)
             ],
           ),

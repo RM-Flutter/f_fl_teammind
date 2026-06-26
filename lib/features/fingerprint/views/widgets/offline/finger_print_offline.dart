@@ -21,16 +21,16 @@ class FingerPrintOffline extends StatelessWidget {
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100.w : double.infinity
+                maxWidth: kIsWeb ? 1100 : double.infinity
             ),
             child: Padding(
-              padding: EdgeInsets.all(AppSizes.s12.w),
+              padding: EdgeInsets.all(AppSizes.s12),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     if(AppConstants.fingerPrints != null) ...[
                       FingerprintCardOffline(fingerprint: AppConstants.fingerPrints,),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 12),
                     ]
                   ],
                 ),

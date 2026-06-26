@@ -60,10 +60,10 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                   widget.empName?.isNotEmpty == true &&
                   viewModel.userSettings?.userId.toString() != widget.empId
               ? PreferredSize(
-                  preferredSize: Size.fromHeight(AppSizes.s40.h),
+                  preferredSize: Size.fromHeight(AppSizes.s40),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.s12.w, vertical: AppSizes.s6.h),
+                        horizontal: AppSizes.s12, vertical: AppSizes.s6),
                     child: Container(
                       width: double.infinity,
                       alignment: Alignment.center,
@@ -71,7 +71,7 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                         widget.empName!,
                         style: AppStyles.heading(context).copyWith(
                             fontWeight: FontWeight.w600,
-                            fontSize: AppSizes.s20.sp),
+                            fontSize: AppSizes.s20),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -86,10 +86,10 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100.w : double.infinity,
+                maxWidth: kIsWeb ? 1100 : double.infinity,
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12.r),
+                padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Consumer<PayrollsListViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -105,10 +105,10 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                             gapH12,
                        if(widget.empName == null) Text(gCache['name'], style:
                         AppStyles.heading(context).copyWith(
-                            fontWeight: FontWeight.w600,fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,fontSize: 20,
                         )
                           ,),
-                        SizedBox(height: 20.h,),
+                        SizedBox(height: 20,),
                                   /// general screen message widget for other requests types
                                   // GeneralScreenMessageWidget(
                                   //     screenId: '/payrolls'),

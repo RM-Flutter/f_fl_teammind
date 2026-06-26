@@ -59,16 +59,16 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
       create: (_) => viewModel,
       child: TemplatePage(
           floatingActionButton: Padding(
-            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35.w : 0),
+            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
             child: MainAppFabWidget(requests: false,viewRequest: false,),
           ),
           pageContext: context,
           bottomAppbarWidget: widget.empId != null && widget.empId?.isNotEmpty == true && viewModel.userSettings?.userId.toString() != widget.empId
               ? PreferredSize(
-                  preferredSize: Size.fromHeight(AppSizes.s40.h),
+                  preferredSize: Size.fromHeight(AppSizes.s40),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.s12.w, vertical: AppSizes.s6.h),
+                        horizontal: AppSizes.s12, vertical: AppSizes.s6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -76,7 +76,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                           "",
                           style: AppStyles.heading(context).copyWith(
                               fontWeight: FontWeight.w600,
-                              fontSize: AppSizes.s20.sp),
+                              fontSize: AppSizes.s20),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.start,
@@ -91,10 +91,10 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : double.infinity
+                  maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12.w),
+                padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Consumer<FingerprintViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -109,7 +109,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                           if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
                                 child: CustomElevatedButton(
                                     backgroundColor: Color(AppColors.buttons),
-                                    titleSize: AppSizes.s12.sp,
+                                    titleSize: AppSizes.s12,
                                     title: locale.tr(AppStrings.showOfflineFingerprints).toUpperCase(),
                                     onPressed: () async{
                                       await context.pushNamed(
@@ -121,14 +121,14 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                                           context: context, empId: widget.empId);
                                     }
                                 )),
-                            if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty) SizedBox(height: 15.h),
+                            if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty) SizedBox(height: 15),
                                 if(viewModel.fingerprints != null)  ...viewModel.fingerprints!.map(
                                     (FingerPrintModel fingerprint) => Column(
                                       children: [
                                         FingerprintCard(
                                           fingerprint: fingerprint,
                                         ),
-                                        SizedBox(height: 12.h)
+                                        SizedBox(height: 12)
                                       ],
                                     ),
                                   ),

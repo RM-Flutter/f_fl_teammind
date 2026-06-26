@@ -114,7 +114,7 @@ class _SalaryAdvanceListItemWidgetState
           child: child,
         ),
         child: Padding(
-          padding: EdgeInsets.only(bottom: AppSizes.s16.h, left: 4.w, right: 4.w),
+          padding: EdgeInsets.only(bottom: AppSizes.s16, left: 4, right: 4),
           child: GlassmorphismCard(
             padding: EdgeInsets.zero,
             backgroundColor: Colors.white,
@@ -135,16 +135,16 @@ class _SalaryAdvanceListItemWidgetState
                   widget.request.employeeProfile != null) ...[
                 Padding(
                   padding: EdgeInsets.only(
-                      top: AppSizes.s14.h,
-                      left: AppSizes.s16.w,
-                      right: AppSizes.s16.w),
+                      top: AppSizes.s14,
+                      left: AppSizes.s16,
+                      right: AppSizes.s16),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
                           widget.request.employeeProfile?.name ?? '',
                           style: AppStyles.primaryContent(context).copyWith(
-                            fontSize: 15.sp,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Color(AppColors.titleTextColor),
                           ),
@@ -155,7 +155,7 @@ class _SalaryAdvanceListItemWidgetState
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.s16.w, vertical: 10.h),
+                      horizontal: AppSizes.s16, vertical: 10),
                   child: Divider(height: 1, color: Colors.grey.shade100),
                 ),
               ],
@@ -163,10 +163,10 @@ class _SalaryAdvanceListItemWidgetState
               // ─── Main Content Row ───
               Padding(
                 padding: EdgeInsets.only(
-                  top: widget.isIncoming ? 0 : AppSizes.s16.h,
-                  bottom: AppSizes.s16.h,
-                  left: AppSizes.s16.w,
-                  right: AppSizes.s16.w,
+                  top: widget.isIncoming ? 0 : AppSizes.s16,
+                  bottom: AppSizes.s16,
+                  left: AppSizes.s16,
+                  right: AppSizes.s16,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,19 +182,19 @@ class _SalaryAdvanceListItemWidgetState
                               Text(
                                 '${widget.request.total ?? '0'}',
                                 style: AppStyles.heading(context).copyWith(
-                                  fontSize: 24.sp,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.w900,
                                   color: Color(AppColors.buttonColor),
                                   letterSpacing: 0.5,
                                 ),
                               ),
-                              SizedBox(width: 4.w),
+                              SizedBox(width: 4),
                               Padding(
-                                padding: EdgeInsets.only(bottom: 4.h),
+                                padding: EdgeInsets.only(bottom: 4),
                                 child: Text(
                                   'egp'.tr(),
                                   style: AppStyles.content(context).copyWith(
-                                    fontSize: 12.sp,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey.shade600,
                                   ),
@@ -202,31 +202,31 @@ class _SalaryAdvanceListItemWidgetState
                               ),
                             ],
                           ),
-                          SizedBox(height: 8.h),
+                          SizedBox(height: 8),
                           Row(
                             children: [
                               Icon(Icons.calendar_month,
-                                  size: 14.sp, color: Colors.grey.shade400),
-                              SizedBox(width: 4.w),
+                                  size: 14, color: Colors.grey.shade400),
+                              SizedBox(width: 4),
                               Text(
                                 '${'from_date'.tr()}: ${widget.request.from ?? ''}',
                                 style: AppStyles.content(context).copyWith(
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                   color: Colors.grey.shade600,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 4),
                           Row(
                             children: [
                               Icon(Icons.update,
-                                  size: 14.sp, color: Colors.grey.shade400),
-                              SizedBox(width: 4.w),
+                                  size: 14, color: Colors.grey.shade400),
+                              SizedBox(width: 4),
                               Text(
                                 '${'how_long_to_pay'.tr()}: ${widget.request.howLongToPay ?? ''} ${'months'.tr()}',
                                 style: AppStyles.content(context).copyWith(
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                   color: Colors.grey.shade600,
                                 ),
                               ),
@@ -236,7 +236,7 @@ class _SalaryAdvanceListItemWidgetState
                       ),
                     ),
 
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 10),
 
                     // ─── Right: Status badge + Edit button ───
                     Column(
@@ -245,10 +245,10 @@ class _SalaryAdvanceListItemWidgetState
                         // Status badge
                         Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 12.w, vertical: 8.h),
+                              horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
                             color: statusColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                                 color: statusColor.withOpacity(0.2)),
                           ),
@@ -260,12 +260,12 @@ class _SalaryAdvanceListItemWidgetState
                                 status: status,
                                 iconColor: statusColor,
                               ),
-                              SizedBox(height: 4.h),
+                              SizedBox(height: 4),
                               Text(
                                 statusText,
                                 style: AppStyles.content(context).copyWith(
                                   color: statusColor,
-                                  fontSize: 12.sp,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -275,7 +275,7 @@ class _SalaryAdvanceListItemWidgetState
 
                         // Edit button — shown only when canEdit is true and status is editable
                         if (widget.canEdit && status != 'approved' && status != 'cancelled' && status != 'canceled') ...[
-                          SizedBox(height: 8.h),
+                          SizedBox(height: 8),
                           GestureDetector(
                             onTap: () async {
                               HapticFeedback.mediumImpact();
@@ -293,7 +293,7 @@ class _SalaryAdvanceListItemWidgetState
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 10.w, vertical: 7.h),
+                                  horizontal: 10, vertical: 7),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -303,7 +303,7 @@ class _SalaryAdvanceListItemWidgetState
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
-                                borderRadius: BorderRadius.circular(10.r),
+                                borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Color(AppColors.buttonColor)
@@ -317,13 +317,13 @@ class _SalaryAdvanceListItemWidgetState
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(Icons.edit_rounded,
-                                      color: Colors.white, size: 13.sp),
-                                  SizedBox(width: 4.w),
+                                      color: Colors.white, size: 13),
+                                  SizedBox(width: 4),
                                   Text(
                                     'edit_request'.tr(),
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 11.sp,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),

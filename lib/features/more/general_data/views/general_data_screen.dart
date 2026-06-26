@@ -25,7 +25,7 @@ class GeneralDataScreen extends StatelessWidget {
             body: (!value.isLoading)?Container(
                 width: 1.sw,
                 height: 1.sh,
-                padding: EdgeInsets.symmetric(horizontal: AppSizes.s15.w),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s15),
                 child: SingleChildScrollView(
                   keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                   child: Column(
@@ -33,21 +33,21 @@ class GeneralDataScreen extends StatelessWidget {
                     children: [
                       Container(
                         color: Colors.transparent,
-                        height: 90.h,
+                        height: 90,
                         width: double.infinity,
                         alignment: Alignment.bottomCenter,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24.r,),
+                              icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24,),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
                             ),
                             Text(
                               value.dataTitle.toUpperCase(),
-                              style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                              style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             IconButton(
                                 icon: const Icon(Icons.arrow_back, color: Colors.transparent),
@@ -56,9 +56,9 @@ class GeneralDataScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 16),
                       if(value.dataimage != null) ClipRRect(
-                        borderRadius: BorderRadius.circular(25.r),
+                        borderRadius: BorderRadius.circular(25),
                         child: CachedNetworkImage(
                           width: 1.sw,
                           height: 0.225.sh,
@@ -68,12 +68,12 @@ class GeneralDataScreen extends StatelessWidget {
                           const ShimmerAnimatedLoading(),
                           errorWidget: (context, url, error) => Icon(
                             Icons.image_not_supported_outlined,
-                            size: AppSizes.s32.r,
+                            size: AppSizes.s32,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      if(value.dataimage != null)  SizedBox(height: 24.h),
+                      if(value.dataimage != null)  SizedBox(height: 24),
                       Html(
                           data: value.dataContent,
                           style: TextsStyles.htmlStyle),
@@ -88,13 +88,13 @@ class GeneralDataScreen extends StatelessWidget {
                 children: [
                   Container(
                     width: double.infinity,
-                    height: 150.h,
+                    height: 150,
                     color: Colors.white,
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 16),
                   Container(
-                    width: 200.w,
-                    height: 20.h,
+                    width: 200,
+                    height: 20,
                     color: Colors.white,
                   ),
                 ],

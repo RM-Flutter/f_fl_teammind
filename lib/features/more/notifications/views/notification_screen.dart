@@ -94,7 +94,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             surfaceTintColor: Colors.transparent,
             title: AppStrings.notifications.tr(),
             titleStyle: AppStyles.heading(context).copyWith(
-              fontSize: 15.sp, 
+              fontSize: 15, 
               fontWeight: FontWeight.w400
             ),
             backgroundColor: Colors.transparent,
@@ -104,7 +104,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               gCache['is_manager_in'].isNotEmpty)?Container(
             padding: EdgeInsets.symmetric(
                 horizontal: LocalizationService.isArabic(context: context)
-                    ? 35.w
+                    ? 35
                     : 0),
             width: double.infinity,
             alignment: Alignment.bottomRight,
@@ -121,8 +121,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 child: Image.asset(
                   AppImages.addFloatingActionButtonIcon,
                   color: AppThemeService.colorPalette.fabIconColor.color,
-                  width: AppSizes.s16.r,
-                  height: AppSizes.s16.r,
+                  width: AppSizes.s16,
+                  height: AppSizes.s16,
                 ),
               ),
             ),
@@ -137,12 +137,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100.w : double.infinity
+                    maxWidth: kIsWeb ? 1100 : double.infinity
                 ),
                 child: ListView(
                   controller: _scrollController,
                   children: [
-                    if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5.h)
+                    if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5)
                     else  SwitchRowNotification(
                       isLoginPageStyle: false,
                       value: CacheHelper.getBool("value") ??value!,
@@ -156,9 +156,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         );
                       },
                     ),
-                    SizedBox(height: 25.h),
+                    SizedBox(height: 25),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
@@ -173,13 +173,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
                               child: Container(
-                                margin: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
-                                padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15.w, vertical: AppSizes.s12.h),
+                                margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
+                                padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                                  borderRadius: BorderRadius.circular(AppSizes.s15),
                                 ),
-                                height: 100.h,
+                                height: 100,
                               ),
                             );
                           } else {
@@ -192,17 +192,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     ),
                     if(!notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty) Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child:  NoExistingPlaceholderScreen(
                           height: LayoutService.getHeight(context) *
                               0.6,
                           title: AppStrings.thereIsNoNotifications.tr()),
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 20),
                     if (notificationProviderModel.hasMoreNotifications && !notificationProviderModel.isGetNotificationLoading)
                       Center(
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 30.h),
+                          padding: EdgeInsets.only(bottom: 30),
                           child: ElevatedButton(
                             onPressed: () {
                               if(CacheHelper.getBool("value") != null){
@@ -218,16 +218,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF000033), // Dark navy blue as in design
                               foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 12.h),
+                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.r),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                             ),
                             child: Text(
                               AppStrings.loadMore.tr().toUpperCase(),
                               style: AppStyles.whiteContent(context).copyWith(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14.sp
+                                fontSize: 14
                               ),
                             ),
                           ),
@@ -235,10 +235,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage != 1)
                       Padding(
-                        padding: EdgeInsets.only(bottom: 30.h),
+                        padding: EdgeInsets.only(bottom: 30),
                         child: const Center(child: CircularProgressIndicator()),
                       ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),

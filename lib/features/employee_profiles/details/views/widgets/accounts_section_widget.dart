@@ -36,7 +36,7 @@ class AccountsSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.basicSalary.tr().toUpperCase(),
                 trailingTitle: "${employee?.basicSalary.toString()} ${AppStrings.egp.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WORK HOURS TYPE
             if (employee?.additions != null)
@@ -44,7 +44,7 @@ class AccountsSectionWidget extends StatelessWidget {
                 isTitleOnly: false,isList: false,
                 title: AppStrings.additions.tr().toUpperCase(),
                 trailingTitle: "${employee?.additions.toString()} ${AppStrings.egp.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             // WORK HOURS
             if (employee?.totalDeductions != null)
@@ -52,7 +52,7 @@ class AccountsSectionWidget extends StatelessWidget {
                 isTitleOnly: false,isList: false,
                 title: AppStrings.totalDeductions.tr().toUpperCase(),
                 trailingTitle: "${employee?.totalDeductions.toString()} ${AppStrings.egp.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WEEKENDS
             if (employee?.netSalary != null)
@@ -60,14 +60,14 @@ class AccountsSectionWidget extends StatelessWidget {
                 isTitleOnly: false,isList: false,
                 title: AppStrings.netSalaryPayable.tr().toUpperCase(),
                 trailingTitle: "${employee?.netSalary.toString()} ${AppStrings.egp.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color:  Color(AppColors.buttons)),
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
           ],
           gapH24,
           Center(
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),
-                  titleSize: AppSizes.s12.sp,
+                  titleSize: AppSizes.s12,
                   title: AppStrings.viewPayrolls.tr().toUpperCase(),
                   onPressed: () async => await context
                           .pushNamed(AppRoutes.payrollsList.name, extra: {

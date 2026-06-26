@@ -134,40 +134,40 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Manager Reply Section
                       if (widget.request.theManagerReply != null && widget.request.theManagerReply!.isNotEmpty) ...[
                         _buildSectionHeader(AppStrings.managerResponse.tr(), Icons.quickreply_outlined),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 12),
                         ...widget.request.theManagerReply!.map((reply) => _buildReplyCard(reply)).toList(),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 30),
                       ],
 
                       // Duration Edit (for Manager)
                       if (!isMyRequest && isManager) ...[
                         _buildSectionHeader(AppStrings.durationMinutes.tr(), Icons.timer_outlined),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 12),
                         _buildDurationUpdateField(provider),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 30),
                       ],
 
                       // Manager Action Buttons
                       if (isManager && !isMyRequest && (widget.request.status == 'pending' || widget.request.status == 'waiting')) ...[
                         _buildSectionHeader(AppStrings.reason.tr(), Icons.notes_outlined),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 12),
                         _buildReasonTextField(),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 24),
                         _buildActionButtons(provider),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 30),
                       ],
 
                       // Complaint Button
                       if (isMyRequest && (widget.request.status == 'rejected' || widget.request.status == 'refused')) ...[
                         SizedBox(
-                          height: 55.h,
+                          height: 55,
                           child: Row(
                             children: [
                               CustomRequestDetailsButton(
@@ -198,19 +198,19 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     return Row(
       children: [
         Container(
-          padding: EdgeInsets.all(6.r),
+          padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: Color(AppColors.buttons).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 18.r, color: Color(AppColors.buttons)),
+          child: Icon(icon, size: 18, color: Color(AppColors.buttons)),
         ),
-        SizedBox(width: 10.w),
+        SizedBox(width: 10),
         Text(
           title,
           style: AppStyles.primaryContent(context).copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 16.sp,
+            fontSize: 16,
             color: Color(AppColors.secondaryButton),
           ),
         ),
@@ -230,11 +230,11 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(16.r),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
@@ -255,7 +255,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                 );
               }
             },
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(8),
             child: Row(
               children: [
                 Expanded(
@@ -263,29 +263,29 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(reply.managerName ?? "", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold)),
-                      Text(reply.managerJobTitle ?? "", style: AppStyles.greyContent(context).copyWith(fontSize: 11.sp)),
+                      Text(reply.managerJobTitle ?? "", style: AppStyles.greyContent(context).copyWith(fontSize: 11)),
                     ],
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios, size: 12.r, color: Colors.grey.shade300),
+                Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey.shade300),
               ],
             ),
           ),
-          Divider(height: 24.h, color: Colors.grey.shade100),
-          Text(reply.replay ?? "", style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp, height: 1.4)),
-          SizedBox(height: 16.h),
+          Divider(height: 24, color: Colors.grey.shade100),
+          Text(reply.replay ?? "", style: AppStyles.darkContent(context).copyWith(fontSize: 14, height: 1.4)),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               if (time.isNotEmpty)
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: 10.r, color: Colors.grey.shade400),
-                    SizedBox(width: 4.w),
-                    Text(time, style: AppStyles.greyContent(context).copyWith(fontSize: 10.sp)),
+                    Icon(Icons.access_time, size: 10, color: Colors.grey.shade400),
+                    SizedBox(width: 4),
+                    Text(time, style: AppStyles.greyContent(context).copyWith(fontSize: 10)),
                   ],
                 ),
-              Text(date, style: AppStyles.greyContent(context).copyWith(fontSize: 10.sp, fontStyle: FontStyle.italic)),
+              Text(date, style: AppStyles.greyContent(context).copyWith(fontSize: 10, fontStyle: FontStyle.italic)),
             ],
           ),
         ],
@@ -300,7 +300,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
@@ -316,25 +316,25 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                     controller: _durationController,
                     keyboardType: TextInputType.number,
                     onChanged: (val) => setState(() {}),
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     decoration: InputDecoration(
                       hintText: AppStrings.enterMinutes.tr(),
                       suffixText: AppStrings.minutes.tr(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 15),
                       border: InputBorder.none,
                     ),
                   ),
                 ),
-                VerticalDivider(width: 1, color: Colors.grey.shade200, indent: 10.h, endIndent: 10.h),
+                VerticalDivider(width: 1, color: Colors.grey.shade200, indent: 10, endIndent: 10),
                 TextButton(
                   onPressed: provider.isActionLoading ? null : _updateDuration,
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(15.r), bottomRight: Radius.circular(15.r))),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15))),
                   ),
                   child: provider.isActionLoading
-                      ? SizedBox(width: 20.r, height: 20.r, child: CircularProgressIndicator(strokeWidth: 2))
-                      : Text(AppStrings.update.tr(), style: TextStyle(color: Color(AppColors.buttons), fontWeight: FontWeight.bold, fontSize: 15.sp)),
+                      ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : Text(AppStrings.update.tr(), style: TextStyle(color: Color(AppColors.buttons), fontWeight: FontWeight.bold, fontSize: 15)),
                 )
               ],
             ),
@@ -342,14 +342,14 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
           if (minutes > 0)
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.grey.shade50,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15.r), bottomRight: Radius.circular(15.r)),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
               ),
               child: Text(
                 preview,
-                style: AppStyles.greyContent(context).copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Color(AppColors.buttons)),
+                style: AppStyles.greyContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w600, color: Color(AppColors.buttons)),
               ),
             ),
         ],
@@ -361,7 +361,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
@@ -372,8 +372,8 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
         maxLines: 4,
         decoration: InputDecoration(
           hintText: AppStrings.typeYourMessage.tr(),
-          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14.sp),
-          contentPadding: EdgeInsets.all(16.r),
+          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+          contentPadding: EdgeInsets.all(16),
           border: InputBorder.none,
         ),
       ),
@@ -385,7 +385,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
       children: [
         Expanded(
           child: Container(
-            height: 55.h,
+            height: 55,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(color: Colors.green.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4))
@@ -397,24 +397,24 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text(AppStrings.approve.tr(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+              child: Text(AppStrings.approve.tr(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ),
         ),
-        SizedBox(width: 15.w),
+        SizedBox(width: 15),
         Expanded(
           child: Container(
-            height: 55.h,
+            height: 55,
             child: OutlinedButton(
               onPressed: provider.isActionLoading ? null : () => _updateStatus('rejected'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.red,
                 side: BorderSide(color: Colors.red, width: 1.5),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text(AppStrings.reject.tr(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+              child: Text(AppStrings.reject.tr(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ),
         ),
@@ -426,14 +426,14 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     String? displayName = widget.request.employeeName ?? widget.request.employeeProfile?.name;
 
     return Container(
-      height: 290.h,
+      height: 290,
       width: 1.sw,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(28.r),
-          bottomRight: Radius.circular(28.r),
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
         image: const DecorationImage(
           image: AssetImage("assets/images/request-app-bar.png"),
@@ -452,10 +452,10 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                 centerTitle: true,
                 routeName: AppRoutes.overtimeRequestDetailsScreen.name,
                 title: AppStrings.details.tr(),
-                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 12.sp),
+                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 12),
                 bookmarkIconColor: Colors.white,
                 leading: Padding(
-                  padding: EdgeInsets.all(10.r),
+                  padding: EdgeInsets.all(10),
                   child: InkWell(
                     onTap: () {
                       if (context.canPop()) {
@@ -473,13 +473,13 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                       child: Icon(
                         Icons.arrow_back_sharp,
                         color: Colors.white,
-                        size: 18.r,
+                        size: 18,
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 8),
               
               // Employee Name in Header
               if (!isMyRequest && displayName != null) ...[
@@ -487,7 +487,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                   displayName,
                   textAlign: TextAlign.center,
                   style: AppStyles.whiteContent(context).copyWith(
-                    fontSize: 20.sp,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     shadows: [Shadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 4))]
                   ),
@@ -496,15 +496,15 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                    Text(
                       widget.request.employeeProfile!.department!,
                       style: AppStyles.whiteContent(context).copyWith(
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         color: Colors.white70,
                       ),
                     ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 12),
               ],
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                padding: EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -513,33 +513,33 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: 65.w,
-                          height: 85.h,
+                          width: 65,
+                          height: 85,
                           decoration: BoxDecoration(
                             color: mainColor.withOpacity(.3),
-                            borderRadius: BorderRadius.circular(10.r),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
                             child: RequestsServices.getRequestsStatusIcon(
                               context: context,
                               status: widget.request.status?.toLowerCase().contains('approved') == true ? 'approved' : 
                                       widget.request.status?.toLowerCase().contains('rejected') == true ? 'refused' : 'waiting',
-                              iconSize: 30.r,
+                              iconSize: 30,
                               iconColor: Colors.white,
                             ),
                           ),
                         )
                       ],
                     ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 8),
 
                     // Info tiles
                     Expanded(
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Wrap(
-                          spacing: 12.w,
-                          runSpacing: 12.h,
+                          spacing: 12,
+                          runSpacing: 12,
                           children: [
                             InfoTileWidget(
                               background: Color(AppColors.secondaryButton),
@@ -547,7 +547,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                               title: widget.request.date ?? "",
                               isFullRow: true,
                               trailing: InfoTileWidget(
-                                width: 100.w,
+                                width: 100,
                                 background: Color(AppColors.secondaryButton).withOpacity(0.08),
                                 imgPath: Icons.access_time,
                                 title: formatDuration(widget.request.overtime),
@@ -566,7 +566,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                   ],
                 ),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 12),
             ],
           ),
         ),
@@ -608,10 +608,10 @@ class InfoTileWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: width ?? (isFullRow == true ? 1.sw - 97.w : (1.sw - 116.w) / 2),
+        width: width ?? (isFullRow == true ? 1.sw - 97 : (1.sw - 116) / 2),
         decoration: BoxDecoration(
           color: isHighLight == true ? _imgColor : background,
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -619,28 +619,28 @@ class InfoTileWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                 child: Row(
                   children: [
                     if (imagePath != null)
                       Image.asset(
                         imagePath!,
-                        width: 14.r,
-                        height: 14.r,
+                        width: 14,
+                        height: 14,
                         color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       )
                     else if (imgPath != null)
                       Icon(
                         imgPath,
-                        size: 20.r,
+                        size: 20,
                         color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         title,
                         style: AppStyles.whiteContent(context).copyWith(
-                          fontSize: 11.sp,
+                          fontSize: 11,
                           fontWeight: FontWeight.w700,
                         ),
                         maxLines: 2,

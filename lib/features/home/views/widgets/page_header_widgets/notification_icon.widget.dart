@@ -22,27 +22,27 @@ class NotificationIcon extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: AppSizes.s50.w,
-            height: AppSizes.s40.h,
+            width: AppSizes.s50,
+            height: AppSizes.s40,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.transparent,
-                border: Border.all(color: Colors.white, width: 2.w)),
+                border: Border.all(color: Colors.white, width: 2)),
             child: Icon(
               Icons.notifications_none_rounded,
               color: Colors.white,
-              size: AppSizes.s28.r,
+              size: AppSizes.s28,
             ),
           ),
           if (hasNewNotifications)
             Positioned(
               left: 0,
-              top: -2.h,
+              top: -2,
               child: Container(
-                padding: EdgeInsets.all(AppSizes.s2.r),
+                padding: EdgeInsets.all(AppSizes.s2),
                 child: CircleAvatar(
                   backgroundColor: Color(AppColors.purple),
-                  radius: 8.r,
+                  radius: 8,
                 ),
                 // child: Center(
                 //   child: AutoSizeText(

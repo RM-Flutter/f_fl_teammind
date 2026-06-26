@@ -50,9 +50,9 @@ class _UpdateSalaryAdvanceScreenState
             pageContext: context,
             title: 'edit_salary_advance'.tr(),
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(AppSizes.s16.r),
+              padding: EdgeInsets.all(AppSizes.s16),
               child: GlassmorphismCard(
-                padding: EdgeInsets.all(AppSizes.s24.r),
+                padding: EdgeInsets.all(AppSizes.s24),
                 backgroundColor: Colors.white,
                 opacity: 0.9,
                 boxShadow: [
@@ -72,7 +72,7 @@ class _UpdateSalaryAdvanceScreenState
                       Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10.r),
+                            padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
@@ -80,12 +80,12 @@ class _UpdateSalaryAdvanceScreenState
                                   Color(AppColors.buttonSecondaryColor)
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(12.r),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(Icons.edit_note_rounded,
-                                color: Colors.white, size: 22.sp),
+                                color: Colors.white, size: 22),
                           ),
-                          SizedBox(width: 12.w),
+                          SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,21 +93,21 @@ class _UpdateSalaryAdvanceScreenState
                                 Text(
                                   'edit_salary_advance'.tr(),
                                   style: AppStyles.heading(context).copyWith(
-                                      fontSize: 17.sp,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   '#${widget.existingRequest.id}',
                                   style: AppStyles.content(context).copyWith(
                                       color: Colors.grey.shade500,
-                                      fontSize: 13.sp),
+                                      fontSize: 13),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 28.h),
+                      SizedBox(height: 28),
 
                       // ─── Total Amount ───
                       _buildTextField(
@@ -121,7 +121,7 @@ class _UpdateSalaryAdvanceScreenState
                             ? 'field_required'.tr()
                             : null,
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 20),
 
                       // ─── Duration ───
                       _buildTextField(
@@ -135,7 +135,7 @@ class _UpdateSalaryAdvanceScreenState
                             ? 'field_required'.tr()
                             : null,
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 20),
 
                       // ─── From Date ───
                       _buildTextField(
@@ -155,30 +155,30 @@ class _UpdateSalaryAdvanceScreenState
                             context: context,
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                             builder: (BuildContext builder) {
                               DateTime tempPickedDate = DateTime.now();
                               return Container(
-                                height: 300.h,
-                                padding: EdgeInsets.only(top: 10.h),
+                                height: 300,
+                                padding: EdgeInsets.only(top: 10),
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                      padding: EdgeInsets.symmetric(horizontal: 16),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           TextButton(
                                             onPressed: () => Navigator.pop(context),
-                                            child: Text('cancel_request'.tr().split(' ')[0], style: TextStyle(color: Color(AppColors.failureRed), fontSize: 16.sp)),
+                                            child: Text('cancel_request'.tr().split(' ')[0], style: TextStyle(color: Color(AppColors.failureRed), fontSize: 16)),
                                           ),
                                           TextButton(
                                             onPressed: () {
                                               pickedDate = tempPickedDate;
                                               Navigator.pop(context);
                                             },
-                                            child: Text('submit'.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                            child: Text('submit'.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16, fontWeight: FontWeight.bold)),
                                           ),
                                         ],
                                       ),
@@ -206,26 +206,26 @@ class _UpdateSalaryAdvanceScreenState
                           }
                         },
                       ),
-                      SizedBox(height: 28.h),
+                      SizedBox(height: 28),
 
                       // ─── Existing Attachments Section ───
                       if (controller.existingAttachments.isNotEmpty) ...[
                         Row(
                           children: [
                             Icon(Icons.attachment_rounded,
-                                color: Color(AppColors.buttons), size: 18.sp),
-                            SizedBox(width: 8.w),
+                                color: Color(AppColors.buttons), size: 18),
+                            SizedBox(width: 8),
                             Text(
                               'attachments'.tr(),
                               style: AppStyles.heading(context)
-                                  .copyWith(fontSize: 15.sp),
+                                  .copyWith(fontSize: 15),
                             ),
                           ],
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 12),
                         Wrap(
-                          spacing: 12.w,
-                          runSpacing: 12.h,
+                          spacing: 12,
+                          runSpacing: 12,
                           children: controller.existingAttachments
                               .map((attachment) {
                             final isImage = attachment.fileType?.toLowerCase() == 'png' ||
@@ -248,15 +248,15 @@ class _UpdateSalaryAdvanceScreenState
                                   launchUrl(Uri.parse(originalUrl), mode: LaunchMode.externalApplication);
                                 },
                                 child: Container(
-                                  width: 80.w,
-                                  height: 80.w,
+                                  width: 80,
+                                  height: 80,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.r),
+                                    borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                         color: Colors.grey.shade300, width: 1),
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12.r),
+                                    borderRadius: BorderRadius.circular(12),
                                     child: CachedNetworkImage(
                                       imageUrl: imageUrl,
                                       fit: BoxFit.cover,
@@ -283,12 +283,12 @@ class _UpdateSalaryAdvanceScreenState
                                   }
                                 },
                                 child: Container(
-                                  width: 80.w,
-                                  height: 80.w,
+                                  width: 80,
+                                  height: 80,
                                   decoration: BoxDecoration(
                                     color: Color(AppColors.buttonSecondaryColor)
                                         .withOpacity(0.05),
-                                    borderRadius: BorderRadius.circular(12.r),
+                                    borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                         color: Color(AppColors.buttonSecondaryColor)
                                             .withOpacity(0.2),
@@ -299,14 +299,14 @@ class _UpdateSalaryAdvanceScreenState
                                     children: [
                                       Icon(Icons.insert_drive_file_rounded,
                                           color: Color(AppColors.buttonSecondaryColor),
-                                          size: 24.sp),
-                                      SizedBox(height: 4.h),
+                                          size: 24),
+                                      SizedBox(height: 4),
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                                        padding: EdgeInsets.symmetric(horizontal: 4),
                                         child: Text(
                                           attachment.fileName ?? 'File',
                                           style: AppStyles.content(context).copyWith(
-                                            fontSize: 10.sp,
+                                            fontSize: 10,
                                             color: Colors.grey.shade700,
                                           ),
                                           maxLines: 1,
@@ -320,13 +320,15 @@ class _UpdateSalaryAdvanceScreenState
                               );
                             }
 
-                            if (controller.isHr) {
-                              return Stack(
-                                children: [
+                            final isOwner = controller.userSettings?.empId.toString() ==
+                                widget.existingRequest.employeeId?.toString();
+                            if (controller.isHr && !isOwner) {
+                               return Stack(
+                                 children: [
                                   attachmentCard,
                                   Positioned(
-                                    top: 2.r,
-                                    right: 2.r,
+                                    top: 2,
+                                    right: 2,
                                     child: GestureDetector(
                                       onTap: () async {
                                         final confirm = await AlertsService.customConfirm(
@@ -339,7 +341,7 @@ class _UpdateSalaryAdvanceScreenState
                                         }
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.all(3.r),
+                                        padding: EdgeInsets.all(3),
                                         decoration: const BoxDecoration(
                                           color: Colors.red,
                                           shape: BoxShape.circle,
@@ -359,26 +361,26 @@ class _UpdateSalaryAdvanceScreenState
                             }
                           }).toList(),
                         ),
-                        SizedBox(height: 28.h),
+                        SizedBox(height: 28),
                       ],
 
                       // ─── New Attachments Section ───
                       Row(
                         children: [
                           Icon(Icons.attach_file_rounded,
-                              color: Color(AppColors.buttons), size: 18.sp),
-                          SizedBox(width: 8.w),
+                              color: Color(AppColors.buttons), size: 18),
+                          SizedBox(width: 8),
                           Text(
                             'add_new_attachments'.tr(),
                             style: AppStyles.heading(context)
-                                .copyWith(fontSize: 15.sp),
+                                .copyWith(fontSize: 15),
                           ),
                         ],
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 12),
 
                       InkWell(
-                        borderRadius: BorderRadius.circular(16.r),
+                        borderRadius: BorderRadius.circular(16),
                         onTap: () async {
                           final ImagePicker picker = ImagePicker();
                           final List<XFile> images = await picker.pickMultiImage();
@@ -398,7 +400,7 @@ class _UpdateSalaryAdvanceScreenState
                         },
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 20.h),
+                          padding: EdgeInsets.symmetric(vertical: 20),
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttonSecondaryColor)
                                 .withOpacity(0.03),
@@ -407,12 +409,12 @@ class _UpdateSalaryAdvanceScreenState
                                     .withOpacity(0.3),
                                 width: 1.5,
                                 style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(16.r),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(12.r),
+                                padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: Color(AppColors.buttonSecondaryColor)
                                       .withOpacity(0.1),
@@ -421,15 +423,15 @@ class _UpdateSalaryAdvanceScreenState
                                 child: Icon(Icons.cloud_upload_rounded,
                                     color:
                                         Color(AppColors.buttonSecondaryColor),
-                                    size: 28.sp),
+                                    size: 28),
                               ),
-                              SizedBox(height: 10.h),
+                              SizedBox(height: 10),
                               Text(
                                 'add_attachment'.tr(),
                                 style: AppStyles.content(context).copyWith(
                                   color: Color(AppColors.buttonSecondaryColor),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
@@ -439,17 +441,17 @@ class _UpdateSalaryAdvanceScreenState
 
                       // ─── New attachment chips ───
                       if (controller.newAttachments.isNotEmpty) ...[
-                        SizedBox(height: 14.h),
+                        SizedBox(height: 14),
                         ...controller.newAttachments.asMap().entries.map((e) {
                           final idx = e.key;
                           final file = e.value.files.first;
                           return Container(
-                            margin: EdgeInsets.only(bottom: 8.h),
+                            margin: EdgeInsets.only(bottom: 8),
                             padding: EdgeInsets.symmetric(
-                                horizontal: 12.w, vertical: 10.h),
+                                horizontal: 12, vertical: 10),
                             decoration: BoxDecoration(
                               color: Color(AppColors.buttons).withOpacity(0.05),
-                              borderRadius: BorderRadius.circular(10.r),
+                              borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                   color:
                                       Color(AppColors.buttons).withOpacity(0.2),
@@ -459,7 +461,7 @@ class _UpdateSalaryAdvanceScreenState
                               children: [
                                 Icon(Icons.image_rounded,
                                     color: Color(AppColors.buttons), size: 20),
-                                SizedBox(width: 10.w),
+                                SizedBox(width: 10),
                                 Expanded(
                                   child: Text(file.name,
                                       style: AppStyles.content(context),
@@ -477,7 +479,7 @@ class _UpdateSalaryAdvanceScreenState
                         }),
                       ],
 
-                      SizedBox(height: 36.h),
+                      SizedBox(height: 36),
 
                       // ─── Submit Button ───
                       controller.isLoading
@@ -495,7 +497,7 @@ class _UpdateSalaryAdvanceScreenState
                                     Color(AppColors.buttonSecondaryColor)
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(14.r),
+                                borderRadius: BorderRadius.circular(14),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Color(AppColors.buttonColor)
@@ -510,10 +512,10 @@ class _UpdateSalaryAdvanceScreenState
                                   backgroundColor: Colors.transparent,
                                   shadowColor: Colors.transparent,
                                   padding:
-                                      EdgeInsets.symmetric(vertical: 16.h),
+                                      EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(14.r)),
+                                          BorderRadius.circular(14)),
                                 ),
                                 onPressed: () async {
                                   final success =
@@ -525,7 +527,7 @@ class _UpdateSalaryAdvanceScreenState
                                 child: Text(
                                   'save_changes'.tr(),
                                   style: TextStyle(
-                                      fontSize: 16.sp,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),
@@ -569,30 +571,30 @@ class _UpdateSalaryAdvanceScreenState
         filled: true,
         fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide:
               BorderSide(color: Color(AppColors.buttons), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide:
               BorderSide(color: Color(AppColors.failureRed), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide:
               BorderSide(color: Color(AppColors.failureRed), width: 2.0),
         ),
         contentPadding:
-            EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+            EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
     );
   }

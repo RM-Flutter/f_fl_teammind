@@ -112,33 +112,35 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                 width: double.infinity,
                 height: (kIsWeb || PlatformIs.web) ? double.infinity : null,
                 alignment: Alignment.center,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width < 600
-                      ? double.infinity
-                      : 400,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.s24.w,
-                      vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
-                    ),
-                    child: Form(
-                      key: viewModel.formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: (kIsWeb || PlatformIs.web) ? 40 : 60),
-                          const LoginLogo(),
-                          SizedBox(height: AppSizes.s32.h),
-                          // Login Page Headline
-                          AutoSizeText(
-                            "${AppStrings.loginTo.tr()}\n${AppStrings.yourAccount.tr()}",
-                            textAlign: TextAlign.center,
-                            style: AppStyles.whiteHeading(context).copyWith(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w400,
-                              height: 1.1,
-                            ),
-                          ),
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width < 600
+                          ? double.infinity
+                          : 450,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s24 : AppSizes.s24.w,
+                          vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
+                        ),
+                        child: Form(
+                          key: viewModel.formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: (kIsWeb || PlatformIs.web) ? 40 : 60),
+                              const LoginLogo(),
+                              SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : AppSizes.s32.h),
+                              // Login Page Headline
+                              AutoSizeText(
+                                "${AppStrings.loginTo.tr()}\n${AppStrings.yourAccount.tr()}",
+                                textAlign: TextAlign.center,
+                                style: AppStyles.whiteHeading(context).copyWith(
+                                  fontSize: (kIsWeb || PlatformIs.web) ? 32 : 20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.1,
+                                ),
+                              ),
                           SizedBox(height: AppSizes.s32.h),
 
                           LoginForm(viewModel: viewModel),
@@ -181,6 +183,8 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                             viewModel: viewModel,
                           ),
                         ],
+                          ),
+                        ),
                       ),
                     ),
                   ),

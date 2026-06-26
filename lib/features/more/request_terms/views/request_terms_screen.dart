@@ -40,10 +40,10 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: kIsWeb ? 1100.w : double.infinity,
+              maxWidth: kIsWeb ? 1100 : double.infinity,
             ),
             child: Padding(
-              padding: EdgeInsets.all(AppSizes.s12.r),
+              padding: EdgeInsets.all(AppSizes.s12),
               child: Consumer<RequestTermsViewModel>(
                 builder: (context, viewModel, child) {
                   if (viewModel.isLoading) {
@@ -74,8 +74,8 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                     child: ListView.separated(
                       itemCount: requestTypes.length,
                       separatorBuilder: (context, index) => Divider(
-                        height: 32.h,
-                        thickness: 1.h,
+                        height: 32,
+                        thickness: 1,
                         color: Color(AppColors.disableButton),
                       ),
                       itemBuilder: (context, index) {
@@ -100,14 +100,14 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         : requestType.title.en;
 
     return Container(
-      padding: EdgeInsets.all(AppSizes.s20.r),
+      padding: EdgeInsets.all(AppSizes.s20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.s12.r),
+        borderRadius: BorderRadius.circular(AppSizes.s12),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.disableButton).withValues(alpha: 0.3),
-            blurRadius: AppSizes.s5.r,
+            blurRadius: AppSizes.s5,
             spreadRadius: 1,
           ),
         ],
@@ -119,28 +119,28 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
           Text(
             title,
             style: AppStyles.heading(context).copyWith(
-              fontSize: AppSizes.s20.sp,
+              fontSize: AppSizes.s20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: AppSizes.s16.h),
+          SizedBox(height: AppSizes.s16),
           
           // Conditions Header
           Text(
             AppStrings.conditionsForSubmission.tr().replaceAll('{requestType}', title),
             style: AppStyles.heading(context).copyWith(
-              fontSize: AppSizes.s16.sp,
+              fontSize: AppSizes.s16,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: AppSizes.s12.h),
+          SizedBox(height: AppSizes.s12),
           
           // Acceptance Time
           if (requestType.acceptanceTime != null) ...[
             _buildConditionItem(
               _getAcceptanceTimeText(requestType.acceptanceTime, lang),
             ),
-            SizedBox(height: AppSizes.s8.h),
+            SizedBox(height: AppSizes.s8),
           ],
           
           // Attaching File
@@ -150,7 +150,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                   ? AppStrings.mustAttachFile.tr()
                   : AppStrings.preferAttachFile.tr(),
             ),
-            SizedBox(height: AppSizes.s8.h),
+            SizedBox(height: AppSizes.s8),
           ],
           
           // Money Value
@@ -160,30 +160,30 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                   ? AppStrings.mustAttachMoneyValue.tr()
                   : AppStrings.preferAttachMoneyValue.tr(),
             ),
-            SizedBox(height: AppSizes.s16.h),
+            SizedBox(height: AppSizes.s16),
           ],
           
           // Approval Section
           _buildSectionTitle(AppStrings.approvalSpecialist.tr()),
-          SizedBox(height: AppSizes.s8.h),
+          SizedBox(height: AppSizes.s8),
           _buildConditionItem(
             AppStrings.approvalSpecialistDescription.tr(),
           ),
-          SizedBox(height: AppSizes.s8.h),
+          SizedBox(height: AppSizes.s8),
           _buildConditionItem(
             AppStrings.multiLevelApprovalRequired.tr(),
           ),
-          SizedBox(height: AppSizes.s16.h),
+          SizedBox(height: AppSizes.s16),
           
           // Additional Information
           _buildSectionTitle(AppStrings.additionalInformation.tr()),
-          SizedBox(height: AppSizes.s8.h),
+          SizedBox(height: AppSizes.s8),
           
           // Balance Calculation Method
           _buildConditionItem(
             '${AppStrings.balanceCalculationMethod.tr()}: ${_getCountingTypeText(requestType.countingType, lang)}',
           ),
-          SizedBox(height: AppSizes.s8.h),
+          SizedBox(height: AppSizes.s8),
           
           // Request Unit
           _buildConditionItem(
@@ -193,13 +193,13 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
           // Rules Message
           if (requestType.rulesMessage != null &&
               requestType.rulesMessage!.isNotEmpty) ...[
-            SizedBox(height: AppSizes.s16.h),
+            SizedBox(height: AppSizes.s16),
             _buildSectionTitle(AppStrings.rulesMessage.tr()),
-            SizedBox(height: AppSizes.s8.h),
+            SizedBox(height: AppSizes.s8),
             Text(
               requestType.rulesMessage!,
               style: AppStyles.darkContent(context).copyWith(
-                fontSize: AppSizes.s14.sp,
+                fontSize: AppSizes.s14,
                 height: 1.5,
               ),
             ),
@@ -214,7 +214,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
     return Text(
       title,
       style: AppStyles.heading(context).copyWith(
-        fontSize: AppSizes.s16.sp,
+        fontSize: AppSizes.s16,
         fontWeight: FontWeight.w600,
       ),
     );
@@ -227,14 +227,14 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         Text(
           '• ',
           style: AppStyles.darkContent(context).copyWith(
-            fontSize: AppSizes.s16.sp,
+            fontSize: AppSizes.s16,
           ),
         ),
         Expanded(
           child: Text(
             text,
             style: AppStyles.darkContent(context).copyWith(
-              fontSize: AppSizes.s14.sp,
+              fontSize: AppSizes.s14,
               height: 1.5,
             ),
           ),

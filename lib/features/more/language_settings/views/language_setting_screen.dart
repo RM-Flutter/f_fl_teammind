@@ -59,10 +59,10 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24.r,)),
+                child: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24,)),
             title: AppStrings.languageSettings.tr().toUpperCase(),
             titleStyle: AppStyles.heading(context).copyWith(
-                fontSize: AppSizes.s16.sp,
+                fontSize: AppSizes.s16,
                 fontWeight: FontWeight.w700),
             routeName: AppRoutes.langSettingScreen.name,
           ),
@@ -73,9 +73,9 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
               alignment: Alignment.center,
               child: SizedBox(
                   height: 1.sh,
-                  width: kIsWeb ? 1100.w : 1.sw,
+                  width: kIsWeb ? 1100 : 1.sw,
                   child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.h),
+                      padding: EdgeInsets.symmetric(vertical: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -101,13 +101,13 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                 },
                                 child: Container(
                                   width: double.infinity,
-                                  padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
+                                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                                   decoration: BoxDecoration(
                                       color: Color(AppColors.background),
                                       boxShadow: [
                                         BoxShadow(
                                           color: Color(AppColors.disableButton).withOpacity(0.5),
-                                          blurRadius: AppSizes.s5.r,
+                                          blurRadius: AppSizes.s5,
                                           spreadRadius: 1,
                                         )
                                       ]
@@ -116,29 +116,29 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                        width: 24.r,
-                                        height: 24.r,
-                                        padding: EdgeInsets.all(2.r),
+                                        width: 24,
+                                        height: 24,
+                                        padding: EdgeInsets.all(2),
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(color: Color(AppColors.buttons)),
                                             color:(selectIndex == index)? Color(AppColors.buttons) : Color(AppColors.background)
                                         ),
-                                        child: Icon(Icons.check, color: Colors.white, size: 18.r,),
+                                        child: Icon(Icons.check, color: Colors.white, size: 18,),
                                       ),
-                                      SizedBox(width: 15.w,),
-                                      Text((lang![index].contains("English language")||lang![index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp),)
+                                      SizedBox(width: 15,),
+                                      Text((lang![index].contains("English language")||lang![index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14),)
                                       ,const Spacer(),
-                                      Text((lang![index].contains("en"))?"change".toUpperCase() : "تغيير", style: AppStyles.primaryContent(context).copyWith(fontSize: 12.sp ,fontWeight: FontWeight.w500),)
+                                      Text((lang![index].contains("en"))?"change".toUpperCase() : "تغيير", style: AppStyles.primaryContent(context).copyWith(fontSize: 12 ,fontWeight: FontWeight.w500),)
                                     ],
                                   ),
                                 ),
                               ),
-                              separatorBuilder: (context, index) => SizedBox(height: 19.h,),
+                              separatorBuilder: (context, index) => SizedBox(height: 19,),
                               padding: EdgeInsets.zero,
                               itemCount: lang!.length
                           ),
-                          SizedBox(height: 40.h,),
+                          SizedBox(height: 40,),
                           // SizedBox(
                           //   width: MediaQuery.sizeOf(context).width * 0.6,
                           //   child: GestureDetector(

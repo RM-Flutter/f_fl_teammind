@@ -44,7 +44,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       onChanged: (newValue) =>
                           viewModel.toggleLoginMethod(newValue),
                     ),
-                    SizedBox(height: AppSizes.s24.h),
+                    SizedBox(height: AppSizes.s24),
                     Form(
                       key: viewModel.codeFormKey,
                       child: viewModel.isPhoneLogin
@@ -60,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         validator: (value) =>
                             ValidationService.validateEmail(value),
                       ),),
-                    SizedBox(height: AppSizes.s26.h),
+                    SizedBox(height: AppSizes.s26),
                     Center(
                       child: CustomElevatedButton(
                           isPrimaryBackground: false,
@@ -73,7 +73,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                       ),
                     ),
-                    SizedBox(height: AppSizes.s28.h),
+                    SizedBox(height: AppSizes.s28),
                   ] else if (!viewModel.codeSent &&
                       viewModel.goToChooseForgotMethod &&
                       viewModel.forgotPasswordMethods != null &&
@@ -103,7 +103,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               validator: (value) =>
                                   ValidationService.validateRequired(value, AppStrings.code.tr()),
                             ),
-                            SizedBox(height: AppSizes.s20.h),
+                            SizedBox(height: AppSizes.s20),
                             TextFormField(
                               controller: viewModel.newPasswordController,
                               decoration: InputDecoration(
@@ -126,7 +126,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             ),
                           ],
                         )),
-                    SizedBox(height: AppSizes.s20.h),
+                    SizedBox(height: AppSizes.s20),
                     Center(
                       child: CustomElevatedButton(
                           isPrimaryBackground: false,
@@ -158,7 +158,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           }
                       ),
                     ),
-                    SizedBox(height: AppSizes.s28.h),
+                    SizedBox(height: AppSizes.s28),
                   ],
                 ],
               );

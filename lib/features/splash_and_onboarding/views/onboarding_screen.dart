@@ -116,14 +116,14 @@ class OnBoardingScreen extends StatelessWidget {
                 child: Center(
                   child: Image.asset(
                     AppImages.logo,
-                    width: 140.r,
-                    height: 140.r,
+                    width: kIsWeb ? 140 : 140.r,
+                    height: kIsWeb ? 140 : 140.r,
                   ),
                 ),
               ),
 
               Positioned(
-                bottom: 48.h,
+                bottom: kIsWeb ? 48 : 48.h,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -139,8 +139,8 @@ class OnBoardingScreen extends StatelessWidget {
                       ),
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 18.w, vertical: 20.h),
-                        height: 340.h,
+                            horizontal: kIsWeb ? 18 : 18.w, vertical: kIsWeb ? 20 : 20.h),
+                        height: kIsWeb ? 340 : 340.h,
                         child: Column(
                           children: [
                             Expanded(
@@ -177,19 +177,19 @@ class OnBoardingScreen extends StatelessWidget {
                                           style: AppStyles.heading(context).copyWith(
                                                 color:  Color(AppColors.buttons),
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 24.sp,
+                                                fontSize: kIsWeb ? 28 : 24.sp,
                                               ),
                                           textAlign: TextAlign.center,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                      gapH20,
+                                      SizedBox(height: kIsWeb ? 15 : 20.h),
                                         Text(
                                           info ?? '',
                                           style: AppStyles.greyContent(context).copyWith(
                                                 color: Colors.grey.shade500,
                                                 height: 1.65,
-                                                fontSize: 14.sp,
+                                                fontSize: kIsWeb ? 16 : 14.sp,
                                               ),
                                           textAlign: TextAlign.center,
                                           maxLines: 4,
@@ -209,20 +209,20 @@ class OnBoardingScreen extends StatelessWidget {
                                       onPressed: () async =>
                                           viewModel.goNext(context),
                                       title: AppStrings.next.tr(),
-                                      width: 120.w,
-                                      titleSize: 14.sp,
+                                      width: kIsWeb ? 120 : 120.w,
+                                      titleSize: kIsWeb ? 14 : 14.sp,
                                       isPrimaryBackground: true,
                                       isFuture: false),
                                   TextButton(
                                     onPressed: () => viewModel.skip(context),
                                     style: ElevatedButton.styleFrom(
                                       fixedSize:
-                                      Size(170.w, 50.h),
+                                      Size(kIsWeb ? 170 : 170.w, kIsWeb ? 50 : 50.h),
                                     ),
                                     child: Text(AppStrings.skip.tr(),
                                         style: AppStyles.blackContent(context).copyWith(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 16.sp,
+                                            fontSize: kIsWeb ? 16 : 16.sp,
                                             color: Color(AppColors.secondaryButton))),
                                   ),
                                 ],

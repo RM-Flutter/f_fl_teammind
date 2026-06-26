@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:app_test/core/platform/platform_is.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -98,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
               child: Text(
                 AppStrings.forgetPassword.tr(),
                 style: AppStyles.whiteHeading(context).copyWith(
-                  fontSize: 13.sp
+                  fontSize: (kIsWeb || PlatformIs.web) ? 14 : 13.sp
                 ),
               ),
             ),

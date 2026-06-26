@@ -16,14 +16,14 @@ class RequestsAppbarLoading extends StatelessWidget {
                 children: List.generate(
                     3,
                         (index) => Padding(
-                        padding: EdgeInsets.only(right: 12.w),
+                        padding: EdgeInsets.only(right: 12),
                         child: ShimmerAnimatedLoading(
                           width: (1.sw -
-                              (32.w + (12.w * 3))) /
+                              (32 + (12 * 3))) /
                               3,
-                          height: 120.h,
+                          height: 120,
                         )))),
-            SizedBox(height: 32.h),
+            SizedBox(height: 32),
           ],
         ),
       ],

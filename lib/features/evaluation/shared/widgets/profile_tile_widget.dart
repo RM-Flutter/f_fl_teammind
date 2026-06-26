@@ -33,23 +33,23 @@ class ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-          bottom: marginBottom?.h ?? AppSizes.s12.h, left: 8.w, right: 8.w),
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+          bottom: marginBottom?.h ?? AppSizes.s12, left: 8, right: 8),
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 10.r,
-              offset: Offset(0, 4.h),
+              blurRadius: 10,
+              offset: Offset(0, 4),
             )
           ],
           border: Border.all(color: Colors.grey.withOpacity(0.05))),
       child: isTitleOnly == true
           ? Center(
               child: Text(title.toString(),
-              style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 13.sp),
+              style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 13),
               ),
             )
           : Row(
@@ -57,14 +57,14 @@ class ProfileTile extends StatelessWidget {
               children: [
                 if (icon != null) ...[
                   icon!,
-                  SizedBox(width: 12.w),
+                  SizedBox(width: 12),
                 ],
                 Expanded(
                   flex: 3,
                   child: Text(title,
-                  style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
+                  style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: 8),
                 if (isList == false && trailingTitle != null)
                   Expanded(
                     flex: 4,
@@ -72,7 +72,7 @@ class ProfileTile extends StatelessWidget {
                       trailingTitle!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),
+                      style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14),
                       textAlign: TextAlign.end,
                     ),
                   ),
@@ -81,7 +81,7 @@ class ProfileTile extends StatelessWidget {
                     flex: 4,
                     child: Container(
                       alignment: LocalizationService.isArabic(context: context) ? Alignment.centerLeft : Alignment.centerRight,
-                      height: 18.h,
+                      height: 18,
                       child: ListView.separated(
                           padding: EdgeInsets.zero,
                           scrollDirection: Axis.horizontal,
@@ -93,10 +93,10 @@ class ProfileTile extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppStyles.blackContent(context).copyWith(
-                                fontWeight: FontWeight.w700, fontSize: 14.sp),
+                                fontWeight: FontWeight.w700, fontSize: 14),
                             textAlign: LocalizationService.isArabic(context: context) ? TextAlign.end : TextAlign.start,
                           ),
-                          separatorBuilder: (context, index) => SizedBox(width: 4.w,child: Text(index == weekends!.length - 1 ? "" : ",", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),),),
+                          separatorBuilder: (context, index) => SizedBox(width: 4,child: Text(index == weekends!.length - 1 ? "" : ",", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14),),),
                           itemCount: weekends!.length),
                     ),
                   )
@@ -140,31 +140,31 @@ class ProfileTileEva extends StatelessWidget {
       }
       ,
       child: Container(
-        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12.h),
+        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
         padding: EdgeInsets.symmetric(
-            vertical: 16.h, horizontal: 20.w),
+            vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
-                blurRadius: 10.r,
-                offset: Offset(0, 4.h),
+                blurRadius: 10,
+                offset: Offset(0, 4),
               )
             ],
             border: Border.all(color: Colors.grey.withOpacity(0.05))),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       icon ?? const SizedBox.shrink(),
-                      SizedBox(width: 12.w),
-                      Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: 12),
+                      Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+                      SizedBox(width: 12),
                       if(isViewArrow == true) const Spacer(),
                      if(isViewArrow == true) CircleAvatar(
                         backgroundColor: Color(AppColors.buttons),
-                        radius: 12.r,
-                        child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
+                        radius: 12,
+                        child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
                       )
                     ],
                   ),
@@ -175,37 +175,37 @@ class ProfileTileEva extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       backgroundColor: Colors.white,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           height: MediaQuery.sizeOf(context).height * 0.6,
           width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(AppStrings.evaluationsInfo.tr(),style: AppStyles.heading(context).copyWith(fontSize: 20.sp, fontWeight: FontWeight.w600),),
-               SizedBox(height: 15.h,),
+              Text(AppStrings.evaluationsInfo.tr(),style: AppStyles.heading(context).copyWith(fontSize: 20, fontWeight: FontWeight.w600),),
+               SizedBox(height: 15,),
                Container(
                  width: double.infinity,
                  alignment: Alignment.center,
-                 height: 40.h,
+                 height: 40,
                  decoration: BoxDecoration(
                    color: Color(AppColors.buttons),
-                   borderRadius: BorderRadius.circular(10.r)
+                   borderRadius: BorderRadius.circular(10)
                  ),
                  child: Text(
                    DateFormat('MMMM yyyy', LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(createAt)).toString(),
                    style: AppStyles.whiteContent(context).copyWith(
-                     fontSize: 18.sp,
+                     fontSize: 18,
                      fontWeight: FontWeight.bold,
                    ),
                  ),
                ),
-              SizedBox(height: 30.h),
+              SizedBox(height: 30),
               SizedBox(
                 height: MediaQuery.sizeOf(context).height * 0.35,
                 child: ListView.separated(
@@ -215,11 +215,11 @@ class ProfileTileEva extends StatelessWidget {
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) =>eva[index]['gained_points'] != null? Column(
                       children: [
-                        Text("${eva[index]['employee_name']} (${eva[index]['created_at']})", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 12.sp),),
-                        SizedBox(height: 10.h,),
-                        Text("${AppStrings.totalEvalutaions.tr().toUpperCase()} : ${eva[index]['gained_points']?.toString() ?? 0}/${eva[index]['total_points']?.toString() ?? 0}", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 12.sp),),
+                        Text("${eva[index]['employee_name']} (${eva[index]['created_at']})", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 12),),
+                        SizedBox(height: 10,),
+                        Text("${AppStrings.totalEvalutaions.tr().toUpperCase()} : ${eva[index]['gained_points']?.toString() ?? 0}/${eva[index]['total_points']?.toString() ?? 0}", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 12),),
                       ],
-                    ): const SizedBox.shrink(), separatorBuilder: (context, index) => SizedBox(height: 20.h,),
+                    ): const SizedBox.shrink(), separatorBuilder: (context, index) => SizedBox(height: 20,),
                     itemCount: eva.length),
               )
             ],
@@ -260,31 +260,31 @@ class ProfileTileNotTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12.h),
+      margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
       padding: EdgeInsets.symmetric(
-          vertical: 16.h, horizontal: 20.w),
+          vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 10.r,
-              offset: Offset(0, 4.h),
+              blurRadius: 10,
+              offset: Offset(0, 4),
             )
           ],
           border: Border.all(color: Colors.grey.withOpacity(0.05))),
       child: Row(crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           icon ?? const SizedBox.shrink(),
-          SizedBox(width: 12.w),
-          Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
-          SizedBox(width: 12.w),
+          SizedBox(width: 12),
+          Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+          SizedBox(width: 12),
           if(isViewArrow == true) const Spacer(),
           if(isViewArrow == true) CircleAvatar(
             backgroundColor: Color(AppColors.buttons),
-            radius: 12.r,
-            child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
+            radius: 12,
+            child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
           )
         ],
       ),
@@ -326,39 +326,39 @@ class ProfileTileEvaReq extends StatelessWidget {
       }
       ,
       child: Container(
-        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12.h),
+        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
         padding: EdgeInsets.symmetric(
-            vertical: 16.h, horizontal: 20.w),
+            vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
-                blurRadius: 10.r,
-                offset: Offset(0, 4.h),
+                blurRadius: 10,
+                offset: Offset(0, 4),
               )
             ],
             border: Border.all(color: Colors.grey.withOpacity(0.05))),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             icon ?? const SizedBox.shrink(),
-            SizedBox(width: 12.w),
+            SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
-                Text("${AppStrings.employeeName.tr()} : ${empName ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11.sp)),
-                Text("${AppStrings.department.tr()} : ${department ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11.sp)),
-                Text("${AppStrings.createdAt.tr()} : ${createAt ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11.sp)),
+                Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+                Text("${AppStrings.employeeName.tr()} : ${empName ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
+                Text("${AppStrings.department.tr()} : ${department ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
+                Text("${AppStrings.createdAt.tr()} : ${createAt ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
               ],
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: 12),
             if(isViewArrow == true) const Spacer(),
             if(isViewArrow == true) CircleAvatar(
               backgroundColor: Color(AppColors.buttons),
-              radius: 12.r,
-              child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
+              radius: 12,
+              child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
             )
           ],
         ),
@@ -399,38 +399,38 @@ class ProfileTilePay extends StatelessWidget {
       }
       ,
       child: Container(
-        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12.h),
+        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
         padding: EdgeInsets.symmetric(
-            vertical: 16.h, horizontal: 20.w),
+            vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
-                blurRadius: 10.r,
-                offset: Offset(0, 4.h),
+                blurRadius: 10,
+                offset: Offset(0, 4),
               )
             ],
             border: Border.all(color: Colors.grey.withOpacity(0.05))),
         child: Row(crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             icon ?? const SizedBox.shrink(),
-            SizedBox(width: 12.w),
+            SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp)),
-                Text("${AppStrings.employeeName.tr()} : ${empName ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11.sp)),
-                Text("${AppStrings.createdAt.tr()} : ${createAt ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11.sp)),
+                Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+                Text("${AppStrings.employeeName.tr()} : ${empName ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
+                Text("${AppStrings.createdAt.tr()} : ${createAt ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
               ],
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: 12),
             if(isViewArrow == true) const Spacer(),
             if(isViewArrow == true) CircleAvatar(
               backgroundColor: Color(AppColors.buttons),
-              radius: 12.r,
-              child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10.sp,),
+              radius: 12,
+              child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
             )
           ],
         ),

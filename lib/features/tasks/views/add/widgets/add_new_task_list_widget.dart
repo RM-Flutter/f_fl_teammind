@@ -95,21 +95,21 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
               AppStrings.taskList.tr(),
               style: AppStyles.primaryContent(context).copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: 14.sp,
+                fontSize: 14,
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 16),
 
             ...value.tasksList2.asMap().entries.map((entry) {
               final index = entry.key;
               final task = entry.value['name'];
 
               return Padding(
-                padding: EdgeInsets.only(bottom: 12.0.h),
+                padding: EdgeInsets.only(bottom: 12.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Color(AppColors.border)),
                   ),
                   child: ListTile(
@@ -124,7 +124,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                         border: InputBorder.none,
                         hintText: AppStrings.taskName.tr(),
                         hintStyle: AppStyles.greyContent(context).copyWith(
-                            fontSize: 12.sp,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: Color(AppColors.overlay)),
                         contentPadding: EdgeInsets.zero,
@@ -145,7 +145,7 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                       child: Icon(
                         Icons.delete,
                         color: Color(AppColors.red),
-                        size: 24.r,
+                        size: 24,
                       ),
                     ),
                   ),
@@ -153,14 +153,14 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
               );
             }),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.secondaryButton),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.r),
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               onPressed: () {
@@ -172,10 +172,10 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
                   _controllers.add(TextEditingController(text: ""));
                 });
               },
-              icon: Icon(Icons.add, color: Colors.white, size: 16.r,),
+              icon: Icon(Icons.add, color: Colors.white, size: 16,),
               label: Text(
                 AppStrings.addOne.tr().toUpperCase(),
-                style: AppStyles.whiteContent(context).copyWith(fontSize: 10.sp, fontWeight: FontWeight.w500),
+                style: AppStyles.whiteContent(context).copyWith(fontSize: 10, fontWeight: FontWeight.w500),
               ),
             ),
           ],

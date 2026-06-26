@@ -15,12 +15,12 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainTextStyle = AppStyles.heading(context).copyWith(
-        fontSize: 10.5.sp, 
+        fontSize: 10.5, 
         fontWeight: FontWeight.bold
     );
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: 8.w, vertical: 12.h),
+          horizontal: 8, vertical: 12),
       child: DefaultTabController(
         length: 3,
         child: Column(
@@ -28,18 +28,18 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
-                borderRadius: BorderRadius.circular(30.r),
+                borderRadius: BorderRadius.circular(30),
               ),
-              height: 52.h,
+              height: 52,
               padding: EdgeInsets.symmetric(
-                  horizontal: 8.w, vertical: 6.h),
+                  horizontal: 8, vertical: 6),
               child: TabBar(
                 dividerColor: Colors.transparent,
-                indicatorPadding: EdgeInsets.symmetric(horizontal: 4.w),
+                indicatorPadding: EdgeInsets.symmetric(horizontal: 4),
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
                   color:  Color(AppColors.buttons),
-                  borderRadius: BorderRadius.circular(30.r),
+                  borderRadius: BorderRadius.circular(30),
                 ),
                 labelColor: Colors.white,
                 labelStyle: mainTextStyle,
@@ -93,19 +93,19 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 8.w, vertical: 8.h),
+                    horizontal: 8, vertical: 8),
                 child: TabBarView(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 20.h),
+                      padding: EdgeInsets.only(top: 20),
                       child: Text(
                         request.reason ?? '',
                         textAlign: TextAlign.center,
-                        style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
+                        style: AppStyles.darkContent(context).copyWith(fontSize: 14),
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top: 20.h),
+                        padding: EdgeInsets.only(top: 20),
                         child:request.managerReply.isNotEmpty ? Container(
                           height: 0.4.sh,
                           child: ListView.separated(
@@ -116,22 +116,22 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                                   Text(
                                     "${request.managerReply[index].jobTitle ?? ""} : ${request.managerReply[index].name.toString()} (${request.managerReply[index].createAt.toString()})",
                                     textAlign: TextAlign.center,
-                                    style: AppStyles.darkContent(context).copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600),
+                                    style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w600),
                                   ),
-                                  SizedBox(height: 15.h,),
+                                  SizedBox(height: 15,),
                                   Text(
                                     "${request.managerReply[index].replay ?? ""}",
                                     textAlign: TextAlign.center,
-                                    style: AppStyles.darkContent(context).copyWith(fontSize: 12.sp, fontWeight: FontWeight.w400),
+                                    style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400),
 
                                   ),
                                 ],
-                              ), separatorBuilder: (context, index) => SizedBox(height: 20.h, child: const Divider(),),
+                              ), separatorBuilder: (context, index) => SizedBox(height: 20, child: const Divider(),),
                               itemCount: request.managerReply.length),
                         ):  Center(
                           child: Text(AppStrings.thereIsStillNoResponseFromTheManager.tr(),
                             style: AppStyles.darkContent(context).copyWith(
-                                fontWeight: FontWeight.w400, fontSize: 12.sp
+                                fontWeight: FontWeight.w400, fontSize: 12
                             ),
                           ),
                         )
@@ -141,82 +141,82 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 25.h,),
+                          SizedBox(height: 25,),
                           Container(
                             width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 16.w),
-                            padding:  EdgeInsets.symmetric(vertical: 12.h),
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            padding:  EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(30.r),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("${AppStrings.createdOn.tr()} : ",
                                   style: AppStyles.darkContent(context).copyWith(
-                                      fontWeight: FontWeight.w400, fontSize: 12.sp
+                                      fontWeight: FontWeight.w400, fontSize: 12
                                   ),
                                 ),
                                 Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.createdAt.toString())),
                                   style:  AppStyles.primaryContent(context).copyWith(
-                                      fontWeight: FontWeight.bold, fontSize: 13.sp
+                                      fontWeight: FontWeight.bold, fontSize: 13
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 12.h,),
+                          SizedBox(height: 12,),
                           if(request.seenAt != null && request.seenAt != "") Container(
                             width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 16.w),
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(30.r),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("${AppStrings.seenOn.tr()} : ",style: AppStyles.darkContent(context).copyWith(
-                                    fontWeight: FontWeight.w400, fontSize: 12.sp
+                                    fontWeight: FontWeight.w400, fontSize: 12
                                 ),),
                                 Text(DateFormat('d-M-y | hh:mm a', LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.seenAt.toString())),
                                   style:  AppStyles.primaryContent(context).copyWith(
-                                      fontWeight: FontWeight.bold, fontSize: 13.sp
+                                      fontWeight: FontWeight.bold, fontSize: 13
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 12.h,),
+                          SizedBox(height: 12,),
                           if(request.statusUpdate != null && request.statusUpdate != "") Container(
                             width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 16.w),
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(30.r),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("${AppStrings.statusUpdate.tr()} : ",style: AppStyles.darkContent(context).copyWith(
-                                    fontWeight: FontWeight.w400, fontSize: 12.sp
+                                    fontWeight: FontWeight.w400, fontSize: 12
                                 ),),
                                 Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.statusUpdate.toString())),
                                   style:  AppStyles.primaryContent(context).copyWith(
-                                      fontWeight: FontWeight.bold, fontSize: 13.sp
+                                      fontWeight: FontWeight.bold, fontSize: 13
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          if(request.seenBy != null && request.seenBy.isNotEmpty) SizedBox(height: 25.h,),
+                          if(request.seenBy != null && request.seenBy.isNotEmpty) SizedBox(height: 25,),
                           if(request.seenBy != null && request.seenBy.isNotEmpty)Text(AppStrings.seenBy.tr(),style: AppStyles.darkContent(context).copyWith(
-                              fontWeight: FontWeight.w400, fontSize: 12.sp
+                              fontWeight: FontWeight.w400, fontSize: 12
                           ),),
-                          if(request.seenBy != null && request.seenBy.isNotEmpty) SizedBox(height: 15.h,),
+                          if(request.seenBy != null && request.seenBy.isNotEmpty) SizedBox(height: 15,),
                           if(request.seenBy != null && request.seenBy.isNotEmpty)ListView.separated(
                               padding: EdgeInsets.zero,
                               physics: const NeverScrollableScrollPhysics(),
@@ -227,15 +227,15 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(request.seenBy[index].managerName ?? "",style: AppStyles.darkContent(context).copyWith(
-                                      fontWeight: FontWeight.w400, fontSize: 12.sp
+                                      fontWeight: FontWeight.w400, fontSize: 12
                                   ),),
                                   Text(DateFormat('d-M-y | hh:mm a',  LocalizationService.isArabic(context: context)? "ar": "en").format(DateTime.parse(request.seenBy[index].date.toString())),
                                     style: AppStyles.darkContent(context).copyWith(
-                                        fontWeight: FontWeight.w400, fontSize: 12.sp
+                                        fontWeight: FontWeight.w400, fontSize: 12
                                     ),
                                   ),
                                 ],
-                              ), separatorBuilder: (context, index) => SizedBox(height: 15.h,),
+                              ), separatorBuilder: (context, index) => SizedBox(height: 15,),
                               itemCount: request.seenBy.length)
                         ],
                       ),

@@ -53,7 +53,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
     final textStyle = AppStyles.heading(context).copyWith(
         fontWeight: FontWeight.w400,
         color: Color(AppColors.buttons),
-        fontSize: 16.sp,
+        fontSize: 16,
     );
     return ChangeNotifierProvider<AddNewRequestController>(
       create: (_) => viewModel,
@@ -61,18 +61,18 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
           pageContext: context,
           title: AppStrings.newRequest.tr(),
           titleStyle: AppStyles.heading(context).copyWith(
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
           body: Scaffold(
             body: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100.w : 1.sw
+                    maxWidth: kIsWeb ? 1100 : 1.sw
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: 16.h, horizontal: !kIsWeb? 12.w : 0),
+                      vertical: 16, horizontal: !kIsWeb? 12 : 0),
                   child: Consumer<AddNewRequestController>(
                       builder: (context, viewModel, child){
                         return Column(
@@ -87,7 +87,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                         AppStrings.mainData.tr().toUpperCase(),
                                         style: textStyle,
                                       ),
-                                      SizedBox(height: 14.h),
+                                      SizedBox(height: 14),
                                       if(viewModel.requestsTypes != null && viewModel.requestsTypes!.isNotEmpty)
                                         defaultDropdownField(
                                           value: viewModel.selectReqType,
@@ -97,7 +97,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                             child: Text(
                                               e['title'][context.locale.languageCode].toString(),
                                               style: AppStyles.almostBlackContent(context).copyWith(
-                                                  fontSize: 12.sp,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.w400,
                                               ),),
                                           ),
@@ -134,7 +134,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                           child: Text(
                                             e['title'][context.locale.languageCode].toString(),
                                             style: AppStyles.almostBlackContent(context).copyWith(
-                                                fontSize: 12.sp,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.w400,
                                             ),),
                                         ),
@@ -165,13 +165,13 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                           print("TYPE  IS --> ${viewModel.reqTypeFile}");
                                         },
                                       ),
-                                      SizedBox(height: 14.h),
+                                      SizedBox(height: 14),
                                       viewModel.reqType ==
                                           'instead_of_holidays'
                                           ? CustomDropdown.search(
                                           selectedValue: viewModel.selectedRequestType,
                                           borderRadius:
-                                          BorderRadius.circular(15.r),
+                                          BorderRadius.circular(15),
                                           borderSide: Theme.of(context)
                                               .inputDecorationTheme
                                               .enabledBorder
@@ -195,12 +195,12 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                               : TextDirection.ltr))
                                           : TextField(
                                         controller: viewModel.controller,
-                                        style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
+                                        style: AppStyles.darkContent(context).copyWith(fontSize: 14),
                                         decoration: InputDecoration(
                                           hintText: AppStrings.requestTime.tr(),
-                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13.sp),
+                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13),
                                           suffixIcon: IconButton(
-                                            icon: Image.asset('assets/images/new-cale.png', width: 22.r, height: 22.r, color: Colors.grey[600]),
+                                            icon: Image.asset('assets/images/new-cale.png', width: 22, height: 22, color: Colors.grey[600]),
                                             onPressed: () =>
                                                 viewModel.selectDate(context, filter: false),
                                           ),
@@ -208,17 +208,17 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                         readOnly: true,
                                         onTap: () => viewModel.selectDate(context, filter: false),
                                       ),
-                                      SizedBox(height: 14.h),
+                                      SizedBox(height: 14),
                                       TextFormField(
                                         controller: viewModel.reasonController,
                                         maxLines: 3,
-                                        style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
+                                        style: AppStyles.darkContent(context).copyWith(fontSize: 14),
                                         decoration: InputDecoration(
                                           hintText: AppStrings.reason.tr(),
-                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13.sp),
+                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13),
                                         ),
                                       ),
-                                      SizedBox(height: 14.h),
+                                      SizedBox(height: 14),
                                       Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -228,15 +228,15 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                             AppStrings.additionalData.tr().toUpperCase(),
                                             style: textStyle,
                                           ),
-                                          if(viewModel.reqTypeFile == "required" || viewModel.reqTypeFile == "optional") SizedBox(height: 14.h),
+                                          if(viewModel.reqTypeFile == "required" || viewModel.reqTypeFile == "optional") SizedBox(height: 14),
                                           if(viewModel.reqTypeFile == "required"|| viewModel.reqTypeFile == "optional")TextFormField(
                                             controller: viewModel.fileController,
-                                            style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
+                                            style: AppStyles.darkContent(context).copyWith(fontSize: 14),
                                             decoration: InputDecoration(
                                               hintText: AppStrings.uploadFiles.tr(),
-                                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13.sp),
+                                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13),
                                               suffixIcon: IconButton(
-                                                icon: Icon(Icons.cloud_upload_outlined, color: Colors.grey, size: 26.r),
+                                                icon: Icon(Icons.cloud_upload_outlined, color: Colors.grey, size: 26),
                                                 onPressed: () async =>
                                                     viewModel.pickFile(),
                                               ),
@@ -245,44 +245,44 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                             onTap: () async =>
                                             await viewModel.pickFile(),
                                           ),
-                                          if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional") SizedBox(height: 14.h),
+                                          if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional") SizedBox(height: 14),
                                           if(viewModel.reqTypeMoney == "required" || viewModel.reqTypeMoney == "optional")  TextFormField(
                                             controller:
                                             viewModel.amountController,
-                                            style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
+                                            style: AppStyles.darkContent(context).copyWith(fontSize: 14),
                                             keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                               hintText: AppStrings.amount.tr(),
-                                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13.sp),
+                                              hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 13),
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 14.h),
+                                      SizedBox(height: 14),
                                       // Text(viewModel.notes ?? ''),
                                     ],
                                   ),
                                 )),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 6.h, horizontal: 16.w),
+                                  vertical: 6, horizontal: 16),
                               width: 1.sw,
                               decoration: BoxDecoration(
                                   color: Color(AppColors.secondaryButton),
-                                  borderRadius: BorderRadius.circular(50.r)),
+                                  borderRadius: BorderRadius.circular(50)),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SizedBox(width: 12.w),
+                                    SizedBox(width: 12),
                                     Expanded(
                                         child: Text(
                                           viewModel.formattedDuration != null?
                                           "${viewModel.formattedDuration}" :
                                           viewModel.duration != null?
                                           '${viewModel.duration} ${AppStrings.days.tr()}' : "0",
-                                          style: textStyle.copyWith(color: Colors.white, fontSize: 14.sp),
+                                          style: textStyle.copyWith(color: Colors.white, fontSize: 14),
                                         )),
-                                    SizedBox(width: 8.w),
+                                    SizedBox(width: 8),
                                     CustomRequestDetailsButton(
                                       title: AppStrings.sendRequest.tr(),
                                       color: Color(AppColors.buttons),

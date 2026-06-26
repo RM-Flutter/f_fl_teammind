@@ -222,8 +222,8 @@ class _HomeScreenState extends State<HomeScreen> {
             CoreHeader.transform(
               pinned: true,
               color: Colors.transparent,
-              shrinkHeight: AppSizes.s140.h,
-              expandedHeight: 300.0.h,
+              shrinkHeight: AppSizes.s140,
+              expandedHeight: 300.0,
               shrinkChild: Consumer<HomeController>(
                   builder: (context, viewModel, child) => HomeAppbarWidget(
                         requests: viewModel.myRequests,
@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:
-                    LocalizationService.isArabic(context: context) ? 35.w : 0),
+                    LocalizationService.isArabic(context: context) ? 35 : 0),
             child: MainAppFabWidget(requests: false, viewRequest: true),
           ),
           children: [
@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, viewModel, child) => viewModel.isLoading
                   ? const HomeLoadingPage()
                   : Padding(
-                      padding: EdgeInsets.only(top: AppSizes.s12.h),
+                      padding: EdgeInsets.only(top: AppSizes.s12),
                       child: _buildReorderableWidgets(viewModel),
                     ),
             )
@@ -328,14 +328,14 @@ class _HomeScreenState extends State<HomeScreen> {
         // General Screen Message Widget (always at top, not reorderable)
         // Shortcut actions (Replaces BookmarkList)
         _buildShortcutActions(context),
-        SizedBox(height: AppSizes.s4.h),
+        SizedBox(height: AppSizes.s4),
         // const Center(
         //   child: Text(
         //     "welcome to employee main screeen",
         //     style: TextStyle(color: Colors.grey, fontSize: 12),
         //   ),
         // ),
-        SizedBox(height: AppSizes.s4.h),
+        SizedBox(height: AppSizes.s4),
         if (_availableWidgets.isEmpty)
           NoExistingPlaceholderScreen(
               height: LayoutService.getHeight(context) * 0.4,
@@ -367,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Material(
                   elevation: 8,
                   shadowColor: Color(AppColors.shadow).withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(AppSizes.s12.r),
+                  borderRadius: BorderRadius.circular(AppSizes.s12),
                   child: child,
                 );
               },
@@ -420,8 +420,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       key: ValueKey(widgetType.id),
       margin: EdgeInsets.only(
-        bottom: AppSizes.s12.h,
-        top: AppSizes.s8.h,
+        bottom: AppSizes.s12,
+        top: AppSizes.s8,
       ),
       child: Material(
         color: Colors.transparent,
@@ -430,27 +430,27 @@ class _HomeScreenState extends State<HomeScreen> {
             content,
             // Drag handle - only this can be used to drag
             Positioned(
-              top: 8.h,
-              right: 8.w,
+              top: 8,
+              right: 8,
               child: ReorderableDragStartListener(
                 index: index,
                 child: Container(
-                  padding: EdgeInsets.all(10.r),
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Color(AppColors.background).withValues(alpha: 0.95),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: Color(AppColors.shadow).withValues(alpha: 0.15),
-                        blurRadius: 6.r,
-                        offset: Offset(0, 2.h),
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
                   child: Icon(
                     Icons.drag_handle,
                     color: Color(AppColors.secondaryButton),
-                    size: 24.r,
+                    size: 24,
                   ),
                 ),
               ),
@@ -523,40 +523,40 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return SizedBox(
-      height: 120.h,
+      height: 120,
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
-        separatorBuilder: (context, index) => SizedBox(width: 12.w),
+        separatorBuilder: (context, index) => SizedBox(width: 12),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: items[index]['onTap'],
             child: Container(
-              width: 105.w,
-              padding: EdgeInsets.all(8.r),
+              width: 105,
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 // color: Color(AppColors.cardBackground),
                 color: Color(AppColors.secondaryButton), // Dark Blue from Figma
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
                     items[index]['icon'],
-                    height: 28.r,
-                    width: 28.r,
+                    height: 28,
+                    width: 28,
                     // color: Color(AppColors.icon,),
                     color: Colors.white,
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 12),
                   Text(
                     items[index]['title'],
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     style: AppStyles.titleTextContent(context).copyWith(
-                      fontSize: 12.0.sp,
+                      fontSize: 12.0,
                       fontWeight: FontWeight.w400,
                       height: 1.1,
                         color: Colors.white
@@ -573,7 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTasksSection(BuildContext context, List tasks) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -583,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 AppStrings.myTasksHeader.tr(),
                 style: AppStyles.heading(context).copyWith(
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -593,13 +593,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   AppStrings.viewAll.tr(),
                   style: AppStyles.titleTextContent(context).copyWith(
-                    fontSize: 10.sp,
+                    fontSize: 10,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 12),
           ...tasks.take(3).map((task) {
             // Mapping the dynamic task from home API to the TaskListTileWidget
             // If the model is different, we adjust the fields

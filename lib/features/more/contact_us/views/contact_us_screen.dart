@@ -67,14 +67,14 @@ class _ContactScreenState extends State<ContactScreen> {
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.white,
-                        size: 24.r,
+                        size: 24,
                       ),
                     ),
                     title: Text(
                       AppStrings.contactUs.tr().toUpperCase(),
                       style: AppStyles.whiteHeading(context).copyWith(
                         fontWeight: FontWeight.w700,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                       ),
                     ),
                   ),
@@ -87,19 +87,19 @@ class _ContactScreenState extends State<ContactScreen> {
                         height: 1.sh,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 30.w, vertical: 30.h),
+                              horizontal: 30, vertical: 30),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 50.h),
+                              SizedBox(height: 50),
                               if(gCache['company_contacts']['phone'] != null && (gCache['company_contacts']['otherphones'].isNotEmpty && gCache['company_contacts']['otherphones'] != null))Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SvgPicture.asset(
-                                    "assets/images/svg/contact-phone.svg", height: 20.r, width: 20.r,),
+                                    "assets/images/svg/contact-phone.svg", height: 20, width: 20,),
                                   SizedBox(
-                                    width: 10.w,
+                                    width: 10,
                                   ),
                                   Column(
                                     crossAxisAlignment:
@@ -109,10 +109,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                         AppStrings.phone.tr().toUpperCase(),
                                         style: AppStyles.whiteHeading(context).copyWith(
                                             fontWeight: FontWeight.w700,
-                                            fontSize: 18.sp),
+                                            fontSize: 18),
                                       ),
                                       SizedBox(
-                                        height: 10.h,
+                                        height: 10,
                                       ),
                                       GestureDetector(
                                           onTap: () async {
@@ -128,10 +128,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                             "${AppStrings.hotline.tr().toUpperCase()} ${gCache['company_contacts']['phone']}",
                                             style: AppStyles.whiteContent(context).copyWith(
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: 14.sp),
+                                                fontSize: 14),
                                           )),
                                       SizedBox(
-                                        height: 5.h,
+                                        height: 5,
                                       ),
                                       SizedBox(
                                         width: 0.6.sw,
@@ -159,11 +159,11 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       style: AppStyles.whiteContent(context).copyWith(
                                                           fontWeight:
                                                           FontWeight.w400,
-                                                          fontSize: 14.sp),
+                                                          fontSize: 14),
                                                     )),
                                             separatorBuilder:
                                                 (context, index) => SizedBox(
-                                              height: 5.h,
+                                              height: 5,
                                             ),
                                             itemCount:
                                             gCache['company_contacts']
@@ -175,15 +175,15 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ],
                               ),
                               if(gCache['company_contacts']['phone'] != null && (gCache['company_contacts']['otherphones'].isNotEmpty && gCache['company_contacts']['otherphones'] != null)) SizedBox(
-                                height: 20.h,
+                                height: 20,
                               ),
                               if(gCache['company_contacts']['branches'] != null && gCache['company_contacts']['branches'].isNotEmpty) Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SvgPicture.asset(
-                                    "assets/images/svg/contact-address.svg", height: 20.r, width: 20.r,),
+                                    "assets/images/svg/contact-address.svg", height: 20, width: 20,),
                                   SizedBox(
-                                    width: 10.w,
+                                    width: 10,
                                   ),
                                   SizedBox(
                                     width: 0.6.sw,
@@ -195,10 +195,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                           AppStrings.address.tr().toUpperCase(),
                                           style: AppStyles.whiteHeading(context).copyWith(
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 18.sp),
+                                              fontSize: 18),
                                         ),
                                         SizedBox(
-                                          height: 10.h,
+                                          height: 10,
                                         ),
                                         ListView.separated(
                                             shrinkWrap: true,
@@ -222,10 +222,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                                       style: AppStyles.whiteHeading(context).copyWith(
                                                           fontWeight:
                                                           FontWeight.w700,
-                                                          fontSize: 14.sp),
+                                                          fontSize: 14),
                                                     ),
                                                     SizedBox(
-                                                      height: 5.h,
+                                                      height: 5,
                                                     ),
                                                     SizedBox(
                                                         width: 0.6.sw,
@@ -237,10 +237,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                                               fontWeight:
                                                               FontWeight
                                                                   .w400,
-                                                              fontSize: 14.sp),
+                                                              fontSize: 14),
                                                         )),
                                                     SizedBox(
-                                                      height: 5.h,
+                                                      height: 5,
                                                     ),
                                                     GestureDetector(
                                                       onTap: () async {
@@ -252,8 +252,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                                         );
                                                       },
                                                       child: Container(
-                                                        height: 17.h,
-                                                        width: 78.w,
+                                                        height: 17,
+                                                        width: 78,
                                                         alignment:
                                                         Alignment.center,
                                                         decoration: BoxDecoration(
@@ -264,12 +264,12 @@ class _ContactScreenState extends State<ContactScreen> {
                                                             borderRadius:
                                                             BorderRadius
                                                                 .circular(
-                                                                50.r)),
+                                                                50)),
                                                         child: Text(
                                                           AppStrings.showMap
                                                               .tr(),
                                                           style: AppStyles.whiteContent(context).copyWith(
-                                                              fontSize: 10.sp,
+                                                              fontSize: 10,
                                                               fontWeight:
                                                               FontWeight
                                                                   .w400),
@@ -280,7 +280,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                                 ),
                                             separatorBuilder:
                                                 (context, index) => SizedBox(
-                                              height: 10.h,
+                                              height: 10,
                                             ),
                                             itemCount:
                                             gCache['company_contacts']
@@ -292,15 +292,15 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ],
                               ),
                               if(gCache['company_contacts']['branches'] != null && gCache['company_contacts']['branches'].isNotEmpty) SizedBox(
-                                height: 20.h,
+                                height: 20,
                               ),
                               if(gCache['company_contacts']['otheremails'] != null && gCache['company_contacts']['otheremails'].isNotEmpty) Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SvgPicture.asset(
-                                    "assets/images/svg/contact-email.svg", height: 20.r, width: 20.r,),
+                                    "assets/images/svg/contact-email.svg", height: 20, width: 20,),
                                   SizedBox(
-                                    width: 10.w,
+                                    width: 10,
                                   ),
                                   SizedBox(
                                     width: 0.6.sw,
@@ -313,10 +313,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                           AppStrings.email.tr().toUpperCase(),
                                           style: AppStyles.whiteHeading(context).copyWith(
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 18.sp),
+                                              fontSize: 18),
                                         ),
                                         SizedBox(
-                                          height: 10.h,
+                                          height: 10,
                                         ),
                                         //whatsAppConversationStarterMessage en/ar
                                         ListView.separated(
@@ -338,10 +338,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                                     gCache['company_contacts']['otheremails'][index]??"",
                                                     style: AppStyles.whiteContent(context).copyWith(
                                                         fontWeight: FontWeight.w400,
-                                                        fontSize: 14.sp),
+                                                        fontSize: 14),
                                                   )),
                                             ),
-                                            separatorBuilder: (context, index) => SizedBox(height: 5.h,),
+                                            separatorBuilder: (context, index) => SizedBox(height: 5,),
                                             itemCount: gCache['company_contacts']['otheremails'].length)
                                       ],
                                     ),
@@ -349,7 +349,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ],
                               ),
                               if(gCache['company_contacts']['otheremails'] != null && gCache['company_contacts']['otheremails'].isNotEmpty)SizedBox(
-                                height: 50.h,
+                                height: 50,
                               ),
                               Container(
                                 width: double.infinity,
@@ -361,16 +361,16 @@ class _ContactScreenState extends State<ContactScreen> {
                                       AppStrings.followUs.tr().toUpperCase(),
                                       style: AppStyles.whiteHeading(context).copyWith(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 16.sp),
+                                          fontSize: 16),
                                     ),
                                     SizedBox(
-                                      height: 20.h,
+                                      height: 20,
                                     ),
                                     SizedBox(
-                                      height: 60.h,
+                                      height: 60,
                                       child: Wrap(
-                                        spacing: 10.w,
-                                        runSpacing: 10.h,
+                                        spacing: 10,
+                                        runSpacing: 10,
                                         children: [
                                           if (gCache['company_contacts']['whatsapp'] !=
                                               null &&
@@ -538,7 +538,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 30.h,
+                                      height: 30,
                                     ),
                                     if (gCache['company_contacts']['email'] != null)
                                       CustomElevatedButton(
@@ -573,10 +573,10 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget defaultCircularSocial({onTap, src}) => GestureDetector(
         onTap: onTap,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5.w),
-          padding: EdgeInsets.all(5.r),
-          height: 30.r,
-          width: 30.r,
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          padding: EdgeInsets.all(5),
+          height: 30,
+          width: 30,
           decoration: BoxDecoration(
               shape: BoxShape.circle, color: Color(AppColors.buttons)),
           child: SvgPicture.asset(src, color: Colors.white),

@@ -182,25 +182,24 @@ class _FingerprintDatetimeCardWidgetState
                         : AppImages.fingerprintOut,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (getFingerprintTime(
-                        widget.fingerprintDatetime.time, widget.isIn) !=
-                        null)
-                      AutoSizeText(
-                        getFingerprintTime(
-                            widget.fingerprintDatetime.time, widget.isIn)!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: AppSizes.s14,
-                          color: Colors.black,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (getFingerprintTime(
+                          widget.fingerprintDatetime.time, widget.isIn) !=
+                          null)
+                        AutoSizeText(
+                          getFingerprintTime(
+                              widget.fingerprintDatetime.time, widget.isIn)!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: AppSizes.s14,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    if (branchName != null)
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.5,
-                        child: AutoSizeText(
+                      if (branchName != null)
+                        AutoSizeText(
                           branchName!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -210,8 +209,8 @@ class _FingerprintDatetimeCardWidgetState
                             height: 1.3,
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

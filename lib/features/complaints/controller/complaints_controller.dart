@@ -118,7 +118,7 @@ class ComplaintsController extends ChangeNotifier {
      timeInSecForIosWeb: 5,
      backgroundColor: Colors.red,
      textColor: Colors.white,
-     fontSize: 16.0.sp,
+     fontSize: 16.0,
     );
    } else {
     isAddCommentSuccess = true;
@@ -129,7 +129,7 @@ class ComplaintsController extends ChangeNotifier {
      timeInSecForIosWeb: 5,
      backgroundColor: Colors.green,
      textColor: Colors.white,
-     fontSize: 16.0.sp,
+     fontSize: 16.0,
     );
     contentController.clear();
     // Refresh comments after successful upload
@@ -147,7 +147,7 @@ class ComplaintsController extends ChangeNotifier {
     timeInSecForIosWeb: 5,
     backgroundColor: Colors.red,
     textColor: Colors.white,
-    fontSize: 16.0.sp,
+    fontSize: 16.0,
    );
   } finally {
    isAddCommentLoading = false;
@@ -176,7 +176,7 @@ class ComplaintsController extends ChangeNotifier {
       timeInSecForIosWeb: 5,
       backgroundColor: Colors.red,
       textColor: Colors.white,
-      fontSize: 16.0.sp,
+      fontSize: 16.0,
     );
    }else{
     newRequestsTeam = response.data['complains'] ?? [];
@@ -206,7 +206,7 @@ class ComplaintsController extends ChangeNotifier {
      timeInSecForIosWeb: 5,
      backgroundColor: Colors.red,
      textColor: Colors.white,
-     fontSize: 16.0.sp,
+     fontSize: 16.0,
    );
   } finally {
    isGetRequestLoading = false;
@@ -235,7 +235,7 @@ class ComplaintsController extends ChangeNotifier {
       timeInSecForIosWeb: 5,
       backgroundColor: Colors.red,
       textColor: Colors.white,
-      fontSize: 16.0.sp,
+      fontSize: 16.0,
     );
    }else{
     newRequests = response.data['complains'] ?? [];
@@ -265,7 +265,7 @@ class ComplaintsController extends ChangeNotifier {
      timeInSecForIosWeb: 5,
      backgroundColor: Colors.red,
      textColor: Colors.white,
-     fontSize: 16.0.sp,
+     fontSize: 16.0,
    );
   } finally {
    isGetRequestLoading = false;
@@ -291,7 +291,7 @@ class ComplaintsController extends ChangeNotifier {
       timeInSecForIosWeb: 5,
       backgroundColor: Colors.red,
       textColor: Colors.white,
-      fontSize: 16.0.sp,
+      fontSize: 16.0,
     );
    }else{
     getOneRequestModel = GetOneComplainsRequestModel.fromJson(response.data);
@@ -309,7 +309,7 @@ class ComplaintsController extends ChangeNotifier {
      timeInSecForIosWeb: 5,
      backgroundColor: Colors.red,
      textColor: Colors.white,
-     fontSize: 16.0.sp,
+     fontSize: 16.0,
    );
   } finally {
    isGetRequestLoading = false;
@@ -357,7 +357,7 @@ class ComplaintsController extends ChangeNotifier {
       timeInSecForIosWeb: 5,
       backgroundColor: Colors.red,
       textColor: Colors.white,
-      fontSize: 16.0.sp,
+      fontSize: 16.0,
     );
    }else{
     isAddRequestSuccess = true;
@@ -383,7 +383,7 @@ class ComplaintsController extends ChangeNotifier {
      timeInSecForIosWeb: 5,
      backgroundColor: Colors.red,
      textColor: Colors.white,
-     fontSize: 16.0.sp,
+     fontSize: 16.0,
    );
   } finally {
    isAddRequestLoading = false;
@@ -461,7 +461,7 @@ class ComplaintsController extends ChangeNotifier {
          children: <Widget>[
           Text(
            AppStrings.selectPhoto.tr(),
-           style: AppStyles.blackContent(context).copyWith(fontSize: 20.sp)),
+           style: AppStyles.blackContent(context).copyWith(fontSize: 20)),
           SizedBox(
            height: 10),
           Row(
@@ -489,7 +489,7 @@ class ComplaintsController extends ChangeNotifier {
               ),
               Text(
                AppStrings.gallery.tr(),
-               style: AppStyles.blackContent(context).copyWith(fontSize: 18.sp)),
+               style: AppStyles.blackContent(context).copyWith(fontSize: 18)),
              ]),
             Column(
              children: [
@@ -515,7 +515,7 @@ class ComplaintsController extends ChangeNotifier {
               ),
               Text(
                AppStrings.camera.tr(),
-               style: AppStyles.blackContent(context).copyWith(fontSize: 18.sp)),
+               style: AppStyles.blackContent(context).copyWith(fontSize: 18)),
              ],
              mainAxisAlignment: MainAxisAlignment.spaceAround),
            ],

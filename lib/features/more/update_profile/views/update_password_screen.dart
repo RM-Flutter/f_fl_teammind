@@ -42,7 +42,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     surfaceTintColor: Colors.transparent,
                     backgroundColor: const Color(0xffFFFFFF),
                     leading: Padding(
-                      padding: EdgeInsets.all(AppSizes.s10.r),
+                      padding: EdgeInsets.all(AppSizes.s10),
                       child: InkWell(
                         onTap: () =>  Navigator.pop(context),
                         child: Container(
@@ -52,7 +52,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                           child: Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.white,
-                            size: AppSizes.s18.r,
+                            size: AppSizes.s18,
                           ),
                         ),
                       ),
@@ -60,7 +60,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     title: Text(
                       AppStrings.updatePassword.tr().toUpperCase(),
                       style: AppStyles.heading(context).copyWith(
-                          fontSize: AppSizes.s16.sp,
+                          fontSize: AppSizes.s16,
                           fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -70,7 +70,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                       child: SizedBox(
                         height: 1.sh,
                         child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 30.h),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
                             child: Column(
                               children: [
                                 TextFormField(
@@ -92,7 +92,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                       ValidationService.validatePassword(value, login: true),
                                   obscureText: hidePassword,
                                 ),
-                                SizedBox(height: 30.h),
+                                SizedBox(height: 30),
                                 if(value.isLoading) const Center(child: CircularProgressIndicator(),),
                                 if(!value.isLoading) GestureDetector(
                                   onTap: (){
@@ -102,23 +102,23 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                   },
                                   child: Container(
                                     width: 0.6.sw,
-                                    height: 50.h,
+                                    height: 50,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: Color(AppColors.buttons),
-                                      borderRadius: BorderRadius.circular(50.r),
+                                      borderRadius: BorderRadius.circular(50),
                                     ),
-                                    padding: EdgeInsets.symmetric(horizontal: 40.w),
+                                    padding: EdgeInsets.symmetric(horizontal: 40),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset("assets/images/svg/apply_filter.svg"),
-                                        SizedBox(width: 15.w,),
+                                        SizedBox(width: 15,),
                                         Text(
                                           AppStrings.saveChanges.tr().toUpperCase(),
                                           style: AppStyles.whiteContent(context).copyWith(
-                                              fontSize: 12.sp,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ],

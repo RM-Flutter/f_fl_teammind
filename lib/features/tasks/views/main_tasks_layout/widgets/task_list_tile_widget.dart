@@ -50,7 +50,7 @@ class TaskListTileWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap ?? (){},
         child: Container(
-          margin: EdgeInsets.only(bottom: AppSizes.s12.h),
+          margin: EdgeInsets.only(bottom: AppSizes.s12),
           decoration: BoxDecoration(
             boxShadow: (complete == "completed" || complete == "closed")
                 ? null : null,
@@ -58,10 +58,10 @@ class TaskListTileWidget extends StatelessWidget {
               color: (complete == "completed" || complete == "closed")
                   ? Color(AppColors.buttons)
                   : Colors.grey.shade300,
-              width: 1.0.r,
+              width: 1.0,
             ),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(AppSizes.s12.r),
+            borderRadius: BorderRadius.circular(AppSizes.s12),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -69,21 +69,21 @@ class TaskListTileWidget extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(
-                    left: LocalizationService.isArabic(context: context) ? 0 : 15.w,
-                    right: LocalizationService.isArabic(context: context) ? 15.w : 0,
-                    top: 20.h,
-                    bottom: 20.h,
+                    left: LocalizationService.isArabic(context: context) ? 0 : 15,
+                    right: LocalizationService.isArabic(context: context) ? 15 : 0,
+                    top: 20,
+                    bottom: 20,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         assetName, 
-                        width: 24.r, 
-                        height: 24.r,
+                        width: 24, 
+                        height: 24,
                         colorFilter: ColorFilter.mode(Color(AppColors.buttons), BlendMode.srcIn),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,10 +93,10 @@ class TaskListTileWidget extends StatelessWidget {
                               title,
                               style: AppStyles.heading(context).copyWith(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 13.sp,
+                                fontSize: 13,
                               ),
                             ),
-                            SizedBox(height: 5.h),
+                            SizedBox(height: 5),
                             Row(
                               children: [
                                 if (createdAt.isNotEmpty)
@@ -106,7 +106,7 @@ class TaskListTileWidget extends StatelessWidget {
                                         .toString(),
                                     style: AppStyles.greyContent(context).copyWith(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 10.sp,
+                                      fontSize: 10,
                                       color: Color(AppColors.grey4F),
                                     ),
                                   ),
@@ -115,7 +115,7 @@ class TaskListTileWidget extends StatelessWidget {
                                     " | ",
                                     style: AppStyles.greyContent(context).copyWith(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 10.sp,
+                                      fontSize: 10,
                                       color: Color(AppColors.grey4F),
                                     ),
                                   ),
@@ -126,7 +126,7 @@ class TaskListTileWidget extends StatelessWidget {
                                         .toString(),
                                     style: AppStyles.greyContent(context).copyWith(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 10.sp,
+                                      fontSize: 10,
                                       color: Color(AppColors.grey4F),
                                     ),
                                   ),
@@ -143,7 +143,7 @@ class TaskListTileWidget extends StatelessWidget {
                                         : " (1 ${AppStrings.days.tr()})",
                                     style: AppStyles.greyContent(context).copyWith(
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 10.sp,
+                                      fontSize: 10,
                                       color: Color(AppColors.grey4F),
                                     ),
                                   ),
@@ -158,29 +158,29 @@ class TaskListTileWidget extends StatelessWidget {
               ),
               if (complete == "completed" || complete == "closed")
                 Container(
-                  width: 45.w,
+                  width: 45,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons),
                     borderRadius: BorderRadius.only(
                       topRight: LocalizationService.isArabic(context: context)
                           ? const Radius.circular(0)
-                          : Radius.circular(AppSizes.s12.r),
+                          : Radius.circular(AppSizes.s12),
                       bottomRight: LocalizationService.isArabic(context: context)
                           ? const Radius.circular(0)
-                          : Radius.circular(AppSizes.s12.r),
+                          : Radius.circular(AppSizes.s12),
                       topLeft: LocalizationService.isArabic(context: context)
-                          ? Radius.circular(AppSizes.s12.r)
+                          ? Radius.circular(AppSizes.s12)
                           : const Radius.circular(0),
                       bottomLeft: LocalizationService.isArabic(context: context)
-                          ? Radius.circular(AppSizes.s12.r)
+                          ? Radius.circular(AppSizes.s12)
                           : const Radius.circular(0),
                     ),
                   ),
                   child: Icon(
                     complete == "closed" ? Icons.close : Icons.check,
                     color: Colors.white,
-                    size: 20.r,
+                    size: 20,
                   ),
                 )
             ],

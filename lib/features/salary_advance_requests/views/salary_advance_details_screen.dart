@@ -62,7 +62,7 @@ class _SalaryAdvanceDetailsScreenState
                           children: [
                             _buildHeroHeader(controller),
                             Padding(
-                              padding: EdgeInsets.all(AppSizes.s16.r),
+                              padding: EdgeInsets.all(AppSizes.s16),
                               child: Column(
                                 children: [
                                   _buildInfoCard(controller),
@@ -70,15 +70,15 @@ class _SalaryAdvanceDetailsScreenState
                                           null &&
                                       controller.requestDetails!.attachments!
                                           .isNotEmpty) ...[
-                                    SizedBox(height: 24.h),
+                                    SizedBox(height: 24),
                                     _buildAttachmentsSection(controller, controller
                                         .requestDetails!.attachments!),
                                   ],
-                                  SizedBox(height: 20.h),
+                                  SizedBox(height: 20),
                                   _buildApprovalsCard(controller),
-                                  SizedBox(height: 30.h),
+                                  SizedBox(height: 30),
                                   _buildActionButtons(controller),
-                                  SizedBox(height: 30.h),
+                                  SizedBox(height: 30),
                                 ],
                               ),
                             ),
@@ -95,7 +95,7 @@ class _SalaryAdvanceDetailsScreenState
     final request = controller.requestDetails!;
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 20.w),
+      padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -106,8 +106,8 @@ class _SalaryAdvanceDetailsScreenState
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30.r),
-          bottomRight: Radius.circular(30.r),
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
         ),
         boxShadow: [
           BoxShadow(
@@ -120,14 +120,14 @@ class _SalaryAdvanceDetailsScreenState
       child: Column(
         children: [
           Icon(Icons.account_balance_wallet_rounded,
-              color: Colors.white.withOpacity(0.8), size: 48.sp),
-          SizedBox(height: 16.h),
+              color: Colors.white.withOpacity(0.8), size: 48),
+          SizedBox(height: 16),
           Text(
             'total_amount'.tr(),
             style: AppStyles.content(context).copyWith(
-                color: Colors.white.withOpacity(0.8), fontSize: 14.sp),
+                color: Colors.white.withOpacity(0.8), fontSize: 14),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -136,19 +136,19 @@ class _SalaryAdvanceDetailsScreenState
                 request.total ?? '0',
                 style: AppStyles.heading(context).copyWith(
                   color: Colors.white,
-                  fontSize: 40.sp,
+                  fontSize: 40,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1,
                 ),
               ),
-              SizedBox(width: 8.w),
+              SizedBox(width: 8),
               Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
+                padding: EdgeInsets.only(bottom: 8),
                 child: Text(
                   'egp'.tr(),
                   style: AppStyles.content(context).copyWith(
                     color: Colors.white.withOpacity(0.9),
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -163,7 +163,7 @@ class _SalaryAdvanceDetailsScreenState
   Widget _buildInfoCard(SalaryAdvanceDetailsController controller) {
     final request = controller.requestDetails!;
     return GlassmorphismCard(
-      padding: EdgeInsets.all(AppSizes.s20.r),
+      padding: EdgeInsets.all(AppSizes.s20),
       backgroundColor: Colors.white,
       opacity: 0.9,
       boxShadow: [
@@ -179,23 +179,23 @@ class _SalaryAdvanceDetailsScreenState
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(8.r),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttonSecondaryColor).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(Icons.info_rounded,
-                    color: Color(AppColors.buttonSecondaryColor), size: 20.sp),
+                    color: Color(AppColors.buttonSecondaryColor), size: 20),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 12),
               Text(
                 'request_info'.tr(),
                 style: AppStyles.heading(context)
-                    .copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 20),
           _buildDetailRow('how_long_to_pay'.tr(),
               '${request.howLongToPay ?? ''} ${'months'.tr()}',
               icon: Icons.calendar_view_month),
@@ -222,7 +222,7 @@ class _SalaryAdvanceDetailsScreenState
   Widget _buildApprovalsCard(SalaryAdvanceDetailsController controller) {
     final request = controller.requestDetails!;
     return GlassmorphismCard(
-      padding: EdgeInsets.all(AppSizes.s20.r),
+      padding: EdgeInsets.all(AppSizes.s20),
       backgroundColor: Colors.white,
       opacity: 0.9,
       boxShadow: [
@@ -238,23 +238,23 @@ class _SalaryAdvanceDetailsScreenState
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(8.r),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Color(AppColors.warningYellow).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(Icons.fact_check_rounded,
                     color: Color(AppColors.warningYellow), size: 20),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 12),
               Text(
                 'approvals'.tr(),
                 style: AppStyles.heading(context)
-                    .copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 24),
           _buildTimelineApprovalRow(
               'employee_approval'.tr(), request.employeeApproved,
               isFirst: true),
@@ -293,26 +293,26 @@ class _SalaryAdvanceDetailsScreenState
                       blurRadius: 8,
                       spreadRadius: 1)
                 ]),
-                child: Icon(iconData, color: iconColor, size: 24.sp),
+                child: Icon(iconData, color: iconColor, size: 24),
               ),
               if (!isLast)
                 Expanded(
                   child: Container(
-                    width: 2.w,
-                    margin: EdgeInsets.symmetric(vertical: 4.h),
+                    width: 2,
+                    margin: EdgeInsets.symmetric(vertical: 4),
                     decoration: BoxDecoration(
                       color:
                           isApproved == true ? iconColor : Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(2.r),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
             ],
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: 16),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 24.h),
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -320,11 +320,11 @@ class _SalaryAdvanceDetailsScreenState
                     label,
                     style: AppStyles.content(context).copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15.sp,
+                      fontSize: 15,
                       color: Color(AppColors.titleTextColor),
                     ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 4),
                   Text(
                     isApproved == true
                         ? 'approved'.tr()
@@ -333,7 +333,7 @@ class _SalaryAdvanceDetailsScreenState
                             : 'pending'.tr()),
                     style: AppStyles.content(context).copyWith(
                       color: Colors.grey.shade500,
-                      fontSize: 13.sp,
+                      fontSize: 13,
                     ),
                   )
                 ],
@@ -347,13 +347,13 @@ class _SalaryAdvanceDetailsScreenState
 
   Widget _buildDetailRow(String label, String value, {IconData? icon}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 18.sp, color: Colors.grey.shade400),
-            SizedBox(width: 8.w),
+            Icon(icon, size: 18, color: Colors.grey.shade400),
+            SizedBox(width: 8),
           ],
           Expanded(
             flex: 2,
@@ -399,7 +399,7 @@ class _SalaryAdvanceDetailsScreenState
                   Color(AppColors.buttonSecondaryColor),
                 ],
               ),
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
                   color: Color(AppColors.buttonColor).withOpacity(0.25),
@@ -413,16 +413,16 @@ class _SalaryAdvanceDetailsScreenState
               label: Text(
                 'edit_request'.tr(),
                 style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: 14.h),
+                padding: EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14.r)),
+                    borderRadius: BorderRadius.circular(14)),
               ),
               onPressed: () async {
                 final updated = await Navigator.of(context).push<bool>(
@@ -448,14 +448,14 @@ class _SalaryAdvanceDetailsScreenState
     // Cancel Button (replacing Delete)
     if (controller.canCancel) {
       if (actionButtons.isNotEmpty) {
-        actionButtons.add(SizedBox(width: 12.w));
+        actionButtons.add(SizedBox(width: 12));
       }
       actionButtons.add(
         Expanded(
           child: Container(
             decoration: BoxDecoration(
               color: Colors.red.shade500,
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
                   color: Colors.red.withOpacity(0.25),
@@ -469,16 +469,16 @@ class _SalaryAdvanceDetailsScreenState
               label: Text(
                 'cancel_request'.tr(),
                 style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: 14.h),
+                padding: EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14.r)),
+                    borderRadius: BorderRadius.circular(14)),
               ),
               onPressed: () async {
                 final confirm = await AlertsService.customConfirm(
@@ -535,7 +535,7 @@ class _SalaryAdvanceDetailsScreenState
                   },
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 10),
               Expanded(
                 child: CustomElevatedButton(
                   title: 'reject'.tr(),
@@ -559,7 +559,7 @@ class _SalaryAdvanceDetailsScreenState
     return Column(
       children: buttons
           .map((btn) =>
-              Padding(padding: EdgeInsets.only(bottom: 10.h), child: btn))
+              Padding(padding: EdgeInsets.only(bottom: 10), child: btn))
           .toList(),
     );
   }
@@ -579,39 +579,39 @@ class _SalaryAdvanceDetailsScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(20.r),
+            padding: EdgeInsets.all(20),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(12.r),
+                  padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10.r),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(Icons.attach_file_rounded,
-                      size: 20.r, color: Color(AppColors.buttons)),
+                      size: 20, color: Color(AppColors.buttons)),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'attachments'.tr(),
                     style: AppStyles.heading(context)
-                        .copyWith(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: GridView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 12.w,
-                // runSpacing: 12.h,
+                crossAxisSpacing: 12,
+                // runSpacing: 12,
                 childAspectRatio: 1.1,
               ),
               itemCount: attachments.length,
@@ -628,7 +628,9 @@ class _SalaryAdvanceDetailsScreenState
                 final status = controller.requestDetails?.status?.toLowerCase();
                 final isPending = status != 'approved' && status != 'cancelled' && status != 'canceled';
                 final isHr = controller.userSettings?.isHr == true;
-                final showDeleteIcon = isPending && isHr;
+                final isOwner = controller.userSettings?.empId.toString() ==
+                    controller.requestDetails?.employeeId?.toString();
+                final showDeleteIcon = isPending && isHr && !isOwner;
 
                 Widget cardChild;
 
@@ -669,22 +671,22 @@ class _SalaryAdvanceDetailsScreenState
                                         children: [
                                           Icon(Icons.broken_image_rounded,
                                               color: Colors.white54,
-                                              size: 64.r),
-                                          SizedBox(height: 16.h),
+                                              size: 64),
+                                          SizedBox(height: 16),
                                           Text("Failed to load image",
                                               style: TextStyle(
                                                   color: Colors.white54,
-                                                  fontSize: 14.sp)),
+                                                  fontSize: 14)),
                                         ],
                                       ),
                                     ),
                                   ),
                                   Positioned(
-                                    top: 16.h,
-                                    right: 16.w,
+                                    top: 16,
+                                    right: 16,
                                     child: IconButton(
                                       icon: Container(
-                                        padding: EdgeInsets.all(8.r),
+                                        padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: Colors.white.withOpacity(0.1),
                                           shape: BoxShape.circle,
@@ -706,7 +708,7 @@ class _SalaryAdvanceDetailsScreenState
                       tag: 'image_${attachment.id}',
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.r),
+                          borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.black.withOpacity(0.05),
@@ -715,7 +717,7 @@ class _SalaryAdvanceDetailsScreenState
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16.r),
+                          borderRadius: BorderRadius.circular(16),
                           child: CachedNetworkImage(
                             imageUrl: imageUrl,
                             fit: BoxFit.cover,
@@ -731,11 +733,11 @@ class _SalaryAdvanceDetailsScreenState
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.broken_image_rounded,
-                                      color: Colors.grey.shade400, size: 32.r),
-                                  SizedBox(height: 4.h),
+                                      color: Colors.grey.shade400, size: 32),
+                                  SizedBox(height: 4),
                                   Text("Error",
                                       style: TextStyle(
-                                          fontSize: 10.sp,
+                                          fontSize: 10,
                                           color: Colors.grey.shade500)),
                                 ],
                               ),
@@ -749,7 +751,7 @@ class _SalaryAdvanceDetailsScreenState
                   cardChild = Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF9FAFB),
-                      borderRadius: BorderRadius.circular(16.r),
+                      borderRadius: BorderRadius.circular(16),
                       border:
                           Border.all(color: Colors.grey.shade200, width: 1.5),
                     ),
@@ -757,17 +759,17 @@ class _SalaryAdvanceDetailsScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(12.r),
+                          padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttons).withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(Icons.insert_drive_file_rounded,
-                              size: 28.r, color: Color(AppColors.buttons)),
+                              size: 28, color: Color(AppColors.buttons)),
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 8),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          padding: EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                               attachment.fileName ??
                                   attachment.fileType ??
@@ -775,7 +777,7 @@ class _SalaryAdvanceDetailsScreenState
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xFF4B5563))),
                         ),
@@ -789,8 +791,8 @@ class _SalaryAdvanceDetailsScreenState
                     children: [
                       Positioned.fill(child: cardChild),
                       Positioned(
-                        top: 6.r,
-                        right: 6.r,
+                        top: 6,
+                        right: 6,
                         child: GestureDetector(
                           onTap: () async {
                             final confirm = await AlertsService.customConfirm(
@@ -808,7 +810,7 @@ class _SalaryAdvanceDetailsScreenState
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.all(4.r),
+                            padding: EdgeInsets.all(4),
                             decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,

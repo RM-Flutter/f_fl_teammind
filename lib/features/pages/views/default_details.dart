@@ -31,31 +31,31 @@ class DefaultDetails extends StatelessWidget {
               child: Container(
                   width: 1.sw,
                   height: 1.sh,
-                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s15.w),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s15),
                   child: (value.getOneBlogModel != null)? SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           color: Colors.transparent,
-                          height: 90.h,
+                          height: 90,
                           width: double.infinity,
                           alignment: Alignment.bottomCenter,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.arrow_back, color: const Color(0xff224982), size: 24.r,),
+                                icon: Icon(Icons.arrow_back, color: const Color(0xff224982), size: 24,),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                               ),
                               Text(
                                 type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : type.toString().tr().toUpperCase(),
-                                style: AppStyles.heading(context).copyWith(color: const Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16.sp),
+                                style: AppStyles.heading(context).copyWith(color: const Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               IconButton(
-                                  icon: Icon(Icons.arrow_back, color: Colors.transparent, size: 24.r,),
+                                  icon: Icon(Icons.arrow_back, color: Colors.transparent, size: 24,),
                                   onPressed: (){}
                               ),
                             ],
@@ -63,7 +63,7 @@ class DefaultDetails extends StatelessWidget {
                         ),
                         gapH16,
                         if(value.getOneBlogModel!.item!.mainThumbnail != null && value.getOneBlogModel!.item!.mainThumbnail!.isNotEmpty ) ClipRRect(
-                          borderRadius: BorderRadius.circular(25.r),
+                          borderRadius: BorderRadius.circular(25),
                           child: CachedNetworkImage(
                             width: 1.sw,
                             height: 0.225.sh,
@@ -73,7 +73,7 @@ class DefaultDetails extends StatelessWidget {
                             const ShimmerAnimatedLoading(),
                             errorWidget: (context, url, error) => Icon(
                               Icons.image_not_supported_outlined,
-                              size: AppSizes.s32.r,
+                              size: AppSizes.s32,
                               color: Colors.white,
                             ),
                           ),
@@ -84,23 +84,23 @@ class DefaultDetails extends StatelessWidget {
                             Text(
                               (value.getOneBlogModel!.item!.createdAt != null )?value.getOneBlogModel!.item!.createdAt! : "",
                               style: AppStyles.c1Content(context).copyWith(
-                                  fontSize: AppSizes.s10.sp,
+                                  fontSize: AppSizes.s10,
                                   fontWeight: FontWeight.w400,
                               ),
                             ),
-                            SizedBox(width: 20.w,),
+                            SizedBox(width: 20,),
 
                                 if(value.getOneBlogModel!.item!.category!.title
                                 != null) Row(
                               children: [
                                 Icon(Icons.category, color: Colors.black,
-                                  size: 16.r,),
-                                SizedBox(width: 5.w,),
+                                  size: 16,),
+                                SizedBox(width: 5,),
                                 Text(
                                   value.getOneBlogModel!.item!.category!.title!
                                       .toUpperCase(),
                                   style: AppStyles.c1Content(context).copyWith(
-                                    fontSize: AppSizes.s10.sp,
+                                    fontSize: AppSizes.s10,
                                     fontWeight: FontWeight.w400,
                                   ),
                                   maxLines: 1,
@@ -114,7 +114,7 @@ class DefaultDetails extends StatelessWidget {
                         Text(
                           value.getOneBlogModel!.item!.title ?? "",
                           style: AppStyles.heading(context).copyWith(
-                              fontSize: AppSizes.s16.sp,
+                              fontSize: AppSizes.s16,
                               fontWeight: FontWeight.bold,
                               color: Color(AppColors.c1)),
                         ),
@@ -131,36 +131,36 @@ class DefaultDetails extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 90.h,
+                          height: 90,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 16),
                         Container(
                           width: double.infinity,
                           height: 0.225.sh,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 24),
                         Container(
-                          height: 12.h,
-                          width: 150.w,
+                          height: 12,
+                          width: 150,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 14.h),
+                        SizedBox(height: 14),
                         Container(
-                          height: 16.h,
+                          height: 16,
                           width: double.infinity,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 14.h),
+                        SizedBox(height: 14),
                         Container(
-                          height: 12.h,
+                          height: 12,
                           width: double.infinity,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 12),
                         Container(
-                          height: 12.h,
+                          height: 12,
                           width: double.infinity,
                           color: Colors.grey,
                         ),

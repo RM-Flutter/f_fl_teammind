@@ -21,7 +21,7 @@ class AssetsSectionWidget extends StatelessWidget {
         children: [
           gapH4,
           Text(AppStrings.assets.tr().toUpperCase(),
-          style: AppStyles.subtitleContent(context).copyWith(fontSize: 13.sp, fontWeight: FontWeight.w700),
+          style: AppStyles.subtitleContent(context).copyWith(fontSize: 13, fontWeight: FontWeight.w700),
           ),
           gapH12,
           ListView.separated(
@@ -36,12 +36,12 @@ class AssetsSectionWidget extends StatelessWidget {
                 totalPoints: null,
                 isViewArrow: false,
                 title: "${employee!.assets![index].assets}",
-                icon: Icon(Icons.check_circle_outline, color: Colors.black, size: 20.sp,),
+                icon: Icon(Icons.check_circle_outline, color: Colors.black, size: 20,),
               ),
-              separatorBuilder: (context, index) => SizedBox(height: 15.h,),
+              separatorBuilder: (context, index) => SizedBox(height: 15,),
               itemCount: employee!.assets!.length),
-          SizedBox(height: 20.h,),
-          Text(AppStrings.customData.tr().toUpperCase(), style: AppStyles.subtitleContent(context).copyWith(fontSize: 13.sp, fontWeight: FontWeight.w700),),
+          SizedBox(height: 20,),
+          Text(AppStrings.customData.tr().toUpperCase(), style: AppStyles.subtitleContent(context).copyWith(fontSize: 13, fontWeight: FontWeight.w700),),
           gapH12,
           ListView.separated(
               reverse: false,
@@ -49,24 +49,24 @@ class AssetsSectionWidget extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) => Container(
-                margin: EdgeInsets.only(bottom:AppSizes.s12.h),
+                margin: EdgeInsets.only(bottom:AppSizes.s12),
                 padding: EdgeInsets.symmetric(
-                    vertical: AppSizes.s12.h, horizontal: AppSizes.s10.w),
+                    vertical: AppSizes.s12, horizontal: AppSizes.s10),
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(AppSizes.s8.r),
+                    borderRadius: BorderRadius.circular(AppSizes.s8),
                     border: Border.all(color: Colors.grey.withOpacity(0.1))),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                  Icon(Icons.check_circle_outline, color: Colors.black, size: 20.sp,),
-                    SizedBox(width: 4.w),
+                  Icon(Icons.check_circle_outline, color: Colors.black, size: 20,),
+                    SizedBox(width: 4),
                     SizedBox(
                         width: MediaQuery.sizeOf(context).width * 0.75,
-                        child: Text("${employee!.empCustomData![index].item}",style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp))),
+                        child: Text("${employee!.empCustomData![index].item}",style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14))),
                   ],
                 ),
               ),
-              separatorBuilder: (context, index) => SizedBox(height: 15.h,),
+              separatorBuilder: (context, index) => SizedBox(height: 15,),
               itemCount: employee!.empCustomData!.length)
         ],
       ),

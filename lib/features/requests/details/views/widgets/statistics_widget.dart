@@ -29,7 +29,7 @@ class StatisticsModal extends StatelessWidget {
             type: type,
             employeeId: employeeId,
           ),
-          SizedBox(height: 14.h),
+          SizedBox(height: 14),
           ...requests!
               .map(
                 (req) => RequestCard(
@@ -68,13 +68,13 @@ class StatisticsBalanceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double pVocations = paddingBetweenVocations ?? 12.w;
-    final double sPadding = sectionPadding ?? 32.w;
+    final double pVocations = paddingBetweenVocations ?? 12;
+    final double sPadding = sectionPadding ?? 32;
 
     return vacationBalance == null || vacationBalance?.isEmpty == true
         ? const SizedBox.shrink()
         : Padding(
-      padding: EdgeInsets.only(bottom: 32.h),
+      padding: EdgeInsets.only(bottom: 32),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

@@ -49,19 +49,19 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                 child: Center(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100.w : double.infinity,
+                      maxWidth: kIsWeb ? 1100 : double.infinity,
                     ),
                     child: PayrollDetailsBodyWidget(payroll: widget.payroll),
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 20),
               Padding(
-                padding: EdgeInsets.only(bottom: 20.h),
+                padding: EdgeInsets.only(bottom: 20),
                 child: Center(
                   child: CustomElevatedButton(
                     backgroundColor: Color(AppColors.secondaryButton),
-                    titleSize: AppSizes.s12.sp,
+                    titleSize: AppSizes.s12,
                     title: AppStrings.downloadFile.tr().toUpperCase(),
                     onPressed: () async {
                       await viewModel.downloadPdf(

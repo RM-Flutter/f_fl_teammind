@@ -32,7 +32,7 @@ class ContactsSectionWidget extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         horizontal: 0,
-        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32.h : 12.h,
+        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 12,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -86,7 +86,7 @@ class ContactsSectionWidget extends StatelessWidget {
           ),
         if (employee?.social != null)
           EmployeeSocialContacts(socialData: employee?.social),
-        SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s24.h : 0),
+        SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s24 : 0),
       ],
       ),
     );

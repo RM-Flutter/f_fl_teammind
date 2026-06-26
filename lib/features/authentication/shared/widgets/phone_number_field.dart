@@ -148,9 +148,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         disableAutoFillHints: false,
         disableLengthCheck: false,
         keyboardType: TextInputType.phone,
-        flagsButtonMargin: EdgeInsets.symmetric(
-          horizontal: AppSizes.s12.w,
-          vertical: AppSizes.s8.h,
+        flagsButtonMargin: const EdgeInsets.symmetric(
+          horizontal: AppSizes.s12,
+          vertical: AppSizes.s8,
         ),
         dropdownIcon: const Icon(
           Icons.arrow_drop_down,
@@ -169,8 +169,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         ),
         pickerDialogStyle: PickerDialogStyle(
           backgroundColor: Color(AppColors.background),
-          padding: EdgeInsets.symmetric(
-              vertical: AppSizes.s16.h, horizontal: AppSizes.s6.w,),
+          padding: const EdgeInsets.symmetric(
+              vertical: AppSizes.s16, horizontal: AppSizes.s6,),
         ),
         textAlign: TextAlign.start,
       ),

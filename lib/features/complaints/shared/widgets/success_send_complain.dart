@@ -24,7 +24,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
      SizedBox(height: 30),
      SvgPicture.asset("assets/images/svg/success_meeting.svg"),
      SizedBox(height: 15,),
-     Text(AppStrings.successful.tr().toUpperCase(), style: AppStyles.primaryContent(context).copyWith(fontSize: 24.sp,
+     Text(AppStrings.successful.tr().toUpperCase(), style: AppStyles.primaryContent(context).copyWith(fontSize: 24,
        fontWeight: FontWeight.w700)),
      Padding(
       padding: EdgeInsets.all(15.0),
@@ -33,7 +33,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
        textAlign: TextAlign.center,
        style: AppStyles.almostBlack1BContent(context).copyWith(
          fontWeight: FontWeight.w500,
-         fontSize: 14.sp)),
+         fontSize: 14)),
      ),
      Spacer(),
      CustomElevatedButton(

@@ -57,7 +57,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
           floatingActionButton: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal:
-                    LocalizationService.isArabic(context: context) ? 35.w : 0),
+                    LocalizationService.isArabic(context: context) ? 35 : 0),
             child: MainAppFabWidget(
               requests: false,
               viewRequest: false,
@@ -68,7 +68,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
           onRefresh: () async => await viewModel.initializeFingerprintScreen(
               context: context, empId: widget.empId),
           body: Padding(
-            padding: EdgeInsets.all(AppSizes.s12.r),
+            padding: EdgeInsets.all(AppSizes.s12),
             child: SingleChildScrollView(
               child: Consumer<FingerprintViewModel>(
                   builder: (context, viewModel, child) => viewModel.isLoading
@@ -92,7 +92,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                                           widget.empName!,
                                           style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w400,
-                                              fontSize: 22.sp),
+                                              fontSize: 22),
                                         ),
                                       ),
                                     ),
@@ -100,7 +100,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                                       widget.empName!.isNotEmpty &&
                                       widget.empName != "noName")
                                     SizedBox(
-                                      height: 20.h,
+                                      height: 20,
                                     ),
 
                                   /// general screen message widget for other requests types

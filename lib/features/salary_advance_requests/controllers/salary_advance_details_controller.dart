@@ -66,7 +66,7 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     final isOwner = userSettings!.empId.toString() ==
         requestDetails!.employeeId?.toString();
     
-    return isOwner || isManagerOrHr;
+    return isOwner;
   }
 
   void _loadUserSettings() {

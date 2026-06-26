@@ -16,16 +16,16 @@ class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                  vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
+                  vertical: AppSizes.s14, horizontal: AppSizes.s16),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.s10.r),
+                borderRadius: BorderRadius.circular(AppSizes.s10),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color:
                         Color(AppColors.buttons).withOpacity(0.2),
                     offset: const Offset(0, 0),
-                    blurRadius: 2.5.r,
+                    blurRadius: 2.5,
                   ),
                 ],
               ),
@@ -34,25 +34,25 @@ class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ShimmerAnimatedLoading(
-                    width: AppSizes.s24.w,
-                    height: AppSizes.s24.h,
+                    width: AppSizes.s24,
+                    height: AppSizes.s24,
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: 8),
                   Expanded(
                     child: ShimmerAnimatedLoading(
-                      height: AppSizes.s24.h,
+                      height: AppSizes.s24,
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: 12),
                   ShimmerAnimatedLoading(
-                    width: AppSizes.s28.w,
-                    height: AppSizes.s28.h,
+                    width: AppSizes.s28,
+                    height: AppSizes.s28,
                     circularRaduis: AppSizes.s50,
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20.h)
+            SizedBox(height: 20)
           ],
         ),
       ),

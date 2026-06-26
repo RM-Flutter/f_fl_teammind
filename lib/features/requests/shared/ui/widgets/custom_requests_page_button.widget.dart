@@ -24,12 +24,12 @@ class CustomRequestsPageButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(
-            vertical: 14.h,
-            horizontal: 12.w,
+            vertical: 14,
+            horizontal: 12,
           ),
           backgroundColor: Color(AppColors.buttons),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
         child: Row(
@@ -38,14 +38,14 @@ class CustomRequestsPageButton extends StatelessWidget {
             Icon(
               icon,
               color: Colors.white,
-              size: 22.r,
+              size: 22,
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: 12),
             Text(
               title,
               style: AppStyles.whiteContent(context).copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: 14.sp,
+                fontSize: 14,
               ),
             ),
           ],

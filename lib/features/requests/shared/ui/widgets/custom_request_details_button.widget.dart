@@ -21,7 +21,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: CustomElevatedButton(
-        titleSize: 10.sp,
+        titleSize: 10,
         width: width,
         buttonStyle: ElevatedButton.styleFrom(
           fixedSize: const Size(double.infinity, double.infinity),alignment: Alignment.center,
@@ -31,7 +31,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
           disabledForegroundColor: Colors.transparent,
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28.r),
+            borderRadius: BorderRadius.circular(28),
           ),
         ),
         onPressed: onPressed,
@@ -39,7 +39,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
         titleWidget: Text(
           title.toUpperCase(),
           style: AppStyles.whiteContent(context).copyWith(
-            fontSize: 11.sp,
+            fontSize: 11,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,

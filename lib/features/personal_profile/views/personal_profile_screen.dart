@@ -69,7 +69,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
     final textStyle = AppStyles.heading(context).copyWith(
       fontWeight: FontWeight.w600,
       color: Color(AppColors.secondaryButton),
-      fontSize: AppSizes.s14.sp,
+      fontSize: AppSizes.s14,
     );
     return ChangeNotifierProvider<PersonalProfileController>(
       create: (_) => viewModel,
@@ -80,8 +80,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
             CoreHeader.transform(
               pinned: true,
               color: Colors.white,
-              shrinkHeight: AppSizes.s140.h,
-              expandedHeight: AppSizes.s340.h,
+              shrinkHeight: AppSizes.s140,
+              expandedHeight: AppSizes.s340,
               shrinkChild: const PersonalProfileShrinkedHeaderWidget(),
               child: SingleChildScrollView(
                   controller: viewModel.scrollController,
@@ -89,7 +89,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                     builder: (context, viewModel, child) =>
                         PersonalProfileHeaderWidget(
                             viewModel: viewModel,
-                            circleBorderWidth: AppSizes.s12.r,
+                            circleBorderWidth: AppSizes.s12,
                             key: UniqueKey(),
                             headerImage: AppImages.companyInfoBackground,
                             backgroundHeight: viewModel.backgroundHeight.h,
@@ -134,9 +134,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                       return Stack(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: AppSizes.s12.h),
+                            padding: EdgeInsets.only(top: AppSizes.s12),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
+                              padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
                               child: !kIsWeb?Column(
                                 children: [
                                   // CHANGE PHONE NUMBER
@@ -181,8 +181,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                           gapH18,
                                           Center(
                                             child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.buttons),
-                                                radius: AppSizes.s10.r,
-                                                titleSize: AppSizes.s14.sp,
+                                                radius: AppSizes.s10,
+                                                titleSize: AppSizes.s14,
                                                 title: AppStrings.updateProfile.tr(),
                                                 onPressed: () async =>
                                                     viewModel.updateProfileMainInfo(
@@ -215,8 +215,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     gapH18,
                                     Center(
                                       child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.buttons),
-                                          radius: AppSizes.s10.r,
-                                          titleSize: AppSizes.s14.sp,
+                                          radius: AppSizes.s10,
+                                          titleSize: AppSizes.s14,
                                           backgroundColor: UserSettingConst.userSettings
                                               ?.emailVerifiedAt ==
                                               null &&
@@ -270,8 +270,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     gapH18,
                                     Center(
                                       child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.buttons),
-                                          titleSize: AppSizes.s14.sp,
-                                          radius: AppSizes.s10.r,
+                                          titleSize: AppSizes.s14,
+                                          radius: AppSizes.s10,
                                           backgroundColor: UserSettingConst.userSettings
                                               ?.phoneVerifiedAt ==
                                               null &&
@@ -318,7 +318,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     children: [
                                       Text(
                                         AppStrings.enableAndDisable2fa.tr(),
-                                        style: textStyle.copyWith(fontSize: 18.sp),
+                                        style: textStyle.copyWith(fontSize: 18),
                                       ),
                                       const Spacer(),
                                       if(us1Cache != null) Switch(
@@ -340,9 +340,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   ),
                                   if(us1Cache['tfa'] == true)Center(
                                     child: CustomElevatedButton(
-                                      titleSize: AppSizes.s14.sp,
+                                      titleSize: AppSizes.s14,
                                       width: 1.sw,
-                                      radius: AppSizes.s10.r,
+                                      radius: AppSizes.s10,
                                       backgroundColor:
                                       Color(AppColors.buttons),
                                       title: AppStrings.enable2fa.tr(),
@@ -357,21 +357,21 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   // Enable 2FA
                                   Center(
                                     child: CustomElevatedButton(
-                                      titleSize: AppSizes.s14.sp,
+                                      titleSize: AppSizes.s14,
                                       width: 1.sw,
-                                      radius: AppSizes.s10.r,
+                                      radius: AppSizes.s10,
                                       backgroundColor: const Color(AppColors.pureRed),
                                       title: AppStrings.deleteYourAccount.tr(),
                                       onPressed: () async => await viewModel
                                           .removeAccount(context: context),
                                     ),
                                   ),
-                                  SizedBox(height: 25.h,)
+                                  SizedBox(height: 25,)
                                 ],
                               ):
                               Center(
                                 child: ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: 1100.w),
+                                  constraints: BoxConstraints(maxWidth: 1100),
                                   child: Column(
                                     children: [
                                       // CHANGE PHONE NUMBER
@@ -384,7 +384,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                               AppStrings.updateMainData.tr(),
                                               style: textStyle,
                                             ),
-                                            SizedBox(width: 20.w,),
+                                            SizedBox(width: 20,),
                                             Expanded(
                                               flex: 5,
                                               child: Form(
@@ -427,8 +427,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                         Center(
                                           child: CustomElevatedButton( isOutlined: true,
                                               titleColor: Color(AppColors.buttons),
-                                              radius: AppSizes.s10.r,
-                                              titleSize: AppSizes.s14.sp,
+                                              radius: AppSizes.s10,
+                                              titleSize: AppSizes.s14,
                                               title: AppStrings.updateProfile.tr(),
                                               onPressed: () async =>
                                                   viewModel.updateProfileMainInfo(
@@ -472,8 +472,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                   ? Colors.yellow
                                                   : Color(AppColors.buttons),
                                               isOutlined: true,
-                                              radius: AppSizes.s10.r,
-                                              titleSize: AppSizes.s14.sp,
+                                              radius: AppSizes.s10,
+                                              titleSize: AppSizes.s14,
                                               backgroundColor: UserSettingConst.userSettings?.emailVerifiedAt == null && UserSettingConst.userSettings?.email != null
                                                   ? Colors.yellow
                                                   : Color(AppColors.buttons),
@@ -531,8 +531,8 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                                   ? Colors.yellow
                                                   : Color(AppColors.buttons),
                                               isOutlined: true,
-                                              titleSize: AppSizes.s14.sp,
-                                              radius: AppSizes.s10.r,
+                                              titleSize: AppSizes.s14,
+                                              radius: AppSizes.s10,
                                               backgroundColor: UserSettingConst.userSettings
                                                   ?.phoneVerifiedAt ==
                                                   null &&
@@ -579,7 +579,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                         children: [
                                           Text(
                                             AppStrings.enableAndDisable2fa.tr(),
-                                            style: textStyle.copyWith(fontSize: 18.sp),
+                                            style: textStyle.copyWith(fontSize: 18),
                                           ),
                                           const Spacer(),
                                           if(us1Cache != null) Switch(
@@ -602,9 +602,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
 
                                       if( us1Cache!= null && us1Cache['tfa'] == true) Center(
                                         child: CustomElevatedButton( isOutlined: true,titleColor: Color(AppColors.buttons),
-                                          titleSize: AppSizes.s14.sp,
+                                          titleSize: AppSizes.s14,
                                           width: 1.sw,
-                                          radius: AppSizes.s10.r,
+                                          radius: AppSizes.s10,
                                           backgroundColor:
                                           Color(AppColors.buttons),
                                           title: AppStrings.enable2fa.tr(),
@@ -620,16 +620,16 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                       // Enable 2FA
                                       Center(
                                         child: CustomElevatedButton(
-                                          titleSize: AppSizes.s14.sp,
+                                          titleSize: AppSizes.s14,
                                           width: 1.sw,
-                                          radius: AppSizes.s10.r,
+                                          radius: AppSizes.s10,
                                           backgroundColor: const Color(AppColors.pureRed),
                                           title: AppStrings.deleteYourAccount.tr(),
                                           onPressed: () async => await viewModel
                                               .removeAccount(context: context),
                                         ),
                                       ),
-                                      SizedBox(height: 25.h,)
+                                      SizedBox(height: 25,)
                                     ],
                                   ),
                                 ),

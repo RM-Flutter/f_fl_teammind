@@ -20,25 +20,25 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 300.h,
+      height: 300,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32.r),
-            bottomRight: Radius.circular(AppSizes.s32.r)),
+            bottomLeft: Radius.circular(AppSizes.s32),
+            bottomRight: Radius.circular(AppSizes.s32)),
       ),
       child: Stack(
         children: [
           // Background image using the Home screen asset
           ClipRRect(
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32.r),
-                bottomRight: Radius.circular(AppSizes.s32.r)),
+                bottomLeft: Radius.circular(AppSizes.s32),
+                bottomRight: Radius.circular(AppSizes.s32)),
             child: Image.asset(
               "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
               width: double.infinity,
-              height: 300.h,
+              height: 300,
             ),
           ),
           Positioned.fill(
@@ -46,8 +46,8 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton).withValues(alpha: 0.9),
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppSizes.s32.r),
-                    bottomRight: Radius.circular(AppSizes.s32.r)),
+                    bottomLeft: Radius.circular(AppSizes.s32),
+                    bottomRight: Radius.circular(AppSizes.s32)),
               ),
             ),
           ),
@@ -55,7 +55,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
           Positioned.fill(
             child: SafeArea(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -70,7 +70,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               child: Container(
-                                padding: EdgeInsets.all(8.r),
+                                padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.15),
                                   shape: BoxShape.circle,
@@ -78,7 +78,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                 child: Icon(
                                   Icons.arrow_back,
                                   color: Colors.white,
-                                  size: 20.r,
+                                  size: 20,
                                 ),
                               ),
                             ),
@@ -92,7 +92,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                         Text(
                           AppStrings.notificationInfo.tr(),
                           style: AppStyles.whiteHeading(context).copyWith(
-                            fontSize: 18.sp,
+                            fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -100,18 +100,18 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                     ),
                     const Spacer(),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         (notificationSingleModel?.title?.toString() ?? "").toUpperCase(),
                         style: AppStyles.whiteHeading(context).copyWith(
-                          fontSize: 26.sp,
+                          fontSize: 26,
                           fontWeight: FontWeight.w800,
                           height: 1.1,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(height: 25.h),
+                    SizedBox(height: 25),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -123,13 +123,13 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                   .format(DateTime.parse(notificationSingleModel!.createdAt.toString()))
                               : "",
                         ),
-                        SizedBox(width: 15.w),
+                        SizedBox(width: 15),
                         _buildMetadataItem(
                           context,
                           icon: Icons.folder_open_outlined,
                           text: (notificationSingleModel?.ptype?.key ?? "").toUpperCase(),
                         ),
-                        SizedBox(width: 15.w),
+                        SizedBox(width: 15),
                         GestureDetector(
                           onTap: () {
                              if (notificationSingleModel != null) {
@@ -162,12 +162,12 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: (Color(AppColors.buttons)), size: 16.r),
-        SizedBox(width: 6.w),
+        Icon(icon, color: (Color(AppColors.buttons)), size: 16),
+        SizedBox(width: 6),
         Text(
           text,
           style: AppStyles.whiteContent(context).copyWith(
-            fontSize: 11.sp,
+            fontSize: 11,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.2,
           ),

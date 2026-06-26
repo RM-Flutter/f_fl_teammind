@@ -59,16 +59,16 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : double.infinity
+                  maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12.w),
+                padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       if(viewModel.evaluations.isEmpty == true)    CustomElevatedButton(
                           backgroundColor: Color(AppColors.buttons),
-                          titleSize: AppSizes.s12.sp,
+                          titleSize: AppSizes.s12,
                           title: AppStrings.myEvaluations.tr().toUpperCase(),
                           onPressed: () async => await context.pushNamed(
                               AppRoutes.evaluationScreen.name,
@@ -80,7 +80,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                                 'lang': context.locale.languageCode,
                                 // "empName" : "unKnown"
                               })),
-                      if(viewModel.evaluations.isEmpty == true)   SizedBox(height: 20.h),
+                      if(viewModel.evaluations.isEmpty == true)   SizedBox(height: 20),
                       Consumer<EvaluationController>(
                           builder: (context, viewModel, child) => viewModel.isLoading
                               ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
@@ -91,7 +91,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                               : Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 20.h),
+                                SizedBox(height: 20),
                                 /// general screen message widget for other requests types
                                 // GeneralScreenMessageWidget(
                                 //     screenId: '/payrolls'),
@@ -106,14 +106,14 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                                         empName: viewModel.evaluations[index]['employee_name'],
                                         name: gCache['name'],
                                         icon : viewModel.evaluations[index]['done']  == true? Icon(Icons.check_circle_outline_rounded,
-                                            color: Colors.green, size: AppSizes.s24.sp) : Icon(Icons.access_time,
-                                            color:  const Color(0xff606060), size: AppSizes.s24.sp),
+                                            color: Colors.green, size: AppSizes.s24) : Icon(Icons.access_time,
+                                            color:  const Color(0xff606060), size: AppSizes.s24),
                                         department: viewModel.evaluations[index]['department_name'],
                                         title: "${viewModel.evaluations[index]['title']}",
                                         url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
                                       );
                                     },
-                                    separatorBuilder: (context, index) => SizedBox(height: 15.h),
+                                    separatorBuilder: (context, index) => SizedBox(height: 15),
                                     itemCount: viewModel.evaluations.length),
 
                               ])),

@@ -82,13 +82,13 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           NotificationDetailsAppbarWidget(notificationSingleModel: value.notificationModel,),
-                          SizedBox(height: 20.h),
+                          SizedBox(height: 20),
                           Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
-                                  maxWidth: kIsWeb ? 800.w : double.infinity
+                                  maxWidth: kIsWeb ? 800 : double.infinity
                               ),
-                              child: Padding(padding: EdgeInsets.symmetric(horizontal: 15.w),
+                              child: Padding(padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -104,7 +104,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                           "p": Style(
                                             color: const Color(0xFF666666),
                                             lineHeight: const LineHeight(1.6),
-                                            fontSize: FontSize(14.sp),
+                                            fontSize: FontSize(14),
                                             fontWeight: FontWeight.w400,
                                             textAlign: TextAlign.center,
                                           ),
@@ -113,7 +113,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                             textAlign: TextAlign.center,
                                           ),
                                         }),
-                                    SizedBox(height: 10.h),
+                                    SizedBox(height: 10),
                                     if(value.notificationModel!.mainThumbnail != null &&value.notificationModel!.mainThumbnail!.isNotEmpty)Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
@@ -121,7 +121,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                           alignment: Alignment.bottomCenter,
                                           children: [
                                             SizedBox(
-                                              height: 300.h,
+                                              height: 300,
                                               child: PageView.builder(
                                                 controller: _controller,
                                                 itemCount: value.notificationModel!.mainThumbnail!.length,
@@ -149,7 +149,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                       const ShimmerAnimatedLoading(),
                                                       errorWidget: (context, url, error) => Icon(
                                                         Icons.image_not_supported_outlined,
-                                                        size: AppSizes.s32.r,
+                                                        size: AppSizes.s32,
                                                         color: Colors.white,
                                                       ),
                                                     ),
@@ -158,9 +158,9 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                               ),
                                             ),
                                             Padding(
-                                                padding: EdgeInsets.only(bottom: 25.h, right: 40.w, left: 40.w),
+                                                padding: EdgeInsets.only(bottom: 25, right: 40, left: 40),
                                                 child: SizedBox(
-                                                  height: 20.h,
+                                                  height: 20,
                                                   child: ListView.separated(
                                                       shrinkWrap: true,
                                                       reverse: false,
@@ -169,14 +169,14 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                       padding: EdgeInsets.zero,
                                                       itemBuilder: (context, index) => AnimatedContainer(
                                                         duration: const Duration(milliseconds: 300),
-                                                        margin: EdgeInsets.symmetric(horizontal: 4.w),
-                                                        width: _currentIndex == index ? 12.r : 8.r,
-                                                        height: _currentIndex == index ? 12.r : 8.r,
+                                                        margin: EdgeInsets.symmetric(horizontal: 4),
+                                                        width: _currentIndex == index ? 12 : 8,
+                                                        height: _currentIndex == index ? 12 : 8,
                                                         decoration: BoxDecoration(
                                                           shape: BoxShape.circle,
                                                           color: _currentIndex == index ? Color(AppColors.background) : Colors.grey,
                                                         ),
-                                                      ), separatorBuilder: (context, index) => SizedBox(width: 5.w),
+                                                      ), separatorBuilder: (context, index) => SizedBox(width: 5),
                                                       itemCount: value.notificationModel!.mainThumbnail!.length),
                                                 )
                                             )
@@ -203,7 +203,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                             const ShimmerAnimatedLoading(),
                                             errorWidget: (context, url, error) => Icon(
                                               Icons.image_not_supported_outlined,
-                                              size: AppSizes.s32.r,
+                                              size: AppSizes.s32,
                                               color: Colors.white,
                                             ),
                                           ),

@@ -74,7 +74,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
             body: Column(
               children: [
                 if (controller.isManagerOrHr) ...[
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 10),
                   SwitchRowNotification(
                     value: controller.isIncomingView,
                     leftText: 'my_requests'.tr(),
@@ -83,7 +83,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                       controller.toggleIncomingView(val);
                     },
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 10),
                 ],
                 Expanded(
                   child: controller.isIncomingView 
@@ -136,10 +136,10 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: kIsWeb ? 1100.w : double.infinity,
+          maxWidth: kIsWeb ? 1100 : double.infinity,
         ),
         child: Padding(
-          padding: EdgeInsets.all(AppSizes.s12.r),
+          padding: EdgeInsets.all(AppSizes.s12),
           child: RefreshIndicator.adaptive(
             onRefresh: () => controller.initializeScreen(context),
             child: ListView.builder(

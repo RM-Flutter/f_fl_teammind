@@ -94,7 +94,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
           pageContext: context,
           routeName: AppRoutes.requests.name,
           floatingActionButton: Container(
-            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35.w : 0),
+            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
             width: double.infinity,
             alignment: Alignment.bottomRight,
             child: Column(
@@ -115,12 +115,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     child: Image.asset(
                       AppImages.addFloatingActionButtonIcon,
                       color: AppThemeService.colorPalette.fabIconColor.color,
-                      width: 16.r,
-                      height: 16.r,
+                      width: 16,
+                      height: 16,
                     ),
                   ),
                 ),
-                SizedBox(height: 10.h,),
+                SizedBox(height: 10,),
                 FloatingActionButton(
                   heroTag: 'requests_calendar',
                   onPressed: ()async {
@@ -140,12 +140,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               vertical: screenHeight * 0.1,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(35.r),
+                              borderRadius: BorderRadius.circular(35),
                             ),
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxHeight: screenHeight * 0.8,
-                                maxWidth: 600.w,
+                                maxWidth: 600,
                               ),
                               child: SearchFilterWidget(
                                 contexts: dialogContext,
@@ -167,7 +167,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           borderRadius:
                           BorderRadius.vertical(
                               top: Radius.circular(
-                                  35.r)),
+                                  35)),
                         ),
                         builder: (BuildContext context) {
                           return SearchFilterWidget(
@@ -223,8 +223,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     child: Image.asset(
                       "assets/images/png/filter.png",
                       color: AppThemeService.colorPalette.fabIconColor.color,
-                      width: 16.r,
-                      height: 16.r,
+                      width: 16,
+                      height: 16,
                     ),
                   ),
                 ),
@@ -233,13 +233,13 @@ class _RequestsScreenState extends State<RequestsScreen> {
           ),
           bottomAppbarWidget: widget.requestsType == GetRequestsTypes.mine
               ? PreferredSize(
-            preferredSize: Size.fromHeight(170.h),
+            preferredSize: Size.fromHeight(170),
             child: Consumer<RequestsViewModel>(
                 builder: (context, viewModel, child) => Padding(
                   padding: EdgeInsets.only(
-                      left: 12.w,
-                      right: 12.w,
-                      top: 10.h),
+                      left: 12,
+                      right: 12,
+                      top: 10),
                   child: viewModel.isLoading
                       ? const RequestsAppbarLoading()
                       : VacationListWidget(
@@ -267,7 +267,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : 1.sw
+                  maxWidth: kIsWeb ? 1100 : 1.sw
               ),
               child: Container(
                 alignment: Alignment.topCenter,
@@ -289,7 +289,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     // Main content
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        padding: EdgeInsets.symmetric(horizontal: 12),
                         child: Consumer<RequestsViewModel>(
                           builder: (context, viewModel, child) {
                             if (viewModel.isLoading) return const LoadingPageWidget();
@@ -307,7 +307,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                     AutoSizeText(
                                       viewModel.rulesMessage ?? "",
                                       style: AppStyles.greyContent(context).copyWith(
-                                          fontSize: 12.sp,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w400),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 10,
@@ -362,14 +362,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         icon: Icons.calendar_month_outlined,
                                       ),
 
-                                    SizedBox(height: 10.h),
+                                    SizedBox(height: 10),
 
                                     if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
                                       AutoSizeText(
                                         viewModel.rulesMessage ?? "",
                                         maxLines: 10,
                                         style: AppStyles.greyContent(context).copyWith(
-                                            fontSize: 12.sp,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.w400),
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -377,7 +377,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       ),
 
                                     if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
-                                      SizedBox(height: 15.h),
+                                      SizedBox(height: 15),
 
                                     /// requests cards
                                     if (viewModel.requests != null &&
@@ -411,7 +411,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       ),
                                     if (viewModel.isLoadingMore)
                                       Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                                        padding: EdgeInsets.symmetric(vertical: 16),
                                         child: const Center(child: CircularProgressIndicator()),
                                       ),
                                   ],

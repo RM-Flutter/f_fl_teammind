@@ -80,10 +80,10 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100.w : double.infinity,
+                maxWidth: kIsWeb ? 1100 : double.infinity,
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12.r),
+                padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Consumer<RewardsAndPenaltiesViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -104,9 +104,9 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                           AppStrings.myRewardsAndPenalties.tr(),
                                           style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 16.sp),
+                                              fontSize: 16),
                                         ),
-                                      SizedBox(height: 15.h),
+                                      SizedBox(height: 15),
                                       ...viewModel.rewardsAndPenalties!.map(
                                           (rewardAndPenalty) =>
                                               RewardAndPenaltyCardWidget(
@@ -114,7 +114,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                               )),
                                       if (viewModel.rewardsAndPenalties != null &&
                                           viewModel.rewardsAndPenalties?.isEmpty == false)
-                                        SizedBox(height: 25.h),
+                                        SizedBox(height: 25),
                                       if (viewModel.rewardsAndPenaltiesTeam != null &&
                                           viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
                                           (gCache['is_teamleader_in'].isNotEmpty ||
@@ -123,13 +123,13 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                           AppStrings.teamRewardsAndPenalties.tr(),
                                           style: AppStyles.heading(context).copyWith(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 16.sp),
+                                              fontSize: 16),
                                         ),
                                       if (viewModel.rewardsAndPenaltiesTeam != null &&
                                           viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
                                           (gCache['is_teamleader_in'].isNotEmpty ||
                                               gCache['is_manager_in'].isNotEmpty))
-                                        SizedBox(height: 15.h),
+                                        SizedBox(height: 15),
                                       if (viewModel.rewardsAndPenaltiesTeam != null &&
                                           viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
                                           (gCache['is_teamleader_in'].isNotEmpty ||

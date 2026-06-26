@@ -1,7 +1,9 @@
 import 'package:app_test/features/authentication/create_account/controller/create_account_controller.dart';
 import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/platform/platform_is.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +103,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               child: viewModel.isEmailRegister == false ?CustomElevatedButton(
                                   isPrimaryBackground: false,
                                   title: AppStrings.create.tr(),
-                                  titleSize: 14.sp,
+                                  titleSize: (kIsWeb || PlatformIs.web) ? 14 : 14.sp,
                                   onPressed: () async {
                                     if(viewModel.phoneController.text.isEmpty){
                                       Fluttertoast.showToast(

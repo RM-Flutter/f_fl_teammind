@@ -119,19 +119,19 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: MediaQuery.of(context).padding.top + AppSizes.s12.h,
+            top: MediaQuery.of(context).padding.top + AppSizes.s12,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
               width: 1.sw,
               child: Column(
                 children: [
                   if ( ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) )  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     color: Colors.yellow,
                     child: Row(
                       children: [
-                        Icon(Icons.warning, color: Colors.red, size: 20.r,),
-                        SizedBox(width: 8.w),
+                        Icon(Icons.warning, color: Colors.red, size: 20,),
+                        SizedBox(width: 8),
                         SizedBox(
                           width: 0.6.sw,
                           child: Text(
@@ -139,11 +139,11 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        Text(AppStrings.activeNow.tr(), style:  TextStyle(fontSize: 12.sp, color: Colors.green),),
+                        Text(AppStrings.activeNow.tr(), style:  TextStyle(fontSize: 12, color: Colors.green),),
                       ],
                     ),
                   ),
-                  if ( ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) ) SizedBox(height: 15.h,),
+                  if ( ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) ) SizedBox(height: 15,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,7 +151,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       Container(
                           decoration: BoxDecoration(
                             color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                            borderRadius: BorderRadius.circular(AppSizes.s15),
                           ),
                           child: Center(
                             child: IconButton(
@@ -159,7 +159,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                               icon:  Icon(
                                 Icons.arrow_back_ios_new,
                                 color: Colors.white,
-                                size: AppSizes.s18.r,
+                                size: AppSizes.s18,
                               ),
                             ),
                           )),
@@ -167,7 +167,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                         AppStrings.accountAndSettings.tr(),
                         style:  AppStyles.whiteContent(context).copyWith(
                           fontWeight: FontWeight.w400,
-                          fontSize: AppSizes.s14.sp,
+                          fontSize: AppSizes.s14,
                           letterSpacing: 1.4,
                           color: Colors.white,
                         ),
@@ -175,7 +175,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       Container(
                           decoration: BoxDecoration(
                             color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                            borderRadius: BorderRadius.circular(AppSizes.s15),
                           ),
                           child: Center(
                             child: IconButton(
@@ -184,7 +184,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                               icon:  Icon(
                                 Icons.logout_outlined,
                                 color: Colors.red,
-                                size: AppSizes.s18.r,
+                                size: AppSizes.s18,
                               ),
                             ),
                           )),
@@ -300,7 +300,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
       child: Stack(
         children: [
           Positioned(
-              top: AppSizes.s6.h,
+              top: AppSizes.s6,
               left: 0,
               right: 0,
               child: Center(
@@ -314,7 +314,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                           shape: BoxShape.circle,
                           border: Border.all(
                               color: Color(AppColors.secondaryButton),
-                              width: AppSizes.s2.r),
+                              width: AppSizes.s2),
                         ),
                         child: GestureDetector(
                           onTap: () async => await context
@@ -352,7 +352,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                                 ShimmerAnimatedLoading(
                                   circularRaduis:
                                   AppSizes
-                                      .s50.r,
+                                      .s50,
                                 ),
                                 errorWidget:
                                     (context, url,
@@ -361,7 +361,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                                   Icons
                                       .image_not_supported_outlined,
                                   size: AppSizes
-                                      .s60.r,
+                                      .s60,
                                 )) : DynamicImageWidget(
                               imageUrl: AppImages.logo,
                               fit: BoxFit.cover,
@@ -373,8 +373,8 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                         top: 0,
                         right: 0,
                         child: Container(
-                          width: 40.r,
-                          height: 40.r,
+                          width: 40,
+                          height: 40,
                           padding: const EdgeInsets.all(0),
                           decoration: BoxDecoration(
                               color: Color(AppColors.background),
@@ -384,7 +384,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                               icon: Icon(
                                 Icons.camera_alt,
                                 color: Color(AppColors.secondaryButton),
-                                size: AppSizes.s20.r,
+                                size: AppSizes.s20,
                               ),
                               onPressed: () async {
                                 await widget.viewModel.getImage(context,
@@ -412,13 +412,13 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
               child: Container(
                 padding: EdgeInsets.only(
                     top: (widget.notchRadius / 2).r,
-                    left: AppSizes.s8.w,
-                    right: AppSizes.s8.w),
+                    left: AppSizes.s8,
+                    right: AppSizes.s8),
                 height: widget.notchedContainerHeight - (widget.notchRadius + widget.notchPadding),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppSizes.s32.r),
-                    topRight: Radius.circular(AppSizes.s32.r),
+                    topLeft: Radius.circular(AppSizes.s32),
+                    topRight: Radius.circular(AppSizes.s32),
                   ),
                   color: Colors.white,
                 ),
@@ -429,7 +429,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                     AutoSizeText(
                       widget.title,
                       style: AppStyles.whiteHeading(context).copyWith(
-                        fontSize: 24.sp,
+                        fontSize: 24,
                         fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.center,
@@ -440,7 +440,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                       widget.subtitle,
                       textAlign: TextAlign.center,
                       style: AppStyles.blackContent(context).copyWith(
-                        fontSize: 14.sp,
+                        fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                       maxLines: 2,
@@ -450,15 +450,15 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
               ),
             ),
           ),
-          SizedBox(height: 5.h,),
+          SizedBox(height: 5,),
          if(widget.photo != "https://lab.r-m.dev/files/2024/user-profile.png") Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 50.h, left: 95.w),
+                padding: EdgeInsets.only(top: 50, left: 95),
                 child: Container(
-                  width: 30.r,
-                  height: 30.r,
+                  width: 30,
+                  height: 30,
                   padding: const EdgeInsets.all(0),
                   decoration: const BoxDecoration(
                       color: Colors.red,
@@ -468,7 +468,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                       icon:  Icon(
                         Icons.delete,
                         color: Colors.white,
-                        size: AppSizes.s15.r,
+                        size: AppSizes.s15,
                       ),
                       onPressed: () async {
                         setState(() {
@@ -479,8 +479,8 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
                           _isLoading = false;
                         });
                       }): SizedBox(
-                        width: 15.r,
-                        height: 15.r,
+                        width: 15,
+                        height: 15,
                         child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white,)
                       ),
                 ),

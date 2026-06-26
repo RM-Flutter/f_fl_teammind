@@ -47,21 +47,21 @@ class RequestDetailsScreen extends StatelessWidget {
                     RequestDetailsHeaderWidget(
                       uId: viewModel.userSettings?.empId,
                       rId:viewModel.requestModel!.employeeId,
-                      height: kIsWeb ? 320.h : 340.h,
+                      height: kIsWeb ? 320 : 340,
                       request: viewModel.requestModel!,
                     ),
                     Expanded(
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100.w : 1.sw
+                              maxWidth: kIsWeb ? 1100 : 1.sw
                           ),
                           child: CustomTabbarViewRequestDetails(request: viewModel.requestModel!),
                         ),
                       ),
                     ),
                     // Add extra spacing between tabs and buttons on web only
-                    if (kIsWeb) SizedBox(height: 40.h),
+                    if (kIsWeb) SizedBox(height: 40),
                     if ((viewModel.userSettings?.empId == viewModel.requestModel!.employeeId &&
                         viewModel.requestModel!.employeeId != null &&
                         viewModel.userSettings?.empId != null))
@@ -74,20 +74,20 @@ class RequestDetailsScreen extends StatelessWidget {
                           ? Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100.w : 1.sw
+                              maxWidth: kIsWeb ? 1100 : 1.sw
                           ),
                           child: Container(
-                            height: kIsWeb? 40.h : null,
+                            height: kIsWeb? 40 : null,
                             alignment: Alignment.topCenter,
                             padding: EdgeInsets.symmetric(
-                                vertical: kIsWeb ? 1.h : 12.h,
-                                horizontal: 16.w),
+                                vertical: kIsWeb ? 1 : 12,
+                                horizontal: 16),
                             margin: EdgeInsets.only(
-                                left: 24.w, right: 24.w, bottom: 32.h, top: 8.h),
+                                left: 24, right: 24, bottom: 32, top: 8),
                             width: 1.sw,
                             decoration: BoxDecoration(
                                 color: Color(AppColors.secondaryButton),
-                                borderRadius: BorderRadius.circular(50.r)),
+                                borderRadius: BorderRadius.circular(50)),
                             child: Row(children: [
                               if (viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
                                   viewModel.requestModel!.status == 'waiting') ...[
@@ -98,7 +98,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                       context: context,
                                       requestId: viewModel.requestModel!.id?.toString()),
                                 ),
-                                SizedBox(width: 8.w),
+                                SizedBox(width: 8),
                                 CustomRequestDetailsButton(
                                   title: AppStrings.askIgnore.tr(),
                                   onPressed: () async => await viewModel.askToIgnore(
@@ -107,7 +107,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                 ),
                               ],
                               if ((viewModel.requestModel!.status == 'approved' || viewModel.requestModel!.status == 'canceled'|| viewModel.requestModel!.status == 'refused')) ...[
-                                SizedBox(width: 8.w),
+                                SizedBox(width: 8),
                                 CustomRequestDetailsButton(
                                     title: AppStrings.complaint.tr(),
                                     onPressed: () async => context.pushNamed(
@@ -129,19 +129,19 @@ class RequestDetailsScreen extends StatelessWidget {
                       Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100.w : 1.sw
+                              maxWidth: kIsWeb ? 1100 : 1.sw
                           ),
                           child: Container(
                             alignment: Alignment.topCenter,
                             padding: EdgeInsets.symmetric(
-                                vertical: kIsWeb ? 4.h : 12.h,
-                                horizontal: 16.w),
+                                vertical: kIsWeb ? 4 : 12,
+                                horizontal: 16),
                             margin: EdgeInsets.only(
-                                left: 24.w, right: 24.w, bottom: 32.h, top: 8.h),
+                                left: 24, right: 24, bottom: 32, top: 8),
                             width: 1.sw,
                             decoration: BoxDecoration(
                                 color: Color(AppColors.secondaryButton),
-                                borderRadius: BorderRadius.circular(50.r)),
+                                borderRadius: BorderRadius.circular(50)),
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -152,7 +152,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                         onPressed: () async =>
                                         await viewModel.showAndGetEmployeeStatistics(
                                             context, viewModel.requestModel!.employeeId.toString(), type: requestType)),
-                                    SizedBox(width: 8.w),
+                                    SizedBox(width: 8),
                                   ],
                                   if ((viewModel.requestModel!.status == 'waiting_seen' ||viewModel.requestModel!.status == 'waiting_cancel' ||
                                       viewModel.requestModel!.status == 'waiting') &&

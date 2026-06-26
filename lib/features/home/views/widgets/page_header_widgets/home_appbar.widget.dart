@@ -96,8 +96,8 @@ class HomeAppbarWidget extends StatelessWidget {
             : Color(AppColors.secondaryButton).withValues(alpha: 0.95),
         borderRadius: isExpanded == true
             ? BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32.r),
-            bottomRight: Radius.circular(AppSizes.s32.r))
+            bottomLeft: Radius.circular(AppSizes.s32),
+            bottomRight: Radius.circular(AppSizes.s32))
             : null,
       ),
       child: Stack(
@@ -108,13 +108,13 @@ class HomeAppbarWidget extends StatelessWidget {
               if (isExpanded == true)
                 ClipRRect(
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppSizes.s32.r),
-                    bottomRight: Radius.circular(AppSizes.s32.r)),
+                    bottomLeft: Radius.circular(AppSizes.s32),
+                    bottomRight: Radius.circular(AppSizes.s32)),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(AppSizes.s32.r),
-                        bottomRight: Radius.circular(AppSizes.s32.r)),
+                        bottomLeft: Radius.circular(AppSizes.s32),
+                        bottomRight: Radius.circular(AppSizes.s32)),
                   ),
                     child: Opacity(
                       opacity: 0.5,
@@ -122,7 +122,7 @@ class HomeAppbarWidget extends StatelessWidget {
                         "assets/images/png/home-app-bar.png",
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 300.0.h,
+                        height: 300.0,
 
                       ),
                     ),
@@ -144,32 +144,32 @@ class HomeAppbarWidget extends StatelessWidget {
                   },
                   child: Container(
                     color: Colors.yellow,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        Icon(Icons.warning, color: Colors.red, size: 24.r),
-                        SizedBox(width: 8.w),
+                        Icon(Icons.warning, color: Colors.red, size: 24),
+                        SizedBox(width: 8),
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.6,
                           child: Text(
-                            getVerificationStatus(us1Cache),   style: AppStyles.redContent(context).copyWith(fontSize: 14.sp),
+                            getVerificationStatus(us1Cache),   style: AppStyles.redContent(context).copyWith(fontSize: 14),
                           ),
                         ),
                         const Spacer(),
-                        Text(AppStrings.activeNow.tr(), style: AppStyles.greenContent(context).copyWith(fontSize: 12.sp)),
+                        Text(AppStrings.activeNow.tr(), style: AppStyles.greenContent(context).copyWith(fontSize: 12)),
                       ],
                     ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 5.h,
-                    right: LocalizationService.isArabic(context: context) ? 15.w : 0, left: LocalizationService.isArabic(context: context) ? 0 : 15.w,
+                    top: 5,
+                    right: LocalizationService.isArabic(context: context) ? 15 : 0, left: LocalizationService.isArabic(context: context) ? 0 : 15,
                   ),
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -181,21 +181,21 @@ class HomeAppbarWidget extends StatelessWidget {
                               child: (us1Cache != null && us1Cache['photo'] == null ||
                                   (us1Cache['photo'].isEmpty == true))
                                   ? Container(
-                                width: AppSizes.s40.w,
-                                height: AppSizes.s40.h,
+                                width: AppSizes.s40,
+                                height: AppSizes.s40,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.transparent,
                                     border:
-                                    Border.all(color: Colors.white, width: 2.w)),
+                                    Border.all(color: Colors.white, width: 2)),
                                 child: Icon(
                                   Icons.person,
                                   color: Colors.white,
-                                  size: AppSizes.s28.r,
+                                  size: AppSizes.s28,
                                 ),
                               )
                                   : CircleAvatar(
-                                radius: AppSizes.s22.r,
+                                radius: AppSizes.s22,
                                 child: ClipOval(
                                   child: CachedNetworkImage(
                                     width: double.infinity,
@@ -206,18 +206,18 @@ class HomeAppbarWidget extends StatelessWidget {
                                     const ShimmerAnimatedLoading(),
                                     errorWidget: (context, url, error) => Icon(
                                       Icons.image_not_supported_outlined,
-                                      size: AppSizes.s32.r,
+                                      size: AppSizes.s32,
                                       color: Colors.white,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 12.w),
+                            SizedBox(width: 12),
                             us1Cache == null
                                 ? ShimmerAnimatedLoading(
-                              height: AppSizes.s32.h,
-                              width: AppSizes.s50.w,
+                              height: AppSizes.s32,
+                              width: AppSizes.s50,
                             )
                                 : Expanded(
                               child: Column(
@@ -227,26 +227,26 @@ class HomeAppbarWidget extends StatelessWidget {
                                       minFontSize: 20,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppStyles.whiteHeading(context).copyWith(fontSize: 24.sp)),
+                                      style: AppStyles.whiteHeading(context).copyWith(fontSize: 24)),
                                    Text(AppStrings.niceToMeetYou.tr().toUpperCase(),
                                        style: AppStyles.whiteContent(context).copyWith(
                                            fontWeight: FontWeight.w400,
                                            letterSpacing: 0.5,
-                                           fontSize: 13.sp
+                                           fontSize: 13
                                        )),
                                 ],
                               ),
                             ),
-                            SizedBox(width: 10.w),
+                            SizedBox(width: 10),
                             if (us1Cache != null)
                               Stack(
                                 children: [
                                   IconButton(
                                     icon: Icon(Icons.notifications_none_outlined,
-                                        color: Colors.white, size: 28.r),
+                                        color: Colors.white, size: 28),
                                     padding: EdgeInsets.zero,
                                     constraints: BoxConstraints(
-                                        minWidth: 40.w, minHeight: 40.h),
+                                        minWidth: 40, minHeight: 40),
                                     onPressed: () => context.pushNamed(
                                         AppRoutes.notification.name,
                                         pathParameters: {
@@ -255,12 +255,12 @@ class HomeAppbarWidget extends StatelessWidget {
                                   ),
                                   if (notifications?.any((n) => n.seen == false || n.seen == 0) ?? false)
                                     Positioned(
-                                      top: 10.h,
-                                      right: LocalizationService.isArabic(context: context) ? 12.w : null,
-                                      left: LocalizationService.isArabic(context: context) ? null : 12.w,
+                                      top: 10,
+                                      right: LocalizationService.isArabic(context: context) ? 12 : null,
+                                      left: LocalizationService.isArabic(context: context) ? null : 12,
                                       child: Container(
-                                        width: 7.r,
-                                        height: 7.r,
+                                        width: 7,
+                                        height: 7,
                                         decoration: const BoxDecoration(
                                           color: Colors.white,
                                           shape: BoxShape.circle,
@@ -276,16 +276,16 @@ class HomeAppbarWidget extends StatelessWidget {
                                         AppRoutes.personalProfile.name,
                                         pathParameters: {'lang': context.locale.languageCode});
                                   },
-                                  child: Icon(Icons.error, color: Colors.yellow, size: 24.r))
+                                  child: Icon(Icons.error, color: Colors.yellow, size: 24))
                           ],
                         ),
                       ),
-                      SizedBox(height: 32.h),
+                      SizedBox(height: 32),
                       if (isExpanded == true)
                         Center(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
-                                maxWidth: kIsWeb ? 1100.w : double.infinity
+                                maxWidth: kIsWeb ? 1100 : double.infinity
                             ),
                             child: VacationListWidget(
                               requests: requests,

@@ -46,36 +46,36 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(AppSizes.s40.r),
-                          bottomRight: Radius.circular(AppSizes.s40.r),
+                          bottomLeft: Radius.circular(AppSizes.s40),
+                          bottomRight: Radius.circular(AppSizes.s40),
                         ),
                         child: Container(
                           color: Color(AppColors.secondaryButton),
                           child: Image.asset(
                             "assets/images/png/home-app-bar.png",
                             width: double.infinity,
-                            height: 280.h,
+                            height: 280,
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).padding.top + 10.h,
-                        left: 15.w,
+                        top: MediaQuery.of(context).padding.top + 10,
+                        left: 15,
                         child: GestureDetector(
                           onTap: () => Navigator.pop(context),
                           child: Container(
-                            padding: EdgeInsets.all(8.r),
+                            padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(context.locale.languageCode == "en" ? Icons.arrow_back : Icons.arrow_forward, color: Colors.white, size: 20.r),
+                            child: Icon(context.locale.languageCode == "en" ? Icons.arrow_back : Icons.arrow_forward, color: Colors.white, size: 20),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).padding.top + 15.h,
+                        top: MediaQuery.of(context).padding.top + 15,
                         left: 0,
                         right: 0,
                         child: Center(
@@ -83,7 +83,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                             AppStrings.aboutApplication.tr(),
                             style: AppStyles.whiteHeading(context).copyWith(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14.sp,
+                              fontSize: 14,
                             ),
                           ),
                         ),
@@ -94,19 +94,19 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
                   // Description Content
                   Padding(
-                    padding: EdgeInsets.all(25.0.r),
+                    padding: EdgeInsets.all(25.0),
                     child: Text(
                       AppStrings.aboutAppDescription.tr(),
                       textAlign: TextAlign.start,
                       style: AppStyles.aboutUsContent(context).copyWith(
-                        fontSize: 11.sp,
+                        fontSize: 11,
                         height: 1.4,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
 
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 10),
 
                   // FOLLOW US section
                   Text(
@@ -114,20 +114,20 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     style: AppStyles.heading(context).copyWith(
                       color: Color(AppColors.secondaryButton),
                       fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                     ),
                   ),
 
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 20),
 
                   // Social Icons Row
                   if (gCache != null && gCache['company_contacts'] != null)
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Wrap(
                         alignment: WrapAlignment.center,
-                        spacing: 12.w,
-                        runSpacing: 12.h,
+                        spacing: 12,
+                        runSpacing: 12,
                         children: [
                           if (gCache['company_contacts']['whatsapp'] != null && gCache['company_contacts']['whatsapp'] != "")
                             _buildSocialIcon("assets/images/svg/whatsapp.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['whatsapp']))),
@@ -144,12 +144,12 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ],
                       ),
                     ),
-                   SizedBox(height: 40.h),
+                   SizedBox(height: 40),
 
                   // SEND BY EMAIL button
                   if (gCache != null && gCache['company_contacts'] != null && gCache['company_contacts']['email'] != null)
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 50.w),
+                      padding: EdgeInsets.symmetric(horizontal: 50),
                       child: CustomElevatedButton(
                         backgroundColor:  Color(AppColors.secondaryButton),
                         title: AppStrings.sendByEmail.tr().toUpperCase(),
@@ -165,7 +165,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       ),
                     ),
 
-                  SizedBox(height: 50.h),
+                  SizedBox(height: 50),
                 ],
               ),
             ),
@@ -179,14 +179,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     return GestureDetector(
       onTap: tap,
       child: Container(
-        padding: EdgeInsets.all(5.r),
-        height: 30.r,
-        width: 30.r,
+        padding: EdgeInsets.all(5),
+        height: 30,
+        width: 30,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color:  Color(AppColors.secondaryButton),
         ),
-        child: SvgPicture.asset(ico, color: Colors.white, width: 15.r, height: 15.r),
+        child: SvgPicture.asset(ico, color: Colors.white, width: 15, height: 15),
       ),
     );
   }

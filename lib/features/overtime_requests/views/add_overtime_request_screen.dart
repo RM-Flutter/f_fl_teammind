@@ -47,7 +47,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
         builder: (context, provider, child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,19 +56,19 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                   icon: Icons.calendar_today_outlined,
                   child: _buildDatePicker(),
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 24),
                 _buildCardSection(
                   title: AppStrings.durationMinutes.tr(),
                   icon: Icons.timer_outlined,
                   child: _buildDurationField(),
                 ),
                 if (_durationController.text.isNotEmpty) ...[
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 16),
                   _buildDurationPreview(),
                 ],
-                SizedBox(height: 48.h),
+                SizedBox(height: 48),
                 _buildSubmitButton(provider),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20),
               ],
             ),
           );
@@ -82,16 +82,16 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 4.w, bottom: 10.h),
+          padding: EdgeInsets.only(left: 4, bottom: 10),
           child: Row(
             children: [
-              Icon(icon, size: 18.r, color: Color(AppColors.buttons)),
-              SizedBox(width: 8.w),
+              Icon(icon, size: 18, color: Color(AppColors.buttons)),
+              SizedBox(width: 8),
               Text(
                 title,
                 style: AppStyles.titleTextContent(context).copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 15.sp,
+                  fontSize: 15,
                   color: Color(AppColors.secondaryButton).withOpacity(0.8),
                 ),
               ),
@@ -100,10 +100,10 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
         ),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(15.r),
+            borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
@@ -155,13 +155,13 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                   ? DateFormat('EEEE, d MMMM yyyy').format(selectedDate!) 
                   : AppStrings.selectDate.tr(),
               style: AppStyles.darkContent(context).copyWith(
-                fontSize: 15.sp,
+                fontSize: 15,
                 fontWeight: selectedDate != null ? FontWeight.bold : FontWeight.normal,
                 color: selectedDate != null ? Colors.black : Colors.grey.shade400,
               ),
             ),
           ),
-          Icon(Icons.calendar_month, size: 18.r, color: Colors.grey.shade300),
+          Icon(Icons.calendar_month, size: 18, color: Colors.grey.shade300),
         ],
       ),
     );
@@ -172,12 +172,12 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
       controller: _durationController,
       keyboardType: TextInputType.number,
       onChanged: (val) => setState(() {}),
-      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         hintText: AppStrings.enterMinutes.tr(),
         hintStyle: TextStyle(color: Colors.grey.shade300, fontWeight: FontWeight.normal),
         suffixText: AppStrings.minutes.tr(),
-        suffixStyle: TextStyle(color: Colors.grey, fontSize: 13.sp),
+        suffixStyle: TextStyle(color: Colors.grey, fontSize: 13),
         isDense: true,
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
@@ -206,21 +206,21 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.access_time, size: 16.r, color: Color(AppColors.buttons)),
-          SizedBox(width: 8.w),
+          Icon(Icons.access_time, size: 16, color: Color(AppColors.buttons)),
+          SizedBox(width: 8),
           Text(
             text,
             style: AppStyles.primaryContent(context).copyWith(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: Color(AppColors.buttons),
             ),
@@ -233,7 +233,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   Widget _buildSubmitButton(OvertimeRequestsProvider provider) {
     return Container(
       width: double.infinity,
-      height: 55.h,
+      height: 55,
       child: ElevatedButton(
         onPressed: provider.isActionLoading ? null : _submit,
         style: ElevatedButton.styleFrom(
@@ -241,7 +241,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           foregroundColor: Colors.white,
           elevation: 4,
           shadowColor: Color(AppColors.buttons).withOpacity(0.3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         ),
         child: provider.isActionLoading
             ? const CircularProgressIndicator(color: Colors.white)
@@ -249,7 +249,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                 AppStrings.sendRequest.tr(),
                 style: AppStyles.whiteContent(context).copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                 ),
               ),
       ),

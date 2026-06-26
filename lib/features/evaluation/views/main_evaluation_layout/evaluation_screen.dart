@@ -57,10 +57,10 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : double.infinity
+                  maxWidth: kIsWeb ? 1100 : double.infinity
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12.w),
+                padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Consumer<EvaluationController>(
                       builder: (context, viewModel, child) => viewModel.isLoading
@@ -75,10 +75,10 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                           children: [
                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) Text("", style:
                             AppStyles.heading(context).copyWith(
-                                fontWeight: FontWeight.w600,fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,fontSize: 20,
                             )
                               ,),
-                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) SizedBox(height: 20.h),
+                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) SizedBox(height: 20),
                             /// general screen message widget for other requests types
                             // GeneralScreenMessageWidget(
                             //     screenId: '/payrolls'),
@@ -95,11 +95,11 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                                     eva: viewModel.evaluations[index]['results'],
                                     title: "${viewModel.evaluations[index]['title']}",
                                     icon: (viewModel.evaluations[index]['done'] != null)?
-                                    viewModel.evaluations[index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 24.sp): Icon(Icons.calendar_month, color: Color(AppColors.black), size: 24.sp): Icon(Icons.check_circle_outline, color: Colors.green, size: 24.sp),
+                                    viewModel.evaluations[index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 24): Icon(Icons.calendar_month, color: Color(AppColors.black), size: 24): Icon(Icons.check_circle_outline, color: Colors.green, size: 24),
                                     url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
                                   );
                                 },
-                                separatorBuilder: (context, index) => SizedBox(height: 15.h),
+                                separatorBuilder: (context, index) => SizedBox(height: 15),
                                 itemCount: viewModel.evaluations!.length)
                           ])),
                 ),

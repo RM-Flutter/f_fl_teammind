@@ -81,9 +81,9 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
         if (rewardAndPenalty.profile?.name != null)
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(AppSizes.s10.r),
+            padding: EdgeInsets.all(AppSizes.s10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s8.r),
+              borderRadius: BorderRadius.circular(AppSizes.s8),
               color: Color(AppColors.buttons),
             ),
             child: Center(
@@ -91,7 +91,7 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
                 rewardAndPenalty.profile!.name!,
                 style: AppStyles.whiteContent(context).copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.s12.sp),
+                    fontSize: AppSizes.s12),
               ),
             ),
           ),
@@ -136,16 +136,16 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
         if (canShowComplaintButton) ...[
           gapH24,
           CustomElevatedButton(
-            titleSize: AppSizes.s10.sp,
+            titleSize: AppSizes.s10,
             buttonStyle: ElevatedButton.styleFrom(
-              fixedSize: Size(double.infinity, 50.h),
+              fixedSize: Size(double.infinity, 50),
               alignment: Alignment.center,
               shadowColor: Colors.transparent,
               backgroundColor: Color(AppColors.secondaryButton),
               foregroundColor: Colors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s28.r),
+                borderRadius: BorderRadius.circular(AppSizes.s28),
               ),
             ),
             onPressed: () async => context.pushNamed(
@@ -175,7 +175,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
   Widget build(BuildContext context) {
     TextStyle textStyle = AppStyles.primaryContent(context).copyWith(
         fontWeight: FontWeight.w600,
-        fontSize: AppSizes.s14.sp);
+        fontSize: AppSizes.s14);
     Widget titleWidget = AutoSizeText(title, style: textStyle);
     
     return SizedBox(
@@ -191,7 +191,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                   children: [
                     titleWidget,
                     AutoSizeText(subtitle,
-                        style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                        style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14, fontWeight: FontWeight.w600)),
                   ],
                 )
               : Row(
@@ -201,7 +201,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                     titleWidget,
                     Expanded(
                       child: AutoSizeText(subtitle,
-                          style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                          style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14, fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),

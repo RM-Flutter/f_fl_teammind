@@ -28,10 +28,10 @@ class _FaqScreenState extends State<FaqScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,
-            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  AppStyles.heading(context).copyWith(fontSize: 16.sp,
+            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  AppStyles.heading(context).copyWith(fontSize: 16,
                 fontWeight: FontWeight.w700),),
             leading: Padding(
-              padding: EdgeInsets.all(AppSizes.s10.r),
+              padding: EdgeInsets.all(AppSizes.s10),
               child: InkWell(
                 onTap: () =>  Navigator.pop(context),
                 child: Container(
@@ -41,7 +41,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   child: Icon(
                     Icons.arrow_back_sharp,
                     color: Colors.white,
-                    size: AppSizes.s18.r,
+                    size: AppSizes.s18,
                   ),
                 ),
               ),
@@ -49,7 +49,7 @@ class _FaqScreenState extends State<FaqScreen> {
             backgroundColor: Colors.transparent,
           ),
           body: (value.faqModel != null)?ListView.builder(
-            padding: EdgeInsets.all(16.0.r),
+            padding: EdgeInsets.all(16.0),
             itemCount: value.faqModel!.page!.questions!.length,
             itemBuilder: (context, index) {
               return FaqTile(
@@ -57,7 +57,7 @@ class _FaqScreenState extends State<FaqScreen> {
               );
             },
           ):ListView.builder(
-            padding: EdgeInsets.all(16.0.r),
+            padding: EdgeInsets.all(16.0),
             itemCount: 3,
             itemBuilder: (context, index) {
               return const FaqLoadingWidget();
@@ -95,40 +95,40 @@ class _FaqTileState extends State<FaqTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16.0.h),
+      padding: EdgeInsets.only(bottom: 16.0),
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF5F8FA), // Light blue background like in the image
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             // Top shadow
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, -1.h), // Slightly offset upwards
-              blurRadius: 4.r,
+              offset: Offset(0, -1), // Slightly offset upwards
+              blurRadius: 4,
               spreadRadius: 0,
             ),
             // Bottom shadow
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, 1.h), // Slightly offset downwards
-              blurRadius: 4.r,
+              offset: Offset(0, 1), // Slightly offset downwards
+              blurRadius: 4,
               spreadRadius: 0,
             ),
           ],
         ),
         child: ExpansionTile(
-          tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           title: Text(
             widget.item.question??"",
             style: AppStyles.darkContent(context).copyWith(
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
           iconColor: Colors.grey,
           collapsedIconColor: Colors.grey,
-          childrenPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          childrenPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           expandedAlignment: Alignment.centerLeft,
           collapsedBackgroundColor: Colors.transparent,
@@ -136,7 +136,7 @@ class _FaqTileState extends State<FaqTile> {
             Text(
               widget.item.answer ?? "",
               style: AppStyles.greyContent(context).copyWith(
-                fontSize: 12.sp,
+                fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
             ),

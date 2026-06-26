@@ -81,21 +81,21 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
               AppStrings.taskList.tr(),
               style: AppStyles.primaryContent(context).copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: 14.sp,
+                fontSize: 14,
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 16),
 
             ...tasksController.tasksList2.asMap().entries.map((entry) {
               final index = entry.key;
               final task = entry.value['name'];
 
               return Padding(
-                padding: EdgeInsets.only(bottom: 12.0.h),
+                padding: EdgeInsets.only(bottom: 12.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: ListTile(
@@ -137,10 +137,10 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                           child: Icon(
                             Icons.delete,
                             color: Color(AppColors.red),
-                            size: 24.r,
+                            size: 24,
                           ),
                         ),
-                        SizedBox(width: 15.w,),
+                        SizedBox(width: 15,),
                         GestureDetector(
                           onTap: () {
                             tasksController.tasksList2[index]['status'] = !tasksController.tasksList2[index]['status'];
@@ -153,7 +153,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                                 ? Icons.radio_button_checked
                                 : Icons.radio_button_unchecked,
                             color: Color(AppColors.buttons),
-                            size: 24.r,
+                            size: 24,
                           ),
                         ),
                       ],
@@ -163,14 +163,14 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
               );
             }),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.secondaryButton),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.r),
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               onPressed: () {
@@ -183,10 +183,10 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                   _controllers.add(TextEditingController(text: AppStrings.taskName.tr()));
                 });
               },
-              icon: Icon(Icons.add, color: Colors.white, size: 16.r,),
+              icon: Icon(Icons.add, color: Colors.white, size: 16,),
               label: Text(
                 AppStrings.addOne.tr().toUpperCase(),
-                style: AppStyles.whiteContent(context).copyWith(fontSize: 10.sp, fontWeight: FontWeight.w500),
+                style: AppStyles.whiteContent(context).copyWith(fontSize: 10, fontWeight: FontWeight.w500),
               ),
             ),
           ],

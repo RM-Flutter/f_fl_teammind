@@ -1,6 +1,6 @@
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
+
 import 'dart:html' if (dart.library.io) '../../../../../core/services/dart_html_stub.dart' as html;
 import 'package:open_filex/open_filex.dart';
 
@@ -240,14 +240,14 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     return Stack(
       children: [
         Container(
-          height: (widget.height! + 30.h) ,
+          height: (widget.height! + 30) ,
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(28.r),
-              bottomRight: Radius.circular(28.r),
+              bottomLeft: Radius.circular(28),
+              bottomRight: Radius.circular(28),
             ),
             image: const DecorationImage(
               image: AssetImage("assets/images/request-app-bar.png"),
@@ -258,7 +258,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : 1.sw
+                  maxWidth: kIsWeb ? 1100 : 1.sw
               ),
               child: Column(
                 children: [
@@ -273,10 +273,10 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                     title: AppSettingsService.getRequestTitleFromGenenralSettings(
                         context: context, requestId: request.typeId.toString()) ??
                         '',
-                    titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20.sp),
+                    titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
                     bookmarkIconColor: Colors.white,
                     leading: Padding(
-                      padding: EdgeInsets.all(10.r),
+                      padding: EdgeInsets.all(10),
                       child: InkWell(
                         onTap: () {
                           if (context.canPop()) {
@@ -294,15 +294,15 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                           child: Icon(
                             Icons.arrow_back_sharp,
                             color: Colors.white,
-                            size: 18.r,
+                            size: 18,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 18.h),
+                  SizedBox(height: 18),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -326,17 +326,17 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                   );
                                 },
                                 child: Container(
-                                  width: 65.w,
-                                  height: 85.h,
+                                  width: 65,
+                                  height: 85,
                                   decoration: BoxDecoration(
                                     color: mainColor.withOpacity(.3),
-                                    borderRadius: BorderRadius.circular(10.r),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Center(
                                     child: RequestsServices.getRequestsStatusIcon(
                                       context: context,
                                       status: request.status,
-                                      iconSize: 30.r,
+                                      iconSize: 30,
                                       iconColor: Colors.white,
                                     ),
                                   ),
@@ -344,15 +344,15 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                               )
                             ],
                           ),
-                          SizedBox(width: 8.w),
+                          SizedBox(width: 8),
 
                           // Info tiles
                           Expanded(
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Wrap(
-                                spacing: 12.w,
-                                runSpacing: 12.h,
+                                spacing: 12,
+                                runSpacing: 12,
                                 children: [
                                   // Date tile with formatting
                                   InfoTileWidget(
@@ -370,7 +370,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
                                     isFullRow: true,
                                     trailing: InfoTileWidget(
-                                        width: 100.w,
+                                        width: 100,
                                         background: Color(AppColors.secondaryButton),
                                         imgPath: Icons.access_time,
                                         title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
@@ -450,7 +450,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         ],
                       ),
                     ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 12),
                 ],
               ),
             ),
@@ -468,11 +468,11 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               color: Colors.black87,
               child: Container(
                 padding:
-                EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
-                    Icon(Icons.file_download, color: Colors.white, size: 24.r),
-                    SizedBox(width: 12.w),
+                    Icon(Icons.file_download, color: Colors.white, size: 24),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         _downloadingFileName!,
@@ -482,7 +482,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 12),
                     Expanded(
                       flex: 2,
                       child: LinearProgressIndicator(
@@ -491,10 +491,10 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         backgroundColor: Colors.white24,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 12),
                     Text(
                       "${(_downloadProgress * 100).toStringAsFixed(0)}%",
-                      style: AppStyles.whiteContent(context).copyWith(fontSize: 12.sp),
+                      style: AppStyles.whiteContent(context).copyWith(fontSize: 12),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white),
@@ -532,19 +532,19 @@ class _DownloadProgressDialog extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
             SizedBox(
-              width: 28.r,
-              height: 28.r,
+              width: 28,
+              height: 28,
               child: const CircularProgressIndicator(strokeWidth: 2),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 AppStrings.downloadFile.tr(),
-                style: AppStyles.whiteHeading(context).copyWith(fontSize: 18.sp),
+                style: AppStyles.whiteHeading(context).copyWith(fontSize: 18),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -560,25 +560,25 @@ class _DownloadProgressDialog extends StatelessWidget {
                 Text(
                   fileName,
                   style: AppStyles.greyContent(context).copyWith(
-                    fontSize: 13.sp,
+                    fontSize: 13,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 16),
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
                   backgroundColor: Colors.grey.shade300,
                   valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
-                  minHeight: 8.h,
-                  borderRadius: BorderRadius.circular(4.r),
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 8),
                 Text(
                   value > 0 ? '${(value * 100).toStringAsFixed(0)}%' : '0%',
                   style: AppStyles.darkContent(context).copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: 14.sp,
+                    fontSize: 14,
                   ),
                 ),
               ],
@@ -623,11 +623,11 @@ class InfoTileWidget extends StatelessWidget {
       onTap: onTap ?? (){},
       child: Container(
         width: width != null ? width : isFullRow == false
-            ? (1.sw - 116.w) / 2
-            : 1.sw - 97.w,
+            ? (1.sw - 116) / 2
+            : 1.sw - 97,
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : effectiveBackground,
-            borderRadius: BorderRadius.circular(10.r)),
+            borderRadius: BorderRadius.circular(10)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -635,28 +635,28 @@ class InfoTileWidget extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 6.w, vertical: 6.h),
+                    horizontal: 6, vertical: 6),
                 child: Row(
                   children: [
                     if (imagePath != null)
                       Image.asset(
                         imagePath!,
-                        width: 14.r,
-                        height: 14.r,
+                        width: 14,
+                        height: 14,
                         color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       )
                     else if (imgPath != null)
                       Icon(
                         imgPath,
-                        size: 20.r,
+                        size: 20,
                         color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 12),
                     Expanded(
                       child: AutoSizeText(
                         title,
                         style: AppStyles.whiteContent(context).copyWith(
-                            fontSize: 11.sp,
+                            fontSize: 11,
                             fontWeight: FontWeight.w700),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

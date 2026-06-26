@@ -78,15 +78,14 @@ Widget defaultTap2BarItem({
     builder: (context, provider, child) {
       bool isWeb = kIsWeb;
 
-      double itemWidth = (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9) / (items?.length ?? 1);
+      double containerWidth = isWeb ? 550 : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9);
+      double itemWidth = containerWidth / (items?.length ?? 1);
 
       return Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7.5),
-          height: isWeb ? null : 45.0,
-          width: isWeb
-              ? 200
-              : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9),
+          height: 45.0,
+          width: containerWidth,
           decoration: BoxDecoration(
             color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.circular(25),
@@ -94,7 +93,7 @@ Widget defaultTap2BarItem({
           child: ListView.builder(
             shrinkWrap: true,
             reverse: false,
-            scrollDirection: isWeb ? Axis.vertical : Axis.horizontal,
+            scrollDirection: Axis.horizontal,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items!.length,
             itemBuilder: (context, index) => GestureDetector(
@@ -105,11 +104,9 @@ Widget defaultTap2BarItem({
                 }
               },
               child: Container(
-                height: isWeb ? 45 : 32,
-                width: isWeb ? double.infinity : itemWidth - 8,
-                margin: isWeb
-                    ? const EdgeInsets.symmetric(vertical: 5)
-                    : EdgeInsets.zero,
+                height: 32,
+                width: itemWidth - 8,
+                margin: EdgeInsets.zero,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),

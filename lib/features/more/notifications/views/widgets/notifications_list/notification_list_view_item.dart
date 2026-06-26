@@ -31,7 +31,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
     final double iconSize = (1.sw * 0.22).clamp(60.0, 84.0).r;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.s12.h),
+      padding: EdgeInsets.only(bottom: AppSizes.s12),
       child: InkWell(
         onTap: () {
           setState(() {
@@ -43,19 +43,19 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 'id': notification['id'].toString(),
               });
         },
-        borderRadius: BorderRadius.circular(AppSizes.s15.r),
+        borderRadius: BorderRadius.circular(AppSizes.s15),
         child: Container(
           // no padding — icon fills full card height
           decoration: BoxDecoration(
             color: Color(AppColors.background),
-            borderRadius: BorderRadius.circular(AppSizes.s15.r),
-            border: Border.all(color: const Color(0xFFE8ECF0), width: 1.w),
+            borderRadius: BorderRadius.circular(AppSizes.s15),
+            border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
             boxShadow: [
               BoxShadow(
                 color: const Color.fromRGBO(0, 0, 0, 0.03),
                 spreadRadius: 0,
-                offset: Offset(0, 2.h),
-                blurRadius: 6.r,
+                offset: Offset(0, 2),
+                blurRadius: 6,
               )
             ],
           ),
@@ -96,10 +96,10 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                         ),
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 12),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: AppSizes.s12.h),
+                  padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -107,16 +107,16 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                         DateFormat('dd/MM/yyyy', context.locale.languageCode)
                             .format(DateTime.parse(notification['created_at'])),
                         style: AppStyles.greyContent(context).copyWith(
-                          fontSize: 11.sp,
+                          fontSize: 11,
                           fontWeight: FontWeight.w400,
                           color: const Color(0xFFB0B7C3),
                         ),
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 4),
                       Text(
                         (notification['title'] ?? '').toString().toUpperCase(),
                         style: AppStyles.darkContent(context).copyWith(
-                          fontSize: 13.sp,
+                          fontSize: 13,
                           fontWeight: seen ? FontWeight.w400 : FontWeight.w700,
                           color: seen
                               ? Colors.black.withOpacity(0.5)
@@ -127,7 +127,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                   ),
                 ),
               ),
-              SizedBox(width: AppSizes.s12.w),
+              SizedBox(width: AppSizes.s12),
             ],
           ),
         ),

@@ -45,11 +45,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100.w : double.infinity,
+                    maxWidth: kIsWeb ? 1100 : double.infinity,
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: AppSizes.s16.h, horizontal: AppSizes.s12.w),
+                        vertical: AppSizes.s16, horizontal: AppSizes.s12),
                     child: Consumer<TasksController>(
                       builder: (context, viewModel, child) => Form(
                         key: formKey,
@@ -61,7 +61,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               AppStrings.mainData.tr(),
                               style: AppStyles.primaryContent(context).copyWith(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 14.sp),
+                                  fontSize: 14),
                             ),
                             gapH14,
                             TextFormField(
@@ -111,7 +111,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   context: context,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(16.r)),
+                                        top: Radius.circular(16)),
                                   ),
                                   builder: (context) {
                                     return StatefulBuilder(
@@ -121,11 +121,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                           children: [
                                             Padding(
                                               padding:
-                                                  EdgeInsets.all(16.0.r),
+                                                  EdgeInsets.all(16.0),
                                               child: Text(
                                                 AppStrings.employeeName.tr(),
                                                 style: AppStyles.heading(context).copyWith(
-                                                    fontSize: 18.sp,
+                                                    fontSize: 18,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
@@ -163,7 +163,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             ),
                                             Padding(
                                               padding:
-                                                  EdgeInsets.all(16.0.r),
+                                                  EdgeInsets.all(16.0),
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -174,7 +174,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                     style: AppStyles.whiteContent(context).copyWith(
                                                         fontWeight:
                                                             FontWeight.w500,
-                                                        fontSize: 14.sp)),
+                                                        fontSize: 14)),
                                               ),
                                             )
                                           ],
@@ -185,18 +185,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 );
                               },
                               child: Container(
-                                height: 65.h,
+                                height: 65,
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w, vertical: 0),
+                                    horizontal: 16, vertical: 0),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(AppSizes.s10.r),
+                                        BorderRadius.circular(AppSizes.s10),
                                     side: BorderSide(
                                       color: Color(AppColors.border),
-                                      width: 1.0.r,
+                                      width: 1.0,
                                     ),
                                   ),
                                 ),
@@ -209,7 +209,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                           ? "${viewModel.selectedEmployeeIds.length} ${AppStrings.selected.tr()}"
                                           : AppStrings.employeeName.tr(),
                                       style: AppStyles.greyContent(context).copyWith(
-                                          fontSize: 12.sp,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w400,
                                           color: Color(AppColors.overlay)),
                                     ),
@@ -234,16 +234,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             SvgPicture.asset(
                                               e['value']!,
                                               fit: BoxFit.scaleDown,
-                                              width: 27.r,
-                                              height: 24.r,
+                                              width: 27,
+                                              height: 24,
                                             ),
                                             SizedBox(
-                                              width: 10.w,
+                                              width: 10,
                                             ),
                                             Text(
                                               e['name'].toString(),
                                               style: AppStyles.greyContent(context).copyWith(
-                                                  fontSize: 12.sp,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.w400,
                                                   color: Color(
                                                       AppColors.overlay)),
@@ -273,7 +273,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       child: Text(
                                         e['name'].toString(),
                                         style: AppStyles.greyContent(context).copyWith(
-                                            fontSize: 12.sp,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.w400,
                                             color:
                                                 Color(AppColors.overlay)),
@@ -292,7 +292,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             AddNewTaskListWidget(),
                             gapH14,
                             SizedBox(
-                              height: 30.h,
+                              height: 30,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -300,8 +300,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 if (viewModel.isLoading == false)
                                   CustomElevatedButton(
                                     backgroundColor:  Color(AppColors.secondaryButton),
-                                    titleSize: AppSizes.s14.sp,
-                                    radius: AppSizes.s24.r,
+                                    titleSize: AppSizes.s14,
+                                    radius: AppSizes.s24,
                                     title: AppStrings.addTask.tr().toUpperCase(),
                                     onPressed: () async {
                                       if (formKey.currentState!.validate()) {

@@ -26,8 +26,8 @@ class SwitchRowNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = isLoginPageStyle == true
-        ? AppStyles.blackContent(context).copyWith(fontSize: 12.sp)
-        : AppStyles.blackContent(context).copyWith(fontSize: 12.sp);
+        ? AppStyles.blackContent(context).copyWith(fontSize: 12)
+        : AppStyles.blackContent(context).copyWith(fontSize: 12);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -38,18 +38,18 @@ class SwitchRowNotification extends StatelessWidget {
             leftText ?? AppStrings.allNotifications.tr(),
             style: textStyle,
           ),
-          SizedBox(width: 8.w),
+          SizedBox(width: 8),
           CustomSwitchButton(
-            width: 60.w,
-            height: 30.h,
-            padding: 4.r,
-            circleSize: 22.r,
+            width: 60,
+            height: 30,
+            padding: 4,
+            circleSize: 22,
             value: value,
             activeColor:  Color(AppColors.buttons),
             inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
-          SizedBox(width: 8.w),
+          SizedBox(width: 8),
           Text(
             rightText ?? AppStrings.myDepartment.tr(),
             style: textStyle,

@@ -205,8 +205,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: isWeb
-                                    ? BorderRadius.circular(35.r)
-                                    : BorderRadius.vertical(top: Radius.circular(35.r)),
+                                    ? BorderRadius.circular(35)
+                                    : BorderRadius.vertical(top: Radius.circular(35)),
                                 color: Color(AppColors.background)
                             ),
                             width: double.infinity,
@@ -224,22 +224,22 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   if (!isWeb) ...[
-                                    SizedBox(height: 10.h,),
+                                    SizedBox(height: 10,),
                                     Center(
                                       child:Container(
-                                        width: 63.w,
-                                        height: 5.h,
+                                        width: 63,
+                                        height: 5,
                                         decoration: BoxDecoration(
                                             color: Color(AppColors.disableButton),
-                                            borderRadius: BorderRadius.circular(100.r)
+                                            borderRadius: BorderRadius.circular(100)
                                         ),
                                       ) ,
                                     ),
-                                    SizedBox(height: 10.h,),
+                                    SizedBox(height: 10,),
                                   ] else
-                                    SizedBox(height: 20.h,),
+                                    SizedBox(height: 20,),
                                   Padding(
-                                    padding: EdgeInsets.all(20.r),
+                                    padding: EdgeInsets.all(20),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,22 +251,22 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               AppStrings.requests.tr().toUpperCase(),
                                               style: AppStyles.heading(context).copyWith(
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 18.sp
+                                                  fontSize: 18
                                               ),
                                             )
                                           ],
                                         ),
-                                        SizedBox(height: 15.h),
+                                        SizedBox(height: 15),
                                         SearchableDropdownSheet(
                                           items: viewModel.requestsTypes,
                                           selectedValue: viewModels.selectedRequestType,
                                           nameKey: 'title',
                                           hintText: AppStrings.requestType.tr(),
-                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
-                                          height: 65.h,
-                                          borderRadius: BorderRadius.circular(10.r),
+                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                                          height: 65,
+                                          borderRadius: BorderRadius.circular(10),
                                           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                           fieldSuffixIcon: InkWell(
                                             onTap: () async {
                                               viewModels.selectedRequestType = null;
@@ -279,7 +279,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             child: Icon(
                                               Icons.close,
                                               color: Colors.red,
-                                              size: 20.r,
+                                              size: 20,
                                             ),
                                           ),
                                           onChanged: (value){
@@ -292,7 +292,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             setState(() {});
                                           },
                                         ),
-                                        SizedBox(height: 15.h),
+                                        SizedBox(height: 15),
                                         defaultDropdownField(
                                             value: viewModels.selectStatus,
                                             title: viewModels.selectStatus ?? AppStrings.status.tr(),
@@ -302,7 +302,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               child: Text(
                                                 e.toString().tr().toString(),
                                                 style: AppStyles.almostBlackContent(context).copyWith(
-                                                    fontSize: 12.sp,
+                                                    fontSize: 12,
                                                     fontWeight: FontWeight.w400,
                                                 ),),
                                             ),
@@ -314,7 +314,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               );
                                             }
                                         ),
-                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   SizedBox(height: 15.h),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   SizedBox(height: 15),
                                         if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
                                           SearchableDropdownSheet(
                                             items: viewModel.departments,
@@ -331,22 +331,22 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               child: Icon(
                                                 Icons.close,
                                                 color: Colors.red,
-                                                size: 20.r,
+                                                size: 20,
                                               ),
                                             ),
                                             hintText: AppStrings.department.tr(),
-                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
-                                            height: 65.h,
-                                            borderRadius: BorderRadius.circular(10.r),
+                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                                            height: 65,
+                                            borderRadius: BorderRadius.circular(10),
                                             borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                             onChanged: (value){
                                               viewModel.selectedDepartment = value;
                                               viewModel.selectDepId = value['id']?.toString();
                                               setState(() {});
                                             },
                                           ),
-                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   SizedBox(height: 15.h),
+                                        if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty) && widget.requestsType != GetRequestsTypes.mine)   SizedBox(height: 15),
                                         if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
                                           SearchableDropdownSheet(
                                             items: viewModel.employees,
@@ -364,15 +364,15 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               child: Icon(
                                                 Icons.close,
                                                 color: Colors.red,
-                                                size: 20.r,
+                                                size: 20,
                                               ),
                                             ),
                                             hintText: AppStrings.employeeName.tr(),
-                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
-                                            height: 65.h,
-                                            borderRadius: BorderRadius.circular(10.r),
+                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                                            height: 65,
+                                            borderRadius: BorderRadius.circular(10),
                                             borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                             onChanged: (value){
                                               viewModel.selectedEmployee = value;
                                               viewModel.selectedDatecontroller.clear();
@@ -380,7 +380,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               setState(() {});
                                             },
                                           ),
-                                        SizedBox(height: 15.h),
+                                        SizedBox(height: 15),
                                         viewModels.selectedRequestType?['type'] ==
                                             'instead_of_holidays'
                                             ? SearchableDropdownSheet(
@@ -388,11 +388,11 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           selectedValue: viewModels.selectedRequestType,
                                           nameKey: 'name',
                                           hintText: AppStrings.requestTime.tr(),
-                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
-                                          height: 65.h,
-                                          borderRadius: BorderRadius.circular(10.r),
+                                          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                                          height: 65,
+                                          borderRadius: BorderRadius.circular(10),
                                           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                           onChanged: (value) =>
                                               viewModels.selectInsteadOfHolidays(context,
                                                   startDateOrDatetime: value['from'],
@@ -400,12 +400,12 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                         )
                                             : TextField(
                                           controller: viewModels.controller,
-                                          style: AppStyles.darkContent(context).copyWith(fontSize: 14.sp),
+                                          style: AppStyles.darkContent(context).copyWith(fontSize: 14),
                                           decoration: InputDecoration(
                                             hintText: AppStrings.requestTime.tr(),
-                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12.sp),
+                                            hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                             suffixIcon: IconButton(
-                                              icon: Icon(Icons.calendar_today, size: 20.r),
+                                              icon: Icon(Icons.calendar_today, size: 20),
                                               onPressed: () =>
                                                   viewModels.selectDateFilter(context, filter: true),
                                             ),
@@ -413,7 +413,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           readOnly: true,
                                           onTap: () => viewModels.selectDateFilter(context, filter: true),
                                         ),
-                                        SizedBox(height: 30.h,),
+                                        SizedBox(height: 30,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -486,17 +486,17 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 Navigator.pop(context, _buildFilterMap(viewModels, viewModel));
                                               },
                                               child: Container(
-                                                height: 50.h,
+                                                height: 50,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.secondaryButton),
-                                                  borderRadius: BorderRadius.circular(50.r),
+                                                  borderRadius: BorderRadius.circular(50),
                                                 ),
-                                                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                                                padding: EdgeInsets.symmetric(horizontal: 40),
                                                 child: Text(
                                                   AppStrings.applyFilter.tr().toUpperCase(),
                                                   style: AppStyles.whiteContent(context).copyWith(
-                                                      fontSize: 12.sp,
+                                                      fontSize: 12,
                                                       fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
@@ -514,18 +514,18 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 Navigator.pop(context, _emptyFilterMap());
                                               },
                                               child: Container(
-                                                height: 50.h,
+                                                height: 50,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.background),
-                                                  borderRadius: BorderRadius.circular(50.r),
-                                                  border: Border.all(color: Color(AppColors.secondaryButton), width: 1.w),
+                                                  borderRadius: BorderRadius.circular(50),
+                                                  border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
                                                 ),
-                                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                                padding: EdgeInsets.symmetric(horizontal: 20),
                                                 child: Text(
                                                   AppStrings.clear.tr().toUpperCase(),
                                                   style: AppStyles.darkContent(context).copyWith(
-                                                      fontSize: 12.sp,
+                                                      fontSize: 12,
                                                       fontWeight: FontWeight.w500,
                                                   ),
                                                 ),

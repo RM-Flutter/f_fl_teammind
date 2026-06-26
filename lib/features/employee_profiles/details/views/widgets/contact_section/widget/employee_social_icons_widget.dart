@@ -50,16 +50,16 @@ class EmployeeSocialContacts extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16.w : 0,
-        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8.h : 0,
+        horizontal: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
+        vertical: (kIsWeb || PlatformIs.web) ? AppSizes.s8 : 0,
       ),
       margin: EdgeInsets.only(
-        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s16.h : 0,
+        bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s16 : 0,
       ),
       child: Wrap(
         alignment: WrapAlignment.center,
-        spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12.w : AppSizes.s8.w,
-        runSpacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12.h : AppSizes.s8.h,
+        spacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
+        runSpacing: (kIsWeb || PlatformIs.web) ? AppSizes.s12 : AppSizes.s8,
         children: [
           for (var entry in socialLinks.entries)
             if (entry.value?.isNotEmpty ?? false)
@@ -111,14 +111,14 @@ class SocailIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
+      margin: EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () async => UrlLauncherServiceEx.launch(
             context: context, url: url, mode: mode ?? LaunchMode.platformDefault),
         child: CircleAvatar(
           backgroundColor:  Color(AppColors.secondaryButton),
-          radius: 18.r,
-          child: Center(child: FaIcon(icon, color: Colors.white, size: 16.sp)),
+          radius: 18,
+          child: Center(child: FaIcon(icon, color: Colors.white, size: 16)),
         ),
       ),
     );

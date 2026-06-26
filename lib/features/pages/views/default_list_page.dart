@@ -72,28 +72,28 @@ class _DefaultListPageState extends State<DefaultListPage> {
                   children: [
                     Container(
                       color: Colors.transparent,
-                      height: 90.h,
+                      height: 90,
                       width: double.infinity,
                       alignment: Alignment.center,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_back, color:  const Color(0xff224982), size: 24.r,),
+                            icon: Icon(Icons.arrow_back, color:  const Color(0xff224982), size: 24,),
                             onPressed: () =>  Navigator.pop(context),
                           ),
                           Text(
                             widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),
-                            style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                            style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           IconButton(
-                            icon:  Icon(Icons.arrow_back, color: Colors.transparent, size: 24.r,),
+                            icon:  Icon(Icons.arrow_back, color: Colors.transparent, size: 24,),
                             onPressed: () {},
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: AppSizes.s20.h),
+                    SizedBox(height: AppSizes.s20),
                     if(points.blogs.isEmpty)Container(
                       height: 0.8.sh,
                       alignment: Alignment.center,
@@ -102,13 +102,14 @@ class _DefaultListPageState extends State<DefaultListPage> {
                           title: AppStrings.noDataFounded.tr()),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: GridView.count(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12.w,
-                            childAspectRatio: 1/1.3,
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: GridView.extent(
+                            maxCrossAxisExtent: 220,
+                            mainAxisSpacing: 15,
+                            crossAxisSpacing: 15,
+                            childAspectRatio: 1/1.1,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             children: List.generate((points.isGetBlogLoading && points.currentPage == 1)?8 :
@@ -119,10 +120,10 @@ class _DefaultListPageState extends State<DefaultListPage> {
                                 highlightColor: Colors.grey[100]!,
                                 child: Container(
                                   width: double.infinity,
-                                  height: 100.h, // Adjust height based on your UI
+                                  height: 100, // Adjust height based on your UI
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.r), // Adjust as needed
+                                    borderRadius: BorderRadius.circular(8), // Adjust as needed
                                   ),
                                 ),
                               ):
@@ -183,40 +184,53 @@ class _DefaultListPageState extends State<DefaultListPage> {
         padding: EdgeInsets.symmetric(vertical: 0),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(10),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
-                blurRadius: 8.r,
-                spreadRadius: 1.r,
+                blurRadius: 8,
+                spreadRadius: 1,
               )
             ],
           ),
           child: Column(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
-                child:  CachedNetworkImage(
-                  height: 135.h,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  imageUrl: src,
-                  placeholder: (context, url) =>
-                  const ShimmerAnimatedLoading(),
-                  errorWidget: (context, url, error) =>  Icon(
-                    Icons.image_not_supported_outlined,
-                    size: AppSizes.s32.r,
-                    color: Colors.white,
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                  child:  CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    imageUrl: src,
+                    placeholder: (context, url) =>
+                    const ShimmerAnimatedLoading(),
+                    errorWidget: (context, url, error) =>  Icon(
+                      Icons.image_not_supported_outlined,
+                      size: AppSizes.s32,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),), // Replace with project images
-              SizedBox(height: 5.h,),
+                ),
+              ),
+              SizedBox(height: 5,),
               Padding(
-                padding: EdgeInsets.all(8.0.r),
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),maxLines: 1, style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 10.sp, color: Color(AppColors.secondaryButton))),],
+                    Text(
+                      title1 ?? "".toUpperCase(),
+                      maxLines: 2, 
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis, 
+                      style: AppStyles.primaryContent(context).copyWith(
+                        fontWeight: FontWeight.w600, 
+                        fontSize: 13, 
+                        color: Color(AppColors.secondaryButton)
+                      )
+                    ),
+                  ],
                 ),
               ),
             ],

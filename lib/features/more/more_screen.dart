@@ -75,7 +75,7 @@ class _MoreScreenState extends State<MoreScreen> {
               alignment: Alignment.topCenter,
               color: Color(AppColors.secondaryButton),
               child: SizedBox(
-                height: 0.25.sh,
+                height: MediaQuery.sizeOf(context).height * 0.25,
                 child: Image.asset(
                   "assets/images/png/more_back.png",
                   fit: BoxFit.cover,
@@ -83,7 +83,7 @@ class _MoreScreenState extends State<MoreScreen> {
               ),
             ),
             Positioned.fill(
-              top: 0.25.sh,
+              top: MediaQuery.sizeOf(context).height * 0.25,
               child: Container(
                 // height: MediaQuery.sizeOf(context).height * 0.66,
                 decoration: ShapeDecoration(
@@ -94,15 +94,15 @@ class _MoreScreenState extends State<MoreScreen> {
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40.r),
-                      topRight: Radius.circular(40.r),
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
                     ),
                   ),
                 ),
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 0.14.sh,
+                      height: MediaQuery.sizeOf(context).height * 0.14,
                     ),
                     Expanded(
                       child: Padding(
@@ -110,16 +110,16 @@ class _MoreScreenState extends State<MoreScreen> {
                         child: ListView(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              padding: EdgeInsets.symmetric(horizontal: 24),
                               child: Container(
                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                 child: Text(AppStrings.functionality.tr().toUpperCase(),
                                     style: AppStyles.primaryContent(context).copyWith(
-                                        fontSize: 13.sp,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.w600)),
                               ),
                             ),
-                            SizedBox(height : 15.h),
+                            SizedBox(height : 15),
                             DefaultListTile(
                               title: AppStrings.payroll.tr(),
                               src: AppIcons.payroll,
@@ -184,14 +184,14 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) SizedBox(height : 15.h),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) SizedBox(height : 15),
                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Padding(
-                             padding: EdgeInsets.symmetric(horizontal: 24.w),
+                             padding: EdgeInsets.symmetric(horizontal: 24),
                              child: Container(
                                alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                child: Text(AppStrings.management.tr().toUpperCase(),
                                    style: AppStyles.primaryContent(context).copyWith(
-                                       fontSize: 13.sp,
+                                       fontSize: 13,
                                        fontWeight: FontWeight.w600)),
                              ),
                            ),
@@ -229,18 +229,18 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
-                            SizedBox(height : 15.h),
+                            SizedBox(height : 15),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              padding: EdgeInsets.symmetric(horizontal: 24),
                               child: Container(
                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                 child: Text(AppStrings.more.tr().toUpperCase(),
                                     style: AppStyles.primaryContent(context).copyWith(
-                                        fontSize: 13.sp,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.w600)),
                               ),
                             ),
-                            SizedBox(height : 15.h),
+                            SizedBox(height : 15),
                             DefaultListTile(
                               title: AppStrings.ticketSystem.tr(),
                               src: "assets/images/svg/mts.svg",
@@ -387,19 +387,19 @@ class _MoreScreenState extends State<MoreScreen> {
                                 );
                               },
                             ),
-                            SizedBox(height : 15.h),
+                            SizedBox(height : 15),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              padding: EdgeInsets.symmetric(horizontal: 24),
                               child: Container(
                                 alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
                                 child: Text(AppStrings.myAccount.tr().toUpperCase(),
                                     style: AppStyles.primaryContent(context).copyWith(
 
-                                        fontSize: 13.sp,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.w600)),
                               ),
                             ),
-                            SizedBox(height : 15.h),
+                            SizedBox(height : 15),
                             DefaultListTile(
                               title:AppStrings.customizeNotifications.tr(),
                               src: "assets/images/svg/mcn.svg",
@@ -479,11 +479,11 @@ class _MoreScreenState extends State<MoreScreen> {
               ),
             ),
             Positioned(
-              top: 0.15.sh,
+              top: MediaQuery.sizeOf(context).height * 0.15,
               child: Column(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(124.r),
+                    borderRadius: BorderRadius.circular(124),
                     child: GestureDetector(
                       onTap:(){
                         context.pushNamed(AppRoutes.personalProfile.name,
@@ -493,44 +493,44 @@ class _MoreScreenState extends State<MoreScreen> {
                       child: CachedNetworkImage(
                           imageUrl:(gCache != null)? gCache['photo']??"" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
                           fit: BoxFit.cover,
-                          height: 124.r,
-                          width: 124.r,
+                          height: 124,
+                          width: 124,
                           placeholder: (context, url) => ShimmerAnimatedLoading(
-                            width: 63.0.r,
-                            height: 63.r,
-                            circularRaduis: 63.r,
+                            width: 63.0,
+                            height: 63,
+                            circularRaduis: 63,
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.image_not_supported_outlined,
-                            size: 32.r,
+                            size: 32,
                           )),
                     ),
                   ),
-                  SizedBox(height: 15.h),
+                  SizedBox(height: 15),
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 50.w),
-                    width: 1.sw,
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    width: MediaQuery.sizeOf(context).width,
                     child: Text(
                       (gCache['name'] ?? '').toUpperCase(),
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: AppStyles.heading(context).copyWith(
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 8),
                   Container(
                     alignment: Alignment.center,
-                    width: 0.5.sw,
+                    width: MediaQuery.sizeOf(context).width * 0.5,
                     child: Text(
                       gCache['job_title'] ?? "",
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       style: AppStyles.greyContent(context).copyWith(
-                         fontSize: 11.sp,
+                         fontSize: 11,
                          fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -563,26 +563,26 @@ class DefaultListTile extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 4.h),
+          contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 4),
           leading: SvgPicture.asset(
             src,
             color: Color(AppColors.buttons),
             fit: BoxFit.scaleDown,
-            width: 20.r,
-            height: 20.r,
+            width: 20,
+            height: 20,
           ),
           title: Text(
             title.toUpperCase(),
             style: AppStyles.darkContent(context).copyWith(
-              fontSize: 12.sp,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
           ),
           onTap: onTap ?? () {},
         ),
         Divider(
-          height: 1.3.h,
-          thickness: 2.h,
+          height: 1.3,
+          thickness: 2,
           color: const Color(0xFFF3F3F3), // Light gray divider
           indent: 0,
           endIndent: 0,

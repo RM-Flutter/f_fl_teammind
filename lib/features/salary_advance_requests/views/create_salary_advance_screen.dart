@@ -42,9 +42,9 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
             pageContext: context,
             title: 'create_salary_advance'.tr(),
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(AppSizes.s16.r),
+              padding: EdgeInsets.all(AppSizes.s16),
               child: GlassmorphismCard(
-                padding: EdgeInsets.all(AppSizes.s24.r),
+                padding: EdgeInsets.all(AppSizes.s24),
                 backgroundColor: Colors.white,
                 opacity: 0.9,
                 boxShadow: [
@@ -72,7 +72,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 20),
                       _buildTextField(
                         controller: controller.howLongToPayController,
                         hintText: 'how_long_to_pay_months'.tr(),
@@ -85,7 +85,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 20),
                       _buildTextField(
                         controller: controller.fromDateController,
                         hintText: 'from_date_yyyy_mm'.tr(),
@@ -104,30 +104,30 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                             context: context,
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                             builder: (BuildContext builder) {
                               DateTime tempPickedDate = DateTime.now();
                               return Container(
-                                height: 300.h,
-                                padding: EdgeInsets.only(top: 10.h),
+                                height: 300,
+                                padding: EdgeInsets.only(top: 10),
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                      padding: EdgeInsets.symmetric(horizontal: 16),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           TextButton(
                                             onPressed: () => Navigator.pop(context),
-                                            child: Text('cancel_request'.tr().split(' ')[0], style: TextStyle(color: Color(AppColors.failureRed), fontSize: 16.sp)),
+                                            child: Text('cancel_request'.tr().split(' ')[0], style: TextStyle(color: Color(AppColors.failureRed), fontSize: 16)),
                                           ),
                                           TextButton(
                                             onPressed: () {
                                               pickedDate = tempPickedDate;
                                               Navigator.pop(context);
                                             },
-                                            child: Text('submit'.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                                            child: Text('submit'.tr(), style: TextStyle(color: Color(AppColors.buttons), fontSize: 16, fontWeight: FontWeight.bold)),
                                           ),
                                         ],
                                       ),
@@ -156,12 +156,12 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                           }
                         },
                       ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 16),
                     Text(
                       'attachments'.tr(),
-                      style: AppStyles.heading(context).copyWith(fontSize: 16.sp),
+                      style: AppStyles.heading(context).copyWith(fontSize: 16),
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 8),
                       InkWell(
                         onTap: () async {
                           final ImagePicker picker = ImagePicker();
@@ -182,29 +182,29 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                         },
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 24.h),
+                          padding: EdgeInsets.symmetric(vertical: 24),
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
                             border: Border.all(color: Color(AppColors.buttonSecondaryColor).withOpacity(0.3), width: 1.5, style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(16.r),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(12.r),
+                                padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: Color(AppColors.buttonSecondaryColor).withOpacity(0.1),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(Icons.cloud_upload_rounded, color: Color(AppColors.buttonSecondaryColor), size: 32.sp),
+                                child: Icon(Icons.cloud_upload_rounded, color: Color(AppColors.buttonSecondaryColor), size: 32),
                               ),
-                              SizedBox(height: 12.h),
+                              SizedBox(height: 12),
                               Text(
                                 'add_attachment'.tr(), 
                                 style: AppStyles.content(context).copyWith(
                                   color: Color(AppColors.buttonSecondaryColor),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14.sp
+                                  fontSize: 14
                                 ),
                               ),
                             ],
@@ -212,22 +212,22 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                         ),
                       ),
                       if (controller.attachments.isNotEmpty) ...[
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 16),
                         ...controller.attachments.asMap().entries.map((entry) {
                           int idx = entry.key;
                           var file = entry.value.files.first;
                           return Container(
-                            margin: EdgeInsets.only(bottom: 8.h),
-                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                            margin: EdgeInsets.only(bottom: 8),
+                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
                               color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8.r),
+                              borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: Colors.grey.shade300),
                             ),
                             child: Row(
                               children: [
                                 Icon(Icons.image, color: Colors.grey.shade600),
-                                SizedBox(width: 12.w),
+                                SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
                                     file.name,
@@ -247,7 +247,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                           );
                         }).toList(),
                       ],
-                    SizedBox(height: 40.h),
+                    SizedBox(height: 40),
                     controller.isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : Container(
@@ -256,7 +256,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                               gradient: LinearGradient(
                                 colors: [Color(AppColors.buttonColor), Color(AppColors.buttonSecondaryColor)],
                               ),
-                              borderRadius: BorderRadius.circular(12.r),
+                              borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
                                   color: Color(AppColors.buttonColor).withOpacity(0.3),
@@ -269,8 +269,8 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
-                                padding: EdgeInsets.symmetric(vertical: 16.h),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
                               onPressed: () async {
                                 bool success = await controller.submitRequest(context);
@@ -280,7 +280,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                               },
                               child: Text(
                                 'submit'.tr(),
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.white),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                             ),
                           ),
@@ -319,26 +319,26 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
         filled: true,
         fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Color(AppColors.buttons), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Color(AppColors.failureRed), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Color(AppColors.failureRed), width: 2.0),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
     );
   }

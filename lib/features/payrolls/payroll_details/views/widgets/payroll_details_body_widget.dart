@@ -38,7 +38,7 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.s12.w),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
         child: Column(
           children: [
             gapH24,
@@ -117,10 +117,10 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.symmetric(
-              horizontal: AppSizes.s12.w, vertical: AppSizes.s18.h),
+              horizontal: AppSizes.s12, vertical: AppSizes.s18),
           decoration: BoxDecoration(
             color: const Color(AppColors.lightGreyE5).withOpacity(0.4),
-            borderRadius: BorderRadius.circular(AppSizes.s8.r),
+            borderRadius: BorderRadius.circular(AppSizes.s8),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,7 +130,7 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
                   title ?? "",
                   style: AppStyles.primaryContent(context).copyWith(
                     fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.s14.sp,
+                    fontSize: AppSizes.s14,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -142,7 +142,7 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
                 subtitle! + '' " " "${AppStrings.EGP.tr()}",
                 style: AppStyles.blackContent(context).copyWith(
                   fontWeight: FontWeight.w400,
-                  fontSize: AppSizes.s12.sp,
+                  fontSize: AppSizes.s12,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

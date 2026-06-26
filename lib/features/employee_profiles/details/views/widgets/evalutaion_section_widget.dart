@@ -38,16 +38,16 @@ class EvalutaionSectionWidget extends StatelessWidget {
                    gainedPoints: evaluations![index]['gainedPoints'],
                    totalPoints: evaluations![index]['totalPoints'],
                    title: "${evaluations![index]['title']}",
-                   icon: evaluations![index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 20.sp,): Image.asset("assets/images/new-cale.png", width: 20.w, height: 20.h, color: Colors.black),
+                   icon: evaluations![index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 20,): Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Colors.black),
                    url: (evaluations![index]['submitUrl'] != null)? evaluations![index]['submitUrl'].toString() : null,
                  ),
-                 separatorBuilder: (context, index) => SizedBox(height: 12.h,),
+                 separatorBuilder: (context, index) => SizedBox(height: 12,),
                  itemCount:evaluations!.length <= 6 ? evaluations!.length : 6),
-          if(evaluations!.isNotEmpty) SizedBox(height: 24.h),
+          if(evaluations!.isNotEmpty) SizedBox(height: 24),
           if(evaluations!.isNotEmpty) Center(
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),
-                  titleSize: AppSizes.s12.sp,
+                  titleSize: AppSizes.s12,
                   title: AppStrings.viewEvaluations.tr().toUpperCase(),
                   onPressed: ()async{
                     await context.pushNamed(

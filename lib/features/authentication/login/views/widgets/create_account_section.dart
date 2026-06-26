@@ -38,7 +38,7 @@ class CreateAccountSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomElevatedButton(
-                width: AppSizes.s290.w,
+                width: (kIsWeb || PlatformIs.web) ? AppSizes.s290 : AppSizes.s290.w,
                 title: AppStrings.createNewAccount.tr(),
                 isFuture: false,
                 onPressed: () => viewModel.showCreateAccountModal(context: context),
@@ -60,7 +60,7 @@ class CreateAccountSection extends StatelessWidget {
                   style: AppStyles.titleTextContent(context).copyWith(
                     color: Color(0xffffffff),
                     fontWeight: FontWeight.w400,
-                    fontSize: 14.sp,
+                    fontSize: (kIsWeb || PlatformIs.web) ? 14 : 14.sp,
                   ),
                 ),
               )

@@ -54,7 +54,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
-              expandedHeight: 220.h,
+              expandedHeight: 220,
               pinned: true,
               backgroundColor: Color(AppColors.buttons),
               elevation: 0,
@@ -74,72 +74,72 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   child: Stack(
                     children: [
                       Positioned(
-                        right: -50.w,
-                        top: -50.h,
+                        right: -50,
+                        top: -50,
                         child: CircleAvatar(
-                          radius: 130.r,
+                          radius: 130,
                           backgroundColor: Colors.white.withOpacity(0.05),
                         ),
                       ),
                       Positioned(
-                        left: -30.w,
-                        bottom: -20.h,
+                        left: -30,
+                        bottom: -20,
                         child: CircleAvatar(
-                          radius: 80.r,
+                          radius: 80,
                           backgroundColor: Colors.white.withOpacity(0.08),
                         ),
                       ),
                       SafeArea(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(20.r),
+                                  borderRadius: BorderRadius.circular(20),
                                   border: Border.all(color: Colors.white.withOpacity(0.3)),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.calendar_month_rounded, color: Colors.white, size: 16.r),
-                                    SizedBox(width: 8.w),
+                                    Icon(Icons.calendar_month_rounded, color: Colors.white, size: 16),
+                                    SizedBox(width: 8),
                                     Text(
                                       dateFormatted,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 13.sp,
+                                        fontSize: 13,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 16.h),
+                              SizedBox(height: 16),
                               Text(
                                 AppStrings.reportDetails.tr(),
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 28.sp,
+                                  fontSize: 28,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 0.5,
                                 ),
                               ),
                               if (employeeName != null) ...[
-                                SizedBox(height: 8.h),
+                                SizedBox(height: 8),
                                 Row(
                                   children: [
-                                    Icon(Icons.person_outline_rounded, color: Colors.white70, size: 18.r),
-                                    SizedBox(width: 6.w),
+                                    Icon(Icons.person_outline_rounded, color: Colors.white70, size: 18),
+                                    SizedBox(width: 6),
                                     Text(
                                       employeeName,
                                       style: TextStyle(
                                         color: Colors.white70,
-                                        fontSize: 15.sp,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -157,14 +157,14 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
             ),
             SliverToBoxAdapter(
               child: Transform.translate(
-                offset: Offset(0, -20.h),
+                offset: Offset(0, -20),
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFFF8F9FA),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -175,7 +175,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           bgColor: const Color(0xFFD1FAE5),
                           content: widget.report.done ?? AppStrings.noAccomplishmentsRecorded.tr(),
                         ),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 24),
                         
                         _buildSection(
                           title: AppStrings.inProgressTasks.tr(),
@@ -184,7 +184,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           bgColor: const Color(0xFFDBEAFE),
                           content: widget.report.inProgress ?? AppStrings.noOngoingTasksRecorded.tr(),
                         ),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 24),
 
                         _buildSection(
                           title: AppStrings.blockersAndProblems.tr(),
@@ -193,11 +193,11 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           bgColor: const Color(0xFFFEF3C7),
                           content: widget.report.problems ?? AppStrings.noProblemsRecorded.tr(),
                         ),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 24),
 
                         if (widget.report.attachments != null && widget.report.attachments!.isNotEmpty) ...[
                           _buildAttachmentsSection(widget.report.attachments!),
-                          SizedBox(height: 40.h),
+                          SizedBox(height: 40),
                         ],
 
                         // Comments Section
@@ -205,11 +205,11 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           children: [
                             Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
                                 AppStrings.comments.tr().toUpperCase(),
                                 style: TextStyle(
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.grey.shade500,
                                   letterSpacing: 1.2,
@@ -219,7 +219,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
                           ],
                         ),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 24),
                         Consumer<CommentProvider>(
                           builder: (context, commentProvider, child) {
                             return CommentsWidget(
@@ -233,7 +233,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             );
                           }
                         ),
-                        SizedBox(height: 80.h),
+                        SizedBox(height: 80),
                       ],
                     ),
                   ),
@@ -257,7 +257,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -270,24 +270,24 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(20.r),
+            padding: EdgeInsets.all(20),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(12.r),
+                  padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: bgColor,
-                    borderRadius: BorderRadius.circular(16.r),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(icon, size: 22.r, color: iconColor),
+                  child: Icon(icon, size: 22, color: iconColor),
                 ),
-                SizedBox(width: 16.w),
+                SizedBox(width: 16),
                 Expanded(
                   child: Text(
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       color: const Color(0xFF1F2937),
                     ),
                   ),
@@ -296,19 +296,19 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.all(16.r),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFFF9FAFB),
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.grey.shade100),
               ),
               child: Text(
                 content,
                 style: TextStyle(
-                  fontSize: 15.sp, 
+                  fontSize: 15, 
                   height: 1.6, 
                   color: const Color(0xFF4B5563),
                   fontWeight: FontWeight.w500,
@@ -326,7 +326,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -339,24 +339,24 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(20.r),
+            padding: EdgeInsets.all(20),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(12.r),
+                  padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(16.r),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(Icons.attach_file_rounded, size: 22.r, color: Color(AppColors.buttons)),
+                  child: Icon(Icons.attach_file_rounded, size: 22, color: Color(AppColors.buttons)),
                 ),
-                SizedBox(width: 16.w),
+                SizedBox(width: 16),
                 Expanded(
                   child: Text(
                     AppStrings.attachments.tr(),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       color: const Color(0xFF1F2937),
                     ),
                   ),
@@ -365,15 +365,15 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: GridView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 12.w,
-                mainAxisSpacing: 12.h,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
                 childAspectRatio: 1.1,
               ),
               itemCount: attachments.length,
@@ -412,19 +412,19 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                       errorWidget: (context, url, error) => Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.broken_image_rounded, color: Colors.white54, size: 64.r),
-                                          SizedBox(height: 16.h),
-                                          Text("Failed to load image", style: TextStyle(color: Colors.white54, fontSize: 14.sp)),
+                                          Icon(Icons.broken_image_rounded, color: Colors.white54, size: 64),
+                                          SizedBox(height: 16),
+                                          Text("Failed to load image", style: TextStyle(color: Colors.white54, fontSize: 14)),
                                         ],
                                       ),
                                     ),
                                   ),
                                   Positioned(
-                                    top: 16.h,
-                                    right: 16.w,
+                                    top: 16,
+                                    right: 16,
                                     child: IconButton(
                                       icon: Container(
-                                        padding: EdgeInsets.all(8.r),
+                                        padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: Colors.white.withOpacity(0.1),
                                           shape: BoxShape.circle,
@@ -445,13 +445,13 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                       tag: 'image_${attachment.id}',
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.r),
+                          borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16.r),
+                          borderRadius: BorderRadius.circular(16),
                           child: CachedNetworkImage(
                             imageUrl: imageUrl,
                             fit: BoxFit.cover,
@@ -464,9 +464,9 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.broken_image_rounded, color: Colors.grey.shade400, size: 32.r),
-                                  SizedBox(height: 4.h),
-                                  Text("Error", style: TextStyle(fontSize: 10.sp, color: Colors.grey.shade500)),
+                                  Icon(Icons.broken_image_rounded, color: Colors.grey.shade400, size: 32),
+                                  SizedBox(height: 4),
+                                  Text("Error", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
                                 ],
                               ),
                             ),
@@ -479,28 +479,28 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   return Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF9FAFB),
-                      borderRadius: BorderRadius.circular(16.r),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: Colors.grey.shade200, width: 1.5),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(12.r),
+                          padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttons).withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.insert_drive_file_rounded, size: 28.r, color: Color(AppColors.buttons)),
+                          child: Icon(Icons.insert_drive_file_rounded, size: 28, color: Color(AppColors.buttons)),
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 8),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          padding: EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             attachment.fileName ?? attachment.fileType ?? "File", 
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: const Color(0xFF4B5563))
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF4B5563))
                           ),
                         ),
                       ],

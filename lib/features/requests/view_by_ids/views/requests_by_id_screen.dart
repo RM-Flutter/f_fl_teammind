@@ -64,8 +64,8 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
               'lang': context.locale.languageCode
             }),
             tagSuffix: 'add',
-            height: 16.r,
-            width: 16.r,
+            height: 16,
+            width: 16,
           ),
           title: AppSettingsService.getRequestTitleFromGenenralSettings(
               context: context, requestId: widget.requestTypeId) ??
@@ -82,10 +82,10 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100.w : 1.sw
+                  maxWidth: kIsWeb ? 1100 : 1.sw
               ),
               child: Padding(
-                  padding: EdgeInsets.all(!kIsWeb? 12.r : 0),
+                  padding: EdgeInsets.all(!kIsWeb? 12 : 0),
                   child: Consumer<RequestsWithTypeIdViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const LoadingPageWidget()
@@ -97,7 +97,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           if(viewModel.rulesMessage != null) AutoSizeText(
                             viewModel.rulesMessage ?? "",
                             style: AppStyles.greyContent(context).copyWith(
-                                fontSize: 12.sp,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 10,
@@ -118,20 +118,20 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           viewModel.rulesMessage ?? "",
                           maxLines: 10,
                           style: AppStyles.greyContent(context).copyWith(
-                              fontSize: 12.sp,
+                              fontSize: 12,
                               fontWeight: FontWeight.w400),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           softWrap: true,
                         ),
-                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  SizedBox(height: 16.h),
+                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  SizedBox(height: 16),
                         if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
                           onPressed: () async => viewModel
                               .showSummaryReports(context: context),
                           title: AppStrings.summaryReports.tr(),
                           icon: Icons.folder_copy_outlined,
                         ),
-                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)SizedBox(height: 16.h),
+                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)SizedBox(height: 16),
                         if (viewModel.requestsById != null &&
                             viewModel.requestsById!.isNotEmpty)
                           ...viewModel.requestsById!.map(

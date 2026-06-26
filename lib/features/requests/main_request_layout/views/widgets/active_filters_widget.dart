@@ -55,11 +55,11 @@ class ActiveFiltersWidget extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       color: Colors.grey.shade50,
       child: Wrap(
-        spacing: 8.w,
-        runSpacing: 8.h,
+        spacing: 8,
+        runSpacing: 8,
         children: activeFilters.map((filter) {
           return _FilterChip(
             label: filter['label'] as String,
@@ -263,12 +263,12 @@ class _FilterChip extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onRemove,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: Color(AppColors.buttons).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: Color(AppColors.buttons).withOpacity(0.3),
               width: 1,
@@ -281,22 +281,22 @@ class _FilterChip extends StatelessWidget {
                 child: Text(
                   label,
                   style: AppStyles.darkContent(context).copyWith(
-                    fontSize: 12.sp,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 6.w),
+              SizedBox(width: 6),
               Container(
-                padding: EdgeInsets.all(2.r),
+                padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   color: Color(AppColors.secondaryButton),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.close,
-                  size: 14.r,
+                  size: 14,
                   color: Colors.white,
                 ),
               ),

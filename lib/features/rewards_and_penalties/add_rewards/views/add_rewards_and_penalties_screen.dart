@@ -106,11 +106,11 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100.w : double.infinity
+                      maxWidth: kIsWeb ? 1100 : double.infinity
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: AppSizes.s16.h, horizontal: AppSizes.s12.w),
+                        vertical: AppSizes.s16, horizontal: AppSizes.s12),
                     child: Consumer<AddRewardAndPenaltyViewModel>(
                       builder: (context, viewModel, child) => Form(
                         key: formKey,
@@ -121,7 +121,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             //Date Field
                             CustomDropdown.search(
                                 selectedValue: viewModel.selectedType,
-                                borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                                borderRadius: BorderRadius.circular(AppSizes.s15),
                                 borderSide: Theme.of(context)
                                     .inputDecorationTheme
                                     .enabledBorder
@@ -186,7 +186,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                 child: Text(
                                   e.toString().tr(),
                                   style: AppStyles.darkContent(context).copyWith(
-                                    fontSize: 12.sp,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -217,7 +217,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             gapH14,
                             CustomDropdown.search(
                                 selectedValue: viewModel.selectedEmployee,
-                                borderRadius: BorderRadius.circular(AppSizes.s15.r),
+                                borderRadius: BorderRadius.circular(AppSizes.s15),
                                 borderSide: Theme.of(context)
                                     .inputDecorationTheme
                                     .enabledBorder
@@ -263,15 +263,15 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               ),
                             ),
                             //TODO:ADDING EMPLOYEE THAT MANAGED BY ME IN DROPDOWN
-                            SizedBox(height: 30.h,),
+                            SizedBox(height: 30,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 if(viewModel.isLoadingPost == false)  CustomElevatedButton(
                                     backgroundColor:
                                     Color(AppColors.secondaryButton),
-                                    titleSize: AppSizes.s14.sp,
-                                    radius: AppSizes.s24.r,
+                                    titleSize: AppSizes.s14,
+                                    radius: AppSizes.s24,
                                     title: AppStrings.send.tr(),
                                     onPressed: () async {
                                       if(formKey.currentState!.validate()){

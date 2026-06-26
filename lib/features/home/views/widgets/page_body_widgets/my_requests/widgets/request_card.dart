@@ -53,18 +53,18 @@ class RequestCard extends StatelessWidget {
             (userSettings?.empId != null && request.employeeId != null && userSettings!.empId != request.employeeId);
 
     return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.s16.h),
+      margin: EdgeInsets.only(bottom: AppSizes.s16),
       padding: EdgeInsets.symmetric(
-          vertical: AppSizes.s14.h, horizontal: AppSizes.s16.w),
+          vertical: AppSizes.s14, horizontal: AppSizes.s16),
       decoration: ShapeDecoration(
         color: Color(AppColors.cardBackground),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10),
         ),
         shadows: [
           BoxShadow(
             color: Color(AppColors.disableButton).withOpacity(0.5),
-            blurRadius: AppSizes.s5.r,
+            blurRadius: AppSizes.s5,
             spreadRadius: 1,
           )
         ],
@@ -109,14 +109,14 @@ class RequestCard extends StatelessWidget {
                         '',
                     style: AppStyles.titleTextContent(context).copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: AppSizes.s16.sp,
+                      fontSize: AppSizes.s16,
                       letterSpacing: 0.75,
                       height: 1.1,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 4),
                   Opacity(
                     opacity: 0.5,
                     child: AutoSizeText(
@@ -127,20 +127,20 @@ class RequestCard extends StatelessWidget {
                           : '${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.from)} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ? "ar" : "en", context, request.to)} (${request.duration} ${request.durationType.toString().tr()})',
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontWeight: FontWeight.w400,
-                        fontSize: AppSizes.s12.sp,
+                        fontSize: AppSizes.s12,
                         letterSpacing: 0.5,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) SizedBox(height: 4.h),
+                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) SizedBox(height: 4),
                   if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment)
                     Text(
                       "${request.employeeName ?? ""} - ${request.departmentName ?? ""}",
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontWeight: FontWeight.w600, 
-                        fontSize: 12.sp
+                        fontSize: 12
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -148,7 +148,7 @@ class RequestCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: AppSizes.s8.w),
+            SizedBox(width: AppSizes.s8),
             RequestsServices.getRequestsStatusIcon(
                 context: context, status: request.status),
           ],
