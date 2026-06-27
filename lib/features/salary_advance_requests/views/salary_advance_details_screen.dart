@@ -387,9 +387,10 @@ class _SalaryAdvanceDetailsScreenState
           _buildTimelineApprovalRow(
               'employee_approval'.tr(), request.employeeApproved,
               isFirst: true),
-          _buildTimelineApprovalRow('hr_approval'.tr(), request.hrApproved),
           _buildTimelineApprovalRow(
-              'manager_approval'.tr(), request.managerApproved,
+              'manager_approval'.tr(), request.managerApproved),
+          _buildTimelineApprovalRow(
+              'hr_approval'.tr(), request.hrApproved,
               isLast: true),
         ],
       ),
@@ -399,10 +400,10 @@ class _SalaryAdvanceDetailsScreenState
   Widget _buildTimelineApprovalRow(String label, bool? isApproved,
       {bool isFirst = false, bool isLast = false}) {
     Color iconColor = isApproved == true
-        ? Color(AppColors.successGreen)
+        ? const Color(0xFF10B981) // Clean, premium success green
         : (isApproved == false
-            ? Color(AppColors.failureRed)
-            : Color(AppColors.warningYellow));
+            ? const Color(0xFFEF4444) // Clean, premium error red
+            : const Color(0xFFD1D5DB)); // Clean, premium pending grey
     IconData iconData = isApproved == true
         ? Icons.check_circle_rounded
         : (isApproved == false
@@ -416,12 +417,7 @@ class _SalaryAdvanceDetailsScreenState
           Column(
             children: [
               Container(
-                decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                  BoxShadow(
-                      color: iconColor.withOpacity(0.3),
-                      blurRadius: 8,
-                      spreadRadius: 1)
-                ]),
+                decoration: const BoxDecoration(shape: BoxShape.circle),
                 child: Icon(iconData, color: iconColor, size: 24),
               ),
               if (!isLast)
