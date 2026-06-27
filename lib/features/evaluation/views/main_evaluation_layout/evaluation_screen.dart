@@ -23,7 +23,8 @@ import '../../../../core/services/layout_service.dart' show LayoutService;
 
 class EvaluationScreen extends StatefulWidget {
   final String? empId;
-  const EvaluationScreen({super.key, this.empId});
+  final String? empName;
+  const EvaluationScreen({super.key, this.empId, this.empName});
 
   @override
   State<EvaluationScreen> createState() => _FingerprintScreenState();
@@ -73,12 +74,12 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                           : Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                           if(gCache['employee_profile_id'].toString() != widget.empId.toString()) Text("", style:
+                           if(gCache['employee_profile_id'].toString() != widget.empId.toString() && widget.empName != null && widget.empName!.isNotEmpty) Text(widget.empName!, style:
                             AppStyles.heading(context).copyWith(
                                 fontWeight: FontWeight.w600,fontSize: 20,
                             )
                               ,),
-                            if(gCache['employee_profile_id'].toString() != widget.empId.toString()) SizedBox(height: 20),
+                            if(gCache['employee_profile_id'].toString() != widget.empId.toString() && widget.empName != null && widget.empName!.isNotEmpty) SizedBox(height: 20),
                             /// general screen message widget for other requests types
                             // GeneralScreenMessageWidget(
                             //     screenId: '/payrolls'),

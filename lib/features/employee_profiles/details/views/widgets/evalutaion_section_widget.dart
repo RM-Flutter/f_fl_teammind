@@ -54,11 +54,11 @@ class EvalutaionSectionWidget extends StatelessWidget {
                         AppRoutes.evaluationScreen.name,
                         extra: {
                           "empId": id.toString(),
+                          "empName": empName?.toString(),
                           "begin": const Offset(1.0, 0.0),
                         },
                         pathParameters: {
                           'lang': context.locale.languageCode,
-                          // "empName" : empName.toString()
                         });
                   },
               )),

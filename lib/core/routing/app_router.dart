@@ -1553,6 +1553,7 @@ GoRouter goRouter(BuildContext context) {
                   print("ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
                   final extra = state.extra as Map<String, dynamic>?;
                   final empId = extra?["empId"] ?? gCache['employee_profile_id'].toString();
+                  final empName = extra?["empName"] as String?;
                   final begin = extra?["begin"] as Offset? ?? const Offset(1.0, 0.0);
                   final animationController = AnimationController(
                     vsync: ticker,
@@ -1566,7 +1567,7 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: EvaluationScreen( empId: empId,),
+                    child: EvaluationScreen(empId: empId, empName: empName),
                     animation: animationController,
                     begin: begin,
                   );
