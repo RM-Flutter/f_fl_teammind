@@ -168,7 +168,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             DefaultListTile(
                               title: AppStrings.overtimeRequests.tr(),
-                              src: AppIcons.tasks, // Reusing an existing icon
+                              icon: Icons.access_time, // Reusing an existing icon
                               onTap: () async => await context.pushNamed(
                                   AppRoutes.overtimeRequestsScreen.name,
                                   pathParameters: {
@@ -177,7 +177,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             DefaultListTile(
                               title: AppStrings.dailyReports.tr(),
-                              src: AppIcons.tasks,
+                              icon: Icons.edit_document,
                               onTap: () async => await context.pushNamed(
                                   AppRoutes.dailyReportsListScreen.name,
                                   pathParameters: {
@@ -547,13 +547,15 @@ class _MoreScreenState extends State<MoreScreen> {
 }
 
 class DefaultListTile extends StatelessWidget {
-  final String src;
+  final String? src;
+  final IconData? icon;
   final String title;
   final VoidCallback? onTap;
 
   const DefaultListTile({
     super.key,
-    required this.src,
+    this.src,
+    this.icon,
     required this.title,
     required this.onTap,
   });
@@ -564,13 +566,19 @@ class DefaultListTile extends StatelessWidget {
       children: [
         ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-          leading: SvgPicture.asset(
-            src,
-            color: Color(AppColors.buttons),
-            fit: BoxFit.scaleDown,
-            width: 20,
-            height: 20,
-          ),
+          leading: icon != null
+              ? Icon(
+                  icon,
+                  color: Color(AppColors.buttons),
+                  size: 20,
+                )
+              : SvgPicture.asset(
+                  src ?? "",
+                  color: Color(AppColors.buttons),
+                  fit: BoxFit.scaleDown,
+                  width: 20,
+                  height: 20,
+                ),
           title: Text(
             title.toUpperCase(),
             style: AppStyles.darkContent(context).copyWith(
