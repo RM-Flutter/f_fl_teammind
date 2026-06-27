@@ -341,103 +341,105 @@ abstract class AlertsService {
       barrierDismissible: false,
       builder: (ctx) => Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(24),
         ),
-        elevation: 10,
+        elevation: 12,
         backgroundColor: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(24.w, 32.h, 24.w, 24.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Top Alert/Warning Icon
-              Container(
-                padding: EdgeInsets.all(16.r),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFEF2F2), // Light red background
-                  shape: BoxShape.circle,
-                ),
-                child: SvgPicture.asset(
-                  AppImages.alertsWarning,
-                  width: 36.r,
-                  height: 36.r,
-                  colorFilter: const ColorFilter.mode(
-                    Color(0xFFDC2626), // Premium red color
-                    BlendMode.srcIn,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 380),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top Warning / Delete Icon
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF1F2), // Soft pink/rose background
+                    shape: BoxShape.circle,
+                    border: Border.all(color: const Color(0xFFFFE4E6), width: 1.5),
+                  ),
+                  child: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Color(0xFFF43F5E), // Premium rose/red color
+                    size: 32,
                   ),
                 ),
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1F2937), // Dark slate grey for readable title
+                const SizedBox(height: 24),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF111827), // Very dark grey/black
+                    letterSpacing: -0.5,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 12.h),
-              Text(
-                message,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: const Color(0xFF4B5563), // Clean medium grey for readability
-                  height: 1.5,
+                const SizedBox(height: 12),
+                Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF4B5563), // Medium slate grey
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 32.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(ctx, false),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF3F4F6), // Premium light grey background
-                        foregroundColor: const Color(0xFF374151), // Dark grey text
-                        elevation: 0,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.r),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(ctx, false),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                          foregroundColor: const Color(0xFF374151), // Dark grey text
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          elevation: 0,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 14.h),
-                      ),
-                      child: Text(
-                        'no'.tr(),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                        child: Text(
+                          'no'.tr(),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(ctx, true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.buttons), // App burgundy/red button color
-                        foregroundColor: Colors.white, // White text
-                        elevation: 0,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.r),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(ctx, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE11D48), // Rose/red danger color
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 14.h),
-                      ),
-                      child: Text(
-                        'yes'.tr(),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                        child: Text(
+                          'yes'.tr(),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
