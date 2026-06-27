@@ -8,12 +8,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:html' if (dart.library.io) '../../../../core/services/dart_html_stub.dart' as html;
 
+
+import '../../../core/routing/app_router.dart';
 import '../controllers/salary_advance_details_controller.dart';
 import 'update_salary_advance_screen.dart';
 
@@ -31,6 +40,90 @@ class _SalaryAdvanceDetailsScreenState
     extends State<SalaryAdvanceDetailsScreen> {
   late final SalaryAdvanceDetailsController viewModel;
   bool wasUpdated = false;
+  double _downloadProgress = 0.0;
+
+  Future<void> _downloadFile(String url, String fileName) async {
+    if (kIsWeb) {
+      try {
+        final fetchResult = html.window.fetch(url);
+        fetchResult.then((response) {
+          return (response as dynamic).blob();
+        }).then((blob) {
+          final blobUrl = html.Url.createObjectUrlFromBlob(blob as dynamic);
+          final html.AnchorElement downloadAnchor = html.AnchorElement(href: blobUrl);
+          downloadAnchor.download = fileName;
+          downloadAnchor.style.display = 'none';
+          html.document.body?.append(downloadAnchor);
+          downloadAnchor.click();
+          downloadAnchor.remove();
+          html.Url.revokeObjectUrl(blobUrl);
+        }).catchError((e) {
+          Fluttertoast.showToast(msg: "Download failed: $e");
+        });
+      } catch (e) {
+        Fluttertoast.showToast(msg: "Error: $e");
+      }
+      return;
+    }
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text('downloading'.tr()),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LinearProgressIndicator(value: _downloadProgress),
+                  const SizedBox(height: 10),
+                  Text('${(_downloadProgress * 100).toStringAsFixed(0)}%'),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      final dio = Dio();
+      final dir = await getApplicationDocumentsDirectory();
+      final filePath = "${dir.path}/$fileName";
+
+      await dio.download(
+        url,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            setState(() {
+              _downloadProgress = received / total;
+            });
+          }
+        },
+      );
+
+      if (mounted) Navigator.of(context).pop();
+      await OpenFilex.open(filePath);
+      
+      Fluttertoast.showToast(
+        msg: '✅ ${'downloaded'.tr()}: $fileName',
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      if (mounted) Navigator.of(context).pop();
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } finally {
+      setState(() {
+        _downloadProgress = 0.0;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -47,42 +140,48 @@ class _SalaryAdvanceDetailsScreenState
       value: viewModel,
       child: Consumer<SalaryAdvanceDetailsController>(
         builder: (context, controller, child) {
-          return TemplatePage(
-            pageContext: context,
-            title: 'request_details'.tr(),
-            popResult: wasUpdated,
+          return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: controller.isLoading
                 ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
                 : controller.requestDetails == null
                     ? Center(child: Text('error_loading_data'.tr()))
-                    : SingleChildScrollView(
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildHeroHeader(controller),
-                            Padding(
-                              padding: EdgeInsets.all(AppSizes.s16),
-                              child: Column(
-                                children: [
-                                  _buildInfoCard(controller),
-                                  if (controller.requestDetails?.attachments !=
-                                          null &&
-                                      controller.requestDetails!.attachments!
-                                          .isNotEmpty) ...[
-                                    SizedBox(height: 24),
-                                    _buildAttachmentsSection(controller, controller
-                                        .requestDetails!.attachments!),
+                    : RefreshIndicator.adaptive(
+                        onRefresh: () =>
+                            controller.fetchDetails(context, widget.requestId),
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.zero,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildHeroHeader(controller),
+                              Padding(
+                                padding: EdgeInsets.all(AppSizes.s16),
+                                child: Column(
+                                  children: [
+                                    _buildInfoCard(controller),
+                                    if (controller
+                                                .requestDetails?.attachments !=
+                                            null &&
+                                        controller.requestDetails!.attachments!
+                                            .isNotEmpty) ...[
+                                      SizedBox(height: 24),
+                                      _buildAttachmentsSection(
+                                          controller,
+                                          controller
+                                              .requestDetails!.attachments!),
+                                    ],
+                                    SizedBox(height: 20),
+                                    _buildApprovalsCard(controller),
+                                    SizedBox(height: 30),
+                                    _buildActionButtons(controller),
+                                    SizedBox(height: 30),
                                   ],
-                                  SizedBox(height: 20),
-                                  _buildApprovalsCard(controller),
-                                  SizedBox(height: 30),
-                                  _buildActionButtons(controller),
-                                  SizedBox(height: 30),
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
           );
@@ -95,23 +194,17 @@ class _SalaryAdvanceDetailsScreenState
     final request = controller.requestDetails!;
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+      padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top + 10, bottom: 30),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(AppColors.buttonColor),
-            Color(AppColors.buttonSecondaryColor)
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
         boxShadow: [
           BoxShadow(
-            color: Color(AppColors.buttonColor).withOpacity(0.3),
+            color: Color(AppColors.secondaryButton).withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -119,13 +212,48 @@ class _SalaryAdvanceDetailsScreenState
       ),
       child: Column(
         children: [
+          AppBarWithBookmark(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            routeName: AppRoutes.salaryAdvanceDetails.name,
+            defaultTitle: 'request_details'.tr(),
+            title: 'request_details'.tr(),
+            titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
+            bookmarkIconColor: Colors.white,
+            leading: Padding(
+              padding: const EdgeInsets.all(10),
+              child: InkWell(
+                onTap: () {
+                  if (context.canPop()) {
+                    context.pop(wasUpdated);
+                  } else {
+                    context.goNamed(AppRoutes.home.name,
+                        pathParameters: {'lang': context.locale.languageCode});
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_sharp,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15),
           Icon(Icons.account_balance_wallet_rounded,
               color: Colors.white.withOpacity(0.8), size: 48),
           SizedBox(height: 16),
           Text(
             'total_amount'.tr(),
-            style: AppStyles.content(context).copyWith(
-                color: Colors.white.withOpacity(0.8), fontSize: 14),
+            style: AppStyles.content(context)
+                .copyWith(color: Colors.white.withOpacity(0.8), fontSize: 14),
           ),
           SizedBox(height: 8),
           Row(
@@ -208,8 +336,9 @@ class _SalaryAdvanceDetailsScreenState
           _buildDetailRow(
             'createdAt'.tr(),
             request.createdAt != null && request.createdAt!.length >= 7
-                ? (request.createdAt!.contains(' ') 
-                    ? request.createdAt!.split(' ')[0].substring(0, 7) // Extract YYYY-MM if it's "YYYY-MM-DD HH:MM:SS"
+                ? (request.createdAt!.contains(' ')
+                    ? request.createdAt!.split(' ')[0].substring(
+                        0, 7) // Extract YYYY-MM if it's "YYYY-MM-DD HH:MM:SS"
                     : request.createdAt!.substring(0, 7))
                 : (request.createdAt ?? ''),
             icon: Icons.access_time,
@@ -393,23 +522,19 @@ class _SalaryAdvanceDetailsScreenState
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(AppColors.buttonColor),
-                  Color(AppColors.buttonSecondaryColor),
-                ],
-              ),
+              color: Color(AppColors.buttons),
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Color(AppColors.buttonColor).withOpacity(0.25),
+                  color: Color(AppColors.buttons).withOpacity(0.25),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
             child: ElevatedButton.icon(
-              icon: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 20),
+              icon: const Icon(Icons.edit_note_rounded,
+                  color: Colors.white, size: 20),
               label: Text(
                 'edit_request'.tr(),
                 style: TextStyle(
@@ -465,7 +590,8 @@ class _SalaryAdvanceDetailsScreenState
               ],
             ),
             child: ElevatedButton.icon(
-              icon: const Icon(Icons.cancel_outlined, color: Colors.white, size: 20),
+              icon: const Icon(Icons.cancel_outlined,
+                  color: Colors.white, size: 20),
               label: Text(
                 'cancel_request'.tr(),
                 style: TextStyle(
@@ -515,8 +641,11 @@ class _SalaryAdvanceDetailsScreenState
           controller.requestDetails?.employeeApproved == true &&
               controller.requestDetails?.hrApproved == true &&
               controller.requestDetails?.managerApproved == true;
-      bool isCancelled = controller.requestDetails?.status?.toLowerCase() == 'cancelled' || controller.requestDetails?.status?.toLowerCase() == 'canceled';
-      bool isRejected = controller.requestDetails?.status?.toLowerCase() == 'rejected';
+      bool isCancelled =
+          controller.requestDetails?.status?.toLowerCase() == 'cancelled' ||
+              controller.requestDetails?.status?.toLowerCase() == 'canceled';
+      bool isRejected =
+          controller.requestDetails?.status?.toLowerCase() == 'rejected';
 
       // Show approve and reject only if it's not fully approved, not cancelled, and not rejected
       if (!isFullyApproved && !isCancelled && !isRejected) {
@@ -528,9 +657,12 @@ class _SalaryAdvanceDetailsScreenState
                   title: 'approve'.tr(),
                   backgroundColor: Colors.green,
                   onPressed: () async {
-                    bool success = await controller.reviewRequest(context, 'approved');
+                    bool success =
+                        await controller.reviewRequest(context, 'approved');
                     if (success && mounted) {
-                      setState(() { wasUpdated = true; });
+                      setState(() {
+                        wasUpdated = true;
+                      });
                     }
                   },
                 ),
@@ -541,9 +673,12 @@ class _SalaryAdvanceDetailsScreenState
                   title: 'reject'.tr(),
                   backgroundColor: Colors.red,
                   onPressed: () async {
-                    bool success = await controller.reviewRequest(context, 'rejected');
+                    bool success =
+                        await controller.reviewRequest(context, 'rejected');
                     if (success && mounted) {
-                      setState(() { wasUpdated = true; });
+                      setState(() {
+                        wasUpdated = true;
+                      });
                     }
                   },
                 ),
@@ -564,7 +699,8 @@ class _SalaryAdvanceDetailsScreenState
     );
   }
 
-  Widget _buildAttachmentsSection(SalaryAdvanceDetailsController controller, List<ReportAttachmentModel> attachments) {
+  Widget _buildAttachmentsSection(SalaryAdvanceDetailsController controller,
+      List<ReportAttachmentModel> attachments) {
     return GlassmorphismCard(
       backgroundColor: Colors.white,
       opacity: 0.9,
@@ -579,11 +715,11 @@ class _SalaryAdvanceDetailsScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
@@ -591,7 +727,7 @@ class _SalaryAdvanceDetailsScreenState
                   child: Icon(Icons.attach_file_rounded,
                       size: 20, color: Color(AppColors.buttons)),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'attachments'.tr(),
@@ -603,232 +739,291 @@ class _SalaryAdvanceDetailsScreenState
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: GridView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                // runSpacing: 12,
-                childAspectRatio: 1.1,
-              ),
-              itemCount: attachments.length,
-              itemBuilder: (context, index) {
-                final attachment = attachments[index];
-                final isImage = attachment.fileType?.toLowerCase() == 'png' ||
-                    attachment.fileType?.toLowerCase() == 'jpg' ||
-                    attachment.fileType?.toLowerCase() == 'jpeg' ||
-                    attachment.fileType?.toLowerCase() == 'webp' ||
-                    attachment.fileType?.toLowerCase() == 'gif' ||
-                    (attachment.imageList != null &&
-                        attachment.imageList!['thumbnail'] != null);
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: List.generate(attachments.length, (index) {
+                  final attachment = attachments[index];
+                  final isImage = attachment.fileType?.toLowerCase() == 'png' ||
+                      attachment.fileType?.toLowerCase() == 'jpg' ||
+                      attachment.fileType?.toLowerCase() == 'jpeg' ||
+                      attachment.fileType?.toLowerCase() == 'webp' ||
+                      attachment.fileType?.toLowerCase() == 'gif' ||
+                      (attachment.imageList != null &&
+                          attachment.imageList!['thumbnail'] != null);
 
-                final status = controller.requestDetails?.status?.toLowerCase();
-                final isPending = status != 'approved' && status != 'cancelled' && status != 'canceled';
-                final isHr = controller.userSettings?.isHr == true;
-                final isOwner = controller.userSettings?.empId.toString() ==
-                    controller.requestDetails?.employeeId?.toString();
-                final showDeleteIcon = isPending && isHr && !isOwner;
+                  final status = controller.requestDetails?.status?.toLowerCase();
+                  final isPending = status != 'approved' &&
+                      status != 'cancelled' &&
+                      status != 'canceled';
+                  final isHr = controller.userSettings?.isHr == true;
+                  final isOwner = controller.userSettings?.empId.toString() ==
+                      controller.requestDetails?.employeeId?.toString();
+                  final showDeleteIcon = isPending && isHr && !isOwner;
 
-                Widget cardChild;
+                  Widget cardChild;
 
-                if (isImage &&
-                    attachment.imageList != null &&
-                    attachment.imageList!['thumbnail'] != null) {
-                  final String imageUrl = attachment.imageList!['thumbnail'];
-                  cardChild = GestureDetector(
-                    onTap: () {
-                      showGeneralDialog(
-                        context: context,
-                        barrierColor: Colors.black.withOpacity(0.95),
-                        barrierDismissible: true,
-                        barrierLabel: 'Close',
-                        transitionDuration: const Duration(milliseconds: 300),
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return Scaffold(
-                            backgroundColor: Colors.transparent,
-                            body: SafeArea(
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  InteractiveViewer(
-                                    minScale: 0.5,
-                                    maxScale: 4.0,
-                                    child: CachedNetworkImage(
-                                      imageUrl: imageUrl,
-                                      fit: BoxFit.contain,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                              child: CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                  strokeWidth: 2)),
-                                      errorWidget: (context, url, error) =>
-                                          Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                  if (isImage &&
+                      attachment.imageList != null &&
+                      attachment.imageList!['thumbnail'] != null) {
+                    final String imageUrl = attachment.imageList!['thumbnail'];
+                    cardChild = GestureDetector(
+                      onTap: () {
+                        showGeneralDialog(
+                          context: context,
+                          barrierColor: Colors.black.withOpacity(0.95),
+                          barrierDismissible: true,
+                          barrierLabel: 'Close',
+                          transitionDuration: const Duration(milliseconds: 300),
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return Scaffold(
+                              backgroundColor: Colors.transparent,
+                              body: SafeArea(
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    InteractiveViewer(
+                                      minScale: 0.5,
+                                      maxScale: 4.0,
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        fit: BoxFit.contain,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                                child: CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                    strokeWidth: 2)),
+                                        errorWidget: (context, url, error) =>
+                                            Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(Icons.broken_image_rounded,
+                                                color: Colors.white54, size: 64),
+                                            const SizedBox(height: 16),
+                                            Text("Failed to load image",
+                                                style: const TextStyle(
+                                                    color: Colors.white54,
+                                                    fontSize: 14)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 16,
+                                      right: 16,
+                                      child: IconButton(
+                                        icon: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(Icons.close_rounded,
+                                              color: Colors.white, size: 24),
+                                        ),
+                                        onPressed: () => Navigator.pop(context),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 16,
+                                      left: 16,
+                                      child: IconButton(
+                                        icon: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(Icons.download_rounded,
+                                              color: Colors.white, size: 24),
+                                        ),
+                                        onPressed: () {
+                                          _downloadFile(imageUrl, "image_${attachment.id}.jpg");
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Hero(
+                              tag: 'image_${attachment.id}',
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4))
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageUrl,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      color: Colors.grey.shade100,
+                                      child: const Center(
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 2)),
+                                    ),
+                                    errorWidget: (context, url, error) => Container(
+                                      color: Colors.grey.shade100,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Icon(Icons.broken_image_rounded,
-                                              color: Colors.white54,
-                                              size: 64),
-                                          SizedBox(height: 16),
-                                          Text("Failed to load image",
+                                              color: Colors.grey.shade400, size: 32),
+                                          const SizedBox(height: 4),
+                                          Text("Error",
                                               style: TextStyle(
-                                                  color: Colors.white54,
-                                                  fontSize: 14)),
+                                                  fontSize: 10,
+                                                  color: Colors.grey.shade500)),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 16,
-                                    right: 16,
-                                    child: IconButton(
-                                      icon: Container(
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.1),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(Icons.close_rounded,
-                                            color: Colors.white, size: 24),
-                                      ),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          );
-                        },
-                      );
-                    },
-                    child: Hero(
-                      tag: 'image_${attachment.id}',
+                          ),
+                          Positioned(
+                            top: 8,
+                            left: 8,
+                            child: GestureDetector(
+                              onTap: () {
+                                _downloadFile(imageUrl, "image_${attachment.id}.jpg");
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.5),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.download_rounded,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    cardChild = GestureDetector(
+                      onTap: () {
+                        if (attachment.url != null) {
+                          final fileUrl = attachment.url!;
+                          final fileName = fileUrl.split('/').last;
+                          _downloadFile(fileUrl, fileName);
+                        }
+                      },
                       child: Container(
                         decoration: BoxDecoration(
+                          color: const Color(0xFFF9FAFB),
                           borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4))
+                          border:
+                              Border.all(color: Colors.grey.shade200, width: 1.5),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Color(AppColors.buttons).withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.insert_drive_file_rounded,
+                                  size: 28, color: Color(AppColors.buttons)),
+                            ),
+                            const SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                  attachment.fileName ??
+                                      attachment.fileType ??
+                                      "File",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF4B5563))),
+                            ),
                           ],
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: Colors.grey.shade100,
-                              child: const Center(
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2)),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: Colors.grey.shade100,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.broken_image_rounded,
-                                      color: Colors.grey.shade400, size: 32),
-                                  SizedBox(height: 4),
-                                  Text("Error",
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.grey.shade500)),
-                                ],
+                      ),
+                    );
+                  }
+
+                  Widget mainWidget = cardChild;
+
+                  if (showDeleteIcon) {
+                    mainWidget = Stack(
+                      children: [
+                        Positioned.fill(child: cardChild),
+                        Positioned(
+                          top: 6,
+                          right: 6,
+                          child: GestureDetector(
+                            onTap: () async {
+                              final confirm = await AlertsService.customConfirm(
+                                context: context,
+                                title: 'remove_attachment'.tr(),
+                                message: 'remove_attachment_confirm'.tr(),
+                              );
+                              if (confirm == true && context.mounted) {
+                                bool success = await controller.removeAttachment(
+                                    context, attachment.id!);
+                                if (success && context.mounted) {
+                                  setState(() {
+                                    wasUpdated = true;
+                                  });
+                                }
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close_rounded,
+                                color: Colors.white,
+                                size: 16,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                } else {
-                  cardChild = Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF9FAFB),
-                      borderRadius: BorderRadius.circular(16),
-                      border:
-                          Border.all(color: Colors.grey.shade200, width: 1.5),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Color(AppColors.buttons).withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(Icons.insert_drive_file_rounded,
-                              size: 28, color: Color(AppColors.buttons)),
-                        ),
-                        SizedBox(height: 8),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                              attachment.fileName ??
-                                  attachment.fileType ??
-                                  "File",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF4B5563))),
-                        ),
                       ],
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: SizedBox(
+                      width: 140,
+                      height: 140,
+                      child: mainWidget,
                     ),
                   );
-                }
-
-                if (showDeleteIcon) {
-                  return Stack(
-                    children: [
-                      Positioned.fill(child: cardChild),
-                      Positioned(
-                        top: 6,
-                        right: 6,
-                        child: GestureDetector(
-                          onTap: () async {
-                            final confirm = await AlertsService.customConfirm(
-                              context: context,
-                              title: 'remove_attachment'.tr(),
-                              message: 'remove_attachment_confirm'.tr(),
-                            );
-                            if (confirm == true && context.mounted) {
-                              bool success = await controller.removeAttachment(context, attachment.id!);
-                              if (success && context.mounted) {
-                                setState(() {
-                                  wasUpdated = true;
-                                });
-                              }
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.close_rounded,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return cardChild;
-                }
-              },
+                }),
+              ),
             ),
           ),
         ],

@@ -253,13 +253,11 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                         : Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(AppColors.buttonColor), Color(AppColors.buttonSecondaryColor)],
-                              ),
+                              color: Color(AppColors.buttons),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(AppColors.buttonColor).withOpacity(0.3),
+                                  color: Color(AppColors.buttons).withOpacity(0.3),
                                   blurRadius: 15,
                                   offset: const Offset(0, 8),
                                 ),

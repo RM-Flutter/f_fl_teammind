@@ -74,12 +74,7 @@ class _UpdateSalaryAdvanceScreenState
                           Container(
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(AppColors.buttonColor),
-                                  Color(AppColors.buttonSecondaryColor)
-                                ],
-                              ),
+                              color: Color(AppColors.buttons),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(Icons.edit_note_rounded,
@@ -491,16 +486,11 @@ class _UpdateSalaryAdvanceScreenState
                           : Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(AppColors.buttonColor),
-                                    Color(AppColors.buttonSecondaryColor)
-                                  ],
-                                ),
+                                color: Color(AppColors.buttons),
                                 borderRadius: BorderRadius.circular(14),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Color(AppColors.buttonColor)
+                                    color: Color(AppColors.buttons)
                                         .withOpacity(0.3),
                                     blurRadius: 15,
                                     offset: const Offset(0, 8),

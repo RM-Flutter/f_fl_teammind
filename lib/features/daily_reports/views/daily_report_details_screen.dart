@@ -56,20 +56,13 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
             SliverAppBar(
               expandedHeight: 220,
               pinned: true,
-              backgroundColor: Color(AppColors.buttons),
+              backgroundColor: Color(AppColors.secondaryButton),
               elevation: 0,
               iconTheme: const IconThemeData(color: Colors.white),
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(AppColors.buttons),
-                        Color(AppColors.buttons).withBlue(150),
-                      ],
-                    ),
+                    color: Color(AppColors.secondaryButton),
                   ),
                   child: Stack(
                     children: [

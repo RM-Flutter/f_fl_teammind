@@ -295,18 +295,11 @@ class _SalaryAdvanceListItemWidgetState
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 7),
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(AppColors.buttonColor),
-                                    Color(AppColors.buttonSecondaryColor),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
+                                color: Color(AppColors.buttons),
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Color(AppColors.buttonColor)
+                                    color: Color(AppColors.buttons)
                                         .withOpacity(0.35),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
