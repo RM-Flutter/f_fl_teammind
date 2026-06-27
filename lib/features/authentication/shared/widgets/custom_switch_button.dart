@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_colors.dart';
 
@@ -33,7 +32,7 @@ class CustomSwitchButton extends StatefulWidget {
 
 class CustomSwitchButtonState extends State<CustomSwitchButton>
     with SingleTickerProviderStateMixin {
-  late Animation<Alignment> _circleAnimation;
+  late Animation<AlignmentGeometry?> _circleAnimation;
   late AnimationController _animationController;
 
   @override
@@ -43,15 +42,17 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
       vsync: this,
       duration: widget.animationDuration,
     );
-    _circleAnimation = AlignmentTween(
-      begin: widget.value ? Alignment.centerLeft : Alignment.centerRight,
-      end: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+    _circleAnimation = AlignmentGeometryTween(
+      begin: AlignmentDirectional.centerStart,
+      end: AlignmentDirectional.centerEnd,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.linear,
     ));
     if (widget.value) {
       _animationController.value = 1.0;
+    } else {
+      _animationController.value = 0.0;
     }
   }
 
@@ -95,18 +96,19 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
             height: widget.height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.0),
-              color: _circleAnimation.value == Alignment.centerLeft
-                  ? effectiveInactiveColor
-                  : effectiveActiveColor,
+              color: ColorTween(
+                begin: effectiveInactiveColor,
+                end: effectiveActiveColor,
+              ).evaluate(_animationController),
             ),
             child: Padding(
               padding: EdgeInsets.all(widget.padding),
               child: Align(
-                alignment: _circleAnimation.value,
+                alignment: _circleAnimation.value ?? AlignmentDirectional.centerStart,
                 child: Container(
                   width: widget.circleSize,
                   height: widget.circleSize,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xffffffff),
                   ),

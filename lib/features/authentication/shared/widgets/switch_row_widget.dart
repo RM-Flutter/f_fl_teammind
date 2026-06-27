@@ -36,31 +36,28 @@ class SwitchRow extends StatelessWidget {
         .copyWith(fontSize: AppSizes.s14, fontWeight: FontWeight.w500)
         : AppStyles.subTitleContent(context);
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Row(
-        mainAxisAlignment: axis ?? MainAxisAlignment.center,
-        children: [
-          Text(
-            leftText ?? AppStrings.byEmail.tr(),
-            style: textStyle,
-          ),
-          SizedBox(width: kIsWeb ? AppSizes.s8 : AppSizes.s8.w),
-          CustomSwitchButton(
-            width: kIsWeb ? AppSizes.s50 : AppSizes.s50.w,
-            height: kIsWeb ? AppSizes.s20 : AppSizes.s20.h,
-            padding: AppSizes.s3,
-            value: value,
-            inactiveColor: Color(AppColors.tabInactive),
-            onChanged: onChanged,
-          ),
-          if(viewPhone == true)  SizedBox(width: kIsWeb ? AppSizes.s8 : AppSizes.s8.w),
-          if(viewPhone == true)  Text(
-            rightText ?? AppStrings.byPhone.tr(),
-            style: textStyle,
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: axis ?? MainAxisAlignment.center,
+      children: [
+        Text(
+          leftText ?? AppStrings.byEmail.tr(),
+          style: textStyle,
+        ),
+        SizedBox(width: kIsWeb ? AppSizes.s8 : AppSizes.s8.w),
+        CustomSwitchButton(
+          width: kIsWeb ? AppSizes.s50 : AppSizes.s50.w,
+          height: kIsWeb ? AppSizes.s20 : AppSizes.s20.h,
+          padding: AppSizes.s3,
+          value: value,
+          inactiveColor: Color(AppColors.tabInactive),
+          onChanged: onChanged,
+        ),
+        if(viewPhone == true)  SizedBox(width: kIsWeb ? AppSizes.s8 : AppSizes.s8.w),
+        if(viewPhone == true)  Text(
+          rightText ?? AppStrings.byPhone.tr(),
+          style: textStyle,
+        ),
+      ],
     );
   }
 }

@@ -29,34 +29,30 @@ class SwitchRowNotification extends StatelessWidget {
         ? AppStyles.blackContent(context).copyWith(fontSize: 12)
         : AppStyles.blackContent(context).copyWith(fontSize: 12);
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            leftText ?? AppStrings.allNotifications.tr(),
-            style: textStyle,
-          ),
-          SizedBox(width: 8),
-          CustomSwitchButton(
-            width: 60,
-            height: 30,
-            padding: 4,
-            circleSize: 22,
-            value: value,
-            activeColor:  Color(AppColors.buttons),
-            inactiveColor: const Color(AppColors.navyBlue),
-            onChanged: onChanged,
-          ),
-          SizedBox(width: 8),
-          Text(
-            rightText ?? AppStrings.myDepartment.tr(),
-            style: textStyle,
-          ),
-
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          leftText ?? AppStrings.allNotifications.tr(),
+          style: textStyle,
+        ),
+        SizedBox(width: 8),
+        CustomSwitchButton(
+          width: 60,
+          height: 30,
+          padding: 4,
+          circleSize: 22,
+          value: value,
+          activeColor:  Color(AppColors.buttons),
+          inactiveColor: const Color(AppColors.navyBlue),
+          onChanged: onChanged,
+        ),
+        SizedBox(width: 8),
+        Text(
+          rightText ?? AppStrings.myDepartment.tr(),
+          style: textStyle,
+        ),
+      ],
     );
   }
 }
