@@ -1142,5 +1142,6 @@
   "personalReports": "التقارير الشخصية",
   "noAccomplishmentsRecorded": "لا توجد إنجازات مسجلة.",
   "noOngoingTasksRecorded": "لا توجد مهام قيد التنفيذ مسجلة.",
-  "noProblemsRecorded": "لا توجد مشاكل مسجلة."
+  "noProblemsRecorded": "لا توجد مشاكل مسجلة.",
+  "SEND RESPONSE" : "إرسال الرد"
 }

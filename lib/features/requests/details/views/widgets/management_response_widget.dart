@@ -137,7 +137,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                   title: AppStrings.sendRequest.tr().toUpperCase(),
                   titleWidget: Text(
-                    "SEND RESPONSE",
+                    "SEND RESPONSE".tr(),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
