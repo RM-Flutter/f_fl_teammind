@@ -149,7 +149,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                 final request = requests[index];
 
                 // Owner can edit their own (personal list), Manager/HR can edit incoming
-                final canEdit = isIncoming ? controller.isManagerOrHr : true;
+                final canEdit = isIncoming ? controller.canModifyIncoming : true;
 
                 return TweenAnimationBuilder<double>(
                   duration: Duration(milliseconds: 400 + (index * 100).clamp(0, 500)),

@@ -26,6 +26,7 @@ class GeneralSettingsModel extends AppSettingsModel {
   final bool? canVisit;
   final bool? payrollScreenProtection;
   final List<String>? loginTypes;
+  final bool? managerAbleToApproveSalaryAdvances;
 
   GeneralSettingsModel(
       {required super.lastUpdateDate,
@@ -49,7 +50,8 @@ class GeneralSettingsModel extends AppSettingsModel {
         this.fpScanSteps,
         this.canNewRegister,
         this.payrollScreenProtection,
-        this.loginTypes});
+        this.loginTypes,
+        this.managerAbleToApproveSalaryAdvances});
 
   factory GeneralSettingsModel.fromJson(Map<String, dynamic> json) {
     return GeneralSettingsModel(
@@ -108,6 +110,7 @@ class GeneralSettingsModel extends AppSettingsModel {
           .map((item) => item as String)
           .toList()
           : null,
+      managerAbleToApproveSalaryAdvances: ModelHelpersService.getBoolValue(json['manager_able_to_approve_salary_advances']),
     );
   }
 
@@ -144,6 +147,7 @@ class GeneralSettingsModel extends AppSettingsModel {
       'fp_scan_steps': fpScanSteps,
       'can_new_register': canNewRegister,
       'payroll_screen_protection': payrollScreenProtection,
+      'manager_able_to_approve_salary_advances': managerAbleToApproveSalaryAdvances,
     };
   }
 }

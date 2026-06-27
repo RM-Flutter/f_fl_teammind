@@ -27,8 +27,29 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
            isTeamLeader;
   }
 
+  bool get canModifyIncoming {
+    if (userSettings == null) return false;
+
+    // 1. Team Leader: NEVER allowed
+    final isTeamLeader = userSettings?.isTeamleaderIn != null && userSettings!.isTeamleaderIn!.isNotEmpty;
+    if (isTeamLeader) return false;
+
+    // 2. HR / Top Management: Always allowed
+    final isHr = userSettings?.isHr == true || userSettings?.topManagement == true;
+    if (isHr) return true;
+
+    // 3. Manager: Allowed only if manager_able_to_approve_salary_advances is true
+    final hasManagerRole = userSettings?.role?.map((e) => e.toLowerCase()).contains('manager') == true;
+    final isManager = (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty) || hasManagerRole;
+    if (isManager) {
+      return UserSettingConst.generalSettingsModel?.managerAbleToApproveSalaryAdvances == true;
+    }
+
+    return false;
+  }
+
   bool get canReview {
-    if (requestDetails == null || !isManagerOrHr) return false;
+    if (requestDetails == null || !canModifyIncoming) return false;
     
     final status = requestDetails!.status?.toLowerCase();
     if (status == 'cancelled' || status == 'canceled' || status == 'approved' || status == 'rejected') {
@@ -52,7 +73,7 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     final isOwner = userSettings!.empId.toString() ==
         requestDetails!.employeeId?.toString();
     
-    return isOwner || isManagerOrHr;
+    return isOwner || canModifyIncoming;
   }
 
   bool get canCancel {
