@@ -39,7 +39,13 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
 	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>We need access to your local network to verify your Wi-Fi connection for attendance tracking.</string>
+	<key>NFCReaderUsageDescription</key>
+	<string>We need NFC access to scan attendance tags.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Need BLE permission</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

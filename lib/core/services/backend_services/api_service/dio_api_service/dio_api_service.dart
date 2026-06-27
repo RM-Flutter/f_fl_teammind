@@ -60,6 +60,11 @@ class DioApiService implements BackEndServicesInterface {
               error.requestOptions.extra['retryCount'] = retryCount + 1;
               // إغلاق الاتصالات القديمة وفتح اتصالات جديدة قبل إعادة المحاولة
               adapter_reset.resetDioAdapter(_dio);
+              if (error.requestOptions.data is FormData) {
+                try {
+                  error.requestOptions.data = (error.requestOptions.data as FormData).clone();
+                } catch (_) {}
+              }
               Future.delayed(Duration(seconds: retryCount + 1), () {
                 _dio.fetch(error.requestOptions).then(
                       (response) => handler.resolve(response),
@@ -539,7 +544,10 @@ class DioApiService implements BackEndServicesInterface {
       final response = await _effectiveDio.post(
         _getUri(url).toString(),
         data: formData,
-        options: Options(headers: headers),
+        options: Options(
+          headers: headers,
+          persistentConnection: false,
+        ),
       );
 
       if (response.statusCode == 200) {

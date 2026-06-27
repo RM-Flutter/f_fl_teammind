@@ -119,6 +119,11 @@ class DioHelper{
             }
           } catch (_) {}
           error.requestOptions.extra[_extraKey] = true;
+          if (error.requestOptions.data is FormData) {
+            try {
+              error.requestOptions.data = (error.requestOptions.data as FormData).clone();
+            } catch (_) {}
+          }
           dio!.fetch(error.requestOptions).then(
                 (response) => handler.resolve(response),
             onError: (e) => handler.reject(e),
