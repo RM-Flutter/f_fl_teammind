@@ -5,7 +5,6 @@ import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.service.d
 import 'package:app_test/features/offline/views/widgets/finger_print_offline_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
@@ -117,26 +116,26 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
             alignment: Alignment.topCenter,
             children: [
               Container(
-                height: 1.sh,
+                height: MediaQuery.of(context).size.height,
               ),
               Stack(
                 children: [
                   // Background image
                   ClipRRect(
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(AppSizes.s32.r),
-                        bottomRight: Radius.circular(AppSizes.s32.r)),
+                        bottomLeft: Radius.circular(AppSizes.s32),
+                        bottomRight: Radius.circular(AppSizes.s32)),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(AppSizes.s32.r),
-                            bottomRight: Radius.circular(AppSizes.s32.r)),
+                            bottomLeft: Radius.circular(AppSizes.s32),
+                            bottomRight: Radius.circular(AppSizes.s32)),
                       ),
                       child: Image.asset(
                         "assets/images/png/home_back.png",
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 300.h,
+                        height: 220,
                       ),
                     ),
                   ),
@@ -144,7 +143,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                   // Linear gradient overlay
                   Container(
                     width: double.infinity,
-                    height: 300.h,
+                    height: 220,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -158,38 +157,48 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                       ),
                     ),
                   ),
-
-                  // Your content goes here, if any
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 200.h),
+                padding: const EdgeInsets.only(top: 180),
                 child: Container(
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(15.r),
-                        topLeft: Radius.circular(15.r),
+                        topRight: Radius.circular(16),
+                        topLeft: Radius.circular(16),
                       )),
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SvgPicture.asset("assets/images/svg/wifi.svg",),
-                        SizedBox(height: 25.h,),
-                        Text(AppStrings.youAreOffline.tr(), style: AppStyles.heading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
-                        SizedBox(height: 15.h,),
-                        Text(AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(), style: AppStyles.blackContent(context).copyWith(fontSize: 13.sp, fontWeight: FontWeight.w500),),
-                        SizedBox(height: 25.h,),
+                        SvgPicture.asset("assets/images/svg/wifi.svg"),
+                        const SizedBox(height: 24),
+                        Text(
+                          AppStrings.youAreOffline.tr(),
+                          style: AppStyles.heading(context).copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(),
+                          style: AppStyles.blackContent(context).copyWith(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
                         Consumer<ConnectionService>(
                           builder: (context, connectionService, _) {
                             return CustomElevatedButton(
                                 backgroundColor: Color(AppColors.secondaryButton),
-                                titleSize: AppSizes.s12.sp,
+                                titleSize: AppSizes.s12,
                                 title: AppStrings.retry.tr().toUpperCase(),
                                 onPressed: () async {
                                   // Check connection immediately
@@ -205,12 +214,19 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             );
                           },
                         ),
-                        SizedBox(height: 40.h,),
-                        if (viewModel.usersFingerprints.isNotEmpty) Text(AppStrings.fingerprint.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700),),
-                        SizedBox(height: 15.h,),
+                        const SizedBox(height: 32),
+                        if (viewModel.usersFingerprints.isNotEmpty)
+                          Text(
+                            AppStrings.fingerprint.tr().toUpperCase(),
+                            style: AppStyles.heading(context).copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        const SizedBox(height: 12),
                         if (viewModel.usersFingerprints.isNotEmpty)
                           SizedBox(
-                            height: 60.h,
+                            height: 60,
                             child: ListView.builder(
                               itemCount: viewModel.usersFingerprints.length,
                               shrinkWrap: true,
@@ -224,7 +240,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                 switch (fingerprintType) {
                                   case 'fp_scan':
                                     icon = Icons.qr_code;
-                                    function = () async{
+                                    function = () async {
                                       debugPrint("👆 QR Code fingerprint button pressed");
                                       OfflineOverlayService.hideOfflineOverlay();
                                       final navContext = rootNavigatorKey.currentContext ?? context;
@@ -238,7 +254,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                   case 'fp_wifi':
                                     icon = Icons.wifi;
                                     hero = 'wifi';
-                                    function = ()async {
+                                    function = () async {
                                       debugPrint("👆 WiFi fingerprint button pressed");
                                       OfflineOverlayService.hideOfflineOverlay();
                                       final navContext = rootNavigatorKey.currentContext ?? context;
@@ -251,7 +267,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                   case 'fp_navigate':
                                   case 'custom_fp_navigate':
                                     icon = Icons.gps_fixed;
-                                    function = () async{
+                                    function = () async {
                                       debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
                                       OfflineOverlayService.hideOfflineOverlay();
                                       final navContext = rootNavigatorKey.currentContext ?? context;
@@ -264,9 +280,8 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     break;
                                   case 'fp_bluetooth':
                                     icon = Icons.bluetooth;
-                                    function = ()async{
+                                    function = () async {
                                       debugPrint("👆 Bluetooth fingerprint button pressed");
-                                      // لما نفتح بصمة أوفلاين، نشيل overlay ونستخدم سياق الـ root navigator
                                       OfflineOverlayService.hideOfflineOverlay();
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
@@ -286,24 +301,24 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                               },
                             ),
                           ),
-                        SizedBox(height: 30.h,),
+                        const SizedBox(height: 24),
                         // Show saved fingerprints
                         if (viewModel.savedFingerprints != null &&
                             viewModel.savedFingerprints!.isNotEmpty)
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15.w),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   AppStrings.fingerprintsTitle.tr(),
                                   style: AppStyles.heading(context).copyWith(
-                                    fontSize: 18.sp,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                SizedBox(height: 15.h,),
-                                if (viewModel.isLoadingFingerprints)
+                                const SizedBox(height: 12),
+                                 if (viewModel.isLoadingFingerprints)
                                   const Center(
                                     child: Padding(
                                       padding: EdgeInsets.all(20.0),
@@ -312,7 +327,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                   )
                                 else
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
                                     child: FingerprintCardOffiline(
                                       fingerprint: viewModel.savedFingerprints,
                                       onDelete: (index) async {
@@ -333,28 +348,23 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
           );
         },
       ),
-
     );
   }
 
   Widget _widget(
-      {required IconData icon,
-        Function()? onPress,
-        required String hero}) =>
+          {required IconData icon,
+          Function()? onPress,
+          required String hero}) =>
       Padding(
-        padding: const EdgeInsets.all(AppSizes.s0),
-        child: Row(
-          children: [
-            FloatingActionButton(
-              heroTag: hero,
-              onPressed: onPress,
-              backgroundColor: Color(AppColors.buttons),
-              child: Icon(
-                icon,
-                color: Colors.white,
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: FloatingActionButton(
+          heroTag: hero,
+          onPressed: onPress,
+          backgroundColor: Color(AppColors.buttons),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
         ),
       );
 }
