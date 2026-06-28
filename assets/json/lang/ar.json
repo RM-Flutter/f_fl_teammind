@@ -202,6 +202,7 @@
   "closed": "مغلق",
   "completed": "مكتمل",
   "pending": "معلّق",
+  "has_not_decided_yet": "لم يقرر بعد",
   "complains": "شكاوى",
   "resolved": "تم الحل",
   "publish": "نشر",

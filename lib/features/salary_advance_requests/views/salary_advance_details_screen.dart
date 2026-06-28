@@ -388,9 +388,11 @@ class _SalaryAdvanceDetailsScreenState
               'employee_approval'.tr(), request.employeeApproved,
               isFirst: true),
           _buildTimelineApprovalRow(
-              'manager_approval'.tr(), request.managerApproved),
+              'manager_approval'.tr(),
+              request.managerId == null ? null : request.managerApproved),
           _buildTimelineApprovalRow(
-              'hr_approval'.tr(), request.hrApproved,
+              'hr_approval'.tr(),
+              request.hrId == null ? null : request.hrApproved,
               isLast: true),
         ],
       ),
@@ -455,7 +457,7 @@ class _SalaryAdvanceDetailsScreenState
                         ? 'approved'.tr()
                         : (isApproved == false
                             ? 'rejected'.tr()
-                            : 'pending'.tr()),
+                            : 'has_not_decided_yet'.tr()),
                     style: AppStyles.content(context).copyWith(
                       color: Colors.grey.shade500,
                       fontSize: 13,

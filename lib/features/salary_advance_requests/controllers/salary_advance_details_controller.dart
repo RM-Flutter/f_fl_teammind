@@ -69,11 +69,8 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
     if (status == 'cancelled' || status == 'canceled' || status == 'approved' || status == 'rejected') {
       return false;
     }
-
-    final isOwner = userSettings!.empId.toString() ==
-        requestDetails!.employeeId?.toString();
     
-    return isOwner || canModifyIncoming;
+    return canModifyIncoming;
   }
 
   bool get canCancel {

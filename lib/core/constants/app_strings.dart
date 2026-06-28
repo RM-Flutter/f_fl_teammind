@@ -298,6 +298,7 @@ abstract class AppStrings {
   static const pleaseEnterReasonWithAtLeastCharacters =
       "pleaseEnterReasonWithAtLeastCharacters";
   static const complains = "complains";
+  static const hasNotDecidedYet = "has_not_decided_yet";
   static const myRewardsAndPenalties = "myRewardsAndPenalties";
   static const thereIsNoTasks = "thereIsNoTasks";
   static const evaluation = "evaluation";
