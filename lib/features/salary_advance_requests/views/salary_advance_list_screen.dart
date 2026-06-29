@@ -104,9 +104,15 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
     }
     
     if (controller.personalRequests == null || controller.personalRequests!.isEmpty) {
-      return NoExistingPlaceholderScreen(
-        height: 0.6.sh,
-        title: 'no_requests'.tr(),
+      return RefreshIndicator.adaptive(
+        onRefresh: () => controller.initializeScreen(context),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: NoExistingPlaceholderScreen(
+            height: 0.6.sh,
+            title: 'no_requests'.tr(),
+          ),
+        ),
       );
     }
 
@@ -119,9 +125,15 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
     }
     
     if (controller.incomingRequests == null || controller.incomingRequests!.isEmpty) {
-      return NoExistingPlaceholderScreen(
-        height: 0.6.sh,
-        title: 'no_incoming_requests'.tr(),
+      return RefreshIndicator.adaptive(
+        onRefresh: () => controller.initializeScreen(context),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: NoExistingPlaceholderScreen(
+            height: 0.6.sh,
+            title: 'no_incoming_requests'.tr(),
+          ),
+        ),
       );
     }
 

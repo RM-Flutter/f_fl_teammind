@@ -56,7 +56,6 @@ class SalaryAdvanceRepo {
       queryParameters: queryParams,
       context: context,
       allData: true,
-      // cache: false,
     );
   }
 
@@ -88,7 +87,6 @@ class SalaryAdvanceRepo {
       queryParameters: queryParams,
       context: context,
       allData: true,
-      // cache: false,
     );
   }
 
@@ -105,7 +103,6 @@ class SalaryAdvanceRepo {
       dataKey: 'data',
       context: context,
       allData: true,
-      // cache: false,
     );
   }
 

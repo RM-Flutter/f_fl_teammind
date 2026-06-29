@@ -212,9 +212,17 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
 
   Widget _buildList(List<DailyReportModel> list, DailyReportsProvider provider, {required bool isIncoming}) {
     if (list.isEmpty) {
-      return NoExistingPlaceholderScreen(
-        height: 300,
-        title: AppStrings.noDataFounded.tr(),
+      return RefreshIndicator.adaptive(
+        onRefresh: () async {
+          await provider.fetchReports(context, isIncoming: isIncoming);
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: NoExistingPlaceholderScreen(
+            height: 300,
+            title: AppStrings.noDataFounded.tr(),
+          ),
+        ),
       );
     }
     return RefreshIndicator(

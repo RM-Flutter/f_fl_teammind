@@ -120,19 +120,26 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 SizedBox(height: 10),
               ],
               Expanded(
-                child: list.isEmpty
-                    ? NoExistingPlaceholderScreen(
-                        height: 300,
-                        title: AppStrings.noDataFounded.tr(),
-                      )
-                    : ListView.builder(
-                        padding: EdgeInsets.only(top: 8, bottom: 80),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          final item = list[index];
-                          return _buildRequestCard(item, provider.isForDepartment);
-                        },
-                      ),
+                child: RefreshIndicator.adaptive(
+                  onRefresh: () => provider.fetchRequests(context),
+                  child: list.isEmpty
+                      ? SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: NoExistingPlaceholderScreen(
+                            height: 300,
+                            title: AppStrings.noDataFounded.tr(),
+                          ),
+                        )
+                      : ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.only(top: 8, bottom: 80),
+                          itemCount: list.length,
+                          itemBuilder: (context, index) {
+                            final item = list[index];
+                            return _buildRequestCard(item, provider.isForDepartment);
+                          },
+                        ),
+                ),
               ),
             ],
           );
