@@ -349,7 +349,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         onPressed: () async => await context.pushNamed(
                                           AppRoutes.requestsCalendar.name,
                                           pathParameters: {
-                                            'type': 'mine',
+                                            'type': widget.requestsType?.name ?? 'mine',
                                             'lang': context.locale.languageCode,
                                           },
                                           extra: widget.requestsType == GetRequestsTypes.mine

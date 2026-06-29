@@ -4,6 +4,8 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
@@ -35,10 +37,12 @@ String _titleByLang(dynamic value, String lang) {
 class RequestsCalendarScreen extends StatelessWidget {
   final requests;
   final GetRequestsTypes requestType;
+
   const RequestsCalendarScreen(
       {super.key, this.requests, required this.requestType});
 
-  List _buildCalendarAppointments(BuildContext context, List sourceRequests, Map<String, dynamic>? gCache) {
+  List _buildCalendarAppointments(
+      BuildContext context, List sourceRequests, Map<String, dynamic>? gCache) {
     final List combined = [...sourceRequests];
     final lang = context.locale.languageCode;
     // Append holidays as calendar items if present (from US2)
@@ -50,9 +54,11 @@ class RequestsCalendarScreen extends StatelessWidget {
           final String? to = h['to']?.toString();
           if (from == null || to == null) continue;
           // name قد يكون String أو Map { en, ar } → نعرض ar فقط في العربي و en فقط في الإنجليزي
-          final String holidayName = _titleByLang(h['name'], lang).isEmpty ? 'Holiday' : _titleByLang(h['name'], lang);
+          final String holidayName = _titleByLang(h['name'], lang).isEmpty
+              ? 'Holiday'
+              : _titleByLang(h['name'], lang);
           final String officialHolidayLabel =
-          lang == 'ar' ? 'إجازة رسمية' : 'Official Holiday';
+              lang == 'ar' ? 'إجازة رسمية' : 'Official Holiday';
           combined.add({
             'from': from,
             'to': to,
@@ -67,6 +73,7 @@ class RequestsCalendarScreen extends StatelessWidget {
     }
     return combined;
   }
+
   @override
   Widget build(BuildContext context) {
     final currentLang = context.locale.languageCode;
@@ -76,228 +83,292 @@ class RequestsCalendarScreen extends StatelessWidget {
         create: (_) => RequestsCalendarViewModel(),
         child: Consumer<RequestsCalendarViewModel>(
             builder: (context, viewModel, child) {
-              var gCache;
-              final jsonString = CacheHelper.getString("US2");
-              if (jsonString != null && jsonString != "") {
-                gCache = json.decode(jsonString) as Map<String, dynamic>;
-              }
-              return TemplatePage(
-                  pageContext: context,
-                  floatingActionButton: FloatingActionButton(
-                    heroTag: 'requests_calendar_add',
-                    onPressed: () async => await context
-                        .pushNamed(AppRoutes.addRequest.name, pathParameters: {
-                      'type': 'mine',
-                      'lang': context.locale.languageCode
-                    }), // Icon inside FAB
-                    backgroundColor: Color(AppColors.buttons), // Optional: change color
-                    tooltip: 'Add',
-                    child: Center(
-                      child: Image.asset(
-                        AppImages.addFloatingActionButtonIcon,
-                        color: AppThemeService.colorPalette.fabIconColor.color,
-                        width: 16,
-                        height: 16,
-                      ),
-                    ),
+          var gCache;
+          final jsonString = CacheHelper.getString("US2");
+          if (jsonString != null && jsonString != "") {
+            gCache = json.decode(jsonString) as Map<String, dynamic>;
+          }
+
+          var us1JsonString = CacheHelper.getString("US1");
+          if (us1JsonString != null && us1JsonString != "") {
+            try {
+              var us1Cache = json.decode(us1JsonString) as Map<String, dynamic>;
+              UserSettingConst.userSettings =
+                  UserSettingsModel.fromJson(us1Cache);
+            } catch (e) {
+              debugPrint('Error decoding US1: $e');
+            }
+          }
+
+          bool isManager =
+              UserSettingConst.userSettings?.isManagerIn?.isNotEmpty == true;
+          bool isTeamLeader =
+              UserSettingConst.userSettings?.isTeamleaderIn?.isNotEmpty == true;
+          bool isHR = UserSettingConst.userSettings?.isHr == true;
+          bool topManagement =
+              UserSettingConst.userSettings?.topManagement == true;
+          bool canSeeTeamRequests = requestType != GetRequestsTypes.mine &&
+              (isManager || isHR || topManagement || isTeamLeader);
+
+          return TemplatePage(
+              pageContext: context,
+              floatingActionButton: FloatingActionButton(
+                heroTag: 'requests_calendar_add',
+                onPressed: () async => await context
+                    .pushNamed(AppRoutes.addRequest.name, pathParameters: {
+                  'type': 'mine',
+                  'lang': context.locale.languageCode
+                }),
+                // Icon inside FAB
+                backgroundColor: Color(AppColors.buttons),
+                // Optional: change color
+                tooltip: 'Add',
+                child: Center(
+                  child: Image.asset(
+                    AppImages.addFloatingActionButtonIcon,
+                    color: AppThemeService.colorPalette.fabIconColor.color,
+                    width: 16,
+                    height: 16,
                   ),
-                  title: AppStrings.calendar.tr(),
-                  actions: [
-                    PopupMenuButton<CalendarView>(
-                      initialValue: viewModel.calendarView,
-                      onSelected: (val) => viewModel.updateCalendarView(val),
-                      itemBuilder: (BuildContext context) {
-                        return viewModel.calendarViews
-                            .map((Map<String, dynamic> view) {
-                          return PopupMenuItem<CalendarView>(
-                            value: view['value'],
-                            child: Text(
-                              view['name'],
-                              style: AppStyles.darkContent(context).copyWith(
-                                  color: viewModel.calendarView == view['value']
-                                      ? Color(AppColors.secondaryButton)
-                                      : Color(AppColors.buttons),
-                                  fontSize: 14,
-                                  fontWeight:
+                ),
+              ),
+              title: AppStrings.calendar.tr(),
+              actions: [
+                PopupMenuButton<CalendarView>(
+                  initialValue: viewModel.calendarView,
+                  onSelected: (val) => viewModel.updateCalendarView(val),
+                  itemBuilder: (BuildContext context) {
+                    return viewModel.calendarViews
+                        .map((Map<String, dynamic> view) {
+                      return PopupMenuItem<CalendarView>(
+                        value: view['value'],
+                        child: Text(
+                          view['name'],
+                          style: AppStyles.darkContent(context).copyWith(
+                              color: viewModel.calendarView == view['value']
+                                  ? Color(AppColors.secondaryButton)
+                                  : Color(AppColors.buttons),
+                              fontSize: 14,
+                              fontWeight:
                                   viewModel.calendarView == view['value']
                                       ? FontWeight.bold
                                       : FontWeight.normal),
-                            ),
-                          );
-                        }).toList();
-                      },
-                      icon: Icon(
-                        Icons.preview_outlined,
-                        size: 32,
-                        color: Color(AppColors.buttons),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ],
-                  body: SingleChildScrollView(
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxWidth: kIsWeb ? 1100 : 1.sw
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 0.6.sh,
-                                child: SfCalendar(
-                                  backgroundColor: Color(AppColors.background),
-                                  key: UniqueKey(),
-                                  view: viewModel.calendarView ?? CalendarView.month,
-                                  dataSource: RequestDataSource(_buildCalendarAppointments(context, requests, gCache), context.locale.languageCode),
-                                  monthViewSettings: MonthViewSettings(
-                                    appointmentDisplayMode:
+                      );
+                    }).toList();
+                  },
+                  icon: Icon(
+                    Icons.preview_outlined,
+                    size: 32,
+                    color: Color(AppColors.buttons),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ],
+              body: SingleChildScrollView(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: kIsWeb ? 1100 : 1.sw),
+                    child: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height:
+                                (kIsWeb || PlatformIs.web) ? 0.7.sh : 0.65.sh,
+                            child: SfCalendar(
+                              backgroundColor: Color(AppColors.background),
+                              key: UniqueKey(),
+                              view:
+                                  viewModel.calendarView ?? CalendarView.month,
+                              dataSource: RequestDataSource(
+                                  _buildCalendarAppointments(
+                                      context, requests, gCache),
+                                  context.locale.languageCode,
+                                  canSeeTeamRequests),
+                              monthViewSettings: MonthViewSettings(
+                                appointmentDisplayMode:
                                     MonthAppointmentDisplayMode.appointment,
-                                    showAgenda: false,
-                                    appointmentDisplayCount: (kIsWeb || PlatformIs.web) ? 2 : 1,
-                                    showTrailingAndLeadingDates: true,
-                                  ),
-                                  showNavigationArrow: true,
-                                  appointmentBuilder: (context, details) {
-                                    final appt = details.appointments.first;
-                                    // Render holidays (Map) differently
-                                    if (appt is Map && appt['_isHoliday'] == true) {
-                                      final title = _titleByLang(appt['typeName'], currentLang);
-                                      final displayTitle = title.isEmpty ? 'Holiday' : title;
-                                      return Container(
-                                        width: double.infinity,
-                                        constraints: BoxConstraints(
-                                          minHeight: (kIsWeb || PlatformIs.web) ? 50 : 28,
-                                        ),
-                                        alignment: Alignment.center,
-                                        padding: (kIsWeb || PlatformIs.web)
-                                            ? EdgeInsets.symmetric(horizontal: 5, vertical: 3)
-                                            : EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(4),
-                                          color: const Color(AppColors.green),
-                                        ),
-                                        child: Text(
-                                          displayTitle,
-                                          textAlign: TextAlign.center,
-                                          maxLines: (kIsWeb || PlatformIs.web) ? 1 : 1,
-                                          overflow: TextOverflow.visible,
-                                          style: AppStyles.whiteContent(context).copyWith(
-                                            fontSize: (kIsWeb || PlatformIs.web) ? 12 : 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      );
-                                    }
+                                showAgenda: false,
+                                appointmentDisplayCount:
+                                    (kIsWeb || PlatformIs.web) ? 3 : 2,
+                                showTrailingAndLeadingDates: true,
+                              ),
+                              showNavigationArrow: true,
+                              appointmentBuilder: (context, details) {
+                                final appt = details.appointments.first;
+                                final bool isWeb = kIsWeb || PlatformIs.web;
+                                final double boundsHeight =
+                                    details.bounds.height;
+                                final int calculatedMaxLines =
+                                    boundsHeight > 30 ? 2 : 1;
+                                final double calculatedFontSize =
+                                    isWeb ? 12 : (boundsHeight > 25 ? 11 : 10);
 
-                                    final request = appt;
-                                    final status = request?.status?.toLowerCase()?.trim();
-                                    final canShow = status == "approved" || status == "waiting_seen" || status == "waiting";
-                                    if (!canShow) return const SizedBox.shrink();
-
-                                    final backgroundColor = viewModel.getStatusColor(status);
-                                    final textColor = (backgroundColor == const Color(AppColors.green) ||
-                                        backgroundColor == Color(0xff606060))
-                                        ? Colors.white
-                                        : Color(AppColors.buttons);
-
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        await context.pushNamed(
-                                          AppRoutes.requestDetails.name,
-                                          extra: request,
-                                          pathParameters: {
-                                            'type': RequestsServices.getRequestsTypeStr(type: requestType),
-                                            'id': CacheHelper.getInt("id").toString(),
-                                            'lang': context.locale.languageCode,
-                                          },
-                                        );
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        constraints: BoxConstraints(
-                                          minHeight: (kIsWeb || PlatformIs.web) ? 50 : 28,
-                                        ),
-                                        alignment: Alignment.center,
-                                        padding: (kIsWeb || PlatformIs.web)
-                                            ? EdgeInsets.symmetric(horizontal: 5, vertical: 3)
-                                            : EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(4),
-                                          color: backgroundColor,
-                                        ),
-                                        child: Text(
-                                          _titleByLang(request?.typeName, currentLang),
-                                          textAlign: TextAlign.center,
-                                          maxLines: (kIsWeb || PlatformIs.web) ? 2 : 1,
-
-                                          overflow: TextOverflow.visible,
-                                          style: AppStyles.content(context).copyWith(
-                                            color: textColor,
-                                            fontSize: (kIsWeb || PlatformIs.web) ? 13 : 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
+                                // Render holidays (Map) differently
+                                if (appt is Map && appt['_isHoliday'] == true) {
+                                  final title = _titleByLang(
+                                      appt['typeName'], currentLang);
+                                  final displayTitle =
+                                      title.isEmpty ? 'Holiday' : title;
+                                  return Container(
+                                    width: details.bounds.width,
+                                    height: details.bounds.height,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4, vertical: 1),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: const Color(AppColors.green),
+                                    ),
+                                    child: Text(
+                                      displayTitle,
+                                      textAlign: TextAlign.center,
+                                      maxLines: calculatedMaxLines,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppStyles.whiteContent(context)
+                                          .copyWith(
+                                        fontSize: calculatedFontSize,
+                                        fontWeight: FontWeight.w600,
                                       ),
+                                    ),
+                                  );
+                                }
+
+                                final request = appt;
+                                final status =
+                                    request?.status?.toLowerCase()?.trim();
+                                final canShow = status == "approved" ||
+                                    status == "waiting_seen" ||
+                                    status == "waiting";
+                                if (!canShow) return const SizedBox.shrink();
+
+                                final backgroundColor =
+                                    viewModel.getStatusColor(status);
+                                final explicitTextColor = (backgroundColor ==
+                                            const Color(AppColors.green) ||
+                                        backgroundColor == Color(0xff606060))
+                                    ? Colors.white
+                                    : Color(AppColors.buttons);
+
+                                final empName =
+                                    request?.employeeName?.toString() ?? '';
+                                final typeName = _titleByLang(
+                                    request?.typeName, currentLang);
+                                final displayTitle =
+                                    (canSeeTeamRequests && empName.isNotEmpty)
+                                        ? '$empName - $typeName'
+                                        : typeName;
+
+                                return GestureDetector(
+                                  onTap: () async {
+                                    await context.pushNamed(
+                                      AppRoutes.requestDetails.name,
+                                      extra: request,
+                                      pathParameters: {
+                                        'type':
+                                            RequestsServices.getRequestsTypeStr(
+                                                type: requestType),
+                                        'id':
+                                            CacheHelper.getInt("id").toString(),
+                                        'lang': context.locale.languageCode,
+                                      },
                                     );
                                   },
-                                ),
-                              ),
-                              SizedBox(height: 15,),
-                              Card(
-                                margin: EdgeInsets.all(16),
-                                elevation: 4,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "📅 ${AppStrings.publicHolidays.tr()}",
-                                        style: AppStyles.heading(context).copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20
-                                        ),
+                                  child: Container(
+                                    width: details.bounds.width,
+                                    height: details.bounds.height,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 4, vertical: 1),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: backgroundColor,
+                                    ),
+                                    child: Text(
+                                      displayTitle,
+                                      textAlign: TextAlign.center,
+                                      maxLines: calculatedMaxLines,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          AppStyles.content(context).copyWith(
+                                        color: explicitTextColor,
+                                        fontSize: calculatedFontSize,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      SizedBox(height: 12),
-                                      ...(gCache['holidays'] as List? ?? []).map(
-                                              (holiday) {
-                                            final name = _titleByLang(holiday['name'], context.locale.languageCode);
-                                            return ListTile(
-                                              leading: const Icon(Icons.event, color: Color(AppColors.green)),
-                                              title: Text(name.isEmpty ? 'Holiday' : name, style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold),),
-                                              subtitle: Text(
-                                                "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr().toUpperCase()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
-                                                style: AppStyles.greyContent(context).copyWith(fontSize: 12),
-                                              ),
-                                            );
-                                          }).toList(),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
+                                );
+                              },
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Card(
+                            margin: EdgeInsets.all(16),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "📅 ${AppStrings.publicHolidays.tr()}",
+                                    style: AppStyles.heading(context).copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  SizedBox(height: 12),
+                                  ...(gCache['holidays'] as List? ?? [])
+                                      .map((holiday) {
+                                    final name = _titleByLang(holiday['name'],
+                                        context.locale.languageCode);
+                                    return ListTile(
+                                      leading: const Icon(Icons.event,
+                                          color: Color(AppColors.green)),
+                                      title: Text(
+                                        name.isEmpty ? 'Holiday' : name,
+                                        style: AppStyles.darkContent(context)
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle: Text(
+                                        "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr().toUpperCase()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
+                                        style: AppStyles.greyContent(context)
+                                            .copyWith(fontSize: 12),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ));
-            }));
+                  ),
+                ),
+              ));
+        }));
   }
 
   String formatDateArabic(DateTime date, context) {
-    final DateFormat formatter = DateFormat('d MMMM y', LocalizationService.isArabic(context: context)?'ar' : 'en');
+    final DateFormat formatter = DateFormat('d MMMM y',
+        LocalizationService.isArabic(context: context) ? 'ar' : 'en');
     return formatter.format(date);
   }
 }
 
 class RequestDataSource extends CalendarDataSource {
   final String _lang;
-  RequestDataSource(List requests, this._lang) {
+  final bool _canSeeTeamRequests;
+
+  RequestDataSource(List requests, this._lang, this._canSeeTeamRequests) {
     appointments = requests;
   }
 
@@ -325,7 +396,12 @@ class RequestDataSource extends CalendarDataSource {
     if (item is Map) {
       return _titleByLang(item['typeName'], _lang);
     }
-    return _titleByLang(item?.typeName, _lang);
+    final empName = item?.employeeName?.toString() ?? '';
+    final typeName = _titleByLang(item?.typeName, _lang);
+    if (_canSeeTeamRequests && empName.isNotEmpty) {
+      return '$empName - $typeName';
+    }
+    return typeName;
   }
 
   @override
