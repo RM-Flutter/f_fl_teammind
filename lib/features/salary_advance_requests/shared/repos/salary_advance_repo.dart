@@ -27,7 +27,7 @@ class SalaryAdvanceRepo {
       data,
       dataKey: 'data',
       files: files,
-      fileFieldName: 'files[]',
+      fileFieldName: 'attachments[]',
       context: context,
       allData: true,
     );
@@ -56,6 +56,7 @@ class SalaryAdvanceRepo {
       queryParameters: queryParams,
       context: context,
       allData: true,
+      // cache: false,
     );
   }
 
@@ -87,6 +88,7 @@ class SalaryAdvanceRepo {
       queryParameters: queryParams,
       context: context,
       allData: true,
+      // cache: false,
     );
   }
 
@@ -103,6 +105,7 @@ class SalaryAdvanceRepo {
       dataKey: 'data',
       context: context,
       allData: true,
+      // cache: false,
     );
   }
 
@@ -189,7 +192,7 @@ class SalaryAdvanceRepo {
       data,
       dataKey: 'data',
       files: files,
-      fileFieldName: 'files[]',
+      fileFieldName: 'attachments[]',
       context: context,
       allData: true,
     );

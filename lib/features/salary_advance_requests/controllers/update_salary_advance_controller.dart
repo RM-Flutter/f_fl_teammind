@@ -56,8 +56,12 @@ class UpdateSalaryAdvanceController extends ChangeNotifier {
   }
 
   void addAttachment(FilePickerResult result) {
-    newAttachments.add(result);
-    notifyListeners();
+    if (result.files.isNotEmpty) {
+      for (var file in result.files) {
+        newAttachments.add(FilePickerResult([file]));
+      }
+      notifyListeners();
+    }
   }
 
   void removeAttachment(int index) {
@@ -82,6 +86,13 @@ class UpdateSalaryAdvanceController extends ChangeNotifier {
       );
 
       if (result.success) {
+        if (context.mounted) {
+          AlertsService.success(
+            context: context,
+            message: 'updated_successfully'.tr(),
+            title: 'success'.tr(),
+          );
+        }
         return true;
       } else {
         if (context.mounted) {

@@ -14,6 +14,7 @@ class SalaryAdvanceRequestModel {
   bool? managerApproved;
   ProfileModel? employeeProfile;
   ProfileModel? managerProfile;
+  ProfileModel? hrProfile;
   List<ReportAttachmentModel>? attachments;
   String? status;
   String? createdAt;
@@ -33,6 +34,7 @@ class SalaryAdvanceRequestModel {
     this.managerApproved,
     this.employeeProfile,
     this.managerProfile,
+    this.hrProfile,
     this.attachments,
     this.status,
     this.createdAt,
@@ -56,6 +58,9 @@ class SalaryAdvanceRequestModel {
         : null;
     managerProfile = json['manager_profile'] != null
         ? ProfileModel.fromJson(json['manager_profile'])
+        : null;
+    hrProfile = json['hr_profile'] != null
+        ? ProfileModel.fromJson(json['hr_profile'])
         : null;
     attachments = json['attachments'] != null
         ? (json['attachments'] as List)
@@ -85,6 +90,9 @@ class SalaryAdvanceRequestModel {
     }
     if (managerProfile != null) {
       data['manager_profile'] = managerProfile!.toJson();
+    }
+    if (hrProfile != null) {
+      data['hr_profile'] = hrProfile!.toJson();
     }
     data['attachments'] = attachments?.map((e) => e.toJson()).toList();
     data['status'] = status;

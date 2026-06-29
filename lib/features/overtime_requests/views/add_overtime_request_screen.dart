@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/routing/app_router.dart';
+import '../../../../core/services/alert_service/alerts_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
 import '../controllers/overtime_requests_controller.dart';
@@ -23,8 +24,20 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   DateTime? selectedDate;
 
   void _submit() async {
-    if (selectedDate == null || _durationController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppStrings.dataIsRequired.tr())));
+    if (selectedDate == null) {
+      AlertsService.error(
+        context: context,
+        message: AppStrings.selectDate.tr(),
+        title: 'error'.tr(),
+      );
+      return;
+    }
+    if (_durationController.text.isEmpty) {
+      AlertsService.error(
+        context: context,
+        message: AppStrings.durationIsRequired.tr(),
+        title: 'error'.tr(),
+      );
       return;
     }
 
@@ -33,7 +46,14 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
     final success = await provider.addRequest(context, dateStr, _durationController.text);
     
     if (success) {
-      context.pop();
+      if (context.mounted) {
+        AlertsService.success(
+          context: context,
+          message: 'request_sent_successfully'.tr(),
+          title: 'success'.tr(),
+        );
+        context.pop();
+      }
     }
   }
 

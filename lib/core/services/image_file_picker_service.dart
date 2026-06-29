@@ -33,7 +33,7 @@ abstract class FileAndImagePickerService {
   static Future<FilePickerResult?> pickImageWithFilePicker() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,
-      allowMultiple: false,
+      allowMultiple: true,
       withData: true,
     );
     return (result != null && result.files.isNotEmpty) ? result : null;
@@ -107,7 +107,7 @@ abstract class FileAndImagePickerService {
 
     try {
       return await FilePicker.platform.pickFiles(
-        allowMultiple: false,
+        allowMultiple: true,
         withData: true,
         allowedExtensions: allowedExtensions,
         type: FileType.custom,

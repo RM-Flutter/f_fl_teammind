@@ -20,8 +20,12 @@ class CreateSalaryAdvanceController extends ChangeNotifier {
   }
 
   void addAttachment(FilePickerResult result) {
-    attachments.add(result);
-    notifyListeners();
+    if (result.files.isNotEmpty) {
+      for (var file in result.files) {
+        attachments.add(FilePickerResult([file]));
+      }
+      notifyListeners();
+    }
   }
 
   void removeAttachment(int index) {

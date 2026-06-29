@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
@@ -386,13 +387,17 @@ class _SalaryAdvanceDetailsScreenState
           SizedBox(height: 24),
           _buildTimelineApprovalRow(
               'employee_approval'.tr(), request.employeeApproved,
+              approverName: request.employeeId == controller.userSettings?.empId ? null : request.employeeProfile?.name,
               isFirst: true),
-          _buildTimelineApprovalRow(
-              'manager_approval'.tr(),
-              request.managerId == null ? null : request.managerApproved),
+          if (UserSettingConst.generalSettingsModel?.managerAbleToApproveSalaryAdvances == true)
+            _buildTimelineApprovalRow(
+                'manager_approval'.tr(),
+                request.managerId == null ? null : request.managerApproved,
+                approverName: request.managerId == controller.userSettings?.empId ? null : request.managerProfile?.name),
           _buildTimelineApprovalRow(
               'hr_approval'.tr(),
               request.hrId == null ? null : request.hrApproved,
+              approverName: request.hrId == controller.userSettings?.empId ? null : request.hrProfile?.name,
               isLast: true),
         ],
       ),
@@ -400,7 +405,7 @@ class _SalaryAdvanceDetailsScreenState
   }
 
   Widget _buildTimelineApprovalRow(String label, bool? isApproved,
-      {bool isFirst = false, bool isLast = false}) {
+      {String? approverName, bool isFirst = false, bool isLast = false}) {
     Color iconColor = isApproved == true
         ? const Color(0xFF10B981) // Clean, premium success green
         : (isApproved == false
@@ -444,7 +449,7 @@ class _SalaryAdvanceDetailsScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    label,
+                    approverName != null && approverName.isNotEmpty ? "$label ($approverName)" : label,
                     style: AppStyles.content(context).copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -506,6 +511,47 @@ class _SalaryAdvanceDetailsScreenState
 
   // _buildApprovalRow removed as we now use _buildTimelineApprovalRow
 
+  Widget _buildCleanButton({
+    required String label,
+    required Color backgroundColor,
+    required Color textColor,
+    IconData? icon,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      height: 48,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 20, color: textColor),
+              const SizedBox(width: 8),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildActionButtons(SalaryAdvanceDetailsController controller) {
     if (controller.isActionLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -518,51 +564,26 @@ class _SalaryAdvanceDetailsScreenState
     if (controller.canEdit) {
       actionButtons.add(
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Color(AppColors.buttons),
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(AppColors.buttons).withOpacity(0.25),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.edit_note_rounded,
-                  color: Colors.white, size: 20),
-              label: Text(
-                'edit_request'.tr(),
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
-              ),
-              onPressed: () async {
-                final updated = await Navigator.of(context).push<bool>(
-                  MaterialPageRoute(
-                    builder: (_) => UpdateSalaryAdvanceScreen(
-                      existingRequest: controller.requestDetails!,
-                    ),
+          child: _buildCleanButton(
+            label: 'edit_request'.tr(),
+            backgroundColor: Color(AppColors.buttons),
+            textColor: Colors.white,
+            icon: Icons.edit_note_rounded,
+            onPressed: () async {
+              final updated = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  builder: (_) => UpdateSalaryAdvanceScreen(
+                    existingRequest: controller.requestDetails!,
                   ),
-                );
-                if (updated == true && mounted) {
-                  setState(() {
-                    wasUpdated = true;
-                  });
-                  viewModel.fetchDetails(context, widget.requestId);
-                }
-              },
-            ),
+                ),
+              );
+              if (updated == true && mounted) {
+                setState(() {
+                  wasUpdated = true;
+                });
+                viewModel.fetchDetails(context, widget.requestId);
+              }
+            },
           ),
         ),
       );
@@ -575,49 +596,24 @@ class _SalaryAdvanceDetailsScreenState
       }
       actionButtons.add(
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.red.shade500,
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.red.withOpacity(0.25),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.cancel_outlined,
-                  color: Colors.white, size: 20),
-              label: Text(
-                'cancel_request'.tr(),
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
-              ),
-              onPressed: () async {
-                final confirm = await AlertsService.customConfirm(
-                  context: context,
-                  title: 'cancel_request'.tr(),
-                  message: 'cancel_request_confirm'.tr(),
-                );
-                if (confirm == true && mounted) {
-                  bool success = await controller.cancelRequest(context);
-                  if (success && mounted) {
-                    context.pop(true); // Return true to refresh list
-                  }
+          child: _buildCleanButton(
+            label: 'cancel_request'.tr(),
+            backgroundColor: Colors.red.shade500,
+            textColor: Colors.white,
+            icon: Icons.cancel_outlined,
+            onPressed: () async {
+              final confirm = await AlertsService.customConfirm(
+                context: context,
+                title: 'cancel_request'.tr(),
+                message: 'cancel_request_confirm'.tr(),
+              );
+              if (confirm == true && mounted) {
+                bool success = await controller.cancelRequest(context);
+                if (success && mounted) {
+                  context.pop(true); // Return true to refresh list
                 }
-              },
-            ),
+              }
+            },
           ),
         ),
       );
@@ -631,6 +627,29 @@ class _SalaryAdvanceDetailsScreenState
       );
     }
 
+    // Employee Approve Button (if employee approval is rejected)
+    if (controller.requestDetails?.employeeId == controller.userSettings?.empId &&
+        controller.requestDetails?.employeeApproved == false &&
+        controller.requestDetails?.status?.toLowerCase() != 'cancelled' &&
+        controller.requestDetails?.status?.toLowerCase() != 'canceled') {
+      buttons.add(
+        _buildCleanButton(
+          label: 'approve'.tr(),
+          backgroundColor: Colors.green.shade600,
+          textColor: Colors.white,
+          icon: Icons.check_circle_outline_rounded,
+          onPressed: () async {
+            bool success = await controller.reviewRequest(context, 'approved');
+            if (success && mounted) {
+              setState(() {
+                wasUpdated = true;
+              });
+            }
+          },
+        ),
+      );
+    }
+
     // Review Buttons for Manager/HR
     if (controller.canReview &&
         controller.requestDetails?.employeeId !=
@@ -638,7 +657,8 @@ class _SalaryAdvanceDetailsScreenState
       bool isFullyApproved =
           controller.requestDetails?.employeeApproved == true &&
               controller.requestDetails?.hrApproved == true &&
-              controller.requestDetails?.managerApproved == true;
+              (UserSettingConst.generalSettingsModel?.managerAbleToApproveSalaryAdvances != true ||
+                  controller.requestDetails?.managerApproved == true);
       bool isCancelled =
           controller.requestDetails?.status?.toLowerCase() == 'cancelled' ||
               controller.requestDetails?.status?.toLowerCase() == 'canceled';
@@ -651,9 +671,11 @@ class _SalaryAdvanceDetailsScreenState
           Row(
             children: [
               Expanded(
-                child: CustomElevatedButton(
-                  title: 'approve'.tr(),
-                  backgroundColor: Colors.green,
+                child: _buildCleanButton(
+                  label: 'approve'.tr(),
+                  backgroundColor: Colors.green.shade600,
+                  textColor: Colors.white,
+                  icon: Icons.check_circle_outline_rounded,
                   onPressed: () async {
                     bool success =
                         await controller.reviewRequest(context, 'approved');
@@ -665,11 +687,13 @@ class _SalaryAdvanceDetailsScreenState
                   },
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 12),
               Expanded(
-                child: CustomElevatedButton(
-                  title: 'reject'.tr(),
-                  backgroundColor: Colors.red,
+                child: _buildCleanButton(
+                  label: 'reject'.tr(),
+                  backgroundColor: Colors.red.shade500,
+                  textColor: Colors.white,
+                  icon: Icons.cancel_outlined,
                   onPressed: () async {
                     bool success =
                         await controller.reviewRequest(context, 'rejected');
@@ -692,7 +716,7 @@ class _SalaryAdvanceDetailsScreenState
     return Column(
       children: buttons
           .map((btn) =>
-              Padding(padding: EdgeInsets.only(bottom: 10), child: btn))
+              Padding(padding: EdgeInsets.only(bottom: 12), child: btn))
           .toList(),
     );
   }
@@ -756,10 +780,11 @@ class _SalaryAdvanceDetailsScreenState
                   final isPending = status != 'approved' &&
                       status != 'cancelled' &&
                       status != 'canceled';
-                  final isHr = controller.userSettings?.isHr == true;
+                  final isHrOrTopManagement = controller.userSettings?.isHr == true ||
+                      controller.userSettings?.topManagement == true;
                   final isOwner = controller.userSettings?.empId.toString() ==
                       controller.requestDetails?.employeeId?.toString();
-                  final showDeleteIcon = isPending && isHr && !isOwner;
+                  final showDeleteIcon = isPending && isHrOrTopManagement && !isOwner;
 
                   Widget cardChild;
 

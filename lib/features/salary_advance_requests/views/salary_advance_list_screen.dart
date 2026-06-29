@@ -148,8 +148,8 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
               itemBuilder: (context, index) {
                 final request = requests[index];
 
-                // Only HR, Top Management, and authorized managers can edit requests
-                final canEdit = controller.canModifyIncoming;
+                // Only HR and Top Management can edit incoming requests (never personal requests)
+                final canEdit = isIncoming && controller.canEdit;
 
                 return TweenAnimationBuilder<double>(
                   duration: Duration(milliseconds: 400 + (index * 100).clamp(0, 500)),

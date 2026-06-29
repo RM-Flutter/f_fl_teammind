@@ -74,9 +74,11 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
 
   void _pickFiles() async {
     FilePickerResult? result = await FileAndImagePickerService.pickFile();
-    if (result != null) {
+    if (result != null && result.files.isNotEmpty) {
       setState(() {
-        selectedFiles.add(result);
+        for (var file in result.files) {
+          selectedFiles.add(FilePickerResult([file]));
+        }
       });
     }
   }

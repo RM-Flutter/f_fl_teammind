@@ -804,6 +804,7 @@
   "availableUpdate ": "Available Update",
   "cairo": "Cairo",
   "dataIsRequired": "Data is Required",
+  "duration_is_required": "Duration is Required",
   "maddi": "Maddi",
   "fawry": "Fawry",
   "eleveenNumber": "11 Number",

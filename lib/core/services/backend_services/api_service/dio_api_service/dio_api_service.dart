@@ -524,7 +524,7 @@ class DioApiService implements BackEndServicesInterface {
               }
 
               formData.files.add(MapEntry(
-                fileFieldName ?? 'files[]',
+                fileFieldName ?? 'attachments[]',
                 MultipartFile.fromBytes(
                   fileBytes,
                   filename: fileItem.name,
@@ -539,14 +539,17 @@ class DioApiService implements BackEndServicesInterface {
       final headers = await ApiServiceHelpers.buildHeaders(
           additionalHeaders: header, context: context);
       headers.remove('Content-Type'); // Let Dio handle it for FormData
+      headers.remove('content-type');
       
-      // Send the request
+      // Send the request exactly as Postman does
       final response = await _effectiveDio.post(
         _getUri(url).toString(),
         data: formData,
         options: Options(
+          method: 'POST',
           headers: headers,
           persistentConnection: false,
+          contentType: null, // Wipe out BaseOptions default Content-Type
         ),
       );
 

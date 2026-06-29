@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/repos/salary_advance_repo.dart';
@@ -31,22 +32,25 @@ class SalaryAdvanceListController extends ChangeNotifier {
   bool get canModifyIncoming {
     if (userSettings == null) return false;
 
-    // 1. Team Leader: NEVER allowed
-    final isTeamLeader = userSettings?.isTeamleaderIn != null && userSettings!.isTeamleaderIn!.isNotEmpty;
-    if (isTeamLeader) return false;
-
-    // 2. HR / Top Management: Always allowed
+    // 1. HR / Top Management: Always allowed
     final isHr = userSettings?.isHr == true || userSettings?.topManagement == true;
     if (isHr) return true;
 
-    // 3. Manager: Allowed only if manager_able_to_approve_salary_advances is true
+    // 2. Manager: Allowed only if manager_able_to_approve_salary_advances is true
     final hasManagerRole = userSettings?.role?.map((e) => e.toLowerCase()).contains('manager') == true;
     final isManager = (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty) || hasManagerRole;
     if (isManager) {
       return UserSettingConst.generalSettingsModel?.managerAbleToApproveSalaryAdvances == true;
     }
 
+    // 3. Team Leader / Employee / Anyone else: NEVER allowed
     return false;
+  }
+
+  bool get canEdit {
+    if (userSettings == null) return false;
+    // Only HR and Top Management can edit. Managers cannot edit.
+    return userSettings?.isHr == true || userSettings?.topManagement == true;
   }
 
   bool isIncomingView = false;
@@ -84,6 +88,11 @@ class SalaryAdvanceListController extends ChangeNotifier {
       var gCache = json.decode(jsonString) as Map<String, dynamic>;
       userSettings = UserSettingsModel.fromJson(gCache);
       UserSettingConst.userSettings = userSettings;
+    }
+    var jsonString3 = CacheHelper.getString("US3");
+    if (jsonString3 != null && jsonString3.isNotEmpty && jsonString3 != "") {
+      var gCache3 = json.decode(jsonString3) as Map<String, dynamic>;
+      UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache3);
     }
   }
 

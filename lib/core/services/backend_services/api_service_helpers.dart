@@ -22,7 +22,6 @@ abstract class ApiServiceHelpers {
     debugPrint("DEVICE UNIQE ID $deviceUniqueId");
     var headers = {
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id': deviceUniqueId,
@@ -33,7 +32,7 @@ abstract class ApiServiceHelpers {
       }
     }
     if ((addToken == true) && appConfigServiceProvider.token.isNotEmpty) {
-      headers['authorization'] = 'Bearer ${appConfigServiceProvider.token}';
+      headers['Authorization'] = 'Bearer ${appConfigServiceProvider.token}';
     }
     return headers;
   }

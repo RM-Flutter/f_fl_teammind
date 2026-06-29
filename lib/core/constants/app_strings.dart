@@ -509,6 +509,7 @@ abstract class AppStrings {
   static const enterMinutes = 'enterMinutes';
   static const durationMinutes = 'durationMinutes';
   static const duration = 'duration';
+  static const durationIsRequired = 'duration_is_required';
   static const employee = 'employee';
   static const myNotifications = 'myNotifications';
   static const viewAll = 'viewAll';

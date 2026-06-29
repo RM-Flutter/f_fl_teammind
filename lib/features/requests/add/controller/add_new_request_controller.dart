@@ -439,9 +439,9 @@ class AddNewRequestController extends ChangeNotifier {
   }
   Future<void> pickFile() async {
     FilePickerResult? result = await FileAndImagePickerService.pickFile();
-    if (result != null) {
+    if (result != null && result.files.isNotEmpty) {
       attachedFile = result;
-      fileController.text = result.files.single.name;
+      fileController.text = result.files.map((e) => e.name).join(', ');
     }
     notifyListeners();
   }

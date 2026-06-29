@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/routing/app_router.dart';
+import '../../../../core/services/alert_service/alerts_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../controllers/overtime_requests_controller.dart';
@@ -35,7 +36,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
   @override
   void initState() {
     super.initState();
-    _durationController = TextEditingController(text: widget.request.overtime?.toString() ?? "0");
+    _durationController = TextEditingController(text: widget.request.overtime?.toString() ?? '');
     _replyController = TextEditingController();
 
     final jsonString = CacheHelper.getString("US1");
@@ -54,7 +55,11 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
 
   void _updateStatus(String status) async {
     if (_replyController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppStrings.pleaseEnterReason.tr())));
+      AlertsService.error(
+        context: context,
+        message: AppStrings.pleaseEnterReason.tr(),
+        title: 'error'.tr(),
+      );
       return;
     }
     final provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
@@ -64,19 +69,35 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
       status, 
       _replyController.text
     );
-    if (success) context.pop();
+    if (success && mounted) {
+      context.pop();
+    }
   }
 
   void _updateDuration() async {
-    if (_durationController.text.isEmpty) return;
+    if (_durationController.text.isEmpty) {
+      AlertsService.error(
+        context: context,
+        message: AppStrings.durationIsRequired.tr(),
+        title: 'error'.tr(),
+      );
+      return;
+    }
     final provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
     final success = await provider.updateRequestDuration(
       context, 
       widget.request.id.toString(), 
       _durationController.text
     );
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppStrings.updatedSuccessfully.tr())));
+    if (success && mounted) {
+      AlertsService.success(
+        context: context,
+        message: AppStrings.updatedSuccessfully.tr(),
+        title: 'success'.tr(),
+      );
+      setState(() {
+        widget.request.overtime = int.tryParse(_durationController.text) ?? widget.request.overtime;
+      });
     }
   }
 

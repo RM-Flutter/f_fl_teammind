@@ -174,6 +174,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                                 name: file.name,
                                 path: file.path,
                                 size: await file.length(),
+                                bytes: await file.readAsBytes(),
                               ));
                             }
                             FilePickerResult result = FilePickerResult(platformFiles);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'dart:convert';
@@ -30,21 +31,18 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
   bool get canModifyIncoming {
     if (userSettings == null) return false;
 
-    // 1. Team Leader: NEVER allowed
-    final isTeamLeader = userSettings?.isTeamleaderIn != null && userSettings!.isTeamleaderIn!.isNotEmpty;
-    if (isTeamLeader) return false;
-
-    // 2. HR / Top Management: Always allowed
+    // 1. HR / Top Management: Always allowed
     final isHr = userSettings?.isHr == true || userSettings?.topManagement == true;
     if (isHr) return true;
 
-    // 3. Manager: Allowed only if manager_able_to_approve_salary_advances is true
+    // 2. Manager: Allowed only if manager_able_to_approve_salary_advances is true
     final hasManagerRole = userSettings?.role?.map((e) => e.toLowerCase()).contains('manager') == true;
     final isManager = (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty) || hasManagerRole;
     if (isManager) {
       return UserSettingConst.generalSettingsModel?.managerAbleToApproveSalaryAdvances == true;
     }
 
+    // 3. Team Leader / Employee / Anyone else: NEVER allowed
     return false;
   }
 
@@ -70,7 +68,13 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
       return false;
     }
     
-    return canModifyIncoming;
+    // 1. Check if it's the user's own request. Nobody can edit their own request.
+    if (userSettings!.empId.toString() == requestDetails!.employeeId?.toString()) {
+      return false;
+    }
+
+    // 2. Only HR and Top Management can edit incoming requests. Managers cannot edit.
+    return userSettings?.isHr == true || userSettings?.topManagement == true;
   }
 
   bool get canCancel {
@@ -93,6 +97,11 @@ class SalaryAdvanceDetailsController extends ChangeNotifier {
       var gCache = json.decode(jsonString) as Map<String, dynamic>;
       userSettings = UserSettingsModel.fromJson(gCache);
       UserSettingConst.userSettings = userSettings;
+    }
+    var jsonString3 = CacheHelper.getString("US3");
+    if (jsonString3 != null && jsonString3.isNotEmpty && jsonString3 != "") {
+      var gCache3 = json.decode(jsonString3) as Map<String, dynamic>;
+      UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache3);
     }
   }
 
