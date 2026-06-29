@@ -272,7 +272,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                             RequestsServices.getRequestsTypeStr(
                                                 type: requestType),
                                         'id':
-                                            CacheHelper.getInt("id").toString(),
+                                            request?.id?.toString() ?? "",
                                         'lang': context.locale.languageCode,
                                       },
                                     );
