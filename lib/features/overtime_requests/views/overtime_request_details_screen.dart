@@ -138,10 +138,28 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
   @override
   Widget build(BuildContext context) {
     bool isMyRequest = widget.request.employeeProfileId == currentUserId;
+    bool isHrOrTopManagement = gCache != null && (
+        gCache!['is_hr'] == true || gCache!['top_management'] == true || gCache!['is_hr'] == 'true' || gCache!['top_management'] == 'true'
+    );
     bool isManager = gCache != null && (
         (gCache!['is_manager_in'] != null && gCache!['is_manager_in'].isNotEmpty) ||
-        (gCache!['is_teamleader_in'] != null && gCache!['is_teamleader_in'].isNotEmpty)
+        (gCache!['is_teamleader_in'] != null && gCache!['is_teamleader_in'].isNotEmpty) ||
+        (gCache!['role'] != null && (gCache!['role'] as List<dynamic>).map((e) => e.toString().toLowerCase()).contains('manager'))
     );
+
+    bool canEditDuration = false;
+    bool canApproveReject = false;
+
+    if (!isMyRequest) {
+      final currentStatus = widget.request.status ?? 'pending';
+      if (currentStatus == 'pending' || currentStatus == 'waiting') {
+        canEditDuration = isManager || isHrOrTopManagement;
+        canApproveReject = isManager || isHrOrTopManagement;
+      } else if (currentStatus == 'managerApproved') {
+        canEditDuration = isHrOrTopManagement;
+        canApproveReject = isHrOrTopManagement;
+      }
+    }
 
     final mainColor = Color(AppColors.buttons);
 
@@ -167,16 +185,16 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                         SizedBox(height: 30),
                       ],
 
-                      // Duration Edit (for Manager)
-                      if (!isMyRequest && isManager) ...[
+                      // Duration Edit (for Manager & HR)
+                      if (canEditDuration) ...[
                         _buildSectionHeader(AppStrings.durationMinutes.tr(), Icons.timer_outlined),
                         SizedBox(height: 12),
                         _buildDurationUpdateField(provider),
                         SizedBox(height: 30),
                       ],
 
-                      // Manager Action Buttons
-                      if (isManager && !isMyRequest && (widget.request.status == 'pending' || widget.request.status == 'waiting')) ...[
+                      // Manager / HR Action Buttons
+                      if (canApproveReject) ...[
                         _buildSectionHeader(AppStrings.reason.tr(), Icons.notes_outlined),
                         SizedBox(height: 12),
                         _buildReasonTextField(),

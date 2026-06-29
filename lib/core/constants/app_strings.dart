@@ -375,6 +375,10 @@ abstract class AppStrings {
   static const weekends = "weekends";
   static const hireDate = "hireDate";
   static const generalInfo = "generalInfo";
+  static const mainStatus = "main_status";
+  static const employeeStatus = "employee_status";
+  static const employmentType = "employment_type";
+  static const jobLevel = "job_level";
   static const thereIsNoEmployeeDataFound = "thereIsNoEmployeeDataFound";
   static const searchByName = "searchByName";
   static const String employeesList = "employeesList";

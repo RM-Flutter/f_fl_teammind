@@ -19,14 +19,18 @@ class SalaryAdvanceListController extends ChangeNotifier {
   bool get isManagerOrHr {
     if (userSettings == null) return false;
     
-    final hasManagerRole = userSettings?.role?.map((e) => e.toLowerCase()).contains('manager') == true;
-    final isTeamLeader = userSettings?.isTeamleaderIn != null && userSettings!.isTeamleaderIn!.isNotEmpty;
+    // 1. HR / Top Management: Always allowed
+    final isHr = userSettings?.isHr == true || userSettings?.topManagement == true;
+    if (isHr) return true;
 
-    return userSettings?.topManagement == true || 
-           userSettings?.isHr == true || 
-           (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty) ||
-           hasManagerRole ||
-           isTeamLeader;
+    // 2. Manager / Team Leader: Allowed only if manager_able_to_approve_salary_advances is true
+    final hasManagerRole = userSettings?.role?.map((e) => e.toLowerCase()).contains('manager') == true;
+    final isManagerOrTL = (userSettings?.isManagerIn != null && userSettings!.isManagerIn!.isNotEmpty) || hasManagerRole || (userSettings?.isTeamleaderIn != null && userSettings!.isTeamleaderIn!.isNotEmpty);
+    if (isManagerOrTL) {
+      return UserSettingConst.generalSettingsModel?.managerAbleToApproveSalaryAdvances == true;
+    }
+
+    return false;
   }
 
   bool get canModifyIncoming {

@@ -91,6 +91,14 @@ class GeneralSectionWidget extends StatelessWidget {
               (employee?.workingHoursType != null &&
                   employee?.workingHours?.dailyWorkingHours?.isNotEmpty ==
                       true) ||
+              (employee?.mainStatus != null &&
+                  employee?.mainStatus?.isNotEmpty == true) ||
+              (employee?.employeeStatus != null &&
+                  employee?.employeeStatus?.isNotEmpty == true) ||
+              (employee?.employmentType != null &&
+                  employee?.employmentType?.isNotEmpty == true) ||
+              (employee?.jobLevel != null &&
+                  employee?.jobLevel?.isNotEmpty == true) ||
               (employee?.weekends != null &&
                   employee?.weekends?.isNotEmpty == true)) ...[
             Padding(
@@ -101,6 +109,42 @@ class GeneralSectionWidget extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12),
+            // MAIN STATUS
+            if (employee?.mainStatus != null && employee?.mainStatus?.isNotEmpty == true)
+              ProfileTile(
+                isTitleOnly: false,
+                isList: false,
+                title: AppStrings.mainStatus.tr().toUpperCase(),
+                trailingTitle: employee?.mainStatus.toString().tr().toUpperCase() ?? '',
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
+              ),
+            // EMPLOYEE STATUS
+            if (employee?.employeeStatus != null && employee?.employeeStatus?.isNotEmpty == true)
+              ProfileTile(
+                isTitleOnly: false,
+                isList: false,
+                title: AppStrings.employeeStatus.tr().toUpperCase(),
+                trailingTitle: employee?.employeeStatus.toString().tr().toUpperCase() ?? '',
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
+              ),
+            // EMPLOYMENT TYPE
+            if (employee?.employmentType != null && employee?.employmentType?.isNotEmpty == true)
+              ProfileTile(
+                isTitleOnly: false,
+                isList: false,
+                title: AppStrings.employmentType.tr().toUpperCase(),
+                trailingTitle: employee?.employmentType.toString().tr().toUpperCase() ?? '',
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
+              ),
+            // JOB LEVEL
+            if (employee?.jobLevel != null && employee?.jobLevel?.isNotEmpty == true)
+              ProfileTile(
+                isTitleOnly: false,
+                isList: false,
+                title: AppStrings.jobLevel.tr().toUpperCase(),
+                trailingTitle: employee?.jobLevel.toString().tr().toUpperCase() ?? '',
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
+              ),
             //HIRE DATE
             if (employee?.hireDate != null &&
                 employee?.hireDate?.isNotEmpty == true)

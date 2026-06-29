@@ -51,9 +51,11 @@ class OvertimeRequestsProvider extends ChangeNotifier {
         int? currentUserId;
         if (jsonString != null && jsonString.isNotEmpty) {
           final Map<String, dynamic> gCache = json.decode(jsonString);
-          currentUserId = gCache['id'];
-          if (currentUserId == null && gCache['employee_profile_id'] != null) {
+          if (gCache['employee_profile_id'] != null) {
              currentUserId = int.tryParse(gCache['employee_profile_id'].toString());
+          }
+          if (currentUserId == null && gCache['id'] != null) {
+             currentUserId = int.tryParse(gCache['id'].toString());
           }
         }
         

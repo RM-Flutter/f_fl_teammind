@@ -36,6 +36,10 @@ class EmployeeProfileModel {
   final String? workingHoursType;
    var totalDeductions;
    var additions; // or "totalBonuses"
+  final String? mainStatus;
+  final String? employeeStatus;
+  final String? employmentType;
+  final String? jobLevel;
 
   EmployeeProfileModel({
     this.id,
@@ -68,12 +72,24 @@ class EmployeeProfileModel {
     this.payrollDeductions,
     this.payrollSpecialBonus,
     this.payrolls,
+    this.mainStatus,
+    this.employeeStatus,
+    this.employmentType,
+    this.jobLevel,
   })  : totalDeductions = _calculateTotalAmount(
             basicSalary, payrollDeductions?.map((d) => d.value).toList()),
         additions = _calculateTotalAmount(
             basicSalary, payrollSpecialBonus?.map((b) => b.value).toList()),
         netSalary = _calculateNetSalary(
             basicSalary, payrollDeductions, payrollSpecialBonus);
+
+  static String? _parseStringOrKey(dynamic val) {
+    if (val == null) return null;
+    if (val is Map) {
+      return (val['key'] ?? val['value'] ?? val['en'] ?? val['ar'])?.toString();
+    }
+    return val.toString();
+  }
 
   static double _calculateNetSalary(
     String? basicSalary,
@@ -180,7 +196,11 @@ class EmployeeProfileModel {
         payrolls: json['payrolls'] != null
             ? List<EmpPayroll>.from(
                 json['payrolls'].map((item) => EmpPayroll.fromJson(item)))
-            : null);
+            : null,
+        mainStatus: _parseStringOrKey(json['main_status']),
+        employeeStatus: _parseStringOrKey(json['employee_status']),
+        employmentType: _parseStringOrKey(json['employment_type']),
+        jobLevel: _parseStringOrKey(json['job_level']));
   }
 
   Map<String, dynamic> toJson() {
@@ -214,6 +234,10 @@ class EmployeeProfileModel {
           payrollSpecialBonus?.map((item) => item.toJson()).toList(),
       'payrolls': payrolls?.map((item) => item.toJson()).toList(),
       'working_hours_type': workingHoursType,
+      'main_status': mainStatus,
+      'employee_status': employeeStatus,
+      'employment_type': employmentType,
+      'job_level': jobLevel,
     };
   }
 
@@ -233,6 +257,10 @@ class EmployeeProfileModel {
       String? tags,
       int? departmentId,
       Map<String, String>? action,
+      String? mainStatus,
+      String? employeeStatus,
+      String? employmentType,
+      String? jobLevel,
       String? jobTitle}) {
     return EmployeeProfileModel(
         id: id ?? this.id,
@@ -249,6 +277,10 @@ class EmployeeProfileModel {
         tags: tags ?? this.tags,
         departmentId: departmentId ?? this.departmentId,
         action: action ?? this.action,
+        mainStatus: mainStatus ?? this.mainStatus,
+        employeeStatus: employeeStatus ?? this.employeeStatus,
+        employmentType: employmentType ?? this.employmentType,
+        jobLevel: jobLevel ?? this.jobLevel,
         jobTitle: jobTitle ?? this.jobTitle);
   }
 
@@ -283,6 +315,10 @@ class EmployeeProfileModel {
         other.basicSalary == basicSalary &&
         other.payrollDeductions == payrollDeductions &&
         other.payrollSpecialBonus == payrollSpecialBonus &&
+        other.mainStatus == mainStatus &&
+        other.employeeStatus == employeeStatus &&
+        other.employmentType == employmentType &&
+        other.jobLevel == jobLevel &&
         other.payrolls == payrolls;
   }
 
@@ -314,6 +350,10 @@ class EmployeeProfileModel {
         basicSalary.hashCode ^
         payrollDeductions.hashCode ^
         payrollSpecialBonus.hashCode ^
+        mainStatus.hashCode ^
+        employeeStatus.hashCode ^
+        employmentType.hashCode ^
+        jobLevel.hashCode ^
         payrolls.hashCode;
   }
 
