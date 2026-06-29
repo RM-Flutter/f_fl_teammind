@@ -224,6 +224,7 @@ abstract class AppStrings {
   static const pleaseConnectToTheInternetAndTryAgain =
       "pleaseConnectToTheInternetAndTryAgain";
   static const showOfflineFingerprints = "showOfflineFingerprints";
+  static const resubmitOfflineFingerprints = "resubmitOfflineFingerprints";
   static const refused = "refused";
   static const downloadSuccessfully = "downloadSuccessfully";
   static const retry = "retry";

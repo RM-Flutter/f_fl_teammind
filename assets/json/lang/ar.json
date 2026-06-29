@@ -161,6 +161,7 @@
   "youAreOffline": "أنت غير متصل بالإنترنت",
   "resend": "إعادة الإرسال",
   "showOfflineFingerprints": "عرض البصمات بدون إنترنت",
+  "resubmitOfflineFingerprints": "إعادة الإرسال",
   "noInternetConnection": "خطأ في الشبكة",
   "pdfViewer": "عارض PDF",
   "content": "محتوى",

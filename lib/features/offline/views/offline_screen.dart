@@ -11,10 +11,10 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/internet_check.dart';
-import 'package:app_test/core/services/restart_app.dart';
 import 'package:app_test/core/services/offline_overlay_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/offline/controller/offline_controller.dart';
+import 'package:go_router/go_router.dart';
 
 class OfflineScreen extends StatefulWidget {
   const OfflineScreen({super.key});
@@ -201,14 +201,37 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                 titleSize: AppSizes.s12,
                                 title: AppStrings.retry.tr().toUpperCase(),
                                 onPressed: () async {
-                                  // Check connection immediately
+                                  // Perform real connectivity check
                                   await connectionService.checkConnection();
-                                  if (connectionService.isConnected && mounted) {
-                                    // Connection restored, just close the overlay
-                                    OfflineOverlayService.hideOfflineOverlay();
+                                  if (!mounted) return;
+                                  if (connectionService.isConnected) {
+                                    // Case 1: screen shown via overlay (dynamic offline)
+                                    if (OfflineOverlayService.isShowing) {
+                                      OfflineOverlayService.hideOfflineOverlay();
+                                    } else {
+                                      // Case 2: screen shown via GoRouter navigation (startup offline)
+                                      // Navigate back to splash so it re-initializes and goes to home
+                                      final lang = context.locale.languageCode;
+                                      context.goNamed(
+                                        AppRoutes.splash.name,
+                                        pathParameters: {'lang': lang},
+                                      );
+                                    }
                                   } else {
-                                    // Still offline, restart app
-                                    RestartWidget.restartApp(context);
+                                    // Still offline — inform user
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        backgroundColor: Colors.red,
+                                        behavior: SnackBarBehavior.floating,
+                                        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
                                   }
                                 }
                             );
@@ -242,12 +265,13 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.qr_code;
                                     function = () async {
                                       debugPrint("👆 QR Code fingerprint button pressed");
-                                      OfflineOverlayService.hideOfflineOverlay();
+                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: 'fp_scan',
                                       );
+                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
                                     };
                                     hero = 'QR';
                                     break;
@@ -256,12 +280,13 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     hero = 'wifi';
                                     function = () async {
                                       debugPrint("👆 WiFi fingerprint button pressed");
-                                      OfflineOverlayService.hideOfflineOverlay();
+                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: 'fp_wifi',
                                       );
+                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
                                     };
                                     break;
                                   case 'fp_navigate':
@@ -269,12 +294,13 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.gps_fixed;
                                     function = () async {
                                       debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
-                                      OfflineOverlayService.hideOfflineOverlay();
+                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: fingerprintType,
                                       );
+                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
                                     };
                                     hero = 'gps';
                                     break;
@@ -282,12 +308,13 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.bluetooth;
                                     function = () async {
                                       debugPrint("👆 Bluetooth fingerprint button pressed");
-                                      OfflineOverlayService.hideOfflineOverlay();
+                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: 'fp_bluetooth',
                                       );
+                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
                                     };
                                     hero = 'bluetooth';
                                     break;
