@@ -40,5 +40,22 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+
+        ## Enable only the permissions your app actually uses.
+        ## Unused ones can stay commented out to keep the binary lean.
+
+        'PERMISSION_CAMERA=1',          # Camera (face verification / QR scan)
+        'PERMISSION_MICROPHONE=1',      # Microphone (video recording)
+        'PERMISSION_PHOTOS=1',          # Photo library
+        'PERMISSION_LOCATION=1',        # Location (attendance / Wi-Fi)
+        'PERMISSION_LOCATION_ALWAYS=1', # Background location
+        'PERMISSION_BLUETOOTH=1',       # Bluetooth
+        'PERMISSION_LOCAL_NETWORK=1',   # Local network
+        'PERMISSION_NOTIFICATIONS=1',   # Push notifications
+      ]
+    end
   end
 end

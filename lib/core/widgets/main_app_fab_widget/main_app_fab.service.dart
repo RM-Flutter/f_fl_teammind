@@ -680,7 +680,19 @@ abstract class MainFabServices {
     final permission = permission_handler.Permission.camera;
     var status = await permission.status;
     if (status.isGranted) return true;
+
+    // Request the permission
+    final wasNotDetermined = status.isDenied; // "not determined" on iOS
     status = await permission.request();
+
+    // On iOS, after the user grants the camera permission for the very first
+    // time, the system needs a brief moment to register the grant with
+    // AVCaptureSession. Without this delay the subsequent camera call can
+    // fail silently or throw, which surfaces as a generic "Network Error".
+    if (PlatformIs.iOS && wasNotDetermined && status.isGranted) {
+      await Future.delayed(const Duration(milliseconds: 600));
+    }
+
     return status.isGranted;
   }
 
@@ -2056,7 +2068,7 @@ abstract class MainFabServices {
       debugPrint('Error Adding Bluetooth Fingerprint: $e');
       AlertsService.error(
         context: context,
-        message:  AppStrings.noInternetConnection.tr(),
+        message: e.toString(),
         title: AppStrings.failed.tr(),
       );
     }
@@ -2201,7 +2213,7 @@ abstract class MainFabServices {
       debugPrint('Error Adding Wi-Fi Fingerprint: $e');
       AlertsService.error(
         context: context,
-        message: AppStrings.noInternetConnection.tr(),
+        message: e.toString(),
         title: AppStrings.failed.tr(),
       );
       return;
@@ -2380,7 +2392,7 @@ abstract class MainFabServices {
       if (context.mounted) {
         AlertsService.error(
             context: context,
-            message: AppStrings.noInternetConnection.tr(),
+            message: e.toString(),
             title: AppStrings.failed.tr());
       }
       return;
@@ -2549,7 +2561,7 @@ abstract class MainFabServices {
           'Error Happeded While Adding Fingerprint Using Qrcode! Error :-> $e');
       AlertsService.error(
           context: context,
-          message: AppStrings.noInternetConnection.tr(),
+          message: e.toString(),
           title: AppStrings.failed.tr());
     }
   }
