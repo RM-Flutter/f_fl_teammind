@@ -202,9 +202,24 @@ class DomainSelectionService {
       cleaned = cleaned.substring(7);
     }
 
+    // Remove any path/query parameters to extract clean domain/host
+    final slashIndex = cleaned.indexOf('/');
+    if (slashIndex != -1) {
+      cleaned = cleaned.substring(0, slashIndex);
+    }
+    final colonIndex = cleaned.indexOf(':');
+    if (colonIndex != -1) {
+      cleaned = cleaned.substring(0, colonIndex);
+    }
+
     // Remove www.
     if (cleaned.startsWith('www.')) {
       cleaned = cleaned.substring(4);
+    }
+
+    // If domain ends with r-m.dev, keep it as is (bypass stripping subdomains)
+    if (cleaned.endsWith('r-m.dev')) {
+      return cleaned;
     }
 
     // Remove webapp. or webapp from the beginning (can appear multiple times)
@@ -240,8 +255,11 @@ class DomainSelectionService {
     return cleaned;
   }
 
-  /// Format domain: add https://webapp. prefix
+  /// Format domain: add https://webapp. prefix, but bypass if domain ends with r-m.dev
   static String _formatDomain(String cleanedDomain) {
+    if (cleanedDomain.endsWith('r-m.dev')) {
+      return 'https://$cleanedDomain';
+    }
     return 'https://webapp.$cleanedDomain';
   }
 

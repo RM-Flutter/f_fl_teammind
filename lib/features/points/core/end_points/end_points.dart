@@ -6,7 +6,7 @@ class PointFeatureEndPoints {
   static String get baseUrl {
     String domain = CacheHelper.getString("custom_domain") ?? "";
     if (domain.isEmpty) {
-      domain = "https://lab.r-m.dev";
+      domain = "https://emplive.r-m.dev";
     }
     return domain.endsWith("/") ? domain : "$domain/";
   }

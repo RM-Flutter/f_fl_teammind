@@ -82,8 +82,7 @@ abstract class AppConstants {
   /// للتوافق مع الكود القديم: نفس fingerprintFaceChallengeEnabled.
   static bool get showFaceVerifyForFingerprint => fingerprintFaceChallengeEnabled;
 
-  // static const String _defaultBase = "https://emplive.r-m.dev";
-  static const String _defaultBase = "https://lab.r-m.dev";
+  static const String _defaultBase = "https://emplive.r-m.dev";
 
   /// Get base URL from cache or use default
   static String get base {

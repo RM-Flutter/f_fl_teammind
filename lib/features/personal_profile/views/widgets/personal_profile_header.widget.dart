@@ -451,7 +451,7 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
             ),
           ),
           SizedBox(height: 5,),
-         if(widget.photo != "https://lab.r-m.dev/files/2024/user-profile.png") Row(
+          if(widget.photo != "https://emplive.r-m.dev/files/2024/user-profile.png") Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
