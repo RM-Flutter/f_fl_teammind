@@ -95,7 +95,9 @@ class OfflineController with ChangeNotifier {
         final String? jsonString = prefs.getString('fingerPrints');
         if (jsonString != null && jsonString.isNotEmpty) {
           final List<dynamic> decodedList = jsonDecode(jsonString);
-          savedFingerprints = decodedList.cast<Map<String, dynamic>>();
+          savedFingerprints = decodedList
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
           AppConstants.fingerPrints = savedFingerprints;
           print("Loaded fingerprints in offline screen: ${savedFingerprints}");
         } else {

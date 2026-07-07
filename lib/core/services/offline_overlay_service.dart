@@ -3,86 +3,77 @@ import 'package:app_test/features/offline/views/offline_screen.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
 class OfflineOverlayService {
-  static OverlayEntry? _offlineOverlay;
+  static Route? _offlineRoute;
   static bool _isShowing = false;
   static bool _isTemporarilyHidden = false; // Flag to track temporary hiding
 
+  static bool get isShowing => _isShowing;
+  static bool get isTemporarilyHidden => _isTemporarilyHidden;
 
   static void hideOfflineOverlay({bool temporarily = false}) {
     if (!_isShowing && !_isTemporarilyHidden) {
       // Already hidden, reset state
-      _offlineOverlay = null;
-      _isTemporarilyHidden = false;
-      return;
-    }
-
-    if (_offlineOverlay == null && !temporarily) {
-      // Overlay entry is null, just reset state
-      _isShowing = false;
+      _offlineRoute = null;
       _isTemporarilyHidden = false;
       return;
     }
 
     try {
-      final overlay = _offlineOverlay;
-      if (temporarily && overlay != null) {
+      final route = _offlineRoute;
+      if (temporarily && route != null) {
         _isTemporarilyHidden = true;
-        // Remove overlay temporarily but keep the entry
-        if (rootNavigatorKey.currentState?.overlay != null) {
-          overlay.remove();
-          debugPrint('Offline overlay hidden temporarily');
+        if (rootNavigatorKey.currentState != null) {
+          if (route.isCurrent || route.isActive) {
+            rootNavigatorKey.currentState!.removeRoute(route);
+          }
+          debugPrint('Offline route hidden temporarily');
         }
-      } else if (overlay != null) {
-        _offlineOverlay = null;
+      } else if (route != null) {
+        _offlineRoute = null;
         _isShowing = false;
         _isTemporarilyHidden = false;
-        // Remove overlay permanently
-        if (rootNavigatorKey.currentState?.overlay != null) {
-          overlay.remove();
-          debugPrint('Offline overlay hidden');
+        if (rootNavigatorKey.currentState != null) {
+          if (route.isCurrent || route.isActive) {
+            rootNavigatorKey.currentState!.removeRoute(route);
+          }
+          debugPrint('Offline route hidden');
         }
       } else {
-        debugPrint('Offline overlay state reset (navigator not available)');
+        debugPrint('Offline route state reset (navigator not available)');
       }
     } catch (e) {
-      debugPrint('Error hiding offline overlay: $e');
+      debugPrint('Error hiding offline route: $e');
       _isShowing = false;
-      _offlineOverlay = null;
+      _offlineRoute = null;
       _isTemporarilyHidden = false;
     }
   }
 
-  static bool get isShowing => _isShowing;
-  static bool get isTemporarilyHidden => _isTemporarilyHidden;
-
   static void showOfflineOverlay({bool restoreFromTemporary = false}) {
     if (restoreFromTemporary && _isTemporarilyHidden) {
       _isTemporarilyHidden = false;
-      // Re-insert the overlay entry if it still exists
-      if (_offlineOverlay != null && rootNavigatorKey.currentState?.overlay != null) {
+      if (_offlineRoute != null && rootNavigatorKey.currentState != null) {
         try {
-          rootNavigatorKey.currentState!.overlay!.insert(_offlineOverlay!);
+          rootNavigatorKey.currentState!.push(_offlineRoute!);
           _isShowing = true;
-          debugPrint('Offline overlay restored from temporary hide');
+          debugPrint('Offline route restored from temporary hide');
         } catch (e) {
-          debugPrint('Error restoring overlay from temporary hide: $e');
-          // If restoration fails, create a new overlay
-          _offlineOverlay = null;
+          debugPrint('Error restoring route from temporary hide: $e');
+          _offlineRoute = null;
           _isShowing = false;
-          showOfflineOverlay(); // Recursively call to create new overlay
+          showOfflineOverlay();
         }
       } else {
-        debugPrint('Offline overlay entry not available, creating new one');
+        debugPrint('Offline route not available, creating new one');
         _isTemporarilyHidden = false;
         _isShowing = false;
-        showOfflineOverlay(); // Recursively call to create new overlay
+        showOfflineOverlay();
       }
       return;
     }
 
-    // Call the original showOfflineOverlay logic
     if (_isShowing) {
-      debugPrint('Offline overlay already showing');
+      debugPrint('Offline route already showing');
       return;
     }
 
@@ -93,24 +84,25 @@ class OfflineOverlayService {
       try {
         _isShowing = true;
         _isTemporarilyHidden = false;
-        _offlineOverlay = OverlayEntry(
-          builder: (context) => const OfflineScreen(),
-          opaque: true,
+        _offlineRoute = PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const OfflineScreen(),
+          settings: const RouteSettings(name: '/offline-screen'),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
         );
 
-        // Use rootNavigatorKey from app_router.dart (GoRouter's navigator)
-        if (rootNavigatorKey.currentState?.overlay != null) {
-          rootNavigatorKey.currentState!.overlay!.insert(_offlineOverlay!);
-          debugPrint('Offline overlay shown successfully');
+        if (rootNavigatorKey.currentState != null) {
+          rootNavigatorKey.currentState!.push(_offlineRoute!);
+          debugPrint('Offline route shown successfully');
         } else {
-          debugPrint('⚠️ Cannot show offline overlay: navigator overlay not available');
+          debugPrint('⚠️ Cannot show offline route: navigator not available');
           _isShowing = false;
-          _offlineOverlay = null;
+          _offlineRoute = null;
         }
       } catch (e) {
-        debugPrint('Error showing offline overlay: $e');
+        debugPrint('Error showing offline route: $e');
         _isShowing = false;
-        _offlineOverlay = null;
+        _offlineRoute = null;
       }
     });
   }

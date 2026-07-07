@@ -265,13 +265,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.qr_code;
                                     function = () async {
                                       debugPrint("👆 QR Code fingerprint button pressed");
-                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: 'fp_scan',
                                       );
-                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
+                                      await viewModel.loadFingerprintsFromPreferences();
                                     };
                                     hero = 'QR';
                                     break;
@@ -280,13 +279,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     hero = 'wifi';
                                     function = () async {
                                       debugPrint("👆 WiFi fingerprint button pressed");
-                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: 'fp_wifi',
                                       );
-                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
+                                      await viewModel.loadFingerprintsFromPreferences();
                                     };
                                     break;
                                   case 'fp_navigate':
@@ -294,13 +292,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.gps_fixed;
                                     function = () async {
                                       debugPrint("👆 GPS fingerprint button pressed: $fingerprintType");
-                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: fingerprintType,
                                       );
-                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
+                                      await viewModel.loadFingerprintsFromPreferences();
                                     };
                                     hero = 'gps';
                                     break;
@@ -308,13 +305,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     icon = Icons.bluetooth;
                                     function = () async {
                                       debugPrint("👆 Bluetooth fingerprint button pressed");
-                                      OfflineOverlayService.hideOfflineOverlay(temporarily: true);
                                       final navContext = rootNavigatorKey.currentContext ?? context;
                                       await MainFabServices.getFingerprintActionMethodDependsOnFingerprintMethod(
                                         context: navContext,
                                         fingerprintMethod: 'fp_bluetooth',
                                       );
-                                      OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
+                                      await viewModel.loadFingerprintsFromPreferences();
                                     };
                                     hero = 'bluetooth';
                                     break;

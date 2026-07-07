@@ -85,7 +85,9 @@ class FingerprintViewModel extends ChangeNotifier {
         if (jsonString != null && jsonString.isNotEmpty) {
           // Decode the JSON string back to a list of objects
           final List<dynamic> decodedList = jsonDecode(jsonString);
-          AppConstants.fingerPrints = decodedList.cast<Map<String, dynamic>>();
+          AppConstants.fingerPrints = decodedList
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
           print("Loaded fingerprints: ${AppConstants.fingerPrints}");
         } else {
           AppConstants.fingerPrints = [];

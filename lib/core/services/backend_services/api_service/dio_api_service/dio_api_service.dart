@@ -524,7 +524,7 @@ class DioApiService implements BackEndServicesInterface {
               }
 
               formData.files.add(MapEntry(
-                fileFieldName ?? 'files',
+                fileFieldName != null ? '$fileFieldName[]' : 'files[]',
                 MultipartFile.fromBytes(
                   fileBytes,
                   filename: fileItem.name,

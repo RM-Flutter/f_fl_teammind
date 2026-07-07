@@ -1,7 +1,7 @@
 name: app_test
 description: "Attendance System for Companies."
 publish_to: 'none'
-version: 3.8.3+16
+version: 3.8.4+17
 
 environment:
   sdk: ^3.5.2

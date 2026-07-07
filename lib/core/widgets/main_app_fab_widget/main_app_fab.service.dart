@@ -826,31 +826,13 @@ abstract class MainFabServices {
       debugPrint("❌ Context not mounted, cannot show instruction sheet");
       return false;
     }
-    // Hide offline overlay temporarily to show the dialog
-    final wasOverlayShowing = OfflineOverlayService.isShowing;
     try {
-      // Get root navigator context before hiding overlay
-      BuildContext? dialogContext = rootNavigatorKey.currentContext;
-
-      if (wasOverlayShowing) {
-        debugPrint("📋 Hiding offline overlay temporarily to show instruction sheet");
-        OfflineOverlayService.hideOfflineOverlay(temporarily: true);
-        // Wait a bit for overlay to hide
-        await Future.delayed(const Duration(milliseconds: 300));
-        // Get root navigator context again after hiding overlay
-        dialogContext = rootNavigatorKey.currentContext;
-      } else {
-        // If overlay is not showing, use original context
-        dialogContext = context;
-      }
+      // Get root navigator context if available to display dialog on top of the overlay
+      final dialogContext = rootNavigatorKey.currentContext ?? context;
 
       // Check if dialog context is available and mounted
-      if (dialogContext == null || !dialogContext.mounted) {
-        debugPrint("❌ Dialog context not available or not mounted after hiding overlay");
-        if (wasOverlayShowing) {
-          await Future.delayed(const Duration(milliseconds: 100));
-          OfflineOverlayService.showOfflineOverlay();
-        }
+      if (!dialogContext.mounted) {
+        debugPrint("❌ Dialog context not mounted");
         return false;
       }
 
@@ -934,23 +916,10 @@ abstract class MainFabServices {
       );
       debugPrint("📋 Instruction sheet result: $result");
 
-      // Restore offline overlay if it was showing
-      if (wasOverlayShowing && (result == null || result == false)) {
-        debugPrint("📋 Restoring offline overlay after instruction sheet closed");
-        await Future.delayed(const Duration(milliseconds: 100));
-        OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
-      }
-
       return result ?? false;
     } catch (e, stackTrace) {
       debugPrint("❌ Error showing instruction sheet: $e");
       debugPrint("Stack trace: $stackTrace");
-
-      // Restore offline overlay on error
-      if (wasOverlayShowing) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        OfflineOverlayService.showOfflineOverlay(restoreFromTemporary: true);
-      }
 
       return false;
     }
@@ -1053,10 +1022,7 @@ abstract class MainFabServices {
 
       if (profileImage == null) {
         // If download failed and no cache available, skip verification in offline mode
-        final isConnected = await InternetConnectionChecker.createInstance().hasConnection.timeout(
-          const Duration(seconds: 2),
-          onTimeout: () => false,
-        );
+        final isConnected = await ConnectionsService.isOnline();
         if (!isConnected) {
           debugPrint('⚠️ Offline mode: Skipping face verification');
           // Return a high similarity to allow proceeding in offline mode
@@ -1092,19 +1058,12 @@ abstract class MainFabServices {
       debugPrint('⚠️ Error while verifying profile face: $error');
 
       // Check if offline and allow proceeding
-      try {
-        final isConnected = await InternetConnectionChecker.createInstance().hasConnection.timeout(
-          const Duration(seconds: 2),
-          onTimeout: () => false,
-        );
-        if (!isConnected) {
-          debugPrint('⚠️ Offline mode: Skipping face verification due to error');
-          // Return a high similarity to allow proceeding in offline mode
-          // Don't close dialog here, let finally block handle it
-          return 1.0;
-        }
-      } catch (e) {
-        debugPrint('⚠️ Error checking connection: $e');
+      final isConnected = await ConnectionsService.isOnline();
+      if (!isConnected) {
+        debugPrint('⚠️ Offline mode: Skipping face verification due to error');
+        // Return a high similarity to allow proceeding in offline mode
+        // Don't close dialog here, let finally block handle it
+        return 1.0;
       }
 
       AlertsService.error(
@@ -2023,14 +1982,14 @@ abstract class MainFabServices {
 
       if (selectedDevice == null) return;
       var result;
-      customAlertDialogWithTwoButtons(
+      await customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
           content: AppStrings.doYouWantToAddThisFingerprint.tr(),
           actionRightText: AppStrings.yes.tr(),
           actionLeftText: AppStrings.no.tr(),
           onLeftActionPressed: (){
-            Navigator.pop(context);
+            // customAlertDialogWithTwoButtons handles popping the dialog automatically.
           },
           onRightActionPressed: ()async{
             try {
@@ -2165,14 +2124,14 @@ abstract class MainFabServices {
       final wifiData = {'mac_address': selectedNetwork['bssid']};
       print( "mac_address -> ${selectedNetwork['bssid']}");
       var result;
-      customAlertDialogWithTwoButtons(
+      await customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
           content: AppStrings.doYouWantToAddThisFingerprint.tr(),
           actionRightText: AppStrings.yes.tr(),
           actionLeftText: AppStrings.no.tr(),
           onLeftActionPressed: (){
-            Navigator.pop(context);
+            // customAlertDialogWithTwoButtons handles popping the dialog automatically.
           },
           onRightActionPressed: ()async{
             try {
@@ -2337,14 +2296,14 @@ abstract class MainFabServices {
           ? capturedFace.asFilePickerResults
           : <FilePickerResult>[];
       var result;
-      customAlertDialogWithTwoButtons(
+      await customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
           content: AppStrings.doYouWantToAddThisFingerprint.tr(),
           actionRightText: AppStrings.yes.tr(),
           actionLeftText: AppStrings.no.tr(),
           onLeftActionPressed: (){
-            Navigator.pop(context);
+            // customAlertDialogWithTwoButtons handles popping the dialog automatically.
           },
           onRightActionPressed: ()async{
             try {
@@ -2357,6 +2316,7 @@ abstract class MainFabServices {
                   noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
 
               print("GPS DONE TWO");
+
               // Handle the server response
               if (result != null && result.success) {
                 AlertsService.success(
@@ -2462,8 +2422,7 @@ abstract class MainFabServices {
       print("DONE FROM ONE");
       print("DONE FROM ONE");
       var result;
-
-      customAlertDialogWithTwoButtons(
+      await customAlertDialogWithTwoButtons(
           context,
           title: AppStrings.fingerprint.tr(),
           content: AppStrings.doYouWantToAddThisFingerprint.tr(),
@@ -2473,15 +2432,6 @@ abstract class MainFabServices {
             Navigator.pop(context);
           },
           onRightActionPressed: ()async{
-            // Close confirmation dialog first
-            try {
-              if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-            } catch (e) {
-              debugPrint('Error closing confirmation dialog: $e');
-            }
-
             // Show loading indicator immediately using post frame callback
             WidgetsBinding.instance.addPostFrameCallback((_) {
               try {
@@ -2612,7 +2562,6 @@ abstract class MainFabServices {
             message: 'Error Happeded! Please try later!',
             title: AppStrings.failed.tr());
       }
-      return null;
     }
   }
 }
