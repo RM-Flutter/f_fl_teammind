@@ -356,10 +356,11 @@ class FingerprintViewModel extends ChangeNotifier {
         List<Map<String, dynamic>> files = [];
 
         for (var file in fingerprint['files']) {
+          final fileBytes = file['bytes'];
           files.add({
             'fileName': file['fileName'],
             'mimeType': file['mimeType'],
-            'bytes': base64Encode(file['bytes']), // Encode as base64
+            'bytes': fileBytes is String ? fileBytes : base64Encode(fileBytes as List<int>), // Safe check for base64 encoding
           });
         }
 

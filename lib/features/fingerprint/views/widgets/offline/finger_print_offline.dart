@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import 'widget/finger_print_offline_card.dart';
+import 'package:app_test/features/offline/views/widgets/finger_print_offline_card.dart';
 
 class FingerPrintOffline extends StatelessWidget {
   const FingerPrintOffline({super.key});
@@ -52,26 +52,26 @@ class _FingerPrintOfflineContent extends StatelessWidget {
                     children: [
                       // ── Re-upload Button ──────────────────────────────────
                       if (hasFingerprints) ...[
-                        CustomElevatedButton(
-                          backgroundColor: Color(AppColors.buttons),
-                          titleSize: AppSizes.s14,
-                          title: AppStrings.resubmitOfflineFingerprints.tr(),
-                          onPressed: () async {
-                            await viewModel.addFingerPrints(
-                              context,
-                              List.from(fingerprints),
-                            );
-                            // Refresh list after re-upload attempt
-                            await viewModel.loadFingerprintsFromPreferences();
-                          },
+                        Center(
+                          child: CustomElevatedButton(
+                            backgroundColor: Color(AppColors.buttons),
+                            titleSize: AppSizes.s14,
+                            title: AppStrings.resubmitOfflineFingerprints.tr(),
+                            onPressed: () async {
+                              await viewModel.addFingerPrints(
+                                context,
+                                List.from(fingerprints),
+                              );
+                              // Refresh list after re-upload attempt
+                              await viewModel.loadFingerprintsFromPreferences();
+                            },
+                          ),
                         ),
                         SizedBox(height: 20),
                       ],
 
                       // ── Fingerprints List ─────────────────────────────────
-                      if (viewModel.isLoading)
-                        const Center(child: CircularProgressIndicator())
-                      else if (!hasFingerprints)
+                      if (!hasFingerprints)
                         Padding(
                           padding: EdgeInsets.only(top: 60),
                           child: Column(
@@ -95,7 +95,7 @@ class _FingerPrintOfflineContent extends StatelessWidget {
                           ),
                         )
                       else
-                        FingerprintCardOffline(
+                        FingerprintCardOffiline(
                           fingerprint: fingerprints,
                           onDelete: (index) async {
                             await viewModel.deleteOfflineFingerprintAt(index);

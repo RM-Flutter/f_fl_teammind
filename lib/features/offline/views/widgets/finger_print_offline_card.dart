@@ -89,16 +89,6 @@ class FingerprintCardOffiline extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        AutoSizeText(
-                          _formatFingerprintDate(
-                              fingerprint![index]['finger_day'].toString(),
-                              context),
-                          style: AppStyles.secoundaryContent(context).copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: AppSizes.s14.sp,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
                         Row(
                           children: [
                             Icon(
@@ -113,12 +103,23 @@ class FingerprintCardOffiline extends StatelessWidget {
                                 style: AppStyles.primaryContent(context).copyWith(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
+                                  color: Color(AppColors.buttons),
                                 ),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(height: 4.h),
+                        AutoSizeText(
+                          _formatFingerprintDate(
+                              fingerprint![index]['finger_day'].toString(),
+                              context),
+                          style: AppStyles.secoundaryContent(context).copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: AppSizes.s14.sp,
+                          ),
                         ),
                       ],
                     ),
