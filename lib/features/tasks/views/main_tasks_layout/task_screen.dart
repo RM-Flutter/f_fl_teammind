@@ -83,8 +83,11 @@ class _TaskScreenState extends State<TaskScreen> {
               ),
             ),
           )],
-          floatingActionButton: (gCache['is_teamleader_in'].isNotEmpty ||
-              gCache['is_manager_in'].isNotEmpty)
+          floatingActionButton: (gCache != null &&
+                  ((gCache['is_teamleader_in'] != null && gCache['is_teamleader_in'] is List && gCache['is_teamleader_in'].isNotEmpty) ||
+                   (gCache['is_manager_in'] != null && gCache['is_manager_in'] is List && gCache['is_manager_in'].isNotEmpty) ||
+                   (gCache['top_management'] == true) ||
+                   (gCache['is_hr'] == true)))
               ? Container(
             padding: EdgeInsets.symmetric(
                 horizontal: LocalizationService.isArabic(context: context)

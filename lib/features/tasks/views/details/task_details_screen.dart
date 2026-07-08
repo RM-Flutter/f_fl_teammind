@@ -67,7 +67,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           return Consumer<CommentProvider>(
             builder: (context, values, child) {
               return Scaffold(
-                floatingActionButton: value.getOneTaskModel != null && gCache != null ?(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)?Padding(
+                floatingActionButton: value.getOneTaskModel != null && gCache != null &&
+                        ((gCache['is_teamleader_in'] != null && gCache['is_teamleader_in'] is List && gCache['is_teamleader_in'].isNotEmpty) ||
+                         (gCache['is_manager_in'] != null && gCache['is_manager_in'] is List && gCache['is_manager_in'].isNotEmpty) ||
+                         (gCache['top_management'] == true) ||
+                         (gCache['is_hr'] == true)) ? Padding(
                   padding: EdgeInsets.only(bottom: 0.05.sh),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
@@ -94,7 +98,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                     ) ,
                   ),
-                ): null : null,
+                ): null,
                 body: value.getOneTaskModel == null || value.getOneTaskModel!.task == null  ?
                 const DetailsLoadingWidget():RefreshIndicator.adaptive(
                   onRefresh: ()async{

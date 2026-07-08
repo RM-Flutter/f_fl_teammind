@@ -27,7 +27,7 @@ class SalaryAdvanceRepo {
       data,
       dataKey: 'data',
       files: files,
-      fileFieldName: 'attachments[]',
+      fileFieldName: 'attachments',
       context: context,
       allData: true,
     );
@@ -189,7 +189,7 @@ class SalaryAdvanceRepo {
       data,
       dataKey: 'data',
       files: files,
-      fileFieldName: 'attachments[]',
+      fileFieldName: 'attachments',
       context: context,
       allData: true,
     );
