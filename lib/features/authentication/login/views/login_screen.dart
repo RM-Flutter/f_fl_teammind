@@ -93,8 +93,15 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     Map<String, dynamic>? gCache;
     final jsonString = CacheHelper.getString("USG");
-    if (jsonString != null && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>;
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "null") {
+      try {
+        final decoded = json.decode(jsonString);
+        if (decoded is Map<String, dynamic>) {
+          gCache = decoded;
+        }
+      } catch (e) {
+        debugPrint("Error decoding USG in login_screen.dart: $e");
+      }
     }
 
     return ChangeNotifierProvider<AuthenticationController>(

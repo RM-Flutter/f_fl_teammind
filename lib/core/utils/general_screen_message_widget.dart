@@ -21,8 +21,15 @@ class GeneralScreenMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<String, dynamic>? gCache;
     final jsonString = CacheHelper.getString("USG");
-    if (jsonString != null && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "null") {
+      try {
+        final decoded = json.decode(jsonString);
+        if (decoded is Map<String, dynamic>) {
+          gCache = decoded;
+        }
+      } catch (e) {
+        debugPrint("Error decoding USG in general_screen_message_widget.dart: $e");
+      }
     }
     if (gCache == null) return const SizedBox.shrink();
     final messages = (gCache["general_message_by_screen"] as List?)?.cast<Map<String, dynamic>>();

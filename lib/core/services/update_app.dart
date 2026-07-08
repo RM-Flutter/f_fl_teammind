@@ -16,8 +16,15 @@ class UpdateApp{
     final packageInfo = await PackageInfo.fromPlatform();
     final jsonString = CacheHelper.getString("USG");
     Map<String, dynamic> gCache = {};
-    if (jsonString != null) {
-      gCache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "null") {
+      try {
+        final decoded = json.decode(jsonString);
+        if (decoded is Map<String, dynamic>) {
+          gCache = decoded;
+        }
+      } catch (e) {
+        debugPrint("Error decoding USG in core/services/update_app.dart: $e");
+      }
     }
     try {
       if (gCache['mandatory_updates_alert_build'] != null || gCache['mandatory_updates_end_build'] != null) {

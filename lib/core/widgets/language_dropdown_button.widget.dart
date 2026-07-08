@@ -18,11 +18,22 @@ class LanguageDropdownButton extends StatelessWidget {
     GeneralSettingsModel generalSettingsModel;
     var gCache;
     jsonString = CacheHelper.getString("USG");
-    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-      UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "null") {
+      try {
+        final decoded = json.decode(jsonString);
+        if (decoded is Map<String, dynamic>) {
+          gCache = decoded;
+          UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
+        }
+      } catch (e) {
+        debugPrint("Error parsing USG in LanguageDropdownButton: $e");
+      }
     }
-    generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
+    if (gCache != null) {
+      generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
+    } else {
+      generalSettingsModel = GeneralSettingsModel(lastUpdateDate: '');
+    }
     List<String>? supportedLocales = generalSettingsModel
         .availableLang;
     supportedLocales = (supportedLocales == null || supportedLocales.isEmpty)
