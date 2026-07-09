@@ -78,8 +78,10 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     bool isManager = gCache != null && (
-        (gCache!['is_manager_in'] != null && gCache!['is_manager_in'].isNotEmpty) ||
-        (gCache!['is_teamleader_in'] != null && gCache!['is_teamleader_in'].isNotEmpty)
+        (gCache!['is_manager_in'] != null && gCache!['is_manager_in'] is List && gCache!['is_manager_in'].isNotEmpty) ||
+        (gCache!['is_teamleader_in'] != null && gCache!['is_teamleader_in'] is List && gCache!['is_teamleader_in'].isNotEmpty) ||
+        (gCache!['top_management'] == true) ||
+        (gCache!['is_hr'] == true)
     );
 
     return TemplatePage(
