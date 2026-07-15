@@ -75,41 +75,83 @@ class PersonalProfileController extends ChangeNotifier {
     scrollController.dispose();
     super.dispose();
   }
-  updatePassword({context,password}){
+  updatePassword({context, password}) {
     isLoading = true;
+    isSuccess = false;
     notifyListeners();
+
+    String getMessage(dynamic msgData, String fallback) {
+      if (msgData is Map) {
+        final lang = CacheHelper.getString("lang") ?? "en";
+        return msgData[lang]?.toString() ??
+            msgData['en']?.toString() ??
+            msgData['ar']?.toString() ??
+            (msgData.values.isEmpty ? fallback : msgData.values.first?.toString() ?? fallback);
+      }
+      return msgData?.toString() ?? fallback;
+    }
+
     DioHelper.postData(
         url: "/rm_users/v1/update_password",
         context: context,
         data: {
-          "password" : password
+          "password": password
         }
-    ).then((value){
-      debugPrint(value.data);
+    ).then((value) {
+      if (value.data is Map) {
+        debugPrint(value.data.toString());
+      }
       isLoading = false;
       notifyListeners();
-      if(value.data['errors'] !=null){
+
+      if (value.data is Map && value.data['errors'] != null) {
+        String errMsg = '';
+        var errors = value.data['errors'];
+        if (errors is Map) {
+          if (errors['password'] is List && (errors['password'] as List).isNotEmpty) {
+            errMsg = errors['password'][0]?.toString() ?? '';
+          } else if (errors['password'] != null) {
+            errMsg = errors['password'].toString();
+          } else {
+            var firstVal = errors.values.isEmpty ? null : errors.values.first;
+            if (firstVal is List && firstVal.isNotEmpty) {
+              errMsg = firstVal[0]?.toString() ?? '';
+            } else {
+              errMsg = firstVal?.toString() ?? '';
+            }
+          }
+        } else {
+          errMsg = errors.toString();
+        }
+        if (errMsg.isEmpty) errMsg = AppStrings.errorPleaseTryAgain.tr();
+
         AlertsService.error(
             context: context,
-            message: value.data['errors']['password'][0] !,
+            message: errMsg,
             title: AppStrings.failed.tr());
-      }else{
+      } else {
         isSuccess = true;
+        String successMsg = getMessage(value.data is Map ? value.data['message'] : null, AppStrings.success.tr());
         AlertsService.success(
             context: context,
-            message: value.data['message'],
-            title: AppStrings.success.tr());}
-    }).catchError((error){
+            message: successMsg,
+            title: AppStrings.success.tr());
+      }
+    }).catchError((error) {
       isLoading = false;
-      AlertsService.error(
-          context: context,
-          message: AppStrings.errorPleaseTryAgain.tr(),
-          title: AppStrings.failed.tr().toUpperCase());
+      notifyListeners();
+
       if (error is DioException) {
-        errorMessage = error.response?.data['message'] ?? AppStrings.failed.tr();
+        var errorData = error.response?.data;
+        if (errorData is Map) {
+          errorMessage = getMessage(errorData['message'], AppStrings.errorPleaseTryAgain.tr());
+        } else {
+          errorMessage = error.message ?? AppStrings.errorPleaseTryAgain.tr();
+        }
       } else {
         errorMessage = error.toString();
       }
+
       AlertsService.error(
           context: context,
           message: errorMessage!,

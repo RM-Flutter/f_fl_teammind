@@ -384,8 +384,10 @@ class DomainSelectionService {
                           itemCount: savedDomains.length,
                           itemBuilder: (context, index) {
                             final domain = savedDomains[index];
-                            // Extract subdomain from full domain (remove https://webapp.)
-                            final displayDomain = domain.replaceFirst('https://webapp.', '');
+                            final displayDomain = domain
+                                .replaceFirst('https://', '')
+                                .replaceFirst('http://', '')
+                                .replaceFirst('webapp.', '');
 
                             return ListTile(
                               title: Text(
