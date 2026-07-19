@@ -7,6 +7,7 @@ import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
@@ -384,17 +385,13 @@ class CreateCVJobInfoTab extends StatelessWidget {
 
   Future<void> _pickWorksImages(BuildContext context) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.image,
-        withData: true,
-      );
-      if (result == null || result.files.isEmpty) return;
+      final ImagePicker picker = ImagePicker();
+      final List<XFile> images = await picker.pickMultiImage(imageQuality: 85);
+      if (images.isEmpty) return;
       final List<String> files = [];
-      for (final file in result.files) {
-        if (file.bytes != null) {
-          files.add(base64Encode(file.bytes!));
-        }
+      for (final xFile in images) {
+        final bytes = await xFile.readAsBytes();
+        files.add(base64Encode(bytes));
       }
       if (files.isEmpty) return;
       viewModel.addWorksGalleryItems(files);

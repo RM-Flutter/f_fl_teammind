@@ -25,9 +25,9 @@ abstract class AlertsService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (context.mounted) {
         _showSnackbar(
-          title: title,
+          title: title.tr(),
           context: context,
-          message: message,
+          message: message.tr(),
           type: AlertType.success,
         );
       }
@@ -43,8 +43,8 @@ abstract class AlertsService {
       if (context.mounted) {
         _showSnackbar(
           context: context,
-          title: title,
-          message: message,
+          title: title.tr(),
+          message: message.tr(),
           type: AlertType.warning,
         );
       }
@@ -60,8 +60,8 @@ abstract class AlertsService {
       if (context.mounted) {
         _showSnackbar(
           context: context,
-          title: title,
-          message: message,
+          title: title.tr(),
+          message: message.tr(),
           color: Color(AppColors.disableButton),
           type: AlertType.warning,
         );
@@ -78,8 +78,8 @@ abstract class AlertsService {
       if (context.mounted) {
         _showSnackbar(
           context: context,
-          title: title,
-          message: message,
+          title: title.tr(),
+          message: message.tr(),
           type: AlertType.failure,
         );
       }
@@ -99,6 +99,14 @@ abstract class AlertsService {
     final snackBar = SnackBar(
       duration: const Duration(seconds: 5),
       elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom > 0 
+            ? MediaQuery.of(context).viewInsets.bottom + AppSizes.s10 
+            : AppSizes.s10,
+        left: 0,
+        right: 0,
+      ),
       padding: const EdgeInsets.only(top: AppSizes.s15, bottom: AppSizes.s5),
       backgroundColor: Colors.transparent,
       content: CustomAlert(

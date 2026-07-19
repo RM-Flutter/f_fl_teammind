@@ -60,9 +60,11 @@ class UserSettings2Model extends AppSettingsModel {
       weekend: _parseWeekend(json['weekend']),
       worktime:
       json['worktime'] != null ? Worktime.fromJson(json['worktime']) : null,
-      requestTypes: (json['request_types'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(key, RequestType.fromJson(value)),
-      ),
+      requestTypes: json['request_types'] is List
+          ? {}
+          : (json['request_types'] as Map<String, dynamic>?)?.map(
+                (key, value) => MapEntry(key, RequestType.fromJson(value)),
+              ),
     );
   }
 

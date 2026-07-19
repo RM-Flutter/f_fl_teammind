@@ -321,12 +321,32 @@ class CreateCVViewModel extends ChangeNotifier {
 
   Future<void> _loadCountries(BuildContext context) async {
     countries = await CVReferenceDataService.getCountries(context);
+    if (countries.isNotEmpty && countryId == null) {
+      final egypt = countries.firstWhere(
+        (c) => (c['title'] ?? c['name'] ?? '').toString().toLowerCase().contains('egypt') || 
+               (c['title'] ?? c['name'] ?? '').toString().contains('مصر'),
+        orElse: () => <String, dynamic>{},
+      );
+      if (egypt.isNotEmpty && egypt['id'] != null) {
+        await loadStates(context, egypt['id'] as int, clearStateAndCity: false);
+      }
+    }
     notifyListeners();
   }
 
   Future<void> _loadNationalities(BuildContext context) async {
     // Use countries endpoint for nationalities
     nationalities = await CVReferenceDataService.getCountries(context);
+    if (nationalities.isNotEmpty && nationalityId == null) {
+      final egypt = nationalities.firstWhere(
+        (c) => (c['title'] ?? c['name'] ?? '').toString().toLowerCase().contains('egypt') || 
+               (c['title'] ?? c['name'] ?? '').toString().contains('مصر'),
+        orElse: () => <String, dynamic>{},
+      );
+      if (egypt.isNotEmpty && egypt['id'] != null) {
+        nationalityId = egypt['id'] as int;
+      }
+    }
     notifyListeners();
   }
 
@@ -742,8 +762,8 @@ class CreateCVViewModel extends ChangeNotifier {
           }
         }
         gender = personal.gender;
-        nationalityId = personal.nationalityId;
-        countryId = personal.countryId;
+        nationalityId = personal.nationalityId ?? nationalityId;
+        countryId = personal.countryId ?? countryId;
         stateId = personal.stateId;
         cityId = personal.cityId;
         addressController.text = personal.address ?? '';

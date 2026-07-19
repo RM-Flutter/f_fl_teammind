@@ -89,7 +89,7 @@ class UpdateSalaryAdvanceController extends ChangeNotifier {
         if (context.mounted) {
           AlertsService.success(
             context: context,
-            message: 'updated_successfully'.tr(),
+            message: result.message?.tr() ?? 'updated_successfully'.tr(),
             title: 'success'.tr(),
           );
         }

@@ -91,9 +91,12 @@ class GeneralSettingsModel extends AppSettingsModel {
           ? WorktimeOrInt.fromJson(json['worktime'])
           : null,
       requestTypes: json['request_types'] != null
-          ? Map<String, RequestTypeOrList>.from(json['request_types'].map(
-              (k, v) => MapEntry<String, RequestTypeOrList>(
-              k, RequestTypeOrList.fromJson(v))))
+          ? (json['request_types'] is List
+              ? {}
+              : Map<String, RequestTypeOrList>.from(
+                  (json['request_types'] as Map<String, dynamic>).map(
+                      (k, v) => MapEntry<String, RequestTypeOrList>(
+                          k, RequestTypeOrList.fromJson(v)))))
           : null,
       fingerprintMustUploadImage: ModelHelpersService.getBoolValue(
           json['fingerprint_must_upload_image']),

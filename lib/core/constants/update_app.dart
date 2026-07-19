@@ -15,7 +15,7 @@ class UpdateApp{
   static checkForForceUpdate(BuildContext context) async {
     final packageInfo = await PackageInfo.fromPlatform();
     final jsonString = CacheHelper.getString("USG");
-    var gCache;
+    Map<String, dynamic> gCache = {};
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "null") {
       try {
         final decoded = json.decode(jsonString);

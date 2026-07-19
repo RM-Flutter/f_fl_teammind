@@ -9,6 +9,7 @@ import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -23,7 +24,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+
 
 class AddNewRequestController extends ChangeNotifier {
   Map<String, dynamic>? selectedRequestType;
@@ -438,13 +441,29 @@ class AddNewRequestController extends ChangeNotifier {
     });
   }
   Future<void> pickFile() async {
-    FilePickerResult? result = await FileAndImagePickerService.pickFile();
-    if (result != null && result.files.isNotEmpty) {
-      attachedFile = result;
-      fileController.text = result.files.map((e) => e.name).join(', ');
+    try {
+      final List<XFile> images = await picker.pickMultiImage(imageQuality: 85);
+      if (images.isEmpty) return;
+
+      final platformFiles = images.map((xFile) {
+        final file = File(xFile.path);
+        final bytes = file.readAsBytesSync();
+        return PlatformFile(
+          path: xFile.path,
+          name: xFile.name,
+          size: bytes.length,
+          bytes: bytes,
+        );
+      }).toList();
+
+      attachedFile = FilePickerResult(platformFiles);
+      fileController.text = images.map((e) => e.name).join(', ');
+    } catch (e) {
+      debugPrint('Failed to pick images from gallery: $e');
     }
     notifyListeners();
   }
+
 
   void _getRequestTypes({required BuildContext context}) {
     try {
@@ -1083,9 +1102,13 @@ class AddNewRequestController extends ChangeNotifier {
           builder: (context) {
             return SuccessfullAddRequestSheet(
               title: AppStrings.goToComplain.tr().toUpperCase(),
-              onTap: ()async{
-                Navigator.pop(context);
-                Navigator.pop(context);
+              onTap: () async {
+                Navigator.pop(context); // close bottom sheet
+                // Use goNamed directly, GoRouter will handle clearing the stack up to complainScreen
+                GoRouter.of(context).goNamed(
+                  AppRoutes.complainScreen.name,
+                  pathParameters: {'lang': context.locale.languageCode},
+                );
               },
             );
           },

@@ -157,7 +157,17 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                   onSurface: Color(AppColors.secondaryButton),
                 ),
               ),
-              child: child!,
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.noScaling,
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.92,
+                  ),
+                  child: child!,
+                ),
+              ),
             );
           },
         );

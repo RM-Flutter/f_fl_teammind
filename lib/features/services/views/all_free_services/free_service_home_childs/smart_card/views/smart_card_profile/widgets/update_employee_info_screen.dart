@@ -7,6 +7,7 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -223,15 +224,11 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
 
   Future<void> _pickPhoto() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        type: FileType.image,
-        withData: true,
-      );
-      if (result == null || result.files.isEmpty) return;
-      final file = result.files.first;
-      if (file.bytes == null) return;
-      final encoded = base64Encode(file.bytes!);
+      final ImagePicker picker = ImagePicker();
+      final XFile? xFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+      if (xFile == null) return;
+      final bytes = await xFile.readAsBytes();
+      final encoded = base64Encode(bytes);
       setState(() => _photo = [encoded]);
     } catch (e) {
       debugPrint('Failed to pick photo: $e');

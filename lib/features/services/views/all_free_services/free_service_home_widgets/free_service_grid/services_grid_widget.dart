@@ -102,7 +102,7 @@ class ServicesGridWidget extends StatelessWidget {
                   height: 110,
                   child: ServiceCard(
                     title: AppStrings.jobOfferGenerator.tr(),
-                    icon: Icons.beach_access_outlined,
+                    icon: Icons.work_outline,
                     iconColor: const Color(AppColors.lightBlue),
                     onTap: () => onServiceTap?.call('job_offer_generator'),
                   ),

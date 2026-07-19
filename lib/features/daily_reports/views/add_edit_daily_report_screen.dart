@@ -1,6 +1,7 @@
-import 'package:app_test/core/services/image_file_picker_service.dart';
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -73,15 +74,28 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
   }
 
   void _pickFiles() async {
-    FilePickerResult? result = await FileAndImagePickerService.pickFile();
-    if (result != null && result.files.isNotEmpty) {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final List<XFile> images = await picker.pickMultiImage(imageQuality: 85);
+      if (images.isEmpty) return;
       setState(() {
-        for (var file in result.files) {
-          selectedFiles.add(FilePickerResult([file]));
+        for (final xFile in images) {
+          final file = File(xFile.path);
+          final bytes = file.readAsBytesSync();
+          final platformFile = PlatformFile(
+            path: xFile.path,
+            name: xFile.name,
+            size: bytes.length,
+            bytes: bytes,
+          );
+          selectedFiles.add(FilePickerResult([platformFile]));
         }
       });
+    } catch (e) {
+      debugPrint('Failed to pick images from gallery: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

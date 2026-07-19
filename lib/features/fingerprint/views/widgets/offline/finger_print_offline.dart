@@ -40,72 +40,70 @@ class _FingerPrintOfflineContent extends StatelessWidget {
         return TemplatePage(
           pageContext: context,
           title: AppStrings.showOfflineFingerprints.tr(),
-          body: Center(
-            child: ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxWidth: kIsWeb ? 1100 : double.infinity),
-              child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // ── Re-upload Button ──────────────────────────────────
-                      if (hasFingerprints) ...[
-                        Center(
-                          child: CustomElevatedButton(
-                            backgroundColor: Color(AppColors.buttons),
-                            titleSize: AppSizes.s14,
-                            title: AppStrings.resubmitOfflineFingerprints.tr(),
-                            onPressed: () async {
-                              await viewModel.addFingerPrints(
-                                context,
-                                List.from(fingerprints),
-                              );
-                              // Refresh list after re-upload attempt
-                              await viewModel.loadFingerprintsFromPreferences();
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                      ],
-
-                      // ── Fingerprints List ─────────────────────────────────
-                      if (!hasFingerprints)
-                        Padding(
-                          padding: EdgeInsets.only(top: 60),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.fingerprint,
-                                size: 64,
-                                color: Color(AppColors.buttons).withOpacity(0.3),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                AppStrings.noFingerprintsYet.tr(),
-                                style: AppStyles.greyContent(context).copyWith(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        )
-                      else
-                        FingerprintCardOffiline(
-                          fingerprint: fingerprints,
-                          onDelete: (index) async {
-                            await viewModel.deleteOfflineFingerprintAt(index);
+          body: ConstrainedBox(
+            constraints:
+                const BoxConstraints(maxWidth: kIsWeb ? double.infinity : double.infinity),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.s12),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // ── Re-upload Button ──────────────────────────────────
+                    if (hasFingerprints) ...[
+                      Center(
+                        child: CustomElevatedButton(
+                          backgroundColor: Color(AppColors.buttons),
+                          titleSize: AppSizes.s14,
+                          title: AppStrings.resubmitOfflineFingerprints.tr(),
+                          onPressed: () async {
+                            await viewModel.addFingerPrints(
+                              context,
+                              List.from(fingerprints),
+                            );
+                            // Refresh list after re-upload attempt
+                            await viewModel.loadFingerprintsFromPreferences();
                           },
-                          deletingIndexes: viewModel.deletingOfflineIndexes,
                         ),
-
-                      SizedBox(height: 20),
+                      ),
+                      const SizedBox(height: 20),
                     ],
-                  ),
+
+                    // ── Fingerprints List ─────────────────────────────────
+                    if (!hasFingerprints)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 60),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.fingerprint,
+                              size: 64,
+                              color: Color(AppColors.buttons).withOpacity(0.3),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              AppStrings.noFingerprintsYet.tr(),
+                              style: AppStyles.greyContent(context).copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      FingerprintCardOffiline(
+                        fingerprint: fingerprints,
+                        onDelete: (index) async {
+                          await viewModel.deleteOfflineFingerprintAt(index);
+                        },
+                        deletingIndexes: viewModel.deletingOfflineIndexes,
+                      ),
+
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
             ),

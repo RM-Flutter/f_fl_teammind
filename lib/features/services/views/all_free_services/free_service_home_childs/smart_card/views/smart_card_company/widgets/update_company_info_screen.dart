@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateCompanyInfoScreen extends StatefulWidget {
   final Map<String, dynamic> company;
@@ -208,6 +210,20 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
 
       final countries = await CVReferenceDataService.getCountries(context);
       _countries = countries;
+      if (_countryId == null && _countries.isNotEmpty) {
+        final egypt = _countries.firstWhere(
+          (c) => (c['title'] ?? c['name'] ?? '').toString().toLowerCase().contains('egypt') || 
+                 (c['title'] ?? c['name'] ?? '').toString().contains('مصر'),
+          orElse: () => <String, dynamic>{},
+        );
+        if (egypt.isNotEmpty && egypt['id'] != null) {
+          _countryId = _parseId(egypt['id']);
+          final phoneCode = egypt['phone_code'];
+          if (phoneCode != null) {
+            _countryKeyController.text = phoneCode.toString();
+          }
+        }
+      }
       if (_countryId != null) await _loadStates(_countryId!, clearStateAndCity: false);
       if (_stateId != null) await _loadCities(_stateId!);
       _initialLoadDone = true;
@@ -350,17 +366,13 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
 
   Future<void> _pickWorksImages() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.image,
-        withData: true,
-      );
-      if (result == null || result.files.isEmpty) return;
+      final ImagePicker picker = ImagePicker();
+      final List<XFile> images = await picker.pickMultiImage(imageQuality: 85);
+      if (images.isEmpty) return;
       final List<String> files = [];
-      for (final file in result.files) {
-        if (file.bytes != null) {
-          files.add(base64Encode(file.bytes!));
-        }
+      for (final xFile in images) {
+        final bytes = await xFile.readAsBytes();
+        files.add(base64Encode(bytes));
       }
       if (files.isEmpty) return;
       setState(() {
@@ -396,15 +408,11 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
 
   Future<void> _pickLogo() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        type: FileType.image,
-        withData: true,
-      );
-      if (result == null || result.files.isEmpty) return;
-      final file = result.files.first;
-      if (file.bytes == null) return;
-      final encoded = base64Encode(file.bytes!);
+      final ImagePicker picker = ImagePicker();
+      final XFile? xFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+      if (xFile == null) return;
+      final bytes = await xFile.readAsBytes();
+      final encoded = base64Encode(bytes);
       setState(() {
         _logo = [encoded];
       });

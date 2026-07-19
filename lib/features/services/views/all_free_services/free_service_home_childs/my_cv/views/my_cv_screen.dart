@@ -12,6 +12,7 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/taps/cv_job_info_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/taps/cv_personal_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
+import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/update_my_info/update_my_info_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,18 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
     super.dispose();
   }
 
+  void _navigateToEdit() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const UpdateMyInfoScreen()),
+    ).then((_) {
+      // Reload CV data when returning from edit screen
+      if (context.mounted) {
+        viewModel.loadCVData(context);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MyCVViewModel>.value(
@@ -77,6 +90,15 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
           ),
           centerTitle: true,
           routeName: AppRoutes.myCVScreen.name,
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: _navigateToEdit,
+          backgroundColor: Color(AppColors.secondaryButton),
+          icon: const Icon(Icons.edit, color: Colors.white),
+          label: Text(
+            AppStrings.edit.tr(),
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
         body: Consumer<MyCVViewModel>(
           builder: (context, viewModel, child) {
@@ -104,6 +126,8 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
                           if(selectIndex == 1) CVContactTab(cvData: viewModel.cvData),
                           if(selectIndex == 2) CVJobInfoTab(cvData: viewModel.cvData),
                           if(selectIndex == 3) CVEducationTab(cvData: viewModel.cvData),
+                          // Extra space so FAB doesn't overlap last item
+                          const SizedBox(height: 80),
                         ],
                       ),
                     ),
