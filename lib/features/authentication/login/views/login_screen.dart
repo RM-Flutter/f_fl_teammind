@@ -104,6 +104,24 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       }
     }
 
+    String accountText = AppStrings.yourAccount.tr();
+    if (gCache != null) {
+      try {
+        final data = gCache['data'] ?? gCache['general_settings']?['data'] ?? gCache; 
+        if (data != null && 
+            data['app'] != null && 
+            data['app']['name'] != null) {
+          final names = data['app']['name'];
+          if (names is Map) {
+            accountText = names[context.locale.languageCode] ?? accountText;
+          }
+        }
+      } catch (e) {
+        debugPrint("Error getting app name: $e");
+      }
+    }
+
+
     return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
       child: Scaffold(
@@ -140,7 +158,7 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                               SizedBox(height: (kIsWeb || PlatformIs.web) ? AppSizes.s32 : AppSizes.s32.h),
                               // Login Page Headline
                               AutoSizeText(
-                                "${AppStrings.loginTo.tr()}\n${AppStrings.yourAccount.tr()}",
+                                "${AppStrings.loginTo.tr()}\n$accountText",
                                 textAlign: TextAlign.center,
                                 style: AppStyles.whiteHeading(context).copyWith(
                                   fontSize: (kIsWeb || PlatformIs.web) ? 32 : 20.sp,

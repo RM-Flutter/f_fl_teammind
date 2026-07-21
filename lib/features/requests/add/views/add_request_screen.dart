@@ -258,8 +258,40 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 14),
-                                      // Text(viewModel.notes ?? ''),
+                                      if (viewModel.deductedWeekendDays > 0 || viewModel.deductedHolidayDays > 0) ...[
+                                        SizedBox(height: 14),
+                                        Text(
+                                          AppStrings.notes.tr().toUpperCase(),
+                                          style: textStyle,
+                                        ),
+                                        SizedBox(height: 14),
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
+                                            borderRadius: BorderRadius.circular(8),
+                                            color: Color(AppColors.secondaryButton).withOpacity(0.05),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              if (viewModel.deductedWeekendDays > 0)
+                                                Text(
+                                                  "${viewModel.deductedWeekendDays} ${AppStrings.days.tr()} ${AppStrings.weekends.tr()}:\n- ${viewModel.deductedWeekendDates.join('\n- ')}",
+                                                  style: AppStyles.darkContent(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+                                                ),
+                                              if (viewModel.deductedWeekendDays > 0 && viewModel.deductedHolidayDays > 0)
+                                                SizedBox(height: 8),
+                                              if (viewModel.deductedHolidayDays > 0)
+                                                Text(
+                                                  "${viewModel.deductedHolidayDays} ${AppStrings.days.tr()} ${AppStrings.publicHolidays.tr()}:\n- ${viewModel.deductedHolidayDates.join('\n- ')}",
+                                                  style: AppStyles.darkContent(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 )),

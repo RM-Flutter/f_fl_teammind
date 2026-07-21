@@ -507,7 +507,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   Widget cardChild;
 
                   if (isImage && attachment.imageList != null && attachment.imageList!['thumbnail'] != null) {
-                    final String imageUrl = attachment.imageList!['thumbnail'];
+                    final String thumbUrl = attachment.imageList!['thumbnail'];
+                    final String originalUrl = attachment.imageList!['original'] ?? thumbUrl;
                     cardChild = GestureDetector(
                       onTap: () {
                         showGeneralDialog(
@@ -527,7 +528,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                       minScale: 0.5,
                                       maxScale: 4.0,
                                       child: CachedNetworkImage(
-                                        imageUrl: imageUrl,
+                                        imageUrl: originalUrl,
                                         fit: BoxFit.contain,
                                         placeholder: (context, url) => const Center(
                                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
@@ -570,7 +571,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                           child: const Icon(Icons.download_rounded, color: Colors.white, size: 24),
                                         ),
                                         onPressed: () {
-                                          _downloadFile(imageUrl, "image_${attachment.id}.jpg");
+                                          _downloadFile(originalUrl, "image_${attachment.id}.jpg");
                                         },
                                       ),
                                     ),
@@ -596,7 +597,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),
                                   child: CachedNetworkImage(
-                                    imageUrl: imageUrl,
+                                    imageUrl: thumbUrl,
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) => Container(
                                       color: Colors.grey.shade100,
@@ -623,7 +624,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             left: 8,
                             child: GestureDetector(
                               onTap: () {
-                                _downloadFile(imageUrl, "image_${attachment.id}.jpg");
+                                _downloadFile(originalUrl, "image_${attachment.id}.jpg");
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(6),

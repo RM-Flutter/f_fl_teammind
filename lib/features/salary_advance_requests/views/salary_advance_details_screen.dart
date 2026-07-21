@@ -193,6 +193,30 @@ class _SalaryAdvanceDetailsScreenState
 
   Widget _buildHeroHeader(SalaryAdvanceDetailsController controller) {
     final request = controller.requestDetails!;
+    
+    bool isMyRequest = request.employeeId == controller.userSettings?.empId;
+    String defaultTitleText = 'request_details'.tr();
+    String headerTitleText = isMyRequest ? defaultTitleText : (request.employeeProfile?.name ?? defaultTitleText);
+
+    Widget? titleWidget;
+    if (!isMyRequest && request.employeeProfile?.id != null) {
+      titleWidget = GestureDetector(
+        onTap: () {
+          context.pushNamed(
+            AppRoutes.employeeDetails.name,
+            pathParameters: {
+              'id': request.employeeProfile!.id.toString(),
+              'lang': context.locale.languageCode,
+            },
+          );
+        },
+        child: Text(
+          headerTitleText,
+          style: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
+        ),
+      );
+    }
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -218,8 +242,9 @@ class _SalaryAdvanceDetailsScreenState
             elevation: 0,
             centerTitle: true,
             routeName: AppRoutes.salaryAdvanceDetails.name,
-            defaultTitle: 'request_details'.tr(),
-            title: 'request_details'.tr(),
+            defaultTitle: defaultTitleText,
+            title: titleWidget == null ? headerTitleText : null,
+            titleWidget: titleWidget,
             titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
             bookmarkIconColor: Colors.white,
             leading: Padding(
@@ -333,7 +358,19 @@ class _SalaryAdvanceDetailsScreenState
           if (request.employeeProfile != null)
             _buildDetailRow(
                 'employee_name'.tr(), request.employeeProfile!.name ?? '',
-                icon: Icons.person_outline),
+                icon: Icons.person_outline,
+                isLink: false,
+                onTap: request.employeeProfile!.id != null
+                    ? () {
+                        context.pushNamed(
+                          AppRoutes.employeeDetails.name,
+                          pathParameters: {
+                            'id': request.employeeProfile!.id.toString(),
+                            'lang': context.locale.languageCode,
+                          },
+                        );
+                      }
+                    : null),
           _buildDetailRow(
             'createdAt'.tr(),
             request.createdAt != null && request.createdAt!.length >= 7
@@ -477,7 +514,7 @@ class _SalaryAdvanceDetailsScreenState
     );
   }
 
-  Widget _buildDetailRow(String label, String value, {IconData? icon}) {
+  Widget _buildDetailRow(String label, String value, {IconData? icon, VoidCallback? onTap, bool isLink = false}) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -497,11 +534,17 @@ class _SalaryAdvanceDetailsScreenState
           ),
           Expanded(
             flex: 3,
-            child: Text(
-              value,
-              style: AppStyles.content(context)
-                  .copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.end,
+            child: GestureDetector(
+              onTap: onTap,
+              child: Text(
+                value,
+                style: AppStyles.content(context).copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: isLink ? Color(AppColors.buttonColor) : null,
+                  decoration: isLink ? TextDecoration.underline : null,
+                ),
+                textAlign: TextAlign.end,
+              ),
             ),
           ),
         ],

@@ -366,7 +366,8 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                       Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey.shade300)
                   ],
                 ),
-                if (report.done != null && report.done!.isNotEmpty) ...[
+                if ((isIncoming ? report.employeeProfile?.department : report.done) != null && 
+                    (isIncoming ? report.employeeProfile!.department! : report.done!).isNotEmpty) ...[
                   Padding(
                     padding: EdgeInsets.only(top: 16, bottom: 12),
                     child: Divider(height: 1, color: Colors.grey.shade100),
@@ -374,15 +375,16 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.check_circle_rounded, color: Colors.green.shade400, size: 18),
+                      Icon(isIncoming ? Icons.business_rounded : Icons.check_circle_rounded, 
+                           color: isIncoming ? Colors.blue.shade400 : Colors.green.shade400, size: 18),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          report.done!, 
+                          isIncoming ? report.employeeProfile!.department! : report.done!, 
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: AppStyles.titleTextContent(context).copyWith(
-                            fontWeight: FontWeight.w400,
+                            fontWeight: isIncoming ? FontWeight.w500 : FontWeight.w400,
                             fontSize: 13,
                             color: Colors.grey.shade700,
                             height: 1.4,

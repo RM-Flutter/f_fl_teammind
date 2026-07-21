@@ -251,16 +251,16 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
-                            DefaultListTile(
-                              title: AppStrings.points.tr(),
-                              src: "assets/images/svg/mts.svg",
-                              onTap: () {
-                                context.pushNamed(AppRoutes.painterPointsViewScreen.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
+                            // DefaultListTile(
+                            //   title: AppStrings.points.tr(),
+                            //   src: "assets/images/svg/mts.svg",
+                            //   onTap: () {
+                            //     context.pushNamed(AppRoutes.painterPointsViewScreen.name,
+                            //         pathParameters: {
+                            //           'lang': context.locale.languageCode
+                            //         });
+                            //   },
+                            // ),
                             DefaultListTile(
                               title: AppStrings.employeesDirectory.tr(),
                               src:  "assets/images/svg/med.svg",

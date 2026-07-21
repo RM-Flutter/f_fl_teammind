@@ -141,12 +141,25 @@ class _SalaryAdvanceListItemWidgetState
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          widget.request.employeeProfile?.name ?? '',
-                          style: AppStyles.primaryContent(context).copyWith(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Color(AppColors.titleTextColor),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (widget.request.employeeProfile?.id != null) {
+                              context.pushNamed(
+                                AppRoutes.employeeDetails.name,
+                                pathParameters: {
+                                  'id': widget.request.employeeProfile!.id.toString(),
+                                  'lang': context.locale.languageCode,
+                                },
+                              );
+                            }
+                          },
+                          child: Text(
+                            widget.request.employeeProfile?.name ?? '',
+                            style: AppStyles.primaryContent(context).copyWith(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Color(AppColors.titleTextColor),
+                            ),
                           ),
                         ),
                       ),

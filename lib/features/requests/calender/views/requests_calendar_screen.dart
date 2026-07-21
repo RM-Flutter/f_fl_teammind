@@ -43,7 +43,16 @@ class RequestsCalendarScreen extends StatelessWidget {
 
   List _buildCalendarAppointments(
       BuildContext context, List sourceRequests, Map<String, dynamic>? gCache) {
-    final List combined = [...sourceRequests];
+    final List combined = [];
+    for (var r in sourceRequests) {
+      final status = r.status?.toLowerCase()?.trim();
+      final canShow = status == "approved" ||
+          status == "waiting_seen" ||
+          status == "waiting";
+      if (canShow) {
+        combined.add(r);
+      }
+    }
     final lang = context.locale.languageCode;
     // Append holidays as calendar items if present (from US2)
     try {
@@ -177,7 +186,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                         children: [
                           SizedBox(
                             height:
-                                (kIsWeb || PlatformIs.web) ? 0.7.sh : 0.65.sh,
+                                MediaQuery.of(context).size.height > 800 ? 0.7.sh : 650,
                             child: SfCalendar(
                               backgroundColor: Color(AppColors.background),
                               key: UniqueKey(),
@@ -192,23 +201,109 @@ class RequestsCalendarScreen extends StatelessWidget {
                                 appointmentDisplayMode:
                                     MonthAppointmentDisplayMode.appointment,
                                 showAgenda: false,
-                                appointmentDisplayCount:
-                                    (kIsWeb || PlatformIs.web) ? 3 : 2,
+                                appointmentDisplayCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
                                 showTrailingAndLeadingDates: true,
                               ),
                               showNavigationArrow: true,
                               appointmentBuilder: (context, details) {
-                                final appt = details.appointments.first;
-                                final bool isWeb = kIsWeb || PlatformIs.web;
-                                final double boundsHeight =
-                                    details.bounds.height;
-                                final int calculatedMaxLines =
-                                    boundsHeight > 30 ? 2 : 1;
-                                final double calculatedFontSize =
-                                    isWeb ? 12 : (boundsHeight > 25 ? 11 : 10);
+                                  if (details.isMoreAppointmentRegion) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              backgroundColor: Color(AppColors.background),
+                                              title: Text(
+                                                '${details.date.day}/${details.date.month}/${details.date.year}',
+                                                style: AppStyles.heading(context),
+                                              ),
+                                              content: SizedBox(
+                                                width: double.maxFinite,
+                                                child: ListView.separated(
+                                                  shrinkWrap: true,
+                                                  itemCount: details.appointments.length,
+                                                  separatorBuilder: (context, index) => SizedBox(height: 8),
+                                                  itemBuilder: (context, index) {
+                                                    final appt = details.appointments.elementAt(index);
+                                                    if (appt is Map && appt['_isHoliday'] == true) {
+                                                      final title = _titleByLang(appt['typeName'], currentLang);
+                                                      return ListTile(
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                        tileColor: const Color(AppColors.green),
+                                                        title: Text(title.isEmpty ? 'Holiday' : title, style: AppStyles.whiteContent(context).copyWith(fontWeight: FontWeight.bold)),
+                                                      );
+                                                    }
+                                                    
+                                                    final request = appt;
+                                                    final status = request?.status?.toLowerCase()?.trim();
+                                                    final backgroundColor = viewModel.getStatusColor(status);
+                                                    final explicitTextColor = (backgroundColor == const Color(AppColors.green) || backgroundColor == Color(0xff606060)) ? Colors.white : Color(AppColors.buttons);
+                                                    final empName = request?.employeeName?.toString() ?? '';
+                                                    final typeName = _titleByLang(request?.typeName, currentLang);
+                                                    final displayTitle = (canSeeTeamRequests && empName.isNotEmpty) ? '$empName - $typeName' : typeName;
+                                                    
+                                                    return ListTile(
+                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                      tileColor: backgroundColor,
+                                                      title: Text(displayTitle, style: AppStyles.content(context).copyWith(color: explicitTextColor, fontWeight: FontWeight.bold)),
+                                                      onTap: () {
+                                                        Navigator.pop(context); // Close dialog
+                                                        context.pushNamed(
+                                                          AppRoutes.requestDetails.name,
+                                                          extra: request,
+                                                          pathParameters: {
+                                                            'type': RequestsServices.getRequestsTypeStr(type: requestType),
+                                                            'id': request?.id?.toString() ?? "",
+                                                            'lang': currentLang,
+                                                          },
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text(AppStrings.cancel.tr(), style: TextStyle(color: Color(AppColors.secondaryButton))),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        );
+                                      },
+                                      child: Container(
+                                        width: details.bounds.width,
+                                        height: details.bounds.height,
+                                        margin: const EdgeInsets.only(bottom: 2),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Color(AppColors.secondaryButton),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          '+${details.appointments.length} ${AppStrings.more.tr()}',
+                                          style: TextStyle(
+                                            fontSize: details.bounds.height > 20 ? 11 : 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
 
-                                // Render holidays (Map) differently
-                                if (appt is Map && appt['_isHoliday'] == true) {
+                                  final appt = details.appointments.first;
+                                  final double boundsHeight =
+                                      details.bounds.height;
+                                  final int calculatedMaxLines =
+                                      boundsHeight > 30 ? 2 : 1;
+                                  final double calculatedFontSize =
+                                      boundsHeight > 25 ? 11 : 9;
+
+                                  // Render holidays (Map) differently
+                                  if (appt is Map && appt['_isHoliday'] == true) {
                                   final title = _titleByLang(
                                       appt['typeName'], currentLang);
                                   final displayTitle =
@@ -216,6 +311,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   return Container(
                                     width: details.bounds.width,
                                     height: details.bounds.height,
+                                    margin: const EdgeInsets.only(bottom: 2),
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 4, vertical: 1),
@@ -280,6 +376,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   child: Container(
                                     width: details.bounds.width,
                                     height: details.bounds.height,
+                                    margin: const EdgeInsets.only(bottom: 2),
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 4, vertical: 1),

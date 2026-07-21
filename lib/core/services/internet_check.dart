@@ -20,7 +20,7 @@ class ConnectionService extends ChangeNotifier {
   final Connectivity _connectivity = Connectivity();
 
   // مدة الانتظار قبل تغيير حالة الاتصال (عشان ما تظهرش الشاشة على كل انقطاع مؤقت)
-  static const Duration _changeDelay = Duration(seconds: 10);
+  static const Duration _changeDelay = Duration(seconds: 5);
 
   // Callback to resume initialization when connection is restored
   VoidCallback? onConnectionRestored;

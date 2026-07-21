@@ -54,6 +54,10 @@ class AddNewRequestController extends ChangeNotifier {
   var reqTypeFile;
   var reqTypeMoney;
   String? notes;
+  int deductedWeekendDays = 0;
+  int deductedHolidayDays = 0;
+  List<String> deductedWeekendDates = [];
+  List<String> deductedHolidayDates = [];
   String? selectReqType;
   String? selectStatus;
   bool isLoading = false;
@@ -211,12 +215,24 @@ class AddNewRequestController extends ChangeNotifier {
       end = dateFormatter.parse(endDateOrDatetime);
     }
 
-    selectedDateOrDatetimeRange = DateTimeRange(start: start, end: end);
+      selectedDateOrDatetimeRange = DateTimeRange(start: start, end: end);
+      
+      // Reset deduction counts
+      deductedWeekendDays = 0;
+      deductedHolidayDays = 0;
+      deductedWeekendDates.clear();
+      deductedHolidayDates.clear();
+
     return;
   }
 
   Future<void> selectDate(BuildContext context,{bool filter = false}) async {
     final String? type = reqType;
+    // Reset deduction counts
+    deductedWeekendDays = 0;
+    deductedHolidayDays = 0;
+    deductedWeekendDates.clear();
+    deductedHolidayDates.clear();
     // check if the type is days then show the date range picker
     if(filter == false && reqType == null){
       AlertsService.warning(
@@ -741,6 +757,7 @@ class AddNewRequestController extends ChangeNotifier {
             weekendDaysList.contains(weekdaysMap[dayOfWeek])) {
           nbDays++;
           weekendDays.add(dayOfWeek);
+          deductedWeekendDates.add(DateFormat('EEEE dd/MM', context.locale.languageCode).format(currentDay));
         }
         currentDay = currentDay.add(const Duration(days: 1));
       }
@@ -761,8 +778,9 @@ class AddNewRequestController extends ChangeNotifier {
         }
       }
 
+      deductedWeekendDays = nbDays;
       notes = nbDays != 0
-          ? 'New Request Subtracting ${weekendDaysNames.length} as the Weekends Days'
+          ? 'New Request Subtracting $nbDays as the Weekends Days'
           : null;
     }
 
@@ -795,6 +813,7 @@ class AddNewRequestController extends ChangeNotifier {
             final skipAsAlreadyWeekend = !hasVariableWeekend && weekendDays.contains(currentDay.weekday);
             if (isInHolidayRange && !skipAsAlreadyWeekend) {
               holidayDays++;
+              deductedHolidayDates.add(DateFormat('EEEE dd/MM', context.locale.languageCode).format(currentDay));
             }
             currentDay = currentDay.add(const Duration(days: 1));
           }
@@ -803,6 +822,7 @@ class AddNewRequestController extends ChangeNotifier {
       print("holidayDays --> ${holidayDays}");
       duration = (duration ?? 0) - holidayDays;
       if ((duration ?? 0) < 0) duration = 0;
+      deductedHolidayDays = holidayDays;
       if (holidayDays != 0) {
         notes =
         '${notes ?? ''} \n New Request Subtracting $holidayDays as the Official Holidays';

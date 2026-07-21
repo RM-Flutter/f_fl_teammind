@@ -68,8 +68,21 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
       canShowComplaintButton = isOwner && isPenalty && isWithinTwoMonths;
     }
 
-    final typeValue = rewardAndPenalty.type?.value ?? "";
-    final categoryValue = rewardAndPenalty.category?.value ?? "";
+    String translateType(String type) {
+      if (type.toLowerCase() == 'penalty') return AppStrings.penalty.tr();
+      if (type.toLowerCase() == 'reward') return AppStrings.reward.tr();
+      return type;
+    }
+
+    String translateCategory(String category) {
+      if (category.toLowerCase() == 'amount') return AppStrings.amount.tr();
+      if (category.toLowerCase() == 'hours') return AppStrings.hours.tr();
+      if (category.toLowerCase() == 'days') return AppStrings.days.tr();
+      return category;
+    }
+
+    final typeValue = translateType(rewardAndPenalty.type?.value ?? "");
+    final categoryValue = translateCategory(rewardAndPenalty.category?.value ?? "");
     final amount = rewardAndPenalty.amount?.toString() ?? "0";
     final actionKey = rewardAndPenalty.action?.key ?? "";
     final payrollDate = rewardAndPenalty.payroll?.dateFrom;

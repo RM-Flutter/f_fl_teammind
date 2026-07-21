@@ -76,20 +76,23 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
   void _pickFiles() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final List<XFile> images = await picker.pickMultiImage(imageQuality: 85);
+      final List<XFile> images = await picker.pickMultiImage();
       if (images.isEmpty) return;
+      
+      List<FilePickerResult> newResults = [];
+      for (final xFile in images) {
+        final bytes = await xFile.readAsBytes();
+        final platformFile = PlatformFile(
+          path: xFile.path,
+          name: xFile.name,
+          size: bytes.length,
+          bytes: bytes,
+        );
+        newResults.add(FilePickerResult([platformFile]));
+      }
+
       setState(() {
-        for (final xFile in images) {
-          final file = File(xFile.path);
-          final bytes = file.readAsBytesSync();
-          final platformFile = PlatformFile(
-            path: xFile.path,
-            name: xFile.name,
-            size: bytes.length,
-            bytes: bytes,
-          );
-          selectedFiles.add(FilePickerResult([platformFile]));
-        }
+        selectedFiles.addAll(newResults);
       });
     } catch (e) {
       debugPrint('Failed to pick images from gallery: $e');
