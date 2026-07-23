@@ -45,53 +45,52 @@ class DailyReportsProvider extends ChangeNotifier {
     }
   }
 
-  String? filterEmpId;
-  String? filterEmpName;
-  String? filterDepId;
-  String? filterDepName;
-  String? filterFrom;
-  String? filterTo;
+  Map<String, String?> personalFilters = {};
+  Map<String, String?> incomingFilters = {};
+
+  Map<String, String?> get currentFiltersMap => isForDepartment ? incomingFilters : personalFilters;
+
+  String? get filterEmpId => currentFiltersMap['empId'];
+  String? get filterEmpName => currentFiltersMap['empName'];
+  String? get filterDepId => currentFiltersMap['depId'];
+  String? get filterDepName => currentFiltersMap['depName'];
+  String? get filterFrom => currentFiltersMap['from'];
+  String? get filterTo => currentFiltersMap['to'];
 
   void applyFilters(Map<String, String?> filters, BuildContext context) {
-    filterEmpId = filters['empId'];
-    filterEmpName = filters['empName'];
-    filterDepId = filters['depId'];
-    filterDepName = filters['depName'];
-    filterFrom = filters['from'];
-    filterTo = filters['to'];
-    
-    fetchReports(context);
-    if (isManagerOrHr) {
-      fetchReports(context, isIncoming: true);
+    if (isForDepartment) {
+      incomingFilters = Map.from(filters);
+    } else {
+      personalFilters = Map.from(filters);
     }
+    fetchReports(context, isIncoming: isForDepartment);
   }
 
   void clearFilterEmp(BuildContext context) {
-    filterEmpId = null;
-    filterEmpName = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['empId'] = null;
+    filters['empName'] = null;
+    applyFilters(filters, context);
   }
 
   void clearFilterDep(BuildContext context) {
-    filterDepId = null;
-    filterDepName = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['depId'] = null;
+    filters['depName'] = null;
+    applyFilters(filters, context);
   }
 
   void clearFilterDate(BuildContext context) {
-    filterFrom = null;
-    filterTo = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['from'] = null;
+    filters['to'] = null;
+    applyFilters(filters, context);
   }
 
-  Map<String, String?> get currentFiltersMap => {
-    'empId': filterEmpId,
-    'empName': filterEmpName,
-    'depId': filterDepId,
-    'depName': filterDepName,
-    'from': filterFrom,
-    'to': filterTo,
-  };
+  void resetAllFilters() {
+    personalFilters.clear();
+    incomingFilters.clear();
+  }
 
   Future<void> fetchReports(BuildContext context, {int page = 1, bool isIncoming = false}) async {
     isLoading = true;
@@ -132,20 +131,13 @@ class DailyReportsProvider extends ChangeNotifier {
 
   void toggleDepartmentView(bool value, BuildContext context) {
     isForDepartment = value;
-    
-    filterEmpId = null;
-    filterEmpName = null;
-    filterDepId = null;
-    filterDepName = null;
-    filterFrom = null;
-    filterTo = null;
-    
-    fetchReports(context);
-    if (isManagerOrHr) {
-      fetchReports(context, isIncoming: true);
-    }
-    
     notifyListeners();
+    // Only fetch if the list is empty since filters are preserved
+    if (value && incomingReports.isEmpty) {
+      fetchReports(context, isIncoming: true);
+    } else if (!value && personalReports.isEmpty) {
+      fetchReports(context, isIncoming: false);
+    }
   }
 
   Future<bool> addReport(

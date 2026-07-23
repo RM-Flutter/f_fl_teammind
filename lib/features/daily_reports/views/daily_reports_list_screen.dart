@@ -41,6 +41,14 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    try {
+      provider.resetAllFilters();
+    } catch (_) {}
+    super.dispose();
+  }
+
   void _deleteReport(BuildContext context, DailyReportModel report,
       DailyReportsProvider provider) async {
     bool confirm = await showDialog(

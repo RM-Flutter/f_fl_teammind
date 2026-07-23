@@ -47,6 +47,9 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
 
   @override
   void dispose() {
+    try {
+      viewModel.resetAllFilters();
+    } catch (_) {}
     super.dispose();
   }
 

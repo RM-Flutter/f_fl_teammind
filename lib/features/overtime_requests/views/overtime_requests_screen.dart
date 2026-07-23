@@ -46,6 +46,14 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    try {
+      provider.resetAllFilters();
+    } catch (_) {}
+    super.dispose();
+  }
+
   String formatStatus(String? status) {
     if (status == null) return '';
     switch (status) {

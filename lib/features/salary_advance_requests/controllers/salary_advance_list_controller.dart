@@ -61,21 +61,13 @@ class SalaryAdvanceListController extends ChangeNotifier {
 
   void toggleIncomingView(bool value, BuildContext context) {
     isIncomingView = value;
-    
-    filterEmpId = null;
-    filterEmpName = null;
-    filterDepId = null;
-    filterDepName = null;
-    filterStatus = null;
-    filterFrom = null;
-    filterTo = null;
-    
-    getPersonalRequests(context: context);
-    if (isManagerOrHr) {
-      getIncomingRequests(context: context);
-    }
-    
     notifyListeners();
+    // Only fetch if the list is empty since filters are preserved
+    if (value && incomingRequests == null) {
+      getIncomingRequests(context: context);
+    } else if (!value && personalRequests == null) {
+      getPersonalRequests(context: context);
+    }
   }
 
   void updateLoadingPersonal(bool value) {
@@ -114,61 +106,64 @@ class SalaryAdvanceListController extends ChangeNotifier {
     }
   }
 
-  String? filterEmpId;
-  String? filterEmpName;
-  String? filterDepId;
-  String? filterDepName;
-  String? filterStatus;
-  String? filterFrom;
-  String? filterTo;
+  Map<String, String?> personalFilters = {};
+  Map<String, String?> incomingFilters = {};
+
+  Map<String, String?> get currentFiltersMap => isIncomingView ? incomingFilters : personalFilters;
+
+  String? get filterEmpId => currentFiltersMap['empId'];
+  String? get filterEmpName => currentFiltersMap['empName'];
+  String? get filterDepId => currentFiltersMap['depId'];
+  String? get filterDepName => currentFiltersMap['depName'];
+  String? get filterStatus => currentFiltersMap['status'];
+  String? get filterFrom => currentFiltersMap['from'];
+  String? get filterTo => currentFiltersMap['to'];
 
   void applyFilters(Map<String, String?> filters, BuildContext context) {
-    filterEmpId = filters['empId'];
-    filterEmpName = filters['empName'];
-    filterDepId = filters['depId'];
-    filterDepName = filters['depName'];
-    filterStatus = filters['status'];
-    filterFrom = filters['from'];
-    filterTo = filters['to'];
+    if (isIncomingView) {
+      incomingFilters = Map.from(filters);
+    } else {
+      personalFilters = Map.from(filters);
+    }
     
-    getPersonalRequests(context: context);
-    if (isManagerOrHr) {
+    if (isIncomingView) {
       getIncomingRequests(context: context);
+    } else {
+      getPersonalRequests(context: context);
     }
   }
 
   void clearFilterEmp(BuildContext context) {
-    filterEmpId = null;
-    filterEmpName = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['empId'] = null;
+    filters['empName'] = null;
+    applyFilters(filters, context);
   }
 
   void clearFilterDep(BuildContext context) {
-    filterDepId = null;
-    filterDepName = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['depId'] = null;
+    filters['depName'] = null;
+    applyFilters(filters, context);
   }
 
   void clearFilterDate(BuildContext context) {
-    filterFrom = null;
-    filterTo = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['from'] = null;
+    filters['to'] = null;
+    applyFilters(filters, context);
   }
 
   void clearFilterStatus(BuildContext context) {
-    filterStatus = null;
-    applyFilters(currentFiltersMap, context);
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['status'] = null;
+    applyFilters(filters, context);
   }
 
-  Map<String, String?> get currentFiltersMap => {
-    'empId': filterEmpId,
-    'empName': filterEmpName,
-    'depId': filterDepId,
-    'depName': filterDepName,
-    'status': filterStatus,
-    'from': filterFrom,
-    'to': filterTo,
-  };
+  void resetAllFilters() {
+    personalFilters.clear();
+    incomingFilters.clear();
+  }
 
   Future<void> getPersonalRequests({required BuildContext context, int page = 1}) async {
     if (page == 1) {
