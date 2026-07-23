@@ -15,6 +15,8 @@ import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeh
 import '../../more/notifications/views/widgets/switch_row_notification.dart';
 import '../controllers/daily_reports_controller.dart';
 import '../models/daily_report_model.dart';
+import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
+import '../../../../core/widgets/active_filters_row_widget.dart';
 
 class DailyReportsListScreen extends StatefulWidget {
   const DailyReportsListScreen({super.key});
@@ -163,6 +165,27 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
           pageContext: context,
           title: AppStrings.dailyReports.tr(),
           routeName: AppRoutes.dailyReportsListScreen.name,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.filter_list_rounded, color: Color(AppColors.secondaryButton)),
+              onPressed: () async {
+                  final result = await showModalBottomSheet<Map<String, String?>>(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => app_test_filter.SharedListFilterWidget(
+                      showEmployee: provider.isForDepartment,
+                      showDepartment: provider.isForDepartment,
+                      showDateRange: true,
+                      initialFilters: provider.currentFiltersMap,
+                    ),
+                  );
+                if (result != null && context.mounted) {
+                  provider.applyFilters(result, context);
+                }
+              },
+            ),
+          ],
           floatingActionButton: provider.isManagerOrHr && provider.isForDepartment ? null : FloatingActionButton.extended(
             heroTag: 'add_daily_report',
             backgroundColor: Color(AppColors.buttons),
@@ -196,6 +219,16 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                 ),
                 SizedBox(height: 10),
               ],
+              ActiveFiltersRowWidget(
+                empName: provider.filterEmpName,
+                depName: provider.filterDepName,
+                fromDate: provider.filterFrom,
+                toDate: provider.filterTo,
+                onClearEmp: () => provider.clearFilterEmp(context),
+                onClearDep: () => provider.clearFilterDep(context),
+                onClearDate: () => provider.clearFilterDate(context),
+                onClearStatus: () {},
+              ),
               Expanded(
                 child: provider.isLoading 
                   ? const Center(child: CircularProgressIndicator())

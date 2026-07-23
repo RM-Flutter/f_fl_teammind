@@ -197,7 +197,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isTitleOnly: false,
                 isList: false,
                 title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
-                trailingTitle: "${employee!.workingHours!.allowedDelayMinutes} ${AppStrings.minutes.tr()}".toUpperCase(),
+                trailingTitle: "${employee!.workingHours!.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}".toUpperCase(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WEEKENDS

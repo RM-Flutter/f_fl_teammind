@@ -461,16 +461,18 @@ class AddNewRequestController extends ChangeNotifier {
       final List<XFile> images = await picker.pickMultiImage(imageQuality: 85);
       if (images.isEmpty) return;
 
-      final platformFiles = images.map((xFile) {
-        final file = File(xFile.path);
-        final bytes = file.readAsBytesSync();
-        return PlatformFile(
-          path: xFile.path,
-          name: xFile.name,
-          size: bytes.length,
-          bytes: bytes,
+      List<PlatformFile> platformFiles = [];
+      for (var xFile in images) {
+        final bytes = await xFile.readAsBytes();
+        platformFiles.add(
+          PlatformFile(
+            path: kIsWeb ? null : xFile.path,
+            name: xFile.name,
+            size: bytes.length,
+            bytes: bytes,
+          ),
         );
-      }).toList();
+      }
 
       attachedFile = FilePickerResult(platformFiles);
       fileController.text = images.map((e) => e.name).join(', ');
@@ -479,6 +481,7 @@ class AddNewRequestController extends ChangeNotifier {
     }
     notifyListeners();
   }
+
 
 
   void _getRequestTypes({required BuildContext context}) {

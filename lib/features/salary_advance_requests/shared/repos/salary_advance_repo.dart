@@ -40,15 +40,20 @@ class SalaryAdvanceRepo {
     int page = 1,
     String from = '',
     String to = '',
+    String departmentId = '',
+    String status = '',
   }) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.salaryAdvancePersonal).url;
     
     Map<String, dynamic> queryParams = {
       'itemsCount': itemsCount,
       'page': page,
-      'from': from,
-      'to': to,
     };
+
+    if (from.isNotEmpty) queryParams['from'] = from;
+    if (to.isNotEmpty) queryParams['to'] = to;
+    if (departmentId.isNotEmpty) queryParams['department_id'] = departmentId;
+    if (status.isNotEmpty) queryParams['status'] = status;
 
     return await DioApiService().get<Map<String, dynamic>>(
       url,
@@ -67,19 +72,21 @@ class SalaryAdvanceRepo {
     String employeeId = '',
     String from = '',
     String to = '',
+    String departmentId = '',
+    String status = '',
   }) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.salaryAdvanceIncoming).url;
     
     Map<String, dynamic> queryParams = {
       'itemsCount': itemsCount,
       'page': page,
-      'from': from,
-      'to': to,
     };
 
-    if (employeeId.isNotEmpty) {
-      queryParams['employee_id'] = employeeId;
-    }
+    if (employeeId.isNotEmpty) queryParams['employee_id'] = employeeId;
+    if (from.isNotEmpty) queryParams['from'] = from;
+    if (to.isNotEmpty) queryParams['to'] = to;
+    if (departmentId.isNotEmpty) queryParams['department_id'] = departmentId;
+    if (status.isNotEmpty) queryParams['status'] = status;
 
     return await DioApiService().get<Map<String, dynamic>>(
       url,

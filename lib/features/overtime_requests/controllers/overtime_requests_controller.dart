@@ -13,6 +13,51 @@ class OvertimeRequestsProvider extends ChangeNotifier {
   bool isActionLoading = false;
   bool isForDepartment = false;
 
+  String? filterEmpId;
+  String? filterEmpName;
+  String? filterDepId;
+  String? filterDepName;
+  String? filterFrom;
+  String? filterTo;
+
+  void applyFilters(Map<String, String?> filters, BuildContext context) {
+    filterEmpId = filters['empId'];
+    filterEmpName = filters['empName'];
+    filterDepId = filters['depId'];
+    filterDepName = filters['depName'];
+    filterFrom = filters['from'];
+    filterTo = filters['to'];
+    
+    fetchRequests(context);
+  }
+
+  void clearFilterEmp(BuildContext context) {
+    filterEmpId = null;
+    filterEmpName = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterDep(BuildContext context) {
+    filterDepId = null;
+    filterDepName = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterDate(BuildContext context) {
+    filterFrom = null;
+    filterTo = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  Map<String, String?> get currentFiltersMap => {
+    'empId': filterEmpId,
+    'empName': filterEmpName,
+    'depId': filterDepId,
+    'depName': filterDepName,
+    'from': filterFrom,
+    'to': filterTo,
+  };
+
   Future<void> fetchRequests(BuildContext context) async {
     isLoading = true;
     notifyListeners();
@@ -34,7 +79,13 @@ class OvertimeRequestsProvider extends ChangeNotifier {
         debugPrint("Error fetching employees for mapping: $e");
       }
 
-      final response = await OvertimeRequestsService.getOvertimeRequests(context: context);
+      final response = await OvertimeRequestsService.getOvertimeRequests(
+        context: context,
+        employeeProfileId: filterEmpId,
+        departmentId: filterDepId,
+        from: filterFrom,
+        to: filterTo,
+      );
       
       if (response.success && response.data != null && response.data!['requests'] != null) {
         final List<dynamic> requestsData = response.data!['requests'];
@@ -79,8 +130,17 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleDepartmentView(bool value) {
+  void toggleDepartmentView(bool value, BuildContext context) {
     isForDepartment = value;
+    
+    filterEmpId = null;
+    filterEmpName = null;
+    filterDepId = null;
+    filterDepName = null;
+    filterFrom = null;
+    filterTo = null;
+    
+    fetchRequests(context);
     notifyListeners();
   }
 

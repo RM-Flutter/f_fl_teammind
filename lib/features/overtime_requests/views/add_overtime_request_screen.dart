@@ -43,7 +43,19 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
 
     final provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
     final dateStr = DateFormat('yyyy-MM-dd').format(selectedDate!);
-    final success = await provider.addRequest(context, dateStr, _durationController.text);
+    // Normalize Arabic/Eastern Arabic numerals to Western Arabic numerals
+    final normalizedDuration = _normalizeNumerals(_durationController.text.trim());
+    // Validate that the normalized value is a valid positive integer
+    final parsedDuration = int.tryParse(normalizedDuration);
+    if (parsedDuration == null || parsedDuration <= 0) {
+      AlertsService.error(
+        context: context,
+        message: AppStrings.durationIsRequired.tr(),
+        title: 'error'.tr(),
+      );
+      return;
+    }
+    final success = await provider.addRequest(context, dateStr, normalizedDuration);
     
     if (success) {
       if (context.mounted) {
@@ -55,6 +67,18 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
         context.pop();
       }
     }
+  }
+
+  /// Converts Arabic-Indic (٠١٢...) and Eastern Arabic numerals to Western Arabic (012...)
+  String _normalizeNumerals(String input) {
+    return input.replaceAllMapped(RegExp(r'[\u0660-\u0669\u06f0-\u06f9]'), (match) {
+      final ch = match.group(0)!.codeUnitAt(0);
+      if (ch >= 0x0660 && ch <= 0x0669) {
+        return (ch - 0x0660).toString();
+      } else {
+        return (ch - 0x06F0).toString();
+      }
+    });
   }
 
   @override
@@ -182,7 +206,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           Expanded(
             child: Text(
               selectedDate != null 
-                  ? DateFormat('EEEE, d MMMM yyyy').format(selectedDate!) 
+                  ? DateFormat('EEEE, d MMMM yyyy', context.locale.languageCode).format(selectedDate!) 
                   : AppStrings.selectDate.tr(),
               style: AppStyles.darkContent(context).copyWith(
                 fontSize: 15,

@@ -59,8 +59,22 @@ class SalaryAdvanceListController extends ChangeNotifier {
 
   bool isIncomingView = false;
 
-  void toggleIncomingView(bool value) {
+  void toggleIncomingView(bool value, BuildContext context) {
     isIncomingView = value;
+    
+    filterEmpId = null;
+    filterEmpName = null;
+    filterDepId = null;
+    filterDepName = null;
+    filterStatus = null;
+    filterFrom = null;
+    filterTo = null;
+    
+    getPersonalRequests(context: context);
+    if (isManagerOrHr) {
+      getIncomingRequests(context: context);
+    }
+    
     notifyListeners();
   }
 
@@ -100,12 +114,75 @@ class SalaryAdvanceListController extends ChangeNotifier {
     }
   }
 
+  String? filterEmpId;
+  String? filterEmpName;
+  String? filterDepId;
+  String? filterDepName;
+  String? filterStatus;
+  String? filterFrom;
+  String? filterTo;
+
+  void applyFilters(Map<String, String?> filters, BuildContext context) {
+    filterEmpId = filters['empId'];
+    filterEmpName = filters['empName'];
+    filterDepId = filters['depId'];
+    filterDepName = filters['depName'];
+    filterStatus = filters['status'];
+    filterFrom = filters['from'];
+    filterTo = filters['to'];
+    
+    getPersonalRequests(context: context);
+    if (isManagerOrHr) {
+      getIncomingRequests(context: context);
+    }
+  }
+
+  void clearFilterEmp(BuildContext context) {
+    filterEmpId = null;
+    filterEmpName = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterDep(BuildContext context) {
+    filterDepId = null;
+    filterDepName = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterDate(BuildContext context) {
+    filterFrom = null;
+    filterTo = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterStatus(BuildContext context) {
+    filterStatus = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  Map<String, String?> get currentFiltersMap => {
+    'empId': filterEmpId,
+    'empName': filterEmpName,
+    'depId': filterDepId,
+    'depName': filterDepName,
+    'status': filterStatus,
+    'from': filterFrom,
+    'to': filterTo,
+  };
+
   Future<void> getPersonalRequests({required BuildContext context, int page = 1}) async {
     if (page == 1) {
       updateLoadingPersonal(true);
     }
     try {
-      final result = await SalaryAdvanceRepo.getPersonalList(context: context, page: page);
+      final result = await SalaryAdvanceRepo.getPersonalList(
+        context: context, 
+        page: page,
+        from: filterFrom ?? '',
+        to: filterTo ?? '',
+        departmentId: filterDepId ?? '',
+        status: filterStatus ?? '',
+      );
       if (result.success && result.data != null) {
         var listData = result.data?['data'] as List<dynamic>?;
         if (page == 1) {
@@ -126,7 +203,15 @@ class SalaryAdvanceListController extends ChangeNotifier {
       updateLoadingIncoming(true);
     }
     try {
-      final result = await SalaryAdvanceRepo.getIncomingList(context: context, page: page);
+      final result = await SalaryAdvanceRepo.getIncomingList(
+        context: context, 
+        page: page,
+        employeeId: filterEmpId ?? '',
+        from: filterFrom ?? '',
+        to: filterTo ?? '',
+        departmentId: filterDepId ?? '',
+        status: filterStatus ?? '',
+      );
       if (result.success && result.data != null) {
         var listData = result.data?['data'] as List<dynamic>?;
         if (page == 1) {

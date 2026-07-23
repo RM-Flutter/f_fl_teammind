@@ -10,10 +10,27 @@ class OvertimeRequestsService {
   static Future<OperationResult<Map<String, dynamic>>> getOvertimeRequests({
     required BuildContext context,
     String? employeeProfileId,
+    String? departmentId,
+    String? from,
+    String? to,
   }) async {
     String url = baseUrl;
+    List<String> queryParams = [];
     if (employeeProfileId != null && employeeProfileId.isNotEmpty) {
-      url += '?employee_profile_id=$employeeProfileId';
+      queryParams.add('employee_profile_id=$employeeProfileId');
+    }
+    if (departmentId != null && departmentId.isNotEmpty) {
+      queryParams.add('department_id=$departmentId');
+    }
+    if (from != null && from.isNotEmpty) {
+      queryParams.add('from=$from');
+    }
+    if (to != null && to.isNotEmpty) {
+      queryParams.add('to=$to');
+    }
+    
+    if (queryParams.isNotEmpty) {
+      url += '?${queryParams.join('&')}';
     }
 
     final response = await DioApiService().get<Map<String, dynamic>>(

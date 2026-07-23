@@ -12,9 +12,26 @@ class DailyReportsService {
     int itemsCount = 10,
     int page = 1,
     bool isIncoming = false,
+    String? employeeId,
+    String? departmentId,
+    String? from,
+    String? to,
   }) async {
     final type = isIncoming ? 'incoming' : 'personal';
-    final url = '$baseUrl/$type?itemsCount=$itemsCount&page=$page';
+    String url = '$baseUrl/$type?itemsCount=$itemsCount&page=$page';
+
+    if (employeeId != null && employeeId.isNotEmpty) {
+      url += '&employee_id=$employeeId';
+    }
+    if (departmentId != null && departmentId.isNotEmpty) {
+      url += '&department_id=$departmentId';
+    }
+    if (from != null && from.isNotEmpty) {
+      url += '&from=$from';
+    }
+    if (to != null && to.isNotEmpty) {
+      url += '&to=$to';
+    }
 
     return await DioApiService().get<Map<String, dynamic>>(
       url,

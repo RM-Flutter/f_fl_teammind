@@ -428,6 +428,17 @@ class DomainSelectionService {
                 onPressed: () {
                   final domain = controller.text.trim();
                   if (domain.isNotEmpty) {
+                    if (domain.contains('@') || domain.contains(' ')) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppStrings.error.tr() + ": Invalid domain format",
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
                     print("🌐 Domain entered: $domain");
                     Navigator.of(ctx).pop(domain);
                   }
@@ -472,10 +483,9 @@ class DomainSelectionService {
         },
       );
 
-      // Check if response is 404 (domain/endpoint not found)
-      // If it's 404, the domain is invalid
-      // Any other status code (200, 401, 500, etc.) means the domain exists
-      return response.statusCode != 404;
+      // We only consider the domain valid if it returns 200 OK.
+      // Other statuses like 403, 404, or 500 mean the domain or endpoint is invalid.
+      return response.statusCode == 200;
     } catch (e) {
       debugPrint("Error validating domain: $e");
       // For network errors or timeouts, we'll consider it invalid

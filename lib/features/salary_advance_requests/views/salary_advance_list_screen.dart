@@ -18,6 +18,8 @@ import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalti
 import '../../salary_advance_requests/controllers/salary_advance_list_controller.dart';
 import '../../salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'widgets/salary_advance_list_item_widget.dart';
+import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
+import '../../../../core/widgets/active_filters_row_widget.dart';
 
 class SalaryAdvanceListScreen extends StatefulWidget {
   const SalaryAdvanceListScreen({super.key});
@@ -57,6 +59,29 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
           return TemplatePage(
             pageContext: context,
             title: 'salary_advance_requests'.tr(),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.filter_list_rounded, color: Color(AppColors.secondaryButton)),
+                onPressed: () async {
+                  final result = await showModalBottomSheet<Map<String, String?>>(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => app_test_filter.SharedListFilterWidget(
+                      showEmployee: controller.isIncomingView,
+                      showDepartment: controller.isIncomingView,
+                      showDateRange: false,
+                      showStatus: true,
+                      statusOptions: const ['approved', 'cancelled', 'pending'],
+                      initialFilters: controller.currentFiltersMap,
+                    ),
+                  );
+                  if (result != null && context.mounted) {
+                    controller.applyFilters(result, context);
+                  }
+                },
+              ),
+            ],
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 context.pushNamed(
@@ -80,11 +105,22 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                     leftText: 'my_requests'.tr(),
                     rightText: 'incoming_requests'.tr(),
                     onChanged: (val) {
-                      controller.toggleIncomingView(val);
+                      controller.toggleIncomingView(val, context);
                     },
                   ),
                   SizedBox(height: 10),
                 ],
+                ActiveFiltersRowWidget(
+                  empName: controller.filterEmpName,
+                  depName: controller.filterDepName,
+                  fromDate: controller.filterFrom,
+                  toDate: controller.filterTo,
+                  status: controller.filterStatus,
+                  onClearEmp: () => controller.clearFilterEmp(context),
+                  onClearDep: () => controller.clearFilterDep(context),
+                  onClearDate: () => controller.clearFilterDate(context),
+                  onClearStatus: () => controller.clearFilterStatus(context),
+                ),
                 Expanded(
                   child: controller.isIncomingView 
                       ? _buildIncomingList(controller) 

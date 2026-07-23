@@ -18,6 +18,8 @@ import '../controllers/overtime_requests_controller.dart';
 import '../models/overtime_request_model.dart';
 import '../../../../core/services/requests_services.dart';
 import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
+import '../../../../core/widgets/active_filters_row_widget.dart';
 
 class OvertimeRequestsScreen extends StatefulWidget {
   const OvertimeRequestsScreen({super.key});
@@ -88,6 +90,27 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       pageContext: context,
       title: AppStrings.overtimeRequests.tr(),
       routeName: AppRoutes.overtimeRequestsScreen.name,
+      actions: [
+        IconButton(
+          icon: Icon(Icons.filter_list_rounded, color: Color(AppColors.secondaryButton)),
+          onPressed: () async {
+            final result = await showModalBottomSheet<Map<String, String?>>(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => app_test_filter.SharedListFilterWidget(
+                showEmployee: provider.isForDepartment,
+                showDepartment: provider.isForDepartment,
+                showDateRange: true,
+                initialFilters: provider.currentFiltersMap,
+              ),
+            );
+            if (result != null && context.mounted) {
+              provider.applyFilters(result, context);
+            }
+          },
+        ),
+      ],
       floatingActionButton: FloatingActionButton(
         heroTag: 'add_overtime',
         backgroundColor: Color(AppColors.buttons),
@@ -116,11 +139,21 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                   leftText: AppStrings.myRequests.tr(),
                   rightText: AppStrings.teamRequests.tr(),
                   onChanged: (val) {
-                    provider.toggleDepartmentView(val);
+                    provider.toggleDepartmentView(val, context);
                   },
                 ),
                 SizedBox(height: 10),
               ],
+              ActiveFiltersRowWidget(
+                empName: provider.filterEmpName,
+                depName: provider.filterDepName,
+                fromDate: provider.filterFrom,
+                toDate: provider.filterTo,
+                onClearEmp: () => provider.clearFilterEmp(context),
+                onClearDep: () => provider.clearFilterDep(context),
+                onClearDate: () => provider.clearFilterDate(context),
+                onClearStatus: () {},
+              ),
               Expanded(
                 child: RefreshIndicator.adaptive(
                   onRefresh: () => provider.fetchRequests(context),

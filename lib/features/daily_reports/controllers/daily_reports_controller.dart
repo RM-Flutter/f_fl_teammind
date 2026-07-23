@@ -45,12 +45,68 @@ class DailyReportsProvider extends ChangeNotifier {
     }
   }
 
+  String? filterEmpId;
+  String? filterEmpName;
+  String? filterDepId;
+  String? filterDepName;
+  String? filterFrom;
+  String? filterTo;
+
+  void applyFilters(Map<String, String?> filters, BuildContext context) {
+    filterEmpId = filters['empId'];
+    filterEmpName = filters['empName'];
+    filterDepId = filters['depId'];
+    filterDepName = filters['depName'];
+    filterFrom = filters['from'];
+    filterTo = filters['to'];
+    
+    fetchReports(context);
+    if (isManagerOrHr) {
+      fetchReports(context, isIncoming: true);
+    }
+  }
+
+  void clearFilterEmp(BuildContext context) {
+    filterEmpId = null;
+    filterEmpName = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterDep(BuildContext context) {
+    filterDepId = null;
+    filterDepName = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  void clearFilterDate(BuildContext context) {
+    filterFrom = null;
+    filterTo = null;
+    applyFilters(currentFiltersMap, context);
+  }
+
+  Map<String, String?> get currentFiltersMap => {
+    'empId': filterEmpId,
+    'empName': filterEmpName,
+    'depId': filterDepId,
+    'depName': filterDepName,
+    'from': filterFrom,
+    'to': filterTo,
+  };
+
   Future<void> fetchReports(BuildContext context, {int page = 1, bool isIncoming = false}) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      final response = await DailyReportsService.getReports(context: context, page: page, isIncoming: isIncoming);
+      final response = await DailyReportsService.getReports(
+        context: context, 
+        page: page, 
+        isIncoming: isIncoming,
+        employeeId: filterEmpId,
+        departmentId: filterDepId,
+        from: filterFrom,
+        to: filterTo,
+      );
       if (response.success && response.data != null && response.data!['data'] != null) {
         final List<dynamic> reportsData = response.data!['data'];
         final list = reportsData.map((e) => DailyReportModel.fromJson(e)).toList();
@@ -76,10 +132,20 @@ class DailyReportsProvider extends ChangeNotifier {
 
   void toggleDepartmentView(bool value, BuildContext context) {
     isForDepartment = value;
-    notifyListeners();
-    if (value && incomingReports.isEmpty) {
+    
+    filterEmpId = null;
+    filterEmpName = null;
+    filterDepId = null;
+    filterDepName = null;
+    filterFrom = null;
+    filterTo = null;
+    
+    fetchReports(context);
+    if (isManagerOrHr) {
       fetchReports(context, isIncoming: true);
     }
+    
+    notifyListeners();
   }
 
   Future<bool> addReport(
