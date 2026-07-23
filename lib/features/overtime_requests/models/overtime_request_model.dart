@@ -1,3 +1,5 @@
+import '../../../core/models/employee_action_model.dart';
+
 class OvertimeRequestModel {
   int? id;
   int? employeeProfileId;
@@ -6,6 +8,7 @@ class OvertimeRequestModel {
   String? rejectReason;
   int? overtime;
   List<ManagerReply>? theManagerReply;
+  List<EmployeeActionModel>? employeeActions;
   EmployeeProfile? employeeProfile;
   String? employeeName; // Fallback field
   String? createdAt;
@@ -19,6 +22,7 @@ class OvertimeRequestModel {
     this.rejectReason,
     this.overtime,
     this.theManagerReply,
+    this.employeeActions,
     this.employeeProfile,
     this.employeeName,
     this.createdAt,
@@ -38,6 +42,12 @@ class OvertimeRequestModel {
       theManagerReply = <ManagerReply>[];
       json['the_manager_reply'].forEach((v) {
         theManagerReply!.add(ManagerReply.fromJson(v));
+      });
+    }
+    if (json['employee_actions'] != null) {
+      employeeActions = <EmployeeActionModel>[];
+      json['employee_actions'].forEach((v) {
+        employeeActions!.add(EmployeeActionModel.fromJson(v));
       });
     }
     employeeProfile = json['employee_profile'] != null
@@ -60,6 +70,10 @@ class OvertimeRequestModel {
     if (theManagerReply != null) {
       data['the_manager_reply'] =
           theManagerReply!.map((v) => v.toJson()).toList();
+    }
+    if (employeeActions != null) {
+      data['employee_actions'] =
+          employeeActions!.map((v) => v.toJson()).toList();
     }
     if (employeeProfile != null) {
       data['employee_profile'] = employeeProfile!.toJson();

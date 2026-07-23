@@ -28,7 +28,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Text('no_data_found'.tr()),
+          child: Text(AppStrings.noDataFounded.tr()),
         ),
       );
     }

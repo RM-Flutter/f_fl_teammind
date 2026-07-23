@@ -17,6 +17,7 @@ import '../controllers/overtime_requests_controller.dart';
 import '../models/overtime_request_model.dart';
 import '../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../../core/services/requests_services.dart';
+import '../../../../core/models/employee_action_model.dart';
 
 class OvertimeRequestDetailsScreen extends StatefulWidget {
   final OvertimeRequestModel request;
@@ -177,11 +178,11 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Manager Reply Section
-                      if (widget.request.theManagerReply != null && widget.request.theManagerReply!.isNotEmpty) ...[
-                        _buildSectionHeader(AppStrings.managerResponse.tr(), Icons.quickreply_outlined),
+                      // Employee Actions Section
+                      if (widget.request.employeeActions != null && widget.request.employeeActions!.isNotEmpty) ...[
+                        _buildSectionHeader(AppStrings.history.tr(), Icons.history_rounded),
                         SizedBox(height: 12),
-                        ...widget.request.theManagerReply!.map((reply) => _buildReplyCard(reply)).toList(),
+                        ...widget.request.employeeActions!.map((action) => _buildActionCard(action)).toList(),
                         SizedBox(height: 30),
                       ],
 
@@ -257,15 +258,23 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
     );
   }
 
-  Widget _buildReplyCard(ManagerReply reply) {
+  Widget _buildActionCard(EmployeeActionModel action) {
     String date = "";
     String time = "";
-    if (reply.createdAt != null && reply.createdAt!.contains(" ")) {
-      final parts = reply.createdAt!.split(" ");
+    if (action.createdAt != null && action.createdAt!.contains(" ")) {
+      final parts = action.createdAt!.split(" ");
       date = parts[0];
       time = parts[1];
     } else {
-      date = reply.createdAt ?? "";
+      date = action.createdAt ?? "";
+    }
+
+    String actionText = "";
+    if (action.action == 'update-duration' || action.action == 'update-amount') {
+      actionText = "${'update'.tr()}: ${action.valueFrom} ➔ ${action.valueTo}";
+    } else {
+      String actionLabel = action.action == 'approve' ? 'approve'.tr() : (action.action == 'reject' ? 'reject'.tr() : action.action ?? '');
+      actionText = "$actionLabel${action.message != null && action.message!.isNotEmpty ? ' - ${action.message}' : ''}";
     }
 
     return Container(
@@ -284,12 +293,12 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
         children: [
           InkWell(
             onTap: () {
-              if (reply.managerId != null) {
+              if (action.profileId != null) {
                 context.pushNamed(
                   AppRoutes.employeeDetails.name,
                   pathParameters: {
                     'lang': context.locale.languageCode,
-                    'id': reply.managerId.toString()
+                    'id': action.profileId.toString()
                   }
                 );
               }
@@ -301,8 +310,8 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(reply.managerName ?? "", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold)),
-                      Text(reply.managerJobTitle ?? "", style: AppStyles.greyContent(context).copyWith(fontSize: 11)),
+                      Text(action.profileName ?? "", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold)),
+                      Text(action.profileJobTitle ?? "", style: AppStyles.greyContent(context).copyWith(fontSize: 11)),
                     ],
                   ),
                 ),
@@ -311,7 +320,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
             ),
           ),
           Divider(height: 24, color: Colors.grey.shade100),
-          Text(reply.replay ?? "", style: AppStyles.darkContent(context).copyWith(fontSize: 14, height: 1.4)),
+          Text(actionText, style: AppStyles.darkContent(context).copyWith(fontSize: 14, height: 1.4)),
           SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -4,6 +4,8 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import '../../employee_profiles/shared/repos/employee_repo.dart';
 import '../models/overtime_request_model.dart';
 import '../services/overtime_requests_service.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class OvertimeRequestsProvider extends ChangeNotifier {
   List<OvertimeRequestModel> myRequests = [];
@@ -167,6 +169,14 @@ class OvertimeRequestsProvider extends ChangeNotifier {
       if (response.success) {
         success = true;
         await fetchRequests(context);
+      } else if (response.message != null && response.message!.isNotEmpty) {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context,
+            message: response.message!,
+            title: 'error'.tr(),
+          );
+        }
       }
     } catch (e) {
       debugPrint("Error adding overtime request: $e");
@@ -190,6 +200,14 @@ class OvertimeRequestsProvider extends ChangeNotifier {
       if (response.success) {
         success = true;
         await fetchRequests(context);
+      } else if (response.message != null && response.message!.isNotEmpty) {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context,
+            message: response.message!,
+            title: 'error'.tr(),
+          );
+        }
       }
     } catch (e) {
       debugPrint("Error updating status: $e");
@@ -212,6 +230,14 @@ class OvertimeRequestsProvider extends ChangeNotifier {
       if (response.success) {
         success = true;
         await fetchRequests(context);
+      } else if (response.message != null && response.message!.isNotEmpty) {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context,
+            message: response.message!,
+            title: 'error'.tr(),
+          );
+        }
       }
     } catch (e) {
       debugPrint("Error updating duration: $e");

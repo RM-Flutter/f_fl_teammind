@@ -1,4 +1,5 @@
 import '../../../daily_reports/models/daily_report_model.dart';
+import '../../../../core/models/employee_action_model.dart';
 
 class SalaryAdvanceRequestModel {
   int? id;
@@ -16,6 +17,7 @@ class SalaryAdvanceRequestModel {
   ProfileModel? managerProfile;
   ProfileModel? hrProfile;
   List<ReportAttachmentModel>? attachments;
+  List<EmployeeActionModel>? employeeActions;
   String? status;
   String? createdAt;
   String? updatedAt;
@@ -36,6 +38,7 @@ class SalaryAdvanceRequestModel {
     this.managerProfile,
     this.hrProfile,
     this.attachments,
+    this.employeeActions,
     this.status,
     this.createdAt,
     this.updatedAt,
@@ -67,6 +70,11 @@ class SalaryAdvanceRequestModel {
             .map((e) => ReportAttachmentModel.fromJson(e))
             .toList()
         : null;
+    employeeActions = json['employee_actions'] != null
+        ? (json['employee_actions'] as List)
+            .map((e) => EmployeeActionModel.fromJson(e))
+            .toList()
+        : null;
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -95,6 +103,7 @@ class SalaryAdvanceRequestModel {
       data['hr_profile'] = hrProfile!.toJson();
     }
     data['attachments'] = attachments?.map((e) => e.toJson()).toList();
+    data['employee_actions'] = employeeActions?.map((e) => e.toJson()).toList();
     data['status'] = status;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;

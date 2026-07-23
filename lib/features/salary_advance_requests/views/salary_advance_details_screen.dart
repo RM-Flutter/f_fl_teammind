@@ -26,6 +26,8 @@ import 'dart:html' if (dart.library.io) '../../../../core/services/dart_html_stu
 import '../../../core/routing/app_router.dart';
 import '../controllers/salary_advance_details_controller.dart';
 import 'update_salary_advance_screen.dart';
+import '../../../../core/models/employee_action_model.dart';
+import '../../../../core/constants/app_strings.dart';
 
 class SalaryAdvanceDetailsScreen extends StatefulWidget {
   final int requestId;
@@ -175,7 +177,11 @@ class _SalaryAdvanceDetailsScreenState
                                     ],
                                     SizedBox(height: 20),
                                     _buildApprovalsCard(controller),
-                                    SizedBox(height: 30),
+                                    SizedBox(height: 20),
+                                    if (controller.requestDetails?.employeeActions != null && controller.requestDetails!.employeeActions!.isNotEmpty) ...[
+                                      _buildActionsCard(controller),
+                                      SizedBox(height: 20),
+                                    ],
                                     _buildActionButtons(controller),
                                     SizedBox(height: 30),
                                   ],
@@ -553,6 +559,123 @@ class _SalaryAdvanceDetailsScreenState
   }
 
   // _buildApprovalRow removed as we now use _buildTimelineApprovalRow
+
+  Widget _buildActionsCard(SalaryAdvanceDetailsController controller) {
+    final actions = controller.requestDetails!.employeeActions!;
+    return GlassmorphismCard(
+      padding: EdgeInsets.all(AppSizes.s20),
+      backgroundColor: Colors.white,
+      opacity: 0.9,
+      boxShadow: [
+        BoxShadow(
+          color: Color(AppColors.buttonSecondaryColor).withOpacity(0.05),
+          blurRadius: 20,
+          offset: const Offset(0, 10),
+        )
+      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Color(AppColors.buttons).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(Icons.history_rounded,
+                    color: Color(AppColors.buttons), size: 20),
+              ),
+              SizedBox(width: 12),
+              Text(
+                AppStrings.history.tr(),
+                style: AppStyles.heading(context)
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 24),
+          ...actions.map((action) => _buildActionCard(action)).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCard(EmployeeActionModel action) {
+    String date = "";
+    String time = "";
+    if (action.createdAt != null && action.createdAt!.contains(" ")) {
+      final parts = action.createdAt!.split(" ");
+      date = parts[0];
+      time = parts[1];
+    } else {
+      date = action.createdAt ?? "";
+    }
+
+    String actionText = "";
+    if (action.action == 'update-duration' || action.action == 'update-amount') {
+      actionText = "${'update'.tr()}: ${action.valueFrom} ➔ ${action.valueTo}";
+    } else {
+      String actionLabel = action.action == 'approve' ? 'approve'.tr() : (action.action == 'reject' ? 'reject'.tr() : action.action ?? '');
+      actionText = "$actionLabel${action.message != null && action.message!.isNotEmpty ? ' - ${action.message}' : ''}";
+    }
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              if (action.profileId != null) {
+                context.pushNamed(
+                  AppRoutes.employeeDetails.name,
+                  pathParameters: {
+                    'lang': context.locale.languageCode,
+                    'id': action.profileId.toString()
+                  }
+                );
+              }
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(action.profileName ?? "", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.bold)),
+                      Text(action.profileJobTitle ?? "", style: AppStyles.greyContent(context).copyWith(fontSize: 11)),
+                    ],
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey.shade300),
+              ],
+            ),
+          ),
+          Divider(height: 12, color: Colors.grey.shade100),
+          Text(actionText, style: AppStyles.darkContent(context).copyWith(fontSize: 14, height: 1.4)),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (time.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(Icons.access_time, size: 10, color: Colors.grey.shade400),
+                    SizedBox(width: 4),
+                    Text(time, style: AppStyles.greyContent(context).copyWith(fontSize: 10)),
+                  ],
+                ),
+              Text(date, style: AppStyles.greyContent(context).copyWith(fontSize: 10, fontStyle: FontStyle.italic)),
+            ],
+          ),
+          SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
 
   Widget _buildCleanButton({
     required String label,
