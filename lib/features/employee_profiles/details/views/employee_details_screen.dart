@@ -14,6 +14,9 @@ import 'package:app_test/features/employee_profiles/details/views/widgets/evalut
 import 'package:app_test/features/employee_profiles/details/views/widgets/general_section_widget.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/profile_details_header.widget.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/request_section/requests_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/daily_reports_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/overtime_requests_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/salary_advance_section_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +42,9 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     AppStrings.accounts.tr(),
     AppStrings.requests.tr(),
     AppStrings.evaluation.tr(),
+    AppStrings.dailyReports.tr(),
+    AppStrings.overtimeRequests.tr(),
+    'salary_advance_requests'.tr(),
     AppStrings.more.tr(),
   ];
   int selectIndex = 0;
@@ -162,6 +168,27 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (selectIndex == 5) {
+                                          return DailyReportsSectionWidget(
+                                            employee: viewModel.employee,
+                                            reports: viewModel.dailyReports,
+                                            id: viewModel.employee!.id.toString(),
+                                            empName: viewModel.employee!.name.toString(),
+                                          );
+                                        } else if (selectIndex == 6) {
+                                          return OvertimeRequestsSectionWidget(
+                                            employee: viewModel.employee,
+                                            requests: viewModel.overtimeRequests,
+                                            id: viewModel.employee!.id.toString(),
+                                            empName: viewModel.employee!.name.toString(),
+                                          );
+                                        } else if (selectIndex == 7) {
+                                          return SalaryAdvanceSectionWidget(
+                                            employee: viewModel.employee,
+                                            requests: viewModel.salaryAdvanceRequestsList,
+                                            id: viewModel.employee!.id.toString(),
+                                            empName: viewModel.employee!.name.toString(),
+                                          );
+                                        } else if (selectIndex == 8) {
                                           return AssetsSectionWidget(employee: viewModel.employee);
                                         }
                                         return const SizedBox.shrink();

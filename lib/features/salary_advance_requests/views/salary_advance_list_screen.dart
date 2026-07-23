@@ -22,7 +22,8 @@ import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_fil
 import '../../../../core/widgets/active_filters_row_widget.dart';
 
 class SalaryAdvanceListScreen extends StatefulWidget {
-  const SalaryAdvanceListScreen({super.key});
+  final Map<String, dynamic>? extra;
+  const SalaryAdvanceListScreen({super.key, this.extra});
 
   @override
   State<SalaryAdvanceListScreen> createState() => _SalaryAdvanceListScreenState();
@@ -39,6 +40,13 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
   }
 
   void _initData() async {
+    if (widget.extra != null) {
+      if (widget.extra!['isIncoming'] == true) {
+        viewModel.isIncomingView = true;
+        viewModel.incomingFilters['empId'] = widget.extra!['empId'];
+        viewModel.incomingFilters['empName'] = widget.extra!['empName'];
+      }
+    }
     await viewModel.initializeScreen(context);
     if (mounted) {
       setState(() {});

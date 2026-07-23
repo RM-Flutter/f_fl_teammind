@@ -91,7 +91,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
       
       if (response.success && response.data != null && response.data!['requests'] != null) {
         final List<dynamic> requestsData = response.data!['requests'];
-        final List<OvertimeRequestModel> allRequests = requestsData.map((e) {
+        List<OvertimeRequestModel> allRequests = requestsData.map((e) {
           final model = OvertimeRequestModel.fromJson(e);
           // If name is missing, try to map it from our employee list
           if ((model.employeeName == null || model.employeeName!.isEmpty) && model.employeeProfileId != null) {
@@ -99,6 +99,18 @@ class OvertimeRequestsProvider extends ChangeNotifier {
           }
           return model;
         }).toList();
+
+        // Apply local filtering as a fallback since the backend currently ignores some filters
+        if (filterEmpId != null && filterEmpId!.isNotEmpty) {
+          final int? empId = int.tryParse(filterEmpId!);
+          if (empId != null) {
+            allRequests = allRequests.where((e) => e.employeeProfileId == empId).toList();
+          }
+        }
+
+        if (filterDepName != null && filterDepName!.isNotEmpty) {
+          allRequests = allRequests.where((e) => e.employeeProfile?.department == filterDepName).toList();
+        }
 
         final String? jsonString = CacheHelper.getString("US1");
         int? currentUserId;

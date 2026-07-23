@@ -430,7 +430,8 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  return const MaterialPage(child: SalaryAdvanceListScreen());
+                  final extra = state.extra as Map<String, dynamic>?;
+                  return MaterialPage(child: SalaryAdvanceListScreen(extra: extra));
                 },
               ),
               GoRoute(
