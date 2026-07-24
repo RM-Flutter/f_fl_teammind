@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
+import '../constants/app_strings.dart';
 import '../services/localization_service.dart';
 
 /// دروب داون مع سيرش — يفتح bottom sheet فيه حقل بحث وقائمة.
@@ -104,7 +106,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                         focusNode: _searchFocusNode,
                         onChanged: (_) => setModalState(() {}),
                         decoration: InputDecoration(
-                          hintText: 'Search...',
+                          hintText: '${AppStrings.search.tr()}...',
                           prefixIcon: const Icon(Icons.search),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppSizes.s15),
