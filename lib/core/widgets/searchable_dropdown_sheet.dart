@@ -166,16 +166,11 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
     final h = widget.height ?? 65.0;
     final isRtl = LocalizationService.isArabic(context: context);
     final verticalPadding = (h - 20) / 2;
-    final base = widget.contentPadding ?? EdgeInsets.zero;
-    final contentPadding = EdgeInsets.only(
-      left: base.left > 0 ? base.left : (isRtl ? 12 : 16),
-      right: base.right > 0 ? base.right : (isRtl ? 16 : 12),
-      top: widget.height != null
-          ? verticalPadding
-          : (base.top > 0 ? base.top : 12),
-      bottom: widget.height != null
-          ? verticalPadding
-          : (base.bottom > 0 ? base.bottom : 12),
+    final contentPadding = widget.contentPadding ?? EdgeInsets.only(
+      left: isRtl ? 12 : 16,
+      right: isRtl ? 16 : 12,
+      top: widget.height != null ? verticalPadding : 12,
+      bottom: widget.height != null ? verticalPadding : 12,
     );
     final child = InkWell(
       onTap: _openSheet,

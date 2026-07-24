@@ -1188,5 +1188,20 @@
   "noAccomplishmentsRecorded": "لا توجد إنجازات مسجلة.",
   "noOngoingTasksRecorded": "لا توجد مهام قيد التنفيذ مسجلة.",
   "noProblemsRecorded": "لا توجد مشاكل مسجلة.",
-  "SEND RESPONSE" : "إرسال الرد"
+  "SEND RESPONSE" : "إرسال الرد",
+  "time_matches_fingerprint": "الوقت مطابق للبصمة",
+  "overtime_difference": "يوجد فرق في وقت الإضافي",
+  "actual_overtime_greater": "وقت الإضافي الفعلي أكبر من المطلوب",
+  "exact_match_desc": "الوقت المطلوب ({requested}) مطابق تماماً للوقت المسجل في جهاز البصمة.",
+  "lost_match_desc": "تم طلب {requested} ولكن المسجل في جهاز البصمة هو {actual}، مما يعني ضياع {difference}.",
+  "greater_match_desc": "تم طلب {requested} ولكن المسجل في جهاز البصمة هو {actual}.",
+  "attendance_delay": "تأخير الحضور",
+  "no_delay": "لا يوجد تأخير",
+  "delay_mins_desc": "تأخر الموظف في تسجيل الحضور بمقدار {delay} دقيقة.",
+  "no_delay_desc": "تم تسجيل الحضور في الموعد.",
+  "fingerprint_recorded_overtime": "الإضافي المسجل بالبصمة",
+  "no_fingerprint_out": "لم يقم بالتبصيم",
+  "no_fingerprint_out_desc": "يبدو أن الموظف لم يقم بتسجيل بصمة الانصراف أو يوجد خلل.",
+  "actual_less_than_requested": "الإضافي الفعلي أقل من المطلوب ({requested} دقيقة).",
+  "actual_covers_requested": "الوقت الفعلي يغطي المطلوب."
 }

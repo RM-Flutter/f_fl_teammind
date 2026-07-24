@@ -178,6 +178,12 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Mismatch Alert
+                      if (widget.request.fingerprintOvertime != null || widget.request.fingerprintDelay != null) ...[
+                        _buildFingerprintNotes(),
+                        SizedBox(height: 24),
+                      ],
+
                       // Employee Actions Section
                       if (widget.request.employeeActions != null && widget.request.employeeActions!.isNotEmpty) ...[
                         _buildSectionHeader(AppStrings.history.tr(), Icons.history_rounded),
@@ -230,6 +236,93 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
             ],
           );
         }
+      ),
+    );
+  }
+
+  Widget _buildFingerprintNotes() {
+    int requested = widget.request.overtime ?? 0;
+    int actual = widget.request.fingerprintOvertime ?? 0;
+    int delay = widget.request.fingerprintDelay ?? 0;
+    
+    int difference = requested - actual;
+    bool hasOvertimeIssue = difference > 0;
+    bool hasDelayIssue = delay > 0;
+    bool hasAnyIssue = hasOvertimeIssue || hasDelayIssue;
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: hasAnyIssue ? Colors.red.shade300 : Colors.green.shade300, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: hasAnyIssue ? Colors.red.withOpacity(0.05) : Colors.green.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          // Delay note
+          _buildNoteRow(
+            icon: Icons.timer_off_outlined,
+            iconColor: hasDelayIssue ? Colors.red : Colors.green,
+            bgColor: hasDelayIssue ? Colors.red.shade50 : Colors.green.shade50,
+            title: "attendance_delay".tr(),
+            value: hasDelayIssue ? "$delay ${AppStrings.minutes.tr()}" : "no_delay".tr(),
+            desc: hasDelayIssue ? "delay_mins_desc".tr(namedArgs: {'delay': delay.toString()}) : "no_delay_desc".tr(),
+          ),
+          Divider(height: 1, color: hasAnyIssue ? Colors.red.shade100 : Colors.green.shade100),
+          // Overtime note
+          _buildNoteRow(
+            icon: actual == 0 ? Icons.error_outline : Icons.more_time_rounded,
+            iconColor: hasOvertimeIssue ? Colors.red : Colors.green,
+            bgColor: hasOvertimeIssue ? Colors.red.shade50 : Colors.green.shade50,
+            title: "fingerprint_recorded_overtime".tr(),
+            value: actual == 0 ? "no_fingerprint_out".tr() : "$actual ${AppStrings.minutes.tr()}",
+            desc: hasOvertimeIssue 
+                ? "lost_match_desc".tr(namedArgs: {'requested': formatDuration(requested), 'actual': formatDuration(actual), 'difference': formatDuration(difference)})
+                : "actual_covers_requested".tr(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoteRow({required IconData icon, required Color iconColor, required Color bgColor, required String title, required String value, required String desc}) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 24),
+          ),
+          SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade800, fontSize: 14)),
+                    Text(value, style: TextStyle(fontWeight: FontWeight.bold, color: iconColor, fontSize: 13)),
+                  ],
+                ),
+                SizedBox(height: 4),
+                Text(desc, style: TextStyle(color: Colors.grey.shade600, fontSize: 12, height: 1.5)),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

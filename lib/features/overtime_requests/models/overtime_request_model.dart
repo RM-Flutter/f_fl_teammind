@@ -7,6 +7,8 @@ class OvertimeRequestModel {
   String? status;
   String? rejectReason;
   int? overtime;
+  int? fingerprintOvertime;
+  int? fingerprintDelay;
   List<ManagerReply>? theManagerReply;
   List<EmployeeActionModel>? employeeActions;
   EmployeeProfile? employeeProfile;
@@ -21,6 +23,8 @@ class OvertimeRequestModel {
     this.status,
     this.rejectReason,
     this.overtime,
+    this.fingerprintOvertime,
+    this.fingerprintDelay,
     this.theManagerReply,
     this.employeeActions,
     this.employeeProfile,
@@ -37,6 +41,12 @@ class OvertimeRequestModel {
     rejectReason = json['reject_reason'];
     if (json['overtime'] != null) {
       overtime = int.tryParse(json['overtime'].toString());
+    }
+    if (json['fingerprint_overtime'] != null) {
+      fingerprintOvertime = int.tryParse(json['fingerprint_overtime'].toString());
+    }
+    if (json['fingerprint_delay'] != null) {
+      fingerprintDelay = int.tryParse(json['fingerprint_delay'].toString());
     }
     if (json['the_manager_reply'] != null) {
       theManagerReply = <ManagerReply>[];
@@ -66,6 +76,8 @@ class OvertimeRequestModel {
     data['status'] = status;
     data['reject_reason'] = rejectReason;
     data['overtime'] = overtime;
+    data['fingerprint_overtime'] = fingerprintOvertime;
+    data['fingerprint_delay'] = fingerprintDelay;
     data['employee_name'] = employeeName;
     if (theManagerReply != null) {
       data['the_manager_reply'] =

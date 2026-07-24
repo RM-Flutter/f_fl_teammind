@@ -377,7 +377,9 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  return MaterialPage(child: const AddOvertimeRequestScreen());
+                  final extra = state.extra as Map<String, dynamic>?;
+                  final bool isForEmployee = extra?['isForEmployee'] as bool? ?? false;
+                  return MaterialPage(child: AddOvertimeRequestScreen(isForEmployee: isForEmployee));
                 },
               ),
               GoRoute(

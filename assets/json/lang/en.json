@@ -1196,5 +1196,20 @@
   "personalReports": "Personal Reports",
   "noAccomplishmentsRecorded": "No accomplishments recorded.",
   "noOngoingTasksRecorded": "No ongoing tasks recorded.",
-  "noProblemsRecorded": "No problems recorded."
+  "noProblemsRecorded": "No problems recorded.",
+  "time_matches_fingerprint": "Time matches fingerprint",
+  "overtime_difference": "There is a difference in overtime",
+  "actual_overtime_greater": "Actual overtime is greater than requested",
+  "exact_match_desc": "Requested time ({requested}) exactly matches the fingerprint time.",
+  "lost_match_desc": "Requested {requested} but fingerprint time is {actual}, meaning {difference} is lost.",
+  "greater_match_desc": "Requested {requested} but fingerprint time is {actual}.",
+  "attendance_delay": "Attendance Delay",
+  "no_delay": "No Delay",
+  "delay_mins_desc": "Employee was late by {delay} minutes.",
+  "no_delay_desc": "Attendance recorded on time.",
+  "fingerprint_recorded_overtime": "Fingerprint Recorded Overtime",
+  "no_fingerprint_out": "No checkout fingerprint",
+  "no_fingerprint_out_desc": "It seems the employee didn't register checkout fingerprint or there is an issue.",
+  "actual_less_than_requested": "Actual overtime is less than requested ({requested} mins).",
+  "actual_covers_requested": "Actual time covers the requested time."
 }

@@ -156,6 +156,37 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> addManagerRequest(BuildContext context, String date, String overtime, String employeeProfileId) async {
+    isActionLoading = true;
+    notifyListeners();
+    bool success = false;
+    try {
+      final response = await OvertimeRequestsService.addManagerOvertimeRequest(
+        context: context,
+        date: date,
+        overtime: overtime,
+        employeeProfileId: employeeProfileId,
+      );
+      if (response.success) {
+        success = true;
+        await fetchRequests(context);
+      } else if (response.message != null && response.message!.isNotEmpty) {
+        if (context.mounted) {
+          AlertsService.error(
+            context: context,
+            message: response.message!,
+            title: 'error'.tr(),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint("Error adding manager overtime request: $e");
+    }
+    isActionLoading = false;
+    notifyListeners();
+    return success;
+  }
+
   Future<bool> addRequest(BuildContext context, String date, String overtime) async {
     isActionLoading = true;
     notifyListeners();

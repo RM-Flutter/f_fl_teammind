@@ -119,16 +119,21 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
           },
         ),
       ],
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'add_overtime',
-        backgroundColor: Color(AppColors.buttons),
-        onPressed: () {
-           context.pushNamed(
-             AppRoutes.addOvertimeRequestScreen.name,
-             pathParameters: {'lang': context.locale.languageCode},
-           );
+      floatingActionButton: Consumer<OvertimeRequestsProvider>(
+        builder: (context, provider, child) {
+          return FloatingActionButton(
+            heroTag: provider.isForDepartment ? 'add_manager_overtime' : 'add_overtime',
+            backgroundColor: Color(AppColors.buttons),
+            onPressed: () {
+               context.pushNamed(
+                 AppRoutes.addOvertimeRequestScreen.name,
+                 pathParameters: {'lang': context.locale.languageCode},
+                 extra: {'isForEmployee': provider.isForDepartment},
+               );
+            },
+            child: Icon(provider.isForDepartment ? Icons.person_add_alt_1 : Icons.add, color: Colors.white),
+          );
         },
-        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Consumer<OvertimeRequestsProvider>(
         builder: (context, provider, child) {

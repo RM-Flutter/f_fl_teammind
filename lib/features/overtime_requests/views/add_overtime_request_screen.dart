@@ -11,9 +11,12 @@ import '../../../../core/services/alert_service/alerts_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
 import '../controllers/overtime_requests_controller.dart';
+import '../../../../core/widgets/searchable_dropdown_sheet.dart';
+import 'package:app_test/features/requests/main_request_layout/controller/filter_controller.dart';
 
 class AddOvertimeRequestScreen extends StatefulWidget {
-  const AddOvertimeRequestScreen({super.key});
+  final bool isForEmployee;
+  const AddOvertimeRequestScreen({super.key, this.isForEmployee = false});
 
   @override
   State<AddOvertimeRequestScreen> createState() => _AddOvertimeRequestScreenState();
@@ -22,6 +25,8 @@ class AddOvertimeRequestScreen extends StatefulWidget {
 class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   final _durationController = TextEditingController();
   DateTime? selectedDate;
+  Map<String, dynamic>? selectedEmployee;
+  String? selectEmpId;
 
   void _submit() async {
     if (selectedDate == null) {
@@ -55,8 +60,22 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
       );
       return;
     }
-    final success = await provider.addRequest(context, dateStr, normalizedDuration);
-    
+
+    bool success = false;
+    if (widget.isForEmployee) {
+      if (selectEmpId == null) {
+        AlertsService.error(
+          context: context,
+          message: AppStrings.employeeName.tr(),
+          title: 'error'.tr(),
+        );
+        return;
+      }
+      success = await provider.addManagerRequest(context, dateStr, normalizedDuration, selectEmpId!);
+    } else {
+      success = await provider.addRequest(context, dateStr, normalizedDuration);
+    }
+
     if (success) {
       if (context.mounted) {
         AlertsService.success(
@@ -87,14 +106,44 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
       pageContext: context,
       title: AppStrings.addOvertimeRequest.tr(),
       routeName: AppRoutes.addOvertimeRequestScreen.name,
-      body: Consumer<OvertimeRequestsProvider>(
-        builder: (context, provider, child) {
-          return SingleChildScrollView(
+      body: ChangeNotifierProvider(
+        create: (context) {
+          final controller = FilterController();
+          if (widget.isForEmployee) controller.getEmployees(context: context);
+          return controller;
+        },
+        child: Consumer2<OvertimeRequestsProvider, FilterController>(
+          builder: (context, provider, filterController, child) {
+            return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (widget.isForEmployee) ...[
+                  _buildCardSection(
+                    title: AppStrings.employeeName.tr(),
+                    icon: Icons.person_outline,
+                    child: SearchableDropdownSheet(
+                      items: filterController.employees,
+                      selectedValue: selectedEmployee,
+                      nameKey: 'name',
+                      hintText: AppStrings.employeeName.tr(),
+                      hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14),
+                      height: 24,
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.transparent, width: 0.0),
+                      contentPadding: EdgeInsets.zero,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedEmployee = value;
+                          selectEmpId = value['id']?.toString();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                ],
                 _buildCardSection(
                   title: AppStrings.date.tr(),
                   icon: Icons.calendar_today_outlined,
@@ -118,7 +167,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           );
         }
       ),
-    );
+    ));
   }
 
   Widget _buildCardSection({required String title, required IconData icon, required Widget child}) {
@@ -205,8 +254,8 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
         children: [
           Expanded(
             child: Text(
-              selectedDate != null 
-                  ? DateFormat('EEEE, d MMMM yyyy', context.locale.languageCode).format(selectedDate!) 
+              selectedDate != null
+                  ? DateFormat('EEEE, d MMMM yyyy', context.locale.languageCode).format(selectedDate!)
                   : AppStrings.selectDate.tr(),
               style: AppStyles.darkContent(context).copyWith(
                 fontSize: 15,
@@ -246,10 +295,10 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   Widget _buildDurationPreview() {
     int totalMinutes = int.tryParse(_durationController.text) ?? 0;
     if (totalMinutes <= 0) return const SizedBox.shrink();
-    
+
     int hoursCount = totalMinutes ~/ 60;
     int minutesCount = totalMinutes % 60;
-    
+
     String text = "";
     if (hoursCount > 0) {
       text += "$hoursCount ${AppStrings.hours.tr()}";

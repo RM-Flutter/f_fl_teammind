@@ -64,6 +64,30 @@ class OvertimeRequestsService {
     return response;
   }
 
+  static Future<OperationResult<Map<String, dynamic>>> addManagerOvertimeRequest({
+    required BuildContext context,
+    required String date,
+    required String overtime,
+    required String employeeProfileId,
+  }) async {
+    final url = '${AppConstants.baseUrl}/rm_fingerprint/v1/manager/overtime_requests';
+    final Map<String, String> requestData = {
+      'date': date,
+      'overtime': overtime,
+      'employee_profile_id': employeeProfileId,
+    };
+
+    final response = await DioApiService().postWithFormData<Map<String, dynamic>>(
+      url,
+      requestData,
+      files: [],
+      dataKey: '',
+      context: context,
+      allData: true,
+    );
+    return response;
+  }
+
   static Future<OperationResult<Map<String, dynamic>>> updateStatus({
     required BuildContext context,
     required String requestId,
