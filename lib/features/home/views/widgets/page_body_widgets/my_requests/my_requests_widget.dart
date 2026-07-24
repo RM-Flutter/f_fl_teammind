@@ -75,7 +75,7 @@ class RequestsWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              ...requests.map(
+              ...requests.take(5).map(
                 (req) => RequestCard(
                   request: req,
                   reqType: requestType,
