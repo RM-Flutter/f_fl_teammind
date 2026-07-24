@@ -1211,5 +1211,7 @@
   "no_fingerprint_out": "No checkout fingerprint",
   "no_fingerprint_out_desc": "It seems the employee didn't register checkout fingerprint or there is an issue.",
   "actual_less_than_requested": "Actual overtime is less than requested ({requested} mins).",
-  "actual_covers_requested": "Actual time covers the requested time."
+  "actual_covers_requested": "Actual time covers the requested time.",
+  "update_amount": "Update Amount",
+  "update_duration": "Update Duration"
 }

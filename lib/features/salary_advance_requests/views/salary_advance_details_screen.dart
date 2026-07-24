@@ -613,16 +613,114 @@ class _SalaryAdvanceDetailsScreenState
       date = action.createdAt ?? "";
     }
 
-    String actionText = "";
+    Color actionColor;
+    IconData actionIcon;
+    String actionLabel = "";
+    
+    switch (action.action) {
+      case 'approve':
+        actionColor = Colors.green;
+        actionIcon = Icons.check_circle_outline;
+        actionLabel = 'approve'.tr();
+        break;
+      case 'reject':
+      case 'refused':
+        actionColor = Colors.red;
+        actionIcon = Icons.cancel_outlined;
+        actionLabel = 'reject'.tr();
+        break;
+      case 'update-amount':
+        actionColor = Colors.blue;
+        actionIcon = Icons.attach_money_rounded;
+        actionLabel = 'update_amount'.tr();
+        break;
+      case 'update-duration':
+        actionColor = Colors.orange;
+        actionIcon = Icons.update_rounded;
+        actionLabel = 'update_duration'.tr();
+        break;
+      default:
+        actionColor = Colors.grey;
+        actionIcon = Icons.info_outline;
+        actionLabel = action.action ?? '';
+    }
+
+    Widget actionWidget;
     if (action.action == 'update-duration' || action.action == 'update-amount') {
-      actionText = "${'update'.tr()}: ${action.valueFrom} ➔ ${action.valueTo}";
+      actionWidget = Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: actionColor.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: actionColor.withOpacity(0.2)),
+        ),
+        child: Row(
+          children: [
+            Icon(actionIcon, color: actionColor, size: 24),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(actionLabel, style: TextStyle(fontWeight: FontWeight.bold, color: actionColor.withOpacity(0.8), fontSize: 12)),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(action.valueFrom ?? "", style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey.shade500, fontSize: 13)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Icon(Icons.arrow_forward_rounded, size: 14, color: Colors.grey.shade400),
+                      ),
+                      Text(action.valueTo ?? "", style: TextStyle(fontWeight: FontWeight.bold, color: actionColor, fontSize: 14)),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
     } else {
-      String actionLabel = action.action == 'approve' ? 'approve'.tr() : (action.action == 'reject' ? 'reject'.tr() : action.action ?? '');
-      actionText = "$actionLabel${action.message != null && action.message!.isNotEmpty ? ' - ${action.message}' : ''}";
+      actionWidget = Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: actionColor.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: actionColor.withOpacity(0.2)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(actionIcon, color: actionColor, size: 24),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(actionLabel, style: TextStyle(fontWeight: FontWeight.bold, color: actionColor, fontSize: 14)),
+                  if (action.message != null && action.message!.isNotEmpty) ...[
+                    SizedBox(height: 4),
+                    Text(action.message!, style: TextStyle(color: Colors.grey.shade800, fontSize: 13, height: 1.4)),
+                  ]
+                ],
+              ),
+            )
+          ],
+        ),
+      );
     }
 
     return Container(
       margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
+        ]
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -654,8 +752,8 @@ class _SalaryAdvanceDetailsScreenState
               ],
             ),
           ),
-          Divider(height: 12, color: Colors.grey.shade100),
-          Text(actionText, style: AppStyles.darkContent(context).copyWith(fontSize: 14, height: 1.4)),
+          Divider(height: 16, color: Colors.transparent),
+          actionWidget,
           SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

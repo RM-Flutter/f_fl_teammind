@@ -1203,5 +1203,7 @@
   "no_fingerprint_out": "لم يقم بالتبصيم",
   "no_fingerprint_out_desc": "يبدو أن الموظف لم يقم بتسجيل بصمة الانصراف أو يوجد خلل.",
   "actual_less_than_requested": "الإضافي الفعلي أقل من المطلوب ({requested} دقيقة).",
-  "actual_covers_requested": "الوقت الفعلي يغطي المطلوب."
+  "actual_covers_requested": "الوقت الفعلي يغطي المطلوب.",
+  "update_amount": "تعديل المبلغ",
+  "update_duration": "تعديل المدة"
 }
