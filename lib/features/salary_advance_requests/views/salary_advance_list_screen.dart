@@ -31,6 +31,7 @@ class SalaryAdvanceListScreen extends StatefulWidget {
 
 class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
   late final SalaryAdvanceListController viewModel;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -51,6 +52,20 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
     if (mounted) {
       setState(() {});
     }
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        if (viewModel.isIncomingView) {
+          if (!viewModel.incomingIsLoadingMore && viewModel.incomingHasMore) {
+            viewModel.getIncomingRequests(context: context, loadMore: true);
+          }
+        } else {
+          if (!viewModel.personalIsLoadingMore && viewModel.personalHasMore) {
+            viewModel.getPersonalRequests(context: context, loadMore: true);
+          }
+        }
+      }
+    });
   }
 
   @override
@@ -85,6 +100,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                       showStatus: true,
                       statusOptions: const ['approved', 'cancelled', 'pending'],
                       initialFilters: controller.currentFiltersMap,
+                      underMyManagement: true,
                     ),
                   );
                   if (result != null && context.mounted) {
@@ -202,9 +218,16 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
           child: RefreshIndicator.adaptive(
             onRefresh: () => controller.initializeScreen(context),
             child: ListView.builder(
+              controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: requests.length,
+              itemCount: requests.length + (isIncoming ? (controller.incomingIsLoadingMore ? 1 : 0) : (controller.personalIsLoadingMore ? 1 : 0)),
               itemBuilder: (context, index) {
+                if (index == requests.length) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
                 final request = requests[index];
 
                 // Only HR and Top Management can edit incoming requests (never personal requests)

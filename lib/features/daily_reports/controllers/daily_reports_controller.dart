@@ -15,6 +15,14 @@ class DailyReportsProvider extends ChangeNotifier {
   bool isManagerOrHr = false;
   bool isForDepartment = false;
 
+  int personalCurrentPage = 1;
+  bool personalHasMore = true;
+  bool personalIsLoadingMore = false;
+
+  int incomingCurrentPage = 1;
+  bool incomingHasMore = true;
+  bool incomingIsLoadingMore = false;
+
   DailyReportsProvider() {
     _checkRole();
   }
@@ -92,14 +100,35 @@ class DailyReportsProvider extends ChangeNotifier {
     incomingFilters.clear();
   }
 
-  Future<void> fetchReports(BuildContext context, {int page = 1, bool isIncoming = false}) async {
-    isLoading = true;
-    notifyListeners();
+  Future<void> fetchReports(BuildContext context, {bool isIncoming = false, bool loadMore = false}) async {
+    if (loadMore) {
+      if (isIncoming) {
+        if (!incomingHasMore || incomingIsLoadingMore) return;
+        incomingIsLoadingMore = true;
+        incomingCurrentPage++;
+      } else {
+        if (!personalHasMore || personalIsLoadingMore) return;
+        personalIsLoadingMore = true;
+        personalCurrentPage++;
+      }
+      notifyListeners();
+    } else {
+      if (isIncoming) {
+        incomingCurrentPage = 1;
+        incomingHasMore = true;
+      } else {
+        personalCurrentPage = 1;
+        personalHasMore = true;
+      }
+      isLoading = true;
+      notifyListeners();
+    }
 
     try {
+      final pageToLoad = isIncoming ? incomingCurrentPage : personalCurrentPage;
       final response = await DailyReportsService.getReports(
         context: context, 
-        page: page, 
+        page: pageToLoad, 
         isIncoming: isIncoming,
         employeeId: filterEmpId,
         departmentId: filterDepId,
@@ -109,16 +138,35 @@ class DailyReportsProvider extends ChangeNotifier {
       if (response.success && response.data != null && response.data!['data'] != null) {
         final List<dynamic> reportsData = response.data!['data'];
         final list = reportsData.map((e) => DailyReportModel.fromJson(e)).toList();
-        if (isIncoming) {
-          incomingReports = list;
+        
+        if (list.isEmpty) {
+          if (isIncoming) {
+            incomingHasMore = false;
+          } else {
+            personalHasMore = false;
+          }
+        }
+
+        if (loadMore) {
+          if (isIncoming) {
+            incomingReports.addAll(list);
+          } else {
+            personalReports.addAll(list);
+          }
         } else {
-          personalReports = list;
+          if (isIncoming) {
+            incomingReports = list;
+          } else {
+            personalReports = list;
+          }
         }
       } else {
         if (isIncoming) {
-          incomingReports = [];
+          incomingHasMore = false;
+          if (!loadMore) incomingReports = [];
         } else {
-          personalReports = [];
+          personalHasMore = false;
+          if (!loadMore) personalReports = [];
         }
       }
     } catch (e) {
@@ -126,6 +174,11 @@ class DailyReportsProvider extends ChangeNotifier {
     }
 
     isLoading = false;
+    if (isIncoming) {
+      incomingIsLoadingMore = false;
+    } else {
+      personalIsLoadingMore = false;
+    }
     notifyListeners();
   }
 

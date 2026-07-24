@@ -15,6 +15,10 @@ class OvertimeRequestsProvider extends ChangeNotifier {
   bool isActionLoading = false;
   bool isForDepartment = false;
 
+  int currentPage = 1;
+  bool hasMore = true;
+  bool isLoadingMore = false;
+
   Map<String, String?> personalFilters = {};
   Map<String, String?> incomingFilters = {};
 
@@ -62,9 +66,18 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     incomingFilters.clear();
   }
 
-  Future<void> fetchRequests(BuildContext context) async {
-    isLoading = true;
-    notifyListeners();
+  Future<void> fetchRequests(BuildContext context, {bool loadMore = false}) async {
+    if (loadMore) {
+      if (!hasMore || isLoadingMore) return;
+      isLoadingMore = true;
+      currentPage++;
+      notifyListeners();
+    } else {
+      currentPage = 1;
+      hasMore = true;
+      isLoading = true;
+      notifyListeners();
+    }
 
     try {
       // Fetch employees to map names if they are missing
@@ -89,6 +102,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
         departmentId: filterDepId,
         from: filterFrom,
         to: filterTo,
+        page: currentPage,
       );
       
       if (response.success && response.data != null && response.data!['requests'] != null) {
@@ -127,22 +141,42 @@ class OvertimeRequestsProvider extends ChangeNotifier {
         }
         
         if (currentUserId != null) {
-           myRequests = allRequests.where((element) => element.employeeProfileId == currentUserId).toList();
-           teamRequests = allRequests.where((element) => element.employeeProfileId != currentUserId).toList();
+           final newMyRequests = allRequests.where((element) => element.employeeProfileId == currentUserId).toList();
+           final newTeamRequests = allRequests.where((element) => element.employeeProfileId != currentUserId).toList();
+           
+           if (loadMore) {
+             teamRequests.addAll(newTeamRequests);
+             myRequests.addAll(newMyRequests);
+           } else {
+             teamRequests = newTeamRequests;
+             myRequests = newMyRequests;
+           }
         } else {
-           myRequests = allRequests;
-           teamRequests = [];
+           if (loadMore) {
+             myRequests.addAll(allRequests);
+           } else {
+             myRequests = allRequests;
+             teamRequests = [];
+           }
+        }
+        
+        if (allRequests.isEmpty) {
+          hasMore = false;
         }
 
       } else {
-        myRequests = [];
-        teamRequests = [];
+        hasMore = false;
+        if (!loadMore) {
+          teamRequests = [];
+          myRequests = [];
+        }
       }
     } catch (e) {
       debugPrint("Error fetching overtime requests: $e");
     }
 
     isLoading = false;
+    isLoadingMore = false;
     notifyListeners();
   }
 

@@ -13,6 +13,7 @@ class OvertimeRequestsService {
     String? departmentId,
     String? from,
     String? to,
+    int? page,
   }) async {
     String url = baseUrl;
     List<String> queryParams = [];
@@ -27,6 +28,9 @@ class OvertimeRequestsService {
     }
     if (to != null && to.isNotEmpty) {
       queryParams.add('to=$to');
+    }
+    if (page != null) {
+      queryParams.add('page=$page');
     }
     
     if (queryParams.isNotEmpty) {

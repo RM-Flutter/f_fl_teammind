@@ -16,6 +16,14 @@ class SalaryAdvanceListController extends ChangeNotifier {
   bool isLoadingPersonal = true;
   bool isLoadingIncoming = true;
 
+  int personalCurrentPage = 1;
+  bool personalHasMore = true;
+  bool personalIsLoadingMore = false;
+
+  int incomingCurrentPage = 1;
+  bool incomingHasMore = true;
+  bool incomingIsLoadingMore = false;
+
   SalaryAdvanceListController() {
     _loadUserSettings();
   }
@@ -166,14 +174,21 @@ class SalaryAdvanceListController extends ChangeNotifier {
     incomingFilters.clear();
   }
 
-  Future<void> getPersonalRequests({required BuildContext context, int page = 1}) async {
-    if (page == 1) {
+  Future<void> getPersonalRequests({required BuildContext context, bool loadMore = false}) async {
+    if (loadMore) {
+      if (!personalHasMore || personalIsLoadingMore) return;
+      personalIsLoadingMore = true;
+      personalCurrentPage++;
+      notifyListeners();
+    } else {
+      personalCurrentPage = 1;
+      personalHasMore = true;
       updateLoadingPersonal(true);
     }
     try {
       final result = await SalaryAdvanceRepo.getPersonalList(
         context: context, 
-        page: page,
+        page: personalCurrentPage,
         from: filterFrom ?? '',
         to: filterTo ?? '',
         departmentId: filterDepId ?? '',
@@ -181,27 +196,41 @@ class SalaryAdvanceListController extends ChangeNotifier {
       );
       if (result.success && result.data != null) {
         var listData = result.data?['data'] as List<dynamic>?;
-        if (page == 1) {
+        if (listData == null || listData.isEmpty) {
+          personalHasMore = false;
+        }
+        if (personalCurrentPage == 1) {
           personalRequests = listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList();
         } else {
           personalRequests?.addAll(listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList() ?? []);
         }
+      } else {
+        personalHasMore = false;
+        if (!loadMore) personalRequests = [];
       }
     } catch (e) {
       debugPrint("Error fetching personal salary advance requests: $e");
     } finally {
+      personalIsLoadingMore = false;
       updateLoadingPersonal(false);
     }
   }
 
-  Future<void> getIncomingRequests({required BuildContext context, int page = 1}) async {
-    if (page == 1) {
+  Future<void> getIncomingRequests({required BuildContext context, bool loadMore = false}) async {
+    if (loadMore) {
+      if (!incomingHasMore || incomingIsLoadingMore) return;
+      incomingIsLoadingMore = true;
+      incomingCurrentPage++;
+      notifyListeners();
+    } else {
+      incomingCurrentPage = 1;
+      incomingHasMore = true;
       updateLoadingIncoming(true);
     }
     try {
       final result = await SalaryAdvanceRepo.getIncomingList(
         context: context, 
-        page: page,
+        page: incomingCurrentPage,
         employeeId: filterEmpId ?? '',
         from: filterFrom ?? '',
         to: filterTo ?? '',
@@ -210,15 +239,22 @@ class SalaryAdvanceListController extends ChangeNotifier {
       );
       if (result.success && result.data != null) {
         var listData = result.data?['data'] as List<dynamic>?;
-        if (page == 1) {
+        if (listData == null || listData.isEmpty) {
+          incomingHasMore = false;
+        }
+        if (incomingCurrentPage == 1) {
           incomingRequests = listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList();
         } else {
           incomingRequests?.addAll(listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList() ?? []);
         }
+      } else {
+        incomingHasMore = false;
+        if (!loadMore) incomingRequests = [];
       }
     } catch (e) {
       debugPrint("Error fetching incoming salary advance requests: $e");
     } finally {
+      incomingIsLoadingMore = false;
       updateLoadingIncoming(false);
     }
   }

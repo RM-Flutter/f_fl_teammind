@@ -74,11 +74,18 @@ class FilterController extends ChangeNotifier {
       requestsTypes = [];
     }
   }
-  void getEmployees({required BuildContext context}) {
+  void getEmployees({required BuildContext context, bool underMyManagement = false}) {
     isLoading = true;
     notifyListeners();
+    
+    Map<String, dynamic> query = {};
+    if (underMyManagement) {
+      query['under_my_management'] = 1;
+    }
+    
     DioHelper.getData(
         url: "/emp_requests/v1/employees",
+        query: query.isNotEmpty ? query : null,
       context: context,
     ).then((value){
       isLoading = false;
@@ -94,14 +101,20 @@ class FilterController extends ChangeNotifier {
       }
     });
   }
-  void getDepartment({required BuildContext context}) {
+  void getDepartment({required BuildContext context, bool underMyManagement = false}) {
     isLoading = true;
     notifyListeners();
+    
+    Map<String, dynamic> query = {
+      "itemsCount" : 200,
+    };
+    if (underMyManagement) {
+      query['under_my_management'] = 1;
+    }
+    
     DioHelper.getData(
         url: "/departments/entities-operations",
-      query: {
-        "itemsCount" : 200,
-      },
+      query: query,
       context: context,
     ).then((value){
       isLoading = false;

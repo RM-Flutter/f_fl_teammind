@@ -27,6 +27,7 @@ class DailyReportsListScreen extends StatefulWidget {
 
 class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
   late DailyReportsProvider provider;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -38,6 +39,21 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
       }
       provider.fetchReports(context);
       setState(() {});
+    });
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        if (provider.isForDepartment) {
+          if (!provider.incomingIsLoadingMore && provider.incomingHasMore) {
+            provider.fetchReports(context, isIncoming: true, loadMore: true);
+          }
+        } else {
+          if (!provider.personalIsLoadingMore && provider.personalHasMore) {
+            provider.fetchReports(context, isIncoming: false, loadMore: true);
+          }
+        }
+      }
     });
   }
 
@@ -186,6 +202,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                       showDepartment: provider.isForDepartment,
                       showDateRange: true,
                       initialFilters: provider.currentFiltersMap,
+                      underMyManagement: true,
                     ),
                   );
                 if (result != null && context.mounted) {
@@ -271,10 +288,17 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
         await provider.fetchReports(context, isIncoming: isIncoming);
       },
       child: ListView.builder(
+        controller: _scrollController,
         padding: EdgeInsets.only(top: 16, bottom: 100),
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-        itemCount: list.length,
+        itemCount: list.length + (provider.isForDepartment ? (provider.incomingIsLoadingMore ? 1 : 0) : (provider.personalIsLoadingMore ? 1 : 0)),
         itemBuilder: (context, index) {
+          if (index == list.length) {
+            return const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
           final item = list[index];
           return _buildReportCard(item, provider, isIncoming: isIncoming);
         },

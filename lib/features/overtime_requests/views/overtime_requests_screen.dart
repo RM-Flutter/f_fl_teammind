@@ -31,6 +31,7 @@ class OvertimeRequestsScreen extends StatefulWidget {
 class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
   late OvertimeRequestsProvider provider;
   Map<String, dynamic>? gCache;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -43,6 +44,14 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
       provider.fetchRequests(context);
+    });
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        if (!provider.isLoadingMore && provider.hasMore) {
+          provider.fetchRequests(context, loadMore: true);
+        }
+      }
     });
   }
 
@@ -111,6 +120,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 showDepartment: provider.isForDepartment,
                 showDateRange: true,
                 initialFilters: provider.currentFiltersMap,
+                underMyManagement: true,
               ),
             );
             if (result != null && context.mounted) {
@@ -179,10 +189,17 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                           ),
                         )
                       : ListView.builder(
+                          controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.only(top: 8, bottom: 80),
-                          itemCount: list.length,
+                          itemCount: list.length + (provider.isLoadingMore ? 1 : 0),
                           itemBuilder: (context, index) {
+                            if (index == list.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Center(child: CircularProgressIndicator()),
+                              );
+                            }
                             final item = list[index];
                             return _buildRequestCard(item, provider.isForDepartment);
                           },

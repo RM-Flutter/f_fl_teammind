@@ -19,6 +19,7 @@ class SharedListFilterWidget extends StatefulWidget {
   final bool showStatus;
   final List<String> statusOptions;
   final Map<String, String?> initialFilters;
+  final bool underMyManagement;
 
   const SharedListFilterWidget({
     Key? key,
@@ -28,6 +29,7 @@ class SharedListFilterWidget extends StatefulWidget {
     this.showStatus = false,
     this.statusOptions = const [],
     this.initialFilters = const {},
+    this.underMyManagement = false,
   }) : super(key: key);
 
   @override
@@ -117,8 +119,8 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
     return ChangeNotifierProvider(
       create: (context) {
         final controller = FilterController();
-        if (widget.showDepartment) controller.getDepartment(context: context);
-        if (widget.showEmployee) controller.getEmployees(context: context);
+        if (widget.showDepartment) controller.getDepartment(context: context, underMyManagement: widget.underMyManagement);
+        if (widget.showEmployee) controller.getEmployees(context: context, underMyManagement: widget.underMyManagement);
         return controller;
       },
       child: Consumer<FilterController>(

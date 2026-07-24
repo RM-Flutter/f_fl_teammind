@@ -28,7 +28,8 @@ class SearchFilterWidget extends StatefulWidget {
   BuildContext? contexts;
   final GetRequestsTypes? requestsType;
   final bool? isWeb;
-  SearchFilterWidget({super.key, this.contexts, this.requestsType, this.isWeb});
+  final bool underMyManagement;
+  SearchFilterWidget({super.key, this.contexts, this.requestsType, this.isWeb, this.underMyManagement = false});
 
   @override
   State<SearchFilterWidget> createState() => _SearchFilterWidgetState();
@@ -163,7 +164,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context)=>FilterController()..getDepartment(context: context)..getRequestTypes(context: context)..getEmployees(context: context),),
+      ChangeNotifierProvider(create: (context)=>FilterController()..getDepartment(context: context, underMyManagement: widget.underMyManagement)..getRequestTypes(context: context)..getEmployees(context: context, underMyManagement: widget.underMyManagement),),
       ChangeNotifierProvider(create: (context)=>RequestsViewModel()),
       ChangeNotifierProvider(create: (context)=>AddNewRequestController()),
     ],

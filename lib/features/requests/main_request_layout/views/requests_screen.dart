@@ -151,6 +151,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 contexts: dialogContext,
                                 requestsType: widget.requestsType,
                                 isWeb: true,
+                                underMyManagement: true,
                               ),
                             ),
                           );
@@ -174,6 +175,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             contexts: context,
                             requestsType: widget.requestsType,
                             isWeb: false,
+                            underMyManagement: true,
                           );
                         },
                       );
