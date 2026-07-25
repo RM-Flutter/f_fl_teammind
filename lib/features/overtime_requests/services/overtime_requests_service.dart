@@ -18,7 +18,7 @@ class OvertimeRequestsService {
     String url = baseUrl;
     List<String> queryParams = [];
     if (employeeProfileId != null && employeeProfileId.isNotEmpty) {
-      queryParams.add('employee_profile_id=$employeeProfileId');
+      queryParams.add('employee_id=$employeeProfileId');
     }
     if (departmentId != null && departmentId.isNotEmpty) {
       queryParams.add('department_id=$departmentId');

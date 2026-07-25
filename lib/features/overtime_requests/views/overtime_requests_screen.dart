@@ -48,8 +48,14 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-        if (!provider.isLoadingMore && provider.hasMore) {
-          provider.fetchRequests(context, loadMore: true);
+        if (provider.isForDepartment) {
+          if (!provider.incomingIsLoadingMore && provider.incomingHasMore) {
+            provider.fetchRequests(context, loadMore: true);
+          }
+        } else {
+          if (!provider.personalIsLoadingMore && provider.personalHasMore) {
+            provider.fetchRequests(context, loadMore: true);
+          }
         }
       }
     });
@@ -192,7 +198,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.only(top: 8, bottom: 80),
-                          itemCount: list.length + (provider.isLoadingMore ? 1 : 0),
+                          itemCount: list.length + (provider.isForDepartment ? (provider.incomingIsLoadingMore ? 1 : 0) : (provider.personalIsLoadingMore ? 1 : 0)),
                           itemBuilder: (context, index) {
                             if (index == list.length) {
                               return const Padding(

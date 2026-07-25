@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import '../../employee_profiles/shared/repos/employee_repo.dart';
+import 'package:app_test/core/constants/user_consts.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
 import '../models/overtime_request_model.dart';
 import '../services/overtime_requests_service.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
@@ -15,14 +16,21 @@ class OvertimeRequestsProvider extends ChangeNotifier {
   bool isActionLoading = false;
   bool isForDepartment = false;
 
-  int currentPage = 1;
-  bool hasMore = true;
-  bool isLoadingMore = false;
+  int personalCurrentPage = 1;
+  bool personalHasMore = true;
+  bool personalIsLoadingMore = false;
+  int personalTotal = 0;
+
+  int incomingCurrentPage = 1;
+  bool incomingHasMore = true;
+  bool incomingIsLoadingMore = false;
+  int incomingTotal = 0;
 
   Map<String, String?> personalFilters = {};
   Map<String, String?> incomingFilters = {};
 
-  Map<String, String?> get currentFiltersMap => isForDepartment ? incomingFilters : personalFilters;
+  Map<String, String?> get currentFiltersMap =>
+      isForDepartment ? incomingFilters : personalFilters;
 
   String? get filterEmpId => currentFiltersMap['empId'];
   String? get filterEmpName => currentFiltersMap['empName'];
@@ -66,109 +74,119 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     incomingFilters.clear();
   }
 
+  /// Gets the current user's employee_profile_id from cache
+  int? _getCurrentUserId() {
+    // First try from UserSettingConst (already loaded)
+    if (UserSettingConst.userSettings?.empId != null) {
+      return UserSettingConst.userSettings!.empId;
+    }
+    // Fallback: parse from cache string
+    final String? jsonString = CacheHelper.getString("US1");
+    if (jsonString != null && jsonString.isNotEmpty) {
+      try {
+        final Map<String, dynamic> gCache = json.decode(jsonString);
+        // Load into UserSettingConst for next time
+        UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
+        return UserSettingConst.userSettings?.empId;
+      } catch (e) {
+        debugPrint("Error parsing user cache: $e");
+      }
+    }
+    return null;
+  }
+
   Future<void> fetchRequests(BuildContext context, {bool loadMore = false}) async {
     if (loadMore) {
-      if (!hasMore || isLoadingMore) return;
-      isLoadingMore = true;
-      currentPage++;
+      if (isForDepartment) {
+        if (!incomingHasMore || incomingIsLoadingMore) return;
+        incomingIsLoadingMore = true;
+        incomingCurrentPage++;
+      } else {
+        if (!personalHasMore || personalIsLoadingMore) return;
+        personalIsLoadingMore = true;
+        personalCurrentPage++;
+      }
       notifyListeners();
     } else {
-      currentPage = 1;
-      hasMore = true;
+      if (isForDepartment) {
+        incomingCurrentPage = 1;
+        incomingHasMore = true;
+      } else {
+        personalCurrentPage = 1;
+        personalHasMore = true;
+      }
       isLoading = true;
       notifyListeners();
     }
 
     try {
-      // Fetch employees to map names if they are missing
-      Map<int, String> employeeNames = {};
-      try {
-        final empResponse = await EmployeeService.getEmployees(context: context);
-        if (empResponse.success && empResponse.data != null && empResponse.data!['employees'] != null) {
-          final List<dynamic> emps = empResponse.data!['employees'];
-          for (var e in emps) {
-            if (e['id'] != null && e['name'] != null) {
-              employeeNames[int.tryParse(e['id'].toString()) ?? 0] = e['name'];
-            }
-          }
+      final int? currentUserId = _getCurrentUserId();
+
+      // For personal view: always send current user's ID to backend
+      // For incoming/team view: send filterEmpId if user filtered by employee, else null
+      String? apiEmployeeProfileId;
+      if (!isForDepartment) {
+        // Personal tab: send the current user's employee_profile_id
+        if (currentUserId != null) {
+          apiEmployeeProfileId = currentUserId.toString();
         }
-      } catch (e) {
-        debugPrint("Error fetching employees for mapping: $e");
+      } else {
+        // Team/Incoming tab: send the filtered employee ID if selected, otherwise null
+        apiEmployeeProfileId = (filterEmpId != null && filterEmpId!.isNotEmpty) ? filterEmpId : null;
       }
 
+      final pageToLoad = isForDepartment ? incomingCurrentPage : personalCurrentPage;
       final response = await OvertimeRequestsService.getOvertimeRequests(
         context: context,
-        employeeProfileId: filterEmpId,
+        employeeProfileId: apiEmployeeProfileId,
         departmentId: filterDepId,
         from: filterFrom,
         to: filterTo,
-        page: currentPage,
+        page: pageToLoad,
       );
-      
+
       if (response.success && response.data != null && response.data!['requests'] != null) {
         final List<dynamic> requestsData = response.data!['requests'];
-        List<OvertimeRequestModel> allRequests = requestsData.map((e) {
-          final model = OvertimeRequestModel.fromJson(e);
-          // If name is missing, try to map it from our employee list
-          if ((model.employeeName == null || model.employeeName!.isEmpty) && model.employeeProfileId != null) {
-            model.employeeName = employeeNames[model.employeeProfileId];
-          }
-          return model;
+        final List<OvertimeRequestModel> newRequests = requestsData.map((e) {
+          return OvertimeRequestModel.fromJson(e);
         }).toList();
 
-        // Apply local filtering as a fallback since the backend currently ignores some filters
-        if (filterEmpId != null && filterEmpId!.isNotEmpty) {
-          final int? empId = int.tryParse(filterEmpId!);
-          if (empId != null) {
-            allRequests = allRequests.where((e) => e.employeeProfileId == empId).toList();
-          }
-        }
+        // Use the total from API response for accurate hasMore detection
+        final int apiTotal = (response.data!['total'] as num?)?.toInt() ?? 0;
 
-        if (filterDepName != null && filterDepName!.isNotEmpty) {
-          allRequests = allRequests.where((e) => e.employeeProfile?.department == filterDepName).toList();
-        }
-
-        final String? jsonString = CacheHelper.getString("US1");
-        int? currentUserId;
-        if (jsonString != null && jsonString.isNotEmpty) {
-          final Map<String, dynamic> gCache = json.decode(jsonString);
-          if (gCache['employee_profile_id'] != null) {
-             currentUserId = int.tryParse(gCache['employee_profile_id'].toString());
+        if (isForDepartment) {
+          // For incoming: no client-side filtering needed, rely on backend
+          if (loadMore) {
+            teamRequests.addAll(newRequests);
+          } else {
+            incomingTotal = apiTotal;
+            teamRequests = newRequests.toList();
           }
-          if (currentUserId == null && gCache['id'] != null) {
-             currentUserId = int.tryParse(gCache['id'].toString());
+          // No more pages if we've loaded all records or got empty results
+          if (newRequests.isEmpty || teamRequests.length >= incomingTotal) {
+            incomingHasMore = false;
           }
-        }
-        
-        if (currentUserId != null) {
-           final newMyRequests = allRequests.where((element) => element.employeeProfileId == currentUserId).toList();
-           final newTeamRequests = allRequests.where((element) => element.employeeProfileId != currentUserId).toList();
-           
-           if (loadMore) {
-             teamRequests.addAll(newTeamRequests);
-             myRequests.addAll(newMyRequests);
-           } else {
-             teamRequests = newTeamRequests;
-             myRequests = newMyRequests;
-           }
         } else {
-           if (loadMore) {
-             myRequests.addAll(allRequests);
-           } else {
-             myRequests = allRequests;
-             teamRequests = [];
-           }
-        }
-        
-        if (allRequests.isEmpty) {
-          hasMore = false;
+          // For personal: the API already filters by our employee_profile_id
+          if (loadMore) {
+            myRequests.addAll(newRequests);
+          } else {
+            personalTotal = apiTotal;
+            myRequests = newRequests.toList();
+          }
+          // No more pages if we've loaded all records or got empty results
+          if (newRequests.isEmpty || myRequests.length >= personalTotal) {
+            personalHasMore = false;
+          }
         }
 
       } else {
-        hasMore = false;
-        if (!loadMore) {
-          teamRequests = [];
-          myRequests = [];
+        if (isForDepartment) {
+          incomingHasMore = false;
+          if (!loadMore) teamRequests = [];
+        } else {
+          personalHasMore = false;
+          if (!loadMore) myRequests = [];
         }
       }
     } catch (e) {
@@ -176,18 +194,31 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     }
 
     isLoading = false;
-    isLoadingMore = false;
+    if (isForDepartment) {
+      incomingIsLoadingMore = false;
+    } else {
+      personalIsLoadingMore = false;
+    }
     notifyListeners();
   }
 
   void toggleDepartmentView(bool value, BuildContext context) {
     isForDepartment = value;
-    notifyListeners();
-    if (value && teamRequests.isEmpty) {
-      fetchRequests(context);
-    } else if (!value && myRequests.isEmpty) {
-      fetchRequests(context);
+    
+    // Reset pagination and clear lists on switch
+    if (value) {
+      incomingCurrentPage = 1;
+      teamRequests.clear();
+      incomingHasMore = true;
+    } else {
+      personalCurrentPage = 1;
+      myRequests.clear();
+      personalHasMore = true;
     }
+    
+    notifyListeners();
+    // Always fetch requests on every switch
+    fetchRequests(context);
   }
 
   Future<bool> addManagerRequest(BuildContext context, String date, String overtime, String employeeProfileId) async {
