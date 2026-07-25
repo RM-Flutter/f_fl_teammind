@@ -132,6 +132,7 @@ class UserSettingsModel extends AppSettingsModel {
     return {
       'last_update_date': lastUpdateDate,
       'user_id': userId,
+      'employee_profile_id': empId,
       'new_notification_count': newNotificationCount,
       'name': name,
       'job_title': jobTitle,

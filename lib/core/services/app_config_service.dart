@@ -11,6 +11,7 @@ import 'package:app_test/core/models/settings/app_settings_model.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import '../constants/user_consts.dart';
 import '../routing/app_router.dart';
 import 'alert_service/alerts_service.dart';
 import 'backend_services/api_service/dio_api_service/dio.dart';
@@ -18,16 +19,18 @@ import 'backend_services/api_service/dio_api_service/shared.dart';
 import 'domain_selection_service.dart';
 import 'settings_service.dart';
 
-class   AppConfigService extends ChangeNotifier {
+class AppConfigService extends ChangeNotifier {
   AppConfigService() {
     _initializeConnectionListener();
     // لا نستدعي init() هنا — يتم استدعاؤه وانتظاره في main() فقط لتجنب race
     // حيث كان يفتح اللوجين أحياناً رغم وجود token لأن القراءة تحدث قبل اكتمال التهيئة
   }
+
   bool isConnected = true;
   bool isInitialized = false;
 
   StreamSubscription<InternetConnectionStatus>? _listener;
+
   void _initializeConnectionListener() {
     // في الويب، لا نستخدم InternetConnectionChecker لأنه يسبب refresh مستمر
     // نعتمد على ConnectionService بدلاً منه
@@ -35,7 +38,8 @@ class   AppConfigService extends ChangeNotifier {
       isConnected = true; // افتراض أن الويب متصل دائماً
       return;
     }
-    _listener = InternetConnectionChecker.instance.onStatusChange.listen((status) {
+    _listener =
+        InternetConnectionChecker.instance.onStatusChange.listen((status) {
       final connected = status == InternetConnectionStatus.connected;
       if (connected != isConnected) {
         isConnected = connected;
@@ -44,6 +48,7 @@ class   AppConfigService extends ChangeNotifier {
       }
     });
   }
+
   /// api url
   String? apiURL;
 
@@ -67,6 +72,7 @@ class   AppConfigService extends ChangeNotifier {
 
   ///locale getter often used to get the current language and send it in the header of the request
   String get language => getValueString('language');
+
   ///locale setter
   set language(v) {
     if (_prefs == null) {
@@ -79,6 +85,7 @@ class   AppConfigService extends ChangeNotifier {
 
   ///access token getter
   String get token => getValueString('token');
+
   /// setter method to set the access token status with optional parameter [notify] set it true if you wanna to notify all application and route system.
   Future<void> setToken(v, {bool? notify = false}) async {
     if (_prefs == null) {
@@ -86,7 +93,8 @@ class   AppConfigService extends ChangeNotifier {
     }
     // Always use await to ensure token is saved before proceeding
     await setValueString('token', v);
-    debugPrint('Token saved: ${v != null && v.toString().isNotEmpty ? v.toString().substring(0, v.toString().length > 20 ? 20 : v.toString().length) + "..." : "empty"}');
+    debugPrint(
+        'Token saved: ${v != null && v.toString().isNotEmpty ? v.toString().substring(0, v.toString().length > 20 ? 20 : v.toString().length) + "..." : "empty"}');
     if (notify == true) {
       notifyListeners();
     }
@@ -124,17 +132,19 @@ class   AppConfigService extends ChangeNotifier {
   /// 3. القيمة الافتراضية يمكن تغييرها هنا في defaultValue:
   ///    bool get blockFingerprintOnDeveloperMode => getValueBool('block_fingerprint_on_dev_mode', defaultValue: false);
   /// ═══════════════════════════════════════════════════════════════
-  bool get blockFingerprintOnDeveloperMode => getValueBool('block_fingerprint_on_dev_mode', defaultValue: true);
+  bool get blockFingerprintOnDeveloperMode =>
+      getValueBool('block_fingerprint_on_dev_mode', defaultValue: true);
 
   /// setter to control if fingerprint should be blocked when developer mode is enabled
   ///
   /// Usage:
   ///   await appConfigService.setBlockFingerprintOnDeveloperMode(false); // Allow fingerprint with Dev Mode
   ///   await appConfigService.setBlockFingerprintOnDeveloperMode(true);  // Block fingerprint with Dev Mode
-  Future<void> setBlockFingerprintOnDeveloperMode(bool value, {bool? notify = false}) async {
-
+  Future<void> setBlockFingerprintOnDeveloperMode(bool value,
+      {bool? notify = false}) async {
     if (_prefs == null) {
-      await init().then((_) => setValueBool('block_fingerprint_on_dev_mode', value));
+      await init()
+          .then((_) => setValueBool('block_fingerprint_on_dev_mode', value));
     } else {
       await setValueBool('block_fingerprint_on_dev_mode', value);
     }
@@ -219,7 +229,10 @@ class   AppConfigService extends ChangeNotifier {
 
   /// setter used to set settings to local storage depends on SettingsType { generalSettings, userSettings, user2Settings }.
   void setSettings(
-      {required SettingsType type, required Map<String, dynamic>? data, Map<String, dynamic>? dataS1, Map<String, dynamic>? dataS2}) {
+      {required SettingsType type,
+      required Map<String, dynamic>? data,
+      Map<String, dynamic>? dataS1,
+      Map<String, dynamic>? dataS2}) {
     switch (type) {
       case SettingsType.generalSettings || SettingsType.startupSettings:
         if (data != null && dataS1 != null && dataS2 != null) {
@@ -230,14 +243,14 @@ class   AppConfigService extends ChangeNotifier {
           notifyListeners();
           return;
         }
-      case SettingsType.userSettings|| SettingsType.startupSettings:
+      case SettingsType.userSettings || SettingsType.startupSettings:
         if (dataS1 != null) {
           print("Done S1");
           _userSettings = dataS1;
           notifyListeners();
         }
         return;
-      case SettingsType.user2Settings|| SettingsType.startupSettings:
+      case SettingsType.user2Settings || SettingsType.startupSettings:
         if (dataS2 != null) {
           print("Done S2");
           _user2Settings = dataS2;
@@ -469,6 +482,7 @@ class   AppConfigService extends ChangeNotifier {
   bool getValueBool(dynamic key, {bool defaultValue = false}) {
     return _prefs?.getBool(key.toString()) ?? defaultValue;
   }
+
   Future<void> clearToken({bool? notify = true}) async {
     if (_prefs == null) await init();
     // Remove token from SharedPreferences
@@ -480,9 +494,14 @@ class   AppConfigService extends ChangeNotifier {
     }
     debugPrint('Token cleared from storage');
   }
-  Future<void> logout(context, {bool viewAlert = false, bool skipServerLogout = false, bool skipNavigation = false}) async {
-    if(viewAlert == true){
-      bool isLogout = await AlertsService.confirmMessage(context, AppStrings.logout.tr(),
+
+  Future<void> logout(context,
+      {bool viewAlert = false,
+      bool skipServerLogout = false,
+      bool skipNavigation = false}) async {
+    if (viewAlert == true) {
+      bool isLogout = await AlertsService.confirmMessage(
+          context, AppStrings.logout.tr(),
           message: AppStrings.areYouSureYouWantToLogout.tr());
       if (isLogout == false) return;
     }
@@ -522,6 +541,11 @@ class   AppConfigService extends ChangeNotifier {
     await CacheHelper.deleteData(key: "s2Date");
     // لا تحذف fcm_token حتى start_app التالي (بعد اختيار الدومين) يبعته. احذف last_sent فقط.
     await CacheHelper.deleteData(key: "last_sent_fcm_token");
+
+    // Clear static memory objects
+    UserSettingConst.userSettings = null;
+    UserSettingConst.userSettings2 = null;
+    UserSettingConst.generalSettingsModel = null;
 
     // Clear domain selection on logout (but keep domains list)
     try {

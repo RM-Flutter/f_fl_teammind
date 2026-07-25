@@ -109,7 +109,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
       body: ChangeNotifierProvider(
         create: (context) {
           final controller = FilterController();
-          if (widget.isForEmployee) controller.getEmployees(context: context);
+          if (widget.isForEmployee) controller.getEmployees(context: context, underMyManagement: true);
           return controller;
         },
         child: Consumer2<OvertimeRequestsProvider, FilterController>(

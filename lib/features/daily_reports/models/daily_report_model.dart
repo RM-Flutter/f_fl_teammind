@@ -112,7 +112,7 @@ class ReportAttachmentModel {
       id: json['id'],
       fileType: fType,
       fileName: json['file_name'] ?? (json['href'] != null ? json['href'].toString().split('/').last : null),
-      url: json['url'] ?? json['href'],
+      url: json['href'] ?? json['url'],
       size: json['size'] != null ? double.tryParse(json['size'].toString()) : null,
       title: json['title'],
       imageList: decodedImageList,
