@@ -109,20 +109,22 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                 },
               ),
             ],
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                context.pushNamed(
-                  AppRoutes.salaryAdvanceCreate.name,
-                  pathParameters: {'lang': context.locale.languageCode},
-                ).then((value) {
-                  if (value == true) {
-                    controller.initializeScreen(context);
-                  }
-                });
-              },
-              backgroundColor: Color(AppColors.buttons),
-              child: const Icon(Icons.add, color: Colors.white),
-            ),
+            floatingActionButton: controller.isIncomingView 
+              ? null 
+              : FloatingActionButton(
+                  onPressed: () {
+                    context.pushNamed(
+                      AppRoutes.salaryAdvanceCreate.name,
+                      pathParameters: {'lang': context.locale.languageCode},
+                    ).then((value) {
+                      if (value == true) {
+                        controller.initializeScreen(context);
+                      }
+                    });
+                  },
+                  backgroundColor: Color(AppColors.buttons),
+                  child: const Icon(Icons.add, color: Colors.white),
+                ),
             body: Column(
               children: [
                 if (controller.isManagerOrHr) ...[

@@ -507,8 +507,14 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   Widget cardChild;
 
                   if (isImage && attachment.imageList != null && attachment.imageList!['thumbnail'] != null) {
-                    final String thumbUrl = attachment.imageList!['thumbnail'];
-                    final String originalUrl = attachment.imageList!['original'] ?? thumbUrl;
+                    final double screenWidth = MediaQuery.of(context).size.width;
+                    final String thumbUrl = screenWidth > 600
+                        ? (attachment.imageList!['large'] ?? attachment.imageList!['medium'] ?? attachment.imageList!['thumbnail'])
+                        : (attachment.imageList!['medium'] ?? attachment.imageList!['thumbnail']);
+                    final String originalUrl = attachment.imageList!['original'] ?? 
+                                               attachment.imageList!['large'] ?? 
+                                               attachment.imageList!['medium'] ?? 
+                                               attachment.imageList!['thumbnail'];
                     cardChild = GestureDetector(
                       onTap: () {
                         showGeneralDialog(

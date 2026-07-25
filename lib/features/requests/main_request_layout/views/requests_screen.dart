@@ -120,7 +120,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 FloatingActionButton(
                   heroTag: 'requests_calendar',
                   onPressed: ()async {
@@ -151,7 +151,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 contexts: dialogContext,
                                 requestsType: widget.requestsType,
                                 isWeb: true,
-                                underMyManagement: true,
+                                // underMyManagement: true,
                               ),
                             ),
                           );
@@ -164,7 +164,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         isScrollControlled: true,
                         enableDrag: false,
                         isDismissible: true,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius:
                           BorderRadius.vertical(
                               top: Radius.circular(
@@ -175,7 +175,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             contexts: context,
                             requestsType: widget.requestsType,
                             isWeb: false,
-                            underMyManagement: true,
+                            // underMyManagement: true,
                           );
                         },
                       );
@@ -235,10 +235,10 @@ class _RequestsScreenState extends State<RequestsScreen> {
           ),
           bottomAppbarWidget: widget.requestsType == GetRequestsTypes.mine
               ? PreferredSize(
-            preferredSize: Size.fromHeight(170),
+            preferredSize: const Size.fromHeight(170),
             child: Consumer<RequestsViewModel>(
                 builder: (context, viewModel, child) => Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                       left: 12,
                       right: 12,
                       top: 10),
@@ -291,7 +291,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     // Main content
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Consumer<RequestsViewModel>(
                           builder: (context, viewModel, child) {
                             if (viewModel.isLoading) return const LoadingPageWidget();
@@ -364,7 +364,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         icon: Icons.calendar_month_outlined,
                                       ),
 
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
 
                                     if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
                                       AutoSizeText(
@@ -379,7 +379,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       ),
 
                                     if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
-                                      SizedBox(height: 15),
+                                      const SizedBox(height: 15),
 
                                     /// requests cards
                                     if (viewModel.requests != null &&
@@ -412,9 +412,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         ),
                                       ),
                                     if (viewModel.isLoadingMore)
-                                      Padding(
+                                      const Padding(
                                         padding: EdgeInsets.symmetric(vertical: 16),
-                                        child: const Center(child: CircularProgressIndicator()),
+                                        child: Center(child: CircularProgressIndicator()),
                                       ),
                                   ],
                                 ),
