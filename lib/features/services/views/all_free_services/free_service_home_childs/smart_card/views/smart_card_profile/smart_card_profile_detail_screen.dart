@@ -49,20 +49,60 @@ class _SmartCardProfileDetailScreenState
     setState(() => _isLoading = true);
     try {
       if (widget.isPersonal) {
-        // Not implemented here, assume it's company employee for now,
-        // or just don't reload if personal isn't supported yet.
+        final res = await SmartCardRepo.getEmployeeProfile(context);
+        if (res.isNotEmpty) {
+          setState(() {
+            Map<String, dynamic> empData = Map<String, dynamic>.from(res);
+            if (empData['data'] is Map) {
+              empData = Map<String, dynamic>.from(empData['data']);
+            } else if (empData['data'] is List && (empData['data'] as List).isNotEmpty) {
+              empData = Map<String, dynamic>.from((empData['data'] as List).first);
+            }
+            if (empData['employee'] is Map) empData = Map<String, dynamic>.from(empData['employee']);
+            _employee = empData;
+          });
+        }
       } else {
         final cId = widget.companyId;
         final eId = _employee['id'];
         if (cId != null && eId != null) {
-          final res = await SmartCardRepo.getEmployeeInCompany(context, companyId: cId, employeeId: eId);
-          if (res.isNotEmpty) {
-            setState(() {
+          bool success = false;
+          try {
+            final res = await SmartCardRepo.getEmployeeInCompany(context, companyId: cId, employeeId: eId);
+            if (res.isNotEmpty) {
               Map<String, dynamic> empData = Map<String, dynamic>.from(res);
-              if (empData['data'] is Map) empData = Map<String, dynamic>.from(empData['data']);
+              if (empData['data'] is Map) {
+                empData = Map<String, dynamic>.from(empData['data']);
+              } else if (empData['data'] is List && (empData['data'] as List).isNotEmpty) {
+                empData = Map<String, dynamic>.from((empData['data'] as List).first);
+              }
               if (empData['employee'] is Map) empData = Map<String, dynamic>.from(empData['employee']);
-              _employee = empData;
-            });
+              
+              if (empData['id'].toString() == eId.toString()) {
+                setState(() => _employee = empData);
+                success = true;
+              }
+            }
+          } catch (apiError) {
+            debugPrint('Error reloading specific employee: $apiError');
+          }
+          
+          if (!success) {
+            try {
+              final allEmpsRes = await SmartCardRepo.getCompanyEmployees(context, companyId: cId);
+              if (allEmpsRes.isNotEmpty && allEmpsRes['data'] is List) {
+                final empsList = allEmpsRes['data'] as List;
+                final emp = empsList.firstWhere(
+                  (e) => e['id'].toString() == eId.toString(),
+                  orElse: () => null,
+                );
+                if (emp != null) {
+                  setState(() => _employee = Map<String, dynamic>.from(emp));
+                }
+              }
+            } catch (fallbackError) {
+              debugPrint('Fallback reload failed: $fallbackError');
+            }
           }
         }
       }
