@@ -114,6 +114,8 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
     Map<String, dynamic> result = Map<String, dynamic>.from(res);
     if (result['data'] is Map) {
       result = Map<String, dynamic>.from(result['data']);
+    } else if (result['data'] is List && (result['data'] as List).isNotEmpty) {
+      result = Map<String, dynamic>.from((result['data'] as List).first);
     }
     if (result['employee'] is Map) {
       result = Map<String, dynamic>.from(result['employee']);
@@ -134,11 +136,15 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
       // جلب بيانات الموظف من الـ API (GET) ثم استخدام الريسبونس
       Map<String, dynamic> employeeMap = Map<String, dynamic>.from(widget.employee);
       if (widget.isPersonal) {
-        final res = await SmartCardRepo.getEmployeeProfile(context);
-        if (res.isNotEmpty) {
-          final normalized = _normalizeEmployeeMap(res);
-          _employeeData = normalized;
-          employeeMap = normalized;
+        try {
+          final res = await SmartCardRepo.getEmployeeProfile(context);
+          if (res.isNotEmpty) {
+            final normalized = _normalizeEmployeeMap(res);
+            _employeeData = normalized;
+            employeeMap = normalized;
+          }
+        } catch (apiError) {
+          debugPrint('Failed to get personal employee info from API, using cached list data: $apiError');
         }
       } else {
         final cId = widget.companyId;
@@ -146,15 +152,46 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         if (cId != null && eId != null) {
           final id = eId is int ? eId : int.tryParse(eId.toString());
           if (id != null) {
-            final res = await SmartCardRepo.getEmployeeInCompany(
-              context,
-              companyId: cId,
-              employeeId: id,
-            );
-            if (res.isNotEmpty) {
-              final normalized = _normalizeEmployeeMap(res);
-              _employeeData = normalized;
-              employeeMap = normalized;
+            bool success = false;
+            try {
+              final res = await SmartCardRepo.getEmployeeInCompany(
+                context,
+                companyId: cId,
+                employeeId: id,
+              );
+              if (res.isNotEmpty) {
+                final normalized = _normalizeEmployeeMap(res);
+                if (normalized['id'].toString() == id.toString()) {
+                  _employeeData = normalized;
+                  employeeMap = normalized;
+                  success = true;
+                }
+              }
+            } catch (apiError) {
+              debugPrint('Failed to get specific employee info from API, using fallback: $apiError');
+            }
+
+            if (!success) {
+              try {
+                final allEmpsRes = await SmartCardRepo.getCompanyEmployees(
+                  context,
+                  companyId: cId,
+                );
+                if (allEmpsRes.isNotEmpty && allEmpsRes['data'] is List) {
+                  final empsList = allEmpsRes['data'] as List;
+                  final emp = empsList.firstWhere(
+                    (e) => e['id'].toString() == id.toString(),
+                    orElse: () => null,
+                  );
+                  if (emp != null) {
+                    final normalized = Map<String, dynamic>.from(emp);
+                    _employeeData = normalized;
+                    employeeMap = normalized;
+                  }
+                }
+              } catch (fallbackError) {
+                debugPrint('Fallback also failed: $fallbackError');
+              }
             }
           }
         }
