@@ -995,32 +995,143 @@ class CreateCVJobInfoTab extends StatelessWidget {
                   '${AppStrings.skillsLevels.tr()} ${index + 1}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    viewModel.removeSkillLevel(index);
-                  },
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              final updatedSkill = CVSkillLevel(
+                                skillId: skillLevel.skillId,
+                                skillName: skillLevel.skillName,
+                                levelId: skillLevel.levelId,
+                                isTextMode: false,
+                              );
+                              viewModel.updateSkillLevel(index, updatedSkill);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: !skillLevel.isTextMode ? Color(AppColors.secondaryButton) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                AppStrings.menuList.tr(),
+                                style: TextStyle(
+                                  color: !skillLevel.isTextMode ? Colors.white : Colors.black54,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              String? newSkillName = skillLevel.skillName;
+                              if ((newSkillName == null || newSkillName.isEmpty) && skillLevel.skillId != null) {
+                                final selectedSkill = viewModel.skills.firstWhere(
+                                  (s) => s['id'] == skillLevel.skillId,
+                                  orElse: () => {},
+                                );
+                                newSkillName = selectedSkill['title'] as String?;
+                              }
+                              final updatedSkill = CVSkillLevel(
+                                skillId: skillLevel.skillId,
+                                skillName: newSkillName,
+                                levelId: skillLevel.levelId,
+                                isTextMode: true,
+                              );
+                              viewModel.updateSkillLevel(index, updatedSkill);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: skillLevel.isTextMode ? Color(AppColors.secondaryButton) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                AppStrings.textInputMode.tr(),
+                                style: TextStyle(
+                                  color: skillLevel.isTextMode ? Colors.white : Colors.black54,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        viewModel.removeSkillLevel(index);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            CustomDropdown.search(
-              items: viewModel.skills,
-              selectedValue: selectedSkill,
-              nameKey: 'title',
-              hintText: AppStrings.selectSkill.tr(),
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.black),
-              onChanged: (value) {
-                if (value.isNotEmpty && value['id'] != null) {
+            if (skillLevel.isTextMode)
+              TextFormField(
+                initialValue: skillLevel.skillName ?? '',
+                decoration: InputDecoration(
+                  labelText: AppStrings.selectSkill.tr(),
+                  hintText: AppStrings.enterSkillHint.tr(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.black),
+                  ),
+                ),
+                onChanged: (value) {
+                  int? currentSkillId = skillLevel.skillId;
+                  if (currentSkillId != null) {
+                    final selectedSkill = viewModel.skills.firstWhere(
+                      (s) => s['id'] == currentSkillId,
+                      orElse: () => {},
+                    );
+                    if (selectedSkill['title'] != value) {
+                      currentSkillId = null; // Text is different from dropdown, drop the ID
+                    }
+                  }
+                  
                   final updatedSkill = CVSkillLevel(
-                    skillId: value['id'] as int,
+                    skillId: currentSkillId,
+                    skillName: value,
                     levelId: skillLevel.levelId,
+                    isTextMode: true,
                   );
                   viewModel.updateSkillLevel(index, updatedSkill);
-                }
-              },
-            ),
+                },
+              )
+            else
+              CustomDropdown.search(
+                items: viewModel.skills,
+                selectedValue: selectedSkill,
+                nameKey: 'title',
+                hintText: AppStrings.selectSkill.tr(),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.black),
+                onChanged: (value) {
+                  if (value.isNotEmpty && value['id'] != null) {
+                    final updatedSkill = CVSkillLevel(
+                      skillId: value['id'] as int,
+                      skillName: skillLevel.skillName,
+                      levelId: skillLevel.levelId,
+                      isTextMode: false,
+                    );
+                    viewModel.updateSkillLevel(index, updatedSkill);
+                  }
+                },
+              ),
             const SizedBox(height: 16),
             CustomDropdown.search(
               items: viewModel.levels,
@@ -1033,7 +1144,9 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedSkill = CVSkillLevel(
                     skillId: skillLevel.skillId,
+                    skillName: skillLevel.skillName,
                     levelId: value['id'] as int,
+                    isTextMode: skillLevel.isTextMode,
                   );
                   viewModel.updateSkillLevel(index, updatedSkill);
                 }

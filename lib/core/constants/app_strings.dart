@@ -3,6 +3,10 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class AppStrings {
+  static const menuList = "menuList";
+  static const textInputMode = "textInputMode";
+  static const enterSkillHint = "enterSkillHint";
+
   static const aboutApplication = "aboutApplication";
   static const aboutAppDescription = "aboutAppDescription";
   static const followUs = "followUs";

@@ -985,7 +985,7 @@
   "job_level": "المستوى الوظيفي",
   "active": "يعمل",
   "inactive": "لا يعمل",
-  "employee": "موظف",
+  "employee": "الموظف",
   "new_employee": "موظف جديد",
   "under_training": "تحت التدريب",
   "termination_in_progress": "جارٍ إنهاء الخدمة",
@@ -1160,7 +1160,6 @@
   "enterMinutes": "أدخل الدقائق",
   "durationMinutes": "المدة (دقائق)",
   "duration": "المدة",
-  "employee": "الموظف",
   "addOvertimeRequest": "إضافة طلب عمل إضافي",
   "dailyReports": "التقارير اليومية",
   "reportDetails": "تفاصيل التقرير",
@@ -1189,7 +1188,7 @@
   "noAccomplishmentsRecorded": "لا توجد إنجازات مسجلة.",
   "noOngoingTasksRecorded": "لا توجد مهام قيد التنفيذ مسجلة.",
   "noProblemsRecorded": "لا توجد مشاكل مسجلة.",
-  "SEND RESPONSE" : "إرسال الرد",
+  "SEND RESPONSE": "إرسال الرد",
   "time_matches_fingerprint": "الوقت مطابق للبصمة",
   "overtime_difference": "يوجد فرق في وقت الإضافي",
   "actual_overtime_greater": "وقت الإضافي الفعلي أكبر من المطلوب",
@@ -1206,5 +1205,8 @@
   "actual_less_than_requested": "الإضافي الفعلي أقل من المطلوب ({requested} دقيقة).",
   "actual_covers_requested": "الوقت الفعلي يغطي المطلوب.",
   "update_amount": "تعديل المبلغ",
-  "update_duration": "تعديل المدة"
+  "update_duration": "تعديل المدة",
+  "menuList": "قائمة",
+  "textInputMode": "نص",
+  "enterSkillHint": "أدخل المهارة"
 }

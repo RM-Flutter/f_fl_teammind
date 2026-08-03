@@ -346,23 +346,33 @@ class CVLanguageLevel {
 /// Model for Skill Level
 class CVSkillLevel {
   final int? skillId;
+  final String? skillName;
   final int? levelId;
+  final bool isTextMode;
 
   CVSkillLevel({
     this.skillId,
+    this.skillName,
     this.levelId,
+    this.isTextMode = false,
   });
 
   factory CVSkillLevel.fromJson(Map<String, dynamic> json) {
     return CVSkillLevel(
       skillId: json['skill_id'] as int?,
+      skillName: json['skill_name'] as String?,
       levelId: json['level_id'] as int?,
+      isTextMode: json['is_text_mode'] as bool? ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {};
-    if (skillId != null) json['skill_id'] = skillId;
+    if (isTextMode) {
+      if (skillName != null && skillName!.isNotEmpty) json['skill_name'] = skillName;
+    } else {
+      if (skillId != null) json['skill_id'] = skillId;
+    }
     if (levelId != null) json['level_id'] = levelId;
     return json;
   }
