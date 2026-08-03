@@ -2,7 +2,6 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
-import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/create_cv/create_cv_screen.dart';
 import 'package:app_test/features/services/views/common_ui/select_template_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -34,13 +33,6 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
     } catch (e) {
       debugPrint('Navigation error: $e');
     }
-  }
-
-  void _navigateToCreateCV() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CreateCVScreen()),
-    );
   }
 
   @override
@@ -94,10 +86,10 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                   
                   // UPDATE INFO Button
                   ElevatedButton(
-                    onPressed: () => _navigateTo(AppRoutes.updateMyInfoScreen.name),
+                    onPressed: () => _navigateTo(AppRoutes.myCVScreen.name),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.secondaryButton),
-                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.grey.shade300,
+                      foregroundColor: Color(AppColors.secondaryButton),
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
@@ -105,29 +97,6 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                     ),
                     child: Text(
                       AppStrings.updateInfo.tr(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // CREATE CV Button
-                  ElevatedButton(
-                    onPressed: _navigateToCreateCV,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.buttons),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                    child: Text(
-                      'Create CV',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
@@ -151,20 +120,9 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // NEXT Button
+                  // NEXT Text
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SelectTemplateScreen(),));
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(AppColors.secondaryButton),
-                        side: const BorderSide(color: Colors.transparent, width: 2),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
+                    child: Center(
                       child: Text(
                         AppStrings.next.tr(),
                         style: const TextStyle(

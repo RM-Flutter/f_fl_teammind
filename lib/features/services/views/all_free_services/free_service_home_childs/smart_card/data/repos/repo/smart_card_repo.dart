@@ -637,6 +637,8 @@ class SmartCardRepo {
         }
       }
 
+      formData.fields.add(const MapEntry('_method', 'PUT'));
+
       final response = await DioHelper.postFormData(
         url: '$url?_method=PUT',
         context: context,

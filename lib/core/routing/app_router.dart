@@ -1301,6 +1301,19 @@ GoRouter goRouter(BuildContext context) {
                     context.setLocale(locale);
                   }
                   final extra = state.extra as Map<String, dynamic>? ?? {};
+                  
+                  final isPersonalQ = state.uri.queryParameters['isPersonal'] == 'true';
+                  final companyIdQ = int.tryParse(state.uri.queryParameters['companyId'] ?? '');
+                  final employeeIdQ = int.tryParse(state.uri.queryParameters['employeeId'] ?? '');
+                  
+                  final isPersonal = extra['isPersonal'] as bool? ?? isPersonalQ;
+                  final companyId = extra['companyId'] as int? ?? companyIdQ;
+                  
+                  Map<String, dynamic> employee = extra['employee'] as Map<String, dynamic>? ?? {};
+                  if (employee.isEmpty && employeeIdQ != null) {
+                    employee = {'id': employeeIdQ};
+                  }
+                  
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1313,9 +1326,9 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: UpdateEmployeeInfoScreen(
-                      employee: extra['employee'] as Map<String, dynamic>? ?? {},
-                      isPersonal: extra['isPersonal'] as bool? ?? false,
-                      companyId: extra['companyId'] as int?,
+                      employee: employee,
+                      isPersonal: isPersonal,
+                      companyId: companyId,
                     ),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),

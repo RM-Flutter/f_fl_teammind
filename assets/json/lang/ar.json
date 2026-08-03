@@ -770,6 +770,7 @@
   "smartCardDigitalProfileDesc": "ملفك المهني الرقمي، يُشارك بسهولة عبر الرابط أو QR أو NFC — بديل عصري لبطاقات العمل الورقية.",
   "deleteProfile": "حذف الملف الشخصي",
   "deleteSmartCardProfileConfirm": "هل أنت متأكد من حذف ملف البطاقة الذكية؟",
+  "deleteCompanyConfirm": "هل أنت متأكد من حذف هذه الشركة؟",
   "removeEmployeeProfileConfirm": "إزالة ملف هذا الموظف من الشركة؟",
   "profileDeleted": "تم حذف الملف الشخصي",
   "deleteProfileButton": "حذف الملف الشخصي",

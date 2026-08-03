@@ -702,13 +702,15 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
     required VoidCallback onTap,
   }) {
     final name = company['name']?.toString() ?? '';
+    final companyId = company['id'] as int?;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -724,13 +726,136 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             ),
           ],
         ),
-        child: Text(
-          name,
-          style: const TextStyle(
-            color: Color(AppColors.black),
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                name,
+                style: const TextStyle(
+                  color: Color(AppColors.black),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            if (companyId != null)
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                onPressed: () => _showDeleteCompanyBottomSheet(companyId, name),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteCompanyBottomSheet(int companyId, String companyName) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        decoration: BoxDecoration(
+          color: Color(AppColors.modalBackground),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.red,
+              size: 48,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'deleteCompanyConfirm'.tr(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              companyName,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'cancel'.tr(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () async {
+                      Navigator.of(ctx).pop();
+                      final ok = await viewModel.deleteCompany(context, companyId);
+                      if (ok && mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('deleted_successfully'.tr())),
+                        );
+                      }
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'delete'.tr(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

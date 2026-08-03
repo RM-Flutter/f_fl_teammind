@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_education_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_job_info_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_personal_tab.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -76,10 +76,12 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
     return defaultVal;
   }
 
-  /// Build CVDataModel from Smart Card employee map to pre-fill the form (مع country/state/city من الريسبونس)
+  /// Build CVDataModel from Smart Card employee map to pre-fill the form
   CVDataModel _employeeToCVDataModel(Map<String, dynamic> emp) {
     final name = emp['name']?.toString() ??
         emp['full_name']?.toString() ??
+        emp['employee_name']?.toString() ??
+        widget.employee['name']?.toString() ??
         emp['email']?.toString();
     return CVDataModel(
       personal: CVPersonalData(
@@ -109,15 +111,14 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
 
   /// بعض الـ endpoints بترجع الموظف جوا key زي data أو employee – الدالة دي بتظبطه لـ Map واحدة جاهزة للاستخدام
   Map<String, dynamic> _normalizeEmployeeMap(Map<String, dynamic> res) {
-    final data = res['data'];
-    if (data is Map) {
-      return Map<String, dynamic>.from(data);
+    Map<String, dynamic> result = Map<String, dynamic>.from(res);
+    if (result['data'] is Map) {
+      result = Map<String, dynamic>.from(result['data']);
     }
-    final emp = res['employee'];
-    if (emp is Map) {
-      return Map<String, dynamic>.from(emp);
+    if (result['employee'] is Map) {
+      result = Map<String, dynamic>.from(result['employee']);
     }
-    return res;
+    return result;
   }
 
   Future<void> _loadEmployeeData() async {
@@ -241,8 +242,19 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
     try {
       final vm = viewModel;
       final name = vm.nameController.text.trim();
-      if (name.isEmpty) {
-        viewModel.setError(AppStrings.pleaseEnterAtLeastName.tr());
+      final phone = vm.phoneController.text.trim();
+      final email = vm.emailController.text.trim();
+      
+      if (name.isEmpty || phone.isEmpty || email.isEmpty || vm.countryId == null || vm.stateId == null || vm.cityId == null) {
+        final errorMsg = 'برجاء إدخال جميع الحقول الإلزامية (الاسم، الدولة، المحافظة، المدينة، رقم الهاتف، البريد الإلكتروني)';
+        viewModel.setError(errorMsg);
+        if (mounted) {
+          AlertsService.error(
+            context: context,
+            message: errorMsg,
+            title: AppStrings.failed.tr(),
+          );
+        }
         viewModel.setSubmitting(false);
         return;
       }
@@ -320,7 +332,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         await SmartCardRepo.updateEmployee(context, body: body);
       } else {
         final cId = widget.companyId;
-        final eId = _parseId((_employeeData ?? widget.employee)['id']);
+        final eId = _parseId(_employeeData?['id']) ?? _parseId(widget.employee['id']);
         if (cId == null || eId == null) {
           viewModel.setError(AppStrings.missingCompanyOrEmployeeId.tr());
           viewModel.setSubmitting(false);
@@ -334,19 +346,20 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         );
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppStrings.updatedSuccessfully.tr())),
+      AlertsService.success(
+        context: context,
+        message: AppStrings.updatedSuccessfully.tr(),
+        title: AppStrings.success.tr(),
       );
-      GoRouter.of(context).pop();
+      GoRouter.of(context).pop(true);
     } catch (e) {
       final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
       viewModel.setError(msg);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(msg),
-            backgroundColor: Colors.red,
-          ),
+        AlertsService.error(
+          context: context,
+          message: msg,
+          title: AppStrings.failed.tr(),
         );
       }
     } finally {
@@ -409,8 +422,8 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (selectIndex == 0) ...[
-                           if(_isPremium) SizedBox(height: 15,),
-                           if(_isPremium) Center(
+                           const SizedBox(height: 15),
+                           Center(
                               child: GestureDetector(
                                 onTap: _pickPhoto,
                                 child: Stack(
@@ -474,6 +487,15 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                       ),
                     ),
                   ),
+                  if (vm.errorMessage != null && vm.errorMessage!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        vm.errorMessage!,
+                        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   Container(
                     padding: const EdgeInsets.all(16),
                     child: ElevatedButton(

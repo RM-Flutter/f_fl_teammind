@@ -257,6 +257,22 @@ class SmartCardViewModel extends ChangeNotifier {
     }
   }
 
+  /// Delete Company
+  Future<bool> deleteCompany(BuildContext context, int companyId) async {
+    _setLoading(true);
+    try {
+      await SmartCardRepo.deleteCompany(context, companyId: companyId);
+      await loadSmartCardScreen(context);
+      return true;
+    } catch (e) {
+      final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
+      _setError(msg);
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   /// Add employee to company – "Add Employee to Company" (POST)
   Future<bool> addEmployeeToCompany(BuildContext context, {required String name}) async {
     if (selectedCompanyId == null) return false;

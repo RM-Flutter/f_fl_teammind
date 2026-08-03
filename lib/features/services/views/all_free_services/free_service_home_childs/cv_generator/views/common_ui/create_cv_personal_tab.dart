@@ -430,13 +430,21 @@ class CreateCVPersonalTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          AppStrings.city.tr(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(AppColors.secondaryButton),
-          ),
+        Row(
+          children: [
+            Text(
+              AppStrings.city.tr(),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(AppColors.secondaryButton),
+              ),
+            ),
+            const Text(
+              ' *',
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(

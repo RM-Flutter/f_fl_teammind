@@ -13,6 +13,8 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/taps/cv_personal_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/update_my_info/update_my_info_screen.dart';
+import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/create_cv/create_cv_screen.dart';
+import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/get_team_mind_system/views/widgets/youtube_video_player/youtube_video_player_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -58,15 +60,49 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
   }
 
   void _navigateToEdit() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const UpdateMyInfoScreen()),
-    ).then((_) {
-      // Reload CV data when returning from edit screen
-      if (context.mounted) {
-        viewModel.loadCVData(context);
-      }
-    });
+    final bool hasRealCV = viewModel.cvData?.jobInfo?.jobId != null || 
+                           (viewModel.cvData?.education?.isNotEmpty ?? false) || 
+                           (viewModel.cvData?.jobInfo?.experiences?.isNotEmpty ?? false);
+
+    if (!hasRealCV) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CreateCVScreen()),
+      ).then((_) {
+        if (context.mounted) viewModel.loadCVData(context);
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const UpdateMyInfoScreen()),
+      ).then((_) {
+        if (context.mounted) viewModel.loadCVData(context);
+      });
+    }
+  }
+
+  void _openVideo(String videoUrl) {
+    final url = videoUrl.trim();
+    if (url.isEmpty) return;
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black54,
+      builder: (context) => Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(color: Color(0xFF1E2D74)),
+          child: YoutubeVideoPlayerScreen(
+            videoUrl: url,
+            videoTitle: AppStrings.learnMoreAboutOpportunities.tr(),
+            showCloseButton: true,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -91,14 +127,22 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
           centerTitle: true,
           routeName: AppRoutes.myCVScreen.name,
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: _navigateToEdit,
-          backgroundColor: Color(AppColors.secondaryButton),
-          icon: const Icon(Icons.edit, color: Colors.white),
-          label: Text(
-            AppStrings.edit.tr(),
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
+        floatingActionButton: Consumer<MyCVViewModel>(
+          builder: (context, viewModel, child) {
+            final bool hasRealCV = viewModel.cvData?.jobInfo?.jobId != null || 
+                                   (viewModel.cvData?.education?.isNotEmpty ?? false) || 
+                                   (viewModel.cvData?.jobInfo?.experiences?.isNotEmpty ?? false);
+            return FloatingActionButton.extended(
+              onPressed: _navigateToEdit,
+              backgroundColor: Color(AppColors.secondaryButton),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              icon: Icon(hasRealCV ? Icons.edit : Icons.add, color: Colors.white),
+              label: Text(
+                hasRealCV ? AppStrings.edit.tr() : AppStrings.createCV.tr(),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              ),
+            );
+          },
         ),
         body: Consumer<MyCVViewModel>(
           builder: (context, viewModel, child) {
@@ -166,13 +210,8 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
           // Learn More Link
           GestureDetector(
             onTap: () {
-              context.pushNamed(
-                AppRoutes.mediaCenterYoutubeScreenView.name,
-                pathParameters: {
-                  'lang': context.locale.languageCode,
-                  'url': gCache['cvVideoUrl'].toString(),
-                },
-              );
+              final videoUrl = gCache['cvVideoUrl']?.toString() ?? '';
+              _openVideo(videoUrl);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

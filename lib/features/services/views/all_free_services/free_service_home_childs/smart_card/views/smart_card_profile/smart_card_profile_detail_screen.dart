@@ -36,17 +36,53 @@ class SmartCardProfileDetailScreen extends StatefulWidget {
 class _SmartCardProfileDetailScreenState
     extends State<SmartCardProfileDetailScreen> {
   final GlobalKey _qrKey = GlobalKey();
+  late Map<String, dynamic> _employee;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _employee = widget.employee;
+  }
+
+  Future<void> _loadEmployee() async {
+    setState(() => _isLoading = true);
+    try {
+      if (widget.isPersonal) {
+        // Not implemented here, assume it's company employee for now,
+        // or just don't reload if personal isn't supported yet.
+      } else {
+        final cId = widget.companyId;
+        final eId = _employee['id'];
+        if (cId != null && eId != null) {
+          final res = await SmartCardRepo.getEmployeeInCompany(context, companyId: cId, employeeId: eId);
+          if (res.isNotEmpty) {
+            setState(() {
+              Map<String, dynamic> empData = Map<String, dynamic>.from(res);
+              if (empData['data'] is Map) empData = Map<String, dynamic>.from(empData['data']);
+              if (empData['employee'] is Map) empData = Map<String, dynamic>.from(empData['employee']);
+              _employee = empData;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error reloading employee: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   String get _profileUrl {
-    final slug = widget.employee['slug'] ?? widget.employee['id'];
+    final slug = _employee['slug'] ?? _employee['id'];
     if (slug == null) return '';
     return SmartCardRepo.getEmployeeProfilePublicUrl(slug.toString());
   }
 
   String get _displayName =>
-      widget.employee['name']?.toString() ??
-      widget.employee['full_name']?.toString() ??
-      widget.employee['email']?.toString() ??
+      _employee['name']?.toString() ??
+      _employee['full_name']?.toString() ??
+      _employee['email']?.toString() ??
       '';
 
 
@@ -202,16 +238,24 @@ class _SmartCardProfileDetailScreenState
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
-  void _navigateToUpdateEmployeeInfo() {
-    context.pushNamed(
+  Future<void> _navigateToUpdateEmployeeInfo() async {
+    final result = await context.pushNamed(
       AppRoutes.updateEmployeeInfoScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
+      queryParameters: {
+        if (_employee['id'] != null) 'employeeId': _employee['id'].toString(),
+        if (widget.companyId != null) 'companyId': widget.companyId.toString(),
+        'isPersonal': widget.isPersonal.toString(),
+      },
       extra: {
-        'employee': widget.employee,
+        'employee': _employee,
         'isPersonal': widget.isPersonal,
         'companyId': widget.companyId,
       },
     );
+    if (result == true) {
+      _loadEmployee();
+    }
   }
 
   void _navigateToSelectTemplate() {
@@ -250,7 +294,7 @@ class _SmartCardProfileDetailScreenState
         await SmartCardRepo.deleteEmployee(context);
       } else {
         final cId = widget.companyId;
-        final eId = widget.employee['id'] as int?;
+        final eId = _employee['id'] as int?;
         if (cId != null && eId != null) {
           await SmartCardRepo.removeEmployeeFromCompany(
             context,

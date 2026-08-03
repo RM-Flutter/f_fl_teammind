@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/base_page/mobile.scaffold.dart';
@@ -79,14 +81,18 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
         break;
       case 'salary_calc':
         // Navigate to Vacation Calculator screen (used for salary calculations)
-       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WebViewStackOffers(
-              '${AppConstants.base}/front-end/job-offer-calculator',
+        if (kIsWeb) {
+          launchUrl(Uri.parse('${AppConstants.base}/front-end/job-offer-calculator'), mode: LaunchMode.externalApplication);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WebViewStackOffers(
+                '${AppConstants.base}/front-end/job-offer-calculator',
+              ),
             ),
-          ),
-        );
+          );
+        }
         break;
       case 'premium_templates':
         // Navigate to Premium Templates screen
@@ -104,18 +110,18 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
         break;
       case 'personality_test':
         // Navigate to Personality Test screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WebViewStackOffers(
-              '${AppConstants.base}/frontend/personality-test',
+        if (kIsWeb) {
+          launchUrl(Uri.parse('${AppConstants.base}/frontend/personality-test'), mode: LaunchMode.externalApplication);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WebViewStackOffers(
+                '${AppConstants.base}/frontend/personality-test',
+              ),
             ),
-          ),
-        );
-        // context.pushNamed(
-        //   AppRoutes.personalityTestScreen.name,
-        //   pathParameters: {'lang': context.locale.languageCode},
-        // );
+          );
+        }
         break;
       case 'team_mind_system':
         // Navigate to About Team Mind screen
@@ -126,14 +132,18 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
         break;
       case 'job_offer_generator':
         // Open Job Offer Calculator in WebView
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WebViewStackOffers(
-              '${AppConstants.base}/front-end/job-offer-calculator',
+        if (kIsWeb) {
+          launchUrl(Uri.parse('${AppConstants.base}/front-end/job-offer-calculator'), mode: LaunchMode.externalApplication);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WebViewStackOffers(
+                '${AppConstants.base}/front-end/job-offer-calculator',
+              ),
             ),
-          ),
-        );
+          );
+        }
         break;
     }
   }

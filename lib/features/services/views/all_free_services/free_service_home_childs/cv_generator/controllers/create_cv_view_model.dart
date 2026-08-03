@@ -424,9 +424,20 @@ class CreateCVViewModel extends ChangeNotifier {
     }
   }
 
+  /// Get Egypt ID from loaded countries to set as default
+  int? getDefaultEgyptId() {
+    if (countries.isEmpty) return null;
+    final egypt = countries.firstWhere(
+      (c) => (c['title'] ?? c['name'] ?? '').toString().toLowerCase().contains('egypt') || 
+             (c['title'] ?? c['name'] ?? '').toString().contains('مصر'),
+      orElse: () => <String, dynamic>{},
+    );
+    return egypt['id'] as int?;
+  }
+
   /// Add Experience
   void addExperience() {
-    experiences.add(CVExperience());
+    experiences.add(CVExperience(countryId: getDefaultEgyptId()));
     notifyListeners();
   }
 
@@ -448,7 +459,7 @@ class CreateCVViewModel extends ChangeNotifier {
 
   /// Add Education
   void addEducation() {
-    educations.add(CVEducation());
+    educations.add(CVEducation(countryId: getDefaultEgyptId()));
     notifyListeners();
   }
 

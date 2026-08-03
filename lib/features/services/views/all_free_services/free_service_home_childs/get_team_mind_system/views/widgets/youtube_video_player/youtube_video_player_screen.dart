@@ -1,4 +1,5 @@
 import 'package:app_test/core/services/string_helpers_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -46,7 +47,9 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
       return;
     }
 
-    // Build HTML content with iframe for YouTube embed
+    final embedUrl = 'https://www.youtube.com/embed/$videoId?autoplay=1&rel=0&modestbranding=1&playsinline=1&origin=https://www.youtube.com';
+
+    // Build HTML content with iframe for YouTube embed (used for mobile)
     final htmlContent = '''
 <!DOCTYPE html>
 <html>
@@ -77,7 +80,7 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
 <body>
     <div class="video-container">
         <iframe 
-            src="https://www.youtube.com/embed/$videoId?autoplay=1&rel=0&modestbranding=1&playsinline=1" 
+            src="\$embedUrl" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
@@ -87,44 +90,78 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
 </html>
 ''';
 
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.black)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (url) {
-            if (mounted) {
-              setState(() {
-                isLoading = true;
-              });
-            }
-          },
-          onPageFinished: (url) {
-            if (mounted) {
-              setState(() {
-                isLoading = false;
-              });
-            }
-          },
-          onWebResourceError: (error) {
-            if (mounted) {
-              setState(() {
-                isLoading = false;
-              });
-            }
-          },
-          onNavigationRequest: (navigation) {
-            // Allow navigation within YouTube embed
-            if (navigation.url.contains('youtube.com') ||
-                navigation.url.contains('youtu.be') ||
-                navigation.url.contains('google.com')) {
-              return NavigationDecision.navigate;
-            }
-            return NavigationDecision.prevent;
-          },
-        ),
-      )
-      ..loadHtmlString(htmlContent);
+    // Proper initialization for WebViewController to allow media playback
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance.runtimeType.toString() == 'WebKitWebViewPlatform') {
+      params = const PlatformWebViewControllerCreationParams(); 
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    controller = WebViewController.fromPlatformCreationParams(params);
+
+    if (kIsWeb) {
+      // On web, some methods like setJavaScriptMode throw UnimplementedError.
+      // We also must use loadRequest instead of loadHtmlString to render the iframe properly.
+      controller!.loadRequest(Uri.parse(embedUrl));
+      
+      if (mounted) {
+        setState(() {
+          isLoading = false; // It loads immediately as an iframe on web
+        });
+      }
+    } else {
+      // Mobile specific configurations
+      controller!
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(Colors.black)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onPageStarted: (url) {
+              if (mounted) {
+                setState(() {
+                  isLoading = true;
+                });
+              }
+            },
+            onPageFinished: (url) {
+              if (mounted) {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            },
+            onWebResourceError: (error) {
+              if (mounted) {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            },
+            onNavigationRequest: (navigation) {
+              // Allow navigation within YouTube embed
+              if (navigation.url.contains('youtube.com') ||
+                  navigation.url.contains('youtu.be') ||
+                  navigation.url.contains('google.com')) {
+                return NavigationDecision.navigate;
+              }
+              return NavigationDecision.prevent;
+            },
+          ),
+        )
+        ..loadHtmlString(htmlContent);
+
+      // Disable user gesture requirement for Android
+      if (controller?.platform.runtimeType.toString() == 'AndroidWebViewController') {
+        try {
+          final dynamic androidController = controller?.platform;
+          androidController.setMediaPlaybackRequiresUserGesture(false);
+        } catch (e) {
+          // Fallback
+        }
+      }
+    }
+    
     if (mounted) setState(() {});
   }
 
