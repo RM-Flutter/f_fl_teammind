@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' show Rect;
+import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:app_settings/app_settings.dart';
@@ -340,6 +341,12 @@ abstract class MainFabServices {
     // تحقق أولاً من أمان الجهاز قبل تنفيذ أي طريقة بصمة
     final allowed = await _ensureDeviceSecurityForFingerprint(context);
     if (!allowed) return;
+
+    if (kIsWeb || PlatformIs.web) {
+      debugPrint("✅ Opening GPS fingerprint for WEB");
+      await addFingerprintUsingGPS(context: context);
+      return;
+    }
 
     final method = fingerprintMethod.toLowerCase().trim();
     debugPrint("🔍 Fingerprint Method: $method");
@@ -2282,7 +2289,12 @@ abstract class MainFabServices {
       }
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       _CapturedFaceData? capturedFace;
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      
+      // Face verification is not supported on web, so we force it to false
+      final bool showFaceVerify = (kIsWeb || PlatformIs.web) 
+          ? false 
+          : AppConstants.fingerprintFaceChallengeEnabled;
+          
       if (showFaceVerify) {
         debugPrint("📍 Starting face verification for GPS fingerprint...");
         capturedFace = await captureEmployeeFaceAndVerify(context);

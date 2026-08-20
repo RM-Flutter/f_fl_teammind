@@ -99,21 +99,41 @@ class _FingerprintDatetimeCardWidgetState
   Future<void> loadBranchName() async {
     final branch = widget.fingerprintDatetime.branchId;
     if (branch != null && branch.contains("lat")) {
-      final decoded = jsonDecode(branch);
-      final lat = decoded["lat"];
-      final lng = decoded["long"];
-      final placemarks = await placemarkFromCoordinates(lat, lng);
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
-        setState(() {
-          branchName = [
-            place.street,
-            place.subLocality,
-            place.locality,
-            place.administrativeArea,
-            place.country
-          ].where((e) => e != null && e!.trim().isNotEmpty).join(', ');
-        });
+      try {
+        final decoded = jsonDecode(branch);
+        final lat = double.tryParse(decoded["lat"].toString()) ?? 0.0;
+        final lng = double.tryParse(decoded["long"].toString()) ?? 0.0;
+        
+        if (lat == 0.0 && lng == 0.0) {
+          // If coordinates are 0,0 do not show them
+          return;
+        }
+
+        final placemarks = await placemarkFromCoordinates(lat, lng);
+        if (placemarks.isNotEmpty) {
+          final place = placemarks.first;
+          setState(() {
+            branchName = [
+              place.street,
+              place.subLocality,
+              place.locality,
+              place.administrativeArea,
+              place.country
+            ].where((e) => e != null && e!.trim().isNotEmpty).join(', ');
+          });
+        }
+      } catch (e) {
+        debugPrint("Error loading branch name (Geocoding might not be supported on Web): $e");
+        try {
+          final decoded = jsonDecode(branch);
+          final latFallback = double.tryParse(decoded["lat"].toString()) ?? 0.0;
+          final lngFallback = double.tryParse(decoded["long"].toString()) ?? 0.0;
+          if (latFallback != 0.0 || lngFallback != 0.0) {
+            setState(() {
+              branchName = "Lat: $latFallback, Lng: $lngFallback";
+            });
+          }
+        } catch (_) {}
       }
     } else {
       setState(() {

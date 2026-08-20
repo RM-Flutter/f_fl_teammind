@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../constants/user_consts.dart';
@@ -44,17 +45,22 @@ class MainAppFabWidget extends StatelessWidget {
             (entry.value as String?)?.toLowerCase().trim() == 'active_some') {
           avFingerprints ??= [];
           avFingerprints.add(entry.key);
-          //avFingerprints.add("custom_fp_navigate");
-          //avFingerprints.add("fp_navigate");
-           avFingerprints.remove("fp_machine");
+          avFingerprints.remove("fp_machine");
+        }
+      }
+      if (kIsWeb || PlatformIs.web) {
+        // On web, only allow location-based fingerprint methods
+        avFingerprints?.removeWhere((method) =>
+            method != 'fp_navigate' && method != 'custom_fp_navigate');
+        if (avFingerprints == null || avFingerprints.isEmpty) {
+          avFingerprints = ['fp_navigate']; // Force show location if empty
         }
       }
     }
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        if (PlatformIs.mobile &&
-            userSettingsFingerprints != null &&
+        if (userSettingsFingerprints != null &&
             userSettingsFingerprints.isNotEmpty == true &&
             avFingerprints != null &&
             avFingerprints.isNotEmpty == true)

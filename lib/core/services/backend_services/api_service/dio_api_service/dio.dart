@@ -22,6 +22,7 @@ class DioHelper{
       'Accept':'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       'Content-Type':"application/json",
+      'x-app-type': (kIsWeb || PlatformIs.web) ? 'web' : 'mobile',
     };
 
     // Add CORS headers for web platform
@@ -60,6 +61,10 @@ class DioHelper{
         maxWidth: 90));
     dio!.interceptors.add(
       InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers['x-app-type'] = (kIsWeb || PlatformIs.web) ? 'web' : 'mobile';
+          return handler.next(options);
+        },
         onResponse: (response, handler) {
           print("response.statusCode == ${response.statusCode}");
           return handler.next(response);
