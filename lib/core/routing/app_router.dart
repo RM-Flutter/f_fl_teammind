@@ -84,6 +84,7 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/get_team_mind_system/views/widgets/youtube_video_player/widgets/youtube_video_player.dart';
 import '../../features/splash_and_onboarding/views/onboarding_screen.dart';
 import '../../features/splash_and_onboarding/views/splash_screen.dart';
+import '../../features/splash_and_onboarding/views/no_access_screen.dart';
 import '../../features/tasks/views/add/add_task_screen.dart';
 import '../../features/tasks/views/edit/edit_task_screen.dart';
 import '../../features/tasks/views/details/task_details_screen.dart';
@@ -92,6 +93,8 @@ import '../platform/platform_is.dart';
 import '../routing/app_router_transitions.dart';
 import '../routing/not_found/not_found_screen.dart';
 import '../services/app_config_service.dart';
+import '../services/settings_service.dart';
+import '../models/settings/user_settings.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
@@ -118,6 +121,7 @@ enum AppRoutes {
   defaultPage2,
   generalDataScreen,
   login,
+  noAccess,
   webViewMainDataScreen,
   webViewScreen,
   userDevices,
@@ -258,6 +262,7 @@ GoRouter goRouter(BuildContext context) {
       final allowedForVisitor = [
         'splash',
         'offline',
+        'no-access',
         'freeMoreScreen',
         'onboarding-screen',
         'login',
@@ -282,6 +287,20 @@ GoRouter goRouter(BuildContext context) {
 
       if (!isLoggedIn && !isAllowedPage) {
         return '/$lang/login-screen';
+      }
+      
+      if (isLoggedIn) {
+        final userSettings = appConfigServiceProvider.getSettings(type: SettingsType.userSettings) as UserSettingsModel?;
+        if (userSettings != null) {
+          final hasProfile = userSettings.empId != null; // No profile if empId is null
+          final licenseType = userSettings.licenseType?.toLowerCase() ?? 'mobile'; // assume mobile if null
+
+          if (!hasProfile || licenseType != 'mobile') {
+            if (state.fullPath?.contains('no-access') != true) {
+              return '/$lang/no-access';
+            }
+          }
+        }
       }
 
       return null;
@@ -2283,6 +2302,28 @@ GoRouter goRouter(BuildContext context) {
           return AppRouterTransitions.slideTransition(
             key: state.pageKey,
             child: const LoginScreen(),
+            animation: animationController,
+            begin: const Offset(1.0, 0.0),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/:lang/no-access',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.noAccess.name,
+        pageBuilder: (context, state) {
+          final animationController = AnimationController(
+            vsync: ticker,
+          );
+          animationController.addStatusListener((status) {
+            if (status == AnimationStatus.completed ||
+                status == AnimationStatus.dismissed) {
+              animationController.dispose();
+            }
+          });
+          return AppRouterTransitions.slideTransition(
+            key: state.pageKey,
+            child: const NoAccessScreen(),
             animation: animationController,
             begin: const Offset(1.0, 0.0),
           );

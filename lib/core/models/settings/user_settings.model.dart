@@ -33,6 +33,7 @@ class UserSettingsModel extends AppSettingsModel {
   final dynamic asset;
   final Map<String, dynamic>? avFingerprint;
   final Map<String, dynamic>? avFingerprintLocations;
+  final String? licenseType;
 
   UserSettingsModel({
     required super.lastUpdateDate,
@@ -66,6 +67,7 @@ class UserSettingsModel extends AppSettingsModel {
     this.asset,
     this.avFingerprint,
     this.avFingerprintLocations,
+    this.licenseType,
   });
 
   factory UserSettingsModel.fromJson(Map<String, dynamic> json) {
@@ -120,6 +122,7 @@ class UserSettingsModel extends AppSettingsModel {
       avFingerprint: json['av_fingerprint'] as Map<String, dynamic>?,
       avFingerprintLocations:
           json['av_fingerprint_locations'] as Map<String, dynamic>?,
+      licenseType: json['license_type'] as String?,
     );
   }
 
@@ -162,6 +165,7 @@ class UserSettingsModel extends AppSettingsModel {
       'asset': asset,
       'av_fingerprint': avFingerprint,
       'av_fingerprint_locations': avFingerprintLocations,
+      'license_type': licenseType,
     };
   }
 }

@@ -10,6 +10,7 @@ class UserSettings2Model extends AppSettingsModel {
   final List<Holiday>? holidays;
   final Worktime? worktime;
   final Map<String, RequestType>? requestTypes;
+  final List<String>? approvedLeaveDays;
 
   UserSettings2Model({
     required super.lastUpdateDate,
@@ -22,6 +23,7 @@ class UserSettings2Model extends AppSettingsModel {
     this.holidays,
     this.worktime,
     this.requestTypes,
+    this.approvedLeaveDays,
   });
 
   static List<String>? _parseWeekend(dynamic value) {
@@ -58,6 +60,9 @@ class UserSettings2Model extends AppSettingsModel {
       //     : {},
       canUseHolidays: json['can_use_holidays'],
       weekend: _parseWeekend(json['weekend']),
+      holidays: (json['holidays'] as List<dynamic>?)
+          ?.map((e) => Holiday.fromJson(e as Map<String, dynamic>))
+          .toList(),
       worktime:
       json['worktime'] != null ? Worktime.fromJson(json['worktime']) : null,
       requestTypes: json['request_types'] is List
@@ -65,6 +70,9 @@ class UserSettings2Model extends AppSettingsModel {
           : (json['request_types'] as Map<String, dynamic>?)?.map(
                 (key, value) => MapEntry(key, RequestType.fromJson(value)),
               ),
+      approvedLeaveDays: (json['approved_leave_days'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
     );
   }
 
@@ -82,6 +90,7 @@ class UserSettings2Model extends AppSettingsModel {
       'worktime': worktime?.toJson(),
       'request_types':
       requestTypes?.map((key, value) => MapEntry(key, value.toJson())),
+      'approved_leave_days': approvedLeaveDays,
     };
   }
 }

@@ -22,7 +22,32 @@ import 'core/services/internet_check.dart';
 import 'features/home/controllers/home_controller.dart';
 import 'features/main_layout/controllers/main_controller.dart';
 import 'package:app_test/core/utils/error_handling/global_error_handler.dart';
+import 'package:app_test/core/services/notification_service/local_notification_service.dart';
+import 'package:app_test/core/services/notification_service/check_in_scheduler.dart';
+import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/services/settings_service.dart';
+import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      await CacheHelper.init();
+      final appConfig = AppConfigService();
+      await appConfig.init();
+      
+      final userSettings2 = appConfig.getSettings(type: SettingsType.user2Settings) as UserSettings2Model?;
+      if (userSettings2 != null) {
+        await LocalNotificationService.init();
+        await CheckInScheduler.scheduleAlarmsForNext30Days(userSettings2);
+      }
+    } catch (e) {
+      debugPrint("Background task error: $e");
+    }
+    return Future.value(true);
+  });
+}
 
 GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -69,6 +94,24 @@ void main() async {
   }
   final appConfigService = AppConfigService();
   await appConfigService.init();
+
+  if (!kIsWeb) {
+    await LocalNotificationService.init();
+    Workmanager().initialize(
+      callbackDispatcher,
+    );
+    Workmanager().registerPeriodicTask(
+      "1",
+      "checkInSchedulingTask",
+      frequency: const Duration(days: 7),
+    );
+    
+    // Also trigger immediately to schedule if not scheduled yet
+    final userSettings2 = appConfigService.getSettings(type: SettingsType.user2Settings) as UserSettings2Model?;
+    if (userSettings2 != null) {
+      await CheckInScheduler.scheduleAlarmsForNext30Days(userSettings2);
+    }
+  }
 
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],
