@@ -4,6 +4,7 @@ class ApprovableDetailsModel {
   final String? status;
   final bool? takeAction;
   final bool? canTakeActionAsSomeoneElse;
+  final bool? canUpdateApproval;
   final bool? waitingCancel;
   final String? createdAt;
   final String? updatedAt;
@@ -39,6 +40,7 @@ class ApprovableDetailsModel {
     this.status,
     this.takeAction,
     this.canTakeActionAsSomeoneElse,
+    this.canUpdateApproval,
     this.waitingCancel,
     this.createdAt,
     this.updatedAt,
@@ -65,8 +67,9 @@ class ApprovableDetailsModel {
       id: json['id'],
       approvableType: json['approvable_type'],
       status: json['status'],
-      takeAction: json['can_take_action'] as bool? ?? false,
+      takeAction: (json['can_take_action'] ?? json['take_action']) as bool? ?? false,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool? ?? false,
+      canUpdateApproval: (json['can_update_approval'] ?? json['can_update'] ?? json['update_approval']) as bool? ?? false,
       waitingCancel: json['waiting_cancel'] as bool?,
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],

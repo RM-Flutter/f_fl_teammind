@@ -11,6 +11,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../cubit/approvable_details_cubit.dart';
 import '../../cubit/approvable_details_state.dart';
 import '../../data/models/approvable_details_model.dart';
+import 'manager_take_action/approver_employee_dropdown.dart';
+import 'manager_take_action/action_type_toggle.dart';
+import 'manager_take_action/action_reply_field.dart';
+import 'manager_take_action/action_file_picker.dart';
+import 'manager_take_action/action_error_banner.dart';
 
 class ManagerTakeActionModal extends StatefulWidget {
   final ApprovableDetailsModel details;
@@ -57,7 +62,8 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
     final isAsSomeoneElse = widget.details.canTakeActionAsSomeoneElse == true;
 
     // approvable_id expected by backend is the main approvable/request ID (e.g., 360)
-    final String approvableId = widget.details.id?.toString() ?? widget.approvableStepId ?? '';
+    final String approvableId =
+        widget.details.id?.toString() ?? widget.approvableStepId ?? '';
 
     if (isAsSomeoneElse) {
       if (_selectedEmployeeId == null || _selectedEmployeeId!.isEmpty) {
@@ -143,7 +149,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                     Text(
                       isAsSomeoneElse
                           ? (isArabic ? 'اتخاذ إجراء نيابة عن موظف' : 'Take Action as Someone Else')
-                          : 'can_take_action'.tr(),
+                          : 'take_action'.tr(),
                       style: AppStyles.darkContent(context).copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -159,295 +165,41 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                 const Divider(),
                 const SizedBox(height: 12),
 
-                // Case B: Select Approver Employee Dropdown
-                if (isAsSomeoneElse) ...[
-                  Text(
-                    isArabic ? 'اختر الشخص المراد التوقيع عنه' : 'Select Approver Employee',
-                    style: AppStyles.darkContent(context).copyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(AppColors.secondaryButton),
-                    ),
+                // Approver Employee Dropdown (Case B)
+                if (isAsSomeoneElse)
+                  ApproverEmployeeDropdown(
+                    selectedEmployeeId: _selectedEmployeeId,
+                    activeApprovers: activeApprovers,
+                    isLoadingApprovers: isLoadingApprovers,
+                    isArabic: isArabic,
+                    onChanged: (val) => setState(() => _selectedEmployeeId = val),
                   ),
-                  const SizedBox(height: 8),
-                  if (isLoadingApprovers)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    )
-                  else if (activeApprovers.isEmpty)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.amber.shade300),
-                      ),
-                      child: Text(
-                        isArabic
-                            ? 'لا يوجد مديرون متاحون حالياً لهذا المستوى'
-                            : 'No approvers available for this level',
-                        style: const TextStyle(fontSize: 12, color: Colors.amber),
-                      ),
-                    )
-                  else
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F3F3),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _selectedEmployeeId,
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          icon: Icon(Icons.arrow_drop_down,
-                              color: Color(AppColors.buttons), size: 24),
-                          hint: Text(
-                            isArabic ? 'اختر الموظف' : 'Select Employee',
-                            style: AppStyles.darkContent(context).copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Color(AppColors.secondaryButton),
-                            ),
-                          ),
-                          items: activeApprovers.map((emp) {
-                            final label =
-                                '${emp.name ?? ''} ${emp.jobTitle != null ? '(${emp.jobTitle})' : ''}';
-                            return DropdownMenuItem<String>(
-                              value: emp.id?.toString(),
-                              child: Text(
-                                label,
-                                style: AppStyles.darkContent(context).copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(AppColors.secondaryButton),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (val) {
-                            setState(() {
-                              _selectedEmployeeId = val;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 16),
-                ],
 
                 // Action Toggle Buttons (Approve / Refuse)
-                Text(
-                  isArabic ? 'نوع الإجراء' : 'Action Type',
-                  style: AppStyles.darkContent(context).copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(AppColors.secondaryButton),
-                  ),
+                ActionTypeToggle(
+                  selectedAction: _selectedAction,
+                  isArabic: isArabic,
+                  onActionChanged: (val) => setState(() => _selectedAction = val),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _selectedAction = 'approve'),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: _selectedAction == 'approve'
-                                ?  Color(AppColors.successGreen)
-                                : const Color(0xFFF3F3F3),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: _selectedAction == 'approve'
-                                  ?  Color(AppColors.successGreen)
-                                  : Colors.grey.shade300,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.check_circle_outline,
-                                color: _selectedAction == 'approve'
-                                    ? Colors.white
-                                    : Color(AppColors.secondaryButton),
-                                size: 18,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                isArabic ? 'موافقة' : 'Approve',
-                                style: AppStyles.whiteContent(context).copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: _selectedAction == 'approve'
-                                      ? Colors.white
-                                      : Color(AppColors.secondaryButton),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _selectedAction = 'refuse'),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: _selectedAction == 'refuse'
-                                ?  Color(AppColors.failureRed)
-                                : const Color(0xFFF3F3F3),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: _selectedAction == 'refuse'
-                                  ?  Color(AppColors.failureRed)
-                                  : Colors.grey.shade300,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.cancel_outlined,
-                                color: _selectedAction == 'refuse'
-                                    ? Colors.white
-                                    : Color(AppColors.secondaryButton),
-                                size: 18,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                isArabic ? 'رفض' : 'Refuse',
-                                style: AppStyles.whiteContent(context).copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: _selectedAction == 'refuse'
-                                      ? Colors.white
-                                      : Color(AppColors.secondaryButton),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
 
                 // Reply Notes Field
-                Text(
-                  isArabic ? 'ملاحظات / الرد (اختياري)' : 'Reply / Notes (Optional)',
-                  style: AppStyles.darkContent(context).copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(AppColors.secondaryButton),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
+                ActionReplyField(
                   controller: _replyController,
-                  maxLines: 3,
-                  style: AppStyles.darkContent(context).copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Color(AppColors.secondaryButton),
-                  ),
-                  decoration: InputDecoration(
-                    hintText: isArabic ? 'أدخل ملاحظاتك هنا...' : 'Enter your notes here...',
-                    hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
-                    filled: true,
-                    fillColor: const Color(0xFFF3F3F3),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.all(12),
-                  ),
+                  isArabic: isArabic,
                 ),
-                const SizedBox(height: 16),
 
                 // File Attachment Picker
-                Text(
-                  isArabic ? 'مرفق (اختياري)' : 'Attachment File (Optional)',
-                  style: AppStyles.darkContent(context).copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(AppColors.secondaryButton),
-                  ),
+                ActionFilePicker(
+                  selectedFile: _selectedFile,
+                  isArabic: isArabic,
+                  onTapPick: _pickAttachment,
+                  onTapClear: () => setState(() => _selectedFile = null),
                 ),
-                const SizedBox(height: 8),
-                GestureDetector(
-                  onTap: _pickAttachment,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3F3F3),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.attach_file, color: Color(AppColors.buttons)),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _selectedFile != null
-                                ? _selectedFile!.path.split('/').last
-                                : (isArabic ? 'اضغط لإرفاق ملف' : 'Tap to attach file'),
-                            style: AppStyles.darkContent(context).copyWith(
-                              fontSize: 12,
-                              color: Color(AppColors.secondaryButton),
-                              fontWeight: _selectedFile != null
-                                  ? FontWeight.bold
-                                  : FontWeight.w400,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (_selectedFile != null)
-                          GestureDetector(
-                            onTap: () => setState(() => _selectedFile = null),
-                            child: const Icon(Icons.close, size: 18, color: Colors.red),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.shade200),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.error_outline, size: 18, color: Colors.red),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _errorMessage!,
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+
+                // Error Message Banner
+                if (_errorMessage != null)
+                  ActionErrorBanner(errorMessage: _errorMessage!),
+
                 const SizedBox(height: 24),
 
                 // Submit Button
@@ -460,7 +212,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                       borderRadius: BorderRadius.circular(28),
                     ),
                   ),
-                  onPressed: () async => _submitAction(context),
+                  onPressed: () async =>  _submitAction(context),
                   title: isArabic ? 'إرسال الإجراء' : 'Submit Action',
                   titleWidget: Text(
                     (isArabic ? 'إرسال الإجراء' : 'Submit Action').toUpperCase(),

@@ -378,31 +378,40 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
                                   // Employee info if different user
                                   if (widget.uId?.toString() != widget.rId?.toString()) ...[
-                                    InfoTileWidget(
-                                      onTap: () {
-                                        context.pushNamed(
-                                          'employeeDetails',
-                                          pathParameters: {
-                                            'id': request.employeeId.toString(),
-                                            'lang': context.locale.languageCode,
-                                          },
-                                        );
-                                      },
-                                      imgPath: Icons.person_2_outlined,
-                                      title: request.employeeName ?? '-',
-                                      isHighLight: true,
-                                    ),
-                                    InfoTileWidget(
-                                      imgPath: Icons.category_outlined,
-                                      title: request.departmentName.toString(),
-                                    ),
+                                    if (request.employeeName != null &&
+                                        request.employeeName.toString() != 'null' &&
+                                        request.employeeName.toString().trim().isNotEmpty)
+                                      InfoTileWidget(
+                                        onTap: () {
+                                          context.pushNamed(
+                                            'employeeDetails',
+                                            pathParameters: {
+                                              'id': request.employeeId.toString(),
+                                              'lang': context.locale.languageCode,
+                                            },
+                                          );
+                                        },
+                                        imgPath: Icons.person_2_outlined,
+                                        title: request.employeeName.toString(),
+                                        isHighLight: true,
+                                      ),
+                                    if (request.departmentName != null &&
+                                        request.departmentName.toString() != 'null' &&
+                                        request.departmentName.toString().trim().isNotEmpty)
+                                      InfoTileWidget(
+                                        imgPath: Icons.category_outlined,
+                                        title: request.departmentName.toString(),
+                                      ),
                                   ],
 
                                   // Request type
-                                  InfoTileWidget(
-                                    imgPath: Icons.category_outlined,
-                                    title: request.typeName.toString(),
-                                  ),
+                                  if (request.typeName != null &&
+                                      request.typeName.toString() != 'null' &&
+                                      request.typeName.toString().trim().isNotEmpty)
+                                    InfoTileWidget(
+                                      imgPath: Icons.category_outlined,
+                                      title: request.typeName.toString(),
+                                    ),
 
                                   // Money value if present
                                   if (request.moneyValue != null && (double.tryParse(request.moneyValue.toString()) ?? 0) > 0)
