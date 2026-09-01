@@ -61,7 +61,7 @@ class RequestModel {
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
       waitingCancel: json['waiting_cancel'] ?? false,
-      takeAction: json['take_action'] as bool?,
+      takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       notes: json['notes'] ?? "",
       files: json['files'] != null

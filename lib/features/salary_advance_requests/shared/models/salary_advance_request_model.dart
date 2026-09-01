@@ -122,7 +122,7 @@ class SalaryAdvanceRequestModel {
     return SalaryAdvanceRequestModel(
       id: json['id'],
       status: json['status'],
-      takeAction: json['take_action'] as bool?,
+      takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       // money_value replaces total in new API
       total: json['money_value']?.toString(),

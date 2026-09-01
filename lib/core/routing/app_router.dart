@@ -16,6 +16,7 @@ import 'package:app_test/features/points/views/points/points_categories/points_c
 import 'package:app_test/features/points/views/prize/prize_screen.dart';
 import 'package:app_test/features/requests/add/views/add_request_screen.dart';
 import 'package:app_test/features/requests/details/views/request_details_screen.dart';
+import 'package:app_test/features/approvables_details/views/approvable_details_screen.dart';
 import 'package:app_test/features/requests/view_by_ids/views/requests_by_id_screen.dart';
 import 'package:app_test/features/requests/calender/views/requests_calendar_screen.dart';
 import 'package:app_test/features/requests/main_request_layout/views/requests_screen.dart';
@@ -192,6 +193,7 @@ enum AppRoutes {
   salaryAdvanceList,
   salaryAdvanceDetails,
   salaryAdvanceCreate,
+  approvableDetails,
 }
 
 const TestVSync ticker = TestVSync();
@@ -408,8 +410,14 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final request = state.extra as OvertimeRequestModel;
-                  return MaterialPage(child: OvertimeRequestDetailsScreen(request: request));
+                  final request = state.extra is OvertimeRequestModel ? (state.extra as OvertimeRequestModel) : null;
+                  final id = request?.id?.toString() ?? state.pathParameters['id'] ?? state.uri.queryParameters['id'] ?? '';
+                  return MaterialPage(
+                    child: ApprovableDetailsScreen(
+                      type: 'overtime',
+                      id: id,
+                    ),
+                  );
                 },
               ),
               GoRoute(
@@ -462,8 +470,13 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final id = int.parse(state.pathParameters['id']!);
-                  return MaterialPage(child: SalaryAdvanceDetailsScreen(requestId: id));
+                  final id = state.pathParameters['id'] ?? '';
+                  return MaterialPage(
+                    child: ApprovableDetailsScreen(
+                      type: 'salary_advance',
+                      id: id,
+                    ),
+                  );
                 },
               ),
               GoRoute(
@@ -474,6 +487,23 @@ GoRouter goRouter(BuildContext context) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
                   return const MaterialPage(child: CreateSalaryAdvanceScreen());
+                },
+              ),
+              GoRoute(
+                path: 'approvable-details/:type/:id',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.approvableDetails.name,
+                pageBuilder: (context, state) {
+                  final type = state.pathParameters['type'] ?? 'employee_requests';
+                  final id = state.pathParameters['id'] ?? '';
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return MaterialPage(
+                    child: ApprovableDetailsScreen(
+                      type: type,
+                      id: id,
+                    ),
+                  );
                 },
               )
             ],
@@ -655,17 +685,20 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.requestDetails.name,
                 pageBuilder: (context, state) {
-                  final type = state.pathParameters['type'] ?? '';
+                  final rawType = state.pathParameters['type'] ?? '';
                   final id = state.pathParameters['id'] ?? '';
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
                     context.setLocale(locale);
                   }
+                  String apiType = 'employee_requests';
+                  if (rawType == 'salary_advance') apiType = 'salary_advance';
+                  if (rawType == 'overtime') apiType = 'overtime';
+
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
-                  // Make sure to dispose the controller after the transition is complete
                   animationController.addStatusListener((status) {
                     if (status == AnimationStatus.completed ||
                         status == AnimationStatus.dismissed) {
@@ -674,15 +707,14 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: RequestDetailsScreen(
-                      request: id,
-                      requestType: type,
+                    child: ApprovableDetailsScreen(
+                      type: apiType,
+                      id: id,
                     ),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
                 },
-
               ),
             ],
           ),

@@ -70,7 +70,7 @@ class OvertimeRequestModel {
     employeeName = json['employee_name'] ?? employeeProfile?.name;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    takeAction = json['take_action'] as bool?;
+    takeAction = json['can_take_action'] as bool?;
     canTakeActionAsSomeoneElse = (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?;
   }
 
@@ -98,7 +98,7 @@ class OvertimeRequestModel {
     }
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
-    data['take_action'] = takeAction;
+    data['can_take_action'] = takeAction;
     data['can_take_action_as_someone_else'] = canTakeActionAsSomeoneElse;
     return data;
   }
@@ -128,7 +128,7 @@ class OvertimeRequestModel {
       theManagerReply: null,
       employeeActions: null,
       employeeProfile: null,
-      takeAction: json['take_action'] as bool?,
+      takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
     );
   }

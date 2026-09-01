@@ -377,7 +377,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                   ),
 
                                   // Employee info if different user
-                                  if (widget.uId != widget.rId) ...[
+                                  if (widget.uId?.toString() != widget.rId?.toString()) ...[
                                     InfoTileWidget(
                                       onTap: () {
                                         context.pushNamed(
@@ -619,12 +619,15 @@ class InfoTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color effectiveBackground = background ?? const Color(AppColors.navyBlue);
+    final double? tileWidth = width ??
+        (isFullRow == true
+            ? null
+            : (kIsWeb ? 240.0 : ((1.sw - 116) / 2)));
+
     return GestureDetector(
       onTap: onTap ?? (){},
       child: Container(
-        width: width != null ? width! : (isFullRow == false
-            ? (1.sw - 116) / 2
-            : 1.sw - 97),
+        width: tileWidth,
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : effectiveBackground,
             borderRadius: BorderRadius.circular(10)),
