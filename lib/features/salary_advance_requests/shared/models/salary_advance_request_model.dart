@@ -21,6 +21,7 @@ class SalaryAdvanceRequestModel {
   String? status;
   String? createdAt;
   String? updatedAt;
+  bool? takeAction;
 
   SalaryAdvanceRequestModel({
     this.id,
@@ -42,6 +43,7 @@ class SalaryAdvanceRequestModel {
     this.status,
     this.createdAt,
     this.updatedAt,
+    this.takeAction,
   });
 
   SalaryAdvanceRequestModel.fromJson(Map<String, dynamic> json) {
@@ -118,6 +120,7 @@ class SalaryAdvanceRequestModel {
     return SalaryAdvanceRequestModel(
       id: json['id'],
       status: json['status'],
+      takeAction: json['take_action'] as bool?,
       // money_value replaces total in new API
       total: json['money_value']?.toString(),
       // duration replaces how_long_to_pay

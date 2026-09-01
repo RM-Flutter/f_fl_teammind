@@ -139,6 +139,14 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                   ),
                   SizedBox(height: 10),
                 ],
+                if (controller.isIncomingView) ...[
+                  _ScopeSelectorRow(
+                    currentScope: controller.incomingScope,
+                    showAllCompany: controller.isHrOrTopManagement,
+                    onSelected: (scope) => controller.setIncomingScope(scope, context),
+                  ),
+                  SizedBox(height: 10),
+                ],
                 ActiveFiltersRowWidget(
                   empName: controller.filterEmpName,
                   depName: controller.filterDepName,
@@ -257,6 +265,79 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                 );
               },
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ScopeSelectorRow extends StatelessWidget {
+  final String currentScope;
+  final bool showAllCompany;
+  final ValueChanged<String> onSelected;
+
+  const _ScopeSelectorRow({
+    required this.currentScope,
+    required this.showAllCompany,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isArabic = context.locale.languageCode == 'ar';
+    final scopes = [
+      {
+        'value': 'team',
+        'label': isArabic ? 'طلبات الفريق' : 'Team Requests',
+      },
+      {
+        'value': 'other_departments',
+        'label': isArabic ? 'الأقسام الأخرى' : 'Other Departments',
+      },
+      if (showAllCompany)
+        {
+          'value': 'all_company',
+          'label': isArabic ? 'كل الشركة' : 'All Company',
+        },
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: scopes.map((s) {
+              final bool isSelected = currentScope == s['value'];
+              return GestureDetector(
+                onTap: () => onSelected(s['value']!),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Color(AppColors.buttons)
+                        : Color(AppColors.cardBackground),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSelected
+                          ? Color(AppColors.buttons)
+                          : Colors.grey.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    s['label']!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? Colors.white : Colors.grey[700],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ),

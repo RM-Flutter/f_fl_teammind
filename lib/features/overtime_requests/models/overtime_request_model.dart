@@ -15,6 +15,7 @@ class OvertimeRequestModel {
   String? employeeName; // Fallback field
   String? createdAt;
   String? updatedAt;
+  bool? takeAction;
 
   OvertimeRequestModel({
     this.id,
@@ -31,6 +32,7 @@ class OvertimeRequestModel {
     this.employeeName,
     this.createdAt,
     this.updatedAt,
+    this.takeAction,
   });
 
   OvertimeRequestModel.fromJson(Map<String, dynamic> json) {
@@ -66,6 +68,7 @@ class OvertimeRequestModel {
     employeeName = json['employee_name'] ?? employeeProfile?.name;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    takeAction = json['take_action'] as bool?;
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +95,7 @@ class OvertimeRequestModel {
     }
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    data['take_action'] = takeAction;
     return data;
   }
 
@@ -120,6 +124,7 @@ class OvertimeRequestModel {
       theManagerReply: null,
       employeeActions: null,
       employeeProfile: null,
+      takeAction: json['take_action'] as bool?,
     );
   }
 }

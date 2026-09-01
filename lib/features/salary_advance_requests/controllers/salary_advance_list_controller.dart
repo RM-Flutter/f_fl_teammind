@@ -70,13 +70,34 @@ class SalaryAdvanceListController extends ChangeNotifier {
 
   bool isIncomingView = false;
 
+  /// 'team' | 'other_departments' | 'all_company'
+  String incomingScope = 'team';
+
+  bool get isHrOrTopManagement =>
+      userSettings?.isHr == true || userSettings?.topManagement == true;
+
+  void setIncomingScope(String scope, BuildContext context) {
+    incomingScope = scope;
+    incomingCurrentPage = 1;
+    incomingRequests = null;
+    incomingHasMore = true;
+    notifyListeners();
+    getIncomingRequests(context: context);
+  }
+
   void toggleIncomingView(bool value, BuildContext context) {
     isIncomingView = value;
+    if (value) {
+      // Reset scope and data on every switch to incoming
+      incomingScope = 'team';
+      incomingRequests = null;
+      incomingHasMore = true;
+      incomingCurrentPage = 1;
+    }
     notifyListeners();
-    // Only fetch if the list is empty since filters are preserved
-    if (value && incomingRequests == null) {
+    if (value) {
       getIncomingRequests(context: context);
-    } else if (!value && personalRequests == null) {
+    } else if (personalRequests == null) {
       getPersonalRequests(context: context);
     }
   }
@@ -238,7 +259,7 @@ class SalaryAdvanceListController extends ChangeNotifier {
       final result = await RequestsServices.getManagerApprovables(
         context: context,
         type: 'salary_advance',
-        scope: 'team', // default scope for incoming is team, unless expanded later
+        scope: incomingScope,
         page: incomingCurrentPage,
         employeesIds: (filterEmpId != null && filterEmpId!.isNotEmpty) ? [filterEmpId!] : null,
         departmentIds: (filterDepId != null && filterDepId!.isNotEmpty) ? [filterDepId!] : null,

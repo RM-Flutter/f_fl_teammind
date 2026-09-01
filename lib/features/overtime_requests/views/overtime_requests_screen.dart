@@ -173,6 +173,14 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 ),
                 SizedBox(height: 10),
               ],
+              if (provider.isForDepartment) ...[
+                _ScopeSelectorRow(
+                  currentScope: provider.incomingScope,
+                  showAllCompany: provider.isHrOrTopManagement,
+                  onSelected: (scope) => provider.setIncomingScope(scope, context),
+                ),
+                SizedBox(height: 10),
+              ],
               ActiveFiltersRowWidget(
                 empName: provider.filterEmpName,
                 depName: provider.filterDepName,
@@ -222,7 +230,10 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
   Widget _buildRequestCard(OvertimeRequestModel request, bool isForDepartment) {
     String? displayName = request.employeeName ?? request.employeeProfile?.name;
 
-    return Container(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
       margin: EdgeInsets.only(bottom: AppSizes.s16, left: 16, right: 16),
       padding: EdgeInsets.symmetric(
           vertical: AppSizes.s14, horizontal: AppSizes.s16),
@@ -324,6 +335,113 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
               ],
             ),
           ],
+        ),
+      ),
+        ),
+        // ─── Take Action Badge ───
+        if (request.takeAction == true)
+          Positioned(
+            top: -1,
+            left: 16,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: const Color(0xFFD32F2F),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red.withOpacity(0.35),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Text(
+                'take_action'.tr(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _ScopeSelectorRow extends StatelessWidget {
+  final String currentScope;
+  final bool showAllCompany;
+  final ValueChanged<String> onSelected;
+
+  const _ScopeSelectorRow({
+    required this.currentScope,
+    required this.showAllCompany,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isArabic = context.locale.languageCode == 'ar';
+    final scopes = [
+      {
+        'value': 'team',
+        'label': isArabic ? 'طلبات الفريق' : 'Team Requests',
+      },
+      {
+        'value': 'other_departments',
+        'label': isArabic ? 'الأقسام الأخرى' : 'Other Departments',
+      },
+      if (showAllCompany)
+        {
+          'value': 'all_company',
+          'label': isArabic ? 'كل الشركة' : 'All Company',
+        },
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: scopes.map((s) {
+              final bool isSelected = currentScope == s['value'];
+              return GestureDetector(
+                onTap: () => onSelected(s['value']!),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Color(AppColors.buttons)
+                        : Color(AppColors.cardBackground),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSelected
+                          ? Color(AppColors.buttons)
+                          : Colors.grey.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    s['label']!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? Colors.white : Colors.grey[700],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

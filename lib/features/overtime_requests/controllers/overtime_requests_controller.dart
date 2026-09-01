@@ -27,6 +27,24 @@ class OvertimeRequestsProvider extends ChangeNotifier {
   bool incomingIsLoadingMore = false;
   int incomingTotal = 0;
 
+  /// 'team' | 'other_departments' | 'all_company'
+  String incomingScope = 'team';
+
+  bool get isHrOrTopManagement {
+    if (UserSettingConst.userSettings == null) return false;
+    return UserSettingConst.userSettings!.isHr == true ||
+        UserSettingConst.userSettings!.topManagement == true;
+  }
+
+  void setIncomingScope(String scope, BuildContext context) {
+    incomingScope = scope;
+    incomingCurrentPage = 1;
+    teamRequests.clear();
+    incomingHasMore = true;
+    notifyListeners();
+    fetchRequests(context);
+  }
+
   Map<String, String?> personalFilters = {};
   Map<String, String?> incomingFilters = {};
 
@@ -167,7 +185,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
         final response = await RequestsServices.getManagerApprovables(
           context: context,
           type: 'overtime',
-          scope: 'team', // default scope for department view
+          scope: incomingScope,
           employeesIds: empIdsList,
           departmentIds: depIdsList,
           dateFrom: filterFrom,
@@ -215,6 +233,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     // Reset pagination and clear lists on switch
     if (value) {
       incomingCurrentPage = 1;
+      incomingScope = 'team'; // reset scope to default on every switch
       teamRequests.clear();
       incomingHasMore = true;
     } else {
