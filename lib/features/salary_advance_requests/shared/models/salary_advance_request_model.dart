@@ -50,11 +50,11 @@ class SalaryAdvanceRequestModel {
 
   SalaryAdvanceRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    total = json['total']?.toString();
-    howLongToPay = json['how_long_to_pay']?.toString();
-    from = json['from'];
-    to = json['to'];
-    employeeId = json['employee_id'];
+    total = json['total']?.toString() ?? json['money_value']?.toString();
+    howLongToPay = json['how_long_to_pay']?.toString() ?? json['duration']?.toString();
+    from = json['from'] ?? json['date_from'];
+    to = json['to'] ?? json['date_to'];
+    employeeId = json['employee_id'] ?? json['profile']?['id'];
     hrId = json['hr_id'];
     managerId = json['manager_id'];
     employeeApproved = json['employeeApproved'];
@@ -62,7 +62,7 @@ class SalaryAdvanceRequestModel {
     managerApproved = json['managerApproved'];
     employeeProfile = json['employee_profile'] != null
         ? ProfileModel.fromJson(json['employee_profile'])
-        : null;
+        : (json['profile'] != null ? ProfileModel.fromJson(json['profile']) : null);
     managerProfile = json['manager_profile'] != null
         ? ProfileModel.fromJson(json['manager_profile'])
         : null;
@@ -82,6 +82,8 @@ class SalaryAdvanceRequestModel {
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    takeAction = (json['can_take_action'] ?? json['take_action']) as bool?;
+    canTakeActionAsSomeoneElse = (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?;
   }
 
   Map<String, dynamic> toJson() {

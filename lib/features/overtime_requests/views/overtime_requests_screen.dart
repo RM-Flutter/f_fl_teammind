@@ -44,6 +44,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
+      provider.incomingScope = 'team';
       provider.fetchRequests(context);
     });
 

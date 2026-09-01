@@ -85,12 +85,12 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
       return;
     }
     final provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
-    final success = await provider.updateRequestDuration(
+    final res = await provider.updateRequestDuration(
       context, 
       widget.request.id.toString(), 
       _durationController.text
     );
-    if (success && mounted) {
+    if (res.success && mounted) {
       AlertsService.success(
         context: context,
         message: AppStrings.updatedSuccessfully.tr(),

@@ -48,7 +48,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     currentUserSettings = userSettingsModel;
     await getSaleryAdvance(context, getTeam: getTeam, empId: employeeId);
     await getDailyReports(context, empId: employeeId, getTeam: getTeam);
-    await getOvertimeRequestsList(context, empId: employeeId);
+    await getOvertimeRequestsList(context, empId: employeeId, getTeam: getTeam);
     await getSalaryAdvanceRequestsList(context, empId: employeeId, getTeam: getTeam);
     await _getEmployeeData(context: context, employeeId: employeeId);
     updateLoadingStatus(laodingValue: false);
@@ -145,21 +145,34 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
   }
 
   Future<void> getOvertimeRequestsList(BuildContext context,
-      {required String empId}) async {
+      {required String empId, required bool getTeam}) async {
     try {
-      final response = await OvertimeRequestsService.getOvertimeRequests(
-        context: context,
-        employeeProfileId: empId,
-      );
-      if (response.success &&
-          response.data != null &&
-          response.data!['requests'] != null) {
-        final List<dynamic> data = response.data!['requests'];
-        final allReqs =
-            data.map((e) => OvertimeRequestModel.fromJson(e)).toList();
-        final int id = int.tryParse(empId) ?? 0;
+      final response = getTeam
+          ? await RequestsServices.getManagerApprovables(
+              context: context,
+              type: 'overtime',
+              scope: 'team',
+              employeesIds: [empId],
+              perPage: 6,
+            )
+          : await RequestsServices.getMyApprovables(
+              context: context,
+              type: 'overtime',
+              perPage: 6,
+            );
+      if (response.success && response.data != null) {
+        final dynamic rawData = response.data!['approvables'] ??
+            response.data!['data'] ??
+            response.data!['requests'];
+        List<dynamic> listData = [];
+        if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+          listData = rawData['data'];
+        } else if (rawData is List) {
+          listData = rawData;
+        }
         overtimeRequests =
-            allReqs.where((e) => e.employeeProfileId == id).take(6).toList();
+            listData.map((e) => OvertimeRequestModel.fromJson(e)).toList();
+        notifyListeners();
       }
     } catch (e) {
       debugPrint("Error fetching overtime requests: $e");
@@ -170,16 +183,31 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       {required String empId, required bool getTeam}) async {
     try {
       final response = getTeam
-          ? await SalaryAdvanceRepo.getIncomingList(
-              context: context, itemsCount: 6, employeeId: empId)
-          : await SalaryAdvanceRepo.getPersonalList(
-              context: context, itemsCount: 6);
-      if (response.success &&
-          response.data != null &&
-          response.data!['data'] != null) {
-        final List<dynamic> data = response.data!['data'];
+          ? await RequestsServices.getManagerApprovables(
+              context: context,
+              type: 'salary_advance',
+              scope: 'team',
+              employeesIds: [empId],
+              perPage: 6,
+            )
+          : await RequestsServices.getMyApprovables(
+              context: context,
+              type: 'salary_advance',
+              perPage: 6,
+            );
+      if (response.success && response.data != null) {
+        final dynamic rawData = response.data!['approvables'] ??
+            response.data!['data'] ??
+            response.data!['requests'];
+        List<dynamic> listData = [];
+        if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+          listData = rawData['data'];
+        } else if (rawData is List) {
+          listData = rawData;
+        }
         salaryAdvanceRequestsList =
-            data.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
+            listData.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
+        notifyListeners();
       }
     } catch (e) {
       debugPrint("Error fetching salary advances: $e");

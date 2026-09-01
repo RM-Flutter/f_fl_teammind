@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
+import '../../../core/models/operation_result.model.dart';
 import '../../../core/services/requests_services.dart';
 import '../models/overtime_request_model.dart';
 import '../services/overtime_requests_service.dart';
@@ -339,33 +340,27 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     return success;
   }
 
-  Future<bool> updateRequestDuration(BuildContext context, String requestId, String overtime) async {
+  Future<OperationResult<Map<String, dynamic>>> updateRequestDuration(
+      BuildContext context, String requestId, String overtime) async {
     isActionLoading = true;
     notifyListeners();
-    bool success = false;
+    OperationResult<Map<String, dynamic>> res =
+        OperationResult(success: false, message: 'Failed');
     try {
       final response = await OvertimeRequestsService.updateOvertime(
         context: context,
         requestId: requestId,
         overtime: overtime,
       );
+      res = response;
       if (response.success) {
-        success = true;
         await fetchRequests(context);
-      } else if (response.message != null && response.message!.isNotEmpty) {
-        if (context.mounted) {
-          AlertsService.error(
-            context: context,
-            message: response.message!,
-            title: 'error'.tr(),
-          );
-        }
       }
     } catch (e) {
       debugPrint("Error updating duration: $e");
     }
     isActionLoading = false;
     notifyListeners();
-    return success;
+    return res;
   }
 }

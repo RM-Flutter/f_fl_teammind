@@ -97,9 +97,12 @@ class OvertimeRequestsSectionWidget extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     context.pushNamed(
-                       AppRoutes.overtimeRequestDetailsScreen.name,
-                       pathParameters: {'lang': context.locale.languageCode},
-                       extra: request,
+                      AppRoutes.approvableDetails.name,
+                      pathParameters: {
+                        'type': 'overtime',
+                        'id': request.id.toString(),
+                        'lang': context.locale.languageCode,
+                      },
                     );
                   },
                   child: Row(

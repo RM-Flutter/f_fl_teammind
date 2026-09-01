@@ -87,11 +87,15 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
           requestTypeId: requestTypeId,
           empIds: employeeId != null ? employeeId.toString() : null);
       if (result.success && result.data != null) {
-        var requestsData = result.data?['requests'] as List<dynamic>?;
-        print("RULES IS --> ${result.data?['rules_message']}");
-        if(result.data?['rules_message'] != null && result.data?['rules_message'] != "" ){
+        var rawRequests = result.data?['requests'] ?? result.data?['data'];
+        List<dynamic>? requestsData;
+        if (rawRequests is Map<String, dynamic> && rawRequests['data'] is List) {
+          requestsData = rawRequests['data'] as List<dynamic>;
+        } else if (rawRequests is List) {
+          requestsData = rawRequests as List<dynamic>;
+        }
+        if (result.data?['rules_message'] != null && result.data?['rules_message'] != "" ){
           rulesMessage = result.data?['rules_message'] ?? "";
-          print("RULES IS DONE");
         }
         requestsById = requestsData
             ?.map((item) => RequestModel.fromJson(item as Map<String, dynamic>))

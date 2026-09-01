@@ -39,12 +39,14 @@ class OvertimeRequestModel {
 
   OvertimeRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    employeeProfileId = json['employee_profile_id'];
-    date = json['date'];
+    employeeProfileId = json['employee_profile_id'] ?? json['profile']?['id'] ?? json['employee_id'];
+    date = json['date'] ?? json['date_from'] ?? json['from'] ?? json['created_at'];
     status = json['status'];
-    rejectReason = json['reject_reason'];
+    rejectReason = json['reject_reason'] ?? json['reason'];
     if (json['overtime'] != null) {
       overtime = int.tryParse(json['overtime'].toString());
+    } else if (json['duration'] != null) {
+      overtime = int.tryParse(json['duration'].toString());
     }
     if (json['fingerprint_overtime'] != null) {
       fingerprintOvertime = int.tryParse(json['fingerprint_overtime'].toString());
@@ -66,11 +68,11 @@ class OvertimeRequestModel {
     }
     employeeProfile = json['employee_profile'] != null
         ? EmployeeProfile.fromJson(json['employee_profile'])
-        : null;
-    employeeName = json['employee_name'] ?? employeeProfile?.name;
+        : (json['profile'] != null ? EmployeeProfile.fromJson(json['profile']) : null);
+    employeeName = json['employee_name'] ?? employeeProfile?.name ?? json['profile']?['name'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    takeAction = json['can_take_action'] as bool?;
+    takeAction = (json['can_take_action'] ?? json['take_action']) as bool?;
     canTakeActionAsSomeoneElse = (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?;
   }
 

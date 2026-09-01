@@ -152,6 +152,66 @@ abstract class RequestsServices {
     int? page,
     String? type,
   }) async {
+    try {
+      if (reqType == GetRequestsTypes.mine) {
+        final res = await getMyApprovables(
+          context: context,
+          type: 'employee_requests',
+          employeesIds: empIds != null ? [empIds.toString()] : null,
+          status: status?.toString(),
+          dateFrom: from,
+          dateTo: to,
+          page: page ?? 1,
+          perPage: plimits ?? 15,
+        );
+        if (res.success && res.data != null) {
+          final rawData = res.data!['approvables'] ?? res.data!['data'] ?? res.data!['requests'];
+          List<dynamic> list = [];
+          if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+            list = rawData['data'];
+          } else if (rawData is List) {
+            list = rawData;
+          }
+          if (list.isNotEmpty) {
+            return OperationResult(
+              success: true,
+              message: res.message,
+              data: {'requests': list, 'status': true},
+            );
+          }
+        }
+      } else if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.allCompany) {
+        final scope = reqType == GetRequestsTypes.myTeam ? 'team' : 'all_company';
+        final res = await getManagerApprovables(
+          context: context,
+          type: 'employee_requests',
+          scope: scope,
+          employeesIds: empIds != null ? [empIds.toString()] : null,
+          status: status?.toString(),
+          dateFrom: from,
+          dateTo: to,
+          page: page ?? 1,
+          perPage: plimits ?? 15,
+        );
+        if (res.success && res.data != null) {
+          final rawData = res.data!['approvables'] ?? res.data!['data'] ?? res.data!['requests'];
+          List<dynamic> list = [];
+          if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+            list = rawData['data'];
+          } else if (rawData is List) {
+            list = rawData;
+          }
+          if (list.isNotEmpty) {
+            return OperationResult(
+              success: true,
+              message: res.message,
+              data: {'requests': list, 'status': true},
+            );
+          }
+        }
+      }
+    } catch (_) {}
+
     String baseUrl;
     if (reqType == null) {
       baseUrl = EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url;
