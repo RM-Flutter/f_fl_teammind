@@ -21,6 +21,8 @@ class OtherDepartmentRequestModel {
   var createdAt;
   var seenAt;
   bool? waitingCancel;
+  bool? takeAction;
+  bool? canTakeActionAsSomeoneElse;
   var statusUpdate;
   var notes;
   var reason;
@@ -46,6 +48,8 @@ class OtherDepartmentRequestModel {
     required this.to,
     required this.status,
     required this.level,
+    this.takeAction,
+    this.canTakeActionAsSomeoneElse,
     this.managerReply,
     this.files,
     this.waitingCancel,
@@ -58,6 +62,8 @@ class OtherDepartmentRequestModel {
       rulesMessage: json['rules_message'] ?? "",
       notes: json['notes'] ?? "",
       waitingCancel: json['waiting_cancel'] ?? false,
+      takeAction: json['take_action'] as bool?,
+      canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       createdAt: json['created_at'] ?? "",
       statusUpdate: json['status_update_at'] ?? "",
       seenAt: json['seen_at'] ?? "",

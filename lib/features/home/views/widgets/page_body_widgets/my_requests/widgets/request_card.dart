@@ -52,6 +52,9 @@ class RequestCard extends StatelessWidget {
             request.id != null &&
             (userSettings?.empId != null && request.employeeId != null && userSettings!.empId != request.employeeId);
 
+    final bool showTakeActionBadge = (request.takeAction == true) ||
+        (request.canTakeActionAsSomeoneElse == true);
+
     return Container(
       margin: EdgeInsets.only(bottom: AppSizes.s16),
       padding: EdgeInsets.symmetric(
@@ -102,6 +105,38 @@ class RequestCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if (showTakeActionBadge) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFEBEE),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.error_outline_rounded,
+                            size: 13,
+                            color: Color(0xFFD32F2F),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            LocalizationService.isArabic(context: context)
+                                ? "مطلوب اتخاذ إجراء"
+                                : "Take Action",
+                            style: const TextStyle(
+                              color: Color(0xFFD32F2F),
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                  ],
                   AutoSizeText(
                     AppSettingsService.getRequestTitleFromGenenralSettings(
                         context: context,

@@ -15,6 +15,8 @@ class RequestModel {
   var rulesMessage;
   var status;
   bool? waitingCancel;
+  bool? takeAction;
+  bool? canTakeActionAsSomeoneElse;
   var level;
   List<Files>? files;
   List<ManagerReply>? managerReply;
@@ -47,6 +49,8 @@ class RequestModel {
     required this.to,
     required this.status,
     required this.level,
+    this.takeAction,
+    this.canTakeActionAsSomeoneElse,
     this.managerReply,
     this.seenBy,
     this.files,
@@ -57,6 +61,8 @@ class RequestModel {
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
       waitingCancel: json['waiting_cancel'] ?? false,
+      takeAction: json['take_action'] as bool?,
+      canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       notes: json['notes'] ?? "",
       files: json['files'] != null
           ? List<Files>.from(json['files'].map((file) => Files.fromJson(file)))

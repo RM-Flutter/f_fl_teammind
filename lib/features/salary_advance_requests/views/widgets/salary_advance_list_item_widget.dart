@@ -7,6 +7,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
+import '../../../../core/services/localization_service.dart';
 import '../../../../core/services/requests_services.dart';
 import '../../../../core/widgets/glassmorphism_card.widget.dart';
 import '../../shared/models/salary_advance_request_model.dart';
@@ -114,24 +115,59 @@ class _SalaryAdvanceListItemWidgetState
                 ),
             child: Padding(
               padding: EdgeInsets.only(bottom: AppSizes.s16, left: 4, right: 4),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  GlassmorphismCard(
-                    padding: EdgeInsets.zero,
-                    backgroundColor: Colors.white,
-                    opacity: 0.8,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(AppColors.buttonColor).withOpacity(0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                        spreadRadius: -5,
+              child: GlassmorphismCard(
+                padding: EdgeInsets.zero,
+                backgroundColor: Colors.white,
+                opacity: 0.8,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(AppColors.buttonColor).withOpacity(0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                    spreadRadius: -5,
+                  ),
+                ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.request.takeAction == true || widget.request.canTakeActionAsSomeoneElse == true) ...[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: AppSizes.s14,
+                          left: AppSizes.s16,
+                          right: AppSizes.s16,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFEBEE),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.error_outline_rounded,
+                                size: 13,
+                                color: Color(0xFFD32F2F),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                LocalizationService.isArabic(context: context)
+                                    ? "مطلوب اتخاذ إجراء"
+                                    : "Take Action",
+                                style: const TextStyle(
+                                  color: Color(0xFFD32F2F),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
                         // ─── Incoming: Employee name header ───
                         if (widget.isIncoming &&
                             widget.request.employeeProfile != null) ...[
@@ -368,42 +404,7 @@ class _SalaryAdvanceListItemWidgetState
                       ],
                     ),
                   ),
-
-                  // ─── Take Action Badge ───
-                  if (widget.request.takeAction == true)
-                    Positioned(
-                      top: -1,
-                      left: 0,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD32F2F),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(12),
-                            bottomRight: Radius.circular(12),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.red.withOpacity(0.35),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          'take_action'.tr(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            )));
+                ),
+              ));
   }
 }

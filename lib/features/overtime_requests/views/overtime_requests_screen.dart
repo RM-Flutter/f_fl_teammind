@@ -13,6 +13,7 @@ import '../../../../core/routing/app_router.dart';
 import '../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
+import '../../../core/services/localization_service.dart';
 import '../../more/notifications/views/widgets/switch_row_notification.dart';
 import '../controllers/overtime_requests_controller.dart';
 import '../models/overtime_request_model.dart';
@@ -229,11 +230,9 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
 
   Widget _buildRequestCard(OvertimeRequestModel request, bool isForDepartment) {
     String? displayName = request.employeeName ?? request.employeeProfile?.name;
+    final bool showTakeAction = request.takeAction == true || request.canTakeActionAsSomeoneElse == true;
 
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
+    return Container(
       margin: EdgeInsets.only(bottom: AppSizes.s16, left: 16, right: 16),
       padding: EdgeInsets.symmetric(
           vertical: AppSizes.s14, horizontal: AppSizes.s16),
@@ -262,6 +261,38 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (showTakeAction) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFEBEE),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 13,
+                      color: Color(0xFFD32F2F),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      LocalizationService.isArabic(context: context)
+                          ? "مطلوب اتخاذ إجراء"
+                          : "Take Action",
+                      style: const TextStyle(
+                        color: Color(0xFFD32F2F),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
             if (isForDepartment && displayName != null) ...[
               Row(
                 children: [
@@ -337,40 +368,6 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
           ],
         ),
       ),
-        ),
-        // ─── Take Action Badge ───
-        if (request.takeAction == true)
-          Positioned(
-            top: -1,
-            left: 16,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: const Color(0xFFD32F2F),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.red.withOpacity(0.35),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Text(
-                'take_action'.tr(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.4,
-                ),
-              ),
-            ),
-          ),
-      ],
     );
   }
 }

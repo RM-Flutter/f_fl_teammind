@@ -16,6 +16,7 @@ class OvertimeRequestModel {
   String? createdAt;
   String? updatedAt;
   bool? takeAction;
+  bool? canTakeActionAsSomeoneElse;
 
   OvertimeRequestModel({
     this.id,
@@ -33,6 +34,7 @@ class OvertimeRequestModel {
     this.createdAt,
     this.updatedAt,
     this.takeAction,
+    this.canTakeActionAsSomeoneElse,
   });
 
   OvertimeRequestModel.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class OvertimeRequestModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     takeAction = json['take_action'] as bool?;
+    canTakeActionAsSomeoneElse = (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?;
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +99,7 @@ class OvertimeRequestModel {
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     data['take_action'] = takeAction;
+    data['can_take_action_as_someone_else'] = canTakeActionAsSomeoneElse;
     return data;
   }
 
@@ -125,6 +129,7 @@ class OvertimeRequestModel {
       employeeActions: null,
       employeeProfile: null,
       takeAction: json['take_action'] as bool?,
+      canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
     );
   }
 }
