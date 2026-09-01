@@ -280,7 +280,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        request.date ?? "", 
+                        (request.date != null && request.date!.length >= 10) ? request.date!.substring(0, 10) : (request.date ?? ""), 
                         style: AppStyles.titleTextContent(context).copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: AppSizes.s16,

@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import '../../../../core/models/requests_model.dart';
+import '../../../../core/services/requests_services.dart';
 import '../../shared/models/employee_profile_model.dart';
 import '../../shared/repos/employee_repo.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
@@ -51,25 +53,27 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     await _getEmployeeData(context: context, employeeId: employeeId);
     updateLoadingStatus(laodingValue: false);
   }
-  Future<void> getSaleryAdvance(BuildContext context, {bool getTeam = true, empId}) async {
+
+  Future<void> getSaleryAdvance(BuildContext context,
+      {bool getTeam = true, empId}) async {
     await DioHelper.getData(
-        url: "/emp-salary-advances/entities-operations",
-      query: {
-          "emp_id" : empId
-      },
+      url: "/emp-salary-advances/entities-operations",
+      query: {"emp_id": empId},
       context: context,
-    ).then((v){
-      if(v.data['status'] == true){
+    ).then((v) {
+      if (v.data['status'] == true) {
         salaryAdvances = v.data['data'];
       }
-    }).catchError((error){
+    }).catchError((error) {
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage =
+            error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
       }
     });
   }
+
   Future<void> _getEmployeeData(
       {required BuildContext context, required String employeeId}) async {
     try {
@@ -77,43 +81,50 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
           context: context, employeeId: employeeId);
       if (result.success && result.data != null) {
         employee = EmployeeProfileModel.fromJson(result.data?['employee']);
-       await getTeamEvaluation(context, employeeId);
+        await getTeamEvaluation(context, employeeId);
       }
     } catch (err, t) {
       debugPrint(
           "error while getting Employee Details  ${err.toString()} at :- $t");
     }
   }
+
   Future<void> getTeamEvaluation(context, empId) async {
     var jsonString;
     var gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
     await DioHelper.getData(
-      context: context,
-        url: (gCache['employee_profile_id'].toString() == empId.toString())? "/rm_evaluation/v1/evaluation/emp_evaluations":"/rm_evaluation/v1/evaluation/emp_evaluations",
-        query: (gCache['employee_profile_id'].toString() != empId.toString())?{
-          "emp_id" : empId
-        }: null
-        ).then((v){
-          if(v.data['status'] == true){
-            evaluations = v.data['evaluations'];
-          }else{
-            debugPrint('false');
-          }
-    }).catchError((error){
+            context: context,
+            url: (gCache['employee_profile_id'].toString() == empId.toString())
+                ? "/rm_evaluation/v1/evaluation/emp_evaluations"
+                : "/rm_evaluation/v1/evaluation/emp_evaluations",
+            query:
+                (gCache['employee_profile_id'].toString() != empId.toString())
+                    ? {"emp_id": empId}
+                    : null)
+        .then((v) {
+      if (v.data['status'] == true) {
+        evaluations = v.data['evaluations'];
+      } else {
+        debugPrint('false');
+      }
+    }).catchError((error) {
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage =
+            error.response?.data['message'] ?? 'Something went wrong';
       } else {
         errorMessage = error.toString();
       }
     });
   }
 
-  Future<void> getDailyReports(BuildContext context, {required String empId, required bool getTeam}) async {
+  Future<void> getDailyReports(BuildContext context,
+      {required String empId, required bool getTeam}) async {
     try {
       final response = await DailyReportsService.getReports(
         context: context,
@@ -122,7 +133,9 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
         isIncoming: getTeam,
         employeeId: empId,
       );
-      if (response.success && response.data != null && response.data!['data'] != null) {
+      if (response.success &&
+          response.data != null &&
+          response.data!['data'] != null) {
         final List<dynamic> data = response.data!['data'];
         dailyReports = data.map((e) => DailyReportModel.fromJson(e)).toList();
       }
@@ -131,31 +144,42 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getOvertimeRequestsList(BuildContext context, {required String empId}) async {
+  Future<void> getOvertimeRequestsList(BuildContext context,
+      {required String empId}) async {
     try {
       final response = await OvertimeRequestsService.getOvertimeRequests(
         context: context,
         employeeProfileId: empId,
       );
-      if (response.success && response.data != null && response.data!['requests'] != null) {
+      if (response.success &&
+          response.data != null &&
+          response.data!['requests'] != null) {
         final List<dynamic> data = response.data!['requests'];
-        final allReqs = data.map((e) => OvertimeRequestModel.fromJson(e)).toList();
+        final allReqs =
+            data.map((e) => OvertimeRequestModel.fromJson(e)).toList();
         final int id = int.tryParse(empId) ?? 0;
-        overtimeRequests = allReqs.where((e) => e.employeeProfileId == id).take(6).toList();
+        overtimeRequests =
+            allReqs.where((e) => e.employeeProfileId == id).take(6).toList();
       }
     } catch (e) {
       debugPrint("Error fetching overtime requests: $e");
     }
   }
 
-  Future<void> getSalaryAdvanceRequestsList(BuildContext context, {required String empId, required bool getTeam}) async {
+  Future<void> getSalaryAdvanceRequestsList(BuildContext context,
+      {required String empId, required bool getTeam}) async {
     try {
-      final response = getTeam 
-          ? await SalaryAdvanceRepo.getIncomingList(context: context, itemsCount: 6, employeeId: empId)
-          : await SalaryAdvanceRepo.getPersonalList(context: context, itemsCount: 6);
-      if (response.success && response.data != null && response.data!['data'] != null) {
+      final response = getTeam
+          ? await SalaryAdvanceRepo.getIncomingList(
+              context: context, itemsCount: 6, employeeId: empId)
+          : await SalaryAdvanceRepo.getPersonalList(
+              context: context, itemsCount: 6);
+      if (response.success &&
+          response.data != null &&
+          response.data!['data'] != null) {
         final List<dynamic> data = response.data!['data'];
-        salaryAdvanceRequestsList = data.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
+        salaryAdvanceRequestsList =
+            data.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
       }
     } catch (e) {
       debugPrint("Error fetching salary advances: $e");

@@ -16,17 +16,17 @@ abstract class ApplicationInformationService {
 
   static Future<String> getAppName() async {
     // Ensure package info is initialized
-    _ensurePackageInfoInitialized();
+    await _ensurePackageInfoInitialized();
     return _packageInfo!.appName;
   }
 
   static Future<String> getAppPackageName() async {
-    _ensurePackageInfoInitialized();
+    await _ensurePackageInfoInitialized();
     return _packageInfo!.packageName;
   }
 
   static Future<String> getAppVersion() async {
-    _ensurePackageInfoInitialized();
+    await _ensurePackageInfoInitialized();
     return _packageInfo!.version;
   }
 

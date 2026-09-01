@@ -315,6 +315,15 @@ abstract class AppSettingsService {
           }
         }
       }
+      if((need == null || need.contains('general_settings')) &&result.data!['general_settings'] != null){
+        if(CacheHelper.getString("USG") != null&& result.data!['general_settings']['status'] == false){
+          final prefs = await SharedPreferences.getInstance();
+          final jsonString = prefs.getString("USG");
+          if (jsonString != null) {
+            gCache = json.decode(jsonString) as Map<String, dynamic>;
+          }
+        }
+      }
       appConfigServiceProvider.setSettings(
           type: settingType,
           data:(result.data!['general_settings']!= null)?(result.data!['general_settings']['status'] == false)? gCache: result.data!['general_settings']['data'] : null,

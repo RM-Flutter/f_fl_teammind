@@ -57,8 +57,8 @@ class GeneralSettingsModel extends AppSettingsModel {
     return GeneralSettingsModel(
       lastUpdateDate: json['last_update_date'],
       popup: (json['popup'] == null) ? null : Popup.fromJson(json['popup']),
-      mandatoryUpdatesAlertBuild: json['mandatory_updates_alert_build'],
-      mandatoryUpdatesEndBuild: json['mandatory_updates_end_build'],
+      mandatoryUpdatesAlertBuild: json['mandatory_updates_alert_build']?.toString(),
+      mandatoryUpdatesEndBuild: json['mandatory_updates_end_build']?.toString(),
       storeUrl: json['store_url'] != null
           ? StoreUrl.fromJson(json['store_url'])
           : null,
@@ -110,7 +110,7 @@ class GeneralSettingsModel extends AppSettingsModel {
       payrollScreenProtection: json['payroll_screen_protection'],
       loginTypes: json['login_types'] != null
           ? (json['login_types'] as List<dynamic>)
-          .map((item) => item as String)
+          .map((item) => item.toString())
           .toList()
           : null,
       managerAbleToApproveSalaryAdvances: ModelHelpersService.getBoolValue(json['manager_able_to_approve_salary_advances']),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
+import '../../../core/services/requests_services.dart';
 import '../models/overtime_request_model.dart';
 import '../services/overtime_requests_service.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
@@ -120,73 +121,79 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     }
 
     try {
-      final int? currentUserId = _getCurrentUserId();
-
-      // For personal view: always send current user's ID to backend
-      // For incoming/team view: send filterEmpId if user filtered by employee, else null
-      String? apiEmployeeProfileId;
+      // ─── Personal (mine) tab: NEW unified Approvals endpoint ─────────────
       if (!isForDepartment) {
-        // Personal tab: send the current user's employee_profile_id
-        if (currentUserId != null) {
-          apiEmployeeProfileId = currentUserId.toString();
-        }
-      } else {
-        // Team/Incoming tab: send the filtered employee ID if selected, otherwise null
-        apiEmployeeProfileId = (filterEmpId != null && filterEmpId!.isNotEmpty) ? filterEmpId : null;
-      }
+        final List<String>? empIdsList =
+            (filterEmpId != null && filterEmpId!.isNotEmpty) ? [filterEmpId!] : null;
+        final List<String>? depIdsList =
+            (filterDepId != null && filterDepId!.isNotEmpty) ? [filterDepId!] : null;
 
-      final pageToLoad = isForDepartment ? incomingCurrentPage : personalCurrentPage;
-      final response = await OvertimeRequestsService.getOvertimeRequests(
-        context: context,
-        employeeProfileId: apiEmployeeProfileId,
-        departmentId: filterDepId,
-        from: filterFrom,
-        to: filterTo,
-        page: pageToLoad,
-      );
+        final response = await OvertimeRequestsService.getMyApprovablesOvertime(
+          context: context,
+          employeesIds: empIdsList,
+          departmentIds: depIdsList,
+          dateFrom: filterFrom,
+          dateTo: filterTo,
+          page: personalCurrentPage,
+        );
 
-      if (response.success && response.data != null && response.data!['requests'] != null) {
-        final List<dynamic> requestsData = response.data!['requests'];
-        final List<OvertimeRequestModel> newRequests = requestsData.map((e) {
-          return OvertimeRequestModel.fromJson(e);
-        }).toList();
+        if (response.success && response.data != null && response.data!['approvables'] != null) {
+          final List<dynamic> approvablesData = response.data!['approvables'];
+          final List<OvertimeRequestModel> newRequests =
+              approvablesData.map((e) => OvertimeRequestModel.fromApprovableJson(e)).toList();
 
-        // Use the total from API response for accurate hasMore detection
-        final int apiTotal = (response.data!['total'] as num?)?.toInt() ?? 0;
+          final int apiTotal = (response.data!['total'] as num?)?.toInt() ?? 0;
 
-        if (isForDepartment) {
-          // For incoming: no client-side filtering needed, rely on backend
-          if (loadMore) {
-            teamRequests.addAll(newRequests);
-          } else {
-            incomingTotal = apiTotal;
-            teamRequests = newRequests.toList();
-          }
-          // No more pages if we've loaded all records or got empty results
-          if (newRequests.isEmpty || teamRequests.length >= incomingTotal) {
-            incomingHasMore = false;
-          }
-        } else {
-          // For personal: the API already filters by our employee_profile_id
           if (loadMore) {
             myRequests.addAll(newRequests);
           } else {
             personalTotal = apiTotal;
             myRequests = newRequests.toList();
           }
-          // No more pages if we've loaded all records or got empty results
           if (newRequests.isEmpty || myRequests.length >= personalTotal) {
             personalHasMore = false;
           }
-        }
-
-      } else {
-        if (isForDepartment) {
-          incomingHasMore = false;
-          if (!loadMore) teamRequests = [];
         } else {
           personalHasMore = false;
           if (!loadMore) myRequests = [];
+        }
+      } else {
+        // ─── Team/Incoming tab: NEW unified Approvals API ─────────────────────
+        final List<String>? empIdsList =
+            (filterEmpId != null && filterEmpId!.isNotEmpty) ? [filterEmpId!] : null;
+        final List<String>? depIdsList =
+            (filterDepId != null && filterDepId!.isNotEmpty) ? [filterDepId!] : null;
+
+        final response = await RequestsServices.getManagerApprovables(
+          context: context,
+          type: 'overtime',
+          scope: 'team', // default scope for department view
+          employeesIds: empIdsList,
+          departmentIds: depIdsList,
+          dateFrom: filterFrom,
+          dateTo: filterTo,
+          page: incomingCurrentPage,
+        );
+
+        if (response.success && response.data != null && response.data!['approvables'] != null) {
+          final List<dynamic> requestsData = response.data!['approvables'];
+          final List<OvertimeRequestModel> newRequests =
+              requestsData.map((e) => OvertimeRequestModel.fromApprovableJson(e)).toList();
+
+          final int apiTotal = (response.data!['total'] as num?)?.toInt() ?? 0;
+
+          if (loadMore) {
+            teamRequests.addAll(newRequests);
+          } else {
+            incomingTotal = apiTotal;
+            teamRequests = newRequests.toList();
+          }
+          if (newRequests.isEmpty || teamRequests.length >= incomingTotal) {
+            incomingHasMore = false;
+          }
+        } else {
+          incomingHasMore = false;
+          if (!loadMore) teamRequests = [];
         }
       }
     } catch (e) {

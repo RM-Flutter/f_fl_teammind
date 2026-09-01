@@ -274,8 +274,12 @@ class HomeController extends ChangeNotifier {
 
   getHome(context)async{
     if (_disposed) return;
-    notifyListeners();
-    isLoading = true;
+    
+    // Defer state change to avoid "setState called during build" exception when called from initState
+    Future.microtask(() {
+      isLoading = true;
+      notifyListeners();
+    });
 
     // Preload profile image in background (non-blocking)
     _preloadProfileImage(context);

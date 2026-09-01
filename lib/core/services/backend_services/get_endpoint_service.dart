@@ -296,6 +296,11 @@ abstract class EndpointServices {
             name: name,
             url: '${AppConstants.baseUrl}/rm_payroll/v1/salary-advance-requests'); // Will append ID
 
+      case EndpointsNames.myApprovables:
+        return EndPoint(
+            name: name,
+            url: '${AppConstants.baseUrl}/approval-system/v1/employee_requests/employee/my-approvables');
+
     }
   }
 }

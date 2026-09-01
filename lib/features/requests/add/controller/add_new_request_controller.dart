@@ -64,7 +64,7 @@ class AddNewRequestController extends ChangeNotifier {
   String? selectedRequestTypes;
   final picker = ImagePicker();
   List status = [
-    "canceled", "approved", "seen", "waiting_seen"
+    "waiting", "waiting_seen", "approved", "refused", "canceled"
   ];
   Future<void> getImage( context, {image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(

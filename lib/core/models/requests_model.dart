@@ -71,17 +71,60 @@ class RequestModel {
       statusUpdate: json['status_update_at'] ?? "",
       seenAt: json['seen_at'] ?? "",
       reason: json['reason'] ?? "",
-      departmentId: json['department_id'] ?? 0,
-      departmentName: json['department_name'] ?? "",
-      employeeId: json['employee_id'] ?? 0,
-      employeeName: json['employee_name'] ?? "",
+      departmentId: json['department_id'] ?? (json['department'] is Map ? json['department']['id'] : null) ?? 0,
+      departmentName: json['department_name'] ?? (json['department'] is Map ? json['department']['title'] : null) ?? "",
+      employeeId: json['employee_id'] ?? (json['profile'] is Map ? json['profile']['id'] : null) ?? 0,
+      employeeName: json['employee_name'] ?? (json['profile'] is Map ? json['profile']['name'] : null) ?? "",
       typeId: json['type_id'] ?? 0,
       typeName: json['type_name'] ?? "",
-      durationType: json['duration_type'] ?? "",
+      durationType: json['duration_type'] ?? json['unit'] ?? "",
       duration: json['duration'] ?? 0,
       moneyValue: json['money_value'] ?? 0,
-      from: json['from'] ?? "",
-      to: json['to'] ?? "",
+      from: json['from'] ?? json['date_from'] ?? "",
+      to: json['to'] ?? json['date_to'] ?? "",
+      status: json['status'],
+      level: json['level'] ?? "",
+    );
+  }
+
+  /// Factory for the new unified Approvals API response structure.
+  /// Maps `approvables[]` items → RequestModel.
+  /// Old fromJson() is kept above for backward compatibility (details screens, etc.)
+  factory RequestModel.fromApprovableJson(Map<String, dynamic> json) {
+    final department = json['department'] as Map<String, dynamic>? ?? {};
+    final profile = json['profile'] as Map<String, dynamic>? ?? {};
+
+    return RequestModel(
+      id: json['id'] ?? 0,
+      // rules_message not returned yet in new API — backend will re-add it
+      rulesMessage: "",
+      waitingCancel: json['waiting_cancel'] ?? false,
+      notes: json['notes'] ?? "",
+      // No files/managerReply/seenBy in list endpoint — kept empty for list cards
+      files: [],
+      managerReply: [],
+      seenBy: [],
+      createdAt: json['created_at'] ?? "",
+      // updated_at plays role of status_update_at
+      statusUpdate: json['updated_at'] ?? "",
+      // seen_at not present in list endpoint
+      seenAt: "",
+      reason: json['reason'] ?? "",
+      // department is now a nested object: { id, title }
+      departmentId: department['id'] ?? 0,
+      departmentName: department['title'] ?? "",
+      // employee info is now in profile: { id, name }
+      employeeId: profile['id'] ?? 0,
+      employeeName: profile['name'] ?? "",
+      typeId: json['type_id'] ?? 0,
+      typeName: json['type_name'] ?? "",
+      // unit replaces duration_type (e.g. "days", "hours")
+      durationType: json['unit'] ?? "",
+      duration: json['duration'] ?? 0,
+      moneyValue: json['money_value'] ?? 0,
+      // date_from / date_to replace from / to
+      from: json['date_from'] ?? "",
+      to: json['date_to'] ?? "",
       status: json['status'],
       level: json['level'] ?? "",
     );

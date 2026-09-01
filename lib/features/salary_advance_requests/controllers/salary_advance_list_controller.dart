@@ -7,6 +7,8 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/repos/salary_advance_repo.dart';
 
+import '../../../core/services/requests_services.dart';
+
 class SalaryAdvanceListController extends ChangeNotifier {
   List<SalaryAdvanceRequestModel>? personalRequests;
   List<SalaryAdvanceRequestModel>? incomingRequests;
@@ -186,23 +188,28 @@ class SalaryAdvanceListController extends ChangeNotifier {
       updateLoadingPersonal(true);
     }
     try {
-      final result = await SalaryAdvanceRepo.getPersonalList(
-        context: context, 
+      // NEW: uses unified Approvals endpoint for personal salary advance list
+      final result = await SalaryAdvanceRepo.getPersonalListV2(
+        context: context,
         page: personalCurrentPage,
-        from: filterFrom ?? '',
-        to: filterTo ?? '',
-        departmentId: filterDepId ?? '',
-        status: filterStatus ?? '',
+        departmentIds: (filterDepId != null && filterDepId!.isNotEmpty) ? [filterDepId!] : null,
+        status: filterStatus,
+        dateFrom: filterFrom,
+        dateTo: filterTo,
       );
       if (result.success && result.data != null) {
-        var listData = result.data?['data'] as List<dynamic>?;
+        // New API returns approvables[] instead of data[]
+        var listData = result.data?['approvables'] as List<dynamic>?;
         if (listData == null || listData.isEmpty) {
           personalHasMore = false;
         }
         if (personalCurrentPage == 1) {
-          personalRequests = listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList();
+          personalRequests = listData
+              ?.map((item) => SalaryAdvanceRequestModel.fromApprovableJson(item))
+              .toList();
         } else {
-          personalRequests?.addAll(listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList() ?? []);
+          personalRequests?.addAll(
+              listData?.map((item) => SalaryAdvanceRequestModel.fromApprovableJson(item)).toList() ?? []);
         }
       } else {
         personalHasMore = false;
@@ -228,24 +235,26 @@ class SalaryAdvanceListController extends ChangeNotifier {
       updateLoadingIncoming(true);
     }
     try {
-      final result = await SalaryAdvanceRepo.getIncomingList(
-        context: context, 
+      final result = await RequestsServices.getManagerApprovables(
+        context: context,
+        type: 'salary_advance',
+        scope: 'team', // default scope for incoming is team, unless expanded later
         page: incomingCurrentPage,
-        employeeId: filterEmpId ?? '',
-        from: filterFrom ?? '',
-        to: filterTo ?? '',
-        departmentId: filterDepId ?? '',
-        status: filterStatus ?? '',
+        employeesIds: (filterEmpId != null && filterEmpId!.isNotEmpty) ? [filterEmpId!] : null,
+        departmentIds: (filterDepId != null && filterDepId!.isNotEmpty) ? [filterDepId!] : null,
+        status: filterStatus,
+        dateFrom: filterFrom,
+        dateTo: filterTo,
       );
       if (result.success && result.data != null) {
-        var listData = result.data?['data'] as List<dynamic>?;
+        var listData = result.data?['approvables'] as List<dynamic>?;
         if (listData == null || listData.isEmpty) {
           incomingHasMore = false;
         }
         if (incomingCurrentPage == 1) {
-          incomingRequests = listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList();
+          incomingRequests = listData?.map((item) => SalaryAdvanceRequestModel.fromApprovableJson(item)).toList();
         } else {
-          incomingRequests?.addAll(listData?.map((item) => SalaryAdvanceRequestModel.fromJson(item)).toList() ?? []);
+          incomingRequests?.addAll(listData?.map((item) => SalaryAdvanceRequestModel.fromApprovableJson(item)).toList() ?? []);
         }
       } else {
         incomingHasMore = false;

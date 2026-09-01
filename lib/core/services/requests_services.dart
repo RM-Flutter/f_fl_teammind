@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import '../constants/app_constants.dart';
 
 /// used when getting requests ( my requests - my team requests - other Departments requests)
 enum GetRequestsTypes { mine, myTeam, otherDepartment, allCompany }
@@ -78,9 +79,9 @@ abstract class RequestsServices {
   /// get Request Status Icon [waiting_seen - seen - approved - canceled - refused]
   static Widget getRequestsStatusIcon(
       {required BuildContext context,
-        String? status,
-        Color? iconColor,
-        double? iconSize}) {
+      String? status,
+      Color? iconColor,
+      double? iconSize}) {
     switch (status?.toLowerCase().trim()) {
       case 'approved':
         return Icon(Icons.check_circle_outline_rounded,
@@ -91,7 +92,7 @@ abstract class RequestsServices {
       case 'seen':
         return Icon(Icons.access_time,
             color: iconColor ?? Colors.blue, size: iconSize ?? AppSizes.s24);
-      case 'waiting_seen' || 'waiting_cancel'|| 'waiting' || 'pending':
+      case 'waiting_seen' || 'waiting_cancel' || 'waiting' || 'pending':
         return Image.asset(
           'assets/images/waiting_icon.png',
           color: iconColor,
@@ -107,7 +108,6 @@ abstract class RequestsServices {
     }
   }
 
-
   /// build query parameters string
   static String _buildQueryParameters({
     String? requestTypeId,
@@ -122,9 +122,11 @@ abstract class RequestsServices {
   }) {
     final Map<String, String> queryParams = {};
 
-    if (requestTypeId != null&&requestTypeId != "") queryParams['request_type_id'] = requestTypeId;
+    if (requestTypeId != null && requestTypeId != "")
+      queryParams['request_type_id'] = requestTypeId;
     if (ids != null && ids.isNotEmpty) queryParams['emp_ids[]'] = ids;
-    if (department != null && department.isNotEmpty) queryParams['department_id'] = department;
+    if (department != null && department.isNotEmpty)
+      queryParams['department_id'] = department;
     if (from != null && from != "") queryParams['from'] = from;
     if (status != null && status != "") queryParams['status'] = status;
     if (to != null && to != "") queryParams['to'] = to;
@@ -137,7 +139,7 @@ abstract class RequestsServices {
 
   /// get Requests depends on the current user privileges
   static Future<OperationResult<Map<String, dynamic>>>
-  getRequestsByTypeDependsOnUserPrivileges({
+      getRequestsByTypeDependsOnUserPrivileges({
     required BuildContext context,
     required GetRequestsTypes? reqType,
     String? requestTypeId,
@@ -152,11 +154,10 @@ abstract class RequestsServices {
   }) async {
     String baseUrl;
     if (reqType == null) {
-      baseUrl =
-          EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url;
+      baseUrl = EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url;
     } else {
       baseUrl =
-      '${EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url}?type=${getRequestsTypeStr(type: reqType)}';
+          '${EndpointServices.getApiEndpoint(EndpointsNames.getRequests).url}?type=${getRequestsTypeStr(type: reqType)}';
     }
     final queryParams = _buildQueryParameters(
       requestTypeId: requestTypeId,
@@ -175,6 +176,105 @@ abstract class RequestsServices {
     final response = await DioApiService().get<Map<String, dynamic>>(url,
         dataKey: 'data', context: context, allData: true);
     return response;
+  }
+
+  /// New unified Approvals API — replaces per-feature list endpoints for employee (mine) view.
+  /// type: 'employee_requests' | 'salary_advance' | 'overtime'
+  static Future<OperationResult<Map<String, dynamic>>> getMyApprovables({
+    required BuildContext context,
+    required String type,
+    List<String>? employeesIds,   // sent as employees_ids[]
+    List<String>? departmentIds,  // sent as department_ids[]
+    String? status,
+    String? dateFrom,
+    String? dateTo,
+    int page = 1,
+    int perPage = 15,
+  }) async {
+    // The endpoint pattern is: /approval-system/v1/{type}/employee/my-approvables
+    final url = '${AppConstants.baseUrl}/approval-system/v1/$type/employee/my-approvables';
+
+    // Build query map — Dio handles List values as repeated params: key[]=v1&key[]=v2
+    final Map<String, dynamic> queryParams = {
+      'page': page,
+      'per_page': perPage,
+    };
+    if (employeesIds != null && employeesIds.isNotEmpty) {
+      queryParams['employees_ids[]'] = employeesIds;
+    }
+    if (departmentIds != null && departmentIds.isNotEmpty) {
+      queryParams['department_ids[]'] = departmentIds;
+    }
+    if (status != null && status.isNotEmpty) {
+      queryParams['status'] = status;
+    }
+    if (dateFrom != null && dateFrom.isNotEmpty) {
+      queryParams['date_from'] = dateFrom;
+    }
+    if (dateTo != null && dateTo.isNotEmpty) {
+      queryParams['date_to'] = dateTo;
+    }
+
+    debugPrint("🟢 getMyApprovables → $url | params: $queryParams");
+
+    return await DioApiService().get<Map<String, dynamic>>(
+      url,
+      context: context,
+      dataKey: '',
+      queryParameters: queryParams,
+      allData: true,
+      checkOnTokenExpiration: true,
+    );
+  }
+
+  /// New unified Approvals API for Manager/HR/Admin views (Team, Other Depts, All Company)
+  /// type: 'employee_requests' | 'salary_advance' | 'overtime'
+  /// scope: 'team' | 'other_departments' | 'all_company'
+  static Future<OperationResult<Map<String, dynamic>>> getManagerApprovables({
+    required BuildContext context,
+    required String type,
+    required String scope,
+    List<String>? employeesIds,
+    List<String>? departmentIds,
+    String? status,
+    String? dateFrom,
+    String? dateTo,
+    int page = 1,
+    int perPage = 15,
+  }) async {
+    final url = '${AppConstants.baseUrl}/approval-system/v1/$type/manager/under-my-management-approvables';
+
+    final Map<String, dynamic> queryParams = {
+      'scope': scope,
+      'page': page,
+      'per_page': perPage,
+    };
+    if (employeesIds != null && employeesIds.isNotEmpty) {
+      queryParams['employees_ids[]'] = employeesIds;
+    }
+    if (departmentIds != null && departmentIds.isNotEmpty) {
+      queryParams['department_ids[]'] = departmentIds;
+    }
+    if (status != null && status.isNotEmpty) {
+      queryParams['status'] = status;
+    }
+    if (dateFrom != null && dateFrom.isNotEmpty) {
+      queryParams['date_from'] = dateFrom;
+    }
+    if (dateTo != null && dateTo.isNotEmpty) {
+      queryParams['date_to'] = dateTo;
+    }
+
+    debugPrint("🟢 getManagerApprovables → $url | params: $queryParams");
+
+    return await DioApiService().get<Map<String, dynamic>>(
+      url,
+      context: context,
+      dataKey: '',
+      queryParameters: queryParams,
+      allData: true,
+      checkOnTokenExpiration: true,
+    );
   }
 
   /// get Requests depends on the current user privileges
@@ -200,7 +300,7 @@ abstract class RequestsServices {
     }
 
     final queryParams =
-    params.entries.map((e) => '${e.key}=${e.value}').join('&');
+        params.entries.map((e) => '${e.key}=${e.value}').join('&');
     final url = queryParams.isEmpty ? baseUrl : '$baseUrl?$queryParams';
 
     // Send request
@@ -244,8 +344,8 @@ abstract class RequestsServices {
   /// method to create a new request with files
   static Future<OperationResult<Map<String, dynamic>>> createNewRequestWithFile(
       {required BuildContext context,
-        required Map<String, String> requestData,
-        required List<FilePickerResult> files}) async {
+      required Map<String, String> requestData,
+      required List<FilePickerResult> files}) async {
     debugPrint("REQUEST DATA IS --> $requestData");
     debugPrint("REQUEST DATA IS --> $files");
     return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -260,7 +360,7 @@ abstract class RequestsServices {
   /// method to create a new request without files
   static Future<OperationResult<Map<String, dynamic>>> createNewRequest(
       {required BuildContext context,
-        required Map<String, dynamic> requestData}) async {
+      required Map<String, dynamic> requestData}) async {
     return await DioApiService().post<Map<String, dynamic>>(
         EndpointServices.getApiEndpoint(EndpointsNames.empAddRequest).url,
         context: context,
@@ -283,7 +383,9 @@ abstract class RequestsServices {
       {
         'request_id': requestId,
         'action':
-        action == 'Approved' ||action == 'approved' || action == 'موافقة' ? 'approved' : 'refused',
+            action == 'Approved' || action == 'approved' || action == 'موافقة'
+                ? 'approved'
+                : 'refused',
         'reply': replay,
       },
       context: context,

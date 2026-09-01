@@ -1,5 +1,6 @@
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/models/endpoint_model.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio_api_service.dart';
 import 'package:app_test/core/services/backend_services/get_endpoint_service.dart';
 import 'package:file_picker/file_picker.dart';
@@ -58,6 +59,43 @@ class SalaryAdvanceRepo {
     return await DioApiService().get<Map<String, dynamic>>(
       url,
       dataKey: 'data',
+      queryParameters: queryParams,
+      context: context,
+      allData: true,
+    );
+  }
+
+  /// New unified Approvals API for personal salary advance list.
+  /// Uses /approval-system/v1/employee_requests/employee/my-approvables/salary_advance
+  /// Returns `approvables[]` instead of `data[]`
+  static Future<OperationResult<Map<String, dynamic>>> getPersonalListV2({
+    required BuildContext context,
+    int page = 1,
+    int perPage = 15,
+    List<String>? departmentIds, // department_ids[]
+    String? status,
+    String? dateFrom,            // date_from
+    String? dateTo,              // date_to
+  }) async {
+    final url =
+        '${AppConstants.baseUrl}/approval-system/v1/salary_advance/employee/my-approvables';
+
+    final Map<String, dynamic> queryParams = {
+      'page': page,
+      'per_page': perPage,
+    };
+    if (departmentIds != null && departmentIds.isNotEmpty) {
+      queryParams['department_ids[]'] = departmentIds;
+    }
+    if (status != null && status.isNotEmpty) queryParams['status'] = status;
+    if (dateFrom != null && dateFrom.isNotEmpty) queryParams['date_from'] = dateFrom;
+    if (dateTo != null && dateTo.isNotEmpty) queryParams['date_to'] = dateTo;
+
+    debugPrint("🟢 getPersonalListV2 (salary_advance) → $url | params: $queryParams");
+
+    return await DioApiService().get<Map<String, dynamic>>(
+      url,
+      dataKey: '',
       queryParameters: queryParams,
       context: context,
       allData: true,

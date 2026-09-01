@@ -235,22 +235,32 @@ class AppConfigService extends ChangeNotifier {
       Map<String, dynamic>? dataS2}) {
     switch (type) {
       case SettingsType.generalSettings || SettingsType.startupSettings:
-        if (data != null && dataS1 != null && dataS2 != null) {
-          print("Done S");
+        bool updated = false;
+        if (data != null) {
           _generalSettigns = data;
-          _userSettings = dataS1;
-          _user2Settings = dataS2;
-          notifyListeners();
-          return;
+          updated = true;
         }
-      case SettingsType.userSettings || SettingsType.startupSettings:
+        if (dataS1 != null) {
+          _userSettings = dataS1;
+          updated = true;
+        }
+        if (dataS2 != null) {
+          _user2Settings = dataS2;
+          updated = true;
+        }
+        if (updated) {
+          print("Done S (partial or full)");
+          notifyListeners();
+        }
+        return;
+      case SettingsType.userSettings:
         if (dataS1 != null) {
           print("Done S1");
           _userSettings = dataS1;
           notifyListeners();
         }
         return;
-      case SettingsType.user2Settings || SettingsType.startupSettings:
+      case SettingsType.user2Settings:
         if (dataS2 != null) {
           print("Done S2");
           _user2Settings = dataS2;

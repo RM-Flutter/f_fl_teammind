@@ -109,6 +109,39 @@ class SalaryAdvanceRequestModel {
     data['updated_at'] = updatedAt;
     return data;
   }
+
+  /// Factory for the new unified Approvals API response structure.
+  /// Maps `approvables[]` items → SalaryAdvanceRequestModel.
+  /// Old fromJson() is kept above for details screen compatibility.
+  factory SalaryAdvanceRequestModel.fromApprovableJson(Map<String, dynamic> json) {
+    final profile = json['profile'] as Map<String, dynamic>? ?? {};
+    return SalaryAdvanceRequestModel(
+      id: json['id'],
+      status: json['status'],
+      // money_value replaces total in new API
+      total: json['money_value']?.toString(),
+      // duration replaces how_long_to_pay
+      howLongToPay: json['duration']?.toString(),
+      // date_from / date_to replace from / to
+      from: json['date_from'],
+      to: json['date_to'],
+      // profile.id replaces employee_id
+      employeeId: profile['id'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      // Fields not present in list endpoint — kept null
+      hrId: null,
+      managerId: null,
+      employeeApproved: null,
+      hrApproved: null,
+      managerApproved: null,
+      employeeProfile: null,
+      managerProfile: null,
+      hrProfile: null,
+      attachments: null,
+      employeeActions: null,
+    );
+  }
 }
 
 class ProfileModel {

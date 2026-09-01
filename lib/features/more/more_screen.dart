@@ -212,9 +212,19 @@ class _MoreScreenState extends State<MoreScreen> {
                               src: AppIcons.otherDepartments,
                               onTap: () async{
                                 await context.pushNamed(AppRoutes.requests2.name,
-                                    //  extra: requests,
                                     pathParameters: {
                                       'type': GetRequestsTypes.otherDepartment.name,
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                              title: 'All Company Requests', // or AppStrings.allCompanyRequests.tr() if it exists
+                              icon: Icons.business, // Fallback icon
+                              onTap: () async{
+                                await context.pushNamed(AppRoutes.requests2.name,
+                                    pathParameters: {
+                                      'type': GetRequestsTypes.allCompany.name,
                                       'lang': context.locale.languageCode
                                     });
                               },

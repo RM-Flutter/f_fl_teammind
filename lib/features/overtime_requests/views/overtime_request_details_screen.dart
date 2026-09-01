@@ -774,7 +774,7 @@ class _OvertimeRequestDetailsScreenState extends State<OvertimeRequestDetailsScr
                             InfoTileWidget(
                               background: Color(AppColors.secondaryButton),
                               imgPath: Icons.calendar_month,
-                              title: widget.request.date ?? "",
+                              title: (widget.request.date != null && widget.request.date!.length >= 10) ? widget.request.date!.substring(0, 10) : (widget.request.date ?? ""),
                               isFullRow: true,
                               trailing: InfoTileWidget(
                                 width: 100,

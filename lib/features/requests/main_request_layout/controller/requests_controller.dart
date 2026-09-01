@@ -12,15 +12,26 @@ class RequestsViewModel extends ChangeNotifier {
   List<RequestModel>? requests;
   List<MyTeamRequestModel>? myTeamRequests;
   List<OtherDepartmentRequestModel>? otherDepartmentRequestModel;
+  List<OtherDepartmentRequestModel>? allCompanyRequests;
   bool isLoadingMore = false;
   bool hasMore = true;
   int currentPage = 1;
   var rulesMessage;
+
   Future<void> initializeRequestsScreen(
       {required BuildContext context,
-        required GetRequestsTypes requestsType,empIds,from,status, to, requestTypeId, depId,  bool loadMore = false}) async {
-    await _getAllUserRequests(context: context, requestType: requestsType, loadMore: loadMore,
-        to:to ,from:from, requestTypeId: requestTypeId,empIds: empIds, depId: depId, status: status
+        required GetRequestsTypes requestsType, empIds, from, status, to, requestTypeId, depId,
+        bool loadMore = false}) async {
+    await _getAllUserRequests(
+      context: context,
+      requestType: requestsType,
+      loadMore: loadMore,
+      to: to,
+      from: from,
+      requestTypeId: requestTypeId,
+      empIds: empIds,
+      depId: depId,
+      status: status,
     );
     updateLoadingStatus(laodingValue: false);
   }
@@ -54,64 +65,48 @@ class RequestsViewModel extends ChangeNotifier {
       requests ??= [];
       myTeamRequests ??= [];
       otherDepartmentRequestModel ??= [];
+      allCompanyRequests ??= [];
       // نفس القوائم الأصلية، تتفضى فقط في أول تحميل
       if (requestType == GetRequestsTypes.mine) requests!.clear();
       if (requestType == GetRequestsTypes.myTeam) myTeamRequests!.clear();
       if (requestType == GetRequestsTypes.otherDepartment) otherDepartmentRequestModel!.clear();
+      if (requestType == GetRequestsTypes.allCompany) allCompanyRequests!.clear();
     } else {
       isLoadingMore = true;
     }
     notifyListeners();
 
     try {
-      final result = await RequestsServices.getRequestsByTypeDependsOnUserPrivileges(
-        page: currentPage,
-        context: context,
-        reqType: requestType,
-        empIds: empIds ?? '',
-        requestTypeId: requestTypeId ?? "",
-        from: from ?? "",
-        to: to ?? "",
-        depId: depId ?? "",
-        status: status ?? "",
-      );
+      // ─── NEW: Employee "mine" tab → unified Approvals endpoint ───────────
+      if (requestType == GetRequestsTypes.mine) {
+        // Convert single empId string → List<String> for employees_ids[]
+        final List<String>? empIdsList =
+            (empIds != null && empIds.toString().isNotEmpty) ? [empIds.toString()] : null;
+        // Convert single depId string → List<String> for department_ids[]
+        final List<String>? depIdsList =
+            (depId != null && depId.toString().isNotEmpty) ? [depId.toString()] : null;
 
-      if (result.success && result.data != null && result.data?.isNotEmpty == true) {
-        var requestsData = result.data?['requests'] as List<dynamic>?;
-        rulesMessage = result.data?['rules_message'] ?? "";
+        final result = await RequestsServices.getMyApprovables(
+          context: context,
+          type: 'employee_requests',
+          employeesIds: empIdsList,
+          departmentIds: depIdsList,
+          status: (status != null && status.toString().isNotEmpty) ? status.toString() : null,
+          dateFrom: (from != null && from.toString().isNotEmpty) ? from.toString() : null,
+          dateTo: (to != null && to.toString().isNotEmpty) ? to.toString() : null,
+          page: currentPage,
+        );
 
-        if (requestsData == null || requestsData.isEmpty) {
-          hasMore = false;
-        } else {
-          // 🧠 خطوة جديدة: التأكد إن الصفحة الجديدة مش مكررة أو فاضية
-          List<String> newIds = requestsData
-              .map((e) => (e['id'] ?? e['requestId'] ?? '').toString())
-              .toList();
+        if (result.success && result.data != null) {
+          final approvablesData = result.data?['approvables'] as List<dynamic>?;
+          // rules_message: backend will re-add it; keep empty for now
+          rulesMessage = result.data?['rules_message'] ?? "";
 
-          List<String> oldIds = [];
-          if (requestType == GetRequestsTypes.mine) {
-            oldIds = requests!.map((e) => e.id.toString()).toList();
-          } else if (requestType == GetRequestsTypes.myTeam) {
-            oldIds = myTeamRequests!.map((e) => e.id.toString()).toList();
-          } else if (requestType == GetRequestsTypes.otherDepartment) {
-            oldIds = otherDepartmentRequestModel!.map((e) => e.id.toString()).toList();
-          }
-
-          final allDuplicate = newIds.every((id) => oldIds.contains(id));
-          if (allDuplicate) {
-            debugPrint("⚠️ الصفحة $currentPage رجعت نفس البيانات — تم تجاهلها");
+          if (approvablesData == null || approvablesData.isEmpty) {
             hasMore = false;
-            isLoading = false;
-            isLoadingMore = false;
-            notifyListeners();
-            return;
-          }
-
-          // نفس منطقك الأصلي 100%
-          if (requestType == GetRequestsTypes.mine) {
-            print("my_requests page $currentPage Done");
-            final newItems = requestsData
-                .map((item) => RequestModel.fromJson(item as Map<String, dynamic>))
+          } else {
+            final newItems = approvablesData
+                .map((item) => RequestModel.fromApprovableJson(item as Map<String, dynamic>))
                 .where((newReq) => !requests!.any((oldReq) => oldReq.id == newReq.id))
                 .toList();
 
@@ -123,8 +118,70 @@ class RequestsViewModel extends ChangeNotifier {
               notifyListeners();
               return;
             }
-
             requests!.addAll(newItems);
+            currentPage++;
+          }
+        } else {
+          hasMore = false;
+        }
+        notifyListeners();
+        isLoading = false;
+        isLoadingMore = false;
+        return;
+      }
+
+      // ─── OLD endpoint replaced with new unified Approvals API ───
+      String scope = '';
+      if (requestType == GetRequestsTypes.myTeam) scope = 'team';
+      else if (requestType == GetRequestsTypes.otherDepartment) scope = 'other_departments';
+      else if (requestType == GetRequestsTypes.allCompany) scope = 'all_company';
+
+      final List<String>? empIdsList =
+          (empIds != null && empIds.toString().isNotEmpty) ? [empIds.toString()] : null;
+      final List<String>? depIdsList =
+          (depId != null && depId.toString().isNotEmpty) ? [depId.toString()] : null;
+
+      final result = await RequestsServices.getManagerApprovables(
+        context: context,
+        type: 'employee_requests',
+        scope: scope,
+        employeesIds: empIdsList,
+        departmentIds: depIdsList,
+        status: (status != null && status.toString().isNotEmpty) ? status.toString() : null,
+        dateFrom: (from != null && from.toString().isNotEmpty) ? from.toString() : null,
+        dateTo: (to != null && to.toString().isNotEmpty) ? to.toString() : null,
+        page: currentPage,
+      );
+
+      if (result.success && result.data != null) {
+        var requestsData = result.data?['approvables'] as List<dynamic>?;
+        rulesMessage = result.data?['rules_message'] ?? "";
+
+        if (requestsData == null || requestsData.isEmpty) {
+          hasMore = false;
+        } else {
+          // 🧠 التأكد إن الصفحة الجديدة مش مكررة أو فاضية
+          List<String> newIds = requestsData
+              .map((e) => (e['id'] ?? e['requestId'] ?? '').toString())
+              .toList();
+
+          List<String> oldIds = [];
+          if (requestType == GetRequestsTypes.myTeam) {
+            oldIds = myTeamRequests!.map((e) => e.id.toString()).toList();
+          } else if (requestType == GetRequestsTypes.otherDepartment) {
+            oldIds = otherDepartmentRequestModel!.map((e) => e.id.toString()).toList();
+          } else if (requestType == GetRequestsTypes.allCompany) {
+            oldIds = allCompanyRequests!.map((e) => e.id.toString()).toList();
+          }
+
+          final allDuplicate = newIds.every((id) => oldIds.contains(id));
+          if (allDuplicate && oldIds.isNotEmpty) {
+            debugPrint("⚠️ الصفحة $currentPage رجعت نفس البيانات — تم تجاهلها");
+            hasMore = false;
+            isLoading = false;
+            isLoadingMore = false;
+            notifyListeners();
+            return;
           }
 
           if (requestType == GetRequestsTypes.myTeam) {
@@ -134,7 +191,7 @@ class RequestsViewModel extends ChangeNotifier {
                 .where((newReq) => !myTeamRequests!.any((oldReq) => oldReq.id == newReq.id))
                 .toList();
 
-            if (newItems.isEmpty) {
+            if (newItems.isEmpty && myTeamRequests!.isNotEmpty) {
               debugPrint("⚠️ الصفحة $currentPage لم تحتوي على عناصر جديدة");
               hasMore = false;
               isLoading = false;
@@ -142,7 +199,6 @@ class RequestsViewModel extends ChangeNotifier {
               notifyListeners();
               return;
             }
-
             myTeamRequests!.addAll(newItems);
           }
 
@@ -153,7 +209,7 @@ class RequestsViewModel extends ChangeNotifier {
                 .where((newReq) => !otherDepartmentRequestModel!.any((oldReq) => oldReq.id == newReq.id))
                 .toList();
 
-            if (newItems.isEmpty) {
+            if (newItems.isEmpty && otherDepartmentRequestModel!.isNotEmpty) {
               debugPrint("⚠️ الصفحة $currentPage لم تحتوي على عناصر جديدة");
               hasMore = false;
               isLoading = false;
@@ -161,8 +217,25 @@ class RequestsViewModel extends ChangeNotifier {
               notifyListeners();
               return;
             }
-
             otherDepartmentRequestModel!.addAll(newItems);
+          }
+
+          if (requestType == GetRequestsTypes.allCompany) {
+            print("allCompany_requests page $currentPage Done");
+            final newItems = requestsData
+                .map((item) => OtherDepartmentRequestModel.fromJson(item as Map<String, dynamic>))
+                .where((newReq) => !allCompanyRequests!.any((oldReq) => oldReq.id == newReq.id))
+                .toList();
+
+            if (newItems.isEmpty && allCompanyRequests!.isNotEmpty) {
+              debugPrint("⚠️ الصفحة $currentPage لم تحتوي على عناصر جديدة");
+              hasMore = false;
+              isLoading = false;
+              isLoadingMore = false;
+              notifyListeners();
+              return;
+            }
+            allCompanyRequests!.addAll(newItems);
           }
 
           currentPage++;

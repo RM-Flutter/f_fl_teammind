@@ -45,7 +45,7 @@ class UserSettings2Model extends AppSettingsModel {
     }
 
     return UserSettings2Model(
-      lastUpdateDate: json['last_update_date'],
+      lastUpdateDate: json['last_update_date']?.toString(),
       lastLogin: parsedLastLogin,
       readList: (json['read_list'] as List<dynamic>?)
           ?.map((e) => e.toString())
@@ -147,9 +147,9 @@ class Holiday {
 
   factory Holiday.fromJson(Map<String, dynamic> json) {
     return Holiday(
-      name: json['name'],
-      from: json['from'],
-      to: json['to'],
+      name: json['name']?.toString(),
+      from: json['from']?.toString(),
+      to: json['to']?.toString(),
     );
   }
 
@@ -172,8 +172,8 @@ class Title {
 
   factory Title.fromJson(Map<String, dynamic> json) {
     return Title(
-      ar: json['ar'],
-      en: json['en'],
+      ar: json['ar']?.toString(),
+      en: json['en']?.toString(),
     );
   }
 }
@@ -188,8 +188,8 @@ class ReqTitle {
 
   factory ReqTitle.fromJson(Map<String, dynamic> json) {
     return ReqTitle(
-      ar: json['ar'],
-      en: json['en'],
+      ar: json['ar']?.toString(),
+      en: json['en']?.toString(),
     );
   }
 }
@@ -207,9 +207,9 @@ class Worktime {
 
   factory Worktime.fromJson(Map<String, dynamic> json) {
     return Worktime(
-      workingHoursType: json['working_hours_type'],
-      workingHoursFrom: json['working_hours_from'],
-      workingHoursTo: json['working_hours_to'],
+      workingHoursType: json['working_hours_type']?.toString(),
+      workingHoursFrom: json['working_hours_from']?.toString(),
+      workingHoursTo: json['working_hours_to']?.toString(),
     );
   }
 
@@ -245,12 +245,12 @@ class RequestType {
     return RequestType(
       id: json['id'],
       title: json['title'] != null ? ReqTitle.fromJson(json['title']) : null,
-      type: json['type'],
+      type: json['type']?.toString(),
       acceptanceTime: json['acceptance_time'],
       maximum: json['maximum'],
-      countingType: json['counting_type'],
+      countingType: json['counting_type']?.toString(),
       fields: json['fields'] != null ? Fields.fromJson(json['fields']) : null,
-      rulesMessage: json['rules_message'],
+      rulesMessage: json['rules_message']?.toString(),
     );
   }
 
@@ -279,8 +279,8 @@ class Fields {
 
   factory Fields.fromJson(Map<String, dynamic> json) {
     return Fields(
-      attachingFile: json['attaching_file'],
-      moneyValue: json['money_value'],
+      attachingFile: json['attaching_file']?.toString(),
+      moneyValue: json['money_value']?.toString(),
     );
   }
 

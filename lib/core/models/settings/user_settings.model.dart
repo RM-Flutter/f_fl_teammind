@@ -71,32 +71,32 @@ class UserSettingsModel extends AppSettingsModel {
   });
 
   factory UserSettingsModel.fromJson(Map<String, dynamic> json) {
-    DateTime? parseDate(String? dateString) {
-      if (dateString == null) return null;
+    DateTime? parseDate(dynamic dateVal) {
+      if (dateVal == null) return null;
       try {
-        return DateTime.parse(dateString);
+        return DateTime.parse(dateVal.toString());
       } catch (e) {
         return null;
       }
     }
 
     return UserSettingsModel(
-      lastUpdateDate: json['last_update_date'],
+      lastUpdateDate: json['last_update_date']?.toString(),
       userId: json['user_id'] as int?,
       empId: json['employee_profile_id'] as int?,
       newNotificationCount: json['new_notification_count'] as int?,
-      name: json['name'] as String?,
-      jobTitle: json['job_title'] as String?,
-      email: json['email'] as String?,
-      phone: json['phone'] as String?,
-      birthDate: parseDate(json['birthday'] as String?),
-      emailVerifiedAt: parseDate(json['email_verified_at'] as String?),
-      phoneVerifiedAt: parseDate(json['phone_verified_at'] as String?),
+      name: json['name']?.toString(),
+      jobTitle: json['job_title']?.toString(),
+      email: json['email']?.toString(),
+      phone: json['phone']?.toString(),
+      birthDate: parseDate(json['birthday']),
+      emailVerifiedAt: parseDate(json['email_verified_at']),
+      phoneVerifiedAt: parseDate(json['phone_verified_at']),
       permissions: (json['permissions'] as List<dynamic>?)
           ?.map((e) => e.toString())
           .toList(),
       role: (json['role'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
-      photo: json['photo'] as String?,
+      photo: json['photo']?.toString(),
       emergencyContacts: json['emergency_contacts'] as List<dynamic>?,
       departmentInfo: json['department_info'],
       departments: (json["departments"] is Map<String, dynamic>)
@@ -122,7 +122,7 @@ class UserSettingsModel extends AppSettingsModel {
       avFingerprint: json['av_fingerprint'] as Map<String, dynamic>?,
       avFingerprintLocations:
           json['av_fingerprint_locations'] as Map<String, dynamic>?,
-      licenseType: json['license_type'] as String?,
+      licenseType: json['license_type']?.toString(),
     );
   }
 

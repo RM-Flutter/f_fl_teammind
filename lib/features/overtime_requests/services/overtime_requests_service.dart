@@ -47,6 +47,48 @@ class OvertimeRequestsService {
     return response;
   }
 
+  /// New unified Approvals API — used for the employee personal (mine) overtime list.
+  /// Replaces getOvertimeRequests() for the personal tab only.
+  /// employees_ids[] and department_ids[] are sent as list query params.
+  static Future<OperationResult<Map<String, dynamic>>> getMyApprovablesOvertime({
+    required BuildContext context,
+    List<String>? employeesIds,   // employees_ids[]
+    List<String>? departmentIds,  // department_ids[]
+    String? status,
+    String? dateFrom,
+    String? dateTo,
+    int page = 1,
+    int perPage = 15,
+  }) async {
+    final String baseUrl = '${AppConstants.baseUrl}/approval-system/v1/overtime/employee/my-approvables';
+
+    final Map<String, dynamic> queryParams = {
+      'page': page,
+      'per_page': perPage,
+    };
+    if (employeesIds != null && employeesIds.isNotEmpty) {
+      queryParams['employees_ids[]'] = employeesIds;
+    }
+    if (departmentIds != null && departmentIds.isNotEmpty) {
+      queryParams['department_ids[]'] = departmentIds;
+    }
+    if (status != null && status.isNotEmpty) queryParams['status'] = status;
+    if (dateFrom != null && dateFrom.isNotEmpty) queryParams['date_from'] = dateFrom;
+    if (dateTo != null && dateTo.isNotEmpty) queryParams['date_to'] = dateTo;
+
+    debugPrint("🟢 getMyApprovablesOvertime → $baseUrl | params: $queryParams");
+
+    final response = await DioApiService().get<Map<String, dynamic>>(
+      baseUrl,
+      context: context,
+      dataKey: '',
+      queryParameters: queryParams,
+      allData: true,
+      checkOnTokenExpiration: true,
+    );
+    return response;
+  }
+
   static Future<OperationResult<Map<String, dynamic>>> addOvertimeRequest({
     required BuildContext context,
     required String date,

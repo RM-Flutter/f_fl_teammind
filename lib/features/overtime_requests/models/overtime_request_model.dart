@@ -94,6 +94,34 @@ class OvertimeRequestModel {
     data['updated_at'] = updatedAt;
     return data;
   }
+
+  /// Factory for the new unified Approvals API response structure.
+  /// Maps `approvables[]` items → OvertimeRequestModel.
+  /// Old fromJson() kept above for details screen compatibility.
+  factory OvertimeRequestModel.fromApprovableJson(Map<String, dynamic> json) {
+    final profile = json['profile'] as Map<String, dynamic>? ?? {};
+    return OvertimeRequestModel(
+      id: json['id'],
+      // date_from replaces date in new API
+      date: json['date_from'],
+      status: json['status'],
+      // duration (in minutes) replaces overtime field
+      overtime: json['duration'] != null ? int.tryParse(json['duration'].toString()) : null,
+      // profile.id replaces employee_profile_id
+      employeeProfileId: profile['id'],
+      // profile.name replaces employee_name
+      employeeName: profile['name'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      // Fields not present in list endpoint — kept null
+      rejectReason: null,
+      fingerprintOvertime: null,
+      fingerprintDelay: null,
+      theManagerReply: null,
+      employeeActions: null,
+      employeeProfile: null,
+    );
+  }
 }
 
 class ManagerReply {

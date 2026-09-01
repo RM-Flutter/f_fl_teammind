@@ -258,8 +258,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     try {
       await homeViewModel.initializeHomeScreen(context, null);
-    } catch (e) {
-      debugPrint("❌ Error in initializeHomeScreen, continuing anyway: $e");
+    } catch (e, s) {
+      debugPrint("❌ Error in initializeHomeScreen, continuing anyway: $e\n$s");
       // Continue even if home screen initialization fails (e.g., due to network issues)
     }
 
@@ -294,8 +294,8 @@ class _SplashScreenState extends State<SplashScreen> {
         // Decode JSON string into a Map
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
         UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
-      } catch (e) {
-        print("Error decoding user settings: $e");
+      } catch (e, s) {
+        print("Error decoding user settings: $e\n$s");
       }
     }
     else {
@@ -306,8 +306,8 @@ class _SplashScreenState extends State<SplashScreen> {
         // Decode JSON string into a Map
         // Convert the Map to the appropriate type (e.g., UserSettingsModel)
         UserSettingConst.userSettings2 = UserSettings2Model.fromJson(us2Cache);
-      } catch (e) {
-        print("Error decoding user settings: $e");
+      } catch (e, s) {
+        print("Error decoding user settings 2: $e\n$s");
       }
     }
     else {
@@ -318,8 +318,8 @@ class _SplashScreenState extends State<SplashScreen> {
         UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
         generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
         print("IS THIS IS -> ${generalSettingsModel.requestTypes}");
-      } catch (e) {
-        print("Error decoding user settings: $e");
+      } catch (e, s) {
+        print("Error decoding general settings: $e\n$s");
       }
     }
     else {

@@ -296,10 +296,11 @@ class _RequestsScreenState extends State<RequestsScreen> {
                           builder: (context, viewModel, child) {
                             if (viewModel.isLoading) return const LoadingPageWidget();
 
-                            final hasRequests =
+                            bool hasRequests =
                                 (viewModel.requests?.isNotEmpty == true) ||
                                     (viewModel.myTeamRequests?.isNotEmpty == true) ||
-                                    (viewModel.otherDepartmentRequestModel?.isNotEmpty == true);
+                                    (viewModel.otherDepartmentRequestModel?.isNotEmpty == true) ||
+                                    (viewModel.allCompanyRequests?.isNotEmpty == true);
 
                             if (!hasRequests) {
                               return Column(
@@ -346,7 +347,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                   children: [
                                     /// calendar button
                                     if (widget.requestsType == GetRequestsTypes.myTeam ||
-                                        widget.requestsType == GetRequestsTypes.otherDepartment)
+                                        widget.requestsType == GetRequestsTypes.otherDepartment ||
+                                        widget.requestsType == GetRequestsTypes.allCompany)
                                       CustomRequestsPageButton(
                                         onPressed: () async => await context.pushNamed(
                                           AppRoutes.requestsCalendar.name,
@@ -358,7 +360,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                               ? viewModel.requests
                                               : (widget.requestsType == GetRequestsTypes.myTeam)
                                               ? viewModel.myTeamRequests
-                                              : viewModel.otherDepartmentRequestModel,
+                                              : (widget.requestsType == GetRequestsTypes.otherDepartment)
+                                              ? viewModel.otherDepartmentRequestModel
+                                              : viewModel.allCompanyRequests,
                                         ),
                                         title: AppStrings.viewTeamRequestsOnCalendar.tr(),
                                         icon: Icons.calendar_month_outlined,
@@ -396,6 +400,16 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         viewModel.otherDepartmentRequestModel!.isNotEmpty &&
                                         widget.requestsType == GetRequestsTypes.otherDepartment)
                                       ...viewModel.otherDepartmentRequestModel!.map(
+                                            (req) => RequestCard(
+                                          reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                          request: req,
+                                        ),
+                                      ),
+
+                                    if (viewModel.allCompanyRequests != null &&
+                                        viewModel.allCompanyRequests!.isNotEmpty &&
+                                        widget.requestsType == GetRequestsTypes.allCompany)
+                                      ...viewModel.allCompanyRequests!.map(
                                             (req) => RequestCard(
                                           reqType: widget.requestsType ?? GetRequestsTypes.mine,
                                           request: req,

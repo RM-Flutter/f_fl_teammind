@@ -47,7 +47,7 @@ class RequestCard extends StatelessWidget {
 
     // التحقق من الصلاحيات لعرض Management Response Modal (نفس الشروط في request details)
     final bool canShowManagementResponse =
-        (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) &&
+        (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment || reqType == GetRequestsTypes.allCompany) &&
             (request.status == 'waiting_seen' || request.status == 'waiting_cancel' || request.status == 'waiting') &&
             request.id != null &&
             (userSettings?.empId != null && request.employeeId != null && userSettings!.empId != request.employeeId);
@@ -134,8 +134,8 @@ class RequestCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment) SizedBox(height: 4),
-                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment)
+                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment || reqType == GetRequestsTypes.allCompany) SizedBox(height: 4),
+                  if (reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment || reqType == GetRequestsTypes.allCompany)
                     Text(
                       "${request.employeeName ?? ""} - ${request.departmentName ?? ""}",
                       style: AppStyles.titleTextContent(context).copyWith(
