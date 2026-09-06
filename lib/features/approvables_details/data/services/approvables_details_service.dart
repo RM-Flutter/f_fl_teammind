@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
@@ -145,7 +145,7 @@ class ApprovablesDetailsService {
     required String approvableId,
     required String action, // approve | refuse
     String? reply,
-    File? file,
+    PlatformFile? file,
   }) async {
     try {
       final Map<String, dynamic> formMap = {
@@ -156,11 +156,17 @@ class ApprovablesDetailsService {
         formMap['reply'] = reply.trim();
       }
       if (file != null) {
-        final fileName = file.path.split('/').last;
-        formMap['file'] = await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        );
+        if (file.bytes != null) {
+          formMap['file'] = MultipartFile.fromBytes(
+            file.bytes!,
+            filename: file.name,
+          );
+        } else if (file.path != null) {
+          formMap['file'] = await MultipartFile.fromFile(
+            file.path!,
+            filename: file.name,
+          );
+        }
       }
 
       final formData = FormData.fromMap(formMap);
@@ -197,7 +203,7 @@ class ApprovablesDetailsService {
     required String action, // approve | refuse
     required String employeeId,
     String? reply,
-    File? file,
+    PlatformFile? file,
   }) async {
     try {
       final Map<String, dynamic> formMap = {
@@ -209,11 +215,17 @@ class ApprovablesDetailsService {
         formMap['reply'] = reply.trim();
       }
       if (file != null) {
-        final fileName = file.path.split('/').last;
-        formMap['file'] = await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        );
+        if (file.bytes != null) {
+          formMap['file'] = MultipartFile.fromBytes(
+            file.bytes!,
+            filename: file.name,
+          );
+        } else if (file.path != null) {
+          formMap['file'] = await MultipartFile.fromFile(
+            file.path!,
+            filename: file.name,
+          );
+        }
       }
 
       final formData = FormData.fromMap(formMap);

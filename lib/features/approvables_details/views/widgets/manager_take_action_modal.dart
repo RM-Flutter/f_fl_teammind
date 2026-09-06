@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -19,11 +19,15 @@ import 'manager_take_action/action_error_banner.dart';
 
 class ManagerTakeActionModal extends StatefulWidget {
   final ApprovableDetailsModel details;
+  final BuildContext parentContext;
+  final bool isAsSomeoneElse;
   final String? approvableStepId; // ID of the required approval step
 
   const ManagerTakeActionModal({
     super.key,
     required this.details,
+    required this.parentContext,
+    this.isAsSomeoneElse = false,
     this.approvableStepId,
   });
 
@@ -34,9 +38,10 @@ class ManagerTakeActionModal extends StatefulWidget {
 class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
   String _selectedAction = 'approve'; // 'approve' | 'refuse'
   final TextEditingController _replyController = TextEditingController();
-  File? _selectedFile;
+  PlatformFile? _selectedFile;
   String? _selectedEmployeeId;
   String? _errorMessage;
+  List<CurrentLevelApproverModel> _activeApprovers = [];
 
   @override
   void dispose() {
@@ -47,16 +52,13 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
   Future<void> _pickAttachment() async {
     final result = await FileAndImagePickerService.pickFile();
     if (result != null && result.files.isNotEmpty) {
-      final path = result.files.first.path;
-      if (path != null) {
-        setState(() {
-          _selectedFile = File(path);
-        });
-      }
+      setState(() {
+        _selectedFile = result.files.first;
+      });
     }
   }
 
-  void _submitAction(BuildContext context) {
+  Future<void> _submitAction(BuildContext context) async {
     setState(() => _errorMessage = null);
     final cubit = context.read<ApprovableDetailsCubit>();
     final isAsSomeoneElse = widget.details.canTakeActionAsSomeoneElse == true;
@@ -83,11 +85,8 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
         return;
       }
 
-      // Close bottom sheet immediately so SnackBar is visible on main screen
-      Navigator.of(context).pop();
-
-      cubit.submitTakeActionAsSomeoneElse(
-        context: context,
+      await cubit.submitTakeActionAsSomeoneElse(
+        context: widget.parentContext,
         approvableId: approvableId,
         action: _selectedAction,
         employeeId: _selectedEmployeeId!,
@@ -95,31 +94,31 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
         file: _selectedFile,
       );
     } else {
-      // Close bottom sheet immediately so SnackBar is visible on main screen
-      Navigator.of(context).pop();
-
-      cubit.submitTakeAction(
-        context: context,
+      await cubit.submitTakeAction(
+        context: widget.parentContext,
         approvableId: approvableId,
         action: _selectedAction,
         reply: _replyController.text,
         file: _selectedFile,
       );
     }
+
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isAsSomeoneElse = widget.details.canTakeActionAsSomeoneElse == true;
+    final isAsSomeoneElse = widget.isAsSomeoneElse;
     final isArabic = LocalizationService.isArabic(context: context);
 
     return BlocBuilder<ApprovableDetailsCubit, ApprovableDetailsState>(
       builder: (context, state) {
-        List<CurrentLevelApproverModel> activeApprovers = [];
         bool isLoadingApprovers = false;
 
         if (state is ApprovableDetailsLoaded) {
-          activeApprovers = state.activeApprovers ?? [];
+          _activeApprovers = state.activeApprovers ?? [];
           isLoadingApprovers = state.isLoadingApprovers;
         }
 
@@ -148,7 +147,9 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                   children: [
                     Text(
                       isAsSomeoneElse
-                          ? (isArabic ? 'اتخاذ إجراء نيابة عن موظف' : 'Take Action as Someone Else')
+                          ? (isArabic
+                              ? 'اتخاذ إجراء نيابة عن موظف'
+                              : 'Take Action as Someone Else')
                           : 'take_action'.tr(),
                       style: AppStyles.darkContent(context).copyWith(
                         fontSize: 16,
@@ -169,17 +170,19 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                 if (isAsSomeoneElse)
                   ApproverEmployeeDropdown(
                     selectedEmployeeId: _selectedEmployeeId,
-                    activeApprovers: activeApprovers,
+                    activeApprovers: _activeApprovers,
                     isLoadingApprovers: isLoadingApprovers,
                     isArabic: isArabic,
-                    onChanged: (val) => setState(() => _selectedEmployeeId = val),
+                    onChanged: (val) =>
+                        setState(() => _selectedEmployeeId = val),
                   ),
 
                 // Action Toggle Buttons (Approve / Refuse)
                 ActionTypeToggle(
                   selectedAction: _selectedAction,
                   isArabic: isArabic,
-                  onActionChanged: (val) => setState(() => _selectedAction = val),
+                  onActionChanged: (val) =>
+                      setState(() => _selectedAction = val),
                 ),
 
                 // Reply Notes Field
@@ -203,22 +206,26 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                 const SizedBox(height: 24),
 
                 // Submit Button
-                CustomElevatedButton(
-                  titleSize: 13,
-                  width: double.infinity,
-                  buttonStyle: ElevatedButton.styleFrom(
-                    backgroundColor: Color(AppColors.buttons),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
+                Center(
+                  child: CustomElevatedButton(
+                    isFuture: true,
+                    titleSize: 13,
+                    width: double.infinity,
+                    buttonStyle: ElevatedButton.styleFrom(
+                      backgroundColor: Color(AppColors.buttons),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(28),
+                      ),
                     ),
-                  ),
-                  onPressed: () async =>  _submitAction(context),
-                  title: isArabic ? 'إرسال الإجراء' : 'Submit Action',
-                  titleWidget: Text(
-                    (isArabic ? 'إرسال الإجراء' : 'Submit Action').toUpperCase(),
-                    style: AppStyles.whiteContent(context).copyWith(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+                    onPressed: () async => await _submitAction(context),
+                    title: isArabic ? 'إرسال الإجراء' : 'Submit Action',
+                    titleWidget: Text(
+                      (isArabic ? 'إرسال الإجراء' : 'Submit Action')
+                          .toUpperCase(),
+                      style: AppStyles.whiteContent(context).copyWith(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

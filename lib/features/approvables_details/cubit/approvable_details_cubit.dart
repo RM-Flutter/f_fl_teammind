@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/models/approvable_details_model.dart';
@@ -110,7 +110,7 @@ class ApprovableDetailsCubit extends Cubit<ApprovableDetailsState> {
     required String approvableId,
     required String action, // approve | refuse
     String? reply,
-    File? file,
+    PlatformFile? file,
   }) async {
     if (currentType == null || currentId == null) return;
     emit(ApprovableActionSubmitting());
@@ -141,7 +141,7 @@ class ApprovableDetailsCubit extends Cubit<ApprovableDetailsState> {
     required String action, // approve | refuse
     required String employeeId,
     String? reply,
-    File? file,
+    PlatformFile? file,
   }) async {
     if (currentType == null || currentId == null) return;
     emit(ApprovableActionSubmitting());

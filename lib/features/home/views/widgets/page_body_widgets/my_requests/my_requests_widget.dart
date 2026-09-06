@@ -3,6 +3,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/requests_services.dart';
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/request_card.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -76,9 +77,18 @@ class RequestsWidget extends StatelessWidget {
               ),
               SizedBox(height: 10),
               ...requests.take(5).map(
-                (req) => RequestCard(
+                (req) => ApprovableCardWidget(
                   request: req,
-                  reqType: requestType,
+                  isForDepartment: requestType != GetRequestsTypes.mine,
+                  onTap: () async => await context.pushNamed(
+                    AppRoutes.requestDetails.name,
+                    extra: req,
+                    pathParameters: {
+                      'type': requestType.name,
+                      'id': req!.id.toString(),
+                      'lang': context.locale.languageCode,
+                    },
+                  ),
                 ),
               )
             ],

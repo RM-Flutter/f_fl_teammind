@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,6 +60,14 @@ class ApprovableDetailsScreen extends StatelessWidget {
                   backgroundColor:  Color(AppColors.failureRed),
                 ),
               );
+            } else if (state is ApprovableDetailsError) {
+              final msg = state.message.toLowerCase();
+              if (msg.contains('something went wrong') || msg.contains('حدث خطأ')) {
+                context.goNamed(
+                  AppRoutes.home.name,
+                  pathParameters: {'lang': isArabic ? 'ar' : 'en'},
+                );
+              }
             }
           },
           builder: (context, state) {

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -256,11 +258,22 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                       ),
                     );
                   },
-                  child: SalaryAdvanceListItemWidget(
+                  child: ApprovableCardWidget(
                     request: request,
-                    isIncoming: isIncoming,
-                    canEdit: canEdit,
-                    onRefresh: () => controller.initializeScreen(context),
+                    isForDepartment: isIncoming,
+                    onTap: () async {
+                      final updated = await context.pushNamed(
+                        AppRoutes.salaryAdvanceDetails.name,
+                        pathParameters: {
+                          'lang': context.locale.languageCode,
+                          'id': request.id.toString(),
+                        },
+                        extra: request,
+                      );
+                      if (updated == true) {
+                        controller.initializeScreen(context);
+                      }
+                    },
                   ),
                 );
               },

@@ -20,6 +20,12 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import '../../../../core/models/requests_model.dart' show RequestModel;
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
+import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/overtime_requests_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/salary_advance_section_widget.dart';
+
 class RequestDetailsViewModel extends ChangeNotifier {
   bool? isLoading = false;
   String? errorMessage;
@@ -67,6 +73,81 @@ class RequestDetailsViewModel extends ChangeNotifier {
         title: AppStrings.statistics.tr(),
         viewProfile: true,
         height: 500);
+  }
+
+  Future<void> showAndGetEmployeeHistory(
+      BuildContext context, String empId, {required String type}) async {
+    try {
+      final response = await RequestsServices.getManagerApprovables(
+        context: context,
+        type: type == 'salary_advance_requests' ? 'salary_advance' : (type == 'overtime_requests' ? 'overtime' : type),
+        scope: 'team',
+        employeesIds: [empId],
+        perPage: 15,
+      );
+
+      if (response.success && response.data != null) {
+        final dynamic rawData = response.data!['approvables'] ??
+            response.data!['data'] ??
+            response.data!['requests'];
+        List<dynamic> listData = [];
+        if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+          listData = rawData['data'];
+        } else if (rawData is List) {
+          listData = rawData;
+        }
+
+        Widget? contentWidget;
+        String title = '';
+        final isArabic = LocalizationService.isArabic(context: context);
+
+        if (type.contains('overtime')) {
+          final reqs = listData.map((e) => OvertimeRequestModel.fromJson(e)).toList();
+          if (reqs.isEmpty) {
+            AlertsService.info(context: context, message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests', title: AppStrings.information.tr());
+            return;
+          }
+          title = isArabic ? 'إحصائيات العمل الإضافي' : 'Overtime Statistics';
+          contentWidget = OvertimeRequestsSectionWidget(
+            employee: null,
+            requests: reqs,
+            id: empId,
+            empName: '',
+          );
+        } else if (type.contains('salary_advance')) {
+          final reqs = listData.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
+          if (reqs.isEmpty) {
+            AlertsService.info(context: context, message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests', title: AppStrings.information.tr());
+            return;
+          }
+          title = isArabic ? 'إحصائيات السلف' : 'Salary Advance Statistics';
+          contentWidget = SalaryAdvanceSectionWidget(
+            employee: null,
+            requests: reqs,
+            id: empId,
+            empName: '',
+          );
+        }
+
+        if (contentWidget != null) {
+          await ModalSheetHelper.showModalSheet(
+            id: empId,
+            context: context,
+            modalContent: SingleChildScrollView(child: contentWidget),
+            title: title,
+            viewProfile: true,
+            height: MediaQuery.of(context).size.height * 0.7,
+          );
+        }
+      } else {
+        AlertsService.error(
+            context: context,
+            message: response.message ?? 'Failed to get history',
+            title: AppStrings.failed.tr());
+      }
+    } catch (e) {
+      debugPrint("Error fetching history: $e");
+    }
   }
 
   Future<List<MapEntry<String, Balance>>?> getEmployeeVocationBalance(

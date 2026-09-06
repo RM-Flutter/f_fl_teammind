@@ -1,10 +1,10 @@
-import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 
 class ActionFilePicker extends StatelessWidget {
-  final File? selectedFile;
+  final PlatformFile? selectedFile;
   final bool isArabic;
   final VoidCallback onTapPick;
   final VoidCallback onTapClear;
@@ -47,7 +47,7 @@ class ActionFilePicker extends StatelessWidget {
                 Expanded(
                   child: Text(
                     selectedFile != null
-                        ? selectedFile!.path.split('/').last
+                        ? selectedFile!.name
                         : (isArabic ? 'اضغط لإرفاق ملف' : 'Tap to attach file'),
                     style: AppStyles.darkContent(context).copyWith(
                       fontSize: 12,

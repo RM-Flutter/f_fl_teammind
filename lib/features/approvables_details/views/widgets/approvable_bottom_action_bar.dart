@@ -11,6 +11,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/requests/shared/ui/widgets/custom_request_details_button.widget.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
+import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/salary_advance_requests/views/update_salary_advance_screen.dart';
 import 'package:app_test/features/requests/details/controller/request_details_controller.dart';
 import '../../cubit/approvable_details_cubit.dart';
@@ -66,7 +67,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.complaint.tr(),
-            color: Colors.purple.shade700,
+            color: Color(AppColors.buttons),
             onPressed: () async {
               context.pushNamed(
                 AppRoutes.newComplainScreen.name,
@@ -83,11 +84,19 @@ class ApprovableBottomActionBar extends StatelessWidget {
             title: AppStrings.statistics.tr(),
             color: Color(AppColors.buttons),
             onPressed: () async {
-              await RequestDetailsViewModel().showAndGetEmployeeStatistics(
-                context,
-                details.employeeId.toString(),
-                type: type,
-              );
+              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance') {
+                await RequestDetailsViewModel().showAndGetEmployeeHistory(
+                  context,
+                  details.employeeId.toString(),
+                  type: type,
+                );
+              } else {
+                await RequestDetailsViewModel().showAndGetEmployeeStatistics(
+                  context,
+                  details.employeeId.toString(),
+                  type: type,
+                );
+              }
             },
           ),
         );
@@ -107,7 +116,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.askIgnore.tr(),
-            color: Colors.blueGrey.shade700,
+            color: Colors.red,
             onPressed: () async => await cubit.askIgnore(context: context),
           ),
         );
@@ -120,11 +129,19 @@ class ApprovableBottomActionBar extends StatelessWidget {
             title: AppStrings.statistics.tr(),
             color: Color(AppColors.buttons),
             onPressed: () async {
-              await RequestDetailsViewModel().showAndGetEmployeeStatistics(
-                context,
-                details.employeeId.toString(),
-                type: type,
-              );
+              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance') {
+                await RequestDetailsViewModel().showAndGetEmployeeHistory(
+                  context,
+                  details.employeeId.toString(),
+                  type: type,
+                );
+              } else {
+                await RequestDetailsViewModel().showAndGetEmployeeStatistics(
+                  context,
+                  details.employeeId.toString(),
+                  type: type,
+                );
+              }
             },
           ),
         );
@@ -143,7 +160,10 @@ class ApprovableBottomActionBar extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 builder: (_) => BlocProvider.value(
                   value: cubit,
-                  child: ManagerTakeActionModal(details: details),
+                  child: ManagerTakeActionModal(
+                    details: details,
+                    parentContext: context,
+                  ),
                 ),
               );
             },
@@ -151,11 +171,11 @@ class ApprovableBottomActionBar extends StatelessWidget {
         );
       }
 
-      // D. Attribute-driven: Take Action As Someone Else (if can_take_action_as_someone_else == true)
       if (details.canTakeActionAsSomeoneElse == true) {
         addButton(
           CustomRequestDetailsButton(
-            title: isArabic ? 'اتخاذ إجراء نيابة عن موظف' : 'Act as Someone Else',
+            title:
+                isArabic ? 'اتخاذ إجراء نيابة عن موظف' : 'Act as Someone Else',
             color: const Color(0xFFD32F2F),
             onPressed: () async {
               await showModalBottomSheet(
@@ -164,7 +184,11 @@ class ApprovableBottomActionBar extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 builder: (_) => BlocProvider.value(
                   value: cubit,
-                  child: ManagerTakeActionModal(details: details),
+                  child: ManagerTakeActionModal(
+                    details: details,
+                    parentContext: context,
+                    isAsSomeoneElse: true,
+                  ),
                 ),
               );
             },
@@ -177,7 +201,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: isArabic ? 'تعديل الطلب' : 'Edit Request',
-            color: Colors.orange.shade800,
+            color: Color(AppColors.secondaryButton),
             onPressed: () async {
               if (type == 'salary_advance') {
                 final salaryModel = SalaryAdvanceRequestModel(
@@ -243,10 +267,6 @@ class ApprovableBottomActionBar extends StatelessWidget {
             top: 8,
           ),
           width: 1.sw,
-          decoration: BoxDecoration(
-            color: Color(AppColors.secondaryButton),
-            borderRadius: BorderRadius.circular(50),
-          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

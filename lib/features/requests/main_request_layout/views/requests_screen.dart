@@ -24,6 +24,14 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/utils/modal_sheet_helper.dart';
+import 'package:app_test/features/requests/details/views/widgets/management_response_widget.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'dart:convert';
+
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../shared/ui/widgets/custom_requests_page_button.widget.dart';
@@ -390,9 +398,57 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         viewModel.requests!.isNotEmpty &&
                                         widget.requestsType == GetRequestsTypes.mine)
                                       ...viewModel.requests!.map(
-                                            (req) => RequestCard(
-                                          reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                            (req) => ApprovableCardWidget(
                                           request: req,
+                                          isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onLongPress: () async {
+                                            var jsonString = CacheHelper.getString("US1");
+                                            UserSettingsModel? userSettings;
+                                            if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+                                              var gCache = json.decode(jsonString) as Map<String, dynamic>;
+                                              userSettings = UserSettingsModel.fromJson(gCache);
+                                            }
+                                            final bool canShowManagementResponse =
+                                                (widget.requestsType == GetRequestsTypes.myTeam || widget.requestsType == GetRequestsTypes.otherDepartment || widget.requestsType == GetRequestsTypes.allCompany) &&
+                                                    (req.status == 'waiting_seen' || req.status == 'waiting_cancel' || req.status == 'waiting') &&
+                                                    req.id != null &&
+                                                    (userSettings?.empId != null && req.employeeId != null && userSettings!.empId != req.employeeId);
+                                            
+                                            if (canShowManagementResponse) {
+                                              await ModalSheetHelper.showModalSheet(
+                                                context: context,
+                                                viewProfile: false,
+                                                modalContent: ManagementResponseModal(
+                                                  requestId: req.id.toString(),
+                                                ),
+                                                title: AppStrings.managementResponse.tr(),
+                                                height: LayoutService.getHeight(context) * 0.5,
+                                              );
+                                            }
+                                          },
+                                          onTap: () async {
+                                            if (widget.requestsType == null || widget.requestsType == GetRequestsTypes.mine) {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req ?? [],
+                                                pathParameters: {
+                                                  'lang': context.locale.languageCode,
+                                                  'id': req!.id.toString(),
+                                                  'type': widget.requestsType != null ? widget.requestsType!.name : "me",
+                                                },
+                                              );
+                                            } else {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req,
+                                                pathParameters: {
+                                                  'type': widget.requestsType!.name,
+                                                  'id': req!.id.toString(),
+                                                  'lang': context.locale.languageCode
+                                                },
+                                              );
+                                            }
+                                          },
                                         ),
                                       ),
 
@@ -400,9 +456,57 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         viewModel.otherDepartmentRequestModel!.isNotEmpty &&
                                         widget.requestsType == GetRequestsTypes.otherDepartment)
                                       ...viewModel.otherDepartmentRequestModel!.map(
-                                            (req) => RequestCard(
-                                          reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                            (req) => ApprovableCardWidget(
                                           request: req,
+                                          isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onLongPress: () async {
+                                            var jsonString = CacheHelper.getString("US1");
+                                            UserSettingsModel? userSettings;
+                                            if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+                                              var gCache = json.decode(jsonString) as Map<String, dynamic>;
+                                              userSettings = UserSettingsModel.fromJson(gCache);
+                                            }
+                                            final bool canShowManagementResponse =
+                                                (widget.requestsType == GetRequestsTypes.myTeam || widget.requestsType == GetRequestsTypes.otherDepartment || widget.requestsType == GetRequestsTypes.allCompany) &&
+                                                    (req.status == 'waiting_seen' || req.status == 'waiting_cancel' || req.status == 'waiting') &&
+                                                    req.id != null &&
+                                                    (userSettings?.empId != null && req.employeeId != null && userSettings!.empId != req.employeeId);
+                                            
+                                            if (canShowManagementResponse) {
+                                              await ModalSheetHelper.showModalSheet(
+                                                context: context,
+                                                viewProfile: false,
+                                                modalContent: ManagementResponseModal(
+                                                  requestId: req.id.toString(),
+                                                ),
+                                                title: AppStrings.managementResponse.tr(),
+                                                height: LayoutService.getHeight(context) * 0.5,
+                                              );
+                                            }
+                                          },
+                                          onTap: () async {
+                                            if (widget.requestsType == null || widget.requestsType == GetRequestsTypes.mine) {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req ?? [],
+                                                pathParameters: {
+                                                  'lang': context.locale.languageCode,
+                                                  'id': req!.id.toString(),
+                                                  'type': widget.requestsType != null ? widget.requestsType!.name : "me",
+                                                },
+                                              );
+                                            } else {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req,
+                                                pathParameters: {
+                                                  'type': widget.requestsType!.name,
+                                                  'id': req!.id.toString(),
+                                                  'lang': context.locale.languageCode
+                                                },
+                                              );
+                                            }
+                                          },
                                         ),
                                       ),
 
@@ -410,9 +514,57 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         viewModel.allCompanyRequests!.isNotEmpty &&
                                         widget.requestsType == GetRequestsTypes.allCompany)
                                       ...viewModel.allCompanyRequests!.map(
-                                            (req) => RequestCard(
-                                          reqType: widget.requestsType ?? GetRequestsTypes.mine,
+                                            (req) => ApprovableCardWidget(
                                           request: req,
+                                          isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onLongPress: () async {
+                                            var jsonString = CacheHelper.getString("US1");
+                                            UserSettingsModel? userSettings;
+                                            if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+                                              var gCache = json.decode(jsonString) as Map<String, dynamic>;
+                                              userSettings = UserSettingsModel.fromJson(gCache);
+                                            }
+                                            final bool canShowManagementResponse =
+                                                (widget.requestsType == GetRequestsTypes.myTeam || widget.requestsType == GetRequestsTypes.otherDepartment || widget.requestsType == GetRequestsTypes.allCompany) &&
+                                                    (req.status == 'waiting_seen' || req.status == 'waiting_cancel' || req.status == 'waiting') &&
+                                                    req.id != null &&
+                                                    (userSettings?.empId != null && req.employeeId != null && userSettings!.empId != req.employeeId);
+                                            
+                                            if (canShowManagementResponse) {
+                                              await ModalSheetHelper.showModalSheet(
+                                                context: context,
+                                                viewProfile: false,
+                                                modalContent: ManagementResponseModal(
+                                                  requestId: req.id.toString(),
+                                                ),
+                                                title: AppStrings.managementResponse.tr(),
+                                                height: LayoutService.getHeight(context) * 0.5,
+                                              );
+                                            }
+                                          },
+                                          onTap: () async {
+                                            if (widget.requestsType == null || widget.requestsType == GetRequestsTypes.mine) {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req ?? [],
+                                                pathParameters: {
+                                                  'lang': context.locale.languageCode,
+                                                  'id': req!.id.toString(),
+                                                  'type': widget.requestsType != null ? widget.requestsType!.name : "me",
+                                                },
+                                              );
+                                            } else {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req,
+                                                pathParameters: {
+                                                  'type': widget.requestsType!.name,
+                                                  'id': req!.id.toString(),
+                                                  'lang': context.locale.languageCode
+                                                },
+                                              );
+                                            }
+                                          },
                                         ),
                                       ),
 
@@ -420,9 +572,57 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                         viewModel.myTeamRequests!.isNotEmpty &&
                                         widget.requestsType == GetRequestsTypes.myTeam)
                                       ...viewModel.myTeamRequests!.map(
-                                            (req) => RequestCard(
-                                          reqType: widget.requestsType ?? GetRequestsTypes.myTeam,
+                                            (req) => ApprovableCardWidget(
                                           request: req,
+                                          isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onLongPress: () async {
+                                            var jsonString = CacheHelper.getString("US1");
+                                            UserSettingsModel? userSettings;
+                                            if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
+                                              var gCache = json.decode(jsonString) as Map<String, dynamic>;
+                                              userSettings = UserSettingsModel.fromJson(gCache);
+                                            }
+                                            final bool canShowManagementResponse =
+                                                (widget.requestsType == GetRequestsTypes.myTeam || widget.requestsType == GetRequestsTypes.otherDepartment || widget.requestsType == GetRequestsTypes.allCompany) &&
+                                                    (req.status == 'waiting_seen' || req.status == 'waiting_cancel' || req.status == 'waiting') &&
+                                                    req.id != null &&
+                                                    (userSettings?.empId != null && req.employeeId != null && userSettings!.empId != req.employeeId);
+                                            
+                                            if (canShowManagementResponse) {
+                                              await ModalSheetHelper.showModalSheet(
+                                                context: context,
+                                                viewProfile: false,
+                                                modalContent: ManagementResponseModal(
+                                                  requestId: req.id.toString(),
+                                                ),
+                                                title: AppStrings.managementResponse.tr(),
+                                                height: LayoutService.getHeight(context) * 0.5,
+                                              );
+                                            }
+                                          },
+                                          onTap: () async {
+                                            if (widget.requestsType == null || widget.requestsType == GetRequestsTypes.mine) {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req ?? [],
+                                                pathParameters: {
+                                                  'lang': context.locale.languageCode,
+                                                  'id': req!.id.toString(),
+                                                  'type': widget.requestsType != null ? widget.requestsType!.name : "me",
+                                                },
+                                              );
+                                            } else {
+                                              await context.pushNamed(
+                                                AppRoutes.requestDetails.name,
+                                                extra: req,
+                                                pathParameters: {
+                                                  'type': widget.requestsType!.name,
+                                                  'id': req!.id.toString(),
+                                                  'lang': context.locale.languageCode
+                                                },
+                                              );
+                                            }
+                                          },
                                         ),
                                       ),
                                     if (viewModel.isLoadingMore)

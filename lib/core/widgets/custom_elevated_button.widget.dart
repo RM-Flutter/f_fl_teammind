@@ -100,13 +100,22 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          width: _isLoading ? AppSizes.s75 : widget.width ?? AppSizes.s200,
-          height: AppSizes.s50,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double targetWidth = widget.width ?? AppSizes.s200;
+        if (targetWidth == double.infinity) {
+          targetWidth = constraints.maxWidth.isFinite 
+              ? constraints.maxWidth 
+              : MediaQuery.of(context).size.width;
+        }
+
+        return AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: _isLoading ? AppSizes.s75 : targetWidth,
+              height: AppSizes.s50,
           child: ElevatedButton(
             style: widget.buttonStyle ??
                 ElevatedButton.styleFrom(
@@ -156,6 +165,8 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
             ),
           ),
         );
+      },
+    );
       },
     );
   }

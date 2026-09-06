@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
@@ -169,11 +170,22 @@ class SingleApprovalRow extends StatelessWidget {
           GestureDetector(
             onTap: () async {
               try {
-                final Uri url = Uri.parse(item.file!);
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                String fileUrl = item.file!;
+                if (fileUrl.startsWith('/')) {
+                  fileUrl = '${AppConstants.base}$fileUrl';
+                } else if (!fileUrl.startsWith('http')) {
+                  fileUrl = 'https://$fileUrl';
                 }
-              } catch (_) {}
+                
+                final Uri url = Uri.parse(fileUrl);
+                await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication,
+                  webOnlyWindowName: '_blank',
+                );
+              } catch (e) {
+                debugPrint('Error launching url: $e');
+              }
             },
             child: Row(
               children: [

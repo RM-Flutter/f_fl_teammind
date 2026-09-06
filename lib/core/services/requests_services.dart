@@ -82,7 +82,10 @@ abstract class RequestsServices {
       String? status,
       Color? iconColor,
       double? iconSize}) {
-    switch (status?.toLowerCase().trim()) {
+    if (status == null || status.trim().isEmpty || status.trim().toLowerCase() == 'null') {
+      return const SizedBox.shrink();
+    }
+    switch (status.toLowerCase().trim()) {
       case 'approved':
         return Icon(Icons.check_circle_outline_rounded,
             color: iconColor ?? Colors.green, size: iconSize ?? AppSizes.s24);
