@@ -3,6 +3,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/views/widgets/salary_advance_list_item_widget.dart';
@@ -46,11 +47,18 @@ class SalaryAdvanceSectionWidget extends StatelessWidget {
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               final request = requests![index];
-              return SalaryAdvanceListItemWidget(
+              return ApprovableCardWidget(
                 request: request,
-                isIncoming: false, // We just display it without edit capabilities
-                canEdit: false,
-                onRefresh: () {},
+                isForDepartment: false,
+                onTap: () async {
+                  await context.pushNamed<bool>(
+                    AppRoutes.salaryAdvanceDetails.name,
+                    pathParameters: {
+                      'id': request.id.toString(),
+                      'lang': context.locale.languageCode,
+                    },
+                  );
+                },
               );
             },
             separatorBuilder: (context, index) => const SizedBox(height: 12),

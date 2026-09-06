@@ -388,7 +388,8 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  return MaterialPage(child: const OvertimeRequestsScreen());
+                  final extra = state.extra as Map<String, dynamic>?;
+                  return MaterialPage(child: OvertimeRequestsScreen(extra: extra));
                 },
               ),
               GoRoute(
@@ -427,7 +428,8 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  return MaterialPage(child: const DailyReportsListScreen());
+                  final extra = state.extra as Map<String, dynamic>?;
+                  return MaterialPage(child: DailyReportsListScreen(extra: extra));
                 },
               ),
               GoRoute(

@@ -3,31 +3,28 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
-import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
-import '../../../core/services/localization_service.dart';
 import '../../more/notifications/views/widgets/switch_row_notification.dart';
 import '../controllers/overtime_requests_controller.dart';
-import '../models/overtime_request_model.dart';
-import '../../../../core/services/requests_services.dart';
 import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
+import '../../../../core/widgets/shared_list_filter_widget.dart'
+    as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
 import '../../requests/shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'overtime_calendar_screen.dart';
 
 class OvertimeRequestsScreen extends StatefulWidget {
-  const OvertimeRequestsScreen({super.key});
+  final Map<String, dynamic>? extra;
+
+  const OvertimeRequestsScreen({super.key, this.extra});
 
   @override
   State<OvertimeRequestsScreen> createState() => _OvertimeRequestsScreenState();
@@ -45,15 +42,27 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     if (jsonString != null && jsonString.isNotEmpty) {
       gCache = json.decode(jsonString);
     }
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider = Provider.of<OvertimeRequestsProvider>(context, listen: false);
+      if (widget.extra != null) {
+        if (widget.extra!['isIncoming'] == true) {
+          provider.isForDepartment = true;
+          provider.incomingFilters['empId'] = widget.extra!['empId'];
+          provider.incomingFilters['empName'] = widget.extra!['empName'];
+        } else {
+          provider.isForDepartment = false;
+        }
+      } else {
+        provider.isForDepartment = false;
+      }
       provider.incomingScope = 'team';
       provider.fetchRequests(context);
     });
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
         if (provider.isForDepartment) {
           if (!provider.incomingIsLoadingMore && provider.incomingHasMore) {
             provider.fetchRequests(context, loadMore: true);
@@ -78,21 +87,32 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
   String formatStatus(String? status) {
     if (status == null) return '';
     switch (status) {
-      case 'hrApproved': return AppStrings.hrApprovedStatus.tr();
-      case 'managerApproved': return AppStrings.managerApprovedStatus.tr();
-      case 'pending': return AppStrings.pendingStatus.tr();
-      case 'waiting': return AppStrings.pendingStatus.tr();
-      case 'rejected': return AppStrings.rejectedStatus.tr();
-      case 'refused': return AppStrings.rejectedStatus.tr();
+      case 'hrApproved':
+        return AppStrings.hrApprovedStatus.tr();
+      case 'managerApproved':
+        return AppStrings.managerApprovedStatus.tr();
+      case 'pending':
+        return AppStrings.pendingStatus.tr();
+      case 'waiting':
+        return AppStrings.pendingStatus.tr();
+      case 'rejected':
+        return AppStrings.rejectedStatus.tr();
+      case 'refused':
+        return AppStrings.rejectedStatus.tr();
       default:
-        return status.replaceAllMapped(RegExp(r'[A-Z]'), (match) => ' ${match.group(0)}').trim().replaceFirstMapped(RegExp(r'^[a-z]'), (match) => match.group(0)!.toUpperCase());
+        return status
+            .replaceAllMapped(RegExp(r'[A-Z]'), (match) => ' ${match.group(0)}')
+            .trim()
+            .replaceFirstMapped(
+                RegExp(r'^[a-z]'), (match) => match.group(0)!.toUpperCase());
     }
   }
 
   Color getStatusColor(String? status) {
     if (status == null) return Colors.grey;
     if (status.toLowerCase().contains('approved')) return Colors.green;
-    if (status.toLowerCase().contains('rejected') || status.toLowerCase().contains('refused')) return Colors.red;
+    if (status.toLowerCase().contains('rejected') ||
+        status.toLowerCase().contains('refused')) return Colors.red;
     return Colors.orange;
   }
 
@@ -100,36 +120,48 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     if (totalMinutes == null) return "0 ${AppStrings.minutes.tr()}";
     int hoursCount = totalMinutes ~/ 60;
     int minutesCount = totalMinutes % 60;
-    
+
     if (hoursCount == 0) return "$minutesCount ${AppStrings.minutes.tr()}";
     if (minutesCount == 0) return "$hoursCount ${AppStrings.hours.tr()}";
     return "$hoursCount ${AppStrings.hours.tr()} $minutesCount ${AppStrings.minutes.tr()}";
   }
 
-  String _getCalendarButtonTitle(BuildContext context, OvertimeRequestsProvider provider) {
+  String _getCalendarButtonTitle(
+      BuildContext context, OvertimeRequestsProvider provider) {
     final bool isArabic = context.locale.languageCode == 'ar';
     if (!provider.isForDepartment) {
-      return isArabic ? "عرض طلباتي للوقت الإضافي في التقويم" : "View My Overtime Requests on Calendar";
+      return isArabic
+          ? "عرض طلباتي للوقت الإضافي في التقويم"
+          : "View My Overtime Requests on Calendar";
     }
     switch (provider.incomingScope) {
       case 'other_departments':
-        return isArabic ? "عرض طلبات الأقسام الأخرى للوقت الإضافي في التقويم" : "View Department Overtime Requests on Calendar";
+        return isArabic
+            ? "عرض طلبات الأقسام الأخرى للوقت الإضافي في التقويم"
+            : "View Department Overtime Requests on Calendar";
       case 'all_company':
-        return isArabic ? "عرض طلبات كل الشركة للوقت الإضافي في التقويم" : "View All Company Overtime Requests on Calendar";
+        return isArabic
+            ? "عرض طلبات كل الشركة للوقت الإضافي في التقويم"
+            : "View All Company Overtime Requests on Calendar";
       case 'team':
       default:
-        return isArabic ? "عرض طلبات الفريق للوقت الإضافي في التقويم" : "View Team Overtime Requests on Calendar";
+        return isArabic
+            ? "عرض طلبات الفريق للوقت الإضافي في التقويم"
+            : "View Team Overtime Requests on Calendar";
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isManager = gCache != null && (
-        (gCache!['is_manager_in'] != null && gCache!['is_manager_in'] is List && gCache!['is_manager_in'].isNotEmpty) ||
-        (gCache!['is_teamleader_in'] != null && gCache!['is_teamleader_in'] is List && gCache!['is_teamleader_in'].isNotEmpty) ||
-        (gCache!['top_management'] == true) ||
-        (gCache!['is_hr'] == true)
-    );
+    bool isManager = gCache != null &&
+        ((gCache!['is_manager_in'] != null &&
+                gCache!['is_manager_in'] is List &&
+                gCache!['is_manager_in'].isNotEmpty) ||
+            (gCache!['is_teamleader_in'] != null &&
+                gCache!['is_teamleader_in'] is List &&
+                gCache!['is_teamleader_in'].isNotEmpty) ||
+            (gCache!['top_management'] == true) ||
+            (gCache!['is_hr'] == true));
 
     return TemplatePage(
       pageContext: context,
@@ -137,7 +169,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       routeName: AppRoutes.overtimeRequestsScreen.name,
       actions: [
         IconButton(
-          icon: Icon(Icons.filter_list_rounded, color: Color(AppColors.secondaryButton)),
+          icon: Icon(Icons.filter_list_rounded,
+              color: Color(AppColors.secondaryButton)),
           onPressed: () async {
             final result = await showModalBottomSheet<Map<String, String?>>(
               context: context,
@@ -160,16 +193,20 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       floatingActionButton: Consumer<OvertimeRequestsProvider>(
         builder: (context, provider, child) {
           return FloatingActionButton(
-            heroTag: provider.isForDepartment ? 'add_manager_overtime' : 'add_overtime',
+            heroTag: provider.isForDepartment
+                ? 'add_manager_overtime'
+                : 'add_overtime',
             backgroundColor: Color(AppColors.buttons),
             onPressed: () {
-               context.pushNamed(
-                 AppRoutes.addOvertimeRequestScreen.name,
-                 pathParameters: {'lang': context.locale.languageCode},
-                 extra: {'isForEmployee': provider.isForDepartment},
-               );
+              context.pushNamed(
+                AppRoutes.addOvertimeRequestScreen.name,
+                pathParameters: {'lang': context.locale.languageCode},
+                extra: {'isForEmployee': provider.isForDepartment},
+              );
             },
-            child: Icon(provider.isForDepartment ? Icons.person_add_alt_1 : Icons.add, color: Colors.white),
+            child: Icon(
+                provider.isForDepartment ? Icons.person_add_alt_1 : Icons.add,
+                color: Colors.white),
           );
         },
       ),
@@ -179,7 +216,9 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final list = provider.isForDepartment ? provider.teamRequests : provider.myRequests;
+          final list = provider.isForDepartment
+              ? provider.teamRequests
+              : provider.myRequests;
 
           return Column(
             children: [
@@ -199,7 +238,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 _ScopeSelectorRow(
                   currentScope: provider.incomingScope,
                   showAllCompany: provider.isHrOrTopManagement,
-                  onSelected: (scope) => provider.setIncomingScope(scope, context),
+                  onSelected: (scope) =>
+                      provider.setIncomingScope(scope, context),
                 ),
                 SizedBox(height: 10),
               ],
@@ -214,7 +254,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 onClearStatus: () {},
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 child: CustomRequestsPageButton(
                   title: _getCalendarButtonTitle(context, provider),
                   icon: Icons.calendar_month_outlined,
@@ -245,13 +286,19 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                       : ListView.builder(
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8).copyWith(bottom: 80),
-                          itemCount: list.length + (provider.isForDepartment ? (provider.incomingIsLoadingMore ? 1 : 0) : (provider.personalIsLoadingMore ? 1 : 0)),
+                          padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8)
+                              .copyWith(bottom: 80),
+                          itemCount: list.length +
+                              (provider.isForDepartment
+                                  ? (provider.incomingIsLoadingMore ? 1 : 0)
+                                  : (provider.personalIsLoadingMore ? 1 : 0)),
                           itemBuilder: (context, index) {
                             if (index == list.length) {
                               return const Padding(
                                 padding: EdgeInsets.all(16.0),
-                                child: Center(child: CircularProgressIndicator()),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
                               );
                             }
                             final item = list[index];
@@ -260,9 +307,11 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                               isForDepartment: provider.isForDepartment,
                               onTap: () {
                                 context.pushNamed(
-                                   AppRoutes.overtimeRequestDetailsScreen.name,
-                                   pathParameters: {'lang': context.locale.languageCode},
-                                   extra: item,
+                                  AppRoutes.overtimeRequestDetailsScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  },
+                                  extra: item,
                                 );
                               },
                             );
@@ -276,8 +325,6 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       ),
     );
   }
-
-  
 }
 
 class _ScopeSelectorRow extends StatelessWidget {
@@ -323,7 +370,8 @@ class _ScopeSelectorRow extends StatelessWidget {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? Color(AppColors.buttons)

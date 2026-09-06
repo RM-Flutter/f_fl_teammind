@@ -3,6 +3,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/core/services/requests_services.dart';
@@ -77,86 +78,19 @@ class OvertimeRequestsSectionWidget extends StatelessWidget {
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               final request = requests![index];
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                decoration: ShapeDecoration(
-                  color:  Color(AppColors.cardBackground),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  shadows: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 4),
-                    )
-                  ],
-                ),
-                child: InkWell(
-                  onTap: () {
-                    context.pushNamed(
-                      AppRoutes.approvableDetails.name,
-                      pathParameters: {
-                        'type': 'overtime',
-                        'id': request.id.toString(),
-                        'lang': context.locale.languageCode,
-                      },
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              (request.date != null && request.date!.length >= 10) ? request.date!.substring(0, 10) : (request.date ?? ""), 
-                              style: AppStyles.titleTextContent(context).copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: AppSizes.s16,
-                                letterSpacing: 0.5,
-                              )
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "${AppStrings.duration.tr()}: ${formatDuration(request.overtime)}", 
-                              style: AppStyles.titleTextContent(context).copyWith(
-                                fontWeight: FontWeight.w400,
-                                fontSize: AppSizes.s12,
-                                color: Colors.grey,
-                              )
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: AppSizes.s8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          RequestsServices.getRequestsStatusIcon(
-                            context: context, 
-                            status: request.status?.toLowerCase().contains('approved') == true ? 'approved' : 
-                                    request.status?.toLowerCase().contains('rejected') == true ? 'refused' : 'waiting',
-                            iconColor: getStatusColor(request.status)
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            formatStatus(request.status),
-                            textAlign: TextAlign.end,
-                            style: AppStyles.titleTextContent(context).copyWith(
-                              color: getStatusColor(request.status),
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+              return ApprovableCardWidget(
+                request: request,
+                isForDepartment: false,
+                onTap: () {
+                  context.pushNamed(
+                    AppRoutes.approvableDetails.name,
+                    pathParameters: {
+                      'type': 'overtime',
+                      'id': request.id.toString(),
+                      'lang': context.locale.languageCode,
+                    },
+                  );
+                },
               );
             },
             separatorBuilder: (context, index) => const SizedBox(height: 16),
@@ -170,19 +104,19 @@ class OvertimeRequestsSectionWidget extends StatelessWidget {
                 titleSize: AppSizes.s12,
                 title: 'viewAll'.tr().toUpperCase(),
                 onPressed: () async {
-                  final provider = Provider.of<app_test_overtime_provider.OvertimeRequestsProvider>(context, listen: false);
                   final myIdStr = CacheHelper.getString("US1");
                   final myId = myIdStr != null && myIdStr.isNotEmpty ? json.decode(myIdStr)['employee_profile_id'].toString() : '';
                   final isIncoming = (id?.toString() != myId);
-                  provider.isForDepartment = isIncoming;
-                  if (isIncoming) {
-                    provider.incomingFilters['empId'] = id?.toString();
-                    provider.incomingFilters['empName'] = empName?.toString();
-                  }
+                  
                   await context.pushNamed(
                     AppRoutes.overtimeRequestsScreen.name,
                     pathParameters: {
                       'lang': context.locale.languageCode,
+                    },
+                    extra: {
+                      "isIncoming": isIncoming,
+                      "empId": id?.toString(),
+                      "empName": empName?.toString(),
                     },
                   );
                 },

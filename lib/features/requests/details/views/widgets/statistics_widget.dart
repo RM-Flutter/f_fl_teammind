@@ -6,6 +6,10 @@ import 'package:app_test/core/widgets/vocation_list.widget.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/request_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
 class StatisticsModal extends StatelessWidget {
   final String employeeId;
   var type;
@@ -32,19 +36,21 @@ class StatisticsModal extends StatelessWidget {
           SizedBox(height: 14),
           ...requests!
               .map(
-                (req) => RequestCard(
-              reqType: type == "mine"
-                  ? GetRequestsTypes.mine
-                  : type == "myTeam"
-                  ? GetRequestsTypes.myTeam
-                  : type == "otherDepartment"
-                  ? GetRequestsTypes.otherDepartment
-                  : type == "allCompany"
-                  ? GetRequestsTypes.allCompany
-                  : GetRequestsTypes.myTeam,
-              request: req,
-            ),
-          )
+                (req) => ApprovableCardWidget(
+                  request: req,
+                  isForDepartment: false,
+                  onTap: () {
+                    context.pushNamed(
+                      AppRoutes.approvableDetails.name,
+                      pathParameters: {
+                        'type': 'requests', // Vacation
+                        'id': req.id.toString(),
+                        'lang': context.locale.languageCode,
+                      },
+                    );
+                  },
+                ),
+              )
         ],
       ),
     );

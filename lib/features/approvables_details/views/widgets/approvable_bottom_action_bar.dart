@@ -89,6 +89,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   context,
                   details.employeeId.toString(),
                   type: type,
+                  empName: details.employeeName?.toString() ?? '',
                 );
               } else {
                 await RequestDetailsViewModel().showAndGetEmployeeStatistics(
@@ -134,6 +135,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   context,
                   details.employeeId.toString(),
                   type: type,
+                  empName: details.employeeName?.toString() ?? '',
                 );
               } else {
                 await RequestDetailsViewModel().showAndGetEmployeeStatistics(

@@ -19,7 +19,8 @@ import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_fil
 import '../../../../core/widgets/active_filters_row_widget.dart';
 
 class DailyReportsListScreen extends StatefulWidget {
-  const DailyReportsListScreen({super.key});
+  final Map<String, dynamic>? extra;
+  const DailyReportsListScreen({Key? key, this.extra}) : super(key: key);
 
   @override
   State<DailyReportsListScreen> createState() => _DailyReportsListScreenState();
@@ -34,6 +35,18 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider = Provider.of<DailyReportsProvider>(context, listen: false);
+      if (widget.extra != null) {
+        if (widget.extra!['isIncoming'] == true) {
+          provider.isForDepartment = true;
+          provider.incomingFilters['empId'] = widget.extra!['empId'];
+          provider.incomingFilters['empName'] = widget.extra!['empName'];
+        } else {
+          provider.isForDepartment = false;
+        }
+      } else {
+        provider.isForDepartment = false;
+      }
+      
       if (provider.isManagerOrHr) {
         provider.fetchReports(context, isIncoming: true);
       }

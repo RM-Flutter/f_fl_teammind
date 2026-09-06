@@ -76,7 +76,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
   }
 
   Future<void> showAndGetEmployeeHistory(
-      BuildContext context, String empId, {required String type}) async {
+      BuildContext context, String empId, {required String type, required String empName}) async {
     try {
       final response = await RequestsServices.getManagerApprovables(
         context: context,
@@ -112,7 +112,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
             employee: null,
             requests: reqs,
             id: empId,
-            empName: '',
+            empName: empName,
           );
         } else if (type.contains('salary_advance')) {
           final reqs = listData.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
@@ -125,7 +125,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
             employee: null,
             requests: reqs,
             id: empId,
-            empName: '',
+            empName: empName,
           );
         }
 

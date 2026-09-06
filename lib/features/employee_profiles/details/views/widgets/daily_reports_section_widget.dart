@@ -184,19 +184,19 @@ class DailyReportsSectionWidget extends StatelessWidget {
                 titleSize: AppSizes.s12,
                 title: 'viewAll'.tr().toUpperCase(),
                 onPressed: () async {
-                  final provider = Provider.of<app_test_reports_provider.DailyReportsProvider>(context, listen: false);
                   final myIdStr = CacheHelper.getString("US1");
                   final myId = myIdStr != null && myIdStr.isNotEmpty ? json.decode(myIdStr)['employee_profile_id'].toString() : '';
                   final isIncoming = (id?.toString() != myId);
-                  provider.isForDepartment = isIncoming;
-                  if (isIncoming) {
-                    provider.incomingFilters['empId'] = id?.toString();
-                    provider.incomingFilters['empName'] = empName?.toString();
-                  }
+                  
                   await context.pushNamed(
                     AppRoutes.dailyReportsListScreen.name,
                     pathParameters: {
                       'lang': context.locale.languageCode,
+                    },
+                    extra: {
+                      "isIncoming": isIncoming,
+                      "empId": id?.toString(),
+                      "empName": empName?.toString(),
                     },
                   );
                 },

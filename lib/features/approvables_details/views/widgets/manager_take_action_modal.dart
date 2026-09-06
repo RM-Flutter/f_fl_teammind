@@ -61,7 +61,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
   Future<void> _submitAction(BuildContext context) async {
     setState(() => _errorMessage = null);
     final cubit = context.read<ApprovableDetailsCubit>();
-    final isAsSomeoneElse = widget.details.canTakeActionAsSomeoneElse == true;
+    final isAsSomeoneElse = widget.isAsSomeoneElse;
 
     // approvable_id expected by backend is the main approvable/request ID (e.g., 360)
     final String approvableId =
