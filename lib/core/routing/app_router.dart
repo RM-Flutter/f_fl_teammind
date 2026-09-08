@@ -2288,7 +2288,10 @@ GoRouter goRouter(BuildContext context) {
             key: state.pageKey,
             child: ChangeNotifierProvider(
               create: (_) => ComplaintsController(),
-              child: const NewComplainScreen(),
+              child: NewComplainScreen(
+                initialSubject: (state.extra as Map<String, dynamic>?)?['initialSubject'],
+                initialDetails: (state.extra as Map<String, dynamic>?)?['initialDetails'],
+              ),
             ),
             animation: animationController,
             begin: begin ?? const Offset(1.0, 0.0),

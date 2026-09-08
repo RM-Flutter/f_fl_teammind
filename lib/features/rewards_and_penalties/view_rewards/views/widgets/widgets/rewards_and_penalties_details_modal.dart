@@ -161,10 +161,24 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSizes.s28),
               ),
             ),
-            onPressed: () async => context.pushNamed(
-              AppRoutes.newComplainScreen.name,
-              pathParameters: {'lang': context.locale.languageCode},
-            ),
+            onPressed: () async {
+              final subject = LocalizationService.isArabic(context: context)
+                  ? 'تظلم بخصوص جزاء'
+                  : 'Complaint regarding penalty';
+                  
+              final details = LocalizationService.isArabic(context: context)
+                  ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'
+                  : 'I am submitting a complaint regarding the penalty applied to me:\n\n- Amount: $amount $categoryValue\n- Date: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- Reason: ${rewardAndPenalty.reason ?? ''}\n\nComplaint Details:\n';
+                  
+              context.pushNamed(
+                AppRoutes.newComplainScreen.name,
+                pathParameters: {'lang': context.locale.languageCode},
+                extra: {
+                  'initialSubject': subject,
+                  'initialDetails': details,
+                },
+              );
+            },
             title: AppStrings.complaint.tr(),
           ),
         ],

@@ -278,7 +278,9 @@ import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../../../core/widgets/custom_elevated_button.widget.dart';
 
 class NewComplainScreen extends StatefulWidget {
- const NewComplainScreen({super.key});
+ final String? initialSubject;
+ final String? initialDetails;
+ const NewComplainScreen({super.key, this.initialSubject, this.initialDetails});
 
  @override
  State<NewComplainScreen> createState() => _NewComplainScreenState();
@@ -291,7 +293,17 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
  TextEditingController detailsController = TextEditingController();
  @override
  Widget build(BuildContext context) {
-  return ChangeNotifierProvider(create: (context) => AddNewRequestController()..initializeAddNewRequestScreen(context: context),
+  return ChangeNotifierProvider(create: (context) {
+    final controller = AddNewRequestController();
+    controller.initializeAddNewRequestScreen(context: context);
+    if (widget.initialSubject != null) {
+      controller.subjectController.text = widget.initialSubject!;
+    }
+    if (widget.initialDetails != null) {
+      controller.detailsController.text = widget.initialDetails!;
+    }
+    return controller;
+  },
    child: Consumer<AddNewRequestController>(
     builder: (context, value, child) {
      return Scaffold(
