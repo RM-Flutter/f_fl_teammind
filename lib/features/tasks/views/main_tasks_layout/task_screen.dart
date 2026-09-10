@@ -63,20 +63,21 @@ class _TaskScreenState extends State<TaskScreen> {
       child: TemplatePage(
           backgroundColor: Colors.white,
           pageContext: context,
-          actions: [Padding(
-            padding: EdgeInsets.all(AppSizes.s10),
-            child: InkWell(
-              onTap: (){
-                viewModel.getTask(context, date: null);
-              },
-              child: Container(
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(AppColors.secondaryButton)),
-                child: Icon(
-                  Icons.refresh,
+          actions: [
+            Padding(
+              padding: EdgeInsets.all(AppSizes.s10),
+              child: InkWell(
+                onTap: (){
+                  viewModel.getTask(context, date: null);
+                },
+                child: Container(
+                  height: 35,
+                  width: 35,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(AppColors.secondaryButton)),
+                  child: Icon(
+                    Icons.refresh,
                   color: Colors.white,
                   size: AppSizes.s18,
                 ),

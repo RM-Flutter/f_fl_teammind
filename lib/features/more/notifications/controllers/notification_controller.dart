@@ -229,6 +229,32 @@ class NotificationProviderModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> markAsRead(BuildContext context, int id) async {
+    try {
+      // NOTE: API call paused until backend implements the endpoint.
+      // Backend needs to create an endpoint:
+      // POST /emp_requests/v1/notifications/{id}/mark-as-read
+      // To mark the notification as seen in the database.
+      
+      /*
+      await DioHelper.postData(
+        url: "/emp_requests/v1/notifications/$id/mark-as-read",
+        context: context,
+        data: {},
+        query: null
+      );
+      */
+      // Update local state if needed
+      final index = notifications.indexWhere((element) => element.id == id);
+      if(index != -1) {
+         notifications[index].seen = true;
+         notifyListeners();
+      }
+    } catch (error) {
+      debugPrint("Error marking notification as read: $error");
+    }
+  }
   addNotification(BuildContext context, {empIds, depIds})async {
     if(selectNotificationType == null || selectNotificationType!.toString().isEmpty){
       AlertsService.warning(

@@ -6,7 +6,8 @@ enum HomeWidgetType {
       'otherDepartmentRequests', 'Other Department Requests'),
   allCompanyRequests('allCompanyRequests', 'All Company Requests'),
   myTasks('myTasks', 'My Tasks'),
-  notifications('notifications', 'Notifications');
+  notifications('notifications', 'Notifications'),
+  bookmarks('bookmarks', 'My Bookmarks');
 
   final String id;
   final String displayName;
@@ -32,6 +33,7 @@ enum HomeWidgetType {
   /// Get default order
   static List<HomeWidgetType> getDefaultOrder() {
     return [
+      HomeWidgetType.bookmarks,
       HomeWidgetType.myRequests,
       HomeWidgetType.myTasks,
       HomeWidgetType.myTeamRequests,

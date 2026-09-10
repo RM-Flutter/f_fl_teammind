@@ -20,10 +20,10 @@ import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
 import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 
-
 class PayrollsListScreen extends StatefulWidget {
   final String? empId;
   final String? empName;
+
   const PayrollsListScreen({super.key, this.empId, this.empName});
 
   @override
@@ -47,7 +47,8 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
     var gCache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
     return ChangeNotifierProvider<PayrollsListViewModel>(
@@ -92,7 +93,8 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                 padding: EdgeInsets.all(AppSizes.s12),
                 child: SingleChildScrollView(
                   child: Consumer<PayrollsListViewModel>(
-                      builder: (context, viewModel, child) => viewModel.isLoading
+                      builder: (context, viewModel, child) => viewModel
+                              .isLoading
                           ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
                           : viewModel.payrolls?.isEmpty == true ||
                                   viewModel.payrolls == null
@@ -100,21 +102,30 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                                   height: 0.6.sh,
                                   title: AppStrings.noExistingPayrolls.tr())
                               : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            gapH12,
-                       if(widget.empName == null) Text(gCache['name'], style:
-                        AppStyles.heading(context).copyWith(
-                            fontWeight: FontWeight.w600,fontSize: 20,
-                        )
-                          ,),
-                        SizedBox(height: 20,),
-                                  /// general screen message widget for other requests types
-                                  // GeneralScreenMessageWidget(
-                                  //     screenId: '/payrolls'),
-                                  ...viewModel.payrolls!.map((PayrollModel payroll) =>
-                                      PayrollListItemWidget(payroll: payroll))
-                                ])),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                      gapH12,
+                                      if (widget.empName == null)
+                                        Text(
+                                          gCache['name'],
+                                          style: AppStyles.heading(context)
+                                              .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+
+                                      /// general screen message widget for other requests types
+                                      // GeneralScreenMessageWidget(
+                                      //     screenId: '/payrolls'),
+                                      ...viewModel.payrolls!.map(
+                                          (PayrollModel payroll) =>
+                                              PayrollListItemWidget(
+                                                  payroll: payroll))
+                                    ])),
                 ),
               ),
             ),

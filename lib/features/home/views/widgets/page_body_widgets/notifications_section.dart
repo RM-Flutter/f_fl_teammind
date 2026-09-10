@@ -24,6 +24,9 @@ class NotificationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Show only unread notifications on the Home Screen
+    final unreadNotifications = notifications.where((n) => n.seen != true && n.seen != 1 && n.seen != "1").toList();
+
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(
@@ -83,10 +86,10 @@ class NotificationsSection extends StatelessWidget {
                   shrinkWrap: true,
                   reverse: false,
                   itemBuilder: (context, index) => NotificationCard(
-                    notification: notifications[index],
+                    notification: unreadNotifications[index],
                   ),
                   separatorBuilder: (context, index) => SizedBox(height: 8,),
-                  itemCount: (notifications.length > 8)? 8 : notifications.length)
+                  itemCount: (unreadNotifications.length > 8)? 8 : unreadNotifications.length)
             ],
           ),
         ),

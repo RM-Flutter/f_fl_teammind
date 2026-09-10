@@ -13,6 +13,8 @@ import '../services/date_service.dart';
 import '../services/localization_service.dart';
 import '../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'cached_network_image_widget.dart';
+import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
+import 'package:provider/provider.dart';
 
 class NotificationCard extends StatefulWidget {
   final NotificationModel notification;
@@ -29,8 +31,13 @@ class _NotificationCardState extends State<NotificationCard> {
 
     return InkWell(
       onTap: (){
+        // Mark as read locally if not already
+        if (widget.notification.seen != true && widget.notification.id != null) {
+          Provider.of<NotificationProviderModel>(context, listen: false)
+              .markAsRead(context, widget.notification.id!);
+        }
         setState(() {
-          widget.notification!.seen = true;
+          widget.notification.seen = true;
         });
         context.pushNamed(
           AppRoutes.notificationDetails.name,

@@ -48,8 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List<HomeWidgetType> _availableWidgets = [];
   Timer? _autoScrollTimer;
   bool _isDragging = false;
+  bool _isEditMode = false;
+  List<String> _hiddenWidgets = [];
 
   static const String _widgetOrderCacheKey = "home_widget_order";
+  static const String _hiddenWidgetsCacheKey = "home_hidden_widgets";
 
   @override
   void initState() {
@@ -90,6 +93,25 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } else {
       _widgetOrder = HomeWidgetType.getDefaultOrder();
+    }
+
+    final hiddenJson = CacheHelper.getString(_hiddenWidgetsCacheKey);
+    if (hiddenJson.isNotEmpty) {
+      try {
+        final List<dynamic> hiddenList = jsonDecode(hiddenJson);
+        _hiddenWidgets = hiddenList.map((e) => e.toString()).toList();
+      } catch (e) {
+        debugPrint('Error loading hidden widgets: $e');
+      }
+    }
+  }
+
+  Future<void> _saveHiddenWidgets() async {
+    try {
+      final hiddenJson = jsonEncode(_hiddenWidgets);
+      await CacheHelper.setString(key: _hiddenWidgetsCacheKey, value: hiddenJson);
+    } catch (e) {
+      debugPrint('Error saving hidden widgets: $e');
     }
   }
 
@@ -307,6 +329,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (viewModel.myTasks != null && viewModel.myTasks?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myTasks);
     }
+    // Bookmarks are always available to show (it will show empty state if no bookmarks, or list)
+    widgetsWithData.add(HomeWidgetType.bookmarks);
 
     // Add widgets that have data, following the saved order
     for (final widgetType in _widgetOrder) {
@@ -322,20 +346,57 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+    // Filter hidden widgets if not in edit mode
+    if (!_isEditMode) {
+      _availableWidgets.removeWhere((w) => _hiddenWidgets.contains(w.id));
+    }
+
     return Column(
       children: [
-        // General Screen Message Widget (always at top, not reorderable)
-        // Shortcut actions (Replaces BookmarkList)
-        _buildShortcutActions(context),
-        SizedBox(height: AppSizes.s4),
-        // const Center(
-        //   child: Text(
-        //     "welcome to employee main screeen",
-        //     style: TextStyle(color: Colors.grey, fontSize: 12),
-        //   ),
-        // ),
-        SizedBox(height: AppSizes.s4),
-        if (_availableWidgets.isEmpty)
+        // Customize Button Row
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _isEditMode = !_isEditMode;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _isEditMode ? Colors.red.withValues(alpha: 0.1) : Color(AppColors.secondaryButton).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _isEditMode ? Icons.close : Icons.tune,
+                        size: 16,
+                        color: _isEditMode ? Colors.red : Color(AppColors.secondaryButton),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _isEditMode 
+                          ? (LocalizationService.isArabic(context: context) ? 'إنهاء التخصيص' : 'Done')
+                          : (LocalizationService.isArabic(context: context) ? 'تخصيص' : 'Customize'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: _isEditMode ? Colors.red : Color(AppColors.secondaryButton),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (_availableWidgets.isEmpty && !_isEditMode)
           NoExistingPlaceholderScreen(
               height: LayoutService.getHeight(context) * 0.4,
               title: AppStrings.thereIsNoRequestsAndNotifications.tr())
@@ -414,7 +475,12 @@ class _HomeScreenState extends State<HomeScreen> {
       case HomeWidgetType.myTasks:
         content = _buildTasksSection(context, viewModel.myTasks!);
         break;
+      case HomeWidgetType.bookmarks:
+        content = const BookmarkListWidget();
+        break;
     }
+
+    final isHidden = _hiddenWidgets.contains(widgetType.id);
 
     return Container(
       key: ValueKey(widgetType.id),
@@ -426,34 +492,82 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.transparent,
         child: Stack(
           children: [
-            content,
-            // Drag handle - only this can be used to drag
-            Positioned(
-              top: 8,
-              right: 8,
-              child: ReorderableDragStartListener(
-                index: index,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Color(AppColors.background).withValues(alpha: 0.95),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(AppColors.shadow).withValues(alpha: 0.15),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.drag_handle,
-                    color: Color(AppColors.secondaryButton),
-                    size: 24,
+            Opacity(
+              opacity: isHidden ? 0.5 : 1.0,
+              child: content,
+            ),
+            if (_isEditMode) ...[
+              // Disable tapping inside widget during edit mode
+              Positioned.fill(
+                child: Container(color: Colors.transparent),
+              ),
+              // Add / Remove Button
+              Positioned(
+                top: 8,
+                left: LocalizationService.isArabic(context: context) ? null : 8,
+                right: LocalizationService.isArabic(context: context) ? 8 : null,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (isHidden) {
+                        _hiddenWidgets.remove(widgetType.id);
+                      } else {
+                        _hiddenWidgets.add(widgetType.id);
+                      }
+                      _saveHiddenWidgets();
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isHidden ? Colors.green : Colors.red,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(AppColors.shadow).withValues(alpha: 0.15),
+                          blurRadius: 6,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      isHidden ? Icons.add : Icons.remove,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
+            // Drag handle - only this can be used to drag
+            if (_isEditMode || !_isEditMode) // Show handle always, or only in edit? Let's show always as before, but maybe gray it out if hidden
+              Positioned(
+                top: 8,
+                right: LocalizationService.isArabic(context: context) ? null : 8,
+                left: LocalizationService.isArabic(context: context) ? 8 : null,
+                child: ReorderableDragStartListener(
+                  index: index,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Color(AppColors.background).withValues(alpha: 0.95),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(AppColors.shadow).withValues(alpha: 0.15),
+                          blurRadius: 6,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.drag_handle,
+                      color: isHidden ? Colors.grey : Color(AppColors.secondaryButton),
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
