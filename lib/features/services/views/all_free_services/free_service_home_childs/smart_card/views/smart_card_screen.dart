@@ -188,7 +188,17 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             return FloatingActionButton(
               heroTag: 'smart_card_add_profile',
               onPressed:
-                  vm.isLoading ? null : () => _showCreateProfileBottomSheet(vm),
+                  vm.isLoading ? null : () async {
+                  final result = await context.pushNamed(
+                    AppRoutes.updateEmployeeInfoScreen.name,
+                    pathParameters: {'lang': context.locale.languageCode},
+                    queryParameters: {'isPersonal': 'true'},
+                    extra: <String, dynamic>{},
+                  );
+                  if (result == true) {
+                    vm.loadSmartCardScreen(context);
+                  }
+                },
               backgroundColor: Color(AppColors.buttons),
               child: vm.isLoading
                   ? const SizedBox(
@@ -340,7 +350,16 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       child: FilledButton(
                         onPressed: vm.isLoading
                             ? null
-                            : () => _showAddCompanyBottomSheet(vm),
+                            : () async {
+                      final result = await context.pushNamed(
+                        AppRoutes.updateCompanyInfoScreen.name,
+                        pathParameters: {'lang': context.locale.languageCode},
+                        extra: <String, dynamic>{},
+                      );
+                      if (result == true) {
+                        vm.loadSmartCardScreen(context);
+                      }
+                    },
                         style: FilledButton.styleFrom(
                           backgroundColor: Color(AppColors.darkBlue),
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -738,6 +757,16 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                 ),
               ),
             ),
+            if (company['profile_url'] != null && company['profile_url'].toString().isNotEmpty)
+              IconButton(
+                icon: const Icon(Icons.link, color: Colors.blue),
+                onPressed: () async {
+                  final url = Uri.parse(company['profile_url'].toString());
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  }
+                },
+              ),
             if (companyId != null)
               IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -882,13 +911,29 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
           ),
         ],
       ),
-      child: Text(
-        displayName.isEmpty ? AppStrings.notSet.tr() : displayName,
-        style: const TextStyle(
-          color: Color(AppColors.black),
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              displayName.isEmpty ? AppStrings.notSet.tr() : displayName,
+              style: const TextStyle(
+                color: Color(AppColors.black),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          if (profile['profile_url'] != null && profile['profile_url'].toString().isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.link, color: Colors.blue),
+              onPressed: () async {
+                final url = Uri.parse(profile['profile_url'].toString());
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
+              },
+            ),
+        ],
       ),
     );
   }

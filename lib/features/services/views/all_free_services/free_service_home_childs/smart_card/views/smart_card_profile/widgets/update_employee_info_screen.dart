@@ -156,7 +156,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
             try {
               final res = await SmartCardRepo.getEmployeeInCompany(
                 context,
-                companyId: cId,
+                companyId: cId!,
                 employeeId: id,
               );
               if (res.isNotEmpty) {
@@ -175,7 +175,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               try {
                 final allEmpsRes = await SmartCardRepo.getCompanyEmployees(
                   context,
-                  companyId: cId,
+                  companyId: cId!,
                 );
                 if (allEmpsRes.isNotEmpty && allEmpsRes['data'] is List) {
                   final empsList = allEmpsRes['data'] as List;
@@ -365,22 +365,33 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
       );
       final body = fullModel.toFullJson();
       body.remove('business'); // update employee info فقط – لا نرسل business للباك إند
+      final isCreate = widget.employee.isEmpty || widget.employee['id'] == null;
       if (widget.isPersonal) {
-        await SmartCardRepo.updateEmployee(context, body: body);
+        if (isCreate) {
+          await SmartCardRepo.createEmployee(context, body: body);
+        } else {
+          await SmartCardRepo.updateEmployee(context, body: body);
+        }
       } else {
         final cId = widget.companyId;
         final eId = _parseId(_employeeData?['id']) ?? _parseId(widget.employee['id']);
-        if (cId == null || eId == null) {
+        if (!isCreate && (cId == null || eId == null)) {
           viewModel.setError(AppStrings.missingCompanyOrEmployeeId.tr());
           viewModel.setSubmitting(false);
           return;
         }
-        await SmartCardRepo.updateEmployeeInCompany(
-          context,
-          companyId: cId,
-          employeeId: eId,
-          body: body,
-        );
+        if (isCreate) {
+          if (cId != null) {
+            await SmartCardRepo.addEmployeeToCompany(context, companyId: cId!, body: body);
+          }
+        } else {
+          await SmartCardRepo.updateEmployeeInCompany(
+            context,
+            companyId: cId!,
+            employeeId: eId!,
+            body: body,
+          );
+        }
       }
       if (!mounted) return;
       AlertsService.success(

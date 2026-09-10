@@ -92,20 +92,11 @@ class SmartCardRepo {
     BuildContext context, {
     required Map<String, dynamic> body,
   }) async {
-    try {
-      final response = await DioHelper.postData(
-        context: context,
-        url: _companyBase,
-        query: null,
-        data: body,
-      );
-      final data = response.data is Map ? Map<String, dynamic>.from(response.data as Map) : <String, dynamic>{};
-      _checkResponse(data);
-      return data;
-    } catch (e) {
-      debugPrint('SmartCardRepo.createCompany: $e');
-      rethrow;
-    }
+    return _sendCompanyFormData(
+      context,
+      body: body,
+      isUpdate: false,
+    );
   }
 
   /// PUT Update Company Profile
@@ -116,6 +107,26 @@ class SmartCardRepo {
     List<String>? logoBase64,
     List<String>? worksGalleryBase64,
     List<String>? videoGalleryBase64,
+  }) async {
+    return _sendCompanyFormData(
+      context,
+      companyId: companyId,
+      body: body,
+      logoBase64: logoBase64,
+      worksGalleryBase64: worksGalleryBase64,
+      videoGalleryBase64: videoGalleryBase64,
+      isUpdate: true,
+    );
+  }
+
+  static Future<Map<String, dynamic>> _sendCompanyFormData(
+    BuildContext context, {
+    int? companyId,
+    required Map<String, dynamic> body,
+    List<String>? logoBase64,
+    List<String>? worksGalleryBase64,
+    List<String>? videoGalleryBase64,
+    bool isUpdate = true,
   }) async {
     try {
       // Build multipart FormData like PersonalProfileService.updateProfile (avatar)
@@ -228,8 +239,10 @@ class SmartCardRepo {
       addMediaInOrder('video_gallery', videoList, videoNewBase64, 'video', 'mp4');
 
       // Use POST with _method=PUT to send multipart (Laravel-style override)
+      if (isUpdate) formData.fields.add(const MapEntry('_method', 'PUT'));
+      final targetUrl = isUpdate ? '$_companyBase/$companyId?_method=PUT' : _companyBase;
       final response = await DioHelper.postFormData(
-        url: '$_companyBase/$companyId?_method=PUT',
+        url: targetUrl,
         context: context,
         query: null,
         formdata: formData,
@@ -252,13 +265,16 @@ class SmartCardRepo {
     BuildContext context, {
     required int companyId,
     required int templateId,
+    Map<String, dynamic>? templateData,
   }) async {
     try {
+      final Map<String, dynamic> body = {'template_id': templateId};
+      if (templateData != null) body['template_data'] = templateData;
       final response = await DioHelper.patchData(
         context: context,
         url: '$_companyBase/$companyId/template',
         query: null,
-        data: {'template_id': templateId},
+        data: body,
       );
       final data = response.data is Map ? Map<String, dynamic>.from(response.data as Map) : <String, dynamic>{};
       _checkResponse(data);
@@ -399,7 +415,7 @@ class SmartCardRepo {
     required int employeeId,
     required Map<String, dynamic> body,
   }) async {
-    return _updateEmployeeFormData(
+    return _sendEmployeeFormData(
       context,
       url: '$_companyBase/$companyId/employees/$employeeId',
       body: body,
@@ -464,20 +480,7 @@ class SmartCardRepo {
     BuildContext context, {
     required Map<String, dynamic> body,
   }) async {
-    try {
-      final response = await DioHelper.postData(
-        context: context,
-        url: _employeeBase,
-        query: null,
-        data: body,
-      );
-      final data = response.data is Map ? Map<String, dynamic>.from(response.data as Map) : <String, dynamic>{};
-      _checkResponse(data);
-      return data;
-    } catch (e) {
-      debugPrint('SmartCardRepo.createEmployee: $e');
-      rethrow;
-    }
+    return _sendEmployeeFormData(context, url: _employeeBase, body: body, isUpdate: false);
   }
 
   /// PUT Update Employee Profile (current user) – with FormData for photo / works_gallery / video_gallery (نفس أسلوب company لكن المفتاح photo بدل logo)
@@ -485,13 +488,14 @@ class SmartCardRepo {
     BuildContext context, {
     required Map<String, dynamic> body,
   }) async {
-    return _updateEmployeeFormData(context, url: _employeeBase, body: body);
+    return _sendEmployeeFormData(context, url: _employeeBase, body: body);
   }
 
-  static Future<Map<String, dynamic>> _updateEmployeeFormData(
+  static Future<Map<String, dynamic>> _sendEmployeeFormData(
     BuildContext context, {
     required String url,
     required Map<String, dynamic> body,
+    bool isUpdate = true,
   }) async {
     try {
       final Map<String, dynamic> original = Map<String, dynamic>.from(body);
@@ -637,10 +641,10 @@ class SmartCardRepo {
         }
       }
 
-      formData.fields.add(const MapEntry('_method', 'PUT'));
+      if (isUpdate) formData.fields.add(const MapEntry('_method', 'PUT'));
 
       final response = await DioHelper.postFormData(
-        url: '$url?_method=PUT',
+        url: isUpdate ? '$url?_method=PUT' : url,
         context: context,
         query: null,
         formdata: formData,

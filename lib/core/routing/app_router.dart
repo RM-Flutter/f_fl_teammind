@@ -1,3 +1,4 @@
+import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/views/select_smart_card_template_screen.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -179,6 +180,7 @@ enum AppRoutes {
   updateCompanyInfoScreen,
   updateEmployeeInfoScreen,
   selectTemplateScreen,
+  selectSmartCardTemplateScreen,
   premiumTemplatesScreen,
   vacationCalcScreen,
   personalityTestScreen,
@@ -1399,6 +1401,27 @@ GoRouter goRouter(BuildContext context) {
                     child: const SelectTemplateScreen(),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'select-smart-card-template',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.selectSmartCardTemplateScreen.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final isPersonal = state.uri.queryParameters['isPersonal'] == 'true';
+                  final companyId = int.tryParse(state.uri.queryParameters['companyId'] ?? '');
+                  return MaterialPage(
+                    key: state.pageKey,
+                    child: SelectSmartCardTemplateScreen(
+                      isPersonal: isPersonal,
+                      companyId: companyId,
+                    ),
                   );
                 },
               ),

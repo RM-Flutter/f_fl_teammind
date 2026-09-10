@@ -429,7 +429,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
       return;
     }
     final id = _company['id'] as int?;
-    if (id == null) return;
+    final isCreate = widget.company.isEmpty || widget.company['id'] == null;
+    if (!isCreate && id == null) return;
     setState(() { _isSubmitting = true; _errorMessage = null; });
     try {
       final morePhonesList = _morePhonesControllers
@@ -468,14 +469,22 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
         worksGallery: _worksGallery,
         videoGallery: _videoGallery,
       );
-      await SmartCardRepo.updateCompany(
-        context,
-        companyId: id,
-        body: fullModel.toFullJson(),
-        logoBase64: null,
-        worksGalleryBase64: null,
-        videoGalleryBase64: null,
-      );
+      final isCreate = widget.company.isEmpty || widget.company['id'] == null;
+      if (isCreate) {
+        await SmartCardRepo.createCompany(
+          context,
+          body: fullModel.toFullJson(),
+        );
+      } else {
+        await SmartCardRepo.updateCompany(
+          context,
+          companyId: id!,
+          body: fullModel.toFullJson(),
+          logoBase64: null,
+          worksGalleryBase64: null,
+          videoGalleryBase64: null,
+        );
+      }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppStrings.updatedSuccessfully.tr())),

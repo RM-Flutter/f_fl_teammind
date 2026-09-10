@@ -298,11 +298,18 @@ class _SmartCardProfileDetailScreenState
     }
   }
 
-  void _navigateToSelectTemplate() {
-    context.pushNamed(
-      AppRoutes.selectTemplateScreen.name,
+  Future<void> _navigateToSelectTemplate() async {
+    final result = await context.pushNamed(
+      AppRoutes.selectSmartCardTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
+      queryParameters: {
+        'isPersonal': widget.isPersonal.toString(),
+        if (widget.companyId != null) 'companyId': widget.companyId.toString(),
+      },
     );
+    if (result == true) {
+      _loadEmployee();
+    }
   }
 
   Future<void> _deleteProfile() async {

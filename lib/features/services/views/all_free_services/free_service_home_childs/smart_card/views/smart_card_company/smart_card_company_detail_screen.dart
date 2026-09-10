@@ -351,8 +351,12 @@ class _SmartCardCompanyDetailScreenState
   }
   void _navigateToSelectTemplate() {
     context.pushNamed(
-      AppRoutes.selectTemplateScreen.name,
+      AppRoutes.selectSmartCardTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
+      queryParameters: {
+        'isPersonal': 'false',
+        if (widget.company['id'] != null) 'companyId': widget.company['id'].toString(),
+      },
     );
   }
   @override
