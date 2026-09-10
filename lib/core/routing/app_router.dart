@@ -291,19 +291,6 @@ GoRouter goRouter(BuildContext context) {
         return '/$lang/login-screen';
       }
       
-      if (isLoggedIn) {
-        final userSettings = appConfigServiceProvider.getSettings(type: SettingsType.userSettings) as UserSettingsModel?;
-        if (userSettings != null) {
-          final hasProfile = userSettings.empId != null; // No profile if empId is null
-          final licenseType = userSettings.licenseType?.toLowerCase() ?? 'mobile'; // assume mobile if null
-
-          if (!hasProfile || licenseType != 'mobile') {
-            if (state.fullPath?.contains('no-access') != true) {
-              return '/$lang/no-access';
-            }
-          }
-        }
-      }
 
       return null;
     },
@@ -2344,28 +2331,6 @@ GoRouter goRouter(BuildContext context) {
           );
         },
       ),
-      // GoRoute(
-      //   path: '/:lang/no-access',
-      //   parentNavigatorKey: rootNavigatorKey,
-      //   name: AppRoutes.noAccess.name,
-      //   pageBuilder: (context, state) {
-      //     final animationController = AnimationController(
-      //       vsync: ticker,
-      //     );
-      //     animationController.addStatusListener((status) {
-      //       if (status == AnimationStatus.completed ||
-      //           status == AnimationStatus.dismissed) {
-      //         animationController.dispose();
-      //       }
-      //     });
-      //     return AppRouterTransitions.slideTransition(
-      //       key: state.pageKey,
-      //       child: const NoAccessScreen(),
-      //       animation: animationController,
-      //       begin: const Offset(1.0, 0.0),
-      //     );
-      //   },
-      // ),
       GoRoute(
         path: '/:lang/offline-screen',
         parentNavigatorKey: rootNavigatorKey,

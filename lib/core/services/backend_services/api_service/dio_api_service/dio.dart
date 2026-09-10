@@ -160,14 +160,21 @@ class DioHelper{
   }) async {
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
-    dio!.options.headers = {
+    
+    final Map<String, dynamic> headers = {
       'Accept': 'application/json',
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id': deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       'lang': CacheHelper.getString("lang") ?? "en",
     };
-    return await dio!.download(url, savePath, onReceiveProgress: onReceiveProgress);
+    
+    return await dio!.download(
+      url, 
+      savePath, 
+      onReceiveProgress: onReceiveProgress,
+      options: Options(headers: headers),
+    );
   }
 
   static Future<String?> _getDeviceUniqueId(BuildContext? context, AppConfigService appConfigServiceProvider) async {
@@ -227,17 +234,22 @@ class DioHelper{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
     String cleanUrl = url.toString().endsWith('/') ? url.toString().substring(0, url.toString().length - 1) : url.toString();
-    dio!.options.headers = {
+    
+    final Map<String, dynamic> headers = {
       'Accept': acceptHeader ?? 'application/pdf',
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id': deviceUniqueId,
       'Authorization': 'Bearer ${appConfigServiceProvider.token}',
       'lang': CacheHelper.getString("lang") ?? "en",
     };
+
     return await dio!.get(
       cleanUrl,
       queryParameters: query,
-      options: Options(responseType: ResponseType.bytes),
+      options: Options(
+        responseType: ResponseType.bytes,
+        headers: headers,
+      ),
     );
   }
 

@@ -47,27 +47,37 @@ class CvTemplatesService {
         acceptHeader: 'application/pdf',
       );
 
-      if (response.statusCode == 200 && response.data != null) {
+      if (response.data != null) {
         final data = response.data;
         if (data is List<int>) {
-          if (data.length >= 4 &&
+          // Check if it's a PDF file directly
+          if (response.statusCode == 200 &&
+              data.length >= 4 &&
               data[0] == 0x25 &&
               data[1] == 0x50 &&
               data[2] == 0x44 &&
               data[3] == 0x46) {
             return CvPrintResult(pdfBytes: data);
           }
-          final jsonString = utf8.decode(data);
-          final jsonResponse = jsonDecode(jsonString) as Map<String, dynamic>;
-          if (jsonResponse['status'] == true) {
-            final pdfUrl = jsonResponse['data']?['pdf_url'] ?? jsonResponse['pdf_url'];
-            if (pdfUrl != null && pdfUrl.toString().isNotEmpty) {
-              return CvPrintResult(pdfUrl: pdfUrl.toString());
+          
+          // If not a PDF or not 200 OK, try parsing as JSON to get the URL or error message
+          try {
+            final jsonString = utf8.decode(data);
+            final jsonResponse = jsonDecode(jsonString) as Map<String, dynamic>;
+            
+            if (response.statusCode == 200 && jsonResponse['status'] == true) {
+              final pdfUrl = jsonResponse['data']?['pdf_url'] ?? jsonResponse['pdf_url'];
+              if (pdfUrl != null && pdfUrl.toString().isNotEmpty) {
+                return CvPrintResult(pdfUrl: pdfUrl.toString());
+              }
             }
+            
+            return CvPrintResult(
+              error: jsonResponse['message']?.toString() ?? 'Failed to generate CV: Status ${response.statusCode}',
+            );
+          } catch (_) {
+            // Failed to parse JSON
           }
-          return CvPrintResult(
-            error: jsonResponse['message']?.toString() ?? 'PDF URL not found',
-          );
         }
       }
       return CvPrintResult(
