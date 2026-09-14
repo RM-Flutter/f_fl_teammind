@@ -250,6 +250,13 @@ GoRouter goRouter(BuildContext context) {
         return null;
       }
 
+      // 🚀 Force splash screen on app start before loading any other screen
+      if (!appConfigServiceProvider.hasCompletedSplash && 
+          state.fullPath?.contains('offline-screen') != true &&
+          state.fullPath?.contains('offline') != true) {
+        return '/$lang/splash-screen';
+      }
+
       // 🌐 Offline handling is now done via overlay, no redirect needed
       // The overlay will be shown/hidden by ConnectionService
 
@@ -1619,7 +1626,7 @@ GoRouter goRouter(BuildContext context) {
                 },
               ),
               GoRoute(
-                path: 'evaluation-Screen',
+                path: 'evaluation-screen',
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.evaluationScreen.name,
                 pageBuilder: (context, state) {
@@ -1653,7 +1660,7 @@ GoRouter goRouter(BuildContext context) {
                 },
               ),
               GoRoute(
-                path: 'evaluation-require-Screen',
+                path: 'evaluation-require-screen',
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.evaluationRequireScreen.name,
                 pageBuilder: (context, state) {

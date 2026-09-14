@@ -90,8 +90,7 @@ class DefaultDetails extends StatelessWidget {
                             ),
                             SizedBox(width: 20,),
 
-                                if(value.getOneBlogModel!.item!.category!.title
-                                != null) Row(
+                                if(value.getOneBlogModel!.item!.category?.title != null) Row(
                               children: [
                                 Icon(Icons.category, color: Colors.black,
                                   size: 16,),

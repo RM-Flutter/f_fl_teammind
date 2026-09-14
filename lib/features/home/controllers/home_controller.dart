@@ -64,10 +64,10 @@ class HomeController extends ChangeNotifier {
     if (_disposed) return;
     updateLoadingStatus(laodingValue: true);
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
-    // if (appConfigServiceProvider.isLogin != true ||
-    //     appConfigServiceProvider.token.isEmpty) {
-    //  return null;
-    // }
+    if (appConfigServiceProvider.isLogin != true ||
+        appConfigServiceProvider.token.isEmpty) {
+     return;
+    }
     // initialize [userSettings] and [userSettings2] after chackings about token
     await AppSettingsService.getUserSettingsAndUpdateTheStoredSettings(
         allData: true, context: context, need: need);

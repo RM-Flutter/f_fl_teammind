@@ -28,6 +28,7 @@ class AppConfigService extends ChangeNotifier {
 
   bool isConnected = true;
   bool isInitialized = false;
+  bool hasCompletedSplash = false;
 
   StreamSubscription<InternetConnectionStatus>? _listener;
 

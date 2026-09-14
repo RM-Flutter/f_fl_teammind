@@ -59,6 +59,9 @@ class GeneralListener {
         case "days":
           interval = Duration(days: count);
           break;
+        case "months":
+          interval = Duration(days: count * 30);
+          break;
         default:
           interval = Duration(minutes: 5);
       }

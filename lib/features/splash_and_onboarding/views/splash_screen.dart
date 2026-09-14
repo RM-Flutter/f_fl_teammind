@@ -22,8 +22,8 @@ import 'package:app_test/core/services/internet_check.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/domain_selection_service.dart';
 import 'package:app_test/features/splash_and_onboarding/controller/splash_onboarding_controller.dart';
+import '../../../core/services/app_config_service.dart';
 import '../../../core/utils/overlay_gradient_widget.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -44,23 +44,28 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
     // Save reference to ConnectionService for safe access in dispose()
     if (_connectionService == null) {
-      _connectionService = Provider.of<ConnectionService>(context, listen: false);
+      _connectionService =
+          Provider.of<ConnectionService>(context, listen: false);
       // Register callback in ConnectionService to resume initialization when connection is restored
       // But only if we're not on offline screen
       final navigatorContext = rootNavigatorKey.currentContext;
       if (navigatorContext != null) {
         try {
           final router = GoRouter.of(navigatorContext);
-          final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
-          final isOnOfflineScreen = currentLocation.contains('offline-screen') ||
-              currentLocation.contains('offline') ||
-              currentLocation.contains('fingerPrintOffline');
+          final currentLocation =
+              router.routerDelegate.currentConfiguration.uri.path;
+          final isOnOfflineScreen =
+              currentLocation.contains('offline-screen') ||
+                  currentLocation.contains('offline') ||
+                  currentLocation.contains('fingerPrintOffline');
 
           if (!isOnOfflineScreen) {
             _connectionService!.onConnectionRestored = _resumeInitialization;
-            debugPrint("✅ Registered connection restored callback (not on offline screen)");
+            debugPrint(
+                "✅ Registered connection restored callback (not on offline screen)");
           } else {
-            debugPrint("⚠️ Not registering connection restored callback (on offline screen: $currentLocation)");
+            debugPrint(
+                "⚠️ Not registering connection restored callback (on offline screen: $currentLocation)");
             _connectionService!.onConnectionRestored = null; // Clear callback
           }
         } catch (e) {
@@ -76,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     homeViewModel = HomeController();
     viewModel = OnboardingController();
@@ -87,13 +92,16 @@ class _SplashScreenState extends State<SplashScreen> {
       if (navigatorContext != null) {
         try {
           final router = GoRouter.of(navigatorContext);
-          final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
-          final isOnOfflineScreen = currentLocation.contains('offline-screen') ||
-              currentLocation.contains('offline') ||
-              currentLocation.contains('fingerPrintOffline');
+          final currentLocation =
+              router.routerDelegate.currentConfiguration.uri.path;
+          final isOnOfflineScreen =
+              currentLocation.contains('offline-screen') ||
+                  currentLocation.contains('offline') ||
+                  currentLocation.contains('fingerPrintOffline');
 
           if (isOnOfflineScreen) {
-            debugPrint("⚠️ User is on offline screen ($currentLocation) - skipping splash initialization in initState");
+            debugPrint(
+                "⚠️ User is on offline screen ($currentLocation) - skipping splash initialization in initState");
             return;
           }
         } catch (e) {
@@ -117,13 +125,16 @@ class _SplashScreenState extends State<SplashScreen> {
       if (navigatorContext != null) {
         try {
           final router = GoRouter.of(navigatorContext);
-          final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
-          final isOnOfflineScreen = currentLocation.contains('offline-screen') ||
-              currentLocation.contains('offline') ||
-              currentLocation.contains('fingerPrintOffline');
+          final currentLocation =
+              router.routerDelegate.currentConfiguration.uri.path;
+          final isOnOfflineScreen =
+              currentLocation.contains('offline-screen') ||
+                  currentLocation.contains('offline') ||
+                  currentLocation.contains('fingerPrintOffline');
 
           if (isOnOfflineScreen) {
-            debugPrint("🔄 Connection restored, but user is on offline screen ($currentLocation) - skipping initialization completely");
+            debugPrint(
+                "🔄 Connection restored, but user is on offline screen ($currentLocation) - skipping initialization completely");
             return;
           }
         } catch (e) {
@@ -132,7 +143,8 @@ class _SplashScreenState extends State<SplashScreen> {
           return;
         }
       } else {
-        debugPrint("⚠️ No navigator context in _resumeInitialization - skipping to avoid navigation issues");
+        debugPrint(
+            "⚠️ No navigator context in _resumeInitialization - skipping to avoid navigation issues");
         return;
       }
 
@@ -140,6 +152,7 @@ class _SplashScreenState extends State<SplashScreen> {
       initializeHomeAndSplash();
     }
   }
+
   Future<void> _handleInitialNotification() async {
     bool isArabic = LocalizationService.isArabic(context: context);
     if (isArabic) {
@@ -148,6 +161,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await CacheHelper.setString(key: "lang", value: "en");
     }
   }
+
   Future<void> initializeHomeAndSplash() async {
     if (!mounted || _isInitializing) return;
 
@@ -157,7 +171,8 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 100));
 
     // Use saved reference or get from Provider
-    final connectionService = _connectionService ?? Provider.of<ConnectionService>(context, listen: false);
+    final connectionService = _connectionService ??
+        Provider.of<ConnectionService>(context, listen: false);
     await connectionService.checkConnection();
 
     // Double-check connection status after a brief delay
@@ -166,7 +181,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // إذا ظهر أوفلاين: إعادة فحص بعد تأخير (قد يكون التطبيق جاء من شاشة أوفلاين والاتصال لم يُحدَّث بعد)
     if (!connectionService.isConnected) {
-      debugPrint("⚠️ Offline detected - re-checking after 1.5s (may have just left offline screen)");
+      debugPrint(
+          "⚠️ Offline detected - re-checking after 1.5s (may have just left offline screen)");
       await Future.delayed(const Duration(milliseconds: 1500));
       if (!mounted) {
         _isInitializing = false;
@@ -174,7 +190,8 @@ class _SplashScreenState extends State<SplashScreen> {
       }
       await connectionService.checkConnection();
       if (connectionService.isConnected) {
-        debugPrint("✅ Re-check: now online, proceeding with normal initialization");
+        debugPrint(
+            "✅ Re-check: now online, proceeding with normal initialization");
         _isInitializing = false;
         await initializeHomeAndSplash();
         return;
@@ -185,13 +202,15 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!connectionService.isConnected) {
       // Check and select domain (may require network, but try anyway)
       try {
-        final domainSelected = await DomainSelectionService.checkAndSelectDomain(context);
+        final domainSelected =
+            await DomainSelectionService.checkAndSelectDomain(context);
         if (!domainSelected || !mounted) {
           _isInitializing = false;
           return;
         }
       } catch (e) {
-        debugPrint("❌ Error in checkAndSelectDomain (offline), continuing anyway: $e");
+        debugPrint(
+            "❌ Error in checkAndSelectDomain (offline), continuing anyway: $e");
       }
 
       if (!mounted) {
@@ -206,7 +225,8 @@ class _SplashScreenState extends State<SplashScreen> {
       }
       await connectionService.checkConnection();
       if (connectionService.isConnected) {
-        debugPrint("✅ Connection available after domain - proceeding with online flow");
+        debugPrint(
+            "✅ Connection available after domain - proceeding with online flow");
         _isInitializing = false;
         await initializeHomeAndSplash();
         return;
@@ -214,9 +234,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // Only initialize device info (doesn't require network)
       try {
-        await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
+        await DeviceInformationService.initializeAndSetDeviceInfo(
+            context: context);
       } catch (e) {
-        debugPrint("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
+        debugPrint(
+            "❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
       }
 
       // Load USG from cache and apply fingerprint security
@@ -230,7 +252,8 @@ class _SplashScreenState extends State<SplashScreen> {
       _isInitializing = false;
       if (mounted) {
         final lang = context.locale.languageCode;
-        context.goNamed(AppRoutes.offlineScreen.name, pathParameters: {'lang': lang});
+        context.goNamed(AppRoutes.offlineScreen.name,
+            pathParameters: {'lang': lang});
         debugPrint("✅ Navigated to offline screen (lang: $lang)");
       }
       return;
@@ -242,16 +265,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Check and select domain before initializing app
     try {
-      final domainSelected = await DomainSelectionService.checkAndSelectDomain(context);
+      final domainSelected =
+          await DomainSelectionService.checkAndSelectDomain(context);
       if (!domainSelected || !mounted) return;
     } catch (e) {
       debugPrint("❌ Error in checkAndSelectDomain, continuing anyway: $e");
     }
 
     try {
-      await DeviceInformationService.initializeAndSetDeviceInfo(context: context);
+      await DeviceInformationService.initializeAndSetDeviceInfo(
+          context: context);
     } catch (e) {
-      debugPrint("❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
+      debugPrint(
+          "❌ Error in initializeAndSetDeviceInfo, continuing anyway: $e");
     }
 
     if (!mounted) return;
@@ -281,13 +307,16 @@ class _SplashScreenState extends State<SplashScreen> {
     var us3Cache;
     GeneralSettingsModel? generalSettingsModel;
     if (jsonString != null && jsonString != "") {
-      us1Cache = json.decode(jsonString) as Map<String, dynamic>;// Convert String back to JSON
+      us1Cache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
     if (json2String != null && json2String != "") {
-      us2Cache = json.decode(json2String) as Map<String, dynamic>;// Convert String back to JSON
+      us2Cache = json.decode(json2String)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
     if (json3String != null && json3String != "") {
-      us3Cache = json.decode(json3String) as Map<String, dynamic>;// Convert String back to JSON
+      us3Cache = json.decode(json3String)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
     if (us1Cache != null && us1Cache.isNotEmpty && us1Cache != "") {
       try {
@@ -297,8 +326,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } catch (e, s) {
         print("Error decoding user settings: $e\n$s");
       }
-    }
-    else {
+    } else {
       print("us1Cache is null or empty.");
     }
     if (us2Cache != null && us2Cache.isNotEmpty && us2Cache != "") {
@@ -309,20 +337,19 @@ class _SplashScreenState extends State<SplashScreen> {
       } catch (e, s) {
         print("Error decoding user settings 2: $e\n$s");
       }
-    }
-    else {
+    } else {
       print("us2Cache is null or empty.");
     }
     if (us3Cache != null && us3Cache.isNotEmpty && us3Cache != "") {
       try {
-        UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
+        UserSettingConst.generalSettingsModel =
+            GeneralSettingsModel.fromJson(us3Cache);
         generalSettingsModel = GeneralSettingsModel.fromJson(us3Cache);
         print("IS THIS IS -> ${generalSettingsModel.requestTypes}");
       } catch (e, s) {
         print("Error decoding general settings: $e\n$s");
       }
-    }
-    else {
+    } else {
       print("us2Cache is null or empty.");
     }
     if (!mounted) {
@@ -335,13 +362,15 @@ class _SplashScreenState extends State<SplashScreen> {
     final navigatorContext = rootNavigatorKey.currentContext ?? context;
     try {
       final router = GoRouter.of(navigatorContext);
-      final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
+      final currentLocation =
+          router.routerDelegate.currentConfiguration.uri.path;
       final isOnOfflineScreen = currentLocation.contains('offline-screen') ||
           currentLocation.contains('offline') ||
           currentLocation.contains('fingerPrintOffline');
 
       if (isOnOfflineScreen) {
-        debugPrint("⚠️ User is on offline screen ($currentLocation), skipping splash screen initialization to avoid navigation");
+        debugPrint(
+            "⚠️ User is on offline screen ($currentLocation), skipping splash screen initialization to avoid navigation");
         _initializationCompleted = true;
         _isInitializing = false;
         return;
@@ -354,10 +383,15 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
+    // Mark splash as completed so router allows navigating away
+    Provider.of<AppConfigService>(context, listen: false).hasCompletedSplash =
+        true;
+
     viewModel.initializeSplashScreen(
         context: context,
-        role: (UserSettingConst.userSettings != null)? UserSettingConst.userSettings!.role : CacheHelper.getString("roles")
-    );
+        role: (UserSettingConst.userSettings != null)
+            ? UserSettingConst.userSettings!.role
+            : CacheHelper.getString("roles"));
 
     _initializationCompleted = true;
     _isInitializing = false;
@@ -376,36 +410,39 @@ class _SplashScreenState extends State<SplashScreen> {
         create: (context) => viewModel,
         child: Scaffold(
             body: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.asset(!kIsWeb?AppImages.splashScreenBackground:AppImages.splashScreenBackgroundWeb,
-                    fit: BoxFit.cover),
-                const OverlayGradientWidget(),
-                Positioned(
-                  bottom: AppSizes.s48,
-                  left: AppSizes.s0,
-                  right: AppSizes.s0,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DynamicImageWidget(
-                        imageUrl: AppImages.logo,
-                        height: AppSizes.s75,
-                        width: AppSizes.s75,
-                      ),
-                      Text(
-                        AppStrings.loading.tr(),
-                        style: LocalizationService.isArabic(context: context)
-                            ? Theme.of(context)
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+                !kIsWeb
+                    ? AppImages.splashScreenBackground
+                    : AppImages.splashScreenBackgroundWeb,
+                fit: BoxFit.cover),
+            const OverlayGradientWidget(),
+            Positioned(
+              bottom: AppSizes.s48,
+              left: AppSizes.s0,
+              right: AppSizes.s0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DynamicImageWidget(
+                    imageUrl: AppImages.logo,
+                    height: AppSizes.s75,
+                    width: AppSizes.s75,
+                  ),
+                  Text(
+                    AppStrings.loading.tr(),
+                    style: LocalizationService.isArabic(context: context)
+                        ? Theme.of(context)
                             .textTheme
                             .displayMedium
                             ?.copyWith(letterSpacing: 0)
-                            : Theme.of(context).textTheme.displayMedium,
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            )));
+                        : Theme.of(context).textTheme.displayMedium,
+                  )
+                ],
+              ),
+            ),
+          ],
+        )));
   }
 }

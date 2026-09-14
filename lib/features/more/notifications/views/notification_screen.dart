@@ -2,6 +2,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/services/general_listener.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
         }
       }else{
         notificationProvider.getNotification(context, page: 1, forWho: "all");
+      }
+      
+      // ✅ Start popup listener for notification screen
+      if (CacheHelper.getString("usPopUps") != null && CacheHelper.getString("usPopUps") != "") {
+        final List popups = json.decode(CacheHelper.getString("usPopUps")!);
+        GeneralListener().startAll(context, "notification", popups);
       }
     });
     _scrollController.addListener(() {
