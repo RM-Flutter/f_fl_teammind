@@ -1,8 +1,5 @@
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/date_service.dart';
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/settings_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -11,7 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
-import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
 
 class ApprovableCardWidget extends StatelessWidget {
   final dynamic request; // RequestModel, OvertimeRequestModel, SalaryAdvanceRequestModel
@@ -32,7 +29,7 @@ class ApprovableCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isArabic = context.locale.languageCode == 'ar';
-    
+
     // Extract generic fields safely
     bool showTakeAction = false;
     String? status;
@@ -46,12 +43,12 @@ class ApprovableCardWidget extends StatelessWidget {
         showTakeAction = ot.takeAction == true || ot.canTakeActionAsSomeoneElse == true;
         status = ot.status;
         employeeName = ot.employeeName ?? ot.employeeProfile?.name ?? "";
-        
+
         final dateStr = (ot.date != null && ot.date!.length >= 10) ? ot.date!.substring(0, 10) : (ot.date ?? "");
-        final formattedDate = (ot.date != null && ot.date!.isNotEmpty) 
-            ? (DateService.formatDate(isArabic ? "ar" : "en", context, ot.date) ?? dateStr) 
+        final formattedDate = (ot.date != null && ot.date!.isNotEmpty)
+            ? (DateService.formatDate(isArabic ? "ar" : "en", context, ot.date) ?? dateStr)
             : dateStr;
-            
+
         int totalMins = ot.overtime ?? 0;
         final hours = totalMins ~/ 60;
         final mins = totalMins % 60;
@@ -69,12 +66,12 @@ class ApprovableCardWidget extends StatelessWidget {
         // Distinctive feature for overtime is the duration worked
         if (totalMins > 0) {
           title = durationStr;
-          subtitle = formattedDate.isNotEmpty 
-              ? (isArabic ? "التاريخ: $formattedDate" : "Date: $formattedDate") 
+          subtitle = formattedDate.isNotEmpty
+              ? (isArabic ? "التاريخ: $formattedDate" : "Date: $formattedDate")
               : "";
         } else {
-          title = formattedDate.isNotEmpty 
-              ? formattedDate 
+          title = formattedDate.isNotEmpty
+              ? formattedDate
               : (isArabic ? "وقت إضافي" : "Overtime");
           subtitle = "";
         }
@@ -83,15 +80,15 @@ class ApprovableCardWidget extends StatelessWidget {
         showTakeAction = sa.takeAction == true || sa.canTakeActionAsSomeoneElse == true;
         status = sa.status;
         employeeName = sa.employeeProfile?.name ?? "";
-        
+
         String amount = sa.total?.toString() ?? "0";
         String months = sa.howLongToPay?.toString() ?? "1";
-        
+
         // Distinctive feature for salary advance is the amount
         title = "$amount ${isArabic ? 'ج.م' : 'EGP'}";
-        
-        String durationText = isArabic 
-            ? "$months شهر" 
+
+        String durationText = isArabic
+            ? "$months شهر"
             : "$months ${months == '1' ? 'month' : 'months'}";
         String details = "${isArabic ? 'مدة السداد' : 'Duration'}: $durationText";
         if (sa.from != null && sa.from!.isNotEmpty) {
@@ -109,15 +106,15 @@ class ApprovableCardWidget extends StatelessWidget {
         if (depName != null && depName.isNotEmpty) {
           employeeName = "$employeeName - $depName";
         }
-        
+
         title = AppSettingsService.getRequestTitleFromGenenralSettings(
                 context: context,
                 requestId: dyn.typeId != null ? dyn.typeId?.toString() : "") ??
             '';
-            
+
         final String fromDate = dyn.from != null ? (DateService.formatDate(isArabic ? "ar" : "en", context, dyn.from) ?? "") : "";
         final String toDate = dyn.to != null ? (DateService.formatDate(isArabic ? "ar" : "en", context, dyn.to) ?? "") : "";
-        
+
         if (dyn.duration == 0) {
           subtitle = fromDate;
         } else if (fromDate == toDate || toDate.isEmpty) {
@@ -209,30 +206,71 @@ class ApprovableCardWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (isForDepartment && employeeName.isNotEmpty) const SizedBox(height: 4),
-                  if (isForDepartment && employeeName.isNotEmpty)
-                    Text(
-                      employeeName,
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontWeight: FontWeight.w600, 
-                        fontSize: 12
+                    if (isForDepartment && employeeName.isNotEmpty) const SizedBox(height: 4),
+                    if (isForDepartment && employeeName.isNotEmpty)
+                      Text(
+                        employeeName,
+                        style: AppStyles.titleTextContent(context).copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            if (status != null &&
-                status!.trim().isNotEmpty &&
-                status!.trim().toLowerCase() != 'null') ...[
-              const SizedBox(width: 8),
-              RequestsServices.getRequestsStatusIcon(
-                  context: context, status: status),
+              // Overlapping Vacations Icon for Managers
+              if (isForDepartment)
+                Builder(
+                  builder: (context) {
+                    bool isVac = false;
+                    try {
+                      final dyn = request as dynamic;
+                      if (dyn.id != null) {
+                        final String appType = dyn.approvableType?.toString().toLowerCase() ?? '';
+                        final String tName = dyn.typeName?.toString().toLowerCase() ?? '';
+                        isVac = appType.contains('employeerequest') || appType.contains('vacation') || tName.contains('vacation') || tName.contains('إجازة');
+                      }
+                    } catch (_) {}
+
+                    if (isVac) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              showOverlappingVacationsSheet(
+                                context: context,
+                                approvableId: (request as dynamic).id.toString(),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Color(AppColors.warningYellow).withOpacity(0.12),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.people_alt_rounded, color: Color(AppColors.warningYellow), size: 20),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              if (status != null &&
+                  status!.trim().isNotEmpty &&
+                  status!.trim().toLowerCase() != 'null') ...[
+                const SizedBox(width: 8),
+                RequestsServices.getRequestsStatusIcon(
+                    context: context, status: status),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }

@@ -26,6 +26,7 @@ class RequestModel {
   var statusUpdate;
   var notes;
   var reason;
+  var approvableType;
 
   RequestModel({
     required this.id,
@@ -49,6 +50,7 @@ class RequestModel {
     required this.to,
     required this.status,
     required this.level,
+    this.approvableType,
     this.takeAction,
     this.canTakeActionAsSomeoneElse,
     this.managerReply,
@@ -90,6 +92,7 @@ class RequestModel {
       to: json['to'] ?? json['date_to'] ?? "",
       status: json['status'],
       level: json['level'] ?? "",
+      approvableType: json['approvable_type'] ?? "",
     );
   }
 
@@ -133,6 +136,9 @@ class RequestModel {
       to: json['date_to'] ?? "",
       status: json['status'],
       level: json['level'] ?? "",
+      approvableType: json['approvable_type'] ?? "",
+      takeAction: (json['can_take_action'] ?? json['take_action']) as bool?,
+      canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
     );
   }
 }

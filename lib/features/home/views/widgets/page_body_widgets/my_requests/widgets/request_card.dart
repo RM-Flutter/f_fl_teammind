@@ -13,6 +13,7 @@ import 'package:app_test/core/services/settings_service.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/widget/view/managment_widget.dart';
 import 'package:app_test/features/requests/details/views/widgets/management_response_widget.dart';
+import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -184,6 +185,31 @@ class RequestCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: AppSizes.s8),
+            // Overlapping Vacations Icon for Managers
+            if ((reqType == GetRequestsTypes.myTeam || reqType == GetRequestsTypes.otherDepartment || reqType == GetRequestsTypes.allCompany) &&
+                request.id != null &&
+                ((request.approvableType?.toString().toLowerCase().contains('vacation') == true) ||
+                 (request.approvableType?.toString().toLowerCase().contains('employeerequest') == true) ||
+                 (request.typeName?.toString().toLowerCase().contains('vacation') == true) ||
+                 (request.typeName?.toString().toLowerCase().contains('إجازة') == true))) ...[
+              InkWell(
+                onTap: () {
+                  showOverlappingVacationsSheet(
+                    context: context,
+                    approvableId: request.id.toString(),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Color(AppColors.warningYellow).withOpacity(0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.people_alt_rounded, color: Color(AppColors.warningYellow), size: 20),
+                ),
+              ),
+              SizedBox(width: 8),
+            ],
             RequestsServices.getRequestsStatusIcon(
                 context: context, status: request.status),
           ],
