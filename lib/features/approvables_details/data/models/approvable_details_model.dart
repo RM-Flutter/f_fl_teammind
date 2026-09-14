@@ -255,3 +255,59 @@ class CurrentLevelApproverModel {
     );
   }
 }
+
+class OverlappingVacationModel {
+  final int? id;
+  final int? profileId;
+  final String? employeeName;
+  final String? employeeAvatar;
+  final String? jobTitle;
+  final int? departmentId;
+  final String? departmentName;
+  final int? typeId;
+  final String? typeName;
+  final String? dateFrom;
+  final String? dateTo;
+  final num? duration;
+  final String? unit;
+  final String? reason;
+  final String? status;
+
+  OverlappingVacationModel({
+    this.id,
+    this.profileId,
+    this.employeeName,
+    this.employeeAvatar,
+    this.jobTitle,
+    this.departmentId,
+    this.departmentName,
+    this.typeId,
+    this.typeName,
+    this.dateFrom,
+    this.dateTo,
+    this.duration,
+    this.unit,
+    this.reason,
+    this.status,
+  });
+
+  factory OverlappingVacationModel.fromJson(Map<String, dynamic> json) {
+    return OverlappingVacationModel(
+      id: json['id'],
+      profileId: json['profile_id'],
+      employeeName: json['employee_name'],
+      employeeAvatar: json['employee_avatar'],
+      jobTitle: json['job_title'],
+      departmentId: json['department_id'],
+      departmentName: json['department_name'],
+      typeId: json['type_id'],
+      typeName: json['type_name'],
+      dateFrom: json['date_from'],
+      dateTo: json['date_to'],
+      duration: json['duration'] is num ? json['duration'] : num.tryParse(json['duration']?.toString() ?? ''),
+      unit: json['unit'],
+      reason: json['reason'],
+      status: json['status'],
+    );
+  }
+}

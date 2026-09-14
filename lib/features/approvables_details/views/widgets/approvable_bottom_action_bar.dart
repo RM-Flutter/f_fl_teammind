@@ -18,6 +18,7 @@ import '../../cubit/approvable_details_cubit.dart';
 import '../../data/models/approvable_details_model.dart';
 import 'manager_take_action_modal.dart';
 import 'overtime_update_dialog.dart';
+import 'overlapping_vacations_sheet.dart';
 
 class ApprovableBottomActionBar extends StatelessWidget {
   final ApprovableDetailsModel details;
@@ -144,6 +145,27 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   type: type,
                 );
               }
+            },
+          ),
+        );
+      }
+
+      // B2. Manager Action: Overlapping Vacations (only for vacation/employee_request types)
+      final bool isVacationType = type.contains('employee_request') ||
+          type.contains('vacation') ||
+          (details.approvableType?.toLowerCase().contains('employeerequest') == true) ||
+          (details.approvableType?.toLowerCase().contains('vacation') == true);
+
+      if (!isApplicant && isVacationType && details.id != null) {
+        addButton(
+          CustomRequestDetailsButton(
+            title: 'overlapping_vacations'.tr(),
+            color: Color(AppColors.warningYellow),
+            onPressed: () async {
+              await showOverlappingVacationsSheet(
+                context: context,
+                approvableId: details.id.toString(),
+              );
             },
           ),
         );

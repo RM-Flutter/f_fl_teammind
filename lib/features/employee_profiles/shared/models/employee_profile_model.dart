@@ -40,6 +40,7 @@ class EmployeeProfileModel {
   final String? employeeStatus;
   final String? employmentType;
   final String? jobLevel;
+  final List<EmpRewardPenalty>? rewardsAndPenalties;
 
   EmployeeProfileModel({
     this.id,
@@ -76,6 +77,7 @@ class EmployeeProfileModel {
     this.employeeStatus,
     this.employmentType,
     this.jobLevel,
+    this.rewardsAndPenalties,
   })  : totalDeductions = _calculateTotalAmount(
             basicSalary, payrollDeductions?.map((d) => d.value).toList()),
         additions = _calculateTotalAmount(
@@ -167,9 +169,13 @@ class EmployeeProfileModel {
             ? List<Balance>.from(
                 json['balance'].map((item) => Balance.fromJson(item)))
             : null,
-        weekends: (json['weekend'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList(),
+        weekends: json['weekend'] is Map
+            ? (json['weekend']['days'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList()
+            : (json['weekend'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList(),
         workingHours: json['working_hours'] != null
             ? EmpWorkingHours.fromJson(json['working_hours'])
             : null,
@@ -200,7 +206,11 @@ class EmployeeProfileModel {
         mainStatus: _parseStringOrKey(json['main_status']),
         employeeStatus: _parseStringOrKey(json['employee_status']),
         employmentType: _parseStringOrKey(json['employment_type']),
-        jobLevel: _parseStringOrKey(json['job_level']));
+        jobLevel: _parseStringOrKey(json['job_level']),
+        rewardsAndPenalties: json['rewards_and_penalties'] != null
+            ? List<EmpRewardPenalty>.from(json['rewards_and_penalties']
+                .map((item) => EmpRewardPenalty.fromJson(item)))
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -504,21 +514,57 @@ class AdditionalPhoneNumbers {
   }
 }
 class Assets {
-  final String? assets;
+  final int? id;
+  final int? assetId;
+  final String? title;
+  final String? serialNumber;
+  final String? description;
+  final String? assetStatus;
+  final String? assignmentStatus;
+  final String? signatureDocumentUrl;
+  final String? startAt;
+  final String? endsAt;
 
   Assets({
-    this.assets,
+    this.id,
+    this.assetId,
+    this.title,
+    this.serialNumber,
+    this.description,
+    this.assetStatus,
+    this.assignmentStatus,
+    this.signatureDocumentUrl,
+    this.startAt,
+    this.endsAt,
   });
 
   factory Assets.fromJson(Map<String, dynamic> json) {
     return Assets(
-      assets: json['aassets'],
+      id: json['id'],
+      assetId: json['asset_id'],
+      title: json['title'] ?? json['aassets'],
+      serialNumber: json['serial_number'],
+      description: json['description'],
+      assetStatus: json['asset_status'],
+      assignmentStatus: json['assignment_status'],
+      signatureDocumentUrl: json['signature_document_url'],
+      startAt: json['start_at'],
+      endsAt: json['ends_at'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'aassets': assets,
+      'id': id,
+      'asset_id': assetId,
+      'title': title,
+      'serial_number': serialNumber,
+      'description': description,
+      'asset_status': assetStatus,
+      'assignment_status': assignmentStatus,
+      'signature_document_url': signatureDocumentUrl,
+      'start_at': startAt,
+      'ends_at': endsAt,
     };
   }
 }
@@ -738,4 +784,64 @@ class EmpKeyValue {
 
   @override
   String toString() => 'KeyValue(key: $key, value: $value)';
+}
+
+class EmpRewardPenalty {
+  final int? id;
+  final String? type; // 'reward' | 'penalty'
+  final String? category; // 'amount' | 'days'
+  final num? amount;
+  final String? reason;
+  final String? dueDate;
+  final String? action; // 'waiting' | 'approved' | 'applied' | 'cancelled'
+  final bool? canCancel;
+  final String? signatureDocumentUrl;
+  final int? profileId;
+  final String? createdAt;
+
+  EmpRewardPenalty({
+    this.id,
+    this.type,
+    this.category,
+    this.amount,
+    this.reason,
+    this.dueDate,
+    this.action,
+    this.canCancel,
+    this.signatureDocumentUrl,
+    this.profileId,
+    this.createdAt,
+  });
+
+  factory EmpRewardPenalty.fromJson(Map<String, dynamic> json) {
+    return EmpRewardPenalty(
+      id: json['id'],
+      type: json['type'],
+      category: json['category'],
+      amount: json['amount'] is num ? json['amount'] as num : num.tryParse(json['amount']?.toString() ?? ''),
+      reason: json['reason'],
+      dueDate: json['due_date'],
+      action: json['action'],
+      canCancel: json['can_cancel'],
+      signatureDocumentUrl: json['signature_document_url'],
+      profileId: json['profile_id'],
+      createdAt: json['created_at'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type,
+      'category': category,
+      'amount': amount,
+      'reason': reason,
+      'due_date': dueDate,
+      'action': action,
+      'can_cancel': canCancel,
+      'signature_document_url': signatureDocumentUrl,
+      'profile_id': profileId,
+      'created_at': createdAt,
+    };
+  }
 }

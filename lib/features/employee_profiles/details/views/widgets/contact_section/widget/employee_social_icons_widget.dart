@@ -97,7 +97,7 @@ String _getUrl({required MapEntry<String, String?> entry}) {
 }
 
 class SocailIconButton extends StatelessWidget {
-  final IconData icon;
+  final dynamic icon;
   final String label;
   final String url;
   final LaunchMode? mode;

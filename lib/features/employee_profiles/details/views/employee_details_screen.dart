@@ -17,6 +17,7 @@ import 'package:app_test/features/employee_profiles/details/views/widgets/reques
 import 'package:app_test/features/employee_profiles/details/views/widgets/daily_reports_section_widget.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/overtime_requests_section_widget.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/salary_advance_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/rewards_and_penalties_section_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     AppStrings.dailyReports.tr(),
     AppStrings.overtimeRequests.tr(),
     'salary_advance_requests'.tr(),
+    'rewards_and_penalties'.tr(),
     AppStrings.more.tr(),
   ];
   int selectIndex = 0;
@@ -189,6 +191,10 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (selectIndex == 8) {
+                                          return RewardsAndPenaltiesSectionWidget(
+                                            employee: viewModel.employee,
+                                          );
+                                        } else if (selectIndex == 9) {
                                           return AssetsSectionWidget(employee: viewModel.employee);
                                         }
                                         return const SizedBox.shrink();

@@ -252,4 +252,33 @@ class ApprovablesDetailsService {
       return OperationResult(success: false, message: e.toString());
     }
   }
+
+  /// Get overlapping vacations for a specific approvable request
+  /// GET: /api/approval-system/v1/employee_requests/manager/approvables/:id/overlapping-vacations
+  static Future<OperationResult<List<OverlappingVacationModel>>> getOverlappingVacations({
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      final response = await DioHelper.getData(
+        url: '/approval-system/v1/employee_requests/manager/approvables/$id/overlapping-vacations',
+        context: context,
+      );
+
+      if (response.data != null && response.data['status'] == true) {
+        final List<dynamic> list = response.data['overlapping_vacations'] ?? [];
+        final items = list
+            .map((e) => OverlappingVacationModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+        return OperationResult(success: true, data: items, message: response.data['message']?.toString());
+      }
+      return OperationResult(
+        success: false,
+        message: response.data?['message']?.toString() ?? 'Failed to load overlapping vacations',
+      );
+    } catch (e) {
+      debugPrint('Error in getOverlappingVacations: $e');
+      return OperationResult(success: false, message: e.toString());
+    }
+  }
 }
