@@ -2,17 +2,18 @@
 class RewardAndPenaltyModelTeam {
   final int? id;
   final int? amount;
-  final Type? type;
+  final dynamic type;
   final Payroll? payroll;
-  final Category? category;
+  final dynamic category;
   final Profile? profile;
   final String? reason;
-  final ActionLinks? action;
+  final dynamic action;
   final int? employeeId;
   final int? payrollId;
   final String? createdAt;
   final String? dueDate;
   final Manager? manager;
+  final bool? canCancel;
 
   RewardAndPenaltyModelTeam({
     this.id,
@@ -28,27 +29,26 @@ class RewardAndPenaltyModelTeam {
     this.action,
     this.employeeId,
     this.payrollId,
+    this.canCancel,
   });
 
   factory RewardAndPenaltyModelTeam.fromJson(Map<String, dynamic> json) {
     return RewardAndPenaltyModelTeam(
       id: json['id'] as int?,
       amount: json['amount'] as int?,
-      type: json['type'] != null ? Type.fromJson(json['type']) : null,
-      category:
-      json['category'] != null ? Category.fromJson(json['category']) : null,
-      profile:
-      json['profile'] != null ? Profile.fromJson(json['profile']) : null,
+      type: json['type'] is Map<String, dynamic> ? Type.fromJson(json['type']) : json['type'],
+      category: json['category'] is Map<String, dynamic> ? Category.fromJson(json['category']) : json['category'],
+      profile: json['profile'] != null ? Profile.fromJson(json['profile']) : (json['employee'] != null ? Profile.fromJson(json['employee']) : null),
       manager: json['manager'] != null ? Manager.fromJson(json['manager']) : null,
       reason: json['reason'] as String?,
       payroll: json['payroll'] != null ? Payroll.fromJson(json['payroll']) : null,
 
-      action:
-      json['action'] != null ? ActionLinks.fromJson(json['action']) : null,
+      action: json['action'] is Map<String, dynamic> ? ActionLinks.fromJson(json['action']) : json['action'],
       employeeId: json['profile_id'] as int?,
       payrollId: json['payroll_id'] as int?,
       createdAt: json['created_at'] as String?,
       dueDate: json['due_date'] as String?,
+      canCancel: json['can_cancel'] as bool?,
     );
   }
 
@@ -56,8 +56,9 @@ class RewardAndPenaltyModelTeam {
     return {
       'id': id,
       'amount': amount,
-      'type': type?.toJson(),
-      'category': category?.toJson(),
+      'type': type is Type ? type?.toJson() : type,
+      'category': category is Category ? category?.toJson() : category,
+
       'reason': reason,
       'action': action?.toJson(),
       'profile_id': employeeId,

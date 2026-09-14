@@ -5,16 +5,30 @@ import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/rewards_and_penalties/view_rewards/views/widgets/widgets/rewards_and_penalties_details_modal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/repos/rewards_and_penalties.service.dart';
+import '../../controllers/rewards_and_penalties_controller.dart';
 
 class RewardAndPenaltyCardWidget extends StatelessWidget {
   var rewardAndPenalty;
   final bool isTeam;
   RewardAndPenaltyCardWidget({super.key, required this.rewardAndPenalty, this.isTeam = false});
 
+  String _getTypeValue(dynamic type) {
+    if (type == null) return "";
+    if (type is String) return type;
+    try {
+      return type.value ?? type.key ?? "";
+    } catch (_) {
+      return type.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final typeValue = _getTypeValue(rewardAndPenalty.type);
+    
     return Column(
       children: [
         InkWell(
@@ -23,10 +37,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
               modalContent: RewardsAndPenaltiesDetailsModal(
                 rewardAndPenalty: rewardAndPenalty,
               ),
-              title: rewardAndPenalty.type?.value
-                  ?.toLowerCase()
-                  .contains('reward') ==
-                  true
+              title: typeValue.toLowerCase().contains('reward') == true
                   ? AppStrings.rewardInfo.tr()
                   : AppStrings.penaltyInfo.tr(),
               height: AppSizes.s400),
@@ -50,7 +61,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
               children: [
                 Image.asset(
                   RewardsAndPenaltiesRepo.getRewardAndPenaltyImage(
-                      type: rewardAndPenalty.type?.value),
+                      type: typeValue),
                   width: AppSizes.s24,
                   errorBuilder: (context, error, stackTrace) => const Icon(
                     Icons.error_outline,
@@ -71,7 +82,18 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                gapW8,
+                if (rewardAndPenalty.canCancel == true && rewardAndPenalty.id != null) ...[
+                  IconButton(
+                    onPressed: () {
+                      final controller = Provider.of<RewardsAndPenaltiesViewModel>(context, listen: false);
+                      controller.cancelRewardAndPenalty(context: context, id: rewardAndPenalty.id!, empId: null); // Or pass empId if needed
+                    },
+                    icon: const Icon(Icons.cancel_outlined, color: Colors.red),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  gapW12,
+                ],
                 Container(
                   height: AppSizes.s28,
                   width: AppSizes.s28,
@@ -93,3 +115,4 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
     );
   }
 }
+

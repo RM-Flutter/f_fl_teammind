@@ -5,6 +5,7 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_and_penalty_team_model.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/services/backend_services/api_service/dio_api_service/dio.dart';
 import '../data/models/reward_and_penalty_model.dart';
 import '../data/repos/rewards_and_penalties.service.dart';
 
@@ -75,4 +76,24 @@ class RewardsAndPenaltiesViewModel extends ChangeNotifier {
           "error while getting user rewardsAndPenaltiesListData  list ${err.toString()} at :- $t");
     }
   }
+
+  Future<void> cancelRewardAndPenalty({required BuildContext context, required int id, String? empId}) async {
+    updateLoadingStatus(laodingValue: true);
+    try {
+      final response = await DioHelper.deleteData(
+        url: "/rm_payroll/v1/payroll/penalities-and-rewards/$id",
+        context: context,
+      );
+      if (response.data['status'] == true) {
+        // Refresh the list
+        await initializeRewardsAndPenaltiesListScreen(context: context, empId: empId);
+      } else {
+        updateLoadingStatus(laodingValue: false);
+      }
+    } catch (error) {
+      updateLoadingStatus(laodingValue: false);
+      debugPrint("Error canceling reward/penalty: $error");
+    }
+  }
 }
+

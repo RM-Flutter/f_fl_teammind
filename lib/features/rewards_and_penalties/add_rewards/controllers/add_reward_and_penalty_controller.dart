@@ -11,7 +11,15 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
   bool isLoading = false;
   bool isLoadingPost = false;
   String? errorMessage;
-  String? selectEmpId;
+  
+  // Target Type
+  String targetType = 'employees'; // 'employees', 'departments', 'all'
+  
+  // Selections
+  List<Map<String, dynamic>> selectedEmployees = [];
+  List<Map<String, dynamic>> selectedDepartments = [];
+  List<Map<String, dynamic>> exceptedEmployees = [];
+
   List<Map<String, dynamic>> categories = [
     {
       'type': 'days',
@@ -26,8 +34,9 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
       'name': AppStrings.amount.tr(),
     },
   ];
-  Map<String, dynamic>? selectedEmployee;
+
   List<Map<String, dynamic>> employees = [];
+  List<Map<String, dynamic>> departments = [];
   Map<String, dynamic>? selectedCategory;
 
   Map<String, dynamic>? selectedType;
@@ -39,6 +48,7 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
 
   void initializeAddRewardAndPenaltyScreen({required BuildContext context}) {
     getEmployees(context: context);
+    getDepartments(context: context);
     _resetValues();
     notifyListeners();
   }
@@ -57,7 +67,12 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
     reasonController = TextEditingController();
     amountController = TextEditingController();
     selectedDate = null;
+    targetType = 'employees';
+    selectedEmployees = [];
+    selectedDepartments = [];
+    exceptedEmployees = [];
   }
+
   void getEmployees({required BuildContext context}) {
     isLoading = true;
     notifyListeners();
@@ -67,11 +82,11 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
       query: {
         "under_my_management": true
       },
-    ).then((value){
+    ).then((value) {
       isLoading = false;
       employees = List<Map<String, dynamic>>.from(value.data['employees']);
       notifyListeners();
-    }).catchError((error){
+    }).catchError((error) {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
@@ -80,6 +95,30 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
         errorMessage = error.toString();
       }
     });
+  }
+
+  void getDepartments({required BuildContext context}) {
+    DioHelper.getData(
+      url: "/departments/entities-operations",
+      query: {
+        "itemsCount": 200,
+      },
+      context: context,
+    ).then((value) {
+      departments = List<Map<String, dynamic>>.from(value.data['data']);
+      notifyListeners();
+    }).catchError((error) {
+      debugPrint("Error fetching departments: $error");
+    });
+  }
+
+  void setTargetType(String type) {
+    targetType = type;
+    // Reset selections when changing type to avoid messy state
+    selectedEmployees = [];
+    selectedDepartments = [];
+    exceptedEmployees = [];
+    notifyListeners();
   }
 
   Future<void> selectDate(BuildContext context) async {
@@ -140,7 +179,8 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
             title: AppStrings.information.tr());
         isLoadingPost = false;
         return;
-      }if (selectedDatecontroller.text.isEmpty) {
+      }
+      if (selectedDatecontroller.text.isEmpty) {
         AlertsService.info(
             context: context,
             message: AppStrings.pleaseSelectRequestDate.tr(),
@@ -148,7 +188,9 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
         isLoadingPost = false;
         return;
       }
-      if (selectEmpId.toString().isEmpty) {
+
+      // Target Validation
+      if (targetType == 'employees' && selectedEmployees.isEmpty) {
         AlertsService.info(
             context: context,
             message: AppStrings.theAssignToFieldIsRequired.tr(),
@@ -156,6 +198,15 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
         isLoadingPost = false;
         return;
       }
+      if (targetType == 'departments' && selectedDepartments.isEmpty) {
+        AlertsService.info(
+            context: context,
+            message: AppStrings.theAssignToFieldIsRequired.tr(), // Or specific translation for departments
+            title: AppStrings.information.tr());
+        isLoadingPost = false;
+        return;
+      }
+
       if (selectedTypes.toString().isEmpty) {
         AlertsService.info(
             context: context,
@@ -165,15 +216,29 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
         return;
       }
       debugPrint("selectedDatecontroller.text --> ${StringConvert.sanitizeDateString(selectedDatecontroller.text)}");
+      
       // Finally, send Request to server create new request
-      final requestMainData = {
+      final Map<String, dynamic> requestMainData = {
+        "target_type": targetType,
         "type": selectedType?['type'],
         "amount": amountController.text,
         "category": selectedTypes.toString(),
         "reason": reasonController.text,
-        "employee_id": selectEmpId.toString(),
         "due_date": StringConvert.sanitizeDateString(selectedDatecontroller.text)
       };
+
+      if (targetType == 'employees') {
+        requestMainData["employee_ids"] = selectedEmployees.map((e) => e['id']).toList();
+      } else if (targetType == 'departments') {
+        requestMainData["department_ids"] = selectedDepartments.map((e) => e['id']).toList();
+        if (exceptedEmployees.isNotEmpty) {
+          requestMainData["except_employee_ids"] = exceptedEmployees.map((e) => e['id']).toList();
+        }
+      } else if (targetType == 'all') {
+        if (exceptedEmployees.isNotEmpty) {
+          requestMainData["except_employee_ids"] = exceptedEmployees.map((e) => e['id']).toList();
+        }
+      }
 
       DioHelper.postData(
           context: context,
@@ -188,29 +253,30 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
           isLoadingPost = false;
           _resetValues();
           notifyListeners();
-          return;
+          Navigator.pop(context, true); // To refresh list or close
         } else {
-           AlertsService.error(
+          AlertsService.error(
               context: context,
-              title: AppStrings.failed.tr(),
-              message: v.data['message'] ?? 'Failed to create new request');
-           isLoadingPost = false;
-           notifyListeners();
-          return;
+              message: v.data['message'] ?? "Failed to create",
+              title: AppStrings.error.tr());
+          isLoadingPost = false;
+          notifyListeners();
         }
+      }).catchError((error){
+        isLoadingPost = false;
+        notifyListeners();
+        AlertsService.error(
+            context: context,
+            message: error is DioError ? (error.response?.data['message'] ?? 'Something went wrong') : error.toString(),
+            title: AppStrings.error.tr());
       });
-
-    } catch (ex, t) {
+    } catch (e) {
       isLoadingPost = false;
-      debugPrint(
-          'Error creating new Penalty Or Reward ${ex.toString()} at :- ${t.toString()}');
-      await AlertsService.error(
+      notifyListeners();
+      AlertsService.error(
           context: context,
-          title: AppStrings.failed.tr(),
-          message: 'Failed to create Penalty Or Reward ${ex.toString()}');
-      isLoadingPost = false;
-
-      return;
+          message: e.toString(),
+          title: AppStrings.error.tr());
     }
   }
 }

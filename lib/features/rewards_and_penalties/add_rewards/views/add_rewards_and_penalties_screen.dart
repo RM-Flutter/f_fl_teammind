@@ -10,7 +10,9 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/animated_custom_dropdown/custom_dropdown.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/multi_searchable_dropdown_sheet.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
+
 import 'package:app_test/features/rewards_and_penalties/add_rewards/controllers/add_reward_and_penalty_controller.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
@@ -133,7 +135,6 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                   viewModel.amountController.clear();
                                   viewModel.reasonController.clear();
                                   viewModel.selectedCategory = null;
-                                  viewModel.selectedEmployee = null;
                                   setState(() {
                                   });
                                 },
@@ -149,9 +150,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                   viewModel.selectedDatecontroller.clear();
                                   viewModel.amountController.clear();
                                   viewModel.reasonController.clear();
-                                  viewModel.reasonController.clear();
                                   viewModel.selectedCategory = null;
-                                  viewModel.selectedEmployee = null;
                                   setState(() {
                                   });
                                 },
@@ -161,6 +160,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                     ?.resolve(
                                     LocalizationService.isArabic(context: context)
                                         ? TextDirection.rtl
+
                                         : TextDirection.ltr)),
                             gapH14,
                             TextField(
@@ -215,39 +215,72 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               ),
                             ),
                             gapH14,
-                            CustomDropdown.search(
-                                selectedValue: viewModel.selectedEmployee,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
-                                borderSide: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .enabledBorder
-                                    ?.borderSide,
-                                hintText: AppStrings.employeeName.tr(),
-                                onRemoveClicked: (){
-                                  viewModel.selectedEmployee = null;
-                                  viewModel.selectEmpId = null;
-                                  setState(() {
-                                  });
-                                },
-                                hintStyle: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .hintStyle,
+                            // Target Type Dropdown
+                            DropdownButtonFormField<String>(
+                              value: viewModel.targetType,
+                              decoration: InputDecoration(
+                                hintText: LocalizationService.isArabic(context: context) ? "نوع الاستهداف" : "Target Type",
+                                contentPadding: Theme.of(context).inputDecorationTheme.contentPadding?.resolve(
+                                    LocalizationService.isArabic(context: context) ? TextDirection.rtl : TextDirection.ltr),
+                              ),
+                              items: [
+                                DropdownMenuItem(value: 'employees', child: Text(LocalizationService.isArabic(context: context) ? "موظفين محددين" : "Specific Employees")),
+                                DropdownMenuItem(value: 'departments', child: Text(LocalizationService.isArabic(context: context) ? "أقسام محددة" : "Specific Departments")),
+                                DropdownMenuItem(value: 'all', child: Text(LocalizationService.isArabic(context: context) ? "الكل" : "All")),
+                              ],
+                              onChanged: (val) {
+                                if (val != null) {
+                                  viewModel.setTargetType(val);
+                                }
+                              },
+                            ),
+                            gapH14,
+
+                            // Specific Employees Multi-Select
+                            if (viewModel.targetType == 'employees') ...[
+                              MultiSearchableDropdownSheet(
+                                selectedValues: viewModel.selectedEmployees,
                                 items: viewModel.employees,
-                                nameKey: "name",
-                                onChanged: (value){
-                                  viewModel.selectedEmployee = value;
-                                  viewModel.selectEmpId = value['id'].toString();
-                                  print("Selected employee ID: ${value["id"]}");
+                                nameKey: 'name',
+                                hintText: AppStrings.employeeName.tr(),
+                                onChanged: (newSelection) {
+                                  viewModel.selectedEmployees = newSelection;
                                   setState(() {});
                                 },
-                                contentPadding: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .contentPadding
-                                    ?.resolve(LocalizationService.isArabic(
-                                    context: context)
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr)),
-                            gapH14,
+                              ),
+                              gapH14,
+                            ],
+
+                            // Specific Departments Multi-Select
+                            if (viewModel.targetType == 'departments') ...[
+                              MultiSearchableDropdownSheet(
+                                selectedValues: viewModel.selectedDepartments,
+                                items: viewModel.departments,
+                                nameKey: 'title', // assuming departments use 'title'
+                                hintText: LocalizationService.isArabic(context: context) ? "اختر الأقسام" : "Select Departments",
+                                onChanged: (newSelection) {
+                                  viewModel.selectedDepartments = newSelection;
+                                  setState(() {});
+                                },
+                              ),
+                              gapH14,
+                            ],
+
+                            // Except Employees Multi-Select (for departments and all)
+                            if (viewModel.targetType == 'departments' || viewModel.targetType == 'all') ...[
+                              MultiSearchableDropdownSheet(
+                                selectedValues: viewModel.exceptedEmployees,
+                                items: viewModel.employees,
+                                nameKey: 'name',
+                                hintText: LocalizationService.isArabic(context: context) ? "استثناء موظفين (اختياري)" : "Except Employees (Optional)",
+                                onChanged: (newSelection) {
+                                  viewModel.exceptedEmployees = newSelection;
+                                  setState(() {});
+                                },
+                              ),
+                              gapH14,
+                            ],
+
                             // Reason
                             TextFormField(
                               controller: viewModel.reasonController,

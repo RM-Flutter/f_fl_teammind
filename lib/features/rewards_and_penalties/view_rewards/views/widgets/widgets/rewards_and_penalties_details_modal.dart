@@ -52,8 +52,14 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
     bool canShowComplaintButton = false;
     if (gCache != null && rewardAndPenalty.employeeId != null && gCache['employee_profile_id'] != null) {
       final bool isOwner = rewardAndPenalty.employeeId.toString() == gCache['employee_profile_id'].toString();
-      final typeKey = rewardAndPenalty.type?.key?.toLowerCase() ?? '';
-      final bool isPenalty = !typeKey.contains('reward') && !typeKey.contains('bonus');
+      
+      String typeKeyStr = '';
+      if (rewardAndPenalty.type is String) typeKeyStr = rewardAndPenalty.type.toLowerCase();
+      else {
+        try { typeKeyStr = rewardAndPenalty.type?.key?.toLowerCase() ?? ''; } catch (_) {}
+      }
+
+      final bool isPenalty = !typeKeyStr.contains('reward') && !typeKeyStr.contains('bonus');
       
       bool isWithinTwoMonths = false;
       try {
@@ -81,10 +87,22 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
       return category;
     }
 
-    final typeValue = translateType(rewardAndPenalty.type?.value ?? "");
-    final categoryValue = translateCategory(rewardAndPenalty.category?.value ?? "");
+    String getDynamicValue(dynamic field) {
+      if (field == null) return "";
+      if (field is String) return field;
+      try { return field.value ?? field.key ?? ""; } catch (_) { return field.toString(); }
+    }
+
+    String getDynamicKey(dynamic field) {
+      if (field == null) return "";
+      if (field is String) return field;
+      try { return field.key ?? field.value ?? ""; } catch (_) { return field.toString(); }
+    }
+
+    final typeValue = translateType(getDynamicValue(rewardAndPenalty.type));
+    final categoryValue = translateCategory(getDynamicValue(rewardAndPenalty.category));
     final amount = rewardAndPenalty.amount?.toString() ?? "0";
-    final actionKey = rewardAndPenalty.action?.key ?? "";
+    final actionKey = getDynamicKey(rewardAndPenalty.action);
     final payrollDate = rewardAndPenalty.payroll?.dateFrom;
 
     return Column(
