@@ -20,6 +20,7 @@ import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
 import 'package:app_test/features/tasks/views/main_tasks_layout/widgets/task_calender_widget.dart';
 import 'package:app_test/features/tasks/views/main_tasks_layout/widgets/task_list_tile_widget.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
+import 'package:app_test/core/services/general_listener.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -41,6 +42,17 @@ class _TaskScreenState extends State<TaskScreen> {
     super.initState();
     viewModel = TasksController();
     viewModel.getTask(context, date: null);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        Map<String, dynamic> gCache = json.decode(jsonString);
+        final popups = gCache['popups'];
+        if (popups != null && popups.isNotEmpty) {
+          GeneralListener().startAll(context, "tasks", popups);
+        }
+      }
+    });
   }
 
   @override

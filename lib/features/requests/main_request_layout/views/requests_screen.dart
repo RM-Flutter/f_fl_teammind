@@ -8,6 +8,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
+import 'package:app_test/core/services/general_listener.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/widgets/loading_page.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -88,6 +89,17 @@ class _RequestsScreenState extends State<RequestsScreen> {
             to: CacheHelper.getString("to"),
             depId: CacheHelper.getString("depId"),
             status: CacheHelper.getString("selectStatus"));
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        Map<String, dynamic> gCache = json.decode(jsonString);
+        final popups = gCache['popups'];
+        if (popups != null && popups.isNotEmpty) {
+          GeneralListener().startAll(context, "requests", popups);
+        }
       }
     });
   }

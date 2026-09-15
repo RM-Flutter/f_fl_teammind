@@ -216,17 +216,14 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             ),
                             gapH14,
                             // Target Type Dropdown
-                            DropdownButtonFormField<String>(
+                            defaultDropdownField(
+                              hasShadows: false,
                               value: viewModel.targetType,
-                              decoration: InputDecoration(
-                                hintText: LocalizationService.isArabic(context: context) ? "نوع الاستهداف" : "Target Type",
-                                contentPadding: Theme.of(context).inputDecorationTheme.contentPadding?.resolve(
-                                    LocalizationService.isArabic(context: context) ? TextDirection.rtl : TextDirection.ltr),
-                              ),
+                              title: LocalizationService.isArabic(context: context) ? "نوع الاستهداف" : "Target Type",
                               items: [
-                                DropdownMenuItem(value: 'employees', child: Text(LocalizationService.isArabic(context: context) ? "موظفين محددين" : "Specific Employees")),
-                                DropdownMenuItem(value: 'departments', child: Text(LocalizationService.isArabic(context: context) ? "أقسام محددة" : "Specific Departments")),
-                                DropdownMenuItem(value: 'all', child: Text(LocalizationService.isArabic(context: context) ? "الكل" : "All")),
+                                DropdownMenuItem(value: 'employees', child: Text(LocalizationService.isArabic(context: context) ? "موظفين محددين" : "Specific Employees", style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w500))),
+                                DropdownMenuItem(value: 'departments', child: Text(LocalizationService.isArabic(context: context) ? "أقسام محددة" : "Specific Departments", style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400))),
+                                DropdownMenuItem(value: 'all', child: Text(LocalizationService.isArabic(context: context) ? "الكل" : "All", style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400))),
                               ],
                               onChanged: (val) {
                                 if (val != null) {

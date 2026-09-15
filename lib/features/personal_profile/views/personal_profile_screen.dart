@@ -2,6 +2,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:app_test/core/services/general_listener.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +63,16 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
     super.initState();
     viewModel = PersonalProfileController();
     viewModel.initializePersonalProfileScreen(context: context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        Map<String, dynamic> gCache = json.decode(jsonString);
+        final popups = gCache['popups'];
+        if (popups != null && popups.isNotEmpty) {
+          GeneralListener().startAll(context, "profile", popups);
+        }
+      }
+    });
   }
 
   @override

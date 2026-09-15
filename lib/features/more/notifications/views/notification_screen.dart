@@ -56,9 +56,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
       }
       
       // ✅ Start popup listener for notification screen
-      if (CacheHelper.getString("usPopUps") != null && CacheHelper.getString("usPopUps") != "") {
-        final List popups = json.decode(CacheHelper.getString("usPopUps")!);
-        GeneralListener().startAll(context, "notification", popups);
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        Map<String, dynamic> gCache = json.decode(jsonString);
+        final popups = gCache['popups'];
+        if (popups != null && popups.isNotEmpty) {
+          GeneralListener().startAll(context, "notification", popups);
+        }
       }
     });
     _scrollController.addListener(() {

@@ -26,6 +26,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_sizes.dart' show AppSizes;
 import '../controller/fingerprint_controller.dart';
 import '../../../core/widgets/finger_print/loading/fingerprint_loading_screen.dart';
+import 'package:app_test/core/services/general_listener.dart';
 
 class FingerprintScreen extends StatefulWidget {
   final String? empId;
@@ -44,6 +45,17 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
     viewModel = FingerprintViewModel();
     viewModel.initializeFingerprintScreen(
         context: context, empId: widget.empId);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        Map<String, dynamic> gCache = json.decode(jsonString);
+        final popups = gCache['popups'];
+        if (popups != null && popups.isNotEmpty) {
+          GeneralListener().startAll(context, "fingerprint", popups);
+        }
+      }
+    });
   }
 
   @override

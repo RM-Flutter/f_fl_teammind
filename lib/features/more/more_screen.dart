@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
+import 'package:app_test/core/services/general_listener.dart';
 import 'package:app_test/features/more/company_structure/company_structure_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -46,6 +47,17 @@ class _MoreScreenState extends State<MoreScreen> {
         context.pop();
 
         PersonalProfileController().logout(context: context);
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        Map<String, dynamic> gCache = json.decode(jsonString);
+        final popups = gCache['popups'];
+        if (popups != null && popups.isNotEmpty) {
+          GeneralListener().startAll(context, "more", popups);
+        }
       }
     });
   }
