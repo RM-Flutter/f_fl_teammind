@@ -13,6 +13,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/features/more/notifications/data/models/get_one_notification_model.dart';
+import 'package:app_test/features/more/notifications/data/models/notification_emotion_model.dart';
+import 'package:app_test/features/more/notifications/data/remote_data/notifications_repo.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,7 +30,7 @@ class NotificationProviderModel extends ChangeNotifier {
   bool isGetNotificationCommentLoading = false;
   bool isGetNotificationCommentSuccess = false;
   bool hasMoreNotifications = true; // Track if there are more notifications to load
-  bool allowComment = true; // Track if there are more notifications to load
+  bool allowComment = false; // Track if there are more notifications to load
   String? getNotificationErrorMessage;
   String? getRequestCommentErrorMessage;
   String? errorAddNotificationMessage;
@@ -53,6 +55,12 @@ class NotificationProviderModel extends ChangeNotifier {
   Map<String, dynamic>? selectedEmployee;
   List<Map<String, dynamic>> employees = [];
   List<Map<String, dynamic>> departments = [];
+
+  // ── Emotion / Reactions ───────────────────────────────────────────────────
+  NotificationEmotionModel? emotionData;
+  bool isEmotionLoading = false;
+  // ─────────────────────────────────────────────────────────────────────────
+
   List notificationsType = [
     {
       "name" : AppStrings.allEmployees.tr(),
@@ -229,6 +237,98 @@ class NotificationProviderModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // ── Emotions / Reactions ────────────────────────────────────────────────
+
+  /// Loads the initial reactions count & user reaction for this notification.
+  Future<void> fetchEmotionCount(BuildContext context, dynamic id) async {
+    try {
+      final response = await NotificationsRepo.getEmotionCount(
+        context: context,
+        notificationId: id,
+      );
+      if (response.data['status'] == true) {
+        emotionData = NotificationEmotionModel.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('fetchEmotionCount error: $e');
+    }
+  }
+
+  /// Add or remove a reaction.
+  ///
+  /// - Pass [emotion] to add/switch to that reaction.
+  /// - Pass null (or the same emotion the user already picked) to remove.
+  Future<void> reactToNotification(
+    BuildContext context,
+    dynamic id, {
+    String? emotion,
+  }) async {
+    if (isEmotionLoading) return;
+
+    final previousData = emotionData;
+    final currentReaction = emotionData?.userReaction;
+
+    // If tapped same emotion → remove; otherwise → add
+    final bool isSame = emotion != null && currentReaction == emotion;
+    final String action = (emotion == null || isSame) ? 'remove' : 'add';
+    final String? emotionToSend = action == 'add' ? emotion : null;
+
+    // ── Optimistic update ──────────────────────────────────────────────────
+    if (emotionData != null) {
+      final summary = emotionData!.summary;
+      if (action == 'remove' && summary != null) {
+        emotionData = emotionData!.copyWith(
+          totalCount: ((emotionData!.totalCount ?? 1) - 1).clamp(0, 999999),
+          clearUserReaction: true,
+          summary: summary.copyWithAdjusted(decrement: currentReaction),
+        );
+      } else if (action == 'add' && summary != null) {
+        final hasExisting =
+            currentReaction != null && currentReaction.isNotEmpty;
+        emotionData = emotionData!.copyWith(
+          totalCount: hasExisting
+              ? emotionData!.totalCount
+              : (emotionData!.totalCount ?? 0) + 1,
+          userReaction: emotionToSend,
+          summary: summary.copyWithAdjusted(
+            increment: emotionToSend,
+            decrement: hasExisting ? currentReaction : null,
+          ),
+        );
+      }
+    }
+
+    isEmotionLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await NotificationsRepo.reactToNotification(
+        context: context,
+        notificationId: id,
+        action: action,
+        emotion: emotionToSend,
+      );
+      if (response.data['status'] == true) {
+        emotionData = NotificationEmotionModel.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+      } else {
+        emotionData = previousData; // rollback
+      }
+    } catch (e) {
+      emotionData = previousData; // rollback
+      debugPrint('reactToNotification error: $e');
+    } finally {
+      isEmotionLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────────────────
 
   Future<void> markAsRead(BuildContext context, int id) async {
     try {

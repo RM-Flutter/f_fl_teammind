@@ -186,6 +186,7 @@ abstract class AppStrings {
   static const evaluationRequest = "evaluationRequest";
   static const customData = "customData";
   static const teamFingerprint = "teamFingerprint";
+  static const teamTodayStatus = "teamTodayStatus";
   static const pleaseEnableWifiFirst = "pleaseEnableWifiFirst";
   static const downloaded = "downloaded";
   static const viewEvaluations = "viewEvaluations";

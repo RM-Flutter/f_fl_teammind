@@ -45,6 +45,7 @@ import '../../features/more/more_screen.dart';
 import '../../features/more/notifications/views/widgets/notifications_list/widgets/notifications_details/notification_details_screen.dart';
 import '../../features/more/request_terms/views/request_terms_screen.dart';
 import '../../features/more/team_fingerprint/view/team_fingerprint_screen.dart';
+import 'package:app_test/features/more/team_today_status/views/team_today_status_screen.dart';
 import '../../features/more/update_profile/views/update_password_screen.dart';
 import '../../features/more/user_device/views/user_devices_screen.dart';
 import '../../features/offline/views/offline_screen.dart';
@@ -196,6 +197,7 @@ enum AppRoutes {
   salaryAdvanceDetails,
   salaryAdvanceCreate,
   approvableDetails,
+  teamTodayStatus,
 }
 
 const TestVSync ticker = TestVSync();
@@ -944,6 +946,34 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: const TeamFingerprintScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'teamTodayStatus',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.teamTodayStatus.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra as Offset?;
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const TeamTodayStatusScreen(),
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
                   );

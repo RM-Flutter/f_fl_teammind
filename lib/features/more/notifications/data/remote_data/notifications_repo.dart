@@ -66,4 +66,38 @@ class NotificationsRepo {
       formdata: formData,
     );
   }
+
+  /// GET /rmnotifications/entities-operations/{id}/emotions/count
+  /// Returns allowed status, total_count, user_reaction, and summary.
+  static Future<Response> getEmotionCount({
+    required BuildContext context,
+    required dynamic notificationId,
+  }) {
+    return DioHelper.getData(
+      url: "/rmnotifications/entities-operations/$notificationId/emotions/count",
+      context: context,
+      query: null,
+    );
+  }
+
+  /// POST /rmnotifications/entities-operations/{id}/emotions
+  /// [action] must be "add" or "remove".
+  /// [emotion] is required when action == "add".
+  static Future<Response> reactToNotification({
+    required BuildContext context,
+    required dynamic notificationId,
+    required String action,
+    String? emotion,
+  }) {
+    final Map<String, dynamic> body = {'action': action};
+    if (emotion != null) body['emotion'] = emotion;
+
+    return DioHelper.postData(
+      url: "/rmnotifications/entities-operations/$notificationId/emotions",
+      context: context,
+      query: null,
+      data: body,
+    );
+  }
 }
+

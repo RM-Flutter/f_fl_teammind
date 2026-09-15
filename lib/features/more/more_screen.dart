@@ -239,6 +239,16 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
+                              title: AppStrings.teamTodayStatus.tr(),
+                              icon: Icons.groups_rounded,
+                              onTap: () async{
+                                await context.pushNamed(AppRoutes.teamTodayStatus.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
                             SizedBox(height : 15),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 24),
