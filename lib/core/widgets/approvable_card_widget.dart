@@ -350,14 +350,26 @@ class ApprovableCardWidget extends StatelessWidget {
                   try {
                     final dyn = request as dynamic;
                     if (dyn.id != null) {
-                      final String appType =
-                          dyn.approvableType?.toString().toLowerCase() ?? '';
-                      final String tName =
-                          dyn.typeName?.toString().toLowerCase() ?? '';
+                      String appType = '';
+                      try { appType = dyn.approvableType?.toString().toLowerCase() ?? ''; } catch (_) {}
+                      
+                      String tName = '';
+                      try { tName = dyn.typeName?.toString().toLowerCase() ?? ''; } catch (_) {}
+
                       isVac = appType.contains('employeerequest') ||
                           appType.contains('vacation') ||
                           tName.contains('vacation') ||
                           tName.contains('إجازة');
+                          
+                      if (!isVac) {
+                        final reqTypeString = request.runtimeType.toString();
+                        if (reqTypeString == 'MyTeamRequestModel' ||
+                            reqTypeString == 'OtherDepartmentRequestModel' ||
+                            reqTypeString == 'AllCompanyRequestModel' ||
+                            reqTypeString == 'RequestModel') {
+                          isVac = true;
+                        }
+                      }
                     }
                   } catch (_) {}
 

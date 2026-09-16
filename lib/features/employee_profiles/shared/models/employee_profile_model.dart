@@ -1,5 +1,5 @@
-
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_and_penalty_model.dart';
 
 class EmployeeProfileModel {
   var id;
@@ -521,7 +521,7 @@ class Assets {
   final String? description;
   final String? assetStatus;
   final String? assignmentStatus;
-  final String? signatureDocumentUrl;
+  final List<MediaFile>? signatureDocumentUrl;
   final String? startAt;
   final String? endsAt;
 
@@ -547,7 +547,15 @@ class Assets {
       description: json['description'],
       assetStatus: json['asset_status'],
       assignmentStatus: json['assignment_status'],
-      signatureDocumentUrl: json['signature_document_url'],
+      signatureDocumentUrl: json['signature_document_url'] != null
+          ? (json['signature_document_url'] is List
+              ? (json['signature_document_url'] as List)
+                  .map((i) => MediaFile.fromJson(i))
+                  .toList()
+              : (json['signature_document_url'] is String
+                  ? [MediaFile(file: json['signature_document_url'])]
+                  : null))
+          : null,
       startAt: json['start_at'],
       endsAt: json['ends_at'],
     );
@@ -562,7 +570,7 @@ class Assets {
       'description': description,
       'asset_status': assetStatus,
       'assignment_status': assignmentStatus,
-      'signature_document_url': signatureDocumentUrl,
+      'signature_document_url': signatureDocumentUrl?.map((e) => e.toJson()).toList(),
       'start_at': startAt,
       'ends_at': endsAt,
     };

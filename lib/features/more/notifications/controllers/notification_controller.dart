@@ -275,7 +275,7 @@ class NotificationProviderModel extends ChangeNotifier {
     // If tapped same emotion → remove; otherwise → add
     final bool isSame = emotion != null && currentReaction == emotion;
     final String action = (emotion == null || isSame) ? 'remove' : 'add';
-    final String? emotionToSend = action == 'add' ? emotion : null;
+    final String? emotionToSend = emotion ?? currentReaction;
 
     // ── Optimistic update ──────────────────────────────────────────────────
     if (emotionData != null) {

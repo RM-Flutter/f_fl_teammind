@@ -27,6 +27,7 @@ class GeneralSettingsModel extends AppSettingsModel {
   final bool? payrollScreenProtection;
   final List<String>? loginTypes;
   final bool? managerAbleToApproveSalaryAdvances;
+  final bool? hasEmployeeProfile;
 
   GeneralSettingsModel(
       {required super.lastUpdateDate,
@@ -51,7 +52,8 @@ class GeneralSettingsModel extends AppSettingsModel {
         this.canNewRegister,
         this.payrollScreenProtection,
         this.loginTypes,
-        this.managerAbleToApproveSalaryAdvances});
+        this.managerAbleToApproveSalaryAdvances,
+        this.hasEmployeeProfile});
 
   factory GeneralSettingsModel.fromJson(Map<String, dynamic> json) {
     return GeneralSettingsModel(
@@ -80,7 +82,13 @@ class GeneralSettingsModel extends AppSettingsModel {
       availableLang: json['available_lang'] != null
           ? List<String>.from(json['available_lang'])
           : null,
-      weekends: json['weekend'] != null ? List<String>.from(json['weekend']) : null,
+      weekends: json['weekend'] != null
+          ? (json['weekend'] is List
+              ? List<String>.from(json['weekend'])
+              : (json['weekend'] is Map && json['weekend']['days'] != null
+                  ? List<String>.from(json['weekend']['days'])
+                  : null))
+          : null,
       holidays: json['holidays'] != null
           ? (json['holidays'] is List
           ? List<HolidayOrString>.from(
@@ -114,6 +122,7 @@ class GeneralSettingsModel extends AppSettingsModel {
           .toList()
           : null,
       managerAbleToApproveSalaryAdvances: ModelHelpersService.getBoolValue(json['manager_able_to_approve_salary_advances']),
+      hasEmployeeProfile: ModelHelpersService.getBoolValue(json['has_employee_profile']) ?? true,
     );
   }
 

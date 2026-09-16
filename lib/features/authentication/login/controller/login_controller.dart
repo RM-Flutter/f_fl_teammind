@@ -23,6 +23,7 @@ import '../../../../core/utils/app_styles.dart';
 import '../../create_account/views/create_account_screen.dart';
 import '../../forgot_password/views/forget_password_screen.dart';
 import '../data/login_repo.dart';
+import 'package:app_test/features/personal_profile/data/repo/personal_profile_repo.dart';
 import '../../shared/widgets/verification_tile_widget.dart';
 
 enum AuthStatus {
@@ -82,11 +83,18 @@ class AuthenticationController extends ChangeNotifier {
         (result.data?.isNotEmpty ?? false)) {
       await _handleLoginResponse(result: result.data!, context: context);
     } else {
-      AlertsService.error(
-          title: AppStrings.failed.tr(),
-          context: context,
-          message:
-          result.message ?? AppStrings.failedLoginingPleaseTryAgain.tr());
+      if (result.data != null && result.data!['error'] == 'LICENCE_ACCESS_DENIED') {
+        AlertsService.error(
+            title: AppStrings.failed.tr(),
+            context: context,
+            message: 'عفواً، نوع الترخيص (${result.data!['licence_type']}) لا يسمح لك بالدخول من هذه المنصة.');
+      } else {
+        AlertsService.error(
+            title: AppStrings.failed.tr(),
+            context: context,
+            message:
+            result.message ?? AppStrings.failedLoginingPleaseTryAgain.tr());
+      }
     }
   }
   Future<void> loginWithSocial(BuildContext context, String url) async {
@@ -790,12 +798,19 @@ class AuthenticationController extends ChangeNotifier {
       // }
       await appConfigServiceProvider.setAuthenticationStatusWithToken(
           isLogin: true, token: result['token']);
-      // Navigate to splash screen after successful login
-      if (context.mounted) {
-        context.goNamed(
-          AppRoutes.splash.name,
-          pathParameters: {'lang': context.locale.languageCode},
-        );
+      
+      if (result['update_password'] == true) {
+        if (context.mounted) {
+          await _showForceUpdatePasswordDialog(context: context);
+        }
+      } else {
+        // Navigate to splash screen after successful login
+        if (context.mounted) {
+          context.goNamed(
+            AppRoutes.splash.name,
+            pathParameters: {'lang': context.locale.languageCode},
+          );
+        }
       }
       return;
     }
@@ -917,5 +932,109 @@ class AuthenticationController extends ChangeNotifier {
         authStatus = AuthStatus.active;
     }
     return authStatus;
+  }
+  Future<void> _showForceUpdatePasswordDialog({required BuildContext context}) async {
+    final TextEditingController passwordController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    bool hidePassword = true;
+    bool isLoading = false;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return PopScope(
+          canPop: false,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                title: Text(
+                  locale.tr(AppStrings.updatePassword).toUpperCase(),
+                  style: AppStyles.heading(context).copyWith(
+                      fontSize: AppSizes.s16, fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.center,
+                ),
+                content: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: passwordController,
+                        obscureText: hidePassword,
+                        decoration: InputDecoration(
+                          hintText: locale.tr(AppStrings.newPassword),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              hidePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                hidePassword = !hidePassword;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (value) =>
+                            ValidationService.validatePassword(value, login: true),
+                      ),
+                      const SizedBox(height: 20),
+                      if (isLoading)
+                        const Center(child: CircularProgressIndicator())
+                      else
+                        CustomElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              final result =
+                                  await PersonalProfileRepo.updatePassword(
+                                context: context,
+                                newPassword: passwordController.text,
+                              );
+
+                              setState(() {
+                                isLoading = false;
+                              });
+
+                              if (result.success) {
+                                Navigator.pop(dialogContext); // Close dialog
+                                if (context.mounted) {
+                                  context.goNamed(
+                                    AppRoutes.splash.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    },
+                                  );
+                                }
+                              } else {
+                                AlertsService.error(
+                                  context: context,
+                                  title: locale.tr(AppStrings.failed),
+                                  message: result.message ??
+                                      locale.tr(AppStrings.failed),
+                                );
+                              }
+                            }
+                          },
+                          title: locale.tr(AppStrings.saveChanges).toUpperCase(),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

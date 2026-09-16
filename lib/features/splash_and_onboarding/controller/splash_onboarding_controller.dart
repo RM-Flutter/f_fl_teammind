@@ -27,6 +27,21 @@ class OnboardingController extends ChangeNotifier {
 
   /// من كاش US1: لو role = ["personal"] فقط → freeServicesHome، وإلا → home
   static String getHomeRouteFromUs1Role() {
+    final usgString = CacheHelper.getString("USG");
+    if (usgString != null && usgString.isNotEmpty) {
+      try {
+        final usg = json.decode(usgString) as Map<String, dynamic>?;
+        final data = usg?['data'] ?? usg?['general_settings']?['data'] ?? usg;
+        bool? hasProfile;
+        if (data != null && data is Map) {
+          hasProfile = data['has_employee_profile'] == null ? null : (data['has_employee_profile'] == true || data['has_employee_profile'] == 'true' || data['has_employee_profile'] == 1);
+        }
+        if (hasProfile == false) {
+          return AppRoutes.noAccess.name;
+        }
+      } catch (_) {}
+    }
+
     final jsonString = CacheHelper.getString("US1");
     if (jsonString == null || jsonString.isEmpty) return AppRoutes.home.name;
     try {

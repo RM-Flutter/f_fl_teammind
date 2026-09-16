@@ -2395,6 +2395,28 @@ GoRouter goRouter(BuildContext context) {
         },
       ),
       GoRoute(
+        path: '/:lang/noAccess-screen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.noAccess.name,
+        pageBuilder: (context, state) {
+          final animationController = AnimationController(
+            vsync: ticker,
+          );
+          // Make sure to dispose the controller after the transition is complete
+          animationController.addStatusListener((status) {
+            if (status == AnimationStatus.completed ||
+                status == AnimationStatus.dismissed) {
+              animationController.dispose();
+            }
+          });
+          return AppRouterTransitions.slideTransition(
+            key: state.pageKey,
+            child: const NoAccessScreen(),
+            animation: animationController,
+            begin: const Offset(1.0, 0.0),
+          );
+        },),
+    GoRoute(
         path: '/:lang/offline-screen',
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.offlineScreen.name,

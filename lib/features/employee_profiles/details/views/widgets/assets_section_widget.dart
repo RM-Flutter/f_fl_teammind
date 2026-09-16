@@ -5,6 +5,13 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:app_test/core/services/url_launcher_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 
 class AssetsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
@@ -84,10 +91,84 @@ class _SectionLabel extends StatelessWidget {
       );
 }
 
-class _AssetCard extends StatelessWidget {
+class _AssetCard extends StatefulWidget {
   final Assets asset;
 
   const _AssetCard({required this.asset});
+
+  @override
+  State<_AssetCard> createState() => _AssetCardState();
+}
+
+class _AssetCardState extends State<_AssetCard> {
+  double _downloadProgress = 0.0;
+
+  Future<void> _downloadFile(String url, String fileName) async {
+    try {
+      if (kIsWeb) {
+        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        return;
+      }
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text('downloading'.tr()),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LinearProgressIndicator(value: _downloadProgress),
+                  const SizedBox(height: 10),
+                  Text('${(_downloadProgress * 100).toStringAsFixed(0)}%'),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      final dio = Dio();
+      final dir = await getApplicationDocumentsDirectory();
+      final filePath = "${dir.path}/$fileName";
+
+      await dio.download(
+        url,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            setState(() {
+              _downloadProgress = received / total;
+            });
+          }
+        },
+      );
+
+      if (mounted) Navigator.of(context).pop();
+      await OpenFilex.open(filePath);
+
+      Fluttertoast.showToast(
+        msg: '✅ ${'downloaded'.tr()}: $fileName',
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      if (mounted) Navigator.of(context).pop();
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _downloadProgress = 0.0;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,41 +204,41 @@ class _AssetCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  asset.title ?? '',
+                  widget.asset.title ?? '',
                   style: AppStyles.blackContent(context)
                       .copyWith(fontWeight: FontWeight.w700, fontSize: 14),
                 ),
-                if (asset.serialNumber?.isNotEmpty == true) ...[
+                if (widget.asset.serialNumber?.isNotEmpty == true) ...[
                   const SizedBox(height: 4),
                   Row(children: [
                     Icon(Icons.tag_rounded,
                         size: 13, color: Colors.grey.shade500),
                     const SizedBox(width: 4),
-                    Text(asset.serialNumber!,
+                    Text(widget.asset.serialNumber!,
                         style: AppStyles.greyContent(context)
                             .copyWith(fontSize: 12)),
                   ]),
                 ],
-                if (asset.description?.isNotEmpty == true) ...[
+                if (widget.asset.description?.isNotEmpty == true) ...[
                   const SizedBox(height: 4),
-                  Text(asset.description!,
+                  Text(widget.asset.description!,
                       style: AppStyles.greyContent(context)
                           .copyWith(fontSize: 12, height: 1.4)),
                 ],
-                if (asset.startAt?.isNotEmpty == true) ...[
+                if (widget.asset.startAt?.isNotEmpty == true) ...[
                   const SizedBox(height: 6),
                   Row(children: [
                     Icon(Icons.calendar_today_rounded,
                         size: 12, color: Colors.grey.shade500),
                     const SizedBox(width: 4),
-                    Text(_fmt(asset.startAt),
+                    Text(_fmt(widget.asset.startAt),
                         style: AppStyles.greyContent(context)
                             .copyWith(fontSize: 11)),
-                    if (asset.endsAt?.isNotEmpty == true) ...[
+                    if (widget.asset.endsAt?.isNotEmpty == true) ...[
                       Text('  →  ',
                           style: AppStyles.greyContent(context)
                               .copyWith(fontSize: 11)),
-                      Text(_fmt(asset.endsAt),
+                      Text(_fmt(widget.asset.endsAt),
                           style: AppStyles.greyContent(context)
                               .copyWith(fontSize: 11)),
                     ],
@@ -168,21 +249,109 @@ class _AssetCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 6,
                   children: [
-                    if (asset.assetStatus?.isNotEmpty == true)
+                    if (widget.asset.assetStatus?.isNotEmpty == true)
                       _Badge(
                         prefixLabel: 'asset_status'.tr(),
-                        label: asset.assetStatus!.tr(),
-                        isPositive: asset.assetStatus == 'active',
+                        label: widget.asset.assetStatus!.tr(),
+                        isPositive: widget.asset.assetStatus == 'active',
                       ),
-                    if (asset.assignmentStatus?.isNotEmpty == true)
+                    if (widget.asset.assignmentStatus?.isNotEmpty == true)
                       _Badge(
                         prefixLabel: 'assignment_status'.tr(),
-                        label: asset.assignmentStatus!.tr(),
-                        isPositive: asset.assignmentStatus == 'active',
+                        label: widget.asset.assignmentStatus!.tr(),
+                        isPositive: widget.asset.assignmentStatus == 'active',
                         isSecondary: true,
                       ),
                   ],
                 ),
+                if (widget.asset.signatureDocumentUrl != null &&
+                    widget.asset.signatureDocumentUrl!.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'attachments'.tr(),
+                          style: AppStyles.primaryContent(context).copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppSizes.s14),
+                        ),
+                        const SizedBox(height: 8),
+                        ...widget.asset.signatureDocumentUrl!
+                            .map<Widget>((file) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
+                              children: [
+                                if (file.thumbnail != null &&
+                                    file.thumbnail!.isNotEmpty)
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: Image.network(
+                                      file.thumbnail!,
+                                      width: 40,
+                                      height: 40,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Icon(
+                                          Icons.insert_drive_file_rounded,
+                                          color: Color(AppColors.buttons),
+                                          size: 40),
+                                    ),
+                                  )
+                                else
+                                  Icon(Icons.insert_drive_file_rounded,
+                                      color: Color(AppColors.buttons),
+                                      size: 40),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    file.title ?? file.type ?? 'File',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                if (file.file != null) ...[
+                                  IconButton(
+                                    icon: Icon(Icons.remove_red_eye,
+                                        color:
+                                            Color(AppColors.secondaryButton)),
+                                    onPressed: () {
+                                      UrlLauncherServiceEx.launch(
+                                        context: context,
+                                        url: file.file!,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.download_rounded,
+                                        color: Color(AppColors.buttons)),
+                                    onPressed: () {
+                                      final fileName =
+                                          file.file!.split('/').last;
+                                      _downloadFile(file.file!, fileName);
+                                    },
+                                  ),
+                                ]
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

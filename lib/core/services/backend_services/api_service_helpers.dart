@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart' as intl;
@@ -23,6 +24,7 @@ abstract class ApiServiceHelpers {
     var headers = {
       'Accept': 'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
+      "X-App-Type": kIsWeb ? "webapp" : "mobileapp",
       if (deviceUniqueId != null && deviceUniqueId.isNotEmpty)
         'device-unique-id': deviceUniqueId,
     };

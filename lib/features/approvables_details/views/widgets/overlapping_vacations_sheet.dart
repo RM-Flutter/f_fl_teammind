@@ -186,6 +186,7 @@ class _VacationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -218,6 +219,7 @@ class _VacationCard extends StatelessWidget {
                     vertical: 12, horizontal: 14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Employee row
                     Row(

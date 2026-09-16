@@ -129,21 +129,22 @@ class _Content extends StatelessWidget {
         const SizedBox(height: 16),
 
         // ── Member list ────────────────────────────────────────────────────
-        Expanded(
-          child: members.isEmpty
-              ? NoExistingPlaceholderScreen(
-                  height: 0.5.sh,
-                  title: 'No members found',
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 4),
-                  itemCount: members.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (_, i) =>
-                      TeamMemberStatusCard(member: members[i]),
-                ),
-        ),
+        if (members.isEmpty)
+          NoExistingPlaceholderScreen(
+            height: 0.5.sh,
+            title: 'No members found',
+          )
+        else
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16, vertical: 4),
+            itemCount: members.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 10),
+            itemBuilder: (_, i) =>
+                TeamMemberStatusCard(member: members[i]),
+          ),
       ],
     );
   }
