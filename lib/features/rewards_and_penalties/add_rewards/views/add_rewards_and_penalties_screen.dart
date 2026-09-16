@@ -33,32 +33,50 @@ class AddRewardAndPenaltyScreen extends StatefulWidget {
 class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
   late final AddRewardAndPenaltyViewModel viewModel;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<Map<String, dynamic>>? types ;
+
+  Map<String, dynamic>? gCache;
+  Map<String, dynamic>? s1Cache;
+  List<dynamic> allowedRewardsAndPenaltyTypes = [];
+  bool canAddReward = false;
+  bool canAddPenalty = false;
+
   @override
   void initState() {
     super.initState();
     viewModel = AddRewardAndPenaltyViewModel();
     viewModel.initializeAddRewardAndPenaltyScreen(context: context);
+    _initializeCaches();
+  }
+
+  void _initializeCaches() {
+    var jsonString = CacheHelper.getString("USG");
+    if (jsonString != null && jsonString.isNotEmpty) {
+      try {
+        gCache = json.decode(jsonString) as Map<String, dynamic>;
+        UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache!);
+        allowedRewardsAndPenaltyTypes = gCache?['allowed_rewards_and_penalty_types'] as List<dynamic>? ?? [];
+      } catch (e) {
+        debugPrint("Error decoding USG cache: $e");
+      }
+    }
+
+    var s1JsonString = CacheHelper.getString("US1");
+    if (s1JsonString != null && s1JsonString.isNotEmpty) {
+      try {
+        s1Cache = json.decode(s1JsonString) as Map<String, dynamic>;
+        canAddReward = s1Cache?['can_add_reward'] == true;
+        canAddPenalty = s1Cache?['can_add_penalty'] == true;
+      } catch (e) {
+        debugPrint("Error decoding US1 cache: $e");
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var gCache;
-    var jsonString;
-    jsonString = CacheHelper.getString("USG");
-    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-      UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(gCache);
-    }
-    var s1Cache;
-    var s1JsonString;
-    s1JsonString = CacheHelper.getString("US1");
-    if (s1JsonString != null && s1JsonString.isNotEmpty && s1JsonString != "") {
-      s1Cache = json.decode(s1JsonString) as Map<String, dynamic>; // Convert String back to JSON
-    }
-
-
-    if(s1Cache['can_add_reward'] == true && s1Cache['can_add_penalty'] == true){
+    List<Map<String, dynamic>> types = [];
+    
+    if(canAddReward && canAddPenalty){
       types = [
         {
           'type': 'penalty',
@@ -69,33 +87,22 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
           'name': AppStrings.reward.tr(),
         },
       ];
-      setState(() {
-
-      });
     }
-    else if(s1Cache['can_add_reward'] == true && s1Cache['can_add_penalty'] == false){
+    else if(canAddReward && !canAddPenalty){
       types = [
         {
           'type': 'reward',
           'name': AppStrings.reward.tr(),
         },
       ];
-      setState(() {
-
-      });
     }
-    else if(s1Cache['can_add_reward'] == false && s1Cache['can_add_penalty'] == true){
+    else if(!canAddReward && canAddPenalty){
       types = [
         {
           'type': 'penalty',
           'name': AppStrings.penalty.tr(),
         },
       ];
-    }
-    else{
-      types = [];
-      setState(() {
-      });
     }
 
     return ChangeNotifierProvider<AddRewardAndPenaltyViewModel>(
@@ -180,7 +187,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               hasShadows: false,
                               value: viewModel.selectedTypes,
                               title: viewModel.selectedTypes ?? AppStrings.requestType.tr(),
-                              items: (gCache['allowed_rewards_and_penalty_types'] as List)
+                              items: allowedRewardsAndPenaltyTypes
                                   .map((e) => DropdownMenuItem<String>(
                                 value: e.toString(),
                                 child: Text(

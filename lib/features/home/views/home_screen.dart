@@ -447,24 +447,28 @@ class _HomeScreenState extends State<HomeScreen> {
         content = RequestsWidget(
           requests: viewModel.myRequests!,
           requestType: GetRequestsTypes.mine,
+          onActionTaken: () => viewModel.getHome(context),
         );
         break;
       case HomeWidgetType.myTeamRequests:
         content = RequestsWidget(
           requests: viewModel.myTeamRequests!,
           requestType: GetRequestsTypes.myTeam,
+          onActionTaken: () => viewModel.getHome(context),
         );
         break;
       case HomeWidgetType.otherDepartmentRequests:
         content = RequestsWidget(
           requests: viewModel.otherDepartmentRequests!,
           requestType: GetRequestsTypes.otherDepartment,
+          onActionTaken: () => viewModel.getHome(context),
         );
         break;
       case HomeWidgetType.allCompanyRequests:
         content = RequestsWidget(
           requests: viewModel.allCompanyRequests!,
           requestType: GetRequestsTypes.allCompany,
+          onActionTaken: () => viewModel.getHome(context),
         );
         break;
       case HomeWidgetType.notifications:

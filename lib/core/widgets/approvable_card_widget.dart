@@ -17,6 +17,7 @@ class ApprovableCardWidget extends StatelessWidget {
   final bool isForDepartment;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
+  final VoidCallback? onActionTaken;
   final EdgeInsetsGeometry? margin;
 
   const ApprovableCardWidget({
@@ -25,6 +26,7 @@ class ApprovableCardWidget extends StatelessWidget {
     required this.isForDepartment,
     required this.onTap,
     this.onLongPress,
+    this.onActionTaken,
     this.margin,
   }) : super(key: key);
 
@@ -176,6 +178,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 type: info.approvableType,
                 id: info.id,
                 isAsSomeoneElse: false,
+                onActionTaken: onActionTaken,
               );
             }
           },
@@ -219,6 +222,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 type: info.approvableType,
                 id: info.id,
                 isAsSomeoneElse: true,
+                onActionTaken: onActionTaken,
               );
             }
           },

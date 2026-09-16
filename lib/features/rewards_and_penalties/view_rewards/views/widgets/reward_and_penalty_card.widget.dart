@@ -40,7 +40,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
               title: typeValue.toLowerCase().contains('reward') == true
                   ? AppStrings.rewardInfo.tr()
                   : AppStrings.penaltyInfo.tr(),
-              height: AppSizes.s400),
+              height: MediaQuery.of(context).size.height * 0.75),
           child: Container(
             padding: const EdgeInsets.symmetric(
                 vertical: AppSizes.s14, horizontal: AppSizes.s16),
@@ -82,18 +82,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (rewardAndPenalty.canCancel == true && rewardAndPenalty.id != null) ...[
-                  IconButton(
-                    onPressed: () {
-                      final controller = Provider.of<RewardsAndPenaltiesViewModel>(context, listen: false);
-                      controller.cancelRewardAndPenalty(context: context, id: rewardAndPenalty.id!, empId: null); // Or pass empId if needed
-                    },
-                    icon: const Icon(Icons.cancel_outlined, color: Colors.red),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                  gapW12,
-                ],
+
                 Container(
                   height: AppSizes.s28,
                   width: AppSizes.s28,

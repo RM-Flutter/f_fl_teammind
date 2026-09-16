@@ -189,8 +189,17 @@ class OnboardingController extends ChangeNotifier {
   /// title (عربي وانجليزي) كلهم null + info (عربي وانجليزي) كلهم null + الصور فاضية.
   /// غير كده نعرض الشريحة: لو title فاضي نعرض الانفو أو الصور اللي راجعة.
   static bool _isOnboardingItemValid(Map<String, dynamic> item) {
-    final title = item['title'];
-    final info = item['info'];
+    var title = item['title'];
+    var info = item['info'];
+    
+    // Parse if they are strings (some backends return JSON strings)
+    if (title is String) {
+      try { title = json.decode(title); } catch (_) { title = null; }
+    }
+    if (info is String) {
+      try { info = json.decode(info); } catch (_) { info = null; }
+    }
+    
     final imageList = item['image'];
     final webImageList = item['web_image'];
     final hasTitle = title is Map && (_hasValue(title['ar']) || _hasValue(title['en']));
@@ -218,7 +227,35 @@ class OnboardingController extends ChangeNotifier {
       return _defaultOnboardingItems;
     }
 
-    final list = features.cast<Map<String, dynamic>>();
+    final list = <Map<String, dynamic>>[];
+    for (var item in features) {
+      if (item is Map<String, dynamic>) {
+        list.add(item);
+      } else if (item is Map) {
+        list.add(Map<String, dynamic>.from(item));
+      } else if (item is String) {
+        try {
+          final decoded = json.decode(item);
+          if (decoded is Map<String, dynamic>) {
+            list.add(decoded);
+          }
+        } catch (e) {
+          debugPrint("Failed to parse onboarding item string: $e");
+        }
+      }
+    }
+    
+    // Normalize stringified JSON in title and info before validation and UI rendering
+    for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      if (item['title'] is String) {
+        try { item['title'] = json.decode(item['title']); } catch (_) {}
+      }
+      if (item['info'] is String) {
+        try { item['info'] = json.decode(item['info']); } catch (_) {}
+      }
+    }
+
     final validList = list.where(_isOnboardingItemValid).toList();
     if (validList.isEmpty) {
       debugPrint('⚠️ Onboarding: كل العناصر فاضية (title+info+image كلهم null/فاضي) → متعرضش الشاشة');
@@ -390,25 +427,10 @@ class OnboardingController extends ChangeNotifier {
           final dateWatchScreenValue = CacheHelper.getString("dateWatchScreen");
           bool shouldShowOnboarding = false;
 
-          // If dateWatchScreen is not set, check if we should show onboarding
-          if (dateWatchScreenValue == null || dateWatchScreenValue.isEmpty) {
-            shouldShowOnboarding = true;
-            print("dateWatchScreen is empty, will check features");
-          }
-          // If dateWatchScreen exists, only show onboarding if referenceDate is newer
-          else if (dateToCheck != null) {
-            if (referenceDate != null && referenceDate.isAfter(dateToCheck)) {
-              shouldShowOnboarding = true;
-              print("referenceDate is newer than dateWatchScreen, will show onboarding");
-            } else {
-              print("dateWatchScreen is valid and up-to-date, going to home");
-            }
-          }
-          // If we can't parse dateWatchScreen, treat it as if it doesn't exist
-          else {
-            shouldShowOnboarding = true;
-            print("Cannot parse dateWatchScreen, will check features");
-          }
+          // LOGIC FIX: Never show Onboarding immediately after Login!
+          // A logged-in user should go straight to Home.
+          shouldShowOnboarding = false;
+          print("User is logged in, skipping onboarding check and routing directly to Home");
 
           if (shouldShowOnboarding) {
             await _precacheImages(context);

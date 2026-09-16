@@ -14,6 +14,7 @@ class RewardAndPenaltyModel {
   final String? dueDate;
   final Manager? manager;
   final bool? canCancel; // New field
+  final List<MediaFile>? files; // New field
 
   RewardAndPenaltyModel({
     this.id,
@@ -30,6 +31,7 @@ class RewardAndPenaltyModel {
     this.employeeId,
     this.payrollId,
     this.canCancel,
+    this.files,
   });
 
   factory RewardAndPenaltyModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class RewardAndPenaltyModel {
       createdAt: json['created_at'] as String?,
       dueDate: json['due_date'] as String?,
       canCancel: json['can_cancel'] as bool?,
+      files: json['signature_document'] != null ? (json['signature_document'] as List).map((i) => MediaFile.fromJson(i)).toList() : null,
     );
   }
 
@@ -61,7 +64,7 @@ class RewardAndPenaltyModel {
       'action': action is ActionLinks ? action?.toJson() : action,
       'profile_id': employeeId,
       'can_cancel': canCancel,
-
+      'signature_document': files?.map((e) => e.toJson()).toList(),
       'payroll_id': payrollId,
       'created_at': createdAt,
     };
@@ -69,7 +72,7 @@ class RewardAndPenaltyModel {
 
   @override
   String toString() {
-    return 'RewardAndPenaltyModel(id: $id,profile: $profile, amount: $amount, type: $type, category: $category, reason: $reason, action: $action, employeeId: $employeeId, payrollId: $payrollId)';
+    return 'RewardAndPenaltyModel(id: $id,profile: $profile, amount: $amount, type: $type, category: $category, reason: $reason, action: $action, employeeId: $employeeId, payrollId: $payrollId, files: $files)';
   }
 
   @override
@@ -257,4 +260,34 @@ class ActionLinks {
 
   @override
   int get hashCode => key.hashCode ^ value.hashCode;
+}
+
+class MediaFile {
+  final int? id;
+  final String? type;
+  final String? title;
+  final String? file;
+  final String? thumbnail;
+
+  MediaFile({this.id, this.type, this.title, this.file, this.thumbnail});
+
+  factory MediaFile.fromJson(Map<String, dynamic> json) {
+    return MediaFile(
+      id: json['id'] as int?,
+      type: json['type'] as String?,
+      title: json['title'] as String?,
+      file: json['file'] as String?,
+      thumbnail: json['thumbnail'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type,
+      'title': title,
+      'file': file,
+      'thumbnail': thumbnail,
+    };
+  }
 }

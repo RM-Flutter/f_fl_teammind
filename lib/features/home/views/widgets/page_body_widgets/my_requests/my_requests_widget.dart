@@ -17,7 +17,8 @@ import 'package:go_router/go_router.dart';
 class RequestsWidget extends StatelessWidget {
   final List requests;
   final GetRequestsTypes requestType;
-  const RequestsWidget({super.key, required this.requests, required this.requestType});
+  final VoidCallback? onActionTaken;
+  const RequestsWidget({super.key, required this.requests, required this.requestType, this.onActionTaken});
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +81,7 @@ class RequestsWidget extends StatelessWidget {
                 (req) => ApprovableCardWidget(
                   request: req,
                   isForDepartment: requestType != GetRequestsTypes.mine,
+                  onActionTaken: onActionTaken,
                   onTap: () async => await context.pushNamed(
                     AppRoutes.requestDetails.name,
                     extra: req,

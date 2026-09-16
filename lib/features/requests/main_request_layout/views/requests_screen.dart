@@ -413,6 +413,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                             (req) => ApprovableCardWidget(
                                           request: req,
                                           isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onActionTaken: () {
+                                            viewModel.currentPage = 1;
+                                            viewModel.initializeRequestsScreen(
+                                                context: context,
+                                                requestsType: widget.requestsType!,
+                                                requestTypeId: CacheHelper.getString("reqId"),
+                                                empIds: CacheHelper.getString("empId"),
+                                                from: CacheHelper.getString("from"),
+                                                to: CacheHelper.getString("to"),
+                                                status: CacheHelper.getString("status"),
+                                                depId: CacheHelper.getString("depId"));
+                                          },
                                           onLongPress: () async {
                                             var jsonString = CacheHelper.getString("US1");
                                             UserSettingsModel? userSettings;
@@ -471,6 +483,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                             (req) => ApprovableCardWidget(
                                           request: req,
                                           isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onActionTaken: () {
+                                            viewModel.currentPage = 1;
+                                            viewModel.initializeRequestsScreen(
+                                                context: context,
+                                                requestsType: widget.requestsType!,
+                                                requestTypeId: CacheHelper.getString("reqId"),
+                                                empIds: CacheHelper.getString("empId"),
+                                                from: CacheHelper.getString("from"),
+                                                to: CacheHelper.getString("to"),
+                                                status: CacheHelper.getString("status"),
+                                                depId: CacheHelper.getString("depId"));
+                                          },
                                           onLongPress: () async {
                                             var jsonString = CacheHelper.getString("US1");
                                             UserSettingsModel? userSettings;
@@ -529,6 +553,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                             (req) => ApprovableCardWidget(
                                           request: req,
                                           isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onActionTaken: () {
+                                            viewModel.currentPage = 1;
+                                            viewModel.initializeRequestsScreen(
+                                                context: context,
+                                                requestsType: widget.requestsType!,
+                                                requestTypeId: CacheHelper.getString("reqId"),
+                                                empIds: CacheHelper.getString("empId"),
+                                                from: CacheHelper.getString("from"),
+                                                to: CacheHelper.getString("to"),
+                                                status: CacheHelper.getString("status"),
+                                                depId: CacheHelper.getString("depId"));
+                                          },
                                           onLongPress: () async {
                                             var jsonString = CacheHelper.getString("US1");
                                             UserSettingsModel? userSettings;
@@ -587,6 +623,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                             (req) => ApprovableCardWidget(
                                           request: req,
                                           isForDepartment: widget.requestsType != null && widget.requestsType != GetRequestsTypes.mine,
+                                          onActionTaken: () {
+                                            viewModel.currentPage = 1;
+                                            viewModel.initializeRequestsScreen(
+                                                context: context,
+                                                requestsType: widget.requestsType!,
+                                                requestTypeId: CacheHelper.getString("reqId"),
+                                                empIds: CacheHelper.getString("empId"),
+                                                from: CacheHelper.getString("from"),
+                                                to: CacheHelper.getString("to"),
+                                                status: CacheHelper.getString("status"),
+                                                depId: CacheHelper.getString("depId"));
+                                          },
                                           onLongPress: () async {
                                             var jsonString = CacheHelper.getString("US1");
                                             UserSettingsModel? userSettings;

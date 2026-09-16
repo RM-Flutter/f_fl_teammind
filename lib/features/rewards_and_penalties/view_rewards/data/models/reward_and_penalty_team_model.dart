@@ -1,3 +1,4 @@
+import 'reward_and_penalty_model.dart' show MediaFile;
 
 class RewardAndPenaltyModelTeam {
   final int? id;
@@ -14,6 +15,7 @@ class RewardAndPenaltyModelTeam {
   final String? dueDate;
   final Manager? manager;
   final bool? canCancel;
+  final List<MediaFile>? files;
 
   RewardAndPenaltyModelTeam({
     this.id,
@@ -30,6 +32,7 @@ class RewardAndPenaltyModelTeam {
     this.employeeId,
     this.payrollId,
     this.canCancel,
+    this.files,
   });
 
   factory RewardAndPenaltyModelTeam.fromJson(Map<String, dynamic> json) {
@@ -49,6 +52,7 @@ class RewardAndPenaltyModelTeam {
       createdAt: json['created_at'] as String?,
       dueDate: json['due_date'] as String?,
       canCancel: json['can_cancel'] as bool?,
+      files: json['signature_document'] != null ? (json['signature_document'] as List).map((i) => MediaFile.fromJson(i)).toList() : null,
     );
   }
 
@@ -64,6 +68,7 @@ class RewardAndPenaltyModelTeam {
       'profile_id': employeeId,
       'payroll_id': payrollId,
       'created_at': createdAt,
+      'signature_document': files?.map((e) => e.toJson()).toList(),
     };
   }
 

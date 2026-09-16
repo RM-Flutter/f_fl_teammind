@@ -2,9 +2,13 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_and_penalty_model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/views/widgets/reward_and_penalty_card.widget.dart';
 
 class RewardsAndPenaltiesSectionWidget extends StatefulWidget {
   final EmployeeProfileModel? employee;
@@ -74,6 +78,25 @@ class _RewardsAndPenaltiesSectionWidgetState
               color: const Color(0xFFC72C41),
               onTap: () => setState(() => _filter = 2),
             ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                context.pushNamed(
+                  AppRoutes.rewardsAndPenalties.name,
+                  pathParameters: {'lang': context.locale.languageCode},
+                  extra: {
+                    'employeeName': widget.employee?.name,
+                    'employeeId': widget.employee?.id?.toString(),
+                  },
+                );
+              },
+              child: Text(
+                AppStrings.viewAll.tr(),
+                style: AppStyles.titleTextContent(context).copyWith(
+                  fontSize: 10,
+                ),
+              ),
+            ),
           ],
         ),
 
@@ -84,12 +107,34 @@ class _RewardsAndPenaltiesSectionWidgetState
           child: _items.isEmpty
               ? Center(child: Text(AppStrings.noDataFounded.tr()))
               : ListView.separated(
-                  reverse: false,
                   padding: EdgeInsets.zero,
                   itemCount: _items.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) =>
-                      _RewardPenaltyCard(item: _items[index]),
+                  itemBuilder: (context, index) {
+                    final eItem = _items[index];
+                    
+                    // Convert EmpRewardPenalty to RewardAndPenaltyModel for compatibility
+                    final model = RewardAndPenaltyModel(
+                      id: eItem.id,
+                      type: eItem.type,
+                      category: eItem.category,
+                      amount: eItem.amount?.toInt(),
+                      reason: eItem.reason,
+                      dueDate: eItem.dueDate,
+                      action: eItem.action,
+                      canCancel: eItem.canCancel,
+                      createdAt: eItem.createdAt,
+                      employeeId: eItem.profileId,
+                      files: eItem.signatureDocumentUrl != null 
+                          ? [MediaFile(file: eItem.signatureDocumentUrl, title: 'Attachment')] 
+                          : null,
+                    );
+                    
+                    return RewardAndPenaltyCardWidget(
+                      rewardAndPenalty: model,
+                      isTeam: false,
+                    );
+                  },
                 ),
         ),
       ],
@@ -161,197 +206,3 @@ class _SummaryChip extends StatelessWidget {
   }
 }
 
-// ── Reward / Penalty card ─────────────────────────────────────────────────────
-class _RewardPenaltyCard extends StatelessWidget {
-  final EmpRewardPenalty item;
-  const _RewardPenaltyCard({required this.item});
-
-  bool get _isReward => item.type == 'reward';
-
-  Color get _accentColor =>
-      _isReward ? const Color(0xFF2D6A4F) : const Color(0xFFC72C41);
-
-  IconData get _typeIcon =>
-      _isReward ? Icons.star_rounded : Icons.warning_amber_rounded;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4)),
-        ],
-        border: Border.all(color: _accentColor.withOpacity(0.15)),
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            // Color strip
-            Container(
-              width: 5,
-              decoration: BoxDecoration(
-                color: _accentColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  bottomLeft: Radius.circular(14),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header row: type badge + action badge
-                    Row(
-                      children: [
-                        // Type icon + label
-                        Icon(_typeIcon, color: _accentColor, size: 16),
-                        const SizedBox(width: 6),
-                        Text(
-                          item.type?.tr().toUpperCase() ?? '',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: _accentColor,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const Spacer(),
-                        // Action badge
-                        _ActionBadge(action: item.action),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    // Reason
-                    if (item.reason?.isNotEmpty == true)
-                      Text(
-                        item.reason!,
-                        style: AppStyles.blackContent(context).copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                        ),
-                      ),
-
-                    const SizedBox(height: 10),
-
-                    // Amount + Category + Due date row
-                    Row(
-                      children: [
-                        // Amount pill
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: _accentColor.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                item.category == 'days'
-                                    ? Icons.calendar_month_rounded
-                                    : Icons.attach_money_rounded,
-                                size: 14,
-                                color: _accentColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                item.category == 'days'
-                                    ? '${item.amount} ${'days'.tr()}'
-                                    : '${item.amount}',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: _accentColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        // Due date
-                        if (item.dueDate?.isNotEmpty == true)
-                          Row(children: [
-                            Icon(Icons.event_rounded,
-                                size: 13, color: Colors.grey.shade500),
-                            const SizedBox(width: 4),
-                            Text(
-                              _fmt(item.dueDate),
-                              style: AppStyles.greyContent(context)
-                                  .copyWith(fontSize: 12),
-                            ),
-                          ]),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _fmt(String? raw) {
-    if (raw == null || raw.isEmpty) return '';
-    try {
-      return DateFormat('dd MMM yyyy').format(DateTime.parse(raw));
-    } catch (_) {
-      return raw;
-    }
-  }
-}
-
-// ── Action badge ──────────────────────────────────────────────────────────────
-class _ActionBadge extends StatelessWidget {
-  final String? action;
-  const _ActionBadge({this.action});
-
-  Color get _bgColor {
-    switch (action) {
-      case 'approved':
-        return const Color(0xFF2D6A4F);
-      case 'applied':
-        return const Color(0xFF3389EE);
-      case 'waiting':
-        return const Color(0xFFFCA652);
-      case 'cancelled':
-        return const Color(0xFF9E9E9E);
-      default:
-        return const Color(0xFF9E9E9E);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (action == null || action!.isEmpty) return const SizedBox.shrink();
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(
-        color: _bgColor.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _bgColor.withOpacity(0.3)),
-      ),
-      child: Text(
-        action!.tr().toUpperCase(),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: _bgColor,
-          letterSpacing: 0.4,
-        ),
-      ),
-    );
-  }
-}

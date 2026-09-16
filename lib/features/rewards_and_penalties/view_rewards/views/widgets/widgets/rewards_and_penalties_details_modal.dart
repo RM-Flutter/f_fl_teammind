@@ -12,15 +12,115 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:html' if (dart.library.io) 'package:app_test/core/services/dart_html_stub.dart' as html;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:intl/intl.dart';
-
-class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
+class RewardsAndPenaltiesDetailsModal extends StatefulWidget {
   final dynamic rewardAndPenalty;
   
   const RewardsAndPenaltiesDetailsModal({super.key, required this.rewardAndPenalty});
 
   @override
+  State<RewardsAndPenaltiesDetailsModal> createState() => _RewardsAndPenaltiesDetailsModalState();
+}
+
+class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDetailsModal> {
+  double _downloadProgress = 0.0;
+
+  Future<void> _downloadFile(String url, String fileName) async {
+    if (kIsWeb) {
+      try {
+        final fetchResult = html.window.fetch(url);
+        fetchResult.then((response) {
+          return (response as dynamic).blob();
+        }).then((blob) {
+          final blobUrl = html.Url.createObjectUrlFromBlob(blob as dynamic);
+          final html.AnchorElement downloadAnchor = html.AnchorElement(href: blobUrl);
+          downloadAnchor.download = fileName;
+          downloadAnchor.style.display = 'none';
+          html.document.body?.append(downloadAnchor);
+          downloadAnchor.click();
+          downloadAnchor.remove();
+          html.Url.revokeObjectUrl(blobUrl);
+        }).catchError((e) {
+          Fluttertoast.showToast(msg: "Download failed: $e");
+        });
+      } catch (e) {
+        Fluttertoast.showToast(msg: "Error: $e");
+      }
+      return;
+    }
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text('downloading'.tr()),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LinearProgressIndicator(value: _downloadProgress),
+                  const SizedBox(height: 10),
+                  Text('${(_downloadProgress * 100).toStringAsFixed(0)}%'),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      final dio = Dio();
+      final dir = await getApplicationDocumentsDirectory();
+      final filePath = "${dir.path}/$fileName";
+
+      await dio.download(
+        url,
+        filePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            setState(() {
+              _downloadProgress = received / total;
+            });
+          }
+        },
+      );
+
+      if (mounted) Navigator.of(context).pop();
+      await OpenFilex.open(filePath);
+      
+      Fluttertoast.showToast(
+        msg: '✅ ${'downloaded'.tr()}: $fileName',
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      if (mounted) Navigator.of(context).pop();
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _downloadProgress = 0.0;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final rewardAndPenalty = widget.rewardAndPenalty;
     String? formatDateString(String? dateString) {
       if (dateString == null || dateString.isEmpty) return null;
       try {
@@ -163,6 +263,81 @@ class RewardsAndPenaltiesDetailsModal extends StatelessWidget {
           RewardAndPenaltyRowTile(
               title: '${AppStrings.reason.tr()}: ', 
               subtitle: rewardAndPenalty.reason!),
+              
+        if (rewardAndPenalty.files != null && rewardAndPenalty.files!.isNotEmpty) ...[
+          gapH16,
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AutoSizeText(
+                  'attachments'.tr(),
+                  style: AppStyles.primaryContent(context).copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: AppSizes.s14),
+                ),
+                gapH8,
+                ...rewardAndPenalty.files!.map<Widget>((file) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        if (file.thumbnail != null && file.thumbnail!.isNotEmpty)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: Image.network(
+                              file.thumbnail!,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Icon(Icons.insert_drive_file_rounded, color: Color(AppColors.buttons), size: 40),
+                            ),
+                          )
+                        else
+                          Icon(Icons.insert_drive_file_rounded, color: Color(AppColors.buttons), size: 40),
+                        gapW8,
+                        Expanded(
+                          child: Text(
+                            file.title ?? file.type ?? 'File',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        if (file.file != null) ...[
+                          IconButton(
+                            icon: Icon(Icons.remove_red_eye, color: Color(AppColors.secondaryButton)),
+                            onPressed: () {
+                              UrlLauncherServiceEx.launch(
+                                context: context,
+                                url: file.file!,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.download_rounded, color: Color(AppColors.buttons)),
+                            onPressed: () {
+                              final fileName = file.file!.split('/').last;
+                              _downloadFile(file.file!, fileName);
+                            },
+                          ),
+                        ]
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+        ],
         
         if (canShowComplaintButton) ...[
           gapH24,
