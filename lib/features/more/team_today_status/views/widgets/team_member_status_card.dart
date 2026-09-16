@@ -225,7 +225,8 @@ class TeamMemberStatusCard extends StatelessWidget {
 
   String _initials(String? name) {
     if (name == null || name.trim().isEmpty) return '?';
-    final words = name.trim().split(' ');
+    final words = name.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    if (words.isEmpty) return '?';
     if (words.length == 1) return words[0][0].toUpperCase();
     return (words[0][0] + words[1][0]).toUpperCase();
   }

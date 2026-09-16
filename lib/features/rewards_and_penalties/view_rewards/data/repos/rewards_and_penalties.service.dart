@@ -91,22 +91,15 @@ abstract class RewardsAndPenaltiesRepo {
     List<String>? withValues,
     String? trash,
     String? scope,
-    String? page,
+    int? page,
     String? departmentId,
     String? empId,
     String? fromDate,
     String? toDate,
     bool? getTeam,
   }) async {
-    // final url = EndpointServices.getApiEndpoint(EndpointsNames.payGetPosts).url;
-    // return await DioApiService().get<Map<String, dynamic>>(
-    //   url,
-    //   dataKey: 'data',
-    //   context: context,
-    //   allData: true,
-    // );
     Map<String, dynamic> queryParameters = {
-      'page': 1,
+      'page': page ?? 1,
       'get_team' : getTeam,
       'emp_id' : empId,
       'with' : "profile_id,manager_id,payroll_id",

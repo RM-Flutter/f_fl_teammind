@@ -28,6 +28,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typeValue = _getTypeValue(rewardAndPenalty.type);
+    final viewModel = context.read<RewardsAndPenaltiesViewModel>();
     
     return Column(
       children: [
@@ -36,6 +37,9 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
               context: context,viewProfile: false,
               modalContent: RewardsAndPenaltiesDetailsModal(
                 rewardAndPenalty: rewardAndPenalty,
+                onCancel: () {
+                  viewModel.cancelRewardAndPenalty(context: context, id: rewardAndPenalty.id!);
+                },
               ),
               title: typeValue.toLowerCase().contains('reward') == true
                   ? AppStrings.rewardInfo.tr()

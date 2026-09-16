@@ -52,7 +52,13 @@ class RewardAndPenaltyModelTeam {
       createdAt: json['created_at'] as String?,
       dueDate: json['due_date'] as String?,
       canCancel: json['can_cancel'] as bool?,
-      files: json['signature_document'] != null ? (json['signature_document'] as List).map((i) => MediaFile.fromJson(i)).toList() : null,
+      files: json['signature_document'] != null
+          ? (json['signature_document'] is List
+              ? (json['signature_document'] as List).map((i) => MediaFile.fromJson(i)).toList()
+              : (json['signature_document'] is String
+                  ? [MediaFile(file: json['signature_document'])]
+                  : null))
+          : null,
     );
   }
 

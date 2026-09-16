@@ -17,20 +17,29 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:html' if (dart.library.io) 'package:app_test/core/services/dart_html_stub.dart' as html;
+import 'dart:html'
+    if (dart.library.io) 'package:app_test/core/services/dart_html_stub.dart'
+    as html;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../../controllers/rewards_and_penalties_controller.dart';
+
 class RewardsAndPenaltiesDetailsModal extends StatefulWidget {
   final dynamic rewardAndPenalty;
-  
-  const RewardsAndPenaltiesDetailsModal({super.key, required this.rewardAndPenalty});
+  final VoidCallback? onCancel;
+
+  const RewardsAndPenaltiesDetailsModal(
+      {super.key, required this.rewardAndPenalty, this.onCancel});
 
   @override
-  State<RewardsAndPenaltiesDetailsModal> createState() => _RewardsAndPenaltiesDetailsModalState();
+  State<RewardsAndPenaltiesDetailsModal> createState() =>
+      _RewardsAndPenaltiesDetailsModalState();
 }
 
-class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDetailsModal> {
+class _RewardsAndPenaltiesDetailsModalState
+    extends State<RewardsAndPenaltiesDetailsModal> {
   double _downloadProgress = 0.0;
 
   Future<void> _downloadFile(String url, String fileName) async {
@@ -41,7 +50,8 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
           return (response as dynamic).blob();
         }).then((blob) {
           final blobUrl = html.Url.createObjectUrlFromBlob(blob as dynamic);
-          final html.AnchorElement downloadAnchor = html.AnchorElement(href: blobUrl);
+          final html.AnchorElement downloadAnchor =
+              html.AnchorElement(href: blobUrl);
           downloadAnchor.download = fileName;
           downloadAnchor.style.display = 'none';
           html.document.body?.append(downloadAnchor);
@@ -96,7 +106,7 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
 
       if (mounted) Navigator.of(context).pop();
       await OpenFilex.open(filePath);
-      
+
       Fluttertoast.showToast(
         msg: '✅ ${'downloaded'.tr()}: $fileName',
         backgroundColor: Colors.green,
@@ -125,7 +135,9 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
       if (dateString == null || dateString.isEmpty) return null;
       try {
         DateTime dateTime = DateTime.parse(dateString);
-        return DateFormat('EEEE, dd MMM yyyy', LocalizationService.isArabic(context: context) ? "ar" : "en").format(dateTime);
+        return DateFormat('EEEE, dd MMM yyyy',
+                LocalizationService.isArabic(context: context) ? "ar" : "en")
+            .format(dateTime);
       } catch (e) {
         return dateString;
       }
@@ -135,7 +147,9 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
       if (dateString == null || dateString.isEmpty) return null;
       try {
         DateTime dateTime = DateTime.parse(dateString);
-        return DateFormat('MMM yyyy', LocalizationService.isArabic(context: context) ? "ar" : "en").format(dateTime);
+        return DateFormat('MMM yyyy',
+                LocalizationService.isArabic(context: context) ? "ar" : "en")
+            .format(dateTime);
       } catch (e) {
         return dateString;
       }
@@ -150,27 +164,35 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
     }
 
     bool canShowComplaintButton = false;
-    if (gCache != null && rewardAndPenalty.employeeId != null && gCache['employee_profile_id'] != null) {
-      final bool isOwner = rewardAndPenalty.employeeId.toString() == gCache['employee_profile_id'].toString();
-      
+    if (gCache != null &&
+        rewardAndPenalty.employeeId != null &&
+        gCache['employee_profile_id'] != null) {
+      final bool isOwner = rewardAndPenalty.employeeId.toString() ==
+          gCache['employee_profile_id'].toString();
+
       String typeKeyStr = '';
-      if (rewardAndPenalty.type is String) typeKeyStr = rewardAndPenalty.type.toLowerCase();
+      if (rewardAndPenalty.type is String)
+        typeKeyStr = rewardAndPenalty.type.toLowerCase();
       else {
-        try { typeKeyStr = rewardAndPenalty.type?.key?.toLowerCase() ?? ''; } catch (_) {}
+        try {
+          typeKeyStr = rewardAndPenalty.type?.key?.toLowerCase() ?? '';
+        } catch (_) {}
       }
 
-      final bool isPenalty = !typeKeyStr.contains('reward') && !typeKeyStr.contains('bonus');
-      
+      final bool isPenalty =
+          !typeKeyStr.contains('reward') && !typeKeyStr.contains('bonus');
+
       bool isWithinTwoMonths = false;
       try {
-        String? dateToCheck = rewardAndPenalty.createdAt ?? rewardAndPenalty.dueDate;
+        String? dateToCheck =
+            rewardAndPenalty.createdAt ?? rewardAndPenalty.dueDate;
         if (dateToCheck != null && dateToCheck.isNotEmpty) {
           DateTime penaltyDate = DateTime.parse(dateToCheck);
           DateTime now = DateTime.now();
           isWithinTwoMonths = now.difference(penaltyDate).inDays < 60;
         }
       } catch (_) {}
-      
+
       canShowComplaintButton = isOwner && isPenalty && isWithinTwoMonths;
     }
 
@@ -190,17 +212,26 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
     String getDynamicValue(dynamic field) {
       if (field == null) return "";
       if (field is String) return field;
-      try { return field.value ?? field.key ?? ""; } catch (_) { return field.toString(); }
+      try {
+        return field.value ?? field.key ?? "";
+      } catch (_) {
+        return field.toString();
+      }
     }
 
     String getDynamicKey(dynamic field) {
       if (field == null) return "";
       if (field is String) return field;
-      try { return field.key ?? field.value ?? ""; } catch (_) { return field.toString(); }
+      try {
+        return field.key ?? field.value ?? "";
+      } catch (_) {
+        return field.toString();
+      }
     }
 
     final typeValue = translateType(getDynamicValue(rewardAndPenalty.type));
-    final categoryValue = translateCategory(getDynamicValue(rewardAndPenalty.category));
+    final categoryValue =
+        translateCategory(getDynamicValue(rewardAndPenalty.category));
     final amount = rewardAndPenalty.amount?.toString() ?? "0";
     final actionKey = getDynamicKey(rewardAndPenalty.action);
     final payrollDate = rewardAndPenalty.payroll?.dateFrom;
@@ -221,50 +252,41 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
               child: Text(
                 rewardAndPenalty.profile!.name!,
                 style: AppStyles.whiteContent(context).copyWith(
-                    fontWeight: FontWeight.w500,
-                    fontSize: AppSizes.s12),
+                    fontWeight: FontWeight.w500, fontSize: AppSizes.s12),
               ),
             ),
           ),
         gapH12,
-        
         if (typeValue.isNotEmpty)
           RewardAndPenaltyRowTile(
-              title: '${AppStrings.requestType.tr()}: ',
-              subtitle: typeValue),
-
+              title: '${AppStrings.requestType.tr()}: ', subtitle: typeValue),
         RewardAndPenaltyRowTile(
             title: '${AppStrings.amounts.tr()}: ',
             subtitle: "$amount $categoryValue"),
-
         if (rewardAndPenalty.dueDate != null)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.dueDate.tr()}: ',
               subtitle: formatDateString2(rewardAndPenalty.dueDate) ?? ''),
-              
         if (rewardAndPenalty.createdAt != null)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.createdAt.tr()}: ',
               subtitle: formatDateString(rewardAndPenalty.createdAt) ?? ''),
-              
         RewardAndPenaltyRowTile(
             title: '${AppStrings.applied.tr()}: ',
-            subtitle: actionKey == "applied" 
-                ? "${AppStrings.yes.tr()} (${payrollDate ?? AppStrings.thereIsNoSalary.tr()})" 
-                : AppStrings.no.tr()
-        ),
-
+            subtitle: actionKey == "applied"
+                ? "${AppStrings.yes.tr()} (${payrollDate ?? AppStrings.thereIsNoSalary.tr()})"
+                : AppStrings.no.tr()),
         if (rewardAndPenalty.manager?.name != null)
           RewardAndPenaltyRowTile(
               title: '${AppStrings.from.tr()}: ',
               subtitle: rewardAndPenalty.manager!.name!),
-              
-        if (rewardAndPenalty.reason != null && rewardAndPenalty.reason!.isNotEmpty)
+        if (rewardAndPenalty.reason != null &&
+            rewardAndPenalty.reason!.isNotEmpty)
           RewardAndPenaltyRowTile(
-              title: '${AppStrings.reason.tr()}: ', 
+              title: '${AppStrings.reason.tr()}: ',
               subtitle: rewardAndPenalty.reason!),
-              
-        if (rewardAndPenalty.files != null && rewardAndPenalty.files!.isNotEmpty) ...[
+        if (rewardAndPenalty.files != null &&
+            rewardAndPenalty.files!.isNotEmpty) ...[
           gapH16,
           SizedBox(
             width: double.infinity,
@@ -274,8 +296,7 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
                 AutoSizeText(
                   'attachments'.tr(),
                   style: AppStyles.primaryContent(context).copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: AppSizes.s14),
+                      fontWeight: FontWeight.w600, fontSize: AppSizes.s14),
                 ),
                 gapH8,
                 ...rewardAndPenalty.files!.map<Widget>((file) {
@@ -289,7 +310,8 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
                     ),
                     child: Row(
                       children: [
-                        if (file.thumbnail != null && file.thumbnail!.isNotEmpty)
+                        if (file.thumbnail != null &&
+                            file.thumbnail!.isNotEmpty)
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Image.network(
@@ -297,23 +319,29 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
                               width: 40,
                               height: 40,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Icon(Icons.insert_drive_file_rounded, color: Color(AppColors.buttons), size: 40),
+                              errorBuilder: (_, __, ___) => Icon(
+                                  Icons.insert_drive_file_rounded,
+                                  color: Color(AppColors.buttons),
+                                  size: 40),
                             ),
                           )
                         else
-                          Icon(Icons.insert_drive_file_rounded, color: Color(AppColors.buttons), size: 40),
+                          Icon(Icons.insert_drive_file_rounded,
+                              color: Color(AppColors.buttons), size: 40),
                         gapW8,
                         Expanded(
                           child: Text(
                             file.title ?? file.type ?? 'File',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
                           ),
                         ),
                         if (file.file != null) ...[
                           IconButton(
-                            icon: Icon(Icons.remove_red_eye, color: Color(AppColors.secondaryButton)),
+                            icon: Icon(Icons.remove_red_eye,
+                                color: Color(AppColors.secondaryButton)),
                             onPressed: () {
                               UrlLauncherServiceEx.launch(
                                 context: context,
@@ -323,7 +351,8 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.download_rounded, color: Color(AppColors.buttons)),
+                            icon: Icon(Icons.download_rounded,
+                                color: Color(AppColors.buttons)),
                             onPressed: () {
                               final fileName = file.file!.split('/').last;
                               _downloadFile(file.file!, fileName);
@@ -338,16 +367,37 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
             ),
           ),
         ],
-        
+        if (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)) ...[
+          gapH24,
+          CustomElevatedButton(
+            titleSize: AppSizes.s12,
+            buttonStyle: ElevatedButton.styleFrom(
+              fixedSize: const Size(double.infinity, 50),
+              alignment: Alignment.center,
+              shadowColor: Colors.transparent,
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSizes.s28),
+              ),
+            ),
+            onPressed: () async {
+              context.pop();
+              widget.onCancel?.call();
+            },
+            title: 'cancel'.tr(),
+          ),
+        ],
         if (canShowComplaintButton) ...[
           gapH24,
           CustomElevatedButton(
             titleSize: AppSizes.s10,
             buttonStyle: ElevatedButton.styleFrom(
-              fixedSize: Size(double.infinity, 50),
+              fixedSize: const Size(double.infinity, 50),
               alignment: Alignment.center,
               shadowColor: Colors.transparent,
-              backgroundColor: Color(AppColors.secondaryButton),
+              backgroundColor:  Color(AppColors.secondaryButton),
               foregroundColor: Colors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(
@@ -358,11 +408,11 @@ class _RewardsAndPenaltiesDetailsModalState extends State<RewardsAndPenaltiesDet
               final subject = LocalizationService.isArabic(context: context)
                   ? 'تظلم بخصوص جزاء'
                   : 'Complaint regarding penalty';
-                  
+
               final details = LocalizationService.isArabic(context: context)
                   ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'
                   : 'I am submitting a complaint regarding the penalty applied to me:\n\n- Amount: $amount $categoryValue\n- Date: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- Reason: ${rewardAndPenalty.reason ?? ''}\n\nComplaint Details:\n';
-                  
+
               context.pushNamed(
                 AppRoutes.newComplainScreen.name,
                 pathParameters: {'lang': context.locale.languageCode},
@@ -385,6 +435,7 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool? isNewLine;
+
   const RewardAndPenaltyRowTile(
       {super.key,
       required this.title,
@@ -393,11 +444,10 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = AppStyles.primaryContent(context).copyWith(
-        fontWeight: FontWeight.w600,
-        fontSize: AppSizes.s14);
+    TextStyle textStyle = AppStyles.primaryContent(context)
+        .copyWith(fontWeight: FontWeight.w600, fontSize: AppSizes.s14);
     Widget titleWidget = AutoSizeText(title, style: textStyle);
-    
+
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -411,7 +461,10 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                   children: [
                     titleWidget,
                     AutoSizeText(subtitle,
-                        style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14, fontWeight: FontWeight.w600)),
+                        style: textStyle.copyWith(
+                            color: Color(AppColors.black),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600)),
                   ],
                 )
               : Row(
@@ -421,7 +474,10 @@ class RewardAndPenaltyRowTile extends StatelessWidget {
                     titleWidget,
                     Expanded(
                       child: AutoSizeText(subtitle,
-                          style: textStyle.copyWith(color: Color(AppColors.black), fontSize: 14, fontWeight: FontWeight.w600)),
+                          style: textStyle.copyWith(
+                              color: Color(AppColors.black),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600)),
                     ),
                   ],
                 ),
