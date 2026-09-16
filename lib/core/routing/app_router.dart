@@ -498,10 +498,13 @@ GoRouter goRouter(BuildContext context) {
                   final id = state.pathParameters['id'] ?? '';
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
+                  final extra = state.extra as Map<String, dynamic>?;
+                  final autoOpenAction = extra?['autoOpenAction'] as AutoOpenAction? ?? AutoOpenAction.none;
                   return MaterialPage(
                     child: ApprovableDetailsScreen(
                       type: type,
                       id: id,
+                      autoOpenAction: autoOpenAction,
                     ),
                   );
                 },

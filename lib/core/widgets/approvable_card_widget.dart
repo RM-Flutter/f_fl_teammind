@@ -6,8 +6,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
+import 'package:app_test/core/widgets/quick_action_sheet.dart';
 import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
 
 class ApprovableCardWidget extends StatelessWidget {
@@ -26,94 +28,105 @@ class ApprovableCardWidget extends StatelessWidget {
     this.margin,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final bool isArabic = context.locale.languageCode == 'ar';
-
-    // Extract generic fields safely
-    bool showTakeAction = false;
+  /// Resolves the approvable type and id from the request object.
+  _ApprovableInfo _resolveInfo(bool isArabic, BuildContext context) {
+    bool takeAction = false;
+    bool takeActionAsSomeoneElse = false;
     String? status;
     String title = '';
     String subtitle = '';
     String employeeName = '';
+    String approvableType = 'employee_requests';
+    String id = '';
 
     try {
       if (request is OvertimeRequestModel) {
         final ot = request as OvertimeRequestModel;
-        showTakeAction = ot.takeAction == true || ot.canTakeActionAsSomeoneElse == true;
+        takeAction = ot.takeAction == true;
+        takeActionAsSomeoneElse = ot.canTakeActionAsSomeoneElse == true;
         status = ot.status;
-        employeeName = ot.employeeName ?? ot.employeeProfile?.name ?? "";
+        employeeName = ot.employeeName ?? ot.employeeProfile?.name ?? '';
+        id = ot.id?.toString() ?? '';
+        approvableType = 'overtime';
 
-        final dateStr = (ot.date != null && ot.date!.length >= 10) ? ot.date!.substring(0, 10) : (ot.date ?? "");
+        final dateStr = (ot.date != null && ot.date!.length >= 10)
+            ? ot.date!.substring(0, 10)
+            : (ot.date ?? '');
         final formattedDate = (ot.date != null && ot.date!.isNotEmpty)
-            ? (DateService.formatDate(isArabic ? "ar" : "en", context, ot.date) ?? dateStr)
+            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, ot.date) ?? dateStr)
             : dateStr;
 
         int totalMins = ot.overtime ?? 0;
         final hours = totalMins ~/ 60;
         final mins = totalMins % 60;
-        String durationStr = "";
+        String durationStr = '';
         if (hours == 0) {
-          durationStr = '$mins ${isArabic ? "دقيقة" : "min"}';
+          durationStr = '$mins ${isArabic ? 'دقيقة' : 'min'}';
         } else if (mins == 0) {
-          durationStr = '$hours ${isArabic ? "ساعة" : "hr"}';
+          durationStr = '$hours ${isArabic ? 'ساعة' : 'hr'}';
         } else {
           durationStr = isArabic
               ? '$hours ساعة و $mins دقيقة'
               : '$hours hr $mins min';
         }
 
-        // Distinctive feature for overtime is the duration worked
         if (totalMins > 0) {
           title = durationStr;
           subtitle = formattedDate.isNotEmpty
-              ? (isArabic ? "التاريخ: $formattedDate" : "Date: $formattedDate")
-              : "";
+              ? (isArabic ? 'التاريخ: $formattedDate' : 'Date: $formattedDate')
+              : '';
         } else {
           title = formattedDate.isNotEmpty
               ? formattedDate
-              : (isArabic ? "وقت إضافي" : "Overtime");
-          subtitle = "";
+              : (isArabic ? 'وقت إضافي' : 'Overtime');
+          subtitle = '';
         }
       } else if (request is SalaryAdvanceRequestModel) {
         final sa = request as SalaryAdvanceRequestModel;
-        showTakeAction = sa.takeAction == true || sa.canTakeActionAsSomeoneElse == true;
+        takeAction = sa.takeAction == true;
+        takeActionAsSomeoneElse = sa.canTakeActionAsSomeoneElse == true;
         status = sa.status;
-        employeeName = sa.employeeProfile?.name ?? "";
+        employeeName = sa.employeeProfile?.name ?? '';
+        id = sa.id?.toString() ?? '';
+        approvableType = 'salary_advance';
 
-        String amount = sa.total?.toString() ?? "0";
-        String months = sa.howLongToPay?.toString() ?? "1";
-
-        // Distinctive feature for salary advance is the amount
-        title = "$amount ${isArabic ? 'ج.م' : 'EGP'}";
-
+        String amount = sa.total?.toString() ?? '0';
+        String months = sa.howLongToPay?.toString() ?? '1';
+        title = '$amount ${isArabic ? 'ج.م' : 'EGP'}';
         String durationText = isArabic
-            ? "$months شهر"
-            : "$months ${months == '1' ? 'month' : 'months'}";
-        String details = "${isArabic ? 'مدة السداد' : 'Duration'}: $durationText";
+            ? '$months شهر'
+            : '$months ${months == '1' ? 'month' : 'months'}';
+        String details = '${isArabic ? 'مدة السداد' : 'Duration'}: $durationText';
         if (sa.from != null && sa.from!.isNotEmpty) {
-          final formattedFrom = DateService.formatDate(isArabic ? "ar" : "en", context, sa.from) ?? sa.from!;
-          details += " • ${isArabic ? 'من' : 'From'}: $formattedFrom";
+          final formattedFrom =
+              DateService.formatDate(isArabic ? 'ar' : 'en', context, sa.from) ?? sa.from!;
+          details += ' • ${isArabic ? 'من' : 'From'}: $formattedFrom';
         }
         subtitle = details;
       } else {
-        // Assume RequestModel
         final dyn = request as dynamic;
-        showTakeAction = dyn.takeAction == true || dyn.canTakeActionAsSomeoneElse == true;
+        takeAction = dyn.takeAction == true;
+        takeActionAsSomeoneElse = dyn.canTakeActionAsSomeoneElse == true;
         status = dyn.status;
-        employeeName = dyn.employeeName ?? "";
+        employeeName = dyn.employeeName ?? '';
+        id = dyn.id?.toString() ?? '';
+        approvableType = 'employee_requests';
         String? depName = dyn.departmentName;
         if (depName != null && depName.isNotEmpty) {
-          employeeName = "$employeeName - $depName";
+          employeeName = '$employeeName - $depName';
         }
 
         title = AppSettingsService.getRequestTitleFromGenenralSettings(
                 context: context,
-                requestId: dyn.typeId != null ? dyn.typeId?.toString() : "") ??
+                requestId: dyn.typeId != null ? dyn.typeId?.toString() : '') ??
             '';
 
-        final String fromDate = dyn.from != null ? (DateService.formatDate(isArabic ? "ar" : "en", context, dyn.from) ?? "") : "";
-        final String toDate = dyn.to != null ? (DateService.formatDate(isArabic ? "ar" : "en", context, dyn.to) ?? "") : "";
+        final String fromDate = dyn.from != null
+            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, dyn.from) ?? '')
+            : '';
+        final String toDate = dyn.to != null
+            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, dyn.to) ?? '')
+            : '';
 
         if (dyn.duration == 0) {
           subtitle = fromDate;
@@ -125,8 +138,121 @@ class ApprovableCardWidget extends StatelessWidget {
       }
     } catch (_) {}
 
-    return Container(
-      margin: margin ?? const EdgeInsets.only(bottom: 16),
+    if (status != null) {
+      final s = status.toLowerCase().trim();
+      if (s == 'approved' || s == 'accepted' || s == 'refused' || s == 'canceled' || s == 'cancelled' || s == 'rejected') {
+        takeAction = false;
+        takeActionAsSomeoneElse = false;
+      }
+    }
+
+    return _ApprovableInfo(
+      takeAction: takeAction,
+      takeActionAsSomeoneElse: takeActionAsSomeoneElse,
+      status: status,
+      title: title,
+      subtitle: subtitle,
+      employeeName: employeeName,
+      approvableType: approvableType,
+      id: id,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isArabic = context.locale.languageCode == 'ar';
+    final info = _resolveInfo(isArabic, context);
+
+    // Build slide actions based on capabilities
+    final List<Widget> slideActions = [];
+
+    if (info.takeAction) {
+      slideActions.add(
+        CustomSlidableAction(
+          onPressed: (_) {
+            if (info.id.isNotEmpty) {
+              showQuickActionSheet(
+                context: context,
+                type: info.approvableType,
+                id: info.id,
+                isAsSomeoneElse: false,
+              );
+            }
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: const Color(0xFFB71C1C),
+          padding: EdgeInsets.zero,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFB71C1C).withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.gavel_rounded, color: Color(0xFFB71C1C), size: 24),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                isArabic ? 'إجراء' : 'Action',
+                style: const TextStyle(
+                  color: Color(0xFFB71C1C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (info.takeActionAsSomeoneElse) {
+      slideActions.add(
+        CustomSlidableAction(
+          onPressed: (_) {
+            if (info.id.isNotEmpty) {
+              showQuickActionSheet(
+                context: context,
+                type: info.approvableType,
+                id: info.id,
+                isAsSomeoneElse: true,
+              );
+            }
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: const Color(0xFFE65100),
+          padding: EdgeInsets.zero,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE65100).withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.manage_accounts_rounded, color: Color(0xFFE65100), size: 24),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                isArabic ? 'نيابةً عن' : 'As Someone',
+                style: const TextStyle(
+                  color: Color(0xFFE65100),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final cardBody = Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       decoration: ShapeDecoration(
         color: Color(AppColors.cardBackground),
@@ -151,38 +277,29 @@ class ApprovableCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (showTakeAction) ...[
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFEBEE),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.error_outline_rounded,
-                            size: 13,
-                            color: Color(0xFFD32F2F),
+                  if (info.takeAction || info.takeActionAsSomeoneElse) ...[
+                    Row(
+                      children: [
+                        if (info.takeAction) ...[
+                          _ActionBadge(
+                            icon: Icons.gavel_rounded,
+                            color: const Color(0xFFD32F2F),
+                            label: isArabic ? 'مطلوب إجراء' : 'Action Required',
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            isArabic ? "مطلوب اتخاذ إجراء" : "Take Action",
-                            style: const TextStyle(
-                              color: Color(0xFFD32F2F),
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          const SizedBox(width: 6),
                         ],
-                      ),
+                        if (info.takeActionAsSomeoneElse)
+                          _ActionBadge(
+                            icon: Icons.manage_accounts_rounded,
+                            color: const Color(0xFFE65100),
+                            label: isArabic ? 'نيابةً عن موظف' : 'Act as Someone',
+                          ),
+                      ],
                     ),
                     const SizedBox(height: 6),
                   ],
                   AutoSizeText(
-                    title,
+                    info.title,
                     style: AppStyles.titleTextContent(context).copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -196,7 +313,7 @@ class ApprovableCardWidget extends StatelessWidget {
                   Opacity(
                     opacity: 0.5,
                     child: AutoSizeText(
-                      subtitle,
+                      info.subtitle,
                       style: AppStyles.titleTextContent(context).copyWith(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
@@ -206,71 +323,167 @@ class ApprovableCardWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                    if (isForDepartment && employeeName.isNotEmpty) const SizedBox(height: 4),
-                    if (isForDepartment && employeeName.isNotEmpty)
-                      Text(
-                        employeeName,
-                        style: AppStyles.titleTextContent(context).copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                  if (isForDepartment && info.employeeName.isNotEmpty)
+                    const SizedBox(height: 4),
+                  if (isForDepartment && info.employeeName.isNotEmpty)
+                    Text(
+                      info.employeeName,
+                      style: AppStyles.titleTextContent(context).copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
                       ),
-                  ],
-                ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
               ),
-              // Overlapping Vacations Icon for Managers
-              if (isForDepartment)
-                Builder(
-                  builder: (context) {
-                    bool isVac = false;
-                    try {
-                      final dyn = request as dynamic;
-                      if (dyn.id != null) {
-                        final String appType = dyn.approvableType?.toString().toLowerCase() ?? '';
-                        final String tName = dyn.typeName?.toString().toLowerCase() ?? '';
-                        isVac = appType.contains('employeerequest') || appType.contains('vacation') || tName.contains('vacation') || tName.contains('إجازة');
-                      }
-                    } catch (_) {}
-
-                    if (isVac) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              showOverlappingVacationsSheet(
-                                context: context,
-                                approvableId: (request as dynamic).id.toString(),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Color(AppColors.warningYellow).withOpacity(0.12),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.people_alt_rounded, color: Color(AppColors.warningYellow), size: 20),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      );
+            ),
+            // Overlapping Vacations Icon for Managers
+            if (isForDepartment)
+              Builder(
+                builder: (context) {
+                  bool isVac = false;
+                  try {
+                    final dyn = request as dynamic;
+                    if (dyn.id != null) {
+                      final String appType =
+                          dyn.approvableType?.toString().toLowerCase() ?? '';
+                      final String tName =
+                          dyn.typeName?.toString().toLowerCase() ?? '';
+                      isVac = appType.contains('employeerequest') ||
+                          appType.contains('vacation') ||
+                          tName.contains('vacation') ||
+                          tName.contains('إجازة');
                     }
-                    return const SizedBox.shrink();
-                  },
-                ),
-              if (status != null &&
-                  status!.trim().isNotEmpty &&
-                  status!.trim().toLowerCase() != 'null') ...[
-                const SizedBox(width: 8),
-                RequestsServices.getRequestsStatusIcon(
-                    context: context, status: status),
-              ],
+                  } catch (_) {}
+
+                  if (isVac) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            showOverlappingVacationsSheet(
+                              context: context,
+                              approvableId:
+                                  (request as dynamic).id.toString(),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Color(AppColors.warningYellow)
+                                  .withOpacity(0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.people_alt_rounded,
+                                color: Color(AppColors.warningYellow),
+                                size: 20),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            if (info.status != null &&
+                info.status!.trim().isNotEmpty &&
+                info.status!.trim().toLowerCase() != 'null') ...[
+              const SizedBox(width: 8),
+              RequestsServices.getRequestsStatusIcon(
+                  context: context, status: info.status),
             ],
-          ),
+          ],
         ),
+      ),
+    );
+
+    Widget finalWidget;
+    // If no slide actions are needed, return card as-is
+    if (slideActions.isEmpty) {
+      finalWidget = cardBody;
+    } else {
+      // Wrap with Slidable — swipe left to reveal action buttons
+      finalWidget = Slidable(
+        key: ValueKey(info.id),
+        endActionPane: ActionPane(
+          motion: const BehindMotion(),
+          extentRatio: slideActions.length == 1 ? 0.22 : 0.42,
+          children: slideActions,
+        ),
+        child: cardBody,
       );
+    }
+
+    return Padding(
+      padding: margin ?? const EdgeInsets.only(bottom: 16),
+      child: finalWidget,
+    );
   }
+}
+
+/// Small badge shown inline on the card when swipe action is available.
+class _ActionBadge extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String label;
+
+  const _ActionBadge({
+    required this.icon,
+    required this.color,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.3), width: 0.8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 11, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Internal data class to hold resolved info from a dynamic request object.
+class _ApprovableInfo {
+  final bool takeAction;
+  final bool takeActionAsSomeoneElse;
+  final String? status;
+  final String title;
+  final String subtitle;
+  final String employeeName;
+  final String approvableType;
+  final String id;
+
+  const _ApprovableInfo({
+    required this.takeAction,
+    required this.takeActionAsSomeoneElse,
+    required this.status,
+    required this.title,
+    required this.subtitle,
+    required this.employeeName,
+    required this.approvableType,
+    required this.id,
+  });
 }
