@@ -22,6 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../controllers/rewards_and_penalties_controller.dart';
+import 'package:app_test/features/more/notifications/views/widgets/switch_row_notification.dart';
+
 
 class RewardsAndPenaltiesScreen extends StatefulWidget {
   final String? empId;
@@ -36,12 +38,37 @@ class RewardsAndPenaltiesScreen extends StatefulWidget {
 class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
   late final RewardsAndPenaltiesViewModel viewModel;
 
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
     viewModel = RewardsAndPenaltiesViewModel();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
     viewModel.initializeRewardsAndPenaltiesListScreen(
         context: context, empId: widget.empId);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (viewModel.isForTeam) {
+        if (viewModel.hasMoreTeam && !viewModel.isLoadingMoreTeam) {
+          viewModel.loadMoreTeam(context, widget.empId);
+        }
+      } else {
+        if (viewModel.hasMorePersonal && !viewModel.isLoadingMorePersonal) {
+          viewModel.loadMorePersonal(context, widget.empId);
+        }
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,9 +101,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
               : null,
           pageContext: context,
           title: AppStrings.rewardsAndPenalties.tr(),
-          onRefresh: () async =>
-              await viewModel.initializeRewardsAndPenaltiesListScreen(
-                  context: context, empId: widget.empId),
+
           body: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
@@ -84,63 +109,81 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
               ),
               child: Padding(
                 padding: EdgeInsets.all(AppSizes.s12),
-                child: SingleChildScrollView(
-                  child: Consumer<RewardsAndPenaltiesViewModel>(
-                      builder: (context, viewModel, child) => viewModel.isLoading
-                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                          : (viewModel.rewardsAndPenalties?.isEmpty == true ||
-                                  viewModel.rewardsAndPenalties == null) &&
-                                  (viewModel.rewardsAndPenaltiesTeam?.isEmpty == true ||
-                                      viewModel.rewardsAndPenaltiesTeam == null)
-                              ? NoExistingPlaceholderScreen(
-                                  height: 0.6.sh,
-                                  title: AppStrings.noExistingPenaltiesAndRewards.tr())
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                      if (viewModel.rewardsAndPenalties != null &&
-                                          viewModel.rewardsAndPenalties?.isEmpty == false)
-                                        Text(
-                                          AppStrings.myRewardsAndPenalties.tr(),
-                                          style: AppStyles.heading(context).copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16),
-                                        ),
-                                      SizedBox(height: 15),
-                                      ...viewModel.rewardsAndPenalties!.map(
-                                          (rewardAndPenalty) =>
-                                              RewardAndPenaltyCardWidget(
-                                                rewardAndPenalty: rewardAndPenalty,
-                                              )),
-                                      if (viewModel.rewardsAndPenalties != null &&
-                                          viewModel.rewardsAndPenalties?.isEmpty == false)
-                                        SizedBox(height: 25),
-                                      if (viewModel.rewardsAndPenaltiesTeam != null &&
-                                          viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
-                                          (gCache['is_teamleader_in'].isNotEmpty ||
-                                              gCache['is_manager_in'].isNotEmpty))
-                                        Text(
-                                          AppStrings.teamRewardsAndPenalties.tr(),
-                                          style: AppStyles.heading(context).copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16),
-                                        ),
-                                      if (viewModel.rewardsAndPenaltiesTeam != null &&
-                                          viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
-                                          (gCache['is_teamleader_in'].isNotEmpty ||
-                                              gCache['is_manager_in'].isNotEmpty))
-                                        SizedBox(height: 15),
-                                      if (viewModel.rewardsAndPenaltiesTeam != null &&
-                                          viewModel.rewardsAndPenaltiesTeam?.isEmpty == false &&
-                                          (gCache['is_teamleader_in'].isNotEmpty ||
-                                              gCache['is_manager_in'].isNotEmpty))
-                                        ...viewModel.rewardsAndPenaltiesTeam!.map(
-                                            (rewardAndPenalty) =>
-                                                RewardAndPenaltyCardWidget(
-                                                  rewardAndPenalty: rewardAndPenalty,
-                                                  isTeam: true,
-                                                )),
-                                    ])),
+                child: RefreshIndicator.adaptive(
+                  onRefresh: () async => await viewModel.initializeRewardsAndPenaltiesListScreen(
+                      context: context, empId: widget.empId),
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _scrollController,
+                    child: Consumer<RewardsAndPenaltiesViewModel>(
+                        builder: (context, viewModel, child) {
+                          if (viewModel.isLoading) {
+                            return const PayrollsAndPenaltiesRewardsLoadingScreensWidget();
+                          }
+                          
+                          final bool isManager = gCache != null && 
+                              (gCache['is_teamleader_in']?.isNotEmpty == true || 
+                               gCache['is_manager_in']?.isNotEmpty == true);
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (isManager) ...[
+                                const SizedBox(height: 10),
+                                SwitchRowNotification(
+                                  value: viewModel.isForTeam,
+                                  leftText: AppStrings.myRewardsAndPenalties.tr(),
+                                  rightText: AppStrings.teamRewardsAndPenalties.tr(),
+                                  onChanged: (val) {
+                                    viewModel.toggleTeamView(val, context);
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                              ],
+                              
+                              if (!viewModel.isForTeam) ...[
+                                if (viewModel.rewardsAndPenalties == null || viewModel.rewardsAndPenalties!.isEmpty)
+                                  NoExistingPlaceholderScreen(
+                                    height: 0.6.sh,
+                                    title: AppStrings.noExistingPenaltiesAndRewards.tr(),
+                                  )
+                                else
+                                  ...viewModel.rewardsAndPenalties!.map(
+                                    (rewardAndPenalty) =>
+                                        RewardAndPenaltyCardWidget(
+                                          rewardAndPenalty: rewardAndPenalty,
+                                        )
+                                  ),
+                                if (viewModel.isLoadingMorePersonal)
+                                  const Center(child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(),
+                                  )),
+                              ] else ...[
+                                if (viewModel.rewardsAndPenaltiesTeam == null || viewModel.rewardsAndPenaltiesTeam!.isEmpty)
+                                  NoExistingPlaceholderScreen(
+                                    height: 0.6.sh,
+                                    title: AppStrings.noExistingPenaltiesAndRewards.tr(),
+                                  )
+                                else
+                                  ...viewModel.rewardsAndPenaltiesTeam!.map(
+                                    (rewardAndPenalty) =>
+                                        RewardAndPenaltyCardWidget(
+                                          rewardAndPenalty: rewardAndPenalty,
+                                          isTeam: true,
+                                        )
+                                  ),
+                                if (viewModel.isLoadingMoreTeam)
+                                  const Center(child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(),
+                                  )),
+                              ],
+                              const SizedBox(height: 50),
+                            ],
+                          );
+                        }),
+                  ),
                 ),
               ),
             ),
