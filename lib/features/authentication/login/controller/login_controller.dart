@@ -957,10 +957,12 @@ class AuthenticationController extends ChangeNotifier {
                       fontSize: AppSizes.s16, fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
                 ),
-                content: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                content: SizedBox(
+                  width: 350,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: 10),
                       TextFormField(
@@ -1030,7 +1032,7 @@ class AuthenticationController extends ChangeNotifier {
                     ],
                   ),
                 ),
-              );
+              ));
             },
           ),
         );
