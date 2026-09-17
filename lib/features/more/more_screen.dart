@@ -383,6 +383,20 @@ class _MoreScreenState extends State<MoreScreen> {
                                 );
                               },
                             ),
+                            
+                            DefaultListTile(
+                              title: 'Files Center',
+                              src: "assets/images/svg/faqqs.svg",
+                              icon: Icons.folder,
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.filesCenter.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
                             DefaultListTile(
                               title: AppStrings.faqs.tr(),
                               src: "assets/images/svg/faqqs.svg",

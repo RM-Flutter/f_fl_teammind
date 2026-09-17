@@ -17,6 +17,7 @@ import 'package:app_test/core/services/device_info_service.dart';
 import 'package:app_test/core/services/notification_service/notification_service.dart';
 import 'package:app_test/core/models/endpoint_model.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/settings_service.dart';
 
 class OnboardingController extends ChangeNotifier {
   final PageController pageController = PageController();
@@ -145,10 +146,22 @@ class OnboardingController extends ChangeNotifier {
 
         // الآن اعمل precache حسب نوع الصورة
         if (image.startsWith('http') || image.startsWith('https')) {
-          await precacheImage(CachedNetworkImageProvider(image), context);
+          await precacheImage(
+            CachedNetworkImageProvider(image, errorListener: (e) => debugPrint('CachedNetworkImageProvider error: $e')),
+            context,
+            onError: (exception, stackTrace) {
+              debugPrint('⚠️ precache network image failed ($image)');
+            },
+          );
           debugPrint('✅ precached network image: $image');
         } else {
-          await precacheImage(AssetImage(image), context);
+          await precacheImage(
+            AssetImage(image),
+            context,
+            onError: (exception, stackTrace) {
+              debugPrint('⚠️ precache asset image failed ($image)');
+            },
+          );
           debugPrint('✅ precached asset image: $image');
         }
       } catch (e, st) {
@@ -293,9 +306,17 @@ class OnboardingController extends ChangeNotifier {
       // Precache logo image
       final logoUrl = AppImages.logo;
       if (logoUrl.startsWith('http://') || logoUrl.startsWith('https://')) {
-        await precacheImage(CachedNetworkImageProvider(logoUrl), context);
+        await precacheImage(
+          CachedNetworkImageProvider(logoUrl, errorListener: (e) => debugPrint('Logo precache error: $e')), 
+          context,
+          onError: (e, st) => debugPrint('⚠️ Failed to precache logo network image'),
+        );
       } else {
-        await precacheImage(AssetImage(logoUrl), context);
+        await precacheImage(
+          AssetImage(logoUrl), 
+          context,
+          onError: (e, st) => debugPrint('⚠️ Failed to precache logo asset image'),
+        );
       }
       print("done service 1");
       // Initialize application services
@@ -533,7 +554,14 @@ class OnboardingController extends ChangeNotifier {
             context.goNamed(route, pathParameters: {'lang': context.locale.languageCode});
             return;
           }
-          // User is not logged in - navigate to login or onboarding
+          // User is not logged in - fetch start_app for general settings before checking cache
+          try {
+            await AppSettingsService.getUserSettingsAndUpdateTheStoredSettings(
+                context: context, allData: true, need: null);
+          } catch (e) {
+            debugPrint("Failed to fetch start_app on fresh start: $e");
+          }
+          
           print("WATCH 0 - User not logged in");
           final jsonString2 = CacheHelper.getString("USG");
           var cache;

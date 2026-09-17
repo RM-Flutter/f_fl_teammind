@@ -106,6 +106,7 @@ import 'package:provider/provider.dart';
 import '../services/backend_services/api_service/dio_api_service/shared.dart';
 import '../services/telegram_error_service.dart';
 import '../widgets/webview_offers.dart';
+import 'package:app_test/features/more/files_center/views/files_center_screen.dart';
 
 enum AppRoutes {
   fawryProviderScreen,
@@ -158,6 +159,7 @@ enum AppRoutes {
   updatePassword,
   personalProfile,
   payrollsList,
+  filesCenter,
   payrollDetails,
   rewardsAndPenalties,
   taskScreen,
@@ -1655,6 +1657,25 @@ GoRouter goRouter(BuildContext context) {
                     child: const CompanyStructureTreeScreen(),
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'files-center',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.filesCenter.name,
+                pageBuilder: (context, state) {
+                  final animationController = AnimationController(vsync: ticker);
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const FilesCenterScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
                   );
                 },
               ),

@@ -124,10 +124,29 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 FloatingActionButton(
                   heroTag: 'requests_add',
                   onPressed: () async {
-                    await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
+                    final result = await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
                       'type': 'mine',
                       'lang': context.locale.languageCode
                     });
+                    
+                    if (result == true) {
+                      final reqId = CacheHelper.getString("reqId");
+                      final empId = CacheHelper.getString("empId");
+                      final from = CacheHelper.getString("from");
+                      final to = CacheHelper.getString("to");
+                      final depId = CacheHelper.getString("depId");
+                      final selectStatus = CacheHelper.getString("selectStatus");
+                      
+                      viewModel.initializeRequestsScreen(
+                          context: context,
+                          requestsType: widget.requestsType ?? GetRequestsTypes.mine,
+                          requestTypeId: reqId.isNotEmpty ? reqId : null,
+                          empIds: empId.isNotEmpty ? empId : null,
+                          from: from.isNotEmpty ? from : null,
+                          to: to.isNotEmpty ? to : null,
+                          depId: depId.isNotEmpty ? depId : null,
+                          status: selectStatus.isNotEmpty ? selectStatus : null);
+                    }
                   }, // Icon inside FAB
                   backgroundColor: Color(AppColors.buttons), // Optional: change color
                   tooltip: 'Add',
