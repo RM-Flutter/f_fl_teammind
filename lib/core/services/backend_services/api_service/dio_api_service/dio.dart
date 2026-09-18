@@ -40,7 +40,7 @@ class DioHelper{
           receiveDataWhenStatusError: true,
           connectTimeout: const Duration(seconds: 30),
           receiveTimeout: const Duration(seconds: 30),
-          sendTimeout: const Duration(seconds: 30),
+          sendTimeout: (kIsWeb || PlatformIs.web) ? null : const Duration(seconds: 30),
           persistentConnection: true,
           headers: headers,
           // For web, set followRedirects and validateStatus

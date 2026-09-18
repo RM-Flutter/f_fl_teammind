@@ -3,7 +3,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/controllers/smart_card_view_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/data/repos/repo/smart_card_repo.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -324,13 +324,14 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
 
   Widget _buildTemplateCard(Map<String, dynamic> template, int index) {
     String? imageUrl;
-    if (template['image'] is List && (template['image'] as List).isNotEmpty) {
-      final imgMap = template['image'][0];
+    final dynamic imageSource = template['images'] ?? template['image'];
+    if (imageSource is List && imageSource.isNotEmpty) {
+      final imgMap = imageSource[0];
       if (imgMap is Map) {
-        imageUrl = (imgMap['file'] ?? imgMap['thumbnail'])?.toString();
+        imageUrl = imgMap['file']?.toString();
       }
-    } else if (template['image'] is String) {
-      imageUrl = template['image'] as String;
+    } else if (imageSource is String) {
+      imageUrl = imageSource;
     }
     
     final isSelected = selectedTemplateIndex == index;
@@ -359,20 +360,23 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                   child: imageUrl != null && imageUrl.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: imageUrl,
+                      ? Image.network(
+                          imageUrl,
                           fit: BoxFit.contain,
                           width: double.infinity,
-                          placeholder: (context, url) => Container(
-                            color: Color(AppColors.buttons),
-                            child: const Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: Color(AppColors.buttons),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) => Container(
                             color: Colors.grey[300],
                             child: const Icon(
                               Icons.image,

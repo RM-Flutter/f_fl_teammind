@@ -26,6 +26,7 @@ class OtherDepartmentRequestModel {
   var statusUpdate;
   var notes;
   var reason;
+  bool? hasOverlapping;
 
   OtherDepartmentRequestModel({
     required this.id,
@@ -54,6 +55,7 @@ class OtherDepartmentRequestModel {
     this.files,
     this.waitingCancel,
     this.seenBy,
+    this.hasOverlapping,
   });
 
   factory OtherDepartmentRequestModel.fromJson(Map<String, dynamic> json) {
@@ -62,6 +64,7 @@ class OtherDepartmentRequestModel {
       rulesMessage: json['rules_message'] ?? "",
       notes: json['notes'] ?? "",
       waitingCancel: json['waiting_cancel'] ?? false,
+      hasOverlapping: json['has_overlapping'] as bool?,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       createdAt: json['created_at'] ?? "",

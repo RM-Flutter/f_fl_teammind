@@ -27,6 +27,7 @@ class RequestModel {
   var notes;
   var reason;
   var approvableType;
+  bool? hasOverlapping;
 
   RequestModel({
     required this.id,
@@ -56,6 +57,7 @@ class RequestModel {
     this.managerReply,
     this.seenBy,
     this.files,
+    this.hasOverlapping,
   });
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
@@ -63,6 +65,7 @@ class RequestModel {
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
       waitingCancel: json['waiting_cancel'] ?? false,
+      hasOverlapping: json['has_overlapping'] as bool?,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       notes: json['notes'] ?? "",
@@ -108,6 +111,7 @@ class RequestModel {
       // rules_message not returned yet in new API — backend will re-add it
       rulesMessage: "",
       waitingCancel: json['waiting_cancel'] ?? false,
+      hasOverlapping: json['has_overlapping'] as bool?,
       notes: json['notes'] ?? "",
       // No files/managerReply/seenBy in list endpoint — kept empty for list cards
       files: [],

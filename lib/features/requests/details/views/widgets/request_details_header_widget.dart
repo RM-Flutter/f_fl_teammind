@@ -28,6 +28,8 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/settings_service.dart';
 
+import '../../../../../core/constants/app_constants.dart';
+
 class RequestDetailsHeaderWidget extends StatefulWidget {
   final double? height;
   final dynamic request;
@@ -70,7 +72,9 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
   }
 
   /// Download a single file and update progress
-  Future<void> _downloadFile(String url, String fileName) async {
+  Future<void> _downloadFile(String rawUrl, String rawFileName) async {
+    final String url = Uri.encodeFull(rawUrl.trim());
+    final String fileName = rawFileName.trim();
     // On web, download the file and open it in a new tab
     if (PlatformIs.web) {
       try {
@@ -222,7 +226,25 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
     for (var file in files) {
       try {
-        final String fileUrl = file.file;
+        String fileUrl = '';
+        if (file is String) {
+          fileUrl = file;
+        } else if (file is Map) {
+          fileUrl = file['file']?.toString() ?? file['url']?.toString() ?? '';
+        } else {
+          try {
+            fileUrl = (file as dynamic).file?.toString() ?? '';
+          } catch (_) {}
+        }
+        if (fileUrl.isEmpty) continue;
+        
+        fileUrl = fileUrl.trim();
+        if (fileUrl.startsWith('/')) {
+          fileUrl = '${AppConstants.base}$fileUrl';
+        } else if (!fileUrl.startsWith('http')) {
+          fileUrl = '${AppConstants.base}/$fileUrl';
+        }
+        
         final String fileName = fileUrl.split('/').last;
         await _downloadFile(fileUrl, fileName);
       } catch (e) {

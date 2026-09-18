@@ -342,38 +342,18 @@ class ApprovableCardWidget extends StatelessWidget {
                 ],
               ),
             ),
-            // Overlapping Vacations Icon for Managers
             if (isForDepartment)
               Builder(
                 builder: (context) {
-                  bool isVac = false;
+                  bool showOverlappingIcon = false;
                   try {
                     final dyn = request as dynamic;
                     if (dyn.id != null) {
-                      String appType = '';
-                      try { appType = dyn.approvableType?.toString().toLowerCase() ?? ''; } catch (_) {}
-                      
-                      String tName = '';
-                      try { tName = dyn.typeName?.toString().toLowerCase() ?? ''; } catch (_) {}
-
-                      isVac = appType.contains('employeerequest') ||
-                          appType.contains('vacation') ||
-                          tName.contains('vacation') ||
-                          tName.contains('إجازة');
-                          
-                      if (!isVac) {
-                        final reqTypeString = request.runtimeType.toString();
-                        if (reqTypeString == 'MyTeamRequestModel' ||
-                            reqTypeString == 'OtherDepartmentRequestModel' ||
-                            reqTypeString == 'AllCompanyRequestModel' ||
-                            reqTypeString == 'RequestModel') {
-                          isVac = true;
-                        }
-                      }
+                      showOverlappingIcon = dyn.hasOverlapping == true;
                     }
                   } catch (_) {}
 
-                  if (isVac) {
+                  if (showOverlappingIcon) {
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

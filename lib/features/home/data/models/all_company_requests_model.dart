@@ -22,6 +22,7 @@ class AllCompanyRequestModel {
   var notes;
   var seenBy;
   var reason;
+  bool? hasOverlapping;
 
   AllCompanyRequestModel({
     required this.id,
@@ -46,11 +47,13 @@ class AllCompanyRequestModel {
     this.managerReply,
     this.files,
     this.seenBy,
+    this.hasOverlapping,
   });
 
   factory AllCompanyRequestModel.fromJson(Map<String, dynamic> json) {
     return AllCompanyRequestModel(
       id: json['id'] ?? 0,
+      hasOverlapping: json['has_overlapping'] as bool?,
       notes: json['notes'] ?? "",
       createdAt: json['created_at'] ?? "",
       statusUpdate: json['status_update_at'] ?? "",

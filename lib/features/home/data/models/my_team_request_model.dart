@@ -26,6 +26,7 @@ class MyTeamRequestModel {
   var notes;
   var reason;
   var seenBy;
+  bool? hasOverlapping;
 
   MyTeamRequestModel({
     required this.id,
@@ -54,6 +55,7 @@ class MyTeamRequestModel {
     this.managerReply,
     this.files,
     this.seenBy,
+    this.hasOverlapping,
   });
 
   factory MyTeamRequestModel.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class MyTeamRequestModel {
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
       waitingCancel: json['waiting_cancel'] ?? false,
+      hasOverlapping: json['has_overlapping'] as bool?,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       files: json['files'] != null
