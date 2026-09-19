@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
@@ -34,19 +35,20 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
   final String title;
   final String subtitle;
   final double circleBorderWidth;
+
   const PersonalProfileHeaderWidget(
       {super.key,
-        required this.viewModel,
-        required this.notchImage,
-        required this.photo,
-        required this.notchPadding,
-        required this.headerImage,
-        required this.notchedContainerHeight,
-        required this.backgroundHeight,
-        required this.notchRadius,
-        required this.title,
-        required this.subtitle,
-        required this.circleBorderWidth});
+      required this.viewModel,
+      required this.notchImage,
+      required this.photo,
+      required this.notchPadding,
+      required this.headerImage,
+      required this.notchedContainerHeight,
+      required this.backgroundHeight,
+      required this.notchRadius,
+      required this.title,
+      required this.subtitle,
+      required this.circleBorderWidth});
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +89,18 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
       // الاتنين متحققين ✅
       return "";
     }
+
     var jsonString;
     Map<String, dynamic> us1Cache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      us1Cache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      us1Cache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
     return SizedBox(
       width: 1.sw,
-      height: backgroundHeight +
-          (notchedContainerHeight *
-              0.35), // background image height + half of notched container height
+      height: backgroundHeight + (notchedContainerHeight * 0.35),
+      // background image height + half of notched container height
       child: Stack(
         children: [
           PersonalProfileHeaderBackgroundWidget(
@@ -107,7 +110,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
             left: 0,
             right: 0,
             child: CompanyInfoNotchedContainer(
-              viewModel:viewModel ,
+              viewModel: viewModel,
               photo: photo,
               notchedContainerHeight: notchedContainerHeight,
               notchRadius: notchRadius,
@@ -125,25 +128,43 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
               width: 1.sw,
               child: Column(
                 children: [
-                  if ( ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) )  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    color: Colors.yellow,
-                    child: Row(
-                      children: [
-                        Icon(Icons.warning, color: Colors.red, size: 20,),
-                        SizedBox(width: 8),
-                        SizedBox(
-                          width: 0.6.sw,
-                          child: Text(
-                            getVerificationStatus(us1Cache),style:  const TextStyle(color: Colors.red),
+                  if (((us1Cache['phone'] != null &&
+                          us1Cache['phone_verified_at'] == null) ||
+                      (us1Cache['email'] != null &&
+                          us1Cache['email_verified_at'] == null)))
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      color: Colors.yellow,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.warning,
+                            color: Colors.red,
+                            size: 20,
                           ),
-                        ),
-                        const Spacer(),
-                        Text(AppStrings.activeNow.tr(), style:  TextStyle(fontSize: 12, color: Colors.green),),
-                      ],
+                          SizedBox(width: 8),
+                          SizedBox(
+                            width: 0.6.sw,
+                            child: Text(
+                              getVerificationStatus(us1Cache),
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            AppStrings.activeNow.tr(),
+                            style: TextStyle(fontSize: 12, color: Colors.green),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  if ( ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) ) SizedBox(height: 15,),
+                  if (((us1Cache['phone'] != null &&
+                          us1Cache['phone_verified_at'] == null) ||
+                      (us1Cache['email'] != null &&
+                          us1Cache['email_verified_at'] == null)))
+                    SizedBox(
+                      height: 15,
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,16 +177,16 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                           child: Center(
                             child: IconButton(
                               onPressed: () => context.pop(),
-                              icon:  Icon(
+                              icon: Icon(
                                 Icons.arrow_back_ios_new,
                                 color: Colors.white,
                                 size: AppSizes.s18,
                               ),
                             ),
                           )),
-                       Text(
+                      Text(
                         AppStrings.accountAndSettings.tr(),
-                        style:  AppStyles.whiteContent(context).copyWith(
+                        style: AppStyles.whiteContent(context).copyWith(
                           fontWeight: FontWeight.w400,
                           fontSize: AppSizes.s14,
                           letterSpacing: 1.4,
@@ -181,7 +202,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                             child: IconButton(
                               onPressed: () async =>
                                   await viewModel.logout(context: context),
-                              icon:  Icon(
+                              icon: Icon(
                                 Icons.logout_outlined,
                                 color: Colors.red,
                                 size: AppSizes.s18,
@@ -203,6 +224,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
 class PersonalProfileHeaderBackgroundWidget extends StatelessWidget {
   final String headerImage;
   final double? backgroundHeight;
+
   const PersonalProfileHeaderBackgroundWidget(
       {super.key, required this.headerImage, required this.backgroundHeight});
 
@@ -267,31 +289,36 @@ class CompanyInfoNotchedContainer extends StatefulWidget {
   var viewModel;
   final String subtitle;
   final double circleBorderWidth;
+
   CompanyInfoNotchedContainer(
       {super.key,
-        required this.notchImage,
-        required this.photo,
-        required this.viewModel,
-        required this.notchPadding,
-        required this.notchRadius,
-        required this.notchedContainerHeight,
-        required this.title,
-        required this.circleBorderWidth,
-        required this.subtitle});
+      required this.notchImage,
+      required this.photo,
+      required this.viewModel,
+      required this.notchPadding,
+      required this.notchRadius,
+      required this.notchedContainerHeight,
+      required this.title,
+      required this.circleBorderWidth,
+      required this.subtitle});
 
   @override
-  State<CompanyInfoNotchedContainer> createState() => _CompanyInfoNotchedContainerState();
+  State<CompanyInfoNotchedContainer> createState() =>
+      _CompanyInfoNotchedContainerState();
 }
 
-class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContainer> {
+class _CompanyInfoNotchedContainerState
+    extends State<CompanyInfoNotchedContainer> {
   bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     var jsonString;
     Map<String, dynamic> gCache = {};
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
     return SizedBox(
@@ -305,116 +332,124 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
               right: 0,
               child: Center(
                   child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: (widget.notchRadius - widget.notchPadding) * 2.2,
-                        height: (widget.notchRadius - widget.notchPadding) * 2.2,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Color(AppColors.secondaryButton),
-                              width: AppSizes.s2),
-                        ),
-                        child: GestureDetector(
-                          onTap: () async => await context
-                              .pushNamed(
-                              AppRoutes.employeeDetails.name,
-                              pathParameters: {
-                                'id': gCache['employee_profile_id'].toString(),
-                                'lang':
-                                context.locale.languageCode
-                              }),
-                          child: ClipOval(
-                            child:widget.viewModel.deleteImage == false ? widget.viewModel
-                                .listProfileImage
-                                .isNotEmpty
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: (widget.notchRadius - widget.notchPadding) * 2.2,
+                    height: (widget.notchRadius - widget.notchPadding) * 2.2,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: Color(AppColors.secondaryButton),
+                          width: AppSizes.s2),
+                    ),
+                    child: GestureDetector(
+                      onTap: () async => await context.pushNamed(
+                          AppRoutes.employeeDetails.name,
+                          pathParameters: {
+                            'id': gCache['employee_profile_id'].toString(),
+                            'lang': context.locale.languageCode
+                          }),
+                      child: ClipOval(
+                        child: widget.viewModel.deleteImage == false
+                            ? widget.viewModel.listProfileImage.isNotEmpty
                                 ? Image(
-                              image: CheckValuesFromApi.safeArray(widget.viewModel.listProfileImage).isNotEmpty &&
-                                  CheckValuesFromApi.safeArray(widget.viewModel.listProfileImage)[0]['compressed'] != null
-                                  ? FileImage(CheckValuesFromApi.safeArray(widget.viewModel.listProfileImage)[0]['compressed'] as File)
-                                  : const AssetImage("assets/images/default_avatar.png") as ImageProvider,
-                              fit: BoxFit.cover,
-                            )
-                                : UserSettingConst.userSettings
-                                ?.photo ==
-                                null
-                                ? DynamicImageWidget(
-                              imageUrl: AppImages.logo,
-                              fit: BoxFit.cover,
-                            )
-                                : CachedNetworkImage(
-                                imageUrl: widget.photo ??
-                                    '',
+                                    image: CheckValuesFromApi.safeArray(widget.viewModel.listProfileImage)
+                                                .isNotEmpty &&
+                                            CheckValuesFromApi.safeArray(widget
+                                                        .viewModel
+                                                        .listProfileImage)[0]
+                                                    ['compressed'] !=
+                                                null
+                                        ? FileImage(CheckValuesFromApi.safeArray(
+                                                widget.viewModel.listProfileImage)[0]
+                                            ['compressed'] as File)
+                                        : const AssetImage("assets/images/default_avatar.png")
+                                            as ImageProvider,
+                                    fit: BoxFit.cover,
+                                  )
+                                : UserSettingConst.userSettings?.photo == null
+                                    ? DynamicImageWidget(
+                                        imageUrl: AppImages.logo,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : kIsWeb
+                                        ? Image.network(
+                                            widget.photo,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Icon(
+                                              Icons
+                                                  .image_not_supported_outlined,
+                                              size: AppSizes.s60,
+                                            ),
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: widget.photo,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                ShimmerAnimatedLoading(
+                                              circularRaduis: AppSizes.s50,
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) => Icon(
+                                              Icons
+                                                  .image_not_supported_outlined,
+                                              size: AppSizes.s60,
+                                            ),
+                                          )
+                            : DynamicImageWidget(
+                                imageUrl: AppImages.logo,
                                 fit: BoxFit.cover,
-                                placeholder: (context,
-                                    url) =>
-                                ShimmerAnimatedLoading(
-                                  circularRaduis:
-                                  AppSizes
-                                      .s50,
-                                ),
-                                errorWidget:
-                                    (context, url,
-                                    error) =>
-                                Icon(
-                                  Icons
-                                      .image_not_supported_outlined,
-                                  size: AppSizes
-                                      .s60,
-                                )) : DynamicImageWidget(
-                              imageUrl: AppImages.logo,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          padding: const EdgeInsets.all(0),
-                          decoration: BoxDecoration(
-                              color: Color(AppColors.background),
-                              shape: BoxShape.circle
-                          ),
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.camera_alt,
-                                color: Color(AppColors.secondaryButton),
-                                size: AppSizes.s20,
                               ),
-                              onPressed: () async {
-                                await widget.viewModel.getImage(context,
-                                    image1: widget.viewModel
-                                        .profileImage,
-                                    image2: widget.viewModel
-                                        .XImageFileProfile,
-                                    list2: widget.viewModel
-                                        .listXProfileImage,
-                                    list: widget.viewModel
-                                        .listProfileImage);
-                                widget.viewModel.updateProfileMainInfoImage(context: context);
-                              }),
-                        ),
                       ),
-                    ],
-                  ))),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(0),
+                      decoration: BoxDecoration(
+                          color: Color(AppColors.background),
+                          shape: BoxShape.circle),
+                      child: IconButton(
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Color(AppColors.secondaryButton),
+                            size: AppSizes.s20,
+                          ),
+                          onPressed: () async {
+                            await widget.viewModel.getImage(context,
+                                image1: widget.viewModel.profileImage,
+                                image2: widget.viewModel.XImageFileProfile,
+                                list2: widget.viewModel.listXProfileImage,
+                                list: widget.viewModel.listProfileImage);
+                            widget.viewModel
+                                .updateProfileMainInfoImage(context: context);
+                          }),
+                    ),
+                  ),
+                ],
+              ))),
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: ClipPath(
               clipper: PersonalProfileCustomNotchClipper(
-                  notchSize: (widget.notchRadius * 2) + (widget.notchPadding * 2)),
+                  notchSize:
+                      (widget.notchRadius * 2) + (widget.notchPadding * 2)),
               child: Container(
                 padding: EdgeInsets.only(
                     top: (widget.notchRadius / 2).r,
                     left: AppSizes.s8,
                     right: AppSizes.s8),
-                height: widget.notchedContainerHeight - (widget.notchRadius + widget.notchPadding),
+                height: widget.notchedContainerHeight -
+                    (widget.notchRadius + widget.notchPadding),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(AppSizes.s32),
@@ -450,43 +485,50 @@ class _CompanyInfoNotchedContainerState extends State<CompanyInfoNotchedContaine
               ),
             ),
           ),
-          SizedBox(height: 5,),
-          if(widget.photo != "https://emplive.r-m.dev/files/2024/user-profile.png") Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 50, left: 95),
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  padding: const EdgeInsets.all(0),
-                  decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle
-                  ),
-                  child: _isLoading == false ?IconButton(
-                      icon:  Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                        size: AppSizes.s15,
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        await widget.viewModel.updateProfileMainInfoImage(context: context);
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      }): SizedBox(
-                        width: 15,
-                        height: 15,
-                        child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white,)
-                      ),
-                ),
-              ),
-            ],
+          SizedBox(
+            height: 5,
           ),
+          if (widget.photo !=
+              "https://emplive.r-m.dev/files/2024/user-profile.png")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 50, left: 95),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    padding: const EdgeInsets.all(0),
+                    decoration: const BoxDecoration(
+                        color: Colors.red, shape: BoxShape.circle),
+                    child: _isLoading == false
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: AppSizes.s15,
+                            ),
+                            onPressed: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              await widget.viewModel
+                                  .updateProfileMainInfoImage(context: context);
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            })
+                        : SizedBox(
+                            width: 15,
+                            height: 15,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            )),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );

@@ -104,19 +104,31 @@ class EmployeeDetailsHeader extends StatelessWidget {
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(85),
-                          child: CachedNetworkImage(
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            imageUrl: employee!.avatar!,
-                            placeholder: (context, url) =>
-                            const ShimmerAnimatedLoading(),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.image_not_supported_outlined,
-                              size: AppSizes.s32,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: kIsWeb
+                              ? Image.network(
+                                  employee!.avatar!,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: AppSizes.s32,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : CachedNetworkImage(
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  imageUrl: employee!.avatar!,
+                                  placeholder: (context, url) =>
+                                      const ShimmerAnimatedLoading(),
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: AppSizes.s32,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       )
                           : CircleAvatar(

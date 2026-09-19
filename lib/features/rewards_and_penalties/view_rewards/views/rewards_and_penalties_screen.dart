@@ -46,8 +46,18 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
     viewModel = RewardsAndPenaltiesViewModel();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+    
+    String? targetEmpId = widget.empId;
+    if (targetEmpId == null) {
+      final jsonString = CacheHelper.getString("US1");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        final cache = json.decode(jsonString) as Map<String, dynamic>;
+        targetEmpId = cache['employee_profile_id']?.toString();
+      }
+    }
+    
     viewModel.initializeRewardsAndPenaltiesListScreen(
-        context: context, empId: widget.empId);
+        context: context, empId: targetEmpId);
   }
 
   void _onScroll() {
@@ -110,8 +120,18 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
               child: Padding(
                 padding: EdgeInsets.all(AppSizes.s12),
                 child: RefreshIndicator.adaptive(
-                  onRefresh: () async => await viewModel.initializeRewardsAndPenaltiesListScreen(
-                      context: context, empId: widget.empId),
+                  onRefresh: () async {
+                    String? targetEmpId = widget.empId;
+                    if (targetEmpId == null) {
+                      final jsonString = CacheHelper.getString("US1");
+                      if (jsonString != null && jsonString.isNotEmpty) {
+                        final cache = json.decode(jsonString) as Map<String, dynamic>;
+                        targetEmpId = cache['employee_profile_id']?.toString();
+                      }
+                    }
+                    await viewModel.initializeRewardsAndPenaltiesListScreen(
+                        context: context, empId: targetEmpId);
+                  },
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     controller: _scrollController,

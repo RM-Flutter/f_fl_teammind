@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 /// Widget that can display both asset images and network images
 /// Automatically detects if the imageUrl is a network URL or asset path
@@ -35,6 +36,17 @@ class DynamicImageWidget extends StatelessWidget {
     }
     
     if (_isNetworkImage) {
+      if (kIsWeb) {
+        return Image.network(
+          imageUrl,
+          height: height,
+          width: width,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) =>
+              errorWidget ??
+              const Icon(Icons.image_not_supported_outlined),
+        );
+      }
       return CachedNetworkImage(
         imageUrl: imageUrl,
         height: height,

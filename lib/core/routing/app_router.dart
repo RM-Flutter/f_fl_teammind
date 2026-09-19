@@ -328,7 +328,7 @@ GoRouter goRouter(BuildContext context) {
               final screenName = state.uri.path.split('/').last;
               TelegramErrorService.setCurrentScreen(screenName, context: context);
 
-              Offset? begin = state.extra as Offset?;
+              Offset? begin = state.extra is Offset ? state.extra as Offset : null;
               final lang = state.uri.queryParameters['lang'];
               if (lang != null) {
                 final locale = Locale(lang);
@@ -357,7 +357,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.personalProfile.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -388,7 +388,7 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final extra = state.extra as Map<String, dynamic>?;
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   return MaterialPage(child: OvertimeRequestsScreen(extra: extra));
                 },
               ),
@@ -399,7 +399,7 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final extra = state.extra as Map<String, dynamic>?;
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   final bool isForEmployee = extra?['isForEmployee'] as bool? ?? false;
                   return MaterialPage(child: AddOvertimeRequestScreen(isForEmployee: isForEmployee));
                 },
@@ -428,7 +428,7 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final extra = state.extra as Map<String, dynamic>?;
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   return MaterialPage(child: DailyReportsListScreen(extra: extra));
                 },
               ),
@@ -461,7 +461,7 @@ GoRouter goRouter(BuildContext context) {
                 pageBuilder: (context, state) {
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final extra = state.extra as Map<String, dynamic>?;
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   return MaterialPage(child: SalaryAdvanceListScreen(extra: extra));
                 },
               ),
@@ -500,7 +500,7 @@ GoRouter goRouter(BuildContext context) {
                   final id = state.pathParameters['id'] ?? '';
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) context.setLocale(Locale(lang));
-                  final extra = state.extra as Map<String, dynamic>?;
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   final autoOpenAction = extra?['autoOpenAction'] as AutoOpenAction? ?? AutoOpenAction.none;
                   return MaterialPage(
                     child: ApprovableDetailsScreen(
@@ -518,7 +518,7 @@ GoRouter goRouter(BuildContext context) {
             parentNavigatorKey: _shellNavigatorKey,
             name: AppRoutes.defaultPage2.name,
             pageBuilder: (context, state) {
-              Offset? begin = state.extra as Offset?;
+              Offset? begin = state.extra is Offset ? state.extra as Offset : null;
               final lang = state.uri.queryParameters['lang'];
               final type = state.pathParameters['type'] ?? '';
 
@@ -659,7 +659,7 @@ GoRouter goRouter(BuildContext context) {
                 name: AppRoutes.requestsById.name,
                 pageBuilder: (context, state) {
                   final extra = state.extra is Map<String, dynamic> ? state.extra as Map<String, dynamic> : null;
-                  Offset? begin = extra?['offset'] as Offset?;
+                  Offset? begin = (extra != null && extra['offset'] is Offset) ? extra['offset'] as Offset : null;
                   String? userId = extra?['userId'] as String?;
                   String? id = state.pathParameters['id'];
                   final type = state.pathParameters['type'] ?? '';
@@ -762,7 +762,7 @@ GoRouter goRouter(BuildContext context) {
                   parentNavigatorKey: rootNavigatorKey,
                   name: AppRoutes.fingerPrintOffline.name,
                   pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
+                    Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                     final animationController = AnimationController(
                       vsync: ticker,
                     );
@@ -788,7 +788,7 @@ GoRouter goRouter(BuildContext context) {
             parentNavigatorKey: _shellNavigatorKey,
             name: AppRoutes.notifications.name,
             pageBuilder: (context, state) {
-              Offset? begin = state.extra as Offset?;
+              Offset? begin = state.extra is Offset ? state.extra as Offset : null;
               final animationController = AnimationController(
                 vsync: ticker,
               );
@@ -813,7 +813,7 @@ GoRouter goRouter(BuildContext context) {
             parentNavigatorKey: _shellNavigatorKey,
             name: AppRoutes.more.name,
             pageBuilder: (context, state) {
-              Offset? begin = state.extra as Offset?;
+              Offset? begin = state.extra is Offset ? state.extra as Offset : null;
               final animationController = AnimationController(
                 vsync: ticker,
               );
@@ -837,7 +837,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.generalDataScreen.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
 
                   if (lang != null) {
@@ -903,7 +903,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.webViewScreen.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -932,7 +932,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.teamFingerprint.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -961,7 +961,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.teamTodayStatus.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -989,7 +989,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.updatePassword.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -1017,7 +1017,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.aboutUsScreen.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -1045,7 +1045,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.faqScreen.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -1073,7 +1073,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.requestTermsScreen.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -1101,7 +1101,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.contactUs.name,
                 pageBuilder: (context, state) {
-                  // Offset? begin = state.extra as Offset?;
+                  // Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final lang = state.uri.queryParameters['lang'];
                   if (lang != null) {
                     final locale = Locale(lang);
@@ -1269,7 +1269,7 @@ GoRouter goRouter(BuildContext context) {
                     final locale = Locale(lang);
                     context.setLocale(locale);
                   }
-                  final company = state.extra as Map<String, dynamic>?;
+                  final company = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1324,7 +1324,7 @@ GoRouter goRouter(BuildContext context) {
                     final locale = Locale(lang);
                     context.setLocale(locale);
                   }
-                  final company = state.extra as Map<String, dynamic>?;
+                  final company = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1352,7 +1352,7 @@ GoRouter goRouter(BuildContext context) {
                     final locale = Locale(lang);
                     context.setLocale(locale);
                   }
-                  final extra = state.extra as Map<String, dynamic>? ?? {};
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : {};
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1384,7 +1384,7 @@ GoRouter goRouter(BuildContext context) {
                     final locale = Locale(lang);
                     context.setLocale(locale);
                   }
-                  final extra = state.extra as Map<String, dynamic>? ?? {};
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : {};
                   
                   final isPersonalQ = state.uri.queryParameters['isPersonal'] == 'true';
                   final companyIdQ = int.tryParse(state.uri.queryParameters['companyId'] ?? '');
@@ -1580,7 +1580,7 @@ GoRouter goRouter(BuildContext context) {
                       parentNavigatorKey: rootNavigatorKey,
                       name: AppRoutes.mediaCenterYoutubeScreenView.name,
                       pageBuilder: (context, state) {
-                        Offset? begin = state.extra as Offset?;
+                        Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                         final lang = state.uri.queryParameters['lang'];
                         final String url = Uri.decodeComponent(state.pathParameters['url']!);
                         if (lang != null) {
@@ -1641,7 +1641,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.companyTree.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1691,10 +1691,10 @@ GoRouter goRouter(BuildContext context) {
                     gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
                   }
                   print("ID CACHE IS --> ${CacheHelper.getInt("id").toString()}");
-                  final extra = state.extra as Map<String, dynamic>?;
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
                   final empId = extra?["empId"] ?? gCache['employee_profile_id'].toString();
                   final empName = extra?["empName"] as String?;
-                  final begin = extra?["begin"] as Offset? ?? const Offset(1.0, 0.0);
+                  final begin = (extra != null && extra["begin"] is Offset) ? extra["begin"] as Offset : const Offset(1.0, 0.0);
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1718,7 +1718,7 @@ GoRouter goRouter(BuildContext context) {
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.evaluationRequireScreen.name,
                 pageBuilder: (context, state) {
-                  Offset? begin = state.extra as Offset?;
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                   final animationController = AnimationController(
                     vsync: ticker,
                   );
@@ -1742,7 +1742,7 @@ GoRouter goRouter(BuildContext context) {
                   parentNavigatorKey: rootNavigatorKey,
                   name: AppRoutes.taskScreen.name,
                   pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
+                    Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                     final animationController = AnimationController(
                       vsync: ticker,
                     );
@@ -1840,7 +1840,7 @@ GoRouter goRouter(BuildContext context) {
                 name: AppRoutes.rewardsAndPenalties.name,
                 pageBuilder: (context, state) {
                   final extra = state.extra is Map<String, dynamic> ? state.extra as Map<String, dynamic> : null;
-                  Offset? begin = extra?['offset'] as Offset?;
+                  Offset? begin = (extra != null && extra['offset'] is Offset) ? extra['offset'] as Offset : null;
                   String? employeeName = extra?['employeeName'] as String?;
                   String? employeeId = extra?['employeeId'] as String?;
                   final animationController = AnimationController(
@@ -1894,7 +1894,7 @@ GoRouter goRouter(BuildContext context) {
                   parentNavigatorKey: rootNavigatorKey,
                   name: AppRoutes.complainScreen.name,
                   pageBuilder: (context, state) {
-                    Offset? begin = state.extra as Offset?;
+                    Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                     final lang = state.uri.queryParameters['lang'];
                     if (lang != null) {
                       final locale = Locale(lang);
@@ -1926,7 +1926,7 @@ GoRouter goRouter(BuildContext context) {
                       parentNavigatorKey: rootNavigatorKey,
                       name: AppRoutes.complainDetails.name,
                       pageBuilder: (context, state) {
-                        Offset? begin = state.extra as Offset?;
+                        Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                         final lang = state.uri.queryParameters['lang'];
                         final id = state.pathParameters['id'] ?? '';
                         final type = state.pathParameters['type'] ?? '';
@@ -1973,7 +1973,7 @@ GoRouter goRouter(BuildContext context) {
         name: AppRoutes.payrollsList.name,
         pageBuilder: (context, state) {
           final extra = state.extra is Map<String, dynamic> ? state.extra as Map<String, dynamic> : null;
-          Offset? begin = extra?['offset'] as Offset?;
+          Offset? begin = (extra != null && extra['offset'] is Offset) ? extra['offset'] as Offset : null;
           String? employeeName = extra?['employeeName'] as String?;
           String? employeeId = extra?['employeeId'] as String?;
           final animationController = AnimationController(
@@ -2054,7 +2054,7 @@ GoRouter goRouter(BuildContext context) {
           parentNavigatorKey: rootNavigatorKey,
           name: AppRoutes.employeesList.name,
           pageBuilder: (context, state) {
-            Offset? begin = state.extra as Offset?;
+            Offset? begin = state.extra is Offset ? state.extra as Offset : null;
             final animationController = AnimationController(
               vsync: ticker,
             );
@@ -2111,7 +2111,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.langSettingScreen.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           if (lang != null) {
             final locale = Locale(lang);
@@ -2145,7 +2145,7 @@ GoRouter goRouter(BuildContext context) {
               parentNavigatorKey: rootNavigatorKey,
               name: AppRoutes.addNotification.name,
               pageBuilder: (context, state) {
-                Offset? begin = state.extra as Offset?;
+                Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                 final lang = state.uri.queryParameters['lang'];
                 if (lang != null) {
                   final locale = Locale(lang);
@@ -2175,7 +2175,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.notificationDetails.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           final id = state.pathParameters['id'] ?? '';
 
@@ -2208,7 +2208,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.defaultPage.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           final type = state.pathParameters['type'] ?? '';
 
@@ -2239,7 +2239,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.defaultListPage.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           final type = state.pathParameters['type'] ?? '';
           if (lang != null) {
@@ -2269,7 +2269,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.defaultSinglePage.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           final type = state.pathParameters['type'] ?? '';
           final id = state.pathParameters['id'] ?? '';
@@ -2306,7 +2306,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.blogDetails.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           final id = Uri.decodeComponent(state.pathParameters['id'] ?? '');
           final type = state.pathParameters['type'] ?? '';
@@ -2339,7 +2339,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.newComplainScreen.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           if (lang != null) {
             final locale = Locale(lang);
@@ -2360,8 +2360,8 @@ GoRouter goRouter(BuildContext context) {
             child: ChangeNotifierProvider(
               create: (_) => ComplaintsController(),
               child: NewComplainScreen(
-                initialSubject: (state.extra as Map<String, dynamic>?)?['initialSubject'],
-                initialDetails: (state.extra as Map<String, dynamic>?)?['initialDetails'],
+                initialSubject: (state.extra is Map) ? (state.extra as Map<String, dynamic>)['initialSubject'] : null,
+                initialDetails: (state.extra is Map) ? (state.extra as Map<String, dynamic>)['initialDetails'] : null,
               ),
             ),
             animation: animationController,
@@ -2448,7 +2448,7 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.webViewMainDataScreen.name,
         pageBuilder: (context, state) {
-          Offset? begin = state.extra as Offset?;
+          Offset? begin = state.extra is Offset ? state.extra as Offset : null;
           final lang = state.uri.queryParameters['lang'];
           if (lang != null) {
             final locale = Locale(lang);
@@ -2565,7 +2565,7 @@ GoRouter goRouter(BuildContext context) {
                     parentNavigatorKey: rootNavigatorKey,
                     name: AppRoutes.fawryProviderScreen.name,
                     pageBuilder: (context, state) {
-                      //  Offset? begin = state.extra as Offset?;
+                      //  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
                       final lang = state.pathParameters['lang'];
                       if (lang != null) {
                         final locale = Locale(lang);

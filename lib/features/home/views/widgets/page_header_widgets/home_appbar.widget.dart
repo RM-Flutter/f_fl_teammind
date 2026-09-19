@@ -197,19 +197,31 @@ class HomeAppbarWidget extends StatelessWidget {
                                   : CircleAvatar(
                                 radius: AppSizes.s22,
                                 child: ClipOval(
-                                  child: CachedNetworkImage(
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    fit: BoxFit.cover,
-                                    imageUrl: us1Cache['photo'] ?? "",
-                                    placeholder: (context, url) =>
-                                    const ShimmerAnimatedLoading(),
-                                    errorWidget: (context, url, error) => Icon(
-                                      Icons.image_not_supported_outlined,
-                                      size: AppSizes.s32,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                  child: kIsWeb
+                                      ? Image.network(
+                                          us1Cache['photo'] ?? "",
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) => Icon(
+                                            Icons.image_not_supported_outlined,
+                                            size: AppSizes.s32,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : CachedNetworkImage(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          fit: BoxFit.cover,
+                                          imageUrl: us1Cache['photo'] ?? "",
+                                          placeholder: (context, url) =>
+                                              const ShimmerAnimatedLoading(),
+                                          errorWidget: (context, url, error) => Icon(
+                                            Icons.image_not_supported_outlined,
+                                            size: AppSizes.s32,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),

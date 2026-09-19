@@ -32,9 +32,14 @@ class SwitchRowNotification extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          leftText ?? AppStrings.allNotifications.tr(),
-          style: textStyle,
+        Expanded(
+          child: Text(
+            leftText ?? AppStrings.allNotifications.tr(),
+            style: textStyle,
+            textAlign: TextAlign.end,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         SizedBox(width: 8),
         CustomSwitchButton(
@@ -48,9 +53,14 @@ class SwitchRowNotification extends StatelessWidget {
           onChanged: onChanged,
         ),
         SizedBox(width: 8),
-        Text(
-          rightText ?? AppStrings.myDepartment.tr(),
-          style: textStyle,
+        Expanded(
+          child: Text(
+            rightText ?? AppStrings.myDepartment.tr(),
+            style: textStyle,
+            textAlign: TextAlign.start,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
