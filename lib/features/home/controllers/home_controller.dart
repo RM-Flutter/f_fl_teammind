@@ -13,6 +13,7 @@ import 'package:app_test/features/home/data/models/my_team_request_model.dart';
 import 'package:app_test/features/home/data/models/other_departments_request.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -228,6 +229,11 @@ class HomeController extends ChangeNotifier {
   }
   Future<void> _preloadProfileImage(BuildContext context) async {
     try {
+      if (kIsWeb) {
+        debugPrint('⚠️ Web: Skipping profile image preload (not supported/needed)');
+        return;
+      }
+
       // Check if online
       final isConnected = await InternetConnectionChecker.createInstance().hasConnection.timeout(
         const Duration(seconds: 2),

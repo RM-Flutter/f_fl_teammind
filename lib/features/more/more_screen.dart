@@ -536,20 +536,43 @@ class _MoreScreenState extends State<MoreScreen> {
                             pathParameters: {'lang': context.locale.languageCode,
                             });
                       },
-                      child: CachedNetworkImage(
-                          imageUrl:(gCache != null)? gCache['photo']??"" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
-                          fit: BoxFit.cover,
-                          height: 124,
-                          width: 124,
-                          placeholder: (context, url) => ShimmerAnimatedLoading(
-                            width: 63.0,
-                            height: 63,
-                            circularRaduis: 63,
-                          ),
-                          errorWidget: (context, url, error) => Icon(
-                            Icons.image_not_supported_outlined,
-                            size: 32,
-                          )),
+                      child: kIsWeb
+                          ? Image.network(
+                              (gCache != null) ? gCache['photo'] ?? "" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
+                              fit: BoxFit.cover,
+                              height: 124,
+                              width: 124,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                color: Colors.grey[200],
+                                height: 124,
+                                width: 124,
+                                child: Icon(
+                                  Icons.person,
+                                  size: 64,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: (gCache != null) ? gCache['photo'] ?? "" : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
+                              fit: BoxFit.cover,
+                              height: 124,
+                              width: 124,
+                              placeholder: (context, url) => ShimmerAnimatedLoading(
+                                width: 63.0,
+                                height: 63,
+                                circularRaduis: 63,
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[200],
+                                child: Icon(
+                                  Icons.person,
+                                  size: 64,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                   SizedBox(height: 15),
