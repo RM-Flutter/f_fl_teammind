@@ -25,6 +25,7 @@ class EmployeeProfileModel {
   final String? hireDate;
   final List<Balance>? balance;
   final List<String>? weekends;
+  final WeekendModel? weekendModel;
   EmpWorkingHours? workingHours;
   final List<Assets>? assets;
   final List<EmpCustomData>? empCustomData;
@@ -67,6 +68,7 @@ class EmployeeProfileModel {
     this.hireDate,
     this.balance,
     this.weekends,
+    this.weekendModel,
     this.workingHours,
     this.assets,
     this.basicSalary,
@@ -176,6 +178,9 @@ class EmployeeProfileModel {
             : (json['weekend'] as List<dynamic>?)
                 ?.map((e) => e.toString())
                 .toList(),
+        weekendModel: json['weekend'] is Map 
+            ? WeekendModel.fromJson(json['weekend'])
+            : null,
         workingHours: json['working_hours'] != null
             ? EmpWorkingHours.fromJson(json['working_hours'])
             : null,
@@ -850,6 +855,78 @@ class EmpRewardPenalty {
       'signature_document_url': signatureDocumentUrl,
       'profile_id': profileId,
       'created_at': createdAt,
+    };
+  }
+}
+
+class WeekendModel {
+  final bool hasWeekends;
+  final List<String> days;
+  final List<String> specificDates;
+  final List<RecurringRuleModel> recurringRules;
+
+  WeekendModel({
+    required this.hasWeekends,
+    required this.days,
+    required this.specificDates,
+    required this.recurringRules,
+  });
+
+  factory WeekendModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return WeekendModel(
+        hasWeekends: true,
+        days: [],
+        specificDates: [],
+        recurringRules: [],
+      );
+    }
+    return WeekendModel(
+      hasWeekends: json['has_weekends'] ?? true,
+      days: (json['days'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      specificDates: (json['specific_dates'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      recurringRules: (json['recurring_rules'] as List<dynamic>?)
+              ?.map((e) => RecurringRuleModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'has_weekends': hasWeekends,
+      'days': days,
+      'specific_dates': specificDates,
+      'recurring_rules': recurringRules.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class RecurringRuleModel {
+  final String? type;
+  final String? dayOfWeek;
+  final String? firstDate;
+
+  RecurringRuleModel({
+    this.type,
+    this.dayOfWeek,
+    this.firstDate,
+  });
+
+  factory RecurringRuleModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return RecurringRuleModel();
+    return RecurringRuleModel(
+      type: json['type']?.toString(),
+      dayOfWeek: json['day_of_week']?.toString(),
+      firstDate: json['first_date']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'day_of_week': dayOfWeek,
+      'first_date': firstDate,
     };
   }
 }

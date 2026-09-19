@@ -103,6 +103,22 @@ class _RequestsScreenState extends State<RequestsScreen> {
       }
     });
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    
+    // Clear filter state when exiting the screen
+    CacheHelper.deleteData(key: "reqId");
+    CacheHelper.deleteData(key: "empId");
+    CacheHelper.deleteData(key: "from");
+    CacheHelper.deleteData(key: "to");
+    CacheHelper.deleteData(key: "depId");
+    CacheHelper.deleteData(key: "selectStatus");
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
