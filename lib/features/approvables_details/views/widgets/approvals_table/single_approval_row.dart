@@ -51,7 +51,7 @@ class SingleApprovalRow extends StatelessWidget {
     final statusColor = _getStatusColor(item.status);
     final approverName = item.employee?.name ??
         item.department?.title ??
-        item.role ??
+        item.role?.tr() ??
         item.type ??
         '';
 
@@ -112,7 +112,7 @@ class SingleApprovalRow extends StatelessWidget {
         if (item.role != null || item.department?.title != null) ...[
           const SizedBox(height: 4),
           Text(
-            '${item.role ?? ''} ${item.department?.title != null ? '(${item.department!.title})' : ''}'
+            '${item.role?.tr() ?? ''} ${item.department?.title != null ? '(${item.department!.title})' : ''}'
                 .trim(),
             style: TextStyle(
               fontSize: 11,

@@ -1,3 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+import '../../../data/models/approvable_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -8,12 +11,14 @@ class InformationTab extends StatelessWidget {
   final String? createdAt;
   final String? seenAt;
   final String? updatedAt;
+  final List<SeenByModel>? seenBy;
 
   const InformationTab({
     super.key,
     this.createdAt,
     this.seenAt,
     this.updatedAt,
+    this.seenBy,
   });
 
   String _formatInfoDate(String? rawDate, BuildContext context) {
@@ -59,6 +64,7 @@ class InformationTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = LocalizationService.isArabic(context: context);
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -87,6 +93,66 @@ class InformationTab extends StatelessWidget {
               AppStrings.statusUpdate.tr(),
               _formatInfoDate(updatedAt, context),
             ),
+          ],
+          if (seenBy != null && seenBy!.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            Text(
+              isArabic ? 'شوهد بواسطة' : 'Seen By',
+              style: AppStyles.darkContent(context).copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...seenBy!.map((person) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: (person.avatar != null && person.avatar!.isNotEmpty)
+                          ? (kIsWeb ? NetworkImage(person.avatar!) : CachedNetworkImageProvider(person.avatar!)) as ImageProvider
+                          : null,
+                      child: (person.avatar == null || person.avatar!.isEmpty)
+                          ? Icon(Icons.person, color: Colors.grey.shade400)
+                          : null,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            person.name ?? '',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          if (person.date != null && person.date!.isNotEmpty)
+                            Text(
+                              _formatInfoDate(person.date, context),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
           ],
         ],
       ),

@@ -10,7 +10,7 @@ class ApprovableDetailsModel {
   final String? updatedAt;
   final List<RequiredApprovalModel>? requiredApprovals;
   final String? seenAt;
-  final List<dynamic>? seenBy;
+  final List<SeenByModel>? seenBy;
   final DepartmentModel? department;
   final ProfileModel? profile;
   final int? typeId;
@@ -81,7 +81,7 @@ class ApprovableDetailsModel {
             )
           : [],
       seenAt: json['seen_at'],
-      seenBy: json['seen_by'] as List<dynamic>?,
+      seenBy: (json['seen_by'] as List<dynamic>?)?.map((e) => SeenByModel.fromJson(e as Map<String, dynamic>)).toList(),
       department: json['department'] != null
           ? DepartmentModel.fromJson(json['department'] as Map<String, dynamic>)
           : null,
@@ -308,6 +308,25 @@ class OverlappingVacationModel {
       unit: json['unit'],
       reason: json['reason'],
       status: json['status'],
+    );
+  }
+}
+
+
+class SeenByModel {
+  final int? id;
+  final String? name;
+  final String? date;
+  final String? avatar;
+
+  SeenByModel({this.id, this.name, this.date, this.avatar});
+
+  factory SeenByModel.fromJson(Map<String, dynamic> json) {
+    return SeenByModel(
+      id: json['id'] as int?,
+      name: json['manager_name'] ?? json['name'] as String?,
+      date: json['date'] ?? json['seen_at'] as String?,
+      avatar: json['avatar'] as String?,
     );
   }
 }

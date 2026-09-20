@@ -93,6 +93,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                     InformationTab(
                       createdAt: details.createdAt,
                       seenAt: details.seenAt,
+                      seenBy: details.seenBy,
                       updatedAt: details.updatedAt,
                     ),
                   ],

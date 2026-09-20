@@ -57,11 +57,10 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 ),
               ),
               */
-              SizedBox(height: 24),
               // request statuses options
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F3F3),
                   borderRadius: BorderRadius.circular(8),
@@ -73,7 +72,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                     hint: Text(
                       (viewModel.selectedRequestStatus ?? AppStrings.requestType.tr()).toUpperCase(),
                       style: AppStyles.darkContent(context).copyWith(
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Color(AppColors.secondaryButton),
                       ),
@@ -83,7 +82,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                       child: Text(
                         e.toString().toUpperCase(),
                         style: AppStyles.darkContent(context).copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Color(AppColors.secondaryButton)
                         ),),
@@ -101,7 +100,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 controller: viewModel.reasonController,
                 maxLines: 5,
                 style: AppStyles.darkContent(context).copyWith(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Color(AppColors.secondaryButton),
                 ),
@@ -114,7 +113,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                   filled: true,
                   fillColor: const Color(0xFFF3F3F3),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -142,7 +141,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppStyles.whiteContent(context).copyWith(
-                      fontSize: 12,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
