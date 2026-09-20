@@ -211,93 +211,130 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
         }
 
         return Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: value.contentController,
-                        onSubmitted: (text) {
-                          // إرسال التعليق عند الضغط على Enter
-                          if (text.trim().isNotEmpty ||
-                              value.listXAttachmentPersonalImage.isNotEmpty) {
-                            value.addComment(context,
-                                id: widget.id,
-                                slug: widget.slug.toString());
-                          }
-                        },
-                        decoration: InputDecoration(
-                          disabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintText: AppStrings.typeYourMessage.tr().toUpperCase(),
-                          hintStyle:  const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: Color(0xFFB0B7C3)),
-                          border: InputBorder.none,
+                    if (_isRecording) ...[
+                      // Recording Indicator
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.mic, color: Colors.red, size: 24),
+                      ),
+                      Text(
+                        '00:${_elapsedTime.toString().padLeft(2, '0')}',
+                        style: const TextStyle(
+                          fontSize: 16, 
+                          fontWeight: FontWeight.bold, 
+                          color: Colors.red,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () async {
-                        // عدم مسح الصور السابقة عند اختيار صورة جديدة
-                        final previousImagesLength = value.listXAttachmentPersonalImage.length;
-                        await value.getImage(
-                            context,
-                            image1: value.attachmentPersonalImage,
-                            image2: value.XImageFileAttachmentPersonal,
-                            list2: value.listXAttachmentPersonalImage,
-                            one: false,
-                            list: value.listAttachmentPersonalImage);
-                        // التحقق من أن الصور تم إضافتها
-                        if (value.listXAttachmentPersonalImage.isNotEmpty &&
-                            value.listXAttachmentPersonalImage.length > previousImagesLength) {
-                          // إرسال التعليق بعد اختيار الصور
-                          value.addComment(context,
-                              id: widget.id,
-                              slug: widget.slug.toString(),
-                              images: value.listXAttachmentPersonalImage);
-                        } else if (value.listXAttachmentPersonalImage.isNotEmpty) {
-                          // إذا كانت هناك صور موجودة مسبقاً، إرسالها
-                          value.addComment(context,
-                              id: widget.id,
-                              slug: widget.slug.toString(),
-                              images: value.listXAttachmentPersonalImage);
-                        }
-                      },
-                      child: SvgPicture.asset("assets/images/svg/image.svg",
-                          color:  Color(AppColors.buttons),
-                          width: 20,
-                          height: 20),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: _isRecording ? () => _stopRecording() : null,
-                      onLongPress: _isRecording ? () => _stopRecording() : _startRecording,
-                      onLongPressUp: () => _stopRecording(),
-                      child: _isRecording
-                          ? Text(
-                        '$_elapsedTime s',
-                        style:  TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: Color(AppColors.buttons)),
-                      )
-                          : SvgPicture.asset("assets/images/svg/voice.svg",
-                          color:  Color(AppColors.buttons),
-                          width: 20,
-                          height: 20),
-                    ),
+                      const Spacer(),
+                      // Cancel Button
+                      GestureDetector(
+                        onTap: () => _cleanUpRecording(deleteFile: true),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Icon(Icons.delete_outline, color: Colors.grey, size: 24),
+                        ),
+                      ),
+                      // Stop Button
+                      GestureDetector(
+                        onTap: () => _stopRecording(),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Icon(Icons.send_rounded, color: Colors.red, size: 28),
+                        ),
+                      ),
+                    ] else ...[
+                      // Normal Text Field
+                      Expanded(
+                        child: TextField(
+                          controller: value.contentController,
+                          minLines: 1,
+                          maxLines: 4,
+                          onSubmitted: (text) {
+                            if (text.trim().isNotEmpty ||
+                                value.listXAttachmentPersonalImage.isNotEmpty) {
+                              value.addComment(context,
+                                  id: widget.id,
+                                  slug: widget.slug.toString());
+                            }
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                            disabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedErrorBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            hintText: AppStrings.typeYourMessage.tr().toUpperCase(),
+                            hintStyle:  const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: Color(0xFFB0B7C3)),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Image Icon
+                      GestureDetector(
+                        onTap: () async {
+                          final previousImagesLength = value.listXAttachmentPersonalImage.length;
+                          await value.getImage(
+                              context,
+                              image1: value.attachmentPersonalImage,
+                              image2: value.XImageFileAttachmentPersonal,
+                              list2: value.listXAttachmentPersonalImage,
+                              one: false,
+                              list: value.listAttachmentPersonalImage);
+                          if (value.listXAttachmentPersonalImage.isNotEmpty &&
+                              value.listXAttachmentPersonalImage.length > previousImagesLength) {
+                            value.addComment(context,
+                                id: widget.id,
+                                slug: widget.slug.toString(),
+                                images: value.listXAttachmentPersonalImage);
+                          } else if (value.listXAttachmentPersonalImage.isNotEmpty) {
+                            value.addComment(context,
+                                id: widget.id,
+                                slug: widget.slug.toString(),
+                                images: value.listXAttachmentPersonalImage);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: SvgPicture.asset("assets/images/svg/image.svg",
+                              color:  Color(AppColors.buttons),
+                              width: 24,
+                              height: 24),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      // Mic Icon
+                      GestureDetector(
+                        onTap: () => _startRecording(),
+                        onLongPress: () => _startRecording(),
+                        onLongPressUp: () => _stopRecording(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: SvgPicture.asset("assets/images/svg/voice.svg",
+                              color:  Color(AppColors.buttons),
+                              width: 24,
+                              height: 24),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

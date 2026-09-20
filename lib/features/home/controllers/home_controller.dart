@@ -308,6 +308,9 @@ class HomeController extends ChangeNotifier {
         var requestsData3 = value.data?['other_departments'] as List<dynamic>?;
         otherDepartmentRequests = requestsData3?.map((item) => OtherDepartmentRequestModel.fromJson(item as Map<String, dynamic>))
             .toList();
+        var requestsData4 = value.data?['all_company'] as List<dynamic>?;
+        allCompanyRequests = requestsData4?.map((item) => AllCompanyRequestModel.fromJson(item as Map<String, dynamic>))
+            .toList();
         // final jsonString = json.encode({value.data}); // Convert JSON to String
         // await prefs.setString("mRequest", jsonString);
         // final jsonString2 = json.encode(value.data); // Convert JSON to String

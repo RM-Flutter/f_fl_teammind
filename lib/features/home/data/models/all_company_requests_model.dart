@@ -2,30 +2,35 @@
 class AllCompanyRequestModel {
   var id;
   var departmentId;
-  final String? departmentName;
+  var departmentName;
   var employeeId;
-  final String? employeeName;
+  var rulesMessage;
+  var employeeName;
   var typeId;
-  final String? typeName;
-  final String? durationType;
+  var typeName;
+  var durationType;
   var duration;
   var moneyValue;
-  final String? from;
-  final String? to;
+  var from;
+  var to;
   var status;
-  final String? level;
-  final String? managerReply;
+  var level;
+  List<ManagerReply>? managerReply;
+  List<SeenBy>? seenBy;
   List<Files>? files;
   var createdAt;
   var seenAt;
+  bool? waitingCancel;
+  bool? takeAction;
+  bool? canTakeActionAsSomeoneElse;
   var statusUpdate;
   var notes;
-  var seenBy;
   var reason;
   bool? hasOverlapping;
 
   AllCompanyRequestModel({
     required this.id,
+    required this.rulesMessage,
     required this.notes,
     required this.reason,
     required this.seenAt,
@@ -44,8 +49,11 @@ class AllCompanyRequestModel {
     required this.to,
     required this.status,
     required this.level,
+    this.takeAction,
+    this.canTakeActionAsSomeoneElse,
     this.managerReply,
     this.files,
+    this.waitingCancel,
     this.seenBy,
     this.hasOverlapping,
   });
@@ -53,39 +61,45 @@ class AllCompanyRequestModel {
   factory AllCompanyRequestModel.fromJson(Map<String, dynamic> json) {
     return AllCompanyRequestModel(
       id: json['id'] ?? 0,
-      hasOverlapping: json['has_overlapping'] as bool?,
+      rulesMessage: json['rules_message'] ?? "",
       notes: json['notes'] ?? "",
+      waitingCancel: json['waiting_cancel'] ?? false,
+      hasOverlapping: json['has_overlapping'] as bool?,
+      takeAction: json['can_take_action'] as bool?,
+      canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
       createdAt: json['created_at'] ?? "",
       statusUpdate: json['status_update_at'] ?? "",
-      seenAt: json['sean_at'] ?? "",
+      seenAt: json['seen_at'] ?? "",
       reason: json['reason'] ?? "",
-      departmentId: json['department_id'] ?? 0,
-      departmentName: json['department_name'] ?? "",
-      employeeId: json['employee_id'] ?? 0,
-      employeeName: json['employee_name'] ?? "",
+      departmentId: json['department_id'] ?? (json['department'] is Map ? json['department']['id'] : null) ?? 0,
+      departmentName: json['department_name'] ?? (json['department'] is Map ? json['department']['title'] : null) ?? "",
+      employeeId: json['employee_id'] ?? (json['profile'] is Map ? json['profile']['id'] : null) ?? 0,
+      employeeName: json['employee_name'] ?? (json['profile'] is Map ? json['profile']['name'] : null) ?? "",
       typeId: json['type_id'] ?? 0,
       typeName: json['type_name'] ?? "",
-      durationType: json['duration_type'] ?? "",
+      durationType: json['duration_type'] ?? json['unit'] ?? "",
       duration: json['duration'] ?? 0,
       moneyValue: json['money_value'] ?? 0,
-      from: json['from'] ?? "",
-      to: json['to'] ?? "",
+      from: json['from'] ?? json['date_from'] ?? "",
+      to: json['to'] ?? json['date_to'] ?? "",
       status: json['status'],
       level: json['level'] ?? "",
-      managerReply: json['manager_reply'],
-      files: json['files'] != null
-          ? List<Files>.from(json['files'].map((file) => Files.fromJson(file)))
+      managerReply: json['manager_reply'] != null
+          ? List<ManagerReply>.from(json['manager_reply'].map((file) => ManagerReply.fromJson(file)))
           : [],
       seenBy: json['seen_by'] != null
           ? List<SeenBy>.from(json['seen_by'].map((file) => SeenBy.fromJson(file)))
+          : [],
+      files: json['files'] != null
+          ? List<Files>.from(json['files'].map((file) => Files.fromJson(file)))
           : [],
     );
   }
 }
 class SeenBy {
-  int? id;
-  String? managerName;
-  String? date;
+  var id;
+  var managerName;
+  var date;
 
   SeenBy(
       {this.id, this.managerName, this.date});
@@ -97,8 +111,8 @@ class SeenBy {
   }
 }
 class Files {
-  int? id;
-  String? file;
+  var id;
+  var file;
 
   Files(
       {this.id, this.file});
@@ -106,5 +120,23 @@ class Files {
   Files.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     file = json['file'];
+  }
+}
+class ManagerReply {
+  var id;
+  var name;
+  var jobTitle;
+  var replay;
+  var createAt;
+
+  ManagerReply(
+      {this.id, this.name, this.jobTitle, this.createAt, this.replay});
+
+  ManagerReply.fromJson(Map<String, dynamic> json) {
+    id = json['manager_id'];
+    name = json['manager_name'];
+    jobTitle = json['manager_job_title'];
+    replay = json['replay'];
+    createAt = json['created_at'];
   }
 }
