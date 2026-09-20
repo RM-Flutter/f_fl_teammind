@@ -51,13 +51,10 @@ class ApprovableBottomActionBar extends StatelessWidget {
         statusLower == 'refused' ||
         statusLower == 'rejected';
 
-    final List<Widget> actionButtons = [];
+    final List<Widget> rawButtons = [];
 
     void addButton(Widget btn) {
-      if (actionButtons.isNotEmpty) {
-        actionButtons.add(const SizedBox(width: 8));
-      }
-      actionButtons.add(btn);
+      rawButtons.add(btn);
     }
 
     if (isCompleted) {
@@ -268,8 +265,37 @@ class ApprovableBottomActionBar extends StatelessWidget {
       }
     }
 
-    if (actionButtons.isEmpty) {
+    if (rawButtons.isEmpty) {
       return const SizedBox.shrink();
+    }
+
+    List<Widget> rows = [];
+    for (int i = 0; i < rawButtons.length; i += 2) {
+      List<Widget> rowChildren = [];
+      rowChildren.add(rawButtons[i]);
+      if (i + 1 < rawButtons.length) {
+        rowChildren.add(const SizedBox(width: 8));
+        rowChildren.add(rawButtons[i + 1]);
+      } else {
+        // If there's an odd button at the end, we can either make it take full width
+        // (since it's wrapped in Expanded, it will take full width automatically if it's the only one).
+        // Or we can add an empty Expanded to keep it half width.
+        // Let's make it take full width as it looks better.
+      }
+
+      rows.add(
+        SizedBox(
+          height: kIsWeb ? 50 : 56,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: rowChildren,
+          ),
+        ),
+      );
+      if (i + 2 < rawButtons.length) {
+        rows.add(const SizedBox(height: 8));
+      }
     }
 
     return Center(
@@ -278,8 +304,6 @@ class ApprovableBottomActionBar extends StatelessWidget {
           maxWidth: kIsWeb ? 1100 : 1.sw,
         ),
         child: Container(
-          height: kIsWeb ? 50 : 56,
-          alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(
             vertical: 6,
             horizontal: 10,
@@ -291,10 +315,9 @@ class ApprovableBottomActionBar extends StatelessWidget {
             top: 8,
           ),
           width: 1.sw,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: actionButtons,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: rows,
           ),
         ),
       ),
