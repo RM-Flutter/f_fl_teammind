@@ -229,7 +229,8 @@ class CommentProvider extends ChangeNotifier{
       );
       final fetchedComments = (response.data['comments'] as List?) ?? [];
 
-      if (pages == 1 || isNewPage != true) {
+      final currentPage = pages ?? pageNumber;
+      if (currentPage == 1) {
         comments.clear();
         commentIds.clear();
       }
