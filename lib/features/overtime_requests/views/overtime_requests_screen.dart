@@ -356,7 +356,7 @@ class _ScopeSelectorRow extends StatelessWidget {
       if (showAllCompany)
         {
           'value': 'all_company',
-          'label': isArabic ? 'كل الشركة' : 'All Company',
+          'label': isArabic ? 'طلبات كل الشركة' : 'All Company',
         },
     ];
     return Padding(
