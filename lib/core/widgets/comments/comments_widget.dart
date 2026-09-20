@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:app_test/core/widgets/comments/comments_audio_widget.dart';
 import 'package:app_test/core/widgets/full_image_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -134,7 +135,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
-                            child: CachedNetworkImage(
+                            child: kIsWeb ? Image.network(comments[index]['user']['avatar'] ?? "", width: 50, height: 50, fit: BoxFit.cover, errorBuilder: (c,e,s) => const Icon(Icons.image_not_supported_outlined, size: 24, color: Colors.grey)) : CachedNetworkImage(
                               width: 50,
                               height: 50,
                               fit: BoxFit.cover,
@@ -207,7 +208,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                             ),
                                           );
                                         },
-                                        child: CachedNetworkImage(
+                                        child: kIsWeb ? Image.network(comments[index]['images'][0]['file'], fit: BoxFit.cover, errorBuilder: (c,e,s) => const Icon(Icons.image_not_supported_outlined, size: 24, color: Colors.grey)) : CachedNetworkImage(
                                           imageUrl: comments[index]['images'][0]
                                           ['file'],
                                           fit: BoxFit.cover,

@@ -186,32 +186,28 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                                     ));
                                                               },
                                                               child:
-                                                                  CachedNetworkImage(
-                                                                width: 1.sw,
-                                                                fit: BoxFit
-                                                                    .contain,
-                                                                imageUrl: value
-                                                                        .notificationModel!
-                                                                        .mainThumbnail![
-                                                                            index]
-                                                                        .file ??
-                                                                    "",
-                                                                placeholder: (context,
-                                                                        url) =>
-                                                                    const ShimmerAnimatedLoading(),
-                                                                errorWidget:
-                                                                    (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        Icon(
-                                                                  Icons
-                                                                      .image_not_supported_outlined,
-                                                                  size: AppSizes
-                                                                      .s32,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
+                                                                  kIsWeb
+                                                                  ? Image.network(
+                                                                      value.notificationModel!.mainThumbnail![index].file ?? "",
+                                                                      width: 1.sw,
+                                                                      fit: BoxFit.contain,
+                                                                      errorBuilder: (context, error, stackTrace) => const Icon(
+                                                                        Icons.image_not_supported_outlined,
+                                                                        size: AppSizes.s32,
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                    )
+                                                                  : CachedNetworkImage(
+                                                                      width: 1.sw,
+                                                                      fit: BoxFit.contain,
+                                                                      imageUrl: value.notificationModel!.mainThumbnail![index].file ?? "",
+                                                                      placeholder: (context, url) => const ShimmerAnimatedLoading(),
+                                                                      errorWidget: (context, url, error) => const Icon(
+                                                                        Icons.image_not_supported_outlined,
+                                                                        size: AppSizes.s32,
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                    ),
                                                             );
                                                           },
                                                         ),
@@ -288,25 +284,26 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                             ),
                                                           ));
                                                     },
-                                                    child: CachedNetworkImage(
-                                                      fit: BoxFit.contain,
-                                                      imageUrl: value
-                                                              .notificationModel!
-                                                              .mainThumbnail![0]
-                                                              .file ??
-                                                          "",
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          const ShimmerAnimatedLoading(),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          Icon(
-                                                        Icons
-                                                            .image_not_supported_outlined,
-                                                        size: AppSizes.s32,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
+                                                    child: kIsWeb
+                                                        ? Image.network(
+                                                            value.notificationModel!.mainThumbnail![0].file ?? "",
+                                                            fit: BoxFit.contain,
+                                                            errorBuilder: (context, error, stackTrace) => const Icon(
+                                                              Icons.image_not_supported_outlined,
+                                                              size: AppSizes.s32,
+                                                              color: Colors.white,
+                                                            ),
+                                                          )
+                                                        : CachedNetworkImage(
+                                                            fit: BoxFit.contain,
+                                                            imageUrl: value.notificationModel!.mainThumbnail![0].file ?? "",
+                                                            placeholder: (context, url) => const ShimmerAnimatedLoading(),
+                                                            errorWidget: (context, url, error) => const Icon(
+                                                              Icons.image_not_supported_outlined,
+                                                              size: AppSizes.s32,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
                                                   ),
                                               ],
                                             ),
