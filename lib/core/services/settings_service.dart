@@ -517,6 +517,27 @@ abstract class AppSettingsService {
   }
 
   /// used to get request title
+    static String? getRequestRulesMessageFromGenenralSettings(
+      {String? requestId, required BuildContext context}) {
+    if (UserSettingConst.generalSettingsModel == null) {
+      String? jsonString = CacheHelper.getString("USG");
+      if (jsonString != null && jsonString.isNotEmpty) {
+        try {
+          var decoded = json.decode(jsonString);
+          UserSettingConst.generalSettingsModel = GeneralSettingsModel.fromJson(decoded);
+        } catch (e) {
+          debugPrint("Error parsing USG cache: $e");
+        }
+      }
+    }
+
+    if (UserSettingConst.generalSettingsModel != null && UserSettingConst.generalSettingsModel!.requestTypes != null && UserSettingConst.generalSettingsModel!.requestTypes!.keys.contains(requestId)) {
+      final desc = UserSettingConst.generalSettingsModel!.requestTypes![requestId]?.rulesMessage;
+      return desc?.toString();
+    }
+    return null;
+  }
+
   static String? getRequestTitleFromGenenralSettings(
       {String? requestId, required BuildContext context}) {
     if (UserSettingConst.generalSettingsModel == null) {

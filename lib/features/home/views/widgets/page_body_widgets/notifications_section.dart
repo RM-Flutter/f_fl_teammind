@@ -27,6 +27,10 @@ class NotificationsSection extends StatelessWidget {
     // Show only unread notifications on the Home Screen
     final unreadNotifications = notifications.where((n) => n.seen != true && n.seen != 1 && n.seen != "1").toList();
 
+    if (unreadNotifications.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(

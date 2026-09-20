@@ -172,6 +172,7 @@ class RequestTypeOrList {
   final String countingType;
   final RequestFields fields;
   final String? rulesMessage;
+  
   var halfDay;
 
   RequestTypeOrList({
@@ -184,6 +185,7 @@ class RequestTypeOrList {
     required this.countingType,
     required this.fields,
     this.rulesMessage,
+    
   });
 
   factory RequestTypeOrList.fromJson(Map<String, dynamic> json) {
@@ -197,6 +199,7 @@ class RequestTypeOrList {
       countingType: json['counting_type'],
       fields: RequestFields.fromJson(json['fields']),
       rulesMessage: json['rules_message'],
+      
     );
   }
 
@@ -914,6 +917,7 @@ class RequestType {
   final String? countingType;
   final Fields? fields;
   final String? rulesMessage;
+  
   var halfDay;
   RequestType({
     this.id,
@@ -925,6 +929,7 @@ class RequestType {
     this.countingType,
     this.fields,
     this.rulesMessage,
+    
   });
 
   factory RequestType.fromJson(Map<String, dynamic> json) {
@@ -938,6 +943,7 @@ class RequestType {
       countingType: json['counting_type'],
       fields: json['fields'] != null ? Fields.fromJson(json['fields']) : null,
       rulesMessage: json['rules_message'],
+      
     );
   }
 

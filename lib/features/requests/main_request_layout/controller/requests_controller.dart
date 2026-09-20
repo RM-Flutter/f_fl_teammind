@@ -89,6 +89,7 @@ class RequestsViewModel extends ChangeNotifier {
         final result = await RequestsServices.getMyApprovables(
           context: context,
           type: 'employee_requests',
+          requestTypeId: (requestTypeId != null && requestTypeId.toString().isNotEmpty) ? requestTypeId.toString() : null,
           employeesIds: empIdsList,
           departmentIds: depIdsList,
           status: (status != null && status.toString().isNotEmpty) ? status.toString() : null,
@@ -145,6 +146,7 @@ class RequestsViewModel extends ChangeNotifier {
         context: context,
         type: 'employee_requests',
         scope: scope,
+        requestTypeId: (requestTypeId != null && requestTypeId.toString().isNotEmpty) ? requestTypeId.toString() : null,
         employeesIds: empIdsList,
         departmentIds: depIdsList,
         status: (status != null && status.toString().isNotEmpty) ? status.toString() : null,

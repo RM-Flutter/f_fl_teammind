@@ -52,6 +52,8 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final rulesMessage = AppSettingsService.getRequestRulesMessageFromGenenralSettings(
+        context: context, requestId: widget.requestTypeId);
     return ChangeNotifierProvider<RequestsWithTypeIdViewModel>(
       create: (_) => viewModel,
       child: TemplatePage(
@@ -94,8 +96,9 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           ? Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          if(viewModel.rulesMessage != null) AutoSizeText(
-                            viewModel.rulesMessage ?? "",
+
+                          if((rulesMessage ?? viewModel.rulesMessage) != null) AutoSizeText(
+                            rulesMessage ?? viewModel.rulesMessage ?? "",
                             style: AppStyles.greyContent(context).copyWith(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400),
@@ -110,12 +113,13 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                         ],
                       )
                           : Column(children: [
+
                         /// general screen message widget for other requests types
                         // GeneralScreenMessageWidget(
                         //     screenId:
                         //         '/requests/type-id=${widget.requestTypeId}', id: widget.requestTypeId),
-                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")AutoSizeText(
-                          viewModel.rulesMessage ?? "",
+                        if( (rulesMessage ?? viewModel.rulesMessage) != null &&  (rulesMessage ?? viewModel.rulesMessage) != "")AutoSizeText(
+                          rulesMessage ?? viewModel.rulesMessage ?? "",
                           maxLines: 10,
                           style: AppStyles.greyContent(context).copyWith(
                               fontSize: 12,
@@ -124,7 +128,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           textAlign: TextAlign.center,
                           softWrap: true,
                         ),
-                        if( viewModel.rulesMessage != null &&  viewModel.rulesMessage != "")  SizedBox(height: 16),
+                        if( (rulesMessage ?? viewModel.rulesMessage) != null &&  (rulesMessage ?? viewModel.rulesMessage) != "")  SizedBox(height: 16),
                         if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
                           onPressed: () async => viewModel
                               .showSummaryReports(context: context),

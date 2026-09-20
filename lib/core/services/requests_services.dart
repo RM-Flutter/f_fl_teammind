@@ -160,6 +160,7 @@ abstract class RequestsServices {
         final res = await getMyApprovables(
           context: context,
           type: 'employee_requests',
+          requestTypeId: requestTypeId,
           employeesIds: empIds != null ? [empIds.toString()] : null,
           status: status?.toString(),
           dateFrom: from,
@@ -189,6 +190,7 @@ abstract class RequestsServices {
           context: context,
           type: 'employee_requests',
           scope: scope,
+          requestTypeId: requestTypeId,
           employeesIds: empIds != null ? [empIds.toString()] : null,
           status: status?.toString(),
           dateFrom: from,
@@ -246,6 +248,7 @@ abstract class RequestsServices {
   static Future<OperationResult<Map<String, dynamic>>> getMyApprovables({
     required BuildContext context,
     required String type,
+    String? requestTypeId,
     List<String>? employeesIds,   // sent as employees_ids[]
     List<String>? departmentIds,  // sent as department_ids[]
     String? status,
@@ -262,6 +265,9 @@ abstract class RequestsServices {
       'page': page,
       'per_page': perPage,
     };
+    if (requestTypeId != null && requestTypeId.isNotEmpty) {
+      queryParams['request_type_id'] = requestTypeId;
+    }
     if (employeesIds != null && employeesIds.isNotEmpty) {
       queryParams['employees_ids[]'] = employeesIds;
     }
@@ -297,6 +303,7 @@ abstract class RequestsServices {
     required BuildContext context,
     required String type,
     required String scope,
+    String? requestTypeId,
     List<String>? employeesIds,
     List<String>? departmentIds,
     String? status,
@@ -312,6 +319,9 @@ abstract class RequestsServices {
       'page': page,
       'per_page': perPage,
     };
+    if (requestTypeId != null && requestTypeId.isNotEmpty) {
+      queryParams['request_type_id'] = requestTypeId;
+    }
     if (employeesIds != null && employeesIds.isNotEmpty) {
       queryParams['employees_ids[]'] = employeesIds;
     }
