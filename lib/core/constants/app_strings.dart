@@ -985,6 +985,7 @@ abstract class AppStrings {
   static const String sheets = 'sheets';
   static const String myGroups = 'myGroups';
   static const String myGroupss = 'myGroupss';
+  static const other = 'other';
   static const String thisCardItUsedTryAnotherOne = 'thisCardItUsedTryAnotherOne';
   static const String myPointsEarneds = 'myPointsEarneds';
   static const String lastedNotifications = 'lastedNotifications';

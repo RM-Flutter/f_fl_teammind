@@ -83,7 +83,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           message: 'request_sent_successfully'.tr(),
           title: 'success'.tr(),
         );
-        context.pop();
+        context.pop(true);
       }
     }
   }

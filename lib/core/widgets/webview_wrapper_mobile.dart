@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:file_picker/file_picker.dart';
 
 /// Mobile implementation using webview_flutter
 class MobileWebView extends StatefulWidget {
@@ -96,6 +98,29 @@ class _MobileWebViewState extends State<MobileWebView> {
             callback(message);
           },
         );
+      });
+    }
+
+    // Android file upload support
+    if (_controller.platform is AndroidWebViewController) {
+      final androidController = _controller.platform as AndroidWebViewController;
+      androidController.setOnShowFileSelector((FileSelectorParams params) async {
+        try {
+          final result = await FilePicker.platform.pickFiles(
+            allowMultiple: params.mode == FileSelectorMode.openMultiple,
+            type: FileType.any,
+          );
+          if (result != null && result.paths.isNotEmpty) {
+            // AndroidWebViewController expects uri strings like "file:///..."
+            return result.paths
+                .where((path) => path != null)
+                .map((path) => 'file://$path')
+                .toList();
+          }
+        } catch (e) {
+          debugPrint("WebView file picker error: $e");
+        }
+        return [];
       });
     }
   }

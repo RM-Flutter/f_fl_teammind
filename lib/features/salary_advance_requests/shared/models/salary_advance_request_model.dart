@@ -143,7 +143,7 @@ class SalaryAdvanceRequestModel {
       employeeApproved: null,
       hrApproved: null,
       managerApproved: null,
-      employeeProfile: null,
+      employeeProfile: json['profile'] != null ? ProfileModel.fromJson(json['profile']) : null,
       managerProfile: null,
       hrProfile: null,
       attachments: null,

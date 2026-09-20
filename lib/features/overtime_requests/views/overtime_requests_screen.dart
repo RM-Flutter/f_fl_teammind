@@ -131,23 +131,23 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     final bool isArabic = context.locale.languageCode == 'ar';
     if (!provider.isForDepartment) {
       return isArabic
-          ? "عرض طلباتي للوقت الإضافي في التقويم"
-          : "View My Overtime Requests on Calendar";
+          ? "تقويم طلباتي"
+          : "My Requests Calendar";
     }
     switch (provider.incomingScope) {
       case 'other_departments':
         return isArabic
-            ? "عرض طلبات الأقسام الأخرى للوقت الإضافي في التقويم"
-            : "View Department Overtime Requests on Calendar";
+            ? "تقويم الإدارات الأخرى"
+            : "Other Departments Calendar";
       case 'all_company':
         return isArabic
-            ? "عرض طلبات كل الشركة للوقت الإضافي في التقويم"
-            : "View All Company Overtime Requests on Calendar";
+            ? "تقويم طلبات الشركة"
+            : "All Company Calendar";
       case 'team':
       default:
         return isArabic
-            ? "عرض طلبات الفريق للوقت الإضافي في التقويم"
-            : "View Team Overtime Requests on Calendar";
+            ? "تقويم طلبات الفريق"
+            : "Team Requests Calendar";
     }
   }
 
@@ -197,12 +197,15 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 ? 'add_manager_overtime'
                 : 'add_overtime',
             backgroundColor: Color(AppColors.buttons),
-            onPressed: () {
-              context.pushNamed(
+            onPressed: () async {
+              final result = await context.pushNamed(
                 AppRoutes.addOvertimeRequestScreen.name,
                 pathParameters: {'lang': context.locale.languageCode},
                 extra: {'isForEmployee': provider.isForDepartment},
               );
+              if (result == true && mounted) {
+                provider.fetchRequests(context);
+              }
             },
             child: Icon(
                 provider.isForDepartment ? Icons.person_add_alt_1 : Icons.add,
@@ -227,7 +230,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 SwitchRowNotification(
                   value: provider.isForDepartment,
                   leftText: AppStrings.myRequests.tr(),
-                  rightText: AppStrings.teamRequests.tr(),
+                  rightText: AppStrings.other.tr(),
                   onChanged: (val) {
                     provider.toggleDepartmentView(val, context);
                   },

@@ -35,6 +35,12 @@ class EmployeesListViewModel extends ChangeNotifier {
 
   Future<void> initializeEmployeesListScreen(BuildContext context) async {
     updateLoadingStatus(laodingValue: true);
+    
+    // Clear search and filters on refresh
+    searchQuery = '';
+    searchController.clear();
+    selectedDepartment = null;
+    
     await _getEmployees(context);
     await _getDepartments(context);
     updateLoadingStatus(laodingValue: false);

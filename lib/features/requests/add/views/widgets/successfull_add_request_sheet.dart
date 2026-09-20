@@ -66,6 +66,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: CustomElevatedButton(
                           onPressed: () async {
+                            await Future.delayed(const Duration(milliseconds: 1000));
                             value.getHome(context);
                             context.goNamed(AppRoutes.home.name,
                                 pathParameters: {'lang': context.locale.languageCode,});
@@ -90,13 +91,10 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: CustomElevatedButton(
                           onPressed: onTap ?? () async {
-                            // context.goNamed(AppRoutes.requests2.name, pathParameters: {
-                            //   'type': 'mine',
-                            //   'lang': context.locale.languageCode
-                            // });
-                            // Navigator.pop(context);
-                            // Navigator.pop(context);
-                            await context.pushNamed(AppRoutes.requests2.name,
+                            await Future.delayed(const Duration(milliseconds: 1200)); // Wait for backend to sync
+                            Navigator.pop(context); // close the success sheet
+                            // Replace the AddRequestScreen with Requests2Screen
+                            context.pushReplacementNamed(AppRoutes.requests2.name,
                                 pathParameters: {
                                   'type': 'mine',
                                   'lang': context.locale.languageCode
