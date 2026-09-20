@@ -22,7 +22,7 @@ class DioHelper{
       'Accept':'application/json',
       "lang" : "${CacheHelper.getString("lang")}",
       'Content-Type':"application/json",
-      'x-app-type': (kIsWeb || PlatformIs.web) ? 'web' : 'mobile',
+      'X-App-Type': (kIsWeb || PlatformIs.web) ? 'web' : 'mobile',
     };
 
     // Add CORS headers for web platform
@@ -62,7 +62,7 @@ class DioHelper{
     dio!.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          options.headers['x-app-type'] = (kIsWeb || PlatformIs.web) ? 'web' : 'mobile';
+          options.headers['X-App-Type'] = (kIsWeb || PlatformIs.web) ? 'web' : 'mobile';
           return handler.next(options);
         },
         onResponse: (response, handler) {

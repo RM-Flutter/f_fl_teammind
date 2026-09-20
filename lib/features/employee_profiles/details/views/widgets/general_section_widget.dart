@@ -172,18 +172,19 @@ class GeneralSectionWidget extends StatelessWidget {
                 isTitleOnly: false,
                 isList: false,
                 title: AppStrings.hoursDailyCount.tr().toUpperCase(),
-                trailingTitle: employee!.workingHours!.dailyWorkingHours ?? '',
+                trailingTitle: employee?.workingHours?.dailyWorkingHours ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             // WORK HOURS
-            if ((employee!.workingHours!.dailyWorkingHoursStart != null || employee!.workingHours!.dailyWorkingHoursEnd != null))
+            if (employee?.workingHours != null && (employee!.workingHours!.dailyWorkingHoursStart != null || employee!.workingHours!.dailyWorkingHoursEnd != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursStart)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursStart.toString())
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}".toUpperCase(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
-              ),if ((employee!.workingHours!.dailyWorkingHoursFrom != null || employee!.workingHours!.dailyWorkingHoursTo != null))
+              ),
+            if (employee?.workingHours != null && (employee!.workingHours!.dailyWorkingHoursFrom != null || employee!.workingHours!.dailyWorkingHoursTo != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
@@ -197,7 +198,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 isTitleOnly: false,
                 isList: false,
                 title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
-                trailingTitle: "${employee!.workingHours!.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}".toUpperCase(),
+                trailingTitle: "${employee?.workingHours?.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}".toUpperCase(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WEEKENDS

@@ -231,7 +231,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               },
                             ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                              title: 'All Company Requests', // or AppStrings.allCompanyRequests.tr() if it exists
+                              title: 'all_company_requests'.tr(),
                               icon: Icons.business, // Fallback icon
                               onTap: () async{
                                 await context.pushNamed(AppRoutes.requests2.name,
@@ -385,7 +385,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                             
                             DefaultListTile(
-                              title: 'Files Center',
+                              title: 'files_center'.tr(),
                               src: "assets/images/svg/faqqs.svg",
                               icon: Icons.folder,
                               onTap: () {

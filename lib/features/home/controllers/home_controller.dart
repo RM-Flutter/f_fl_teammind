@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/notification_service/check_in_scheduler.dart';
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -289,6 +291,7 @@ class HomeController extends ChangeNotifier {
 
     // Preload profile image in background (non-blocking)
     _preloadProfileImage(context);
+    CheckInScheduler.scheduleNotifications(context);
 
     DioHelper.getData(
       url: "/emp_requests/v1/home",

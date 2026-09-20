@@ -257,7 +257,7 @@ class RequestsViewModel extends ChangeNotifier {
       {required GetRequestsTypes requestsType}) {
     switch (requestsType) {
       case GetRequestsTypes.allCompany:
-        return 'All Company Requests';
+        return 'all_company_requests'.tr();
       case GetRequestsTypes.myTeam:
         return AppStrings.teamRequests.tr();
       case GetRequestsTypes.otherDepartment:

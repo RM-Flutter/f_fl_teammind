@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -170,7 +172,7 @@ class TeamMemberStatusCard extends StatelessWidget {
           Icon(_statusIcon(member.status), size: 12, color: color),
           const SizedBox(width: 4),
           Text(
-            member.statusLabel ?? (member.status ?? '-'),
+            (member.status ?? '-').tr(),
             style: TextStyle(
               color: color,
               fontSize: 11,

@@ -79,7 +79,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                 viewModel.fileTypes.map((type) {
                   return DropdownMenuItem(
                     value: type.id.toString(),
-                    child: Text(type.title ?? '', style: const TextStyle(color: Colors.black, fontSize: 14)),
+                    child: Text((type.title ?? '').tr(), style: const TextStyle(color: Colors.black, fontSize: 14)),
                   );
                 }),
               );
@@ -92,7 +92,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
               ),
               ...viewModel.availableStatuses.map((status) => DropdownMenuItem(
                 value: status,
-                child: Text(status.toUpperCase(), style: const TextStyle(color: Colors.black, fontSize: 14)),
+                child: Text(status.tr().toUpperCase(), style: const TextStyle(color: Colors.black, fontSize: 14)),
               ))
             ];
 
@@ -116,7 +116,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                   // Status Filter
                   Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: Text("Status", style: TextStyle(color: Colors.grey[700], fontSize: 14)),
+                    child: Text("status".tr(), style: TextStyle(color: Colors.grey[700], fontSize: 14)),
                   ),
                   const SizedBox(height: 8),
                   Container(
@@ -398,7 +398,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            file.status!.toUpperCase(),
+                            file.status!.tr().toUpperCase(),
                             style: TextStyle(
                               color: file.status == 'premium' 
                                   ? Colors.amber[800] 
@@ -525,7 +525,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
               }
             },
           ),
-          title: 'Files Center',
+          title: 'files_center'.tr(),
           titleStyle: TextStyle(
             color: Color(AppColors.secondaryButton),
             fontSize: 18,

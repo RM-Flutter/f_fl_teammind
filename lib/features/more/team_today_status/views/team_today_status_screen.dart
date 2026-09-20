@@ -1,3 +1,6 @@
+import 'package:go_router/go_router.dart';
+import 'package:app_test/core/routing/app_router.dart';
+
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -23,13 +26,13 @@ class _TeamTodayStatusScreenState extends State<TeamTodayStatusScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   // Filter chip definitions: key → display label
-  static const List<_FilterOption> _filters = [
-    _FilterOption('all', 'All'),
-    _FilterOption('present', 'Present'),
-    _FilterOption('clocked_out', 'Clocked Out'),
-    _FilterOption('absent', 'Absent'),
-    _FilterOption('vacation', 'On Leave'),
-    _FilterOption('weekend', 'Weekend'),
+  List<_FilterOption> get _filters => [
+    _FilterOption('all', 'all'.tr()),
+    _FilterOption('present', 'present'.tr()),
+    _FilterOption('clocked_out', 'clocked_out'.tr()),
+    _FilterOption('absent', 'absent'.tr()),
+    _FilterOption('vacation', 'on_leave'.tr()),
+    _FilterOption('weekend', 'weekend'.tr()),
   ];
 
   @override
@@ -132,7 +135,7 @@ class _Content extends StatelessWidget {
         if (members.isEmpty)
           NoExistingPlaceholderScreen(
             height: 0.5.sh,
-            title: 'No members found',
+            title: 'no_members_found'.tr(),
           )
         else
           ListView.separated(
@@ -142,8 +145,18 @@ class _Content extends StatelessWidget {
                 horizontal: 16, vertical: 4),
             itemCount: members.length,
             separatorBuilder: (_, __) => const SizedBox(height: 10),
-            itemBuilder: (_, i) =>
-                TeamMemberStatusCard(member: members[i]),
+            itemBuilder: (_, i) => InkWell(
+                  onTap: () async {
+                    if (members[i].id != null) {
+                      await context.pushNamed(AppRoutes.employeeDetails.name,
+                          pathParameters: {
+                            'id': members[i].id.toString(),
+                            'lang': context.locale.languageCode
+                          });
+                    }
+                  },
+                  child: TeamMemberStatusCard(member: members[i]),
+                ),
           ),
       ],
     );
@@ -164,28 +177,28 @@ class _SummaryRow extends StatelessWidget {
       child: Row(
         children: [
           _SummaryCard(
-            label: 'Present',
+            label: 'present'.tr(),
             count: summary.present,
             color: Color(AppColors.successGreen),
             icon: Icons.check_circle_outline_rounded,
           ),
           const SizedBox(width: 8),
           _SummaryCard(
-            label: 'Absent',
+            label: 'absent'.tr(),
             count: summary.absent,
             color: Color(AppColors.failureRed),
             icon: Icons.cancel_outlined,
           ),
           const SizedBox(width: 8),
           _SummaryCard(
-            label: 'On Leave',
+            label: 'on_leave'.tr(),
             count: summary.vacation,
             color: Color(AppColors.warningYellow),
             icon: Icons.beach_access_rounded,
           ),
           const SizedBox(width: 8),
           _SummaryCard(
-            label: 'Weekend',
+            label: 'weekend'.tr(),
             count: summary.weekend,
             color: Color(AppColors.tabInactive),
             icon: Icons.weekend_rounded,
@@ -264,7 +277,7 @@ class _SearchBar extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       decoration: InputDecoration(
-        hintText: 'Search by name...',
+        hintText: 'search_by_name'.tr(),
         hintStyle: AppStyles.subtitleContent(context)
             .copyWith(fontSize: 13, color: Colors.grey.shade400),
         prefixIcon:
