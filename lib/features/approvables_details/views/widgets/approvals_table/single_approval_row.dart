@@ -74,7 +74,7 @@ class SingleApprovalRow extends StatelessWidget {
                     child: Text(
                       approverName,
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
@@ -101,7 +101,7 @@ class SingleApprovalRow extends StatelessWidget {
                 item.statusLabel ?? (item.status ?? '').tr(),
                 style: TextStyle(
                   color: statusColor,
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -110,12 +110,12 @@ class SingleApprovalRow extends StatelessWidget {
         ),
 
         if (item.role != null || item.department?.title != null) ...[
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             '${item.role?.tr() ?? ''} ${item.department?.title != null ? '(${item.department!.title})' : ''}'
                 .trim(),
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 13,
               color: Colors.grey.shade600,
             ),
           ),
@@ -128,7 +128,7 @@ class SingleApprovalRow extends StatelessWidget {
               Text(
                 '${isArabic ? 'تم التنفيذ بواسطة' : 'Acted By'}: ',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey.shade700,
                 ),
@@ -136,7 +136,7 @@ class SingleApprovalRow extends StatelessWidget {
               Text(
                 item.actor!.name!,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: Colors.indigo,
                 ),
@@ -158,7 +158,7 @@ class SingleApprovalRow extends StatelessWidget {
             child: Text(
               '${isArabic ? 'الرد' : 'Reply'}: ${item.replay!.trim()}',
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 12,
                 color: Colors.black87,
               ),
             ),
@@ -195,7 +195,7 @@ class SingleApprovalRow extends StatelessWidget {
                 Text(
                   isArabic ? 'عرض المرفق' : 'View Attachment',
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
@@ -207,11 +207,11 @@ class SingleApprovalRow extends StatelessWidget {
         ],
 
         if (item.approvedAutoTime != null || item.startedTime != null) ...[
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             _formatDate(item.approvedAutoTime ?? item.startedTime, context),
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               color: Colors.grey.shade500,
             ),
           ),

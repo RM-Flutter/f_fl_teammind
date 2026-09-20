@@ -351,7 +351,7 @@ class _ScopeSelectorRow extends StatelessWidget {
       },
       {
         'value': 'other_departments',
-        'label': isArabic ? 'الأقسام الأخرى' : 'Other Departments',
+        'label': isArabic ? 'طلبات الإدارات الأخرى' : 'Other Departments',
       },
       if (showAllCompany)
         {
