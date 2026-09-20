@@ -134,7 +134,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                   SwitchRowNotification(
                     value: controller.isIncomingView,
                     leftText: 'my_requests'.tr(),
-                    rightText: 'incoming_requests'.tr(),
+                    rightText: AppStrings.other.tr(),
                     onChanged: (val) {
                       controller.toggleIncomingView(val, context);
                     },

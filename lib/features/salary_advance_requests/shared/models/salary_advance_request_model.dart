@@ -147,7 +147,11 @@ class SalaryAdvanceRequestModel {
       managerProfile: null,
       hrProfile: null,
       attachments: null,
-      employeeActions: null,
+      employeeActions: json['employee_actions'] != null
+          ? (json['employee_actions'] as List)
+              .map((e) => EmployeeActionModel.fromJson(e))
+              .toList()
+          : null,
     );
   }
 }

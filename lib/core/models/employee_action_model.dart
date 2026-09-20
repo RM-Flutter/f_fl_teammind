@@ -24,8 +24,8 @@ class EmployeeActionModel {
   EmployeeActionModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     profileId = json['profile_id'];
-    profileName = json['profile_name'];
-    profileJobTitle = json['profile_job_title'];
+    profileName = json['profile_name'] ?? json['profile']?['name'] ?? json['actor']?['name'];
+    profileJobTitle = json['profile_job_title'] ?? json['profile']?['job_title'] ?? json['actor']?['job_title'];
     action = json['action'];
     message = json['message'];
     valueFrom = json['value_from']?.toString();

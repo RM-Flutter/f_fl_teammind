@@ -1,3 +1,5 @@
+import '../../../../core/models/employee_action_model.dart';
+
 class ApprovableDetailsModel {
   final int? id;
   final String? approvableType;
@@ -24,6 +26,7 @@ class ApprovableDetailsModel {
   final int? level;
   final String? notes;
   final List<dynamic>? files;
+  final List<EmployeeActionModel>? employeeActions;
 
   dynamic get from => dateFrom;
   dynamic get to => dateTo;
@@ -60,6 +63,7 @@ class ApprovableDetailsModel {
     this.level,
     this.notes,
     this.files,
+    this.employeeActions,
   });
 
   factory ApprovableDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -101,6 +105,11 @@ class ApprovableDetailsModel {
       level: json['level'],
       notes: json['notes'],
       files: json['files'] as List<dynamic>?,
+      employeeActions: json['employee_actions'] != null
+          ? (json['employee_actions'] as List)
+              .map((e) => EmployeeActionModel.fromJson(e))
+              .toList()
+          : null,
     );
   }
 }

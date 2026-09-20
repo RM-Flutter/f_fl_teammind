@@ -125,11 +125,15 @@ class OvertimeRequestModel {
       updatedAt: json['updated_at'],
       // Fields not present in list endpoint — kept null
       rejectReason: null,
-      fingerprintOvertime: null,
-      fingerprintDelay: null,
+      fingerprintOvertime: json['fingerprint_overtime'] != null ? int.tryParse(json['fingerprint_overtime'].toString()) : null,
+      fingerprintDelay: json['fingerprint_delay'] != null ? int.tryParse(json['fingerprint_delay'].toString()) : null,
       theManagerReply: null,
-      employeeActions: null,
-      employeeProfile: null,
+      employeeActions: json['employee_actions'] != null
+          ? (json['employee_actions'] as List)
+              .map((e) => EmployeeActionModel.fromJson(e))
+              .toList()
+          : null,
+      employeeProfile: json['profile'] != null ? EmployeeProfile.fromJson(json['profile']) : null,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
     );

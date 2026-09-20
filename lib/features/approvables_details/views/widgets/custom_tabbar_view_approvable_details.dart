@@ -95,6 +95,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                       seenAt: details.seenAt,
                       seenBy: details.seenBy,
                       updatedAt: details.updatedAt,
+                      employeeActions: details.employeeActions,
                     ),
                   ],
                 ),
