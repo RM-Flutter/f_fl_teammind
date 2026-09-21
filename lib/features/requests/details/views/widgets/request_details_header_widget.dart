@@ -578,19 +578,20 @@ class _DownloadProgressDialog extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
             SizedBox(
-              width: 28,
-              height: 28,
-              child: const CircularProgressIndicator(strokeWidth: 2),
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Color(AppColors.buttons)),
             ),
-            SizedBox(width: 12),
+            SizedBox(width: 16),
             Expanded(
               child: Text(
                 AppStrings.downloadFile.tr(),
-                style: AppStyles.whiteHeading(context).copyWith(fontSize: 18),
+                style: AppStyles.heading(context).copyWith(fontSize: 18, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -610,11 +611,12 @@ class _DownloadProgressDialog extends StatelessWidget {
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16),
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
-                  backgroundColor: Colors.grey.shade300,
+                  backgroundColor: Colors.grey.shade200,
                   valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                   minHeight: 8,
                   borderRadius: BorderRadius.circular(4),
@@ -622,10 +624,11 @@ class _DownloadProgressDialog extends StatelessWidget {
                 SizedBox(height: 8),
                 Text(
                   value > 0 ? '${(value * 100).toStringAsFixed(0)}%' : '0%',
-                  style: AppStyles.darkContent(context).copyWith(
+                  style: AppStyles.blackContent(context).copyWith(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             );
