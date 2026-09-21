@@ -44,7 +44,7 @@ class _MobileWebViewState extends State<MobileWebView> {
     _controller = WebViewController()
       ..loadRequest(
         Uri.parse(widget.url),
-        headers: widget.headers!,
+        headers: widget.headers ?? const <String, String>{},
       )
       ..setJavaScriptMode(
         widget.javascriptMode
