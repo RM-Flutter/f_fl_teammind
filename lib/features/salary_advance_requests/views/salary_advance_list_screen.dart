@@ -100,7 +100,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                       showDepartment: controller.isIncomingView,
                       showDateRange: false,
                       showStatus: true,
-                      statusOptions: const ['approved', 'cancelled', 'pending'],
+                      statusOptions: const ["waiting", "waiting_seen", "approved", "refused", "canceled"],
                       initialFilters: controller.currentFiltersMap,
                       underMyManagement: true,
                     ),

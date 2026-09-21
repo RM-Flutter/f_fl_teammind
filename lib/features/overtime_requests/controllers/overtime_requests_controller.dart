@@ -56,6 +56,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
   String? get filterEmpName => currentFiltersMap['empName'];
   String? get filterDepId => currentFiltersMap['depId'];
   String? get filterDepName => currentFiltersMap['depName'];
+  String? get filterStatus => currentFiltersMap['status'];
   String? get filterFrom => currentFiltersMap['from'];
   String? get filterTo => currentFiltersMap['to'];
 
@@ -86,6 +87,12 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     final filters = Map<String, String?>.from(currentFiltersMap);
     filters['from'] = null;
     filters['to'] = null;
+    applyFilters(filters, context);
+  }
+
+  void clearFilterStatus(BuildContext context) {
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    filters['status'] = null;
     applyFilters(filters, context);
   }
 
@@ -151,6 +158,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
           context: context,
           employeesIds: empIdsList,
           departmentIds: depIdsList,
+          status: filterStatus,
           dateFrom: filterFrom,
           dateTo: filterTo,
           page: personalCurrentPage,
@@ -189,6 +197,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
           scope: incomingScope,
           employeesIds: empIdsList,
           departmentIds: depIdsList,
+          status: filterStatus,
           dateFrom: filterFrom,
           dateTo: filterTo,
           page: incomingCurrentPage,

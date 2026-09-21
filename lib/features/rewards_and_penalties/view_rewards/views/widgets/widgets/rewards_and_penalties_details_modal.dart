@@ -367,62 +367,71 @@ class _RewardsAndPenaltiesDetailsModalState
             ),
           ),
         ],
-        if (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)) ...[
+        if ((actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)) || canShowComplaintButton) ...[
           gapH24,
-          CustomElevatedButton(
-            titleSize: AppSizes.s12,
-            buttonStyle: ElevatedButton.styleFrom(
-              fixedSize: const Size(double.infinity, 50),
-              alignment: Alignment.center,
-              shadowColor: Colors.transparent,
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s28),
-              ),
-            ),
-            onPressed: () async {
-              context.pop();
-              widget.onCancel?.call();
-            },
-            title: 'cancel'.tr(),
-          ),
-        ],
-        if (canShowComplaintButton) ...[
-          gapH24,
-          CustomElevatedButton(
-            titleSize: AppSizes.s10,
-            buttonStyle: ElevatedButton.styleFrom(
-              fixedSize: const Size(double.infinity, 50),
-              alignment: Alignment.center,
-              shadowColor: Colors.transparent,
-              backgroundColor:  Color(AppColors.secondaryButton),
-              foregroundColor: Colors.white,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s28),
-              ),
-            ),
-            onPressed: () async {
-              final subject = LocalizationService.isArabic(context: context)
-                  ? 'تظلم بخصوص جزاء'
-                  : 'Complaint regarding penalty';
+          Row(
+            children: [
+              if (canShowComplaintButton)
+                Expanded(
+                  child: CustomElevatedButton(
+                    titleSize: AppSizes.s10,
+                    buttonStyle: ElevatedButton.styleFrom(
+                      fixedSize: const Size.fromHeight(50),
+                      alignment: Alignment.center,
+                      shadowColor: Colors.transparent,
+                      backgroundColor: Color(AppColors.secondaryButton),
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.s28),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final subject = LocalizationService.isArabic(context: context)
+                          ? 'تظلم بخصوص جزاء'
+                          : 'Complaint regarding penalty';
 
-              final details = LocalizationService.isArabic(context: context)
-                  ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'
-                  : 'I am submitting a complaint regarding the penalty applied to me:\n\n- Amount: $amount $categoryValue\n- Date: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- Reason: ${rewardAndPenalty.reason ?? ''}\n\nComplaint Details:\n';
+                      final details = LocalizationService.isArabic(context: context)
+                          ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'
+                          : 'I am submitting a complaint regarding the penalty applied to me:\n\n- Amount: $amount $categoryValue\n- Date: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- Reason: ${rewardAndPenalty.reason ?? ''}\n\nComplaint Details:\n';
 
-              context.pushNamed(
-                AppRoutes.newComplainScreen.name,
-                pathParameters: {'lang': context.locale.languageCode},
-                extra: {
-                  'initialSubject': subject,
-                  'initialDetails': details,
-                },
-              );
-            },
-            title: AppStrings.complaint.tr(),
+                      context.pushNamed(
+                        AppRoutes.newComplainScreen.name,
+                        pathParameters: {'lang': context.locale.languageCode},
+                        extra: {
+                          'initialSubject': subject,
+                          'initialDetails': details,
+                        },
+                      );
+                    },
+                    title: AppStrings.complaint.tr(),
+                  ),
+                ),
+              if (canShowComplaintButton && (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)))
+                const SizedBox(width: 12),
+              if (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true))
+                Expanded(
+                  child: CustomElevatedButton(
+                    titleSize: AppSizes.s12,
+                    buttonStyle: ElevatedButton.styleFrom(
+                      fixedSize: const Size.fromHeight(50),
+                      alignment: Alignment.center,
+                      shadowColor: Colors.transparent,
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.s28),
+                      ),
+                    ),
+                    onPressed: () async {
+                      context.pop();
+                      widget.onCancel?.call();
+                    },
+                    title: 'cancel'.tr(),
+                  ),
+                ),
+            ],
           ),
         ],
         gapH24,

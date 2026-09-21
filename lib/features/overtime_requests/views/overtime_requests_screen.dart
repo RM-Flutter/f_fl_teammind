@@ -180,6 +180,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 showEmployee: provider.isForDepartment,
                 showDepartment: provider.isForDepartment,
                 showDateRange: true,
+                showStatus: true,
+                statusOptions: const ["waiting", "waiting_seen", "approved", "refused", "canceled"],
                 initialFilters: provider.currentFiltersMap,
                 underMyManagement: true,
               ),
