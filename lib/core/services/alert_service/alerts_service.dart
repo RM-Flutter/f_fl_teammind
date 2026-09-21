@@ -140,7 +140,7 @@ abstract class AlertsService {
                     Color(AppColors.buttons)),
               ),
               const SizedBox(width: AppSizes.s15),
-              Text(title.isEmpty ? 'Loading ...' : '$title, please wait')
+              Text(title.isEmpty ? 'loading'.tr() : '$title ...')
             ],
           ),
         ),

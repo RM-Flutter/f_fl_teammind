@@ -46,7 +46,17 @@ class OnboardingController extends ChangeNotifier {
     final jsonString = CacheHelper.getString("US1");
     if (jsonString == null || jsonString.isEmpty) return AppRoutes.home.name;
     try {
-      final us1 = json.decode(jsonString) as Map<String, dynamic>?;
+      final us1Cache = json.decode(jsonString) as Map<String, dynamic>?;
+      final us1 = us1Cache?['data'] ?? us1Cache;
+      
+      if (us1 != null && us1.containsKey('has_employee_profile')) {
+        final val = us1['has_employee_profile'];
+        bool hasProfileUs1 = val == true || val == 'true' || val == 1;
+        if (!hasProfileUs1 && val != null) {
+          return AppRoutes.noAccess.name;
+        }
+      }
+      
       final role = us1?['role'];
       if (role != null && role is List && role.isNotEmpty && role.contains("personal")) {
         return AppRoutes.freeServicesHome.name;

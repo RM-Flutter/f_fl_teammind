@@ -558,13 +558,13 @@ class AppConfigService extends ChangeNotifier {
     UserSettingConst.userSettings2 = null;
     UserSettingConst.generalSettingsModel = null;
 
-    // Clear domain selection on logout (but keep domains list)
-    try {
-      await DomainSelectionService.clearDomainSelectionOnLogout();
-      if (context.mounted) DioHelper.initail(context);
-    } catch (e) {
-      debugPrint('Error clearing domain selection: $e');
-    }
+    // Do not clear domain selection on logout as requested by user
+    // try {
+    //   await DomainSelectionService.clearDomainSelectionOnLogout();
+    //   if (context.mounted) DioHelper.initail(context);
+    // } catch (e) {
+    //   debugPrint('Error clearing domain selection: $e');
+    // }
 
     debugPrint('User has been logged out, and token is cleared.');
 
