@@ -9,6 +9,7 @@ class EmployeeProfileModel {
   final String? username;
   final String? email;
   final String? birthDay;
+
   // final KeyValue? countryKey;
   var countryKey;
   var phone;
@@ -35,13 +36,14 @@ class EmployeeProfileModel {
   final List<EmpPayroll>? payrolls;
   var netSalary;
   final String? workingHoursType;
-   var totalDeductions;
-   var additions; // or "totalBonuses"
+  var totalDeductions;
+  var additions; // or "totalBonuses"
   final String? mainStatus;
   final String? employeeStatus;
   final String? employmentType;
   final String? jobLevel;
   final List<EmpRewardPenalty>? rewardsAndPenalties;
+  final EmpTodayAttendance? todayAttendance;
 
   EmployeeProfileModel({
     this.id,
@@ -80,6 +82,7 @@ class EmployeeProfileModel {
     this.employmentType,
     this.jobLevel,
     this.rewardsAndPenalties,
+    this.todayAttendance,
   })  : totalDeductions = _calculateTotalAmount(
             basicSalary, payrollDeductions?.map((d) => d.value).toList()),
         additions = _calculateTotalAmount(
@@ -132,90 +135,93 @@ class EmployeeProfileModel {
 
   factory EmployeeProfileModel.fromJson(Map<String, dynamic> json) {
     return EmployeeProfileModel(
-        id: json['id'],
-        avatar: json['avatar'],
-        name: json['name'],
-        workingHoursType: json['working_hours_type'],
-        username: json['username'],
-        email: json['email'],
-        birthDay: json['birth_day'],
-        countryKey: json['country_key'],
-        // countryKey: json['country_key'] != null
-        //     ? KeyValue.fromJson(json['country_key'])
-        //     : null,
-        phone: json['phone'],
-        roles: json['roles'],
-        defaultLanguage: json['default_language'] != null
-            ? EmpKeyValue.fromJson(json['default_language'])
-            : null,
-        status: json['status'] != null
-            ? EmpKeyValue.fromJson(json['status'])
-            : null,
-        tags: json['tags'],
-        departmentId: json['department_id'],
-        department: json['department'],
-        action: json['action'] != null
-            ? Map<String, String>.from(json['action'])
-            : null,
-        jobTitle: json['job_title'],
-        additionalPhoneNumbers: json['additional_phone_numbers'] != null
-            ? List<AdditionalPhoneNumbers>.from(
-            json['additional_phone_numbers'].map((item) => AdditionalPhoneNumbers.fromJson(item)))
-            : null,
-        social: json['social'] != null
-            ? EmpSocialMedia.fromJson(json['social'])
-            : null,
-        jobDescription: json['job_description'],
-        hireDate: json['hire_date'],
-        balance: json['balance'] != null
-            ? List<Balance>.from(
-                json['balance'].map((item) => Balance.fromJson(item)))
-            : null,
-        weekends: json['weekend'] is Map
-            ? (json['weekend']['days'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList()
-            : (json['weekend'] as List<dynamic>?)
-                ?.map((e) => e.toString())
-                .toList(),
-        weekendModel: json['weekend'] is Map 
-            ? WeekendModel.fromJson(json['weekend'])
-            : null,
-        workingHours: json['working_hours'] != null
-            ? EmpWorkingHours.fromJson(json['working_hours'])
-            : null,
-        assets:json['aassets'] != null
-            ? List<Assets>.from(json['aassets']
-            .map((item) => Assets.fromJson(item)))
-            : null,
-        empCustomData:json['emp_custom_data'] != null
-            ? List<EmpCustomData>.from(json['emp_custom_data']
-            .map((item) => EmpCustomData.fromJson(item)))
-            : null,
-        basicSalary: json['basic_salary'],
-        // json['basic_salary'] is num?
-        //     ? (json['basic_salary'] as num?)?.toDouble()
-        //     : num.tryParse(json['basic_salary'])?.toDouble(),
-        payrollDeductions: json['payroll_deductions'] != null
-            ? List<EmpPayrollDeduction>.from(json['payroll_deductions']
-                .map((item) => EmpPayrollDeduction.fromJson(item)))
-            : null,
-        payrollSpecialBonus: json['payroll_special_bonus'] != null
-            ? List<EmpPayrollBonus>.from(json['payroll_special_bonus']
-                .map((item) => EmpPayrollBonus.fromJson(item)))
-            : null,
-        payrolls: json['payrolls'] != null
-            ? List<EmpPayroll>.from(
-                json['payrolls'].map((item) => EmpPayroll.fromJson(item)))
-            : null,
-        mainStatus: _parseStringOrKey(json['main_status']),
-        employeeStatus: _parseStringOrKey(json['employee_status']),
-        employmentType: _parseStringOrKey(json['employment_type']),
-        jobLevel: _parseStringOrKey(json['job_level']),
-        rewardsAndPenalties: json['rewards_and_penalties'] != null
-            ? List<EmpRewardPenalty>.from(json['rewards_and_penalties']
-                .map((item) => EmpRewardPenalty.fromJson(item)))
-            : null);
+      id: json['id'],
+      avatar: json['avatar'],
+      name: json['name'],
+      workingHoursType: json['working_hours_type'],
+      username: json['username'],
+      email: json['email'],
+      birthDay: json['birth_day'],
+      countryKey: json['country_key'],
+      // countryKey: json['country_key'] != null
+      //     ? KeyValue.fromJson(json['country_key'])
+      //     : null,
+      phone: json['phone'],
+      roles: json['roles'],
+      defaultLanguage: json['default_language'] != null
+          ? EmpKeyValue.fromJson(json['default_language'])
+          : null,
+      status:
+          json['status'] != null ? EmpKeyValue.fromJson(json['status']) : null,
+      tags: json['tags'],
+      departmentId: json['department_id'],
+      department: json['department'],
+      action: json['action'] != null
+          ? Map<String, String>.from(json['action'])
+          : null,
+      jobTitle: json['job_title'],
+      additionalPhoneNumbers: json['additional_phone_numbers'] != null
+          ? List<AdditionalPhoneNumbers>.from(json['additional_phone_numbers']
+              .map((item) => AdditionalPhoneNumbers.fromJson(item)))
+          : null,
+      social: json['social'] != null
+          ? EmpSocialMedia.fromJson(json['social'])
+          : null,
+      jobDescription: json['job_description'],
+      hireDate: json['hire_date'],
+      balance: json['balance'] != null
+          ? List<Balance>.from(
+              json['balance'].map((item) => Balance.fromJson(item)))
+          : null,
+      weekends: json['weekend'] is Map
+          ? (json['weekend']['days'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList()
+          : (json['weekend'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList(),
+      weekendModel: json['weekend'] is Map
+          ? WeekendModel.fromJson(json['weekend'])
+          : null,
+      workingHours: json['working_hours'] != null
+          ? EmpWorkingHours.fromJson(json['working_hours'])
+          : null,
+      assets: json['aassets'] != null
+          ? List<Assets>.from(
+              json['aassets'].map((item) => Assets.fromJson(item)))
+          : null,
+      empCustomData: json['emp_custom_data'] != null
+          ? List<EmpCustomData>.from(json['emp_custom_data']
+              .map((item) => EmpCustomData.fromJson(item)))
+          : null,
+      basicSalary: json['basic_salary'],
+      // json['basic_salary'] is num?
+      //     ? (json['basic_salary'] as num?)?.toDouble()
+      //     : num.tryParse(json['basic_salary'])?.toDouble(),
+      payrollDeductions: json['payroll_deductions'] != null
+          ? List<EmpPayrollDeduction>.from(json['payroll_deductions']
+              .map((item) => EmpPayrollDeduction.fromJson(item)))
+          : null,
+      payrollSpecialBonus: json['payroll_special_bonus'] != null
+          ? List<EmpPayrollBonus>.from(json['payroll_special_bonus']
+              .map((item) => EmpPayrollBonus.fromJson(item)))
+          : null,
+      payrolls: json['payrolls'] != null
+          ? List<EmpPayroll>.from(
+              json['payrolls'].map((item) => EmpPayroll.fromJson(item)))
+          : null,
+      mainStatus: _parseStringOrKey(json['main_status']),
+      employeeStatus: _parseStringOrKey(json['employee_status']),
+      employmentType: _parseStringOrKey(json['employment_type']),
+      jobLevel: _parseStringOrKey(json['job_level']),
+      rewardsAndPenalties: json['rewards_and_penalties'] != null
+          ? List<EmpRewardPenalty>.from(json['rewards_and_penalties']
+              .map((item) => EmpRewardPenalty.fromJson(item)))
+          : null,
+      todayAttendance: json['today_attendance'] != null
+          ? EmpTodayAttendance.fromJson(json['today_attendance'])
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -235,7 +241,8 @@ class EmployeeProfileModel {
       'department_id': departmentId,
       'action': action,
       'job_title': jobTitle,
-      'additional_phone_numbers': additionalPhoneNumbers?.map((item) => item.toJson()).toList(),
+      'additional_phone_numbers':
+          additionalPhoneNumbers?.map((item) => item.toJson()).toList(),
       'social': social?.toJson(),
       'job_description': jobDescription,
       'hire_date': hireDate,
@@ -480,9 +487,7 @@ class EmpPayrollDeduction {
 
   factory EmpPayrollDeduction.fromJson(Map<String, dynamic> json) {
     return EmpPayrollDeduction(
-      title: json['title'] != null
-          ? Titles.fromJson(json['title'])
-          : null,
+      title: json['title'] != null ? Titles.fromJson(json['title']) : null,
       value: json['value'].toString(),
       nextPeriodOnly: json['next_period_only'],
     );
@@ -495,6 +500,7 @@ class EmpPayrollDeduction {
     };
   }
 }
+
 class AdditionalPhoneNumbers {
   final String? phone;
   final String? visible;
@@ -518,6 +524,7 @@ class AdditionalPhoneNumbers {
     };
   }
 }
+
 class Assets {
   final int? id;
   final int? assetId;
@@ -575,12 +582,14 @@ class Assets {
       'description': description,
       'asset_status': assetStatus,
       'assignment_status': assignmentStatus,
-      'signature_document_url': signatureDocumentUrl?.map((e) => e.toJson()).toList(),
+      'signature_document_url':
+          signatureDocumentUrl?.map((e) => e.toJson()).toList(),
       'start_at': startAt,
       'ends_at': endsAt,
     };
   }
 }
+
 class EmpCustomData {
   final String? item;
 
@@ -600,6 +609,7 @@ class EmpCustomData {
     };
   }
 }
+
 class Titles {
   final String? en;
   final String? ar;
@@ -623,6 +633,7 @@ class Titles {
     };
   }
 }
+
 class Titling {
   final String? en;
   final String? ar;
@@ -660,9 +671,7 @@ class EmpPayrollBonus {
 
   factory EmpPayrollBonus.fromJson(Map<String, dynamic> json) {
     return EmpPayrollBonus(
-      title: json['title'] != null
-          ? Titling.fromJson(json['title'])
-          : null,
+      title: json['title'] != null ? Titling.fromJson(json['title']) : null,
       value: json['value'].toString(),
       nextPeriodOnly: json['next_period_only'],
     );
@@ -678,17 +687,17 @@ class EmpPayrollBonus {
 }
 
 class EmpPayroll {
-    var id;
+  var id;
   final String? dateFrom;
   final String? dateTo;
   final String? currency;
-   var basicSalary;
-   var netPayable;
+  var basicSalary;
+  var netPayable;
   final String? status;
   final List<EmpPayrollDeduction>? payrollDeductions;
   final List<EmpPayrollBonus>? payrollSpecialBonus;
-   var payrollTotalDeductions;
-   var payrollTotalSpecialBonus;
+  var payrollTotalDeductions;
+  var payrollTotalSpecialBonus;
 
   EmpPayroll({
     this.id,
@@ -712,16 +721,14 @@ class EmpPayroll {
       currency: json['currency'],
       basicSalary: (json['basic_salary'] != null)
           ? (json['basic_salary'] is String
-          ? double.tryParse(json['basic_salary'])
-          : (json['basic_salary'] as num).toDouble())
+              ? double.tryParse(json['basic_salary'])
+              : (json['basic_salary'] as num).toDouble())
           : null,
-
       netPayable: (json['net_payable'] != null)
           ? (json['net_payable'] is String
-          ? double.tryParse(json['net_payable'])
-          : (json['net_payable'] as num).toDouble())
+              ? double.tryParse(json['net_payable'])
+              : (json['net_payable'] as num).toDouble())
           : null,
-
       status: json['status'],
       payrollDeductions: json['payroll_deductions'] != null
           ? List<EmpPayrollDeduction>.from(json['payroll_deductions']
@@ -733,10 +740,9 @@ class EmpPayroll {
           : null,
       payrollTotalDeductions: json['payroll_total_deductions'] != null
           ? (json['payroll_total_deductions'] is String
-          ? double.tryParse(json['payroll_total_deductions'])
-          : (json['payroll_total_deductions'] as num).toDouble())
+              ? double.tryParse(json['payroll_total_deductions'])
+              : (json['payroll_total_deductions'] as num).toDouble())
           : null,
-
       payrollTotalSpecialBonus: json['payroll_total_special_bonus'] != null
           ? json['payroll_total_special_bonus'] is String
               ? double.tryParse(json['payroll_total_special_bonus'])
@@ -831,7 +837,9 @@ class EmpRewardPenalty {
       id: json['id'],
       type: json['type'],
       category: json['category'],
-      amount: json['amount'] is num ? json['amount'] as num : num.tryParse(json['amount']?.toString() ?? ''),
+      amount: json['amount'] is num
+          ? json['amount'] as num
+          : num.tryParse(json['amount']?.toString() ?? ''),
       reason: json['reason'],
       dueDate: json['due_date'],
       action: json['action'],
@@ -883,10 +891,16 @@ class WeekendModel {
     }
     return WeekendModel(
       hasWeekends: json['has_weekends'] ?? true,
-      days: (json['days'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      specificDates: (json['specific_dates'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      days:
+          (json['days'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+              [],
+      specificDates: (json['specific_dates'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       recurringRules: (json['recurring_rules'] as List<dynamic>?)
-              ?.map((e) => RecurringRuleModel.fromJson(e as Map<String, dynamic>))
+              ?.map(
+                  (e) => RecurringRuleModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -927,6 +941,30 @@ class RecurringRuleModel {
       'type': type,
       'day_of_week': dayOfWeek,
       'first_date': firstDate,
+    };
+  }
+}
+
+class EmpTodayAttendance {
+  final String? status;
+  final String? clockInTime;
+  final String? clockOutTime;
+
+  EmpTodayAttendance({this.status, this.clockInTime, this.clockOutTime});
+
+  factory EmpTodayAttendance.fromJson(Map<String, dynamic> json) {
+    return EmpTodayAttendance(
+      status: json['status']?.toString(),
+      clockInTime: json['clock_in_time']?.toString(),
+      clockOutTime: json['clock_out_time']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'clock_in_time': clockInTime,
+      'clock_out_time': clockOutTime,
     };
   }
 }

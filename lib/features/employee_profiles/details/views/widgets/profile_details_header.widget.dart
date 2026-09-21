@@ -28,7 +28,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 350,
+      height: 370,
       width: LayoutService.getWidth(context),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
@@ -47,7 +47,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
               fit: BoxFit.cover,
               alignment: const Alignment(0.5, 0.0),
               width: double.infinity,
-              height: 350,
+              height: 370,
             ),
           ),
           Column(
