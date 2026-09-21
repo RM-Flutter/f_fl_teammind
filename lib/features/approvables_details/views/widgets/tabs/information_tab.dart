@@ -177,12 +177,21 @@ class InformationTab extends StatelessWidget {
   Widget _buildActionCard(BuildContext context, EmployeeActionModel action) {
     String date = "";
     String time = "";
-    if (action.createdAt != null && action.createdAt!.contains(" ")) {
-      final parts = action.createdAt!.split(" ");
-      date = parts[0];
-      time = parts[1];
-    } else {
-      date = action.createdAt ?? "";
+    if (action.createdAt != null && action.createdAt!.isNotEmpty) {
+      try {
+        final dateTime = DateTime.parse(action.createdAt!);
+        final lang = LocalizationService.isArabic(context: context) ? "ar" : "en";
+        date = DateFormat('dd MMM yyyy', lang).format(dateTime);
+        time = DateFormat('hh:mm a', lang).format(dateTime);
+      } catch (_) {
+        if (action.createdAt!.contains(" ")) {
+          final parts = action.createdAt!.split(" ");
+          date = parts[0];
+          time = parts[1];
+        } else {
+          date = action.createdAt!;
+        }
+      }
     }
 
     Color actionColor;

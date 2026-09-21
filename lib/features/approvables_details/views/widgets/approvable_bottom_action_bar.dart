@@ -65,7 +65,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.complaint.tr(),
-            color: Color(AppColors.buttons),
+            color: Color(AppColors.secondaryButton),
             onPressed: () async {
               context.pushNamed(
                 AppRoutes.newComplainScreen.name,
@@ -80,7 +80,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.statistics.tr(),
-            color: Color(AppColors.buttons),
+            color: Color(AppColors.secondaryButton),
             onPressed: () async {
               if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance') {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
@@ -108,14 +108,14 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.askRemember.tr(),
-            color: Color(AppColors.buttons),
+            color: Color(AppColors.secondaryButton),
             onPressed: () async => await cubit.askRemember(context: context),
           ),
         );
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.askIgnore.tr(),
-            color: Colors.red,
+            color: Color(AppColors.secondaryButton),
             onPressed: () async => await cubit.askIgnore(context: context),
           ),
         );
@@ -126,7 +126,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.statistics.tr(),
-            color: Color(AppColors.buttons),
+            color: Color(AppColors.secondaryButton),
             onPressed: () async {
               if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance') {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
@@ -157,7 +157,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: 'overlapping_vacations'.tr(),
-            color: Color(AppColors.warningYellow),
+            color: Color(AppColors.buttons),
             onPressed: () async {
               await showOverlappingVacationsSheet(
                 context: context,
@@ -173,7 +173,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: 'take_action'.tr(),
-            color: const Color(0xFFD32F2F),
+            color: Color(AppColors.buttons),
             onPressed: () async {
               await showModalBottomSheet(
                 context: context,
@@ -197,7 +197,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
           CustomRequestDetailsButton(
             title:
                 isArabic ? 'اتخاذ إجراء نيابة عن موظف' : 'Act as Someone Else',
-            color: const Color(0xFFD32F2F),
+            color: Color(AppColors.buttons),
             onPressed: () async {
               await showModalBottomSheet(
                 context: context,
@@ -219,10 +219,13 @@ class ApprovableBottomActionBar extends StatelessWidget {
 
       // E. Attribute-driven: Edit / Update Approval (if can_update_approval == true)
       if (details.canUpdateApproval == true) {
+        final bool isExactlyThreeTotal = rawButtons.length == 2;
         addButton(
           CustomRequestDetailsButton(
             title: isArabic ? 'تعديل الطلب' : 'Edit Request',
-            color: Color(AppColors.secondaryButton),
+            color: isExactlyThreeTotal 
+                ? Color(AppColors.secondaryButton) 
+                : Color(AppColors.buttons),
             onPressed: () async {
               if (type == 'salary_advance') {
                 final salaryModel = SalaryAdvanceRequestModel(
@@ -272,20 +275,15 @@ class ApprovableBottomActionBar extends StatelessWidget {
     List<Widget> rows = [];
     for (int i = 0; i < rawButtons.length; i += 2) {
       List<Widget> rowChildren = [];
-      rowChildren.add(rawButtons[i]);
+      rowChildren.add(Expanded(child: rawButtons[i]));
       if (i + 1 < rawButtons.length) {
         rowChildren.add(const SizedBox(width: 8));
-        rowChildren.add(rawButtons[i + 1]);
-      } else {
-        // If there's an odd button at the end, we can either make it take full width
-        // (since it's wrapped in Expanded, it will take full width automatically if it's the only one).
-        // Or we can add an empty Expanded to keep it half width.
-        // Let's make it take full width as it looks better.
+        rowChildren.add(Expanded(child: rawButtons[i + 1]));
       }
 
       rows.add(
         SizedBox(
-          height: kIsWeb ? 50 : 56,
+          height: kIsWeb ? 40 : 44,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -305,14 +303,14 @@ class ApprovableBottomActionBar extends StatelessWidget {
         ),
         child: Container(
           padding: const EdgeInsets.symmetric(
-            vertical: 6,
+            vertical: 4,
             horizontal: 10,
           ),
           margin: const EdgeInsets.only(
             left: 24,
             right: 24,
-            bottom: 32,
-            top: 8,
+            bottom: 8,
+            top: 4,
           ),
           width: 1.sw,
           child: Column(

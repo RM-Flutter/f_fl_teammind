@@ -52,7 +52,7 @@ class SingleApprovalRow extends StatelessWidget {
     final approverName = item.employee?.name ??
         item.department?.title ??
         item.role?.tr() ??
-        item.type ??
+        item.type?.tr() ??
         '';
 
     return Column(
@@ -112,7 +112,7 @@ class SingleApprovalRow extends StatelessWidget {
         if (item.role != null || item.department?.title != null) ...[
           const SizedBox(height: 6),
           Text(
-            '${item.role?.tr() ?? ''} ${item.department?.title != null ? '(${item.department!.title})' : ''}'
+            '${item.role?.tr() ?? ''} ${item.department?.title != null ? '(${item.department!.title!.tr()})' : ''}'
                 .trim(),
             style: TextStyle(
               fontSize: 13,

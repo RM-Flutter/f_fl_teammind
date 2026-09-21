@@ -161,6 +161,14 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
         Future<void> _stopRecording() async {
           try {
             final path = await _audioRecorder.stop();
+            
+            _timer?.cancel();
+            _timer = null;
+            if (mounted) {
+              setState(() {
+                _isRecording = false;
+              });
+            }
 
             // على الويب، path قد يكون null أو يكون blob URL
             if (path != null || (kIsWeb || PlatformIs.web)) {
@@ -182,7 +190,13 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                     if (duration != null && duration.inSeconds > 0) {
                       print("Audio Duration: ${duration.inSeconds} seconds");
                       await value.addComment(context, id: widget.id, voicePath: path, slug: widget.slug.toString());
-                      await _cleanUpRecording(deleteFile: true);
+                      try {
+                        if (await file.exists()) {
+                          await file.delete();
+                        }
+                      } catch (e) {
+                        print("Error deleting file: $e");
+                      }
                     } else {
                       print("Error: Recorded audio has zero duration!");
                     }
@@ -204,9 +218,8 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
               );
             }
           } finally {
-            if (_isRecording) {
-              await _cleanUpRecording();
-            }
+            _currentRecordingPath = null;
+            _elapsedTime = 0;
           }
         }
 
@@ -339,40 +352,42 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
-            Container(
-              width: 48,
-              height: 48,
-              decoration:  BoxDecoration(
-                color: Color(AppColors.buttons),
-                shape: BoxShape.circle,
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    // إرسال التعليق عند الضغط على أيقونة الإرسال
-                    if (value.contentController.text.trim().isNotEmpty ||
-                        value.listXAttachmentPersonalImage.isNotEmpty) {
-                      value.addComment(context,
-                          id: widget.id,
-                          slug: widget.slug.toString());
-                    }
-                  },
-                  borderRadius: BorderRadius.circular(24),
-                  child: Center(
-                    child: (value.isAddCommentLoading == false)
-                        ? const Icon(Icons.send_rounded, color: Colors.white, size: 22) // Paper plane icon
-                        : const Padding(
-                      padding: EdgeInsets.all(3.0),
-                      child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2),
+            if (!_isRecording) ...[
+              const SizedBox(width: 8),
+              Container(
+                width: 48,
+                height: 48,
+                decoration:  BoxDecoration(
+                  color: Color(AppColors.buttons),
+                  shape: BoxShape.circle,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      // إرسال التعليق عند الضغط على أيقونة الإرسال
+                      if (value.contentController.text.trim().isNotEmpty ||
+                          value.listXAttachmentPersonalImage.isNotEmpty) {
+                        value.addComment(context,
+                            id: widget.id,
+                            slug: widget.slug.toString());
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(24),
+                    child: Center(
+                      child: (value.isAddCommentLoading == false)
+                          ? const Icon(Icons.send_rounded, color: Colors.white, size: 22) // Paper plane icon
+                          : const Padding(
+                        padding: EdgeInsets.all(3.0),
+                        child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ],
         );
       },

@@ -1254,5 +1254,21 @@
   "check_out_title": "تسجيل الانصراف",
   "check_out_body": "حان موعد تسجيل الانصراف، نتمنى لك نهاية يوم سعيدة",
   "teamTodayStatus": "حالة الفريق اليوم",
-  "other": "أخرى"
+  "other": "أخرى",
+  "branch": "الفرع",
+  "branch_manager": "مدير الفرع",
+  "Branch": "الفرع",
+  "Branch Manager": "مدير الفرع",
+  "branch manager": "مدير الفرع",
+  "Branch manager": "مدير الفرع",
+  "Manager": "مدير",
+  "manager": "مدير",
+  "general_manager": "مدير عام",
+  "General Manager": "مدير عام",
+  "department_manager": "مدير قسم",
+  "Department Manager": "مدير قسم",
+  "hr_manager": "مدير موارد بشرية",
+  "HR Manager": "مدير موارد بشرية",
+  "direct_manager": "المدير المباشر",
+  "Direct Manager": "المدير المباشر"
 }

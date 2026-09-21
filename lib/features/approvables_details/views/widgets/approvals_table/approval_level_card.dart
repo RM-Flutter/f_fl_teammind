@@ -70,7 +70,7 @@ class ApprovalLevelCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Column(
               children: items.asMap().entries.map((entry) {
                 final idx = entry.key;

@@ -419,7 +419,11 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                               ? viewModel.otherDepartmentRequestModel
                                               : viewModel.allCompanyRequests,
                                         ),
-                                        title: AppStrings.viewTeamRequestsOnCalendar.tr(),
+                                        title: widget.requestsType == GetRequestsTypes.otherDepartment
+                                            ? AppStrings.otherDepartmentRequests.tr()
+                                            : widget.requestsType == GetRequestsTypes.allCompany
+                                                ? AppStrings.allCompanyRequests.tr()
+                                                : AppStrings.viewTeamRequestsOnCalendar.tr(),
                                         icon: Icons.calendar_month_outlined,
                                       ),
 

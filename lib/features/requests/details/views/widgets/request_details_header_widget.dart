@@ -347,22 +347,37 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     timeInSecForIosWeb: 5,
                                   );
                                 },
-                                child: Container(
-                                  width: 65,
-                                  height: 85,
-                                  decoration: BoxDecoration(
-                                    color: mainColor.withOpacity(.3),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: RequestsServices.getRequestsStatusIcon(
-                                      context: context,
-                                      status: request.status,
-                                      iconSize: 30,
-                                      iconColor: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                                child: Builder(builder: (context) {
+                                    Color getIconColor(String? status) {
+                                      if (status == null) return Colors.white;
+                                      switch (status.toLowerCase().trim()) {
+                                        case 'approved':
+                                          return Colors.green;
+                                        case 'refused':
+                                        case 'rejected':
+                                        case 'canceled':
+                                          return Colors.red;
+                                        default:
+                                          return Colors.white;
+                                      }
+                                    }
+                                    return Container(
+                                      width: 65,
+                                      height: 85,
+                                      decoration: BoxDecoration(
+                                        color: mainColor.withOpacity(.3),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                        child: RequestsServices.getRequestsStatusIcon(
+                                          context: context,
+                                          status: request.status,
+                                          iconSize: 30,
+                                          iconColor: getIconColor(request.status?.toString()),
+                                        ),
+                                      ),
+                                    );
+                                  }),
                               )
                             ],
                           ),

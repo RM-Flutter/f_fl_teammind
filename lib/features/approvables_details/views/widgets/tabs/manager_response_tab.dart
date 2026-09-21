@@ -15,7 +15,7 @@ class ManagerResponseTab extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.only(top: 10, bottom: 20),
+        padding: const EdgeInsets.only(top: 10, bottom: 4),
         child: (requiredApprovals != null && requiredApprovals!.isNotEmpty)
             ? RequiredApprovalsTableWidget(
                 requiredApprovals: requiredApprovals!,

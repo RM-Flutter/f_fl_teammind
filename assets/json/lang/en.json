@@ -1254,5 +1254,21 @@
   "check_out_title": "Check Out",
   "check_out_body": "It is time to check out. Have a great evening!",
   "teamTodayStatus": "Team Today Status",
-  "other": "Other"
+  "other": "Other",
+  "branch": "Branch",
+  "branch_manager": "Branch Manager",
+  "Branch": "Branch",
+  "Branch Manager": "Branch Manager",
+  "branch manager": "Branch Manager",
+  "Branch manager": "Branch Manager",
+  "Manager": "Manager",
+  "manager": "Manager",
+  "general_manager": "General Manager",
+  "General Manager": "General Manager",
+  "department_manager": "Department Manager",
+  "Department Manager": "Department Manager",
+  "hr_manager": "HR Manager",
+  "HR Manager": "HR Manager",
+  "direct_manager": "Direct Manager",
+  "Direct Manager": "Direct Manager"
 }
