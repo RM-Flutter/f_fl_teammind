@@ -316,7 +316,12 @@ class _SmartCardProfileDetailScreenState
       },
     );
     if (result == true) {
-      _loadEmployee();
+      if (!context.mounted) return;
+      try {
+        GoRouter.of(context).pop();
+      } catch (e) {
+        Navigator.of(context).pop();
+      }
     }
   }
 

@@ -349,13 +349,13 @@ class _SmartCardCompanyDetailScreenState
       extra: viewModel.selectedCompany,
     );
   }
-  void _navigateToSelectTemplate() {
+  Future<void> _navigateToSelectTemplate() async {
     // Read current template_id and template_data from the loaded company data.
     final company = viewModel.selectedCompany ?? widget.company;
     final templateId   = company['template_id'] as int?;
     final templateData = company['template_data'] as Map<String, dynamic>?;
 
-    context.pushNamed(
+    final result = await context.pushNamed(
       AppRoutes.selectSmartCardTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
       queryParameters: {
@@ -367,6 +367,14 @@ class _SmartCardCompanyDetailScreenState
         if (templateData != null) 'initialTemplateData': templateData,
       },
     );
+    if (result == true) {
+      if (!context.mounted) return;
+      try {
+        GoRouter.of(context).pop();
+      } catch (e) {
+        Navigator.of(context).pop();
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {
