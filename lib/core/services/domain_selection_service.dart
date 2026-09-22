@@ -217,8 +217,8 @@ class DomainSelectionService {
       cleaned = cleaned.substring(4);
     }
 
-    // If domain ends with r-m.dev, keep it as is (bypass stripping subdomains)
-    if (cleaned.endsWith('r-m.dev')) {
+    // If domain ends with r-m.dev or tmapp.dev, keep it as is (bypass stripping subdomains)
+    if (cleaned.endsWith('r-m.dev') || cleaned.endsWith('tmapp.dev')) {
       return cleaned;
     }
 
@@ -255,9 +255,9 @@ class DomainSelectionService {
     return cleaned;
   }
 
-  /// Format domain: add https://webapp. prefix, but bypass if domain ends with r-m.dev
+  /// Format domain: add https://webapp. prefix, but bypass if domain ends with r-m.dev or tmapp.dev
   static String _formatDomain(String cleanedDomain) {
-    if (cleanedDomain.endsWith('r-m.dev')) {
+    if (cleanedDomain.endsWith('r-m.dev') || cleanedDomain.endsWith('tmapp.dev')) {
       return 'https://$cleanedDomain';
     }
     return 'https://webapp.$cleanedDomain';

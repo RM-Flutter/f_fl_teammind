@@ -153,7 +153,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
           (details.approvableType?.toLowerCase().contains('employeerequest') == true) ||
           (details.approvableType?.toLowerCase().contains('vacation') == true);
 
-      if (!isApplicant && isVacationType && details.id != null) {
+      if (!isApplicant && isVacationType && details.id != null && details.hasOverlapping == true) {
         addButton(
           CustomRequestDetailsButton(
             title: 'overlapping_vacations'.tr(),
@@ -275,10 +275,10 @@ class ApprovableBottomActionBar extends StatelessWidget {
     List<Widget> rows = [];
     for (int i = 0; i < rawButtons.length; i += 2) {
       List<Widget> rowChildren = [];
-      rowChildren.add(Expanded(child: rawButtons[i]));
+      rowChildren.add(rawButtons[i]);
       if (i + 1 < rawButtons.length) {
         rowChildren.add(const SizedBox(width: 8));
-        rowChildren.add(Expanded(child: rawButtons[i + 1]));
+        rowChildren.add(rawButtons[i + 1]);
       }
 
       rows.add(

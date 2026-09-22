@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/services/localization_service.dart';
 
 class CustomRequestDetailsButton extends StatelessWidget {
   final String title;
@@ -19,6 +20,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isArabic = LocalizationService.isArabic(context: context);
     return Expanded(
       child: CustomElevatedButton(
         titleSize: 10,
@@ -36,15 +38,16 @@ class CustomRequestDetailsButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         title: title,
-        titleWidget: Text(
-          title.toUpperCase(),
-          style: AppStyles.whiteContent(context).copyWith(
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
+        titleWidget: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title.toUpperCase(),
+            style: AppStyles.whiteContent(context).copyWith(
+              fontSize: isArabic ? 11 : 9,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

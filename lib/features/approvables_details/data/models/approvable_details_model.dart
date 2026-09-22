@@ -8,6 +8,7 @@ class ApprovableDetailsModel {
   final bool? canTakeActionAsSomeoneElse;
   final bool? canUpdateApproval;
   final bool? waitingCancel;
+  final bool? hasOverlapping;
   final String? createdAt;
   final String? updatedAt;
   final List<RequiredApprovalModel>? requiredApprovals;
@@ -45,6 +46,7 @@ class ApprovableDetailsModel {
     this.canTakeActionAsSomeoneElse,
     this.canUpdateApproval,
     this.waitingCancel,
+    this.hasOverlapping,
     this.createdAt,
     this.updatedAt,
     this.requiredApprovals,
@@ -75,6 +77,7 @@ class ApprovableDetailsModel {
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool? ?? false,
       canUpdateApproval: (json['can_update_approval'] ?? json['can_update'] ?? json['update_approval']) as bool? ?? false,
       waitingCancel: json['waiting_cancel'] as bool?,
+      hasOverlapping: json['has_overlapping'] as bool? ?? false,
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       requiredApprovals: json['required_approvals'] != null
