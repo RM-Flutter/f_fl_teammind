@@ -26,9 +26,18 @@ class RewardsAndPenaltiesViewModel extends ChangeNotifier {
   bool isForTeam = false;
   String? currentEmpId;
   
-  void toggleTeamView(bool value, BuildContext context) {
+  Future<void> toggleTeamView(bool value, BuildContext context) async {
     isForTeam = value;
     notifyListeners();
+    if (isForTeam && (rewardsAndPenaltiesTeam == null || rewardsAndPenaltiesTeam!.isEmpty) && hasMoreTeam) {
+      updateLoadingStatus(laodingValue: true);
+      await _getRewardsAndPenaltiesTeam(context: context, empId: currentEmpId, page: 1);
+      updateLoadingStatus(laodingValue: false);
+    } else if (!isForTeam && (rewardsAndPenalties == null || rewardsAndPenalties!.isEmpty) && hasMorePersonal) {
+      updateLoadingStatus(laodingValue: true);
+      await _getRewardsAndPenalties(context: context, empId: currentEmpId, page: 1);
+      updateLoadingStatus(laodingValue: false);
+    }
   }
 
   bool isLoading = true;
@@ -46,8 +55,8 @@ class RewardsAndPenaltiesViewModel extends ChangeNotifier {
     hasMorePersonal = true;
     currentTeamPage = 1;
     hasMoreTeam = true;
-    rewardsAndPenalties?.clear();
-    rewardsAndPenaltiesTeam?.clear();
+    rewardsAndPenalties = null;
+    rewardsAndPenaltiesTeam = null;
 
     var jsonString;
     var gCache;
@@ -59,8 +68,13 @@ class RewardsAndPenaltiesViewModel extends ChangeNotifier {
     }
     userSettingsModel = UserSettingsModel.fromJson(gCache);
     userSettings = userSettingsModel;
-    await _getRewardsAndPenalties(context: context, empId: empId, page: 1);
-    await _getRewardsAndPenaltiesTeam(context: context, empId: empId, page: 1);
+    
+    if (isForTeam) {
+      await _getRewardsAndPenaltiesTeam(context: context, empId: empId, page: 1);
+    } else {
+      await _getRewardsAndPenalties(context: context, empId: empId, page: 1);
+    }
+    
     updateLoadingStatus(laodingValue: false);
   }
 

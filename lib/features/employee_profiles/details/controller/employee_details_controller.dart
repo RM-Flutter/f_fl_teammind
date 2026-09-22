@@ -46,12 +46,22 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     }
     userSettingsModel = UserSettingsModel.fromJson(gCache);
     currentUserSettings = userSettingsModel;
-    await getSaleryAdvance(context, getTeam: getTeam, empId: employeeId);
-    await getDailyReports(context, empId: employeeId, getTeam: getTeam);
-    await getOvertimeRequestsList(context, empId: employeeId, getTeam: getTeam);
-    await getSalaryAdvanceRequestsList(context, empId: employeeId, getTeam: getTeam);
     await _getEmployeeData(context: context, employeeId: employeeId);
     updateLoadingStatus(laodingValue: false);
+  }
+
+  Future<void> fetchDataForIndex(int index, BuildContext context, {required bool getTeam, required String empId}) async {
+    if (index == 2 && (salaryAdvances == null || salaryAdvances!.isEmpty)) {
+      await getSaleryAdvance(context, getTeam: getTeam, empId: empId);
+      notifyListeners();
+    } else if (index == 5 && dailyReports == null) {
+      await getDailyReports(context, empId: empId, getTeam: getTeam);
+      notifyListeners();
+    } else if (index == 6 && overtimeRequests == null) {
+      await getOvertimeRequestsList(context, empId: empId, getTeam: getTeam);
+    } else if (index == 7 && salaryAdvanceRequestsList == null) {
+      await getSalaryAdvanceRequestsList(context, empId: empId, getTeam: getTeam);
+    }
   }
 
   Future<void> getSaleryAdvance(BuildContext context,

@@ -93,11 +93,20 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
     return ChangeNotifierProvider<RewardsAndPenaltiesViewModel>(
       create: (_) => viewModel,
       child: TemplatePage(
-          floatingActionButton: (gCache['can_add_reward'] == true || gCache['can_add_penalty'] == true)?CustomFloatingActionButton(
+          floatingActionButton: (gCache?['can_add_reward'] == true || gCache?['can_add_penalty'] == true)?CustomFloatingActionButton(
             iconPath: AppImages.addFloatingActionButtonIcon,
-            onPressed: () async => await context.pushNamed(
-                AppRoutes.addRewardsAndPenalties.name,
-                pathParameters: {'lang': context.locale.languageCode}),
+            onPressed: () async {
+              await context.pushNamed(
+                  AppRoutes.addRewardsAndPenalties.name,
+                  pathParameters: {'lang': context.locale.languageCode});
+              
+              String? targetEmpId = widget.empId;
+              if (targetEmpId == null && gCache != null) {
+                targetEmpId = gCache['employee_profile_id']?.toString();
+              }
+              await viewModel.initializeRewardsAndPenaltiesListScreen(
+                  context: context, empId: targetEmpId);
+            },
             tagSuffix: 'add',
             height: AppSizes.s16,
             width: AppSizes.s16,
@@ -112,7 +121,8 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
           pageContext: context,
           title: AppStrings.rewardsAndPenalties.tr(),
 
-          body: Center(
+          body: Align(
+            alignment: Alignment.topCenter,
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: kIsWeb ? 1100 : double.infinity,

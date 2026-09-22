@@ -141,6 +141,12 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                       setState(() {
                                         selectIndex = index;
                                       });
+                                      viewModel.fetchDataForIndex(
+                                        index, 
+                                        context, 
+                                        getTeam: getTeam ?? false, 
+                                        empId: viewModel.employee!.id.toString()
+                                      );
                                     },
                                   ),
                                 ),
@@ -156,6 +162,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                         } else if (selectIndex == 1) {
                                           return GeneralSectionWidget(employee: viewModel.employee);
                                         } else if (selectIndex == 2) {
+                                          if (viewModel.salaryAdvances == null) return const Center(child: CircularProgressIndicator());
                                           return AccountsSectionWidget(
                                             employee: viewModel.employee,
                                             salaryAdvance: viewModel.salaryAdvances ?? [],
@@ -170,6 +177,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (selectIndex == 5) {
+                                          if (viewModel.dailyReports == null) return const Center(child: CircularProgressIndicator());
                                           return DailyReportsSectionWidget(
                                             employee: viewModel.employee,
                                             reports: viewModel.dailyReports,
@@ -177,6 +185,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (selectIndex == 6) {
+                                          if (viewModel.overtimeRequests == null) return const Center(child: CircularProgressIndicator());
                                           return OvertimeRequestsSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.overtimeRequests,
@@ -184,6 +193,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (selectIndex == 7) {
+                                          if (viewModel.salaryAdvanceRequestsList == null) return const Center(child: CircularProgressIndicator());
                                           return SalaryAdvanceSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.salaryAdvanceRequestsList,
