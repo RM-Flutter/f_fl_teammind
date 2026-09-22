@@ -1275,5 +1275,10 @@
   "hr_manager": "HR Manager",
   "HR Manager": "HR Manager",
   "direct_manager": "Direct Manager",
-  "Direct Manager": "Direct Manager"
+  "Direct Manager": "Direct Manager",
+  "instance_suspended_title": "Account Suspended",
+  "instance_suspended_desc": "Your account has been suspended. Please contact your administrator or renew your subscription to regain access.",
+  "licence_denied_title": "Access Not Allowed",
+  "licence_denied_desc": "Your current license does not allow access from this platform. Please use the appropriate version or contact your administrator.",
+  "go_to_domain_selection": "Go to Login"
 }

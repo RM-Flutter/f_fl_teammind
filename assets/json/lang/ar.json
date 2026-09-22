@@ -1273,5 +1273,9 @@
   "hr_manager": "مدير موارد بشرية",
   "HR Manager": "مدير موارد بشرية",
   "direct_manager": "المدير المباشر",
-  "Direct Manager": "المدير المباشر"
-}
+  "Direct Manager": "المدير المباشر",
+  "instance_suspended_title": "الحساب موقوف",
+  "instance_suspended_desc": "تم إيقاف حسابك. يرجى التواصل مع المسؤول أو تجديد اشتراكك لاستعادة الوصول.",
+  "licence_denied_title": "الوصول غير مسموح",
+  "licence_denied_desc": "الرخصة الحالية لا تسمح بالوصول من هذه المنصة. يرجى استخدام الإصدار المناسب أو التواصل مع المسؤول.",
+  "go_to_domain_selection": "الذهاب لصفحة الدخول"

@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 
@@ -67,6 +70,29 @@ class DioHelper{
         },
         onResponse: (response, handler) {
           print("response.statusCode == ${response.statusCode}");
+          // Check for suspended/licence-denied error codes in any response
+          final data = response.data;
+          if (data is Map) {
+            final errorCode = data['error']?.toString();
+            if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
+              final ctx = rootNavigatorKey.currentContext;
+              if (ctx != null && ctx.mounted) {
+                final routeName = errorCode == 'INSTANCE_SUSPENDED'
+                    ? AppRoutes.instanceSuspended.name
+                    : AppRoutes.licenceDenied.name;
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  try {
+                    ctx.goNamed(
+                      routeName,
+                      pathParameters: {'lang': ctx.locale.languageCode},
+                    );
+                  } catch (e) {
+                    debugPrint('Error navigating to suspended screen from interceptor: $e');
+                  }
+                });
+              }
+            }
+          }
           return handler.next(response);
         },
         onError: (DioException error, handler) {

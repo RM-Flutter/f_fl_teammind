@@ -88,6 +88,7 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import '../../features/splash_and_onboarding/views/onboarding_screen.dart';
 import '../../features/splash_and_onboarding/views/splash_screen.dart';
 import '../../features/splash_and_onboarding/views/no_access_screen.dart';
+import '../../features/splash_and_onboarding/views/suspended_screen.dart';
 import '../../features/tasks/views/add/add_task_screen.dart';
 import '../../features/tasks/views/edit/edit_task_screen.dart';
 import '../../features/tasks/views/details/task_details_screen.dart';
@@ -200,6 +201,8 @@ enum AppRoutes {
   salaryAdvanceCreate,
   approvableDetails,
   teamTodayStatus,
+  instanceSuspended,
+  licenceDenied,
 }
 
 const TestVSync ticker = TestVSync();
@@ -2436,8 +2439,29 @@ GoRouter goRouter(BuildContext context) {
             animation: animationController,
             begin: const Offset(1.0, 0.0),
           );
-        },),
-    GoRoute(
+        },
+      ),
+      GoRoute(
+        path: '/:lang/instance-suspended',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.instanceSuspended.name,
+        pageBuilder: (context, state) {
+          return MaterialPage(
+            child: const SuspendedScreen(errorType: SuspendedErrorType.instanceSuspended),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/:lang/licence-denied',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.licenceDenied.name,
+        pageBuilder: (context, state) {
+          return MaterialPage(
+            child: const SuspendedScreen(errorType: SuspendedErrorType.licenceDenied),
+          );
+        },
+      ),
+      GoRoute(
         path: '/:lang/offline-screen',
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.offlineScreen.name,

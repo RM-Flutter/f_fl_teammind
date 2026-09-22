@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
@@ -178,8 +179,20 @@ class DioApiService implements BackEndServicesInterface {
             return OperationResult<T>(
                 success: true, message: reply["message"], data: reply);
           } else {
+            // Check for suspended / licence denied errors even in 200 responses
+            final errorCode = reply["error"]?.toString();
+            if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
+              _handleSuspendedError(safeContext!, errorCode!);
+            }
             return OperationResult<T>(
                 success: false, message: reply["message"] ?? "");
+          }
+        }
+        // Check for suspended / licence denied in any 200 response
+        if (reply is Map) {
+          final errorCode = reply["error"]?.toString();
+          if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
+            _handleSuspendedError(safeContext!, errorCode!);
           }
         }
         return ApiServiceHelpers.parseResponse<T>(
@@ -226,6 +239,11 @@ class DioApiService implements BackEndServicesInterface {
 
       default:
         if (response.data is Map && response.data['message'] != null) {
+          // Check for suspended / licence denied in non-standard responses
+          final errorCode = response.data['error']?.toString();
+          if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
+            _handleSuspendedError(safeContext!, errorCode!);
+          }
           return ApiServiceHelpers.parseResponse<T>(
              responseJsonData: response.data, dataKey: dataKey, allData: allData);
         }
@@ -233,6 +251,24 @@ class DioApiService implements BackEndServicesInterface {
         return OperationResult<T>(
             success: false, message: 'Result code = ${response.statusCode}');
     }
+  }
+
+  static void _handleSuspendedError(BuildContext context, String errorCode) {
+    final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
+    if (safeCtx == null || !safeCtx.mounted) return;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final routeName = errorCode == 'INSTANCE_SUSPENDED'
+          ? AppRoutes.instanceSuspended.name
+          : AppRoutes.licenceDenied.name;
+      try {
+        safeCtx.goNamed(
+          routeName,
+          pathParameters: {'lang': safeCtx.locale.languageCode},
+        );
+      } catch (e) {
+        debugPrint('Error navigating to suspended screen: $e');
+      }
+    });
   }
 
 /*
