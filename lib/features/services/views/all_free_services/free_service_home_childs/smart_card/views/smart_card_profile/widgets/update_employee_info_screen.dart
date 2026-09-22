@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:app_test/core/services/alert_service/custom_alert.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_education_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_job_info_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_personal_tab.dart';
@@ -42,6 +43,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   late final CreateCVViewModel viewModel;
   int selectIndex = 0;
   bool _isPremium = true;
+  bool _isInitializing = true;
   /// بيانات الموظف من آخر GET (لو فشل الـ GET نستخدم widget.employee)
   Map<String, dynamic>? _employeeData;
   // صورة الموظف – نفس أسلوب logo في company (مفتاح الباك: photo)
@@ -51,13 +53,30 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   final List<TextEditingController> _otherLinksControllers = [];
   
   void _showPremiumAlert(BuildContext context) {
-    AlertsService.error(
-      context: context,
-      message: context.locale.languageCode == 'ar' 
-          ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
-          : 'Sorry, updating this data requires a Premium account',
-      title: AppStrings.failed.tr(),
+    if (!context.mounted) return;
+    final snackBar = SnackBar(
+      duration: const Duration(seconds: 3),
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom > 0 
+            ? MediaQuery.of(context).viewInsets.bottom + AppSizes.s10 
+            : AppSizes.s10,
+        left: 0,
+        right: 0,
+      ),
+      padding: const EdgeInsets.only(top: AppSizes.s15, bottom: AppSizes.s5),
+      backgroundColor: Colors.transparent,
+      content: CustomAlert(
+        title: AppStrings.failed.tr(),
+        message: context.locale.languageCode == 'ar' 
+            ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
+            : 'Sorry, updating this data requires a Premium account',
+        contentType: AlertType.failure,
+      ),
     );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   List<String> taps = [
@@ -275,6 +294,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
       viewModel.setError(e.toString());
     } finally {
       viewModel.setLoading(false);
+      if (mounted) setState(() => _isInitializing = false);
     }
   }
 
@@ -466,6 +486,18 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Show full-screen loading until all data is fetched
+    if (_isInitializing) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(
+            color: Color(AppColors.secondaryButton),
+          ),
+        ),
+      );
+    }
+
     return ChangeNotifierProvider<CreateCVViewModel>.value(
       value: viewModel,
       child: Scaffold(
@@ -495,9 +527,6 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         ),
         body: Consumer<CreateCVViewModel>(
           builder: (context, vm, child) {
-            if (vm.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(

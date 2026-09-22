@@ -352,7 +352,7 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(
-          items: viewModel.countries.isNotEmpty ? viewModel.countries : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
+          items: viewModel.countries,
           selectedValue: countryValue,
           nameKey: 'title',
           hintText: AppStrings.selectCountry.tr(),
@@ -400,7 +400,8 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(
-          items: viewModel.states.isNotEmpty ? viewModel.states : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
+          isLoading: viewModel.isStatesLoading,
+          items: viewModel.states,
           selectedValue: stateValue,
           nameKey: 'title',
           hintText: AppStrings.selectStateProvince.tr(),
@@ -409,7 +410,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
-            if (value.isNotEmpty && value['id'] != null) {
+            if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
               viewModel.loadCities(context, value['id'] as int);
             }
           },
@@ -448,7 +449,8 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(
-          items: viewModel.cities.isNotEmpty ? viewModel.cities : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
+          isLoading: viewModel.isCitiesLoading,
+          items: viewModel.cities,
           selectedValue: cityValue,
           nameKey: 'title',
           hintText: AppStrings.selectCity.tr(),
@@ -457,7 +459,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
-            if (value.isNotEmpty && value['id'] != null) {
+            if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
               viewModel.cityId = value['id'] as int;
               viewModel.notifyListeners();
             }

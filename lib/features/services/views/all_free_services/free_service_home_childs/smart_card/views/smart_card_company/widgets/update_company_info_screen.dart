@@ -56,6 +56,9 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   int? _stateId;
   int? _cityId;
 
+  bool _isStatesLoading = false;
+  bool _isCitiesLoading = false;
+
   final List<TextEditingController> _morePhonesControllers = [];
   final List<TextEditingController> _otherLinksControllers = [];
   final List<TextEditingController> _portfolioNames = [];
@@ -274,6 +277,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   }
 
   Future<void> _loadStates(int countryId, {bool clearStateAndCity = true}) async {
+    setState(() => _isStatesLoading = true);
     List<Map<String, dynamic>> states = await CVReferenceDataService.getStates(context, countryId);
     if (!clearStateAndCity && _stateId != null && _company['state'] is Map) {
       final fromRes = _company['state'] as Map;
@@ -287,6 +291,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
     }
     setState(() {
       _states = states;
+      _isStatesLoading = false;
       if (clearStateAndCity) {
         _cities = [];
         _stateId = null;
@@ -296,6 +301,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   }
 
   Future<void> _loadCities(int stateId) async {
+    setState(() => _isCitiesLoading = true);
     List<Map<String, dynamic>> cities = await CVReferenceDataService.getCities(context, stateId);
     if (_cityId != null && _company['city'] is Map) {
       final fromRes = _company['city'] as Map;
@@ -307,7 +313,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
         }];
       }
     }
-    setState(() => _cities = cities);
+    setState(() {
+      _cities = cities;
+      _isCitiesLoading = false;
+    });
   }
 
   @override
@@ -556,7 +565,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           Text(AppStrings.country.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
           const SizedBox(height: 8),
           CustomDropdown.search(
-            items: _countries.isNotEmpty ? _countries : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
+            items: _countries,
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectCountry.tr(),
@@ -601,7 +610,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           Text(AppStrings.stateProvince.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
           const SizedBox(height: 8),
           CustomDropdown.search(
-            items: _states.isNotEmpty ? _states : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
+            isLoading: _isStatesLoading,
+            items: _states,
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectStateProvince.tr(),
@@ -610,7 +620,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             borderSide: const BorderSide(color: Colors.black),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onChanged: (value) {
-              if (value.isNotEmpty && value['id'] != null) {
+              if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
                 if (id != null) { setState(() => _stateId = id); _loadCities(id); }
               }
@@ -663,7 +673,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           Text(AppStrings.city.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
           const SizedBox(height: 8),
           CustomDropdown.search(
-            items: _cities.isNotEmpty ? _cities : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
+            isLoading: _isCitiesLoading,
+            items: _cities,
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectCity.tr(),
@@ -672,7 +683,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             borderSide: const BorderSide(color: Colors.black),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onChanged: (value) {
-              if (value.isNotEmpty && value['id'] != null) {
+              if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
                 if (id != null) setState(() => _cityId = id);
               }

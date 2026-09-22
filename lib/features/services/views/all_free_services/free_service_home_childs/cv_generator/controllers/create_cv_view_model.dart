@@ -37,8 +37,24 @@ class CreateCVViewModel extends ChangeNotifier {
     final id = _parseId(itemId);
     return id != null && id == targetId;
   }
-  bool isLoading = false;
-  bool isSubmitting = false;
+
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool _isSubmitting = false;
+  bool get isSubmitting => _isSubmitting;
+  set isSubmitting(bool value) {
+    _isSubmitting = value;
+    notifyListeners();
+  }
+
+  bool isStatesLoading = false;
+  bool isCitiesLoading = false;
+
   String? errorMessage;
   bool _disposed = false;
   
@@ -354,6 +370,8 @@ class CreateCVViewModel extends ChangeNotifier {
   /// [clearStateAndCity] when true (default) clears state/city selection (e.g. when user changes country).
   /// Set to false when loading existing CV data so state/city remain and can be used to load cities.
   Future<void> loadStates(BuildContext context, int countryId, {bool clearStateAndCity = true}) async {
+    isStatesLoading = true;
+    notifyListeners();
     this.countryId = countryId;
     selectedCountry = countries.isNotEmpty
         ? countries.firstWhere(
@@ -370,6 +388,7 @@ class CreateCVViewModel extends ChangeNotifier {
       }
     }
     states = await CVReferenceDataService.getStates(context, countryId);
+    isStatesLoading = false;
     if (clearStateAndCity) {
       stateId = null;
       selectedState = null;
@@ -382,6 +401,8 @@ class CreateCVViewModel extends ChangeNotifier {
 
   /// Load cities when state is selected
   Future<void> loadCities(BuildContext context, int stateId) async {
+    isCitiesLoading = true;
+    notifyListeners();
     this.stateId = stateId;
     selectedState = states.isNotEmpty
         ? states.firstWhere(
@@ -391,6 +412,7 @@ class CreateCVViewModel extends ChangeNotifier {
         : null;
     if (selectedState != null && selectedState!.isEmpty) selectedState = null;
     cities = await CVReferenceDataService.getCities(context, stateId);
+    isCitiesLoading = false;
 
     // لو كان فيه مدينة متخزنة (مثلاً جاية من الـ API)، نختارها تلقائياً
     if (cityId != null && cities.isNotEmpty) {
@@ -400,6 +422,7 @@ class CreateCVViewModel extends ChangeNotifier {
       );
       if (selectedCity != null && selectedCity!.isEmpty) selectedCity = null;
     } else {
+      cityId = null;
       selectedCity = null;
     }
     notifyListeners();

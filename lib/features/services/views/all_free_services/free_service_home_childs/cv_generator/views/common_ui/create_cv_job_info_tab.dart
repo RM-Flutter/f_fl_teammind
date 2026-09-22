@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:app_test/core/services/alert_service/custom_alert.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -129,13 +130,30 @@ class CreateCVJobInfoTab extends StatelessWidget {
   }
 
   void import_alert(BuildContext context) {
-    AlertsService.error(
-      context: context,
-      message: context.locale.languageCode == 'ar' 
-          ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
-          : 'Sorry, updating this data requires a Premium account',
-      title: AppStrings.failed.tr(),
+    if (!context.mounted) return;
+    final snackBar = SnackBar(
+      duration: const Duration(seconds: 3),
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom > 0 
+            ? MediaQuery.of(context).viewInsets.bottom + 10 
+            : 10,
+        left: 0,
+        right: 0,
+      ),
+      padding: const EdgeInsets.only(top: 15, bottom: 5),
+      backgroundColor: Colors.transparent,
+      content: CustomAlert(
+        title: AppStrings.failed.tr(),
+        message: context.locale.languageCode == 'ar' 
+            ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
+            : 'Sorry, updating this data requires a Premium account',
+        contentType: AlertType.failure,
+      ),
     );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget _buildTextField({

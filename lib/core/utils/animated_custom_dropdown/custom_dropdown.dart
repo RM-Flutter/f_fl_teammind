@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/app_sizes.dart';
 import '../../constants/app_strings.dart';
+import '../../services/alert_service/alerts_service.dart';
 part 'animated_section.dart';
 part 'dropdown_field.dart';
 part 'dropdown_overlay.dart';
@@ -45,6 +46,8 @@ class CustomDropdown extends StatefulWidget {
 
   /// إظهار أيقونة الـ X الحمراء لمسح الاختيار (في .search لا تُظهر)
   final bool showClearButton;
+  
+  final bool isLoading;
 
   const CustomDropdown({
     super.key,
@@ -70,6 +73,7 @@ class CustomDropdown extends StatefulWidget {
     this.excludeSelected = true,
     this.fillColor = Colors.white,
     this.showClearButton = true,
+    this.isLoading = false,
   })  : searchType = null,
         canCloseOutsideBounds = true;
 
@@ -98,6 +102,7 @@ class CustomDropdown extends StatefulWidget {
     this.canCloseOutsideBounds = true,
     this.fillColor = Colors.white,
     this.showClearButton = false,
+    this.isLoading = false,
   }) : searchType = SearchType.onListData;
 
   @override
@@ -170,9 +175,7 @@ class CustomDropdownState extends State<CustomDropdown> {
     ).merge(widget.selectedStyle);
 
     return AbsorbPointer(
-      absorbing: ((widget.items == null) || (widget.items?.isEmpty ?? false))
-          ? true
-          : false,
+      absorbing: false, // We handle taps manually to show alerts if loading
       child: _OverlayBuilder(
         overlay: (size, hideCallback) {
           return _DropdownOverlay(
@@ -194,18 +197,33 @@ class CustomDropdownState extends State<CustomDropdown> {
           );
         },
         child: (showCallback) {
+          void handleTap() {
+            if (widget.isLoading) {
+              AlertsService.info(
+                context: context, 
+                message: context.locale.languageCode == 'ar' ? "برجاء الانتظار، جاري التحميل..." : "Please wait, loading...",
+                title: context.locale.languageCode == 'ar' ? "تنبيه" : "Info",
+              );
+              return;
+            }
+            if (widget.items == null || widget.items!.isEmpty) {
+              return; // Do nothing if there's no data
+            }
+            showCallback();
+          }
+
           return CompositedTransformTarget(
             link: layerLink,
             child: widget.basicWidget != null
                 ? InkWell(
-              onTap: showCallback,
+              onTap: handleTap,
               child: widget.basicWidget,
             )
                 : _DropDownField(
               onRemoveClicked: widget.onRemoveClicked,
               isItemsNullOrEmpty: dataItems.isEmpty,
               controller: textEditingController,
-              onTap: showCallback,
+              onTap: handleTap,
               style: selectedStyle,
               borderRadius: widget.borderRadius,
               borderSide: widget.borderSide,
