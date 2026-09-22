@@ -80,6 +80,8 @@ class SmartCardViewModel extends ChangeNotifier {
     companyEmployees = [];
     notifyListeners();
     if (selectedCompanyId != null) {
+      await loadCompanyProfile(context);
+      if (!context.mounted) return;
       await loadCompanyEmployees(context);
     }
   }

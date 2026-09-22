@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gal/gal.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,9 @@ class _SmartCardProfileDetailScreenState
   void initState() {
     super.initState();
     _employee = widget.employee;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadEmployee();
+    });
   }
 
   Future<void> _loadEmployee() async {
@@ -300,8 +304,12 @@ class _SmartCardProfileDetailScreenState
 
   Future<void> _navigateToSelectTemplate() async {
     // Read current template_id and template_data from the loaded employee data.
-    final templateId   = _employee['template_id'] as int?;
-    final templateData = _employee['template_data'] as Map<String, dynamic>?;
+    final templateId   = _employee['template_id'] != null ? int.tryParse(_employee['template_id'].toString()) : null;
+    dynamic tData = _employee['template_data'];
+    if (tData is String) {
+      try { tData = jsonDecode(tData); } catch (_) {}
+    }
+    final templateData = tData is Map ? Map<String, dynamic>.from(tData as Map) : null;
 
     final result = await context.pushNamed(
       AppRoutes.selectSmartCardTemplateScreen.name,

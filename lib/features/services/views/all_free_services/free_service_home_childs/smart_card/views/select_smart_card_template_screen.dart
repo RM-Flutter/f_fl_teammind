@@ -121,17 +121,16 @@ class _SelectSmartCardTemplateScreenState
       return;
     }
     final idx = templates.indexWhere(
-      (t) => (t['id'] as int?) == widget.initialTemplateId,
+      (t) {
+        final tid = t['id'] != null ? int.tryParse(t['id'].toString()) : null;
+        return tid == widget.initialTemplateId;
+      },
     );
     if (idx >= 0 && idx != selectedTemplateIndex) {
-      // Animate smoothly to the current template page.
+      // Jump instantly to the previously selected template.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_pageController.hasClients) {
-          _pageController.animateToPage(
-            idx,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-          );
+          _pageController.jumpToPage(idx);
         }
         setState(() => selectedTemplateIndex = idx);
       });

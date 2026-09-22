@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'dart:convert';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -352,8 +353,12 @@ class _SmartCardCompanyDetailScreenState
   Future<void> _navigateToSelectTemplate() async {
     // Read current template_id and template_data from the loaded company data.
     final company = viewModel.selectedCompany ?? widget.company;
-    final templateId   = company['template_id'] as int?;
-    final templateData = company['template_data'] as Map<String, dynamic>?;
+    final templateId   = company['template_id'] != null ? int.tryParse(company['template_id'].toString()) : null;
+    dynamic tData = company['template_data'];
+    if (tData is String) {
+      try { tData = jsonDecode(tData); } catch (_) {}
+    }
+    final templateData = tData is Map ? Map<String, dynamic>.from(tData as Map) : null;
 
     final result = await context.pushNamed(
       AppRoutes.selectSmartCardTemplateScreen.name,
