@@ -158,11 +158,14 @@ class SmartCardRepo {
       final List<dynamic> worksList = _ensureList(original['works_gallery']);
       final List<dynamic> videoList = _ensureList(original['video_gallery']);
 
-      // بقية الحقول بدون مفاتيح الميديا
+      // بقية الحقول بدون مفاتيح الميديا والـ Arrays المعقدة عشان نتحكم فيهم يدوياً
       final Map<String, dynamic> baseMap = Map<String, dynamic>.from(original)
         ..remove('logo')
         ..remove('works_gallery')
-        ..remove('video_gallery');
+        ..remove('video_gallery')
+        ..remove('more_phones')
+        ..remove('other_links')
+        ..remove('portfolios');
 
       // العناصر الموجودة من الـ API: Map فيها id → نبعت الـ id فقط. العناصر الجديدة: String base64 → نرفعها كملف.
       int? _parseId(dynamic v) {
@@ -208,13 +211,13 @@ class SmartCardRepo {
         return results;
       }
 
-      // إرسال الميديا بنفس ترتيب القائمة وبفهرس صريح [0],[1],[2]... عشان الباك ما يخلطش (ما يبدلش الجديد بالأول)
-      void addMediaInOrder(String key, List<dynamic> list, List<String> base64List, String filePrefix, String ext) {
+      // إرسال الميديا بنفس ترتيب القائمة
+      void addMediaInOrder(String key, List<dynamic> list, List<String> base64List, String filePrefix, String ext, {bool isSingle = false}) {
         final files = _filesFromBase64List(base64List, filePrefix, ext);
         var fileIndex = 0;
         for (var i = 0; i < list.length; i++) {
           final item = list[i];
-          final indexKey = '$key[$i]';
+          final indexKey = isSingle ? key : '$key[$i]';
           if (item is Map) {
             final id = _parseId(item['id']);
             if (id != null) {
@@ -234,9 +237,38 @@ class SmartCardRepo {
         }
       }
 
-      addMediaInOrder('logo', logoList, logoNewBase64, 'logo', 'jpg');
+      addMediaInOrder('logo', logoList, logoNewBase64, 'logo', 'jpg', isSingle: true); // Send as 'logo' not 'logo[0]'
       addMediaInOrder('works_gallery', worksList, worksNewBase64, 'work', 'jpg');
       addMediaInOrder('video_gallery', videoList, videoNewBase64, 'video', 'mp4');
+
+      // Arrays manual serialization to ensure Laravel receives them properly
+      final morePhonesRaw = original['more_phones'];
+      if (morePhonesRaw is List && morePhonesRaw.isNotEmpty) {
+        final filtered = morePhonesRaw.where((e) => e is Map && e.isNotEmpty).cast<Map<String, dynamic>>().toList();
+        for (var i = 0; i < filtered.length; i++) {
+          formData.fields.add(MapEntry('more_phones[$i][phone]', filtered[i]['phone']?.toString() ?? ''));
+        }
+      }
+
+      final otherLinksRaw = original['other_links'];
+      if (otherLinksRaw is List && otherLinksRaw.isNotEmpty) {
+        final filtered = otherLinksRaw.where((e) => e is Map && e.isNotEmpty).cast<Map<String, dynamic>>().toList();
+        for (var i = 0; i < filtered.length; i++) {
+          formData.fields.add(MapEntry('other_links[$i][url]', filtered[i]['url']?.toString() ?? ''));
+        }
+      }
+
+      final portfoliosRaw = original['portfolios'];
+      if (portfoliosRaw is List && portfoliosRaw.isNotEmpty) {
+        final filtered = portfoliosRaw.where((e) => e is Map && e.isNotEmpty).cast<Map<String, dynamic>>().toList();
+        for (var i = 0; i < filtered.length; i++) {
+          for (final entry in filtered[i].entries) {
+            if (entry.value != null && entry.value.toString().isNotEmpty) {
+              formData.fields.add(MapEntry('portfolios[$i][${entry.key}]', entry.value.toString()));
+            }
+          }
+        }
+      }
 
       // Use POST with _method=PUT to send multipart (Laravel-style override)
       if (isUpdate) formData.fields.add(const MapEntry('_method', 'PUT'));
@@ -542,7 +574,11 @@ class SmartCardRepo {
       final worksNewBase64 = _extractBase64Strings(worksList);
       final videoNewBase64 = _extractBase64Strings(videoList);
 
-      final formData = FormData.fromMap(baseMap);
+      final Map<String, dynamic> formMap = Map<String, dynamic>.from(baseMap)
+        ..remove('more_phones')
+        ..remove('other_links');
+      
+      final formData = FormData.fromMap(formMap);
 
       List<MultipartFile> _filesFromBase64List(List<String> list, String prefix, String extension) {
         final List<MultipartFile> results = [];
@@ -561,13 +597,13 @@ class SmartCardRepo {
         return results;
       }
 
-      // إرسال الميديا بنفس ترتيب القائمة وبفهرس صريح [0],[1],[2]... عشان الباك ما يبدلش الجديد بالأول
-      void addMediaInOrder(String key, List<dynamic> list, List<String> base64List, String filePrefix, String ext) {
+      // إرسال الميديا بنفس ترتيب القائمة
+      void addMediaInOrder(String key, List<dynamic> list, List<String> base64List, String filePrefix, String ext, {bool isSingle = false}) {
         final files = _filesFromBase64List(base64List, filePrefix, ext);
         var fileIndex = 0;
         for (var i = 0; i < list.length; i++) {
           final item = list[i];
-          final indexKey = '$key[$i]';
+          final indexKey = isSingle ? key : '$key[$i]';
           if (item is Map) {
             final id = _parseId(item['id']);
             if (id != null) {
@@ -587,9 +623,25 @@ class SmartCardRepo {
         }
       }
 
-      addMediaInOrder('photo', photoList, photoNewBase64, 'photo', 'jpg');
+      addMediaInOrder('photo', photoList, photoNewBase64, 'photo', 'jpg', isSingle: true); // Send as 'photo' not 'photo[0]'
       addMediaInOrder('works_gallery', worksList, worksNewBase64, 'work', 'jpg');
       addMediaInOrder('video_gallery', videoList, videoNewBase64, 'video', 'mp4');
+
+      final morePhonesRaw = original['more_phones'];
+      if (morePhonesRaw is List && morePhonesRaw.isNotEmpty) {
+        final filtered = morePhonesRaw.where((e) => e is Map && e.isNotEmpty).cast<Map<String, dynamic>>().toList();
+        for (var i = 0; i < filtered.length; i++) {
+          formData.fields.add(MapEntry('more_phones[$i][phone]', filtered[i]['phone']?.toString() ?? ''));
+        }
+      }
+
+      final otherLinksRaw = original['other_links'];
+      if (otherLinksRaw is List && otherLinksRaw.isNotEmpty) {
+        final filtered = otherLinksRaw.where((e) => e is Map && e.isNotEmpty).cast<Map<String, dynamic>>().toList();
+        for (var i = 0; i < filtered.length; i++) {
+          formData.fields.add(MapEntry('other_links[$i][url]', filtered[i]['url']?.toString() ?? ''));
+        }
+      }
 
       // educations – نفس الطريقة والكي كما في Create CV: حقل واحد educations = json.encode(list)
       final educationsRaw = original['educations'];

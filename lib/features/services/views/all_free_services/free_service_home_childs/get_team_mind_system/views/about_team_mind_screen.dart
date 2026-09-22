@@ -86,15 +86,30 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
       'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
 
   Future<void> _downloadAndOpenPdf() async {
-  final jsonString = CacheHelper.getString("USG");
-  var gCache;
-  if (jsonString != null && jsonString != "") {
-  gCache = json.decode(jsonString) as Map<String, dynamic>;
-  }
-   String? _teamMindPdfUrl = LocalizationService.isArabic(context: context)?gCache['teamMindPdfAr'][0]['file'].toString() : gCache['teamMindPdfEn'][0]['file'].toString();
-   String? _teamMindPdfFileName = LocalizationService.isArabic(context: context)?"${gCache['teamMindPdfAr'][0]['file']}" : "${gCache['teamMindPdfEn'][0]['file']}";
+    final isAr = LocalizationService.isArabic(context: context);
+    
+    String? teamMindPdfUrl;
+    String? teamMindPdfFileName;
+
+    if (isAr && _page?.pdfAr != null && _page!.pdfAr.isNotEmpty) {
+      teamMindPdfUrl = _page!.pdfAr[0].file;
+      teamMindPdfFileName = teamMindPdfUrl?.split('/').last ?? 'document_ar.pdf';
+    } else if (!isAr && _page?.pdfEn != null && _page!.pdfEn.isNotEmpty) {
+      teamMindPdfUrl = _page!.pdfEn[0].file;
+      teamMindPdfFileName = teamMindPdfUrl?.split('/').last ?? 'document_en.pdf';
+    }
+
+    if (teamMindPdfUrl == null || teamMindPdfUrl.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppStrings.failed.tr())),
+        );
+      }
+      return;
+    }
+
     if (PlatformIs.web) {
-      final uri = Uri.parse(_teamMindPdfUrl);
+      final uri = Uri.parse(teamMindPdfUrl);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
@@ -112,9 +127,9 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
         );
       }
       final dir = await getApplicationDocumentsDirectory();
-      final filePath = '${dir.path}/$_teamMindPdfFileName';
+      final filePath = '${dir.path}/$teamMindPdfFileName';
       final dio = Dio();
-      await dio.download(_teamMindPdfUrl, filePath);
+      await dio.download(teamMindPdfUrl, filePath);
       if (!mounted) return;
       await OpenFilex.open(filePath);
       if (mounted) {
@@ -316,13 +331,9 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                       if (_page?.videoUrl != null && _page!.videoUrl!.isNotEmpty) ...[
                         GestureDetector(
                           onTap: () {
-                            context.pushNamed(
-                              AppRoutes.mediaCenterYoutubeScreenView.name,
-                              pathParameters: {
-                                'lang': context.locale.languageCode,
-                                'url': _page!.videoUrl.toString(),
-                              },
-                            );
+                            if (_page!.videoUrl != null) {
+                              _openVideo(_page!.videoUrl!);
+                            }
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),

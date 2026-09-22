@@ -299,12 +299,20 @@ class _SmartCardProfileDetailScreenState
   }
 
   Future<void> _navigateToSelectTemplate() async {
+    // Read current template_id and template_data from the loaded employee data.
+    final templateId   = _employee['template_id'] as int?;
+    final templateData = _employee['template_data'] as Map<String, dynamic>?;
+
     final result = await context.pushNamed(
       AppRoutes.selectSmartCardTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
       queryParameters: {
         'isPersonal': widget.isPersonal.toString(),
         if (widget.companyId != null) 'companyId': widget.companyId.toString(),
+      },
+      extra: {
+        if (templateId != null) 'initialTemplateId': templateId,
+        if (templateData != null) 'initialTemplateData': templateData,
       },
     );
     if (result == true) {

@@ -48,6 +48,18 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   List<dynamic> _photo = [];
   // Smart Card employee – more phones (UI فقط هنا، مش في CV)
   final List<TextEditingController> _morePhonesControllers = [];
+  final List<TextEditingController> _otherLinksControllers = [];
+  
+  void _showPremiumAlert(BuildContext context) {
+    AlertsService.error(
+      context: context,
+      message: context.locale.languageCode == 'ar' 
+          ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
+          : 'Sorry, updating this data requires a Premium account',
+      title: AppStrings.failed.tr(),
+    );
+  }
+
   List<String> taps = [
     AppStrings.personal.tr().toUpperCase(),
     AppStrings.contact.tr().toUpperCase(),
@@ -105,7 +117,11 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
         // In Smart Card update we don't use about_me; keep it only for CV compatibility.
         aboutMe: emp['about_me']?.toString(),
       ),
-      education: null,
+      education: emp['educations'] != null
+          ? (emp['educations'] as List)
+              .map((e) => CVEducation.fromJson(Map<String, dynamic>.from(e)))
+              .toList()
+          : null,
     );
   }
 
@@ -237,6 +253,23 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           TextEditingController(text: p.phone?.toString() ?? ''),
         );
       }
+      
+      final existingOtherLinks = existing.otherLinks ?? [];
+      for (final link in existingOtherLinks) {
+        _otherLinksControllers.add(
+          TextEditingController(text: link.url?.toString() ?? ''),
+        );
+      }
+
+      // Load states for each education's country so the dropdowns render correctly
+      final educationCountryIds = viewModel.educations
+          .map((e) => e.countryId)
+          .whereType<int>()
+          .toSet();
+      for (final countryId in educationCountryIds) {
+        await viewModel.loadStatesForItem(context, countryId);
+      }
+
       if (mounted) setState(() {});
     } catch (e) {
       viewModel.setError(e.toString());
@@ -302,7 +335,11 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           .where((v) => v.isNotEmpty)
           .map((v) => SmartCardMorePhone(phone: v))
           .toList();
-      final otherLinks = existing.otherLinks ?? [];
+      final otherLinks = _otherLinksControllers
+          .map((c) => c.text.trim())
+          .where((v) => v.isNotEmpty)
+          .map((v) => SmartCardOtherLink(url: v))
+          .toList();
       final experiences = vm.experiences
           .map((e) => SmartCardExperienceItem(
         companyName: e.companyName,
@@ -420,6 +457,9 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
     for (final c in _morePhonesControllers) {
       c.dispose();
     }
+    for (final c in _otherLinksControllers) {
+      c.dispose();
+    }
     viewModel.dispose();
     super.dispose();
   }
@@ -473,7 +513,13 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                            const SizedBox(height: 15),
                            Center(
                               child: GestureDetector(
-                                onTap: _pickPhoto,
+                                onTap: () {
+                                  if (!_isPremium) {
+                                    _showPremiumAlert(context);
+                                    return;
+                                  }
+                                  _pickPhoto();
+                                },
                                 child: Stack(
                                   alignment: Alignment.bottomRight,
                                   children: [
@@ -497,7 +543,16 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                                           backgroundColor: Colors.grey.shade200,
                                           backgroundImage: provider,
                                           child: provider == null
-                                              ? const Icon(Icons.image, size: 32, color: Colors.grey)
+                                              ? Text(
+                                                  vm.nameController.text.trim().isNotEmpty
+                                                      ? vm.nameController.text.trim()[0].toUpperCase()
+                                                      : '?',
+                                                  style: const TextStyle(
+                                                    fontSize: 48,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey,
+                                                  ),
+                                                )
                                               : null,
                                         );
                                       },
@@ -715,6 +770,90 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
             label: AppStrings.whatsapp.tr(),
             hint: AppStrings.enterYourWhatsAppNumber.tr(),
             keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 16),
+          const Divider(),
+          const SizedBox(height: 16),
+          Text(
+            context.locale.languageCode == 'ar' ? 'روابط أخرى (بريميوم)' : 'Other Links (Premium)',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(AppColors.secondaryButton),
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...List.generate(_otherLinksControllers.length, (i) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (!_isPremium) {
+                           _showPremiumAlert(context);
+                        }
+                      },
+                      child: AbsorbPointer(
+                        absorbing: !_isPremium,
+                        child: TextField(
+                          controller: _otherLinksControllers[i],
+                          keyboardType: TextInputType.url,
+                          decoration: InputDecoration(
+                            labelText: 'URL ${i + 1}',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.remove_circle_outline,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      if (!_isPremium) {
+                        _showPremiumAlert(context);
+                        return;
+                      }
+                      if (i >= 0 && i < _otherLinksControllers.length) {
+                        _otherLinksControllers[i].dispose();
+                        _otherLinksControllers.removeAt(i);
+                        setState(() {});
+                      }
+                    },
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                if (!_isPremium) {
+                  _showPremiumAlert(context);
+                  return;
+                }
+                setState(() {
+                  _otherLinksControllers.add(TextEditingController());
+                });
+              },
+              icon: const Icon(Icons.add),
+              label: Text(
+                context.locale.languageCode == 'ar' ? 'إضافة رابط' : 'Add Link',
+                style: const TextStyle(fontSize: 16),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.black),
+              ),
+            ),
           ),
         ],
       ),

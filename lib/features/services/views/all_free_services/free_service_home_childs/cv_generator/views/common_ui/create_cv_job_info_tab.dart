@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -83,22 +84,25 @@ class CreateCVJobInfoTab extends StatelessWidget {
               const SizedBox(height: 24),
             ],
 
-            // In Smart Card Employee, hide Experience/Portfolio completely when not premium.
-            if (!isSmartCardEmployee ) ...[
-              _buildExperiencesSection(context),
-              const SizedBox(height: 24),
-              _buildPortfoliosSection(),
-            ],
-            if(isSmartCardEmployee && isPremium)...[
+            if (isSmartCardEmployee) ...[
+              _premiumWrapper(
+                context,
+                Column(
+                  children: [
+                    _buildExperiencesSection(context),
+                    const SizedBox(height: 24),
+                    _buildPortfoliosSection(),
+                    const SizedBox(height: 24),
+                    _buildMediaGalleriesSection(context),
+                  ],
+                ),
+              ),
+            ] else ...[
               _buildExperiencesSection(context),
               const SizedBox(height: 24),
               _buildPortfoliosSection(),
             ],
 
-            if (isSmartCardEmployee && isPremium == true) ...[
-              const SizedBox(height: 24),
-              _buildMediaGalleriesSection(context),
-            ],
             if (showCvOnlySections) ...[
               const SizedBox(height: 24),
               _buildLanguagesLevelsSection(),
@@ -108,6 +112,29 @@ class CreateCVJobInfoTab extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _premiumWrapper(BuildContext context, Widget child) {
+    if (isPremium || !isSmartCardEmployee) return child;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        import_alert(context);
+      },
+      child: AbsorbPointer(
+        child: child,
+      ),
+    );
+  }
+
+  void import_alert(BuildContext context) {
+    AlertsService.error(
+      context: context,
+      message: context.locale.languageCode == 'ar' 
+          ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
+          : 'Sorry, updating this data requires a Premium account',
+      title: AppStrings.failed.tr(),
     );
   }
 

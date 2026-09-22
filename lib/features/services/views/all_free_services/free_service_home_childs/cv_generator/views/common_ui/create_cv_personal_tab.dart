@@ -352,7 +352,7 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(
-          items: viewModel.countries,
+          items: viewModel.countries.isNotEmpty ? viewModel.countries : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
           selectedValue: countryValue,
           nameKey: 'title',
           hintText: AppStrings.selectCountry.tr(),
@@ -400,7 +400,7 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(
-          items: viewModel.states,
+          items: viewModel.states.isNotEmpty ? viewModel.states : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
           selectedValue: stateValue,
           nameKey: 'title',
           hintText: AppStrings.selectStateProvince.tr(),
@@ -448,7 +448,7 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         CustomDropdown.search(
-          items: viewModel.cities,
+          items: viewModel.cities.isNotEmpty ? viewModel.cities : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
           selectedValue: cityValue,
           nameKey: 'title',
           hintText: AppStrings.selectCity.tr(),

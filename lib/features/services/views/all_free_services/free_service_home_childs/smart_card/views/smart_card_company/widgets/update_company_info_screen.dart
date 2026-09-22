@@ -556,7 +556,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           Text(AppStrings.country.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
           const SizedBox(height: 8),
           CustomDropdown.search(
-            items: _countries,
+            items: _countries.isNotEmpty ? _countries : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectCountry.tr(),
@@ -601,7 +601,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           Text(AppStrings.stateProvince.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
           const SizedBox(height: 8),
           CustomDropdown.search(
-            items: _states,
+            items: _states.isNotEmpty ? _states : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectStateProvince.tr(),
@@ -663,7 +663,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           Text(AppStrings.city.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
           const SizedBox(height: 8),
           CustomDropdown.search(
-            items: _cities,
+            items: _cities.isNotEmpty ? _cities : [{'id': -1, 'title': AppStrings.noDataFounded.tr()}],
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectCity.tr(),

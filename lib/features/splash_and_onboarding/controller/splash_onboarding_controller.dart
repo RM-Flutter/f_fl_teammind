@@ -28,39 +28,28 @@ class OnboardingController extends ChangeNotifier {
 
   /// من كاش US1: لو role = ["personal"] فقط → freeServicesHome، وإلا → home
   static String getHomeRouteFromUs1Role() {
-    final usgString = CacheHelper.getString("USG");
-    if (usgString != null && usgString.isNotEmpty) {
-      try {
-        final usg = json.decode(usgString) as Map<String, dynamic>?;
-        final data = usg?['data'] ?? usg?['general_settings']?['data'] ?? usg;
-        bool? hasProfile;
-        if (data != null && data is Map) {
-          hasProfile = data['has_employee_profile'] == null ? null : (data['has_employee_profile'] == true || data['has_employee_profile'] == 'true' || data['has_employee_profile'] == 1);
-        }
-        if (hasProfile == false) {
-          return AppRoutes.noAccess.name;
-        }
-      } catch (_) {}
-    }
-
     final jsonString = CacheHelper.getString("US1");
     if (jsonString == null || jsonString.isEmpty) return AppRoutes.home.name;
+
     try {
       final us1Cache = json.decode(jsonString) as Map<String, dynamic>?;
       final us1 = us1Cache?['data'] ?? us1Cache;
-      
-      if (us1 != null && us1.containsKey('has_employee_profile')) {
-        final val = us1['has_employee_profile'];
-        bool hasProfileUs1 = val == true || val == 'true' || val == 1;
-        if (!hasProfileUs1 && val != null) {
-          return AppRoutes.noAccess.name;
-        }
-      }
-      
+
+      // 1. لو role = "personal" → روح على freeServicesHome مباشرة بدون أي check
       final role = us1?['role'];
       if (role != null && role is List && role.isNotEmpty && role.contains("personal")) {
         return AppRoutes.freeServicesHome.name;
       }
+
+      // 2. أي role تانية → check has_employee_profile
+      if (us1 != null && us1.containsKey('has_employee_profile')) {
+        final val = us1['has_employee_profile'];
+        final bool hasProfile = val == true || val == 'true' || val == 1;
+        if (!hasProfile) {
+          return AppRoutes.noAccess.name;
+        }
+      }
+
       return AppRoutes.home.name;
     } catch (_) {
       return AppRoutes.home.name;

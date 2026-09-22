@@ -350,12 +350,21 @@ class _SmartCardCompanyDetailScreenState
     );
   }
   void _navigateToSelectTemplate() {
+    // Read current template_id and template_data from the loaded company data.
+    final company = viewModel.selectedCompany ?? widget.company;
+    final templateId   = company['template_id'] as int?;
+    final templateData = company['template_data'] as Map<String, dynamic>?;
+
     context.pushNamed(
       AppRoutes.selectSmartCardTemplateScreen.name,
       pathParameters: {'lang': context.locale.languageCode},
       queryParameters: {
         'isPersonal': 'false',
         if (widget.company['id'] != null) 'companyId': widget.company['id'].toString(),
+      },
+      extra: {
+        if (templateId != null) 'initialTemplateId': templateId,
+        if (templateData != null) 'initialTemplateData': templateData,
       },
     );
   }

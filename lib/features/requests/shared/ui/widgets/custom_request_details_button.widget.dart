@@ -10,17 +10,22 @@ class CustomRequestDetailsButton extends StatelessWidget {
   var color;
   final Future<void> Function() onPressed;
   final double? width;
+  /// لو true → الـ font بيصغر في الإنجليزي بس (للزراير ذات النص الطويل)
+  final bool smallFontOnEnglish;
+
   CustomRequestDetailsButton({
     super.key,
     this.width,
     this.color,
     required this.title,
     required this.onPressed,
+    this.smallFontOnEnglish = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final bool isArabic = LocalizationService.isArabic(context: context);
+    final double fontSize = smallFontOnEnglish && !isArabic ? 9 : 11;
     return Expanded(
       child: CustomElevatedButton(
         titleSize: 10,
@@ -43,7 +48,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
           child: Text(
             title.toUpperCase(),
             style: AppStyles.whiteContent(context).copyWith(
-              fontSize: isArabic ? 11 : 9,
+              fontSize: fontSize,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,

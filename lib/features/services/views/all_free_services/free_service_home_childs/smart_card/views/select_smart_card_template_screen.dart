@@ -12,21 +12,38 @@ import 'package:provider/provider.dart';
 class SelectSmartCardTemplateScreen extends StatefulWidget {
   final bool isPersonal;
   final int? companyId;
+
+  /// The template_id currently saved on the profile (from API response).
+  final int? initialTemplateId;
+
+  /// The template_data currently saved on the profile (from API response).
+  /// e.g. {'primary_color': '#112233', 'secondary_color': '#445566', 'third_color': '#778899'}
+  final Map<String, dynamic>? initialTemplateData;
+
   const SelectSmartCardTemplateScreen({
     super.key,
     required this.isPersonal,
     this.companyId,
+    this.initialTemplateId,
+    this.initialTemplateData,
   });
 
   @override
-  State<SelectSmartCardTemplateScreen> createState() => _SelectSmartCardTemplateScreenState();
+  State<SelectSmartCardTemplateScreen> createState() =>
+      _SelectSmartCardTemplateScreenState();
 }
 
-class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateScreen> {
+class _SelectSmartCardTemplateScreenState
+    extends State<SelectSmartCardTemplateScreen> {
+  late PageController _pageController;
   int selectedTemplateIndex = 0;
+
+  /// Guard so we only jump to the initial template once after templates load.
+  bool _initialJumpDone = false;
+
   bool _isSaving = false;
 
-  // Colors state
+  // ── Colors state ────────────────────────────────────────────────────────
   Color primaryColor = const Color(0xFF244B78);
   Color secondaryColor = const Color(0xFFF5F5F5);
   Color thirdColor = const Color(0xFF000000);
@@ -42,10 +59,87 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
     const Color(0xFF1E88E5), // Light Blue
   ];
 
+  // ── Helpers ─────────────────────────────────────────────────────────────
+
+  /// Parse '#RRGGBB' / '#AARRGGBB' into a Flutter [Color].
+  Color? _parseHex(String? hex) {
+    if (hex == null || hex.isEmpty) return null;
+    final clean = hex.replaceAll('#', '');
+    if (clean.length == 6) {
+      final value = int.tryParse('FF$clean', radix: 16);
+      return value != null ? Color(value) : null;
+    } else if (clean.length == 8) {
+      final value = int.tryParse(clean, radix: 16);
+      return value != null ? Color(value) : null;
+    }
+    return null;
+  }
+
+  /// Find the closest color in [colorOptions] to [target] (by hex equality).
+  Color _closestColor(Color target) {
+    final targetHex = _colorToHex(target).toUpperCase();
+    for (final c in colorOptions) {
+      if (_colorToHex(c).toUpperCase() == targetHex) return c;
+    }
+    return target; // keep custom color if not in palette
+  }
+
+  String _colorToHex(Color color) {
+    return '#${color.value.toRadixString(16).substring(2, 8).toUpperCase()}';
+  }
+
+  // ── Lifecycle ────────────────────────────────────────────────────────────
+
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: 0);
+
+    // Pre-fill colors from initialTemplateData when available.
+    final data = widget.initialTemplateData;
+    if (data != null) {
+      final pc = _parseHex(data['primary_color']?.toString());
+      final sc = _parseHex(data['secondary_color']?.toString());
+      final tc = _parseHex(data['third_color']?.toString());
+      if (pc != null) primaryColor = _closestColor(pc);
+      if (sc != null) secondaryColor = _closestColor(sc);
+      if (tc != null) thirdColor = _closestColor(tc);
+    }
   }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  // ── Jump to initial template once templates are loaded ───────────────────
+
+  void _maybeJumpToInitialTemplate(List<Map<String, dynamic>> templates) {
+    if (_initialJumpDone || widget.initialTemplateId == null) {
+      _initialJumpDone = true;
+      return;
+    }
+    final idx = templates.indexWhere(
+      (t) => (t['id'] as int?) == widget.initialTemplateId,
+    );
+    if (idx >= 0 && idx != selectedTemplateIndex) {
+      // Animate smoothly to the current template page.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_pageController.hasClients) {
+          _pageController.animateToPage(
+            idx,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        }
+        setState(() => selectedTemplateIndex = idx);
+      });
+    }
+    _initialJumpDone = true;
+  }
+
+  // ── Navigation ───────────────────────────────────────────────────────────
 
   void _goBack() {
     try {
@@ -55,9 +149,7 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
     }
   }
 
-  String _colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2, 8).toUpperCase()}';
-  }
+  // ── Save ─────────────────────────────────────────────────────────────────
 
   Future<void> _handleSelectTemplate(Map<String, dynamic> template) async {
     final templateId = template['id'] as int?;
@@ -88,12 +180,12 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
           templateData: templateData,
         );
       }
-      
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppStrings.updatedSuccessfully.tr())),
       );
-      
+
       try {
         GoRouter.of(context).pop(true);
       } catch (e) {
@@ -101,7 +193,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
       }
     } catch (e) {
       if (!mounted) return;
-      final msg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
+      final msg =
+          e is Exception ? e.toString().replaceFirst('Exception: ', '') : e.toString();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(msg), backgroundColor: Colors.red),
       );
@@ -110,7 +203,10 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
     }
   }
 
-  Widget _buildColorSelector(String label, Color selectedColor, Function(Color) onSelect) {
+  // ── Color Selector Widget ─────────────────────────────────────────────────
+
+  Widget _buildColorSelector(
+      String label, Color selectedColor, Function(Color) onSelect) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,7 +251,9 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                   child: isSelected
                       ? Icon(
                           Icons.check,
-                          color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                          color: color.computeLuminance() > 0.5
+                              ? Colors.black
+                              : Colors.white,
                           size: 20,
                         )
                       : null,
@@ -167,6 +265,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
       ],
     );
   }
+
+  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +284,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                 color: Color(AppColors.secondaryButton),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
+              child:
+                  const Icon(Icons.arrow_back, color: Colors.white, size: 18),
             ),
             onPressed: _goBack,
           ),
@@ -202,7 +303,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
             if (vm.isLoading) {
               return Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                 ),
               );
             }
@@ -238,20 +340,26 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                     const SizedBox(height: 16),
                     Text(
                       AppStrings.noDataFounded.tr(),
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      style:
+                          TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                   ],
                 ),
               );
             }
 
+            // Once templates are loaded, jump to the pre-selected template.
+            _maybeJumpToInitialTemplate(templates);
+
             return Column(
               children: [
                 const SizedBox(height: 16),
                 Expanded(
                   child: PageView.builder(
+                    controller: _pageController,
                     itemCount: templates.length,
-                    onPageChanged: (index) => setState(() => selectedTemplateIndex = index),
+                    onPageChanged: (index) =>
+                        setState(() => selectedTemplateIndex = index),
                     itemBuilder: (context, index) {
                       return _buildTemplateCard(templates[index], index);
                     },
@@ -275,19 +383,29 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                   }),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Colors selection section
-                _buildColorSelector("Primary Color", primaryColor, (c) => setState(() => primaryColor = c)),
-                _buildColorSelector("Secondary Color", secondaryColor, (c) => setState(() => secondaryColor = c)),
-                _buildColorSelector("Third Color", thirdColor, (c) => setState(() => thirdColor = c)),
-                
+                _buildColorSelector(
+                    "Primary Color",
+                    primaryColor,
+                    (c) => setState(() => primaryColor = c)),
+                _buildColorSelector(
+                    "Secondary Color",
+                    secondaryColor,
+                    (c) => setState(() => secondaryColor = c)),
+                _buildColorSelector(
+                    "Third Color",
+                    thirdColor,
+                    (c) => setState(() => thirdColor = c)),
+
                 const SizedBox(height: 24),
                 Container(
                   padding: const EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: _isSaving
                         ? null
-                        : () => _handleSelectTemplate(templates[selectedTemplateIndex]),
+                        : () => _handleSelectTemplate(
+                            templates[selectedTemplateIndex]),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(AppColors.secondaryButton),
                       foregroundColor: Colors.white,
@@ -302,7 +420,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white),
                             ),
                           )
                         : Text(
@@ -322,6 +441,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
     );
   }
 
+  // ── Template Card ─────────────────────────────────────────────────────────
+
   Widget _buildTemplateCard(Map<String, dynamic> template, int index) {
     String? imageUrl;
     final dynamic imageSource = template['images'] ?? template['image'];
@@ -333,7 +454,7 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
     } else if (imageSource is String) {
       imageUrl = imageSource;
     }
-    
+
     final isSelected = selectedTemplateIndex == index;
 
     return Container(
@@ -358,7 +479,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
             children: [
               Expanded(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                   child: imageUrl != null && imageUrl.isNotEmpty
                       ? Image.network(
                           imageUrl,
@@ -376,7 +498,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                               ),
                             );
                           },
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
                             color: Colors.grey[300],
                             child: const Icon(
                               Icons.image,
@@ -395,7 +518,8 @@ class _SelectSmartCardTemplateScreenState extends State<SelectSmartCardTemplateS
                         ),
                 ),
               ),
-              if (template['slug'] != null && template['slug'].toString().isNotEmpty)
+              if (template['slug'] != null &&
+                  template['slug'].toString().isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: Align(

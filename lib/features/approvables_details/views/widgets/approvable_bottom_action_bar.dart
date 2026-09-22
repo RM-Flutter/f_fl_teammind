@@ -158,6 +158,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
           CustomRequestDetailsButton(
             title: 'overlapping_vacations'.tr(),
             color: Color(AppColors.buttons),
+            smallFontOnEnglish: true,
             onPressed: () async {
               await showOverlappingVacationsSheet(
                 context: context,

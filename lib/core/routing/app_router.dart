@@ -1461,11 +1461,17 @@ GoRouter goRouter(BuildContext context) {
                   }
                   final isPersonal = state.uri.queryParameters['isPersonal'] == 'true';
                   final companyId = int.tryParse(state.uri.queryParameters['companyId'] ?? '');
+                  // Extract optional pre-selection data passed via `extra`
+                  final extra = state.extra as Map<String, dynamic>?;
+                  final initialTemplateId = extra?['initialTemplateId'] as int?;
+                  final initialTemplateData = extra?['initialTemplateData'] as Map<String, dynamic>?;
                   return MaterialPage(
                     key: state.pageKey,
                     child: SelectSmartCardTemplateScreen(
                       isPersonal: isPersonal,
                       companyId: companyId,
+                      initialTemplateId: initialTemplateId,
+                      initialTemplateData: initialTemplateData,
                     ),
                   );
                 },

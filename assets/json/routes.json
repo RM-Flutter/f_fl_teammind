@@ -306,5 +306,29 @@
     {
         "frontendRoute": "cp-domain/{domain_id}/{domin_name}/ssl",
         "backendRoute": "cp-domain/{domain_id}/ssl"
+    },
+    {
+        "frontendRoute": "approvable-details/employee_requests/{id}",
+        "backendRoute": "approval-system/v1/employee_requests/employee/approvables/{id}"
+    },
+    {
+        "frontendRoute": "approvable-details/employee_requests/{id}",
+        "backendRoute": "approval-system/v1/employee_requests/approvables/{id}"
+    },
+    {
+        "frontendRoute": "approvable-details/overtime/{id}",
+        "backendRoute": "approval-system/v1/overtime/employee/approvables/{id}"
+    },
+    {
+        "frontendRoute": "approvable-details/overtime/{id}",
+        "backendRoute": "approval-system/v1/overtime/approvables/{id}"
+    },
+    {
+        "frontendRoute": "approvable-details/salary_advance/{id}",
+        "backendRoute": "approval-system/v1/salary_advance/employee/approvables/{id}"
+    },
+    {
+        "frontendRoute": "approvable-details/salary_advance/{id}",
+        "backendRoute": "approval-system/v1/salary_advance/approvables/{id}"
     }
 ]

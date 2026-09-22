@@ -30,6 +30,8 @@ class TeamPage {
   final String? content;
   final String? type;
   final List<TeamPageImage> images;
+  final List<TeamPageImage> pdfAr;
+  final List<TeamPageImage> pdfEn;
   final String? videoUrl;
 
   TeamPage({
@@ -38,11 +40,15 @@ class TeamPage {
     this.content,
     this.type,
     required this.images,
+    this.pdfAr = const [],
+    this.pdfEn = const [],
     this.videoUrl,
   });
 
   factory TeamPage.fromJson(Map<String, dynamic> json) {
     final imagesList = json['images'] as List<dynamic>?;
+    final pdfArList = json['pdf_ar'] as List<dynamic>?;
+    final pdfEnList = json['pdf_en'] as List<dynamic>?;
     return TeamPage(
       id: json['id'] as int?,
       title: json['title']?.toString(),
@@ -50,6 +56,18 @@ class TeamPage {
       type: json['type']?.toString(),
       images: imagesList != null
           ? imagesList
+              .map((e) => TeamPageImage.fromJson(
+                  Map<String, dynamic>.from(e as Map)))
+              .toList()
+          : [],
+      pdfAr: pdfArList != null
+          ? pdfArList
+              .map((e) => TeamPageImage.fromJson(
+                  Map<String, dynamic>.from(e as Map)))
+              .toList()
+          : [],
+      pdfEn: pdfEnList != null
+          ? pdfEnList
               .map((e) => TeamPageImage.fromJson(
                   Map<String, dynamic>.from(e as Map)))
               .toList()
