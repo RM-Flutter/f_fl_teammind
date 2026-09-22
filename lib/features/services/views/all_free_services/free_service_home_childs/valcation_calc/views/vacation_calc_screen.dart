@@ -117,7 +117,10 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
     double totalMonths = fullMonths + monthFraction;
     
     // الحساب: (عدد أيام الإجازة السنوية ÷ 12) × عدد الأشهر الفعلية
-    final balance = (annualDays / 12) * totalMonths;
+    double balance = (annualDays / 12) * totalMonths;
+    if (balance < 0) {
+      balance = 0.0;
+    }
     
     setState(() {
       calculatedBalance = balance;
