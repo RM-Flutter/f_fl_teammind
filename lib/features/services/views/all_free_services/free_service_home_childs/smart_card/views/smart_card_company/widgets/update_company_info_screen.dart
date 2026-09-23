@@ -16,6 +16,8 @@ import 'package:go_router/go_router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:app_test/core/services/alert_service/custom_alert.dart';
 
 class UpdateCompanyInfoScreen extends StatefulWidget {
   final Map<String, dynamic> company;
@@ -341,6 +343,34 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   }
 
   void _addMorePhone() => setState(() => _morePhonesControllers.add(TextEditingController()));
+
+  void _showPremiumAlert() {
+    if (!mounted) return;
+    final snackBar = SnackBar(
+      duration: const Duration(seconds: 3),
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom > 0
+            ? MediaQuery.of(context).viewInsets.bottom + AppSizes.s10
+            : AppSizes.s10,
+        left: 0,
+        right: 0,
+      ),
+      padding: const EdgeInsets.only(top: AppSizes.s15, bottom: AppSizes.s5),
+      backgroundColor: Colors.transparent,
+      content: CustomAlert(
+        title: AppStrings.failed.tr(),
+        message: context.locale.languageCode == 'ar'
+            ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم'
+            : 'Sorry, updating this data requires a Premium account',
+        contentType: AlertType.failure,
+      ),
+    );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void _removeMorePhone(int i) {
     if (i >= 0 && i < _morePhonesControllers.length) {
       _morePhonesControllers[i].dispose();
@@ -707,12 +737,15 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('${AppStrings.portfolio.tr()} ${index + 1}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => _removePortfolio(index)),
+                if (_isPremium)
+                  IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => _removePortfolio(index)),
               ],
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _portfolioNames[index],
+              readOnly: !_isPremium,
+              onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectName.tr(),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
@@ -721,6 +754,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             const SizedBox(height: 12),
             TextField(
               controller: _portfolioDescs[index],
+              readOnly: !_isPremium,
+              onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectDescription.tr(),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
@@ -730,6 +765,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             const SizedBox(height: 12),
             TextField(
               controller: _portfolioLinks[index],
+              readOnly: !_isPremium,
+              onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectLink.tr(),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
@@ -776,7 +813,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                     // Logo avatar at top (similar style to PersonalProfileScreen header)
                     Center(
                       child: GestureDetector(
-                        onTap: _pickLogo,
+                        onTap: _isPremium ? _pickLogo : _showPremiumAlert,
                         child: Stack(
                           alignment: Alignment.bottomRight,
                           children: [
@@ -865,6 +902,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                           Expanded(
                             child: TextField(
                               controller: _otherLinksControllers[i],
+                              readOnly: !_isPremium,
+                              onTap: !_isPremium ? _showPremiumAlert : null,
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                 labelText: '${AppStrings.website.tr()} / URL ${i + 1}',
@@ -872,13 +911,14 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                               ),
                             ),
                           ),
-                          IconButton(icon: const Icon(Icons.remove_circle_outline, color: Colors.red), onPressed: () => _removeOtherLink(i)),
+                          if (_isPremium)
+                            IconButton(icon: const Icon(Icons.remove_circle_outline, color: Colors.red), onPressed: () => _removeOtherLink(i)),
                         ],
                       ),
                     )),
                     if (_otherLinksControllers.isNotEmpty) const SizedBox(height: 8),
                     OutlinedButton.icon(
-                      onPressed: _addOtherLink,
+                      onPressed: _isPremium ? _addOtherLink : _showPremiumAlert,
                       icon: const Icon(Icons.add),
                       label: Text('${AppStrings.website.tr()} / URL (${AppStrings.addOne.tr()})', style: const TextStyle(fontSize: 16)),
                       style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
@@ -893,47 +933,47 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                     _sectionTitle(AppStrings.portfolio.tr()),
                     ...List.generate(_portfolioNames.length, (i) => _buildPortfolioItem(i)),
                     OutlinedButton.icon(
-                      onPressed: _addPortfolio,
+                      onPressed: _isPremium ? _addPortfolio : _showPremiumAlert,
                       icon: const Icon(Icons.add),
                       label: Text(AppStrings.addPortfolio.tr(), style: const TextStyle(fontSize: 16)),
                       style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
                     ),
-                    if (!_isPremium) ...[
 
-                      _sectionTitle(AppStrings.gallery.tr()),
-                      if (_worksGallery.isNotEmpty)
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: List.generate(_worksGallery.length, (i) {
-                            final value = _worksGallery[i];
-                            final urlOrBase64 = _mediaDisplayUrl(value);
-                            ImageProvider? provider;
-                            if (urlOrBase64 != null) {
-                              if (urlOrBase64.startsWith('http') || urlOrBase64.startsWith('https')) {
-                                provider = NetworkImage(urlOrBase64);
-                              } else {
-                                try {
-                                  provider = MemoryImage(base64Decode(urlOrBase64));
-                                } catch (_) {}
-                              }
+                    _sectionTitle(AppStrings.gallery.tr()),
+                    if (_worksGallery.isNotEmpty)
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(_worksGallery.length, (i) {
+                          final value = _worksGallery[i];
+                          final urlOrBase64 = _mediaDisplayUrl(value);
+                          ImageProvider? provider;
+                          if (urlOrBase64 != null) {
+                            if (urlOrBase64.startsWith('http') || urlOrBase64.startsWith('https')) {
+                              provider = NetworkImage(urlOrBase64);
+                            } else {
+                              try {
+                                provider = MemoryImage(base64Decode(urlOrBase64));
+                              } catch (_) {}
                             }
-                            return Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.black12),
-                                    color: Colors.grey.shade200,
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: provider != null
-                                      ? Image(image: provider, fit: BoxFit.cover)
-                                      : const Icon(Icons.image, size: 32),
+                          }
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.black12),
+                                  color: Colors.grey.shade200,
                                 ),
+                                clipBehavior: Clip.antiAlias,
+                                child: provider != null
+                                    ? Image(image: provider, fit: BoxFit.cover)
+                                    : const Icon(Icons.image, size: 32),
+                              ),
+                              if (_isPremium)
                                 IconButton(
                                   icon: const Icon(Icons.close, size: 18, color: Colors.red),
                                   onPressed: () {
@@ -942,43 +982,44 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                                     });
                                   },
                                 ),
-                              ],
-                            );
-                          }),
-                        ),
-                      const SizedBox(height: 8),
-                      OutlinedButton.icon(
-                        onPressed: _pickWorksImages,
-                        icon: const Icon(Icons.photo_library),
-                        label: Text(AppStrings.gallery.tr(), style: const TextStyle(fontSize: 16)),
-                        style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                            ],
+                          );
+                        }),
                       ),
-                      const SizedBox(height: 16),
-                      _sectionTitle(AppStrings.videos.tr()),
-                      if (_videoGallery.isNotEmpty)
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: List.generate(_videoGallery.length, (i) {
-                            final value = _videoGallery[i];
-                            final urlOrBase64 = _mediaDisplayUrl(value);
-                            final isUrl = urlOrBase64 != null && urlOrBase64.startsWith('https');
-                            return Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: Colors.black12),
-                                    color: Colors.grey.shade200,
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: isUrl
-                                      ? Image.network(_videoGallery[i]['thumbnail'], fit: BoxFit.cover)
-                                      : const Icon(Icons.videocam, size: 32),
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: _isPremium ? _pickWorksImages : _showPremiumAlert,
+                      icon: const Icon(Icons.photo_library),
+                      label: Text(AppStrings.gallery.tr(), style: const TextStyle(fontSize: 16)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                    ),
+                    const SizedBox(height: 16),
+                    _sectionTitle(AppStrings.videos.tr()),
+                    if (_videoGallery.isNotEmpty)
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(_videoGallery.length, (i) {
+                          final value = _videoGallery[i];
+                          final urlOrBase64 = _mediaDisplayUrl(value);
+                          final isUrl = urlOrBase64 != null && urlOrBase64.startsWith('https');
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.black12),
+                                  color: Colors.grey.shade200,
                                 ),
+                                clipBehavior: Clip.antiAlias,
+                                child: isUrl
+                                    ? Image.network(_videoGallery[i]['thumbnail'], fit: BoxFit.cover)
+                                    : const Icon(Icons.videocam, size: 32),
+                              ),
+                              if (_isPremium)
                                 IconButton(
                                   icon: const Icon(Icons.close, size: 18, color: Colors.red),
                                   onPressed: () {
@@ -987,18 +1028,17 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                                     });
                                   },
                                 ),
-                              ],
-                            );
-                          }),
-                        ),
-                      const SizedBox(height: 8),
-                      OutlinedButton.icon(
-                        onPressed: _pickVideos,
-                        icon: const Icon(Icons.video_library),
-                        label:  Text(AppStrings.videos.tr(), style: TextStyle(fontSize: 16)),
-                        style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                            ],
+                          );
+                        }),
                       ),
-                    ],
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: _isPremium ? _pickVideos : _showPremiumAlert,
+                      icon: const Icon(Icons.video_library),
+                      label:  Text(AppStrings.videos.tr(), style: TextStyle(fontSize: 16)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                    ),
                   ],
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 8),

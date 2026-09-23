@@ -350,16 +350,9 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       child: FilledButton(
                         onPressed: vm.isLoading
                             ? null
-                            : () async {
-                      final result = await context.pushNamed(
-                        AppRoutes.updateCompanyInfoScreen.name,
-                        pathParameters: {'lang': context.locale.languageCode},
-                        extra: <String, dynamic>{},
-                      );
-                      if (result == true) {
-                        vm.loadSmartCardScreen(context);
-                      }
-                    },
+                            : () {
+                                _showAddCompanyBottomSheet(vm);
+                              },
                         style: FilledButton.styleFrom(
                           backgroundColor: Color(AppColors.darkBlue),
                           padding: const EdgeInsets.symmetric(vertical: 8),

@@ -21,6 +21,29 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/model/team_page_model.dart';
 import 'widgets/youtube_video_player/youtube_video_player_screen.dart';
 
+import 'dart:convert';
+
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/platform/platform_is.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/styles.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/widgets/full_image_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../data/model/team_page_model.dart';
+import 'widgets/youtube_video_player/youtube_video_player_screen.dart';
+
 class AboutTeamMindScreen extends StatefulWidget {
   const AboutTeamMindScreen({super.key});
 
@@ -86,20 +109,31 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
       'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
 
   Future<void> _downloadAndOpenPdf() async {
-    final isAr = LocalizationService.isArabic(context: context);
-    
-    String? teamMindPdfUrl;
-    String? teamMindPdfFileName;
-
-    if (isAr && _page?.pdfAr != null && _page!.pdfAr.isNotEmpty) {
-      teamMindPdfUrl = _page!.pdfAr[0].file;
-      teamMindPdfFileName = teamMindPdfUrl?.split('/').last ?? 'document_ar.pdf';
-    } else if (!isAr && _page?.pdfEn != null && _page!.pdfEn.isNotEmpty) {
-      teamMindPdfUrl = _page!.pdfEn[0].file;
-      teamMindPdfFileName = teamMindPdfUrl?.split('/').last ?? 'document_en.pdf';
+    if (_page == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppStrings.failed.tr())),
+        );
+      }
+      return;
     }
 
-    if (teamMindPdfUrl == null || teamMindPdfUrl.isEmpty) {
+    final bool isAr = LocalizationService.isArabic(context: context);
+    final pdfList = isAr ? _page!.pdfAr : _page!.pdfEn;
+
+    if (pdfList.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppStrings.failed.tr())),
+        );
+      }
+      return;
+    }
+
+    final String? pdfUrl = pdfList[0].file;
+    final String pdfFileName = pdfUrl?.split('/').last ?? 'team_mind.pdf';
+
+    if (pdfUrl == null || pdfUrl.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppStrings.failed.tr())),
@@ -109,7 +143,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
     }
 
     if (PlatformIs.web) {
-      final uri = Uri.parse(teamMindPdfUrl);
+      final uri = Uri.parse(pdfUrl);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
@@ -127,9 +161,9 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
         );
       }
       final dir = await getApplicationDocumentsDirectory();
-      final filePath = '${dir.path}/$teamMindPdfFileName';
+      final filePath = '${dir.path}/$pdfFileName';
       final dio = Dio();
-      await dio.download(teamMindPdfUrl, filePath);
+      await dio.download(pdfUrl, filePath);
       if (!mounted) return;
       await OpenFilex.open(filePath);
       if (mounted) {
@@ -248,200 +282,204 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
           ),
           Expanded(
             child: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _error!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.red),
+                ? const Center(child: CircularProgressIndicator())
+                : _error != null
+                ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      onPressed: _loadPage,
+                      child: Text(AppStrings.retry.tr()),
+                    ),
+                  ],
+                ),
+              ),
+            )
+                : SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (_page?.content != null && _page!.content!.isNotEmpty) ...[
+                    _HtmlContent(content: _page!.content!),
+                    const SizedBox(height: 24),
+                  ],
+                  if (_page?.images != null && _page!.images.isNotEmpty) ...[
+                    SizedBox(
+                      height: 120,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _page!.images.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          final img = _page!.images[index];
+                          final url = img.file ?? img.thumbnail ?? '';
+                          if (url.isEmpty) return const SizedBox.shrink();
+                          return GestureDetector(
+                            onTap: (){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImageViewer(
+                                      imageUrls: _page!.images,
+                                      file: true,
+                                      initialIndex: index,
+                                      url: true,
+                                      thum: false,
+                                    ),
+                                  )
+                              );
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: CachedNetworkImage(
+                                imageUrl: url,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                placeholder: (_, __) => Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(child: CircularProgressIndicator()),
+                                ),
+                                errorWidget: (_, __, ___) => Container(
+                                  color: Colors.grey[300],
+                                  child: const Icon(Icons.image_not_supported),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  if (_page?.videoUrl != null && _page!.videoUrl!.isNotEmpty) ...[
+                    GestureDetector(
+                      onTap: () {
+                        context.pushNamed(
+                          AppRoutes.mediaCenterYoutubeScreenView.name,
+                          pathParameters: {
+                            'lang': context.locale.languageCode,
+                            'url': _page!.videoUrl.toString(),
+                          },
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
+                          height: 200,
+                          width: double.infinity,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Builder(
+                                builder: (context) {
+                                  final videoId = _youtubeVideoId(_page!.videoUrl!);
+                                  final thumbUrl = videoId != null
+                                      ? _youtubeThumbnailUrl(videoId)
+                                      : null;
+                                  if (thumbUrl != null) {
+                                    return CachedNetworkImage(
+                                      imageUrl: thumbUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (_, __) => Container(
+                                        color: Color(AppColors.secondaryButton).withOpacity(0.1),
+                                        child: const Center(child: CircularProgressIndicator()),
+                                      ),
+                                      errorWidget: (_, __, ___) => Container(
+                                        color: Color(AppColors.secondaryButton).withOpacity(0.1),
+                                        child: const Icon(Icons.videocam_off, size: 48),
+                                      ),
+                                    );
+                                  }
+                                  return Container(
+                                    color: Color(AppColors.secondaryButton).withOpacity(0.1),
+                                  );
+                                },
+                              ),
+                              Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.5),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    size: 48,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        TextButton(
-                          onPressed: _loadPage,
-                          child: Text(AppStrings.retry.tr()),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              context.pushNamed(
+                                AppRoutes.contactUs.name,
+                                pathParameters: {
+                                  "lang": context.locale.languageCode,
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(AppColors.buttons),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Text(
+                              AppStrings.contactUs.tr(),
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async => _downloadAndOpenPdf(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(AppColors.buttons),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Text(
+                              AppStrings.downloadPdf.tr(),
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (_page?.content != null && _page!.content!.isNotEmpty) ...[
-                        _HtmlContent(content: _page!.content!),
-                        const SizedBox(height: 24),
-                      ],
-                      if (_page?.images != null && _page!.images.isNotEmpty) ...[
-                        SizedBox(
-                          height: 120,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _page!.images.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 12),
-                            itemBuilder: (context, index) {
-                              final img = _page!.images[index];
-                              final url = img.file ?? img.thumbnail ?? '';
-                              if (url.isEmpty) return const SizedBox.shrink();
-                              return GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => FullScreenImageViewer(
-                                          imageUrls: _page!.images,
-                                          file: true,
-                                          initialIndex: index,
-                                          url: true,
-                                          thum: false,
-                                        ),
-                                      )
-                                  );
-                                },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: CachedNetworkImage(
-                                    imageUrl: url,
-                                    width: 120,
-                                    height: 120,
-                                    fit: BoxFit.cover,
-                                    placeholder: (_, __) => Container(
-                                      color: Colors.grey[300],
-                                      child: const Center(child: CircularProgressIndicator()),
-                                    ),
-                                    errorWidget: (_, __, ___) => Container(
-                                      color: Colors.grey[300],
-                                      child: const Icon(Icons.image_not_supported),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      if (_page?.videoUrl != null && _page!.videoUrl!.isNotEmpty) ...[
-                        GestureDetector(
-                          onTap: () {
-                            if (_page!.videoUrl != null) {
-                              _openVideo(_page!.videoUrl!);
-                            }
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: SizedBox(
-                              height: 200,
-                              width: double.infinity,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Builder(
-                                    builder: (context) {
-                                      final videoId = _youtubeVideoId(_page!.videoUrl!);
-                                      final thumbUrl = videoId != null
-                                          ? _youtubeThumbnailUrl(videoId)
-                                          : null;
-                                      if (thumbUrl != null) {
-                                        return CachedNetworkImage(
-                                          imageUrl: thumbUrl,
-                                          fit: BoxFit.cover,
-                                          placeholder: (_, __) => Container(
-                                            color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                                            child: const Center(child: CircularProgressIndicator()),
-                                          ),
-                                          errorWidget: (_, __, ___) => Container(
-                                            color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                                            child: const Icon(Icons.videocam_off, size: 48),
-                                          ),
-                                        );
-                                      }
-                                      return Container(
-                                        color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                                      );
-                                    },
-                                  ),
-                                  Center(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withValues(alpha: 0.5),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.play_arrow,
-                                        size: 48,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  context.pushNamed(
-                                    AppRoutes.contactUs.name,
-                                    pathParameters: {
-                                      "lang": context.locale.languageCode,
-                                    },
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(AppColors.buttons),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                ),
-                                child: Text(
-                                  AppStrings.contactUs.tr(),
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () async => _downloadAndOpenPdf(),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(AppColors.buttons),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                ),
-                                child: Text(
-                                  AppStrings.downloadPdf.tr(),
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

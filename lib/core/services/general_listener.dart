@@ -229,47 +229,21 @@ class GeneralListener {
     } else {
       var result = await routeCompile(popup);
       if (result != null) {
-        var route = result['key'] as String;
-        var params = result['values'] as Map<String, String>;
-
-        final lang = CacheHelper.getString("lang");
-        final ctx = rootNavigatorKey.currentContext!;
-
-        // --- Approvable Details (employee_requests / overtime / salary_advance) ---
-        if (route.startsWith('approvable-details/')) {
-          // route format: "approvable-details/{type}/{id}"
-          final segments = route.split('/');
-          // segments[0] = "approvable-details", segments[1] = type, segments[2] = "{id}"
-          final type = segments.length > 1 ? segments[1] : 'employee_requests';
-          final id = params['id'] ?? '';
-
-          ctx.goNamed(
-            AppRoutes.home.name,
-            pathParameters: {'lang': lang},
-          );
-          Future.delayed(const Duration(milliseconds: 500), () {
-            rootNavigatorKey.currentContext?.goNamed(
-              AppRoutes.approvableDetails.name,
-              pathParameters: {
-                'lang': lang,
-                'type': type,
-                'id': id,
-              },
-            );
-          });
-          return;
-        }
-
-        // --- Default route handling ---
+        var route = result['key'];
+        var params = result['values'];
         params.forEach((key, value) {
           route = route.replaceFirst('{$key}', value);
         });
-        ctx.goNamed(
+
+        final lang = CacheHelper.getString("lang");
+        rootNavigatorKey.currentContext!.goNamed(
           AppRoutes.home.name,
           pathParameters: {'lang': lang},
         );
         Future.delayed(const Duration(milliseconds: 500), () {
-          rootNavigatorKey.currentContext!.push('/$lang/$route');
+          rootNavigatorKey.currentContext!.push(
+            '/$lang/$route',
+          );
         });
       }
     }
@@ -301,15 +275,9 @@ class GeneralListener {
 
     // Parse URL and extract path and query parameters
     final uri = Uri.parse(url);
-    String path = uri.path
+    final path = uri.path
         .trim()
         .replaceAll(RegExp(r'^/|/$'), ''); // Trim leading/trailing slashes
-
-    // Strip leading "api/" prefix if present (full backend URLs include /api/)
-    if (path.startsWith('api/')) {
-      path = path.substring(4);
-    }
-
     final queryParams = uri.queryParameters;
 
     // Iterate through routes to find a match

@@ -309,26 +309,14 @@
     },
     {
         "frontendRoute": "approvable-details/employee_requests/{id}",
-        "backendRoute": "approval-system/v1/employee_requests/employee/approvables/{id}"
-    },
-    {
-        "frontendRoute": "approvable-details/employee_requests/{id}",
-        "backendRoute": "approval-system/v1/employee_requests/approvables/{id}"
-    },
-    {
-        "frontendRoute": "approvable-details/overtime/{id}",
-        "backendRoute": "approval-system/v1/overtime/employee/approvables/{id}"
-    },
-    {
-        "frontendRoute": "approvable-details/overtime/{id}",
-        "backendRoute": "approval-system/v1/overtime/approvables/{id}"
+        "backendRoute": "approvals/employee_requests/{id}"
     },
     {
         "frontendRoute": "approvable-details/salary_advance/{id}",
-        "backendRoute": "approval-system/v1/salary_advance/employee/approvables/{id}"
+        "backendRoute": "approvals/salary_advance/{id}"
     },
     {
-        "frontendRoute": "approvable-details/salary_advance/{id}",
-        "backendRoute": "approval-system/v1/salary_advance/approvables/{id}"
+        "frontendRoute": "approvable-details/overtime/{id}",
+        "backendRoute": "approvals/overtime/{id}"
     }
 ]
