@@ -182,7 +182,7 @@ class DioApiService implements BackEndServicesInterface {
             // Check for suspended / licence denied errors even in 200 responses
             final errorCode = reply["error"]?.toString();
             if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
-              _handleSuspendedError(safeContext!, errorCode!);
+              _handleSuspendedError(safeContext!, errorCode!, reply["message"]?.toString());
             }
             return OperationResult<T>(
                 success: false, message: reply["message"] ?? "");
@@ -192,7 +192,7 @@ class DioApiService implements BackEndServicesInterface {
         if (reply is Map) {
           final errorCode = reply["error"]?.toString();
           if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
-            _handleSuspendedError(safeContext!, errorCode!);
+            _handleSuspendedError(safeContext!, errorCode!, reply["message"]?.toString());
           }
         }
         return ApiServiceHelpers.parseResponse<T>(
@@ -242,7 +242,7 @@ class DioApiService implements BackEndServicesInterface {
           // Check for suspended / licence denied in non-standard responses
           final errorCode = response.data['error']?.toString();
           if (errorCode == 'INSTANCE_SUSPENDED' || errorCode == 'LICENCE_ACCESS_DENIED') {
-            _handleSuspendedError(safeContext!, errorCode!);
+            _handleSuspendedError(safeContext!, errorCode!, response.data['message']?.toString());
           }
           return ApiServiceHelpers.parseResponse<T>(
              responseJsonData: response.data, dataKey: dataKey, allData: allData);
@@ -253,7 +253,7 @@ class DioApiService implements BackEndServicesInterface {
     }
   }
 
-  static void _handleSuspendedError(BuildContext context, String errorCode) {
+  static void _handleSuspendedError(BuildContext context, String errorCode, String? errorMessage) {
     final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
     if (safeCtx == null || !safeCtx.mounted) return;
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -264,6 +264,7 @@ class DioApiService implements BackEndServicesInterface {
         safeCtx.goNamed(
           routeName,
           pathParameters: {'lang': safeCtx.locale.languageCode},
+          extra: errorMessage,
         );
       } catch (e) {
         debugPrint('Error navigating to suspended screen: $e');

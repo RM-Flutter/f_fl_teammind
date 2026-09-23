@@ -16,7 +16,8 @@ enum SuspendedErrorType {
 
 class SuspendedScreen extends StatelessWidget {
   final SuspendedErrorType errorType;
-  const SuspendedScreen({super.key, required this.errorType});
+  final String? errorMessage;
+  const SuspendedScreen({super.key, required this.errorType, this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +79,11 @@ class SuspendedScreen extends StatelessWidget {
                   gapH16,
                   // Description
                   Text(
-                    isSuspended
-                        ? 'instance_suspended_desc'.tr()
-                        : 'licence_denied_desc'.tr(),
+                    (errorMessage != null && errorMessage!.isNotEmpty)
+                        ? errorMessage!
+                        : (isSuspended
+                            ? 'instance_suspended_desc'.tr()
+                            : 'licence_denied_desc'.tr()),
                     style: AppStyles.bodyTextContent(context).copyWith(
                       fontSize: AppSizes.s15,
                       color: Colors.grey.shade600,

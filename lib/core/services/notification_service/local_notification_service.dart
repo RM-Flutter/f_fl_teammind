@@ -75,3 +75,4 @@ class LocalNotificationService {
     await _notificationsPlugin.cancelAll();
   }
 }
+

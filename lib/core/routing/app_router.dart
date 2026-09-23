@@ -2452,8 +2452,12 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.instanceSuspended.name,
         pageBuilder: (context, state) {
+          final errorMessage = state.extra as String?;
           return MaterialPage(
-            child: const SuspendedScreen(errorType: SuspendedErrorType.instanceSuspended),
+            child: SuspendedScreen(
+              errorType: SuspendedErrorType.instanceSuspended,
+              errorMessage: errorMessage,
+            ),
           );
         },
       ),
@@ -2462,8 +2466,12 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.licenceDenied.name,
         pageBuilder: (context, state) {
+          final errorMessage = state.extra as String?;
           return MaterialPage(
-            child: const SuspendedScreen(errorType: SuspendedErrorType.licenceDenied),
+            child: SuspendedScreen(
+              errorType: SuspendedErrorType.licenceDenied,
+              errorMessage: errorMessage,
+            ),
           );
         },
       ),

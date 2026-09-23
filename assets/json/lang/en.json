@@ -1253,7 +1253,7 @@
   "textInputMode": "Text",
   "enterSkillHint": "Enter skill",
   "no_access_title": "No Access",
-  "no_access_desc": "Sorry, your current account does not have access permissions, or your license type does not support mobile access.",
+  "no_access_desc": "Sorry, this user does not have a profile available for access from the app. Please check with the administrator.",
   "check_in_title": "Check In",
   "check_in_body": "It is time to check in. Do not forget to register your attendance today.",
   "check_out_title": "Check Out",

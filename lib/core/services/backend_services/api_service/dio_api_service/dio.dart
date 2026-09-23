@@ -85,6 +85,7 @@ class DioHelper{
                     ctx.goNamed(
                       routeName,
                       pathParameters: {'lang': ctx.locale.languageCode},
+                      extra: data['message']?.toString(),
                     );
                   } catch (e) {
                     debugPrint('Error navigating to suspended screen from interceptor: $e');

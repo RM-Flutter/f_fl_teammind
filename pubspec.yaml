@@ -1,7 +1,7 @@
 name: app_test
 description: "Attendance System for Companies."
 publish_to: 'none'
-version: 4.0.2+22
+version: 4.0.0+61
 
 environment:
   sdk: ^3.5.2
@@ -151,6 +151,8 @@ dev_dependencies:
 
 
 flutter:
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
