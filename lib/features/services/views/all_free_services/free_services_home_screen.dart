@@ -166,8 +166,8 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
             CoreHeader.transform(
               pinned: true,
               color: Colors.white,
-              shrinkHeight: AppSizes.s140,
-              expandedHeight: AppSizes.s200,
+              shrinkHeight: AppSizes.s100,
+              expandedHeight: AppSizes.s150,
               shrinkChild: const FreeServicesHeaderWidget(isExpanded: false),
               child: const SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
@@ -212,61 +212,6 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
                             notifications: viewModel.notifications!,
                             isFreeService: true,
                           )
-                        else
-                          Container(
-                            alignment: Alignment.topCenter,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSizes.s12,
-                              vertical: AppSizes.s20,
-                            ),
-                            color: Color(AppColors.secondaryButton),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      AppStrings.myNotifications.tr(),
-                                      style: TextStyle(
-                                        color: Color(AppColors.pink),
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const NotificationScreen(true),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        AppStrings.viewAll.tr(),
-                                        style: TextStyle(
-                                          color: Colors.white.withValues(alpha: 0.7),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 30),
-                                Center(
-                                  child: Text(
-                                    AppStrings.thereIsNoNotifications.tr(),
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.6),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 30),
-                              ],
-                            ),
-                          ),
                       ],
                     ],
                   ),

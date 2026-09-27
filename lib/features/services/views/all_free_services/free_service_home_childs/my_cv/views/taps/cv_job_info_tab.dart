@@ -21,37 +21,41 @@ class CVJobInfoTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Separator line
-          _buildSeparator(),
+          
           
           CVInfoItem(
             label: 'CURRENT JOB TITLE',
             value: jobInfo?.currentJobTitle,
             isRequired: true,
+            icon: Icons.badge_outlined,
           ),
           CVInfoItem(
             label: 'JOB',
             value: jobInfo?.jobTitle ?? jobInfo?.jobId?.toString(),
             isRequired: true,
             hint: '(SELECT)',
+            icon: Icons.work_outline,
           ),
           CVInfoItem(
-            label: 'ABOUT ME - ADD YOUR JOB DESCRIPTION...',
+            label: 'ABOUT ME',
             value: jobInfo?.aboutMe,
+            hint: 'ADD YOUR JOB DESCRIPTION...',
+            icon: Icons.description_outlined,
           ),
           CVInfoItem(
             label: 'SKILLS',
             value: jobInfo?.skillsTitles?.join(', ') ?? jobInfo?.skills?.join(', '),
             hint: '(اختيار من الموجود)',
+            icon: Icons.star_border,
           ),
           CVInfoItem(
             label: 'MORE SKILLS',
             value: jobInfo?.moreSkills,
             hint: 'ادخال قائمة عناصر اضافية - بشكل حر',
+            icon: Icons.add_circle_outline,
           ),
           
-          // Separator line
-          _buildSeparator(),
+          
           
           // Experience Section
           _buildSectionTitle('EXPERIENCE'),
@@ -59,8 +63,7 @@ class CVJobInfoTab extends StatelessWidget {
             ...jobInfo.experiences!.map((exp) => _buildExperienceItem(exp))
           else
           
-          // Separator line
-          _buildSeparator(),
+          
           
           // Portfolio Section
           _buildSectionTitle('PORTFOLIO'),
@@ -80,29 +83,29 @@ class CVJobInfoTab extends StatelessWidget {
     );
   }
 
-  Widget _buildSeparator() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      child: const Text(
-        '----------',
-        style: TextStyle(
-          color: Colors.grey,
-          letterSpacing: 2,
-        ),
-      ),
-    );
-  }
+  
 
   Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        '• $title',
-        style: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 16, bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Color(AppColors.secondaryButton).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.work_outline, size: 18, color: Color(AppColors.secondaryButton)),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyle(
+              color: Color(AppColors.secondaryButton),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

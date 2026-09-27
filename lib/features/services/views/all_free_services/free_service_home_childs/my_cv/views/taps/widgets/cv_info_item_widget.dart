@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../../../../../../core/constants/app_colors.dart';
 
 class CVInfoItem extends StatelessWidget {
@@ -7,6 +6,7 @@ class CVInfoItem extends StatelessWidget {
   final String? value;
   final bool isRequired;
   final String? hint;
+  final IconData? icon;
 
   const CVInfoItem({
     super.key,
@@ -14,40 +14,45 @@ class CVInfoItem extends StatelessWidget {
     this.value,
     this.isRequired = false,
     this.hint,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '• ',
-                style: TextStyle(
-                  color: Color(AppColors.secondaryButton),
-                  fontSize: 13,
-                ),
-              ),
+              if (icon != null) ...[
+                Icon(icon, size: 16, color: Colors.grey.shade600),
+                const SizedBox(width: 8),
+              ],
               Expanded(
                 child: RichText(
                   text: TextSpan(
                     style: TextStyle(
-                      color: Color(AppColors.secondaryButton),
+                      color: Colors.grey.shade600,
                       fontSize: 13,
-                      height: 1.4,
+                      fontWeight: FontWeight.w500,
                     ),
                     children: [
-                      TextSpan(
-                        text: label,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      TextSpan(text: label),
                       if (isRequired)
                         const TextSpan(
                           text: ' *',
@@ -62,36 +67,35 @@ class CVInfoItem extends StatelessWidget {
               ),
             ],
           ),
-          if (value != null && value!.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Text(
-                value!,
-                style: TextStyle(
-                  color: Color(AppColors.buttons),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
+          const SizedBox(height: 8),
+          if (value != null && value!.isNotEmpty)
+            Text(
+              value!,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          else if (hint != null)
+            Text(
+              hint!,
+              style: TextStyle(
+                color: Colors.grey.shade400,
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+              ),
+            )
+          else
+            Text(
+              "-",
+              style: TextStyle(
+                color: Colors.grey.shade400,
+                fontSize: 15,
               ),
             ),
-          ] else if (hint != null) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Text(
-                hint!,
-                style: TextStyle(
-                  color: Colors.grey[500],
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
   }
 }
-

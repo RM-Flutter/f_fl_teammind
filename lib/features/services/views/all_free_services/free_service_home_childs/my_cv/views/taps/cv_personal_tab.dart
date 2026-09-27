@@ -37,10 +37,12 @@ class CVPersonalTab extends StatelessWidget {
             label: AppStrings.name.tr(),
             value: personal?.name,
             isRequired: true,
+            icon: Icons.person_outline,
           ),
           CVInfoItem(
             label: AppStrings.familyStatus.tr(),
             value: personal?.familyStatus,
+            icon: Icons.family_restroom,
           ),
           CVInfoItem(
             label: AppStrings.birthday.tr(),
@@ -48,34 +50,41 @@ class CVPersonalTab extends StatelessWidget {
                 ? personal!.birthday!.split(' ')[0] // Remove time part
                 : null,
             isRequired: true,
+            icon: Icons.cake_outlined,
           ),
           CVInfoItem(
             label: AppStrings.gender.tr(),
             value: personal?.gender,
             isRequired: true,
+            icon: Icons.male,
           ),
           CVInfoItem(
             label: AppStrings.nationality.tr(),
             value: personal?.nationalityTitle ?? personal?.nationalityId?.toString(),
             isRequired: true,
+            icon: Icons.flag_outlined,
           ),
           CVInfoItem(
             label: AppStrings.country.tr(),
             value: personal?.countryTitle ?? personal?.countryId?.toString(),
             isRequired: true,
+            icon: Icons.public,
           ),
           CVInfoItem(
             label: AppStrings.stateProvince.tr(),
             value: personal?.stateTitle ?? personal?.stateId?.toString(),
             isRequired: true,
+            icon: Icons.map_outlined,
           ),
           CVInfoItem(
             label: AppStrings.city.tr(),
             value: personal?.cityTitle ?? personal?.cityId?.toString(),
+            icon: Icons.location_city_outlined,
           ),
           CVInfoItem(
             label: AppStrings.address.tr(),
             value: personal?.address,
+            icon: Icons.home_outlined,
           ),
         ],
       ),

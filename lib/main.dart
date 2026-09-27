@@ -65,6 +65,7 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await CacheHelper.init();
   FcmTokenService.initAtAppStart();
+  await LocalNotificationService.init();
 
   if (kIsWeb) {
     await Firebase.initializeApp(

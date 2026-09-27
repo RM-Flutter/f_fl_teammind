@@ -22,8 +22,7 @@ class CVEducationTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Separator line
-          _buildSeparator(),
+          
           
           // Education Section
           _buildSectionTitle('EDUCATION'),
@@ -37,29 +36,29 @@ class CVEducationTab extends StatelessWidget {
     );
   }
 
-  Widget _buildSeparator() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      child: const Text(
-        '----------',
-        style: TextStyle(
-          color: Colors.grey,
-          letterSpacing: 2,
-        ),
-      ),
-    );
-  }
+  
 
   Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        '• $title',
-        style: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 16, bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Color(AppColors.secondaryButton).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.school_outlined, size: 18, color: Color(AppColors.secondaryButton)),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyle(
+              color: Color(AppColors.secondaryButton),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

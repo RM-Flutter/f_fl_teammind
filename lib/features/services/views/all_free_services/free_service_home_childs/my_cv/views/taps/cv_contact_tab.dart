@@ -20,30 +20,34 @@ class CVContactTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Separator line
-          _buildSeparator(),
+          
           
           CVInfoItem(
             label: 'PHONE',
             value: contact?.phone,
             isRequired: true,
+            icon: Icons.phone,
           ),
           CVInfoItem(
             label: 'EMAIL',
             value: contact?.email,
             isRequired: true,
+            icon: Icons.email_outlined,
           ),
           CVInfoItem(
             label: 'LINKEDIN',
             value: contact?.linkedin,
+            icon: Icons.link,
           ),
           CVInfoItem(
             label: 'BEHANCE',
             value: contact?.behance,
+            icon: Icons.brush,
           ),
           CVInfoItem(
             label: 'WHATSAPP',
             value: contact?.whatsapp,
+            icon: Icons.chat_bubble_outline,
           ),
         ],
       ),
@@ -51,17 +55,6 @@ class CVContactTab extends StatelessWidget {
   }
 
 
-  Widget _buildSeparator() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: const Text(
-        '----------',
-        style: TextStyle(
-          color: Colors.grey,
-          letterSpacing: 2,
-        ),
-      ),
-    );
-  }
+  
 }
 
