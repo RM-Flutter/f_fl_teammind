@@ -456,8 +456,11 @@ class _SelectSmartCardTemplateScreenState
 
     final isSelected = selectedTemplateIndex == index;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
+    return Center(
+      child: AspectRatio(
+        aspectRatio: 9 / 16,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -483,7 +486,7 @@ class _SelectSmartCardTemplateScreenState
                   child: imageUrl != null && imageUrl.isNotEmpty
                       ? Image.network(
                           imageUrl,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           width: double.infinity,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -539,6 +542,6 @@ class _SelectSmartCardTemplateScreenState
           ),
         ],
       ),
-    );
+    )));
   }
 }

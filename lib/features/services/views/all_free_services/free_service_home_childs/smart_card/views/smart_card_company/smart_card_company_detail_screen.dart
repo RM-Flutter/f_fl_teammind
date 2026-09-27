@@ -525,31 +525,25 @@ class _SmartCardCompanyDetailScreenState
                       ],
                     ),
                     const SizedBox(height: 32),
-                    Center(
-                      child: Text(
-                        AppStrings.employeeProfiles.tr(),
-                        style: const TextStyle(
-                          color: Color(AppColors.black),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                    if (vm.isLoading)
+                      const Padding(
+                        padding: EdgeInsets.all(24.0),
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (vm.companyEmployees.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Center(
-                            child: Text(
-                            AppStrings.noEmployees.tr(),
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
+                    if (vm.companyEmployees.isNotEmpty) ...[
+                      Center(
+                        child: Text(
+                          AppStrings.employeeProfiles.tr(),
+                          style: const TextStyle(
+                            color: Color(AppColors.black),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      )
-                    else
+                      ),
+                      const SizedBox(height: 16),
                       ...vm.companyEmployees.map(
                         (e) => _buildEmployeeCard(
                           e,
@@ -571,6 +565,7 @@ class _SmartCardCompanyDetailScreenState
                           },
                         ),
                       ),
+                      ],
                   ],
                 ),
               ),

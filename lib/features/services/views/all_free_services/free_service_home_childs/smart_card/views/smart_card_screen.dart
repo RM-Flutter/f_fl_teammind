@@ -246,7 +246,10 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),
-                child: Column(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 700),
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
@@ -295,17 +298,34 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       ),
                     ),
                     SizedBox(height: 30,),
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        AppStrings.selectCompanyProfile.tr(),
-                        style: const TextStyle(
-                          color: Color(AppColors.darkBlue),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          AppStrings.selectCompanyProfile.tr(),
+                          style: const TextStyle(
+                            color: Color(AppColors.darkBlue),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
+                        InkWell(
+                          onTap: vm.isLoading ? null : () { _showAddCompanyBottomSheet(vm); },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Color(AppColors.buttons).withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              color: Color(AppColors.buttons),
+                              size: 26,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     if (vm.myCompanies.isEmpty)
@@ -343,45 +363,20 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                             )
                             .toList(),
                       ),
-                    const SizedBox(height: 12),
-                    Container(
-                      height: 40,
-                      width: 160,
-                      child: FilledButton(
-                        onPressed: vm.isLoading
-                            ? null
-                            : () {
-                                _showAddCompanyBottomSheet(vm);
-                              },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Color(AppColors.darkBlue),
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        child: Text(
-                          AppStrings.addNewCompany.tr(),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
+
 
                     const SizedBox(height: 32),
 
                     // 2) Personal QR Profile section
                     Container(
                       width: double.infinity,
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         AppStrings.personalQrProfile.tr(),
                         style: const TextStyle(
                           color: Color(AppColors.darkBlue),
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -425,13 +420,13 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     SizedBox(height: 30,),
                     Container(
                       width: double.infinity,
-                      alignment: Alignment.center,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         AppStrings.callUsFor.tr(),
                         style: const TextStyle(
                           color: Color(AppColors.black),
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -457,7 +452,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     ),
                   ],
                 ),
-              ),
+              ))),
             );
           },
         ),
@@ -716,168 +711,84 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
     final name = company['name']?.toString() ?? '';
     final companyId = company['id'] as int?;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? Color(AppColors.buttons) : Colors.grey[300]!,
-            width: isSelected ? 1.5 : 1,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isSelected ? Color(AppColors.secondaryButton) : Colors.grey.shade200,
+          width: isSelected ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                name,
-                style: const TextStyle(
-                  color: Color(AppColors.black),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-            if (company['profile_url'] != null && company['profile_url'].toString().isNotEmpty)
-              IconButton(
-                icon: const Icon(Icons.link, color: Colors.blue),
-                onPressed: () async {
-                  final url = Uri.parse(company['profile_url'].toString());
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  }
-                },
-              ),
-            if (companyId != null)
-              IconButton(
-                icon: const Icon(Icons.delete_outline, color: Colors.red),
-                onPressed: () => _showDeleteCompanyBottomSheet(companyId, name),
-              ),
-          ],
-        ),
+        ],
       ),
-    );
-  }
-
-  void _showDeleteCompanyBottomSheet(int companyId, String companyName) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-        decoration: BoxDecoration(
-          color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Icon(
-              Icons.warning_amber_rounded,
-              color: Colors.red,
-              size: 48,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'deleteCompanyConfirm'.tr(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              companyName,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Color(AppColors.secondaryButton).withOpacity(0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.business_outlined, color: Color(AppColors.secondaryButton), size: 24),
+                ),
+                const SizedBox(width: 16),
                 Expanded(
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(ctx).pop(),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.grey[200],
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      'cancel'.tr(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.black87,
+                      const SizedBox(height: 4),
+                      Text(
+                        'Company Profile',
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton(
+                if (company['profile_url'] != null && company['profile_url'].toString().isNotEmpty)
+                  IconButton(
+                    icon: Icon(Icons.qr_code_2_rounded, color: Color(AppColors.secondaryButton)),
+                    tooltip: 'View Profile',
                     onPressed: () async {
-                      Navigator.of(ctx).pop();
-                      final ok = await viewModel.deleteCompany(context, companyId);
-                      if (ok && mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('deleted_successfully'.tr())),
-                        );
+                      final url = Uri.parse(company['profile_url'].toString());
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
                       }
                     },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'delete'.tr(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
                   ),
-                ),
+                if (companyId != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+                    tooltip: 'Delete Company',
+                    onPressed: () => _showDeleteCompanyBottomSheet(companyId, name),
+                  ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -890,43 +801,205 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
         '';
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              displayName.isEmpty ? AppStrings.notSet.tr() : displayName,
-              style: const TextStyle(
-                color: Color(AppColors.black),
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+      child: Material(
+        color: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Color(AppColors.buttons).withOpacity(0.08),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.person_outline, color: Color(AppColors.buttons), size: 24),
               ),
-            ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      displayName.isEmpty ? AppStrings.notSet.tr() : displayName,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Personal Profile',
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (profile['profile_url'] != null && profile['profile_url'].toString().isNotEmpty)
+                IconButton(
+                  icon: Icon(Icons.qr_code_2_rounded, color: Color(AppColors.buttons)),
+                  tooltip: 'View Profile',
+                  onPressed: () async {
+                    final url = Uri.parse(profile['profile_url'].toString());
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+            ],
           ),
-          if (profile['profile_url'] != null && profile['profile_url'].toString().isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.link, color: Colors.blue),
-              onPressed: () async {
-                final url = Uri.parse(profile['profile_url'].toString());
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url, mode: LaunchMode.externalApplication);
-                }
-              },
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteCompanyBottomSheet(int companyId, String companyName) {
+    bool isDeleting = false;
+    showModalBottomSheet<void>(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) {
+          return Container(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+            decoration: BoxDecoration(
+              color: Color(AppColors.modalBackground),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             ),
-        ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.red,
+                  size: 48,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'deleteCompanyConfirm'.tr(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  companyName,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: isDeleting ? null : () => Navigator.of(ctx).pop(),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.grey[200],
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'cancel'.tr(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: isDeleting
+                            ? null
+                            : () async {
+                                setModalState(() {
+                                  isDeleting = true;
+                                });
+                                final ok = await viewModel.deleteCompany(context, companyId);
+                                if (ctx.mounted) {
+                                  Navigator.of(ctx).pop();
+                                }
+                                if (ok && mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('deleted_successfully'.tr())),
+                                  );
+                                }
+                              },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: isDeleting
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                'delete'.tr(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

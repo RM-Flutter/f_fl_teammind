@@ -199,8 +199,11 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
     final isDownloading =
         template.id != null && vm.downloadProgress.containsKey(template.id);
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
+    return Center(
+      child: AspectRatio(
+        aspectRatio: 1 / 1.35,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -226,7 +229,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       ? (kIsWeb
                           ? Image.network(
                               imageUrl,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                               width: double.infinity,
                               loadingBuilder: (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
@@ -251,7 +254,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                             )
                           : CachedNetworkImage(
                               imageUrl: imageUrl,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                               width: double.infinity,
                               placeholder: (context, url) => Container(
                                 color: Color(AppColors.buttons),
@@ -333,6 +336,6 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
             ),
         ],
       ),
-    );
+    )));
   }
 }
