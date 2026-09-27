@@ -631,15 +631,12 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       final sdkInt = androidInfo.version.sdkInt;
 
-      if (sdkInt >= 30) {
-        var status = await Permission.manageExternalStorage.status;
-        if (!status.isGranted) {
-          status = await Permission.manageExternalStorage.request();
-          if (!status.isGranted) {
-            await openAppSettings();
-            return false;
-          }
-        }
+      if (sdkInt >= 33) {
+        // On Android 13+, we don't need write permissions to create files in public directories like Download.
+        return true;
+      } else if (sdkInt >= 30) {
+        // On Android 11 and 12, we also don't need write permissions for public directories.
+        // MANAGE_EXTERNAL_STORAGE is strictly for file managers and requires special Play Store approval.
         return true;
       } else if (sdkInt >= 23) {
         var status = await Permission.storage.status;

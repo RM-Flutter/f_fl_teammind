@@ -102,7 +102,7 @@ class VacationListWidget extends StatelessWidget {
                 extra: requests),
             child: Container(
               width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-              height: 120,
+              height: 128,
               padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
                 color: Color(AppColors.buttons),
@@ -228,7 +228,7 @@ class VacationCard extends StatelessWidget {
           }),
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-        height: 120,
+        height: 128,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
           color: Color(AppColors.secondaryButton), // Match BalanceCard color

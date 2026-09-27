@@ -51,7 +51,7 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Need BLE permission</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera.</string>
+	<string>TeamMind Hub needs access to your camera to let you capture and attach photos or videos to your tasks and team messages.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>This app requires Face ID to secure your sensitive payroll information.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -61,9 +61,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to access Wi-Fi information.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>We need access to your microphone to let you record audio with your videos.</string>
+	<string>TeamMind Hub needs access to your microphone to let you record audio when capturing videos for your team tasks.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to let you select and upload photos.</string>
+	<string>TeamMind Hub needs access to your photo library to let you select and upload photos to your team messages and tasks.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
