@@ -398,6 +398,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               },
                             ),
                             DefaultListTile(
+                              title: 'reports'.tr(),
+                              icon: Icons.analytics_outlined,
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.reportsCatalog.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                            DefaultListTile(
                               title: AppStrings.faqs.tr(),
                               src: "assets/images/svg/faqqs.svg",
                               onTap: () {

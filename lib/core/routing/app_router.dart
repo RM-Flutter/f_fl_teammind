@@ -108,8 +108,10 @@ import '../services/backend_services/api_service/dio_api_service/shared.dart';
 import '../services/telegram_error_service.dart';
 import '../widgets/webview_offers.dart';
 import 'package:app_test/features/more/files_center/views/files_center_screen.dart';
+import 'package:app_test/features/reports/views/reports_catalog_screen.dart';
 
 enum AppRoutes {
+  reportsCatalog,
   fawryProviderScreen,
   CategoriesprizePointsViewScreen,
   prizePointsViewScreen,
@@ -1683,6 +1685,25 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: const FilesCenterScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'reports-catalog',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.reportsCatalog.name,
+                pageBuilder: (context, state) {
+                  final animationController = AnimationController(vsync: ticker);
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const ReportsCatalogScreen(),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );
