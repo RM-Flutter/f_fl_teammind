@@ -1281,4 +1281,9 @@
   "licence_denied_title": "Access Not Allowed",
   "licence_denied_desc": "Your current license does not allow access from this platform. Please use the appropriate version or contact your administrator.",
   "go_to_domain_selection": "Go to Login"
+  ,"companyProfile": "Company Profile",
+  "personalProfile": "Personal Profile"
+  ,"primaryColor": "Primary Color",
+  "secondaryColor": "Secondary Color",
+  "thirdColor": "Third Color"
 }

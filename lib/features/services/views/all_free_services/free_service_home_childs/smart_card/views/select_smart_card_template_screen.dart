@@ -385,15 +385,15 @@ class _SelectSmartCardTemplateScreenState
 
                 // Colors selection section
                 _buildColorSelector(
-                    "Primary Color",
+                    AppStrings.primaryColor.tr(),
                     primaryColor,
                     (c) => setState(() => primaryColor = c)),
                 _buildColorSelector(
-                    "Secondary Color",
+                    AppStrings.secondaryColor.tr(),
                     secondaryColor,
                     (c) => setState(() => secondaryColor = c)),
                 _buildColorSelector(
-                    "Third Color",
+                    AppStrings.thirdColor.tr(),
                     thirdColor,
                     (c) => setState(() => thirdColor = c)),
 

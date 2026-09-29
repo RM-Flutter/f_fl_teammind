@@ -1150,4 +1150,9 @@ abstract class AppStrings {
   static const noAccomplishmentsRecorded = "noAccomplishmentsRecorded";
   static const noOngoingTasksRecorded = "noOngoingTasksRecorded";
   static const noProblemsRecorded = "noProblemsRecorded";
+  static const companyProfile = "companyProfile";
+  static const personalProfile = "personalProfile";
+  static const primaryColor = "primaryColor";
+  static const secondaryColor = "secondaryColor";
+  static const thirdColor = "thirdColor";
 }

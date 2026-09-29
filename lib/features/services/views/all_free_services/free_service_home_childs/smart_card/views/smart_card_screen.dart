@@ -370,7 +370,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     // 2) Personal QR Profile section
                     Container(
                       width: double.infinity,
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: Text(
                         AppStrings.personalQrProfile.tr(),
                         style: const TextStyle(
@@ -420,7 +420,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     SizedBox(height: 30,),
                     Container(
                       width: double.infinity,
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: Text(
                         AppStrings.callUsFor.tr(),
                         style: const TextStyle(
@@ -760,7 +760,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Company Profile',
+                        AppStrings.companyProfile.tr(),
                         style: TextStyle(
                           color: Colors.grey.shade500,
                           fontSize: 12,
@@ -843,7 +843,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Personal Profile',
+                      AppStrings.personalProfile.tr(),
                       style: TextStyle(
                         color: Colors.grey.shade500,
                         fontSize: 12,

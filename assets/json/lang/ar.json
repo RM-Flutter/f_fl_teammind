@@ -1279,4 +1279,9 @@
   "licence_denied_title": "الوصول غير مسموح",
   "licence_denied_desc": "عفواً، هذا المستخدم ليس لديه بروفايل متاح للوصول من التطبيق. يرجى مراجعة المسؤول.",
   "go_to_domain_selection": "الذهاب لصفحة الدخول"
+  ,"companyProfile": "ملف الشركة",
+  "personalProfile": "الملف الشخصي"
+  ,"primaryColor": "اللون الأساسي",
+  "secondaryColor": "اللون الثانوي",
+  "thirdColor": "اللون الثالث"
 }
