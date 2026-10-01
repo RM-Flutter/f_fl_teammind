@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_test/core/helpers/package_helper.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/cache_constants.dart';
@@ -306,21 +307,23 @@ class _HomeScreenState extends State<HomeScreen> {
     bool canSeeTeamRequests = isManager || isHR || topManagement || isTeamLeader;
 
     // First, collect all widgets that have data
-    if (viewModel.myRequests != null &&
-        viewModel.myRequests?.isNotEmpty == true) {
-      widgetsWithData.add(HomeWidgetType.myRequests);
-    }
-    if (canSeeTeamRequests && viewModel.myTeamRequests != null &&
-        viewModel.myTeamRequests?.isNotEmpty == true) {
-      widgetsWithData.add(HomeWidgetType.myTeamRequests);
-    }
-    if (viewModel.otherDepartmentRequests != null &&
-        viewModel.otherDepartmentRequests?.isNotEmpty == true) {
-      widgetsWithData.add(HomeWidgetType.otherDepartmentRequests);
-    }
-    if (viewModel.allCompanyRequests != null &&
-        viewModel.allCompanyRequests?.isNotEmpty == true) {
-      widgetsWithData.add(HomeWidgetType.allCompanyRequests);
+    if (PackageHelper.hasPackage('emp-requests')) {
+      if (viewModel.myRequests != null &&
+          viewModel.myRequests?.isNotEmpty == true) {
+        widgetsWithData.add(HomeWidgetType.myRequests);
+      }
+      if (canSeeTeamRequests && viewModel.myTeamRequests != null &&
+          viewModel.myTeamRequests?.isNotEmpty == true) {
+        widgetsWithData.add(HomeWidgetType.myTeamRequests);
+      }
+      if (viewModel.otherDepartmentRequests != null &&
+          viewModel.otherDepartmentRequests?.isNotEmpty == true) {
+        widgetsWithData.add(HomeWidgetType.otherDepartmentRequests);
+      }
+      if (viewModel.allCompanyRequests != null &&
+          viewModel.allCompanyRequests?.isNotEmpty == true) {
+        widgetsWithData.add(HomeWidgetType.allCompanyRequests);
+      }
     }
     if (viewModel.notifications != null &&
         viewModel.notifications?.isNotEmpty == true) {
@@ -396,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        if (_availableWidgets.isEmpty && !_isEditMode)
+        if (_availableWidgets.isEmpty && !_isEditMode && PackageHelper.hasPackage('emp-requests'))
           NoExistingPlaceholderScreen(
               height: LayoutService.getHeight(context) * 0.4,
               title: AppStrings.thereIsNoRequestsAndNotifications.tr())
@@ -596,22 +599,23 @@ class _HomeScreenState extends State<HomeScreen> {
     bool canSeeTeamRequests = isManager || isHR || topManagement || isTeamLeader;
 
     final List<Map<String, dynamic>> items = [
-      {
-        'title': AppStrings.addRequestsShortcut.tr(),
-        'icon': 'assets/images/add-request.png',
-        'onTap': () => context.pushNamed(AppRoutes.addRequest.name,
-                pathParameters: {
-                  'type': 'mine',
-                  'lang': context.locale.languageCode
-                })
-      },
+      if (PackageHelper.hasPackage('emp-requests'))
+        {
+          'title': AppStrings.addRequestsShortcut.tr(),
+          'icon': 'assets/images/add-request.png',
+          'onTap': () => context.pushNamed(AppRoutes.addRequest.name,
+                  pathParameters: {
+                    'type': 'mine',
+                    'lang': context.locale.languageCode
+                  })
+        },
       {
         'title': AppStrings.viewTasksShortcut.tr(),
         'icon': 'assets/images/view-tasks.png',
         'onTap': () => context.pushNamed(AppRoutes.taskScreen.name,
             pathParameters: {'lang': context.locale.languageCode})
       },
-      if (canSeeTeamRequests)
+      if (canSeeTeamRequests && PackageHelper.hasPackage('emp-requests'))
         {
           'title': AppStrings.myTeamRequestsShortcut.tr(),
           'icon': 'assets/images/my-team-request.png',
@@ -621,13 +625,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 'lang': context.locale.languageCode
               })
         },
-      {
-        'title': AppStrings.viewPayrollShortcut.tr(),
-        'icon': 'assets/images/view-payroll.png',
-        'onTap': () => context.pushNamed(AppRoutes.payrollsList.name,
-            extra: {'employeeName': null, 'employeeId': null},
-            pathParameters: {'lang': context.locale.languageCode})
-      },
+      if (PackageHelper.hasPackage('emp-payroll'))
+        {
+          'title': AppStrings.viewPayrollShortcut.tr(),
+          'icon': 'assets/images/view-payroll.png',
+          'onTap': () => context.pushNamed(AppRoutes.payrollsList.name,
+              extra: {'employeeName': null, 'employeeId': null},
+              pathParameters: {'lang': context.locale.languageCode})
+        },
       {
         'title': AppStrings.viewArticlesShortcut.tr(),
         'icon': 'assets/images/view-articles.png',

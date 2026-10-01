@@ -26,6 +26,7 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../personal_profile/controllers/personal_profile_controller.dart';
+import 'package:app_test/core/helpers/package_helper.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -132,26 +133,28 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ),
                             SizedBox(height : 15),
-                            DefaultListTile(
-                              title: AppStrings.payroll.tr(),
-                              src: AppIcons.payroll,
-                              onTap: () async => await context
-                                  .pushNamed(AppRoutes.payrollsList.name, extra: {
-                                'employeeName': null,
-                                'employeeId': null
-                              }, pathParameters: {
-                                'lang': context.locale.languageCode
-                              }),
-                            ),
-                            DefaultListTile(
-                              title: AppStrings.salaryAdvanceRequests.tr(),
-                              src: AppIcons.payroll,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.salaryAdvanceList.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
+                            if (PackageHelper.hasPackage('emp-payroll'))
+                              DefaultListTile(
+                                title: AppStrings.payroll.tr(),
+                                src: AppIcons.payroll,
+                                onTap: () async => await context
+                                    .pushNamed(AppRoutes.payrollsList.name, extra: {
+                                  'employeeName': null,
+                                  'employeeId': null
+                                }, pathParameters: {
+                                  'lang': context.locale.languageCode
+                                }),
+                              ),
+                            if (PackageHelper.hasPackage('emp-payroll'))
+                              DefaultListTile(
+                                title: AppStrings.salaryAdvanceRequests.tr(),
+                                src: AppIcons.payroll,
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.salaryAdvanceList.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
                             DefaultListTile(
                               title: AppStrings.tasks.tr(),
                               src: AppIcons.tasks,
@@ -161,41 +164,54 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
-                            DefaultListTile(
-                              title: AppStrings.evaluationRequests.tr(),
-                              src: AppIcons.payroll,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.evaluationRequireScreen.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
-                            DefaultListTile(
-                                title: AppStrings.rewardsAndPenalties.tr(),
-                                src: AppIcons.reward,
+                            if (PackageHelper.hasPackage('emp-evaluation'))
+                              DefaultListTile(
+                                title: AppStrings.evaluationRequests.tr(),
+                                src: AppIcons.payroll,
                                 onTap: () async => await context.pushNamed(
-                                    AppRoutes.rewardsAndPenalties.name,
-                                    extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
-                                    pathParameters: {'lang': context.locale.languageCode})
-                            ),
+                                    AppRoutes.evaluationRequireScreen.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
+                            if (PackageHelper.hasPackage('emp-payroll'))
+                              DefaultListTile(
+                                  title: AppStrings.rewardsAndPenalties.tr(),
+                                  src: AppIcons.reward,
+                                  onTap: () async => await context.pushNamed(
+                                      AppRoutes.rewardsAndPenalties.name,
+                                      extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
+                                      pathParameters: {'lang': context.locale.languageCode})
+                              ),
                             DefaultListTile(
-                              title: AppStrings.overtimeRequests.tr(),
-                              icon: Icons.access_time, // Reusing an existing icon
+                              title: AppStrings.expenseClaimsRequests.tr(),
+                              icon: Icons.account_balance_wallet_outlined,
                               onTap: () async => await context.pushNamed(
-                                  AppRoutes.overtimeRequestsScreen.name,
+                                  AppRoutes.expenseClaimsList.name,
                                   pathParameters: {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
-                            DefaultListTile(
-                              title: AppStrings.dailyReports.tr(),
-                              icon: Icons.edit_document,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.dailyReportsListScreen.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
+                            if (PackageHelper.hasPackage('fingerprint-sys'))
+                              DefaultListTile(
+                                title: AppStrings.overtimeRequests.tr(),
+                                icon: Icons.access_time, // Reusing an existing icon
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.overtimeRequestsScreen.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
+                            if (PackageHelper.hasPackage('emp-reports'))
+                              DefaultListTile(
+                                title: AppStrings.dailyReports.tr(),
+                                icon: Icons.edit_document,
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.dailyReportsListScreen.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) SizedBox(height : 15),
                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Padding(
                              padding: EdgeInsets.symmetric(horizontal: 24),
@@ -207,50 +223,58 @@ class _MoreScreenState extends State<MoreScreen> {
                                        fontWeight: FontWeight.w600)),
                              ),
                            ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                              title: AppStrings.teamRequests.tr(),
-                              src: AppIcons.teamRequests,
-                              onTap: ()async {
-                                await context.pushNamed(AppRoutes.requests2.name,
-                                  //  extra: requests,
-                                    pathParameters: {
-                                      'type': GetRequestsTypes.myTeam.name,
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                              title: AppStrings.otherDepartmentsRequests.tr(),
-                              src: AppIcons.otherDepartments,
-                              onTap: () async{
-                                await context.pushNamed(AppRoutes.requests2.name,
-                                    pathParameters: {
-                                      'type': GetRequestsTypes.otherDepartment.name,
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                              title: 'all_company_requests'.tr(),
-                              icon: Icons.business, // Fallback icon
-                              onTap: () async{
-                                await context.pushNamed(AppRoutes.requests2.name,
-                                    pathParameters: {
-                                      'type': GetRequestsTypes.allCompany.name,
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
-                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
-                              title: AppStrings.teamFingerprint.tr(),
-                              src: AppIcons.teamFingerprint,
-                              onTap: () async{
-                                await context.pushNamed(AppRoutes.teamFingerprint.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) 
+                              if (PackageHelper.hasPackage('emp-requests'))
+                                DefaultListTile(
+                                  title: AppStrings.teamRequests.tr(),
+                                  src: AppIcons.teamRequests,
+                                  onTap: ()async {
+                                    await context.pushNamed(AppRoutes.requests2.name,
+                                      //  extra: requests,
+                                        pathParameters: {
+                                          'type': GetRequestsTypes.myTeam.name,
+                                          'lang': context.locale.languageCode
+                                        });
+                                  },
+                                ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) 
+                              if (PackageHelper.hasPackage('emp-requests'))
+                                DefaultListTile(
+                                  title: AppStrings.otherDepartmentsRequests.tr(),
+                                  src: AppIcons.otherDepartments,
+                                  onTap: () async{
+                                    await context.pushNamed(AppRoutes.requests2.name,
+                                        pathParameters: {
+                                          'type': GetRequestsTypes.otherDepartment.name,
+                                          'lang': context.locale.languageCode
+                                        });
+                                  },
+                                ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) 
+                              if (PackageHelper.hasPackage('emp-requests'))
+                                DefaultListTile(
+                                  title: 'all_company_requests'.tr(),
+                                  icon: Icons.business, // Fallback icon
+                                  onTap: () async{
+                                    await context.pushNamed(AppRoutes.requests2.name,
+                                        pathParameters: {
+                                          'type': GetRequestsTypes.allCompany.name,
+                                          'lang': context.locale.languageCode
+                                        });
+                                  },
+                                ),
+                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) 
+                              if (PackageHelper.hasPackage('fingerprint-sys'))
+                                DefaultListTile(
+                                  title: AppStrings.teamFingerprint.tr(),
+                                  src: AppIcons.teamFingerprint,
+                                  onTap: () async{
+                                    await context.pushNamed(AppRoutes.teamFingerprint.name,
+                                        pathParameters: {
+                                          'lang': context.locale.languageCode
+                                        });
+                                  },
+                                ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true)DefaultListTile(
                               title: AppStrings.teamTodayStatus.tr(),
                               icon: Icons.groups_rounded,
@@ -273,16 +297,17 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ),
                             SizedBox(height : 15),
-                            DefaultListTile(
-                              title: AppStrings.ticketSystem.tr(),
-                              src: "assets/images/svg/mts.svg",
-                              onTap: () {
-                                context.pushNamed(AppRoutes.complainScreen.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
+                            if (PackageHelper.hasPackage('emp-requests'))
+                              DefaultListTile(
+                                title: AppStrings.ticketSystem.tr(),
+                                src: "assets/images/svg/mts.svg",
+                                onTap: () {
+                                  context.pushNamed(AppRoutes.complainScreen.name,
+                                      pathParameters: {
+                                        'lang': context.locale.languageCode
+                                      });
+                                },
+                              ),
                             // DefaultListTile(
                             //   title: AppStrings.points.tr(),
                             //   src: "assets/images/svg/mts.svg",
@@ -293,49 +318,51 @@ class _MoreScreenState extends State<MoreScreen> {
                             //         });
                             //   },
                             // ),
-                            DefaultListTile(
-                              title: AppStrings.employeesDirectory.tr(),
-                              src:  "assets/images/svg/med.svg",
-                              onTap: () {
-                                context.pushNamed(AppRoutes.employeesList.name,
-                                    pathParameters: {'lang': context.locale.languageCode,
-                                    });
-                              },
-                            ),
-                            DefaultListTile(
-                              title: AppStrings.companyStructure.tr(),
-                              src: "assets/images/svg/mcs.svg",
-                              onTap: () async{
-                                final jsonString = CacheHelper.getString("USG");
-                                Map<String, dynamic>? gCache;
-                                if (jsonString != null && jsonString.isNotEmpty) {
-                                  gCache = json.decode(jsonString) as Map<String, dynamic>;
-                                }
-                                final url = gCache?['company_structure_url'] ?? "https://www.google.com/";
-
-                                // On web, open in browser. On mobile, use WebView
-                                if (PlatformIs.web) {
-                                  final uri = Uri.parse(url);
-                                  if (await canLaunchUrl(uri)) {
-                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                  } else {
-                                    if (mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Could not open $url')),
-                                      );
-                                    }
+                            if (PackageHelper.hasPackage('emp-requests'))
+                              DefaultListTile(
+                                title: AppStrings.employeesDirectory.tr(),
+                                src:  "assets/images/svg/med.svg",
+                                onTap: () {
+                                  context.pushNamed(AppRoutes.employeesList.name,
+                                      pathParameters: {'lang': context.locale.languageCode,
+                                      });
+                                },
+                              ),
+                            if (PackageHelper.hasPackage('emp-requests'))
+                              DefaultListTile(
+                                title: AppStrings.companyStructure.tr(),
+                                src: "assets/images/svg/mcs.svg",
+                                onTap: () async{
+                                  final jsonString = CacheHelper.getString("USG");
+                                  Map<String, dynamic>? gCache;
+                                  if (jsonString != null && jsonString.isNotEmpty) {
+                                    gCache = json.decode(jsonString) as Map<String, dynamic>;
                                   }
-                                } else {
-                                  // On mobile, navigate to WebView screen
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const WebViewStack(),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
+                                  final url = gCache?['company_structure_url'] ?? "https://www.google.com/";
+  
+                                  // On web, open in browser. On mobile, use WebView
+                                  if (PlatformIs.web) {
+                                    final uri = Uri.parse(url);
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                    } else {
+                                      if (mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Could not open $url')),
+                                        );
+                                      }
+                                    }
+                                  } else {
+                                    // On mobile, navigate to WebView screen
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const WebViewStack(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
                             DefaultListTile(
                               title: AppStrings.articlesNew.tr(),
                               src: "assets/images/svg/man.svg",
@@ -384,31 +411,33 @@ class _MoreScreenState extends State<MoreScreen> {
                               },
                             ),
                             
-                            DefaultListTile(
-                              title: 'files_center'.tr(),
-                              src: "assets/images/svg/faqqs.svg",
-                              icon: Icons.folder,
-                              onTap: () {
-                                context.pushNamed(
-                                  AppRoutes.filesCenter.name,
-                                  pathParameters: {
-                                    "lang": context.locale.languageCode,
-                                  },
-                                );
-                              },
-                            ),
-                            DefaultListTile(
-                              title: 'reports'.tr(),
-                              icon: Icons.analytics_outlined,
-                              onTap: () {
-                                context.pushNamed(
-                                  AppRoutes.reportsCatalog.name,
-                                  pathParameters: {
-                                    "lang": context.locale.languageCode,
-                                  },
-                                );
-                              },
-                            ),
+                            if (PackageHelper.hasPackage('emp-requests'))
+                              DefaultListTile(
+                                title: 'files_center'.tr(),
+                                src: "assets/images/svg/faqqs.svg",
+                                icon: Icons.folder,
+                                onTap: () {
+                                  context.pushNamed(
+                                    AppRoutes.filesCenter.name,
+                                    pathParameters: {
+                                      "lang": context.locale.languageCode,
+                                    },
+                                  );
+                                },
+                              ),
+                            if (PackageHelper.hasPackage('emp-reports'))
+                              DefaultListTile(
+                                title: 'reports'.tr(),
+                                icon: Icons.analytics_outlined,
+                                onTap: () {
+                                  context.pushNamed(
+                                    AppRoutes.reportsCatalog.name,
+                                    pathParameters: {
+                                      "lang": context.locale.languageCode,
+                                    },
+                                  );
+                                },
+                              ),
                             DefaultListTile(
                               title: AppStrings.faqs.tr(),
                               src: "assets/images/svg/faqqs.svg",

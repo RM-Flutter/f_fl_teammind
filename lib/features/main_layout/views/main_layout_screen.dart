@@ -11,35 +11,47 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 
 
+import 'package:app_test/core/helpers/package_helper.dart';
+
 class BottomNavigationBarModel {
   final String icon;
   final String title;
+  final NavbarPages page;
 
-  BottomNavigationBarModel({required this.icon, required this.title});
+  BottomNavigationBarModel({required this.icon, required this.title, required this.page});
 }
 
-final bottomNavigationBarItems = [
-  BottomNavigationBarModel(
-    icon: AppImages.homeBottomBarIcon,
-    title: AppStrings.home,
-  ),
-  BottomNavigationBarModel(
-    icon: AppImages.requestsBottomBarIcon,
-    title: AppStrings.requests,
-  ),
-  BottomNavigationBarModel(
-    icon: AppImages.fingerprintBottomBarIcon,
-    title: AppStrings.fingerprint,
-  ),
-  BottomNavigationBarModel(
-    icon: AppImages.notificationBottomBarIcon,
-    title: AppStrings.notifications,
-  ),
-  BottomNavigationBarModel(
-    icon: AppImages.moreBottomBarIcon,
-    title: AppStrings.more,
-  ),
-];
+List<BottomNavigationBarModel> getBottomNavigationBarItems() {
+  return [
+    BottomNavigationBarModel(
+      icon: AppImages.homeBottomBarIcon,
+      title: AppStrings.home,
+      page: NavbarPages.home,
+    ),
+    if (PackageHelper.hasPackage('emp-requests'))
+      BottomNavigationBarModel(
+        icon: AppImages.requestsBottomBarIcon,
+        title: AppStrings.requests,
+        page: NavbarPages.requests,
+      ),
+    if (PackageHelper.hasPackage('fingerprint-sys'))
+      BottomNavigationBarModel(
+        icon: AppImages.fingerprintBottomBarIcon,
+        title: AppStrings.fingerprint,
+        page: NavbarPages.fingerprint,
+      ),
+    BottomNavigationBarModel(
+      icon: AppImages.notificationBottomBarIcon,
+      title: AppStrings.notifications,
+      page: NavbarPages.page,
+    ),
+    BottomNavigationBarModel(
+      icon: AppImages.moreBottomBarIcon,
+      title: AppStrings.more,
+      page: NavbarPages.more,
+    ),
+  ];
+}
 
 class MainLayoutScreen extends StatelessWidget {
   final Widget child;
@@ -69,7 +81,7 @@ class MainLayoutScreen extends StatelessWidget {
         selectedItemColor: Color(AppColors.secondaryButton),
         elevation: 0,
         type: BottomNavigationBarType.fixed,
-        items: bottomNavigationBarItems.map((element) {
+        items: getBottomNavigationBarItems().map((element) {
           return BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.only(top: 8, bottom: 12),
@@ -100,10 +112,12 @@ class MainLayoutScreen extends StatelessWidget {
             label: element.title.tr(),
           );
         }).toList(),
-        currentIndex: viewModel.currentPage.index,
+        currentIndex: getBottomNavigationBarItems().indexWhere((item) => item.page == viewModel.currentPage) == -1 
+            ? 0 
+            : getBottomNavigationBarItems().indexWhere((item) => item.page == viewModel.currentPage),
         onTap: (index) {
           viewModel.onItemTapped(
-              context: context, page: NavbarPages.values[index]);
+              context: context, page: getBottomNavigationBarItems()[index].page);
         },
       ),
       body: Builder(

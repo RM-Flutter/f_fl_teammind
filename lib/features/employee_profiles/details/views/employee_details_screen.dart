@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_test/core/helpers/package_helper.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -34,21 +35,50 @@ class EmployeeDetailsScreen extends StatefulWidget {
   State<EmployeeDetailsScreen> createState() => _EmployeeDetailsScreenState();
 }
 
+class ProfileTabModel {
+  final String title;
+  final int index;
+  ProfileTabModel({required this.title, required this.index});
+}
+
 class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   late final EmployeeDetailsViewModel viewModel;
   bool ? getTeam;
-  List<String> taps = [
-    AppStrings.contact.tr(),
-    AppStrings.general.tr(),
-    AppStrings.accounts.tr(),
-    AppStrings.requests.tr(),
-    AppStrings.evaluation.tr(),
-    AppStrings.dailyReports.tr(),
-    AppStrings.overtimeRequests.tr(),
-    'salary_advance_requests'.tr(),
-    'rewards_and_penalties'.tr(),
-    AppStrings.more.tr(),
-  ];
+
+  List<ProfileTabModel> get availableTabs {
+    List<ProfileTabModel> items = [];
+    items.add(ProfileTabModel(title: AppStrings.contact.tr(), index: 0));
+    items.add(ProfileTabModel(title: AppStrings.general.tr(), index: 1));
+    items.add(ProfileTabModel(title: AppStrings.accounts.tr(), index: 2));
+
+    if (PackageHelper.hasPackage('emp-requests')) {
+      items.add(ProfileTabModel(title: AppStrings.requests.tr(), index: 3));
+    }
+
+    if (PackageHelper.hasPackage('emp-evaluation')) {
+      items.add(ProfileTabModel(title: AppStrings.evaluation.tr(), index: 4));
+    }
+
+    if (PackageHelper.hasPackage('emp-reports')) {
+      items.add(ProfileTabModel(title: AppStrings.dailyReports.tr(), index: 5));
+    }
+
+    if (PackageHelper.hasPackage('fingerprint-sys')) {
+      items.add(ProfileTabModel(title: AppStrings.overtimeRequests.tr(), index: 6));
+    }
+
+    if (PackageHelper.hasPackage('emp-payroll')) {
+      items.add(ProfileTabModel(title: 'salary_advance_requests'.tr(), index: 7));
+      items.add(ProfileTabModel(title: 'rewards_and_penalties'.tr(), index: 8));
+    }
+
+    if (PackageHelper.hasPackage('emp-requests')) {
+      items.add(ProfileTabModel(title: AppStrings.more.tr(), index: 9));
+    }
+
+    return items;
+  }
+
   int selectIndex = 0;
   @override
   void initState() {
@@ -133,7 +163,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                                   child: defaultTapBarItem(
                                     isVertical: false,
-                                    items: taps,
+                                    items: availableTabs.map((e) => e.title).toList(),
                                     tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
                                     selectIndex: selectIndex,
                                     enableScroll: true,
@@ -142,7 +172,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                         selectIndex = index;
                                       });
                                       viewModel.fetchDataForIndex(
-                                        index, 
+                                        availableTabs[index].index, 
                                         context, 
                                         getTeam: getTeam ?? false, 
                                         empId: viewModel.employee!.id.toString()
@@ -157,26 +187,28 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                         vertical: AppSizes.s8),
                                     child: Builder(
                                       builder: (context) {
-                                        if (selectIndex == 0) {
+                                        if (availableTabs.isEmpty) return const SizedBox.shrink();
+                                        int actualIndex = availableTabs[selectIndex].index;
+                                        if (actualIndex == 0) {
                                           return ContactsSectionWidget(employee: viewModel.employee);
-                                        } else if (selectIndex == 1) {
+                                        } else if (actualIndex == 1) {
                                           return GeneralSectionWidget(employee: viewModel.employee);
-                                        } else if (selectIndex == 2) {
+                                        } else if (actualIndex == 2) {
                                           if (viewModel.salaryAdvances == null) return const Center(child: CircularProgressIndicator());
                                           return AccountsSectionWidget(
                                             employee: viewModel.employee,
                                             salaryAdvance: viewModel.salaryAdvances ?? [],
                                           );
-                                        } else if (selectIndex == 3) {
+                                        } else if (actualIndex == 3) {
                                           return RequestsSectionWidget(employee: viewModel.employee);
-                                        } else if (selectIndex == 4) {
+                                        } else if (actualIndex == 4) {
                                           return EvalutaionSectionWidget(
                                             employee: viewModel.employee,
                                             evaluations: viewModel.evaluations,
                                             id: viewModel.employee!.id.toString(),
                                             empName: viewModel.employee!.name.toString(),
                                           );
-                                        } else if (selectIndex == 5) {
+                                        } else if (actualIndex == 5) {
                                           if (viewModel.dailyReports == null) return const Center(child: CircularProgressIndicator());
                                           return DailyReportsSectionWidget(
                                             employee: viewModel.employee,
@@ -184,7 +216,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             id: viewModel.employee!.id.toString(),
                                             empName: viewModel.employee!.name.toString(),
                                           );
-                                        } else if (selectIndex == 6) {
+                                        } else if (actualIndex == 6) {
                                           if (viewModel.overtimeRequests == null) return const Center(child: CircularProgressIndicator());
                                           return OvertimeRequestsSectionWidget(
                                             employee: viewModel.employee,
@@ -192,7 +224,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             id: viewModel.employee!.id.toString(),
                                             empName: viewModel.employee!.name.toString(),
                                           );
-                                        } else if (selectIndex == 7) {
+                                        } else if (actualIndex == 7) {
                                           if (viewModel.salaryAdvanceRequestsList == null) return const Center(child: CircularProgressIndicator());
                                           return SalaryAdvanceSectionWidget(
                                             employee: viewModel.employee,
@@ -200,11 +232,11 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             id: viewModel.employee!.id.toString(),
                                             empName: viewModel.employee!.name.toString(),
                                           );
-                                        } else if (selectIndex == 8) {
+                                        } else if (actualIndex == 8) {
                                           return RewardsAndPenaltiesSectionWidget(
                                             employee: viewModel.employee,
                                           );
-                                        } else if (selectIndex == 9) {
+                                        } else if (actualIndex == 9) {
                                           return AssetsSectionWidget(employee: viewModel.employee);
                                         }
                                         return const SizedBox.shrink();

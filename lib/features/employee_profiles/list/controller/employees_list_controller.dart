@@ -93,6 +93,7 @@ class EmployeesListViewModel extends ChangeNotifier {
       final result = await CrudOperationService.readEntities(
         context: context,
         slug: 'departments',
+        queryParams: {'itemsCount': 200},
       );
       if (result.success && result.data != null) {
         var departmentsData = result.data?['data'] as List<dynamic>?;

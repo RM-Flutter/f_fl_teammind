@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_test/core/helpers/package_helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,12 +61,13 @@ class MainAppFabWidget extends StatelessWidget {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        if (userSettingsFingerprints != null &&
+        if (PackageHelper.hasPackage('fingerprint-sys') &&
+            userSettingsFingerprints != null &&
             userSettingsFingerprints.isNotEmpty == true &&
             avFingerprints != null &&
             avFingerprints.isNotEmpty == true)
           Container(
-            margin:  EdgeInsets.only(bottom: viewRequest == true? AppSizes.s75 :  35),
+            margin:  EdgeInsets.only(bottom: (viewRequest == true && PackageHelper.hasPackage('emp-requests')) ? AppSizes.s75 :  35),
             child: ExpandableFab(
                 distance: (avFingerprints.length < 4) ? AppSizes.s30 * 4 : AppSizes.s30 * avFingerprints.length,
                 children: avFingerprints.map(
@@ -83,7 +85,7 @@ class MainAppFabWidget extends StatelessWidget {
                     )
                     .toList()),
           ),
-       if(viewRequest == true) Positioned(
+       if(viewRequest == true && PackageHelper.hasPackage('emp-requests')) Positioned(
           child: CustomFloatingActionButton(
             iconPath: AppImages.addFloatingActionButtonIcon,
             onPressed: () async => await context

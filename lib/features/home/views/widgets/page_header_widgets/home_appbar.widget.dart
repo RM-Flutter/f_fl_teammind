@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_test/core/helpers/package_helper.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -294,17 +295,18 @@ class HomeAppbarWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 32),
                       if (isExpanded == true)
-                        Center(
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                                maxWidth: kIsWeb ? 1100 : double.infinity
-                            ),
-                            child: VacationListWidget(
-                              requests: requests,
-                              tap: true,
+                        if (PackageHelper.hasPackage('emp-requests'))
+                          Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxWidth: kIsWeb ? 1100 : double.infinity
+                              ),
+                              child: VacationListWidget(
+                                requests: requests,
+                                tap: true,
+                              ),
                             ),
                           ),
-                        ),
                     ],
                   ),
                 ),

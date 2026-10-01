@@ -1,6 +1,7 @@
 import 'package:app_test/core/services/model_helpers_service.dart';
 
 import 'app_settings_model.dart';
+import 'license.model.dart';
 
 class GeneralSettingsModel extends AppSettingsModel {
   final Popup? popup;
@@ -27,7 +28,9 @@ class GeneralSettingsModel extends AppSettingsModel {
   final bool? payrollScreenProtection;
   final List<String>? loginTypes;
   final bool? managerAbleToApproveSalaryAdvances;
+  final bool? managerAbleToApproveExpenseClaims;
   final bool? hasEmployeeProfile;
+  final LicenseModel? license;
 
   GeneralSettingsModel(
       {required super.lastUpdateDate,
@@ -53,7 +56,9 @@ class GeneralSettingsModel extends AppSettingsModel {
         this.payrollScreenProtection,
         this.loginTypes,
         this.managerAbleToApproveSalaryAdvances,
-        this.hasEmployeeProfile});
+        this.managerAbleToApproveExpenseClaims,
+        this.hasEmployeeProfile,
+        this.license});
 
   factory GeneralSettingsModel.fromJson(Map<String, dynamic> json) {
     return GeneralSettingsModel(
@@ -122,7 +127,9 @@ class GeneralSettingsModel extends AppSettingsModel {
           .toList()
           : null,
       managerAbleToApproveSalaryAdvances: ModelHelpersService.getBoolValue(json['manager_able_to_approve_salary_advances']),
+      managerAbleToApproveExpenseClaims: ModelHelpersService.getBoolValue(json['manager_able_to_approve_expense_claims']),
       hasEmployeeProfile: ModelHelpersService.getBoolValue(json['has_employee_profile']) ?? true,
+      license: json['license'] != null ? LicenseModel.fromJson(json['license']) : null,
     );
   }
 
@@ -160,6 +167,8 @@ class GeneralSettingsModel extends AppSettingsModel {
       'can_new_register': canNewRegister,
       'payroll_screen_protection': payrollScreenProtection,
       'manager_able_to_approve_salary_advances': managerAbleToApproveSalaryAdvances,
+      'manager_able_to_approve_expense_claims': managerAbleToApproveExpenseClaims,
+      'license': license?.toJson(),
     };
   }
 }
