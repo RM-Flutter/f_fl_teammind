@@ -272,6 +272,10 @@ class CreateCVJobInfoTab extends StatelessWidget {
             final isSelected = viewModel.selectedSkills.contains(skillId);
             return FilterChip(
               label: Text(skill['title'] ?? ''),
+              labelStyle: const TextStyle(fontSize: 12),
+              padding: EdgeInsets.zero,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               selected: isSelected,
               onSelected: (selected) {
                 if (selected) {

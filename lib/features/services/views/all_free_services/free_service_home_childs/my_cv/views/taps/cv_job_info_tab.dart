@@ -131,8 +131,8 @@ class CVJobInfoTab extends StatelessWidget {
         children: [
           CVInfoItem(label: 'COMPANY NAME', value: exp.companyName),
           CVInfoItem(label: 'JOB TITLE', value: exp.jobTitle, isRequired: true),
-          CVInfoItem(label: 'COUNTRY ID', value: exp.countryId?.toString()),
-          CVInfoItem(label: 'GOVERNORATE/STATE ID', value: exp.stateId?.toString(), isRequired: true),
+          CVInfoItem(label: 'COUNTRY', value: exp.countryTitle ?? exp.countryId?.toString()),
+          CVInfoItem(label: 'GOVERNORATE/STATE', value: exp.stateTitle ?? exp.stateId?.toString(), isRequired: true),
           CVInfoItem(label: 'DATE FROM', value: exp.dateFrom),
           CVInfoItem(label: 'DATE TO (OR PRESENT)', value: exp.dateTo),
         ],

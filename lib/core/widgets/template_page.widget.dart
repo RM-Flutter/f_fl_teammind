@@ -15,6 +15,7 @@ class TemplatePage extends StatelessWidget {
   final String? routeName;
   final TextStyle? titleStyle;
   final dynamic popResult;
+  final bool showBookmark;
 
   /// used if you want to active [PULLTOREFRESH] option to page.
   final Future<void> Function()? onRefresh;
@@ -30,6 +31,7 @@ class TemplatePage extends StatelessWidget {
       this.titleStyle,
       this.onRefresh,
       this.popResult,
+      this.showBookmark = true,
       this.routeName});
 
   @override
@@ -50,6 +52,7 @@ class TemplatePage extends StatelessWidget {
         bottom: bottomAppbarWidget,
         routeName: routeName,
         defaultTitle: title,
+        showBookmark: showBookmark,
         leading: context.canPop()
             ? Padding(
                 padding: const EdgeInsets.all(AppSizes.s10),

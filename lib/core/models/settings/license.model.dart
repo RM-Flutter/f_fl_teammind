@@ -13,12 +13,12 @@ class LicenseModel {
     // Local override for testing
     // To test specific packages, you can modify this list directly
     List<String> overridePackages = [
-      // 'emp-requests',
+      'emp-requests',
       'emp-payroll',
       'emp-evaluation',
       'emp-reports',
       'emp-approval-system',
-      // 'fingerprint-sys',
+      'fingerprint-sys',
       'cv-hub'
     ];
 

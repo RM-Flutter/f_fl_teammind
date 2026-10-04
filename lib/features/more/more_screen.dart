@@ -133,6 +133,15 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ),
                             SizedBox(height : 15),
+                            // DefaultListTile(
+                            //     title: AppStrings.expenseClaims.tr(),
+                            //     src: AppIcons.payroll,
+                            //     onTap: () async => await context.pushNamed(
+                            //         AppRoutes.expenseClaimList.name,
+                            //         pathParameters: {
+                            //           'lang': context.locale.languageCode
+                            //         }),
+                            //   ),
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
                                 title: AppStrings.payroll.tr(),
@@ -145,6 +154,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode
                                 }),
                               ),
+                            // DefaultListTile(
+                            //     title: AppStrings.expenseClaims.tr(),
+                            //     src: AppIcons.payroll,
+                            //     onTap: () async => await context.pushNamed(
+                            //         AppRoutes.expenseClaimList.name,
+                            //         pathParameters: {
+                            //           'lang': context.locale.languageCode
+                            //         }),
+                            //   ),
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
                                 title: AppStrings.salaryAdvanceRequests.tr(),
@@ -174,6 +192,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                       'lang': context.locale.languageCode
                                     }),
                               ),
+                            // DefaultListTile(
+                            //     title: AppStrings.expenseClaims.tr(),
+                            //     src: AppIcons.payroll,
+                            //     onTap: () async => await context.pushNamed(
+                            //         AppRoutes.expenseClaimList.name,
+                            //         pathParameters: {
+                            //           'lang': context.locale.languageCode
+                            //         }),
+                            //   ),
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
                                   title: AppStrings.rewardsAndPenalties.tr(),
@@ -183,15 +210,6 @@ class _MoreScreenState extends State<MoreScreen> {
                                       extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
                                       pathParameters: {'lang': context.locale.languageCode})
                               ),
-                            DefaultListTile(
-                              title: AppStrings.expenseClaimsRequests.tr(),
-                              icon: Icons.account_balance_wallet_outlined,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.expenseClaimsList.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
                             if (PackageHelper.hasPackage('fingerprint-sys'))
                               DefaultListTile(
                                 title: AppStrings.overtimeRequests.tr(),

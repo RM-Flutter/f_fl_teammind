@@ -19,6 +19,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
   final PreferredSizeWidget? bottom;
   final Color? surfaceTintColor;
   final Color? bookmarkIconColor;
+  final bool showBookmark;
 
   const AppBarWithBookmark({
     super.key,
@@ -36,6 +37,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     this.bottom,
     this.surfaceTintColor,
     this.bookmarkIconColor,
+    this.showBookmark = true,
   }) : assert(title != null || titleWidget != null, 'Either title or titleWidget must be provided');
 
   @override
@@ -73,16 +75,18 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
 
     final allActions = <Widget>[];
     
-    // Add bookmark button
-    allActions.add(
-      BookmarkButton(
-        routeName: currentRouteName,
-        routePath: currentRoutePath,
-        defaultTitle: bookmarkTitle,
-        stateData: finalStateData,
-        iconColor: bookmarkIconColor,
-      ),
-    );
+    // Add bookmark button only if showBookmark is true
+    if (showBookmark) {
+      allActions.add(
+        BookmarkButton(
+          routeName: currentRouteName,
+          routePath: currentRoutePath,
+          defaultTitle: bookmarkTitle,
+          stateData: finalStateData,
+          iconColor: bookmarkIconColor,
+        ),
+      );
+    }
     
     // Add custom actions if any
     if (actions != null) {

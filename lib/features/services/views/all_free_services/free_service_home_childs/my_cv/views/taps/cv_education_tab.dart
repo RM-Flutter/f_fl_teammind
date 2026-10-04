@@ -88,12 +88,12 @@ class CVEducationTab extends StatelessWidget {
             isRequired: true,
           ),
           CVInfoItem(
-            label: 'COUNTRY ID',
-            value: edu.countryId?.toString(),
+            label: 'COUNTRY',
+            value: edu.countryTitle ?? edu.countryId?.toString(),
           ),
           CVInfoItem(
-            label: 'GOVERNORATE/STATE ID',
-            value: edu.stateId?.toString(),
+            label: 'GOVERNORATE/STATE',
+            value: edu.stateTitle ?? edu.stateId?.toString(),
             isRequired: true,
           ),
           CVInfoItem(

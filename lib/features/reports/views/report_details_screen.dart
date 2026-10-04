@@ -81,21 +81,32 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isWebview = widget.report.viewType != 'flutter';
+
     return ChangeNotifierProvider.value(
       value: _viewModel,
       child: TemplatePage(
         pageContext: context,
         title: widget.report.name,
-        onRefresh: () async => _loadReportData(),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.filter_alt_outlined,
-                color: Color(AppColors.buttons)),
-            onPressed: _showFilters,
-          ),
-        ],
+        // WebView: no bookmark, no filter, no pull-to-refresh (ListView would break WebView height)
+        showBookmark: !isWebview,
+        onRefresh: isWebview ? null : () async => _loadReportData(),
+        actions: isWebview
+            ? null
+            : [
+                IconButton(
+                  icon: Icon(Icons.filter_alt_outlined,
+                      color: Color(AppColors.buttons)),
+                  onPressed: _showFilters,
+                ),
+              ],
         body: Consumer<ReportsViewModel>(
           builder: (context, viewModel, child) {
+            if (isWebview) {
+              // WebView fills the entire scaffold body
+              return _buildBody(context, viewModel);
+            }
+            // Flutter report view — constrained width + padding
             return Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(

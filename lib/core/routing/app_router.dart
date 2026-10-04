@@ -16,7 +16,6 @@ import 'package:app_test/features/points/views/points/main_points_layout/points_
 import 'package:app_test/features/points/views/points/points_categories/points_categories_screen.dart';
 import 'package:app_test/features/points/views/prize/prize_screen.dart';
 import 'package:app_test/features/requests/add/views/add_request_screen.dart';
-import 'package:app_test/features/requests/details/views/request_details_screen.dart';
 import 'package:app_test/features/approvables_details/views/approvable_details_screen.dart';
 import 'package:app_test/features/requests/view_by_ids/views/requests_by_id_screen.dart';
 import 'package:app_test/features/requests/calender/views/requests_calendar_screen.dart';
@@ -63,15 +62,14 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_widgets/free_service_more/free_service_more.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/overtime_requests/views/overtime_requests_screen.dart';
-import 'package:app_test/features/overtime_requests/views/overtime_request_details_screen.dart';
 import 'package:app_test/features/overtime_requests/views/add_overtime_request_screen.dart';
 import 'package:app_test/features/daily_reports/models/daily_report_model.dart';
 import 'package:app_test/features/daily_reports/views/daily_reports_list_screen.dart';
 import 'package:app_test/features/daily_reports/views/daily_report_details_screen.dart';
 import 'package:app_test/features/daily_reports/views/add_edit_daily_report_screen.dart';
 import 'package:app_test/features/salary_advance_requests/views/salary_advance_list_screen.dart';
-import 'package:app_test/features/salary_advance_requests/views/salary_advance_details_screen.dart';
 import 'package:app_test/features/salary_advance_requests/views/create_salary_advance_screen.dart';
+
 import 'package:app_test/features/services/views/all_free_services/free_services_home_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/my_cv_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/personality_test/views/personality_test_screen.dart';
@@ -97,8 +95,6 @@ import '../platform/platform_is.dart';
 import '../routing/app_router_transitions.dart';
 import '../routing/not_found/not_found_screen.dart';
 import '../services/app_config_service.dart';
-import '../services/settings_service.dart';
-import '../models/settings/user_settings.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
@@ -201,6 +197,9 @@ enum AppRoutes {
   salaryAdvanceList,
   salaryAdvanceDetails,
   salaryAdvanceCreate,
+  expenseClaimList,
+  expenseClaimDetails,
+  expenseClaimCreate,
   approvableDetails,
   teamTodayStatus,
   instanceSuspended,
@@ -497,6 +496,22 @@ GoRouter goRouter(BuildContext context) {
                 },
               ),
               GoRoute(
+                path: 'expense-claim-details/:id',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.expenseClaimDetails.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  final id = state.pathParameters['id'] ?? '';
+                  return MaterialPage(
+                    child: ApprovableDetailsScreen(
+                      type: 'expense_claims',
+                      id: id,
+                    ),
+                  );
+                },
+              ),
+              GoRoute(
                 path: 'approvable-details/:type/:id',
                 parentNavigatorKey: rootNavigatorKey,
                 name: AppRoutes.approvableDetails.name,
@@ -704,6 +719,7 @@ GoRouter goRouter(BuildContext context) {
                   }
                   String apiType = 'employee_requests';
                   if (rawType == 'salary_advance') apiType = 'salary_advance';
+                  if (rawType == 'expense_claims') apiType = 'expense_claims';
                   if (rawType == 'overtime') apiType = 'overtime';
 
                   final animationController = AnimationController(

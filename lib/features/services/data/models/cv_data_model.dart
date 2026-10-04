@@ -115,7 +115,9 @@ class CVContactData {
 class CVExperience {
   final String? companyName;
   final int? countryId;
+  final String? countryTitle;
   final int? stateId;
+  final String? stateTitle;
   final String? dateFrom;
   final String? dateTo;
   final String? jobTitle;
@@ -123,17 +125,24 @@ class CVExperience {
   CVExperience({
     this.companyName,
     this.countryId,
+    this.countryTitle,
     this.stateId,
+    this.stateTitle,
     this.dateFrom,
     this.dateTo,
     this.jobTitle,
   });
 
   factory CVExperience.fromJson(Map<String, dynamic> json) {
+    String? cTitle = json['country_title'] as String? ?? (json['country'] is Map ? (json['country']['title'] ?? json['country']['name']) as String? : null);
+    String? sTitle = json['state_title'] as String? ?? (json['state'] is Map ? (json['state']['title'] ?? json['state']['name']) as String? : null);
+
     return CVExperience(
       companyName: json['company_name'] as String?,
       countryId: _parseInt(json['country_id']),
+      countryTitle: cTitle,
       stateId: _parseInt(json['state_id']),
+      stateTitle: sTitle,
       dateFrom: json['date_from'] as String?,
       dateTo: json['date_to'] as String?,
       jobTitle: json['job_title'] as String?,
@@ -281,7 +290,9 @@ class CVJobInfoData {
 class CVEducation {
   final String? institutionName;
   final int? countryId;
+  final String? countryTitle;
   final int? stateId;
+  final String? stateTitle;
   final String? dateFrom;
   final String? dateTo;
   final String? certificateName;
@@ -289,17 +300,24 @@ class CVEducation {
   CVEducation({
     this.institutionName,
     this.countryId,
+    this.countryTitle,
     this.stateId,
+    this.stateTitle,
     this.dateFrom,
     this.dateTo,
     this.certificateName,
   });
 
   factory CVEducation.fromJson(Map<String, dynamic> json) {
+    String? cTitle = json['country_title'] as String? ?? (json['country'] is Map ? (json['country']['title'] ?? json['country']['name']) as String? : null);
+    String? sTitle = json['state_title'] as String? ?? (json['state'] is Map ? (json['state']['title'] ?? json['state']['name']) as String? : null);
+
     return CVEducation(
       institutionName: json['institution_name'] as String?,
       countryId: _parseInt(json['country_id']),
+      countryTitle: cTitle,
       stateId: _parseInt(json['state_id']),
+      stateTitle: sTitle,
       dateFrom: json['date_from'] as String?,
       dateTo: json['date_to'] as String?,
       certificateName: json['certificate_name'] as String?,
