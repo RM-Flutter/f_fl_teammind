@@ -24,7 +24,7 @@ class CVPersonalTab extends StatelessWidget {
     debugPrint('CVPersonalTab - cvData: ${viewModel.cvData != null}');
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -39,52 +39,88 @@ class CVPersonalTab extends StatelessWidget {
             isRequired: true,
             icon: Icons.person_outline,
           ),
-          CVInfoItem(
-            label: AppStrings.familyStatus.tr(),
-            value: personal?.familyStatus,
-            icon: Icons.family_restroom,
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.birthday.tr(),
+                  value: personal?.birthday != null 
+                      ? personal!.birthday!.split(' ')[0] // Remove time part
+                      : null,
+                  isRequired: true,
+                  icon: Icons.cake_outlined,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.gender.tr(),
+                  value: personal?.gender,
+                  isRequired: true,
+                  icon: Icons.male,
+                ),
+              ),
+            ],
           ),
-          CVInfoItem(
-            label: AppStrings.birthday.tr(),
-            value: personal?.birthday != null 
-                ? personal!.birthday!.split(' ')[0] // Remove time part
-                : null,
-            isRequired: true,
-            icon: Icons.cake_outlined,
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.familyStatus.tr(),
+                  value: personal?.familyStatus,
+                  icon: Icons.family_restroom,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.nationality.tr(),
+                  value: personal?.nationalityTitle ?? personal?.nationalityId?.toString(),
+                  isRequired: true,
+                  icon: Icons.flag_outlined,
+                ),
+              ),
+            ],
           ),
-          CVInfoItem(
-            label: AppStrings.gender.tr(),
-            value: personal?.gender,
-            isRequired: true,
-            icon: Icons.male,
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.country.tr(),
+                  value: personal?.countryTitle ?? personal?.countryId?.toString(),
+                  isRequired: true,
+                  icon: Icons.public,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.stateProvince.tr(),
+                  value: personal?.stateTitle ?? personal?.stateId?.toString(),
+                  isRequired: true,
+                  icon: Icons.map_outlined,
+                ),
+              ),
+            ],
           ),
-          CVInfoItem(
-            label: AppStrings.nationality.tr(),
-            value: personal?.nationalityTitle ?? personal?.nationalityId?.toString(),
-            isRequired: true,
-            icon: Icons.flag_outlined,
-          ),
-          CVInfoItem(
-            label: AppStrings.country.tr(),
-            value: personal?.countryTitle ?? personal?.countryId?.toString(),
-            isRequired: true,
-            icon: Icons.public,
-          ),
-          CVInfoItem(
-            label: AppStrings.stateProvince.tr(),
-            value: personal?.stateTitle ?? personal?.stateId?.toString(),
-            isRequired: true,
-            icon: Icons.map_outlined,
-          ),
-          CVInfoItem(
-            label: AppStrings.city.tr(),
-            value: personal?.cityTitle ?? personal?.cityId?.toString(),
-            icon: Icons.location_city_outlined,
-          ),
-          CVInfoItem(
-            label: AppStrings.address.tr(),
-            value: personal?.address,
-            icon: Icons.home_outlined,
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.city.tr(),
+                  value: personal?.cityTitle ?? personal?.cityId?.toString(),
+                  icon: Icons.location_city_outlined,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: AppStrings.address.tr(),
+                  value: personal?.address,
+                  icon: Icons.home_outlined,
+                ),
+              ),
+            ],
           ),
         ],
       ),

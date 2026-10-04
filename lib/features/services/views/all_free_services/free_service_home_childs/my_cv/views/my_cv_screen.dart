@@ -121,7 +121,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
           title: AppStrings.myCV2.tr().toUpperCase(),
           titleStyle: TextStyle(
             color: Color(AppColors.secondaryButton),
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,
@@ -136,10 +136,10 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
               onPressed: _navigateToEdit,
               backgroundColor: Color(AppColors.secondaryButton),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              icon: Icon(hasRealCV ? Icons.edit : Icons.add, color: Colors.white),
+              icon: Icon(hasRealCV ? Icons.edit : Icons.add, color: Colors.white, size: 20),
               label: Text(
                 hasRealCV ? AppStrings.edit.tr() : AppStrings.createCV.tr(),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
               ),
             );
           },
@@ -192,7 +192,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
       gCache = json.decode(jsonString) as Map<String, dynamic>;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
       child: Column(
         children: [
          Text(
@@ -200,7 +200,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 13,
+              fontSize: 12,
               height: 1.4,
             ),
           ),
@@ -220,7 +220,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
                   AppStrings.learnMoreAboutOpportunities.tr(),
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

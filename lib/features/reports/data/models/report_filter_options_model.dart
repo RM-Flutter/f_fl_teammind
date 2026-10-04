@@ -3,12 +3,18 @@ class ReportFilterOptionsModel {
   final List<EmployeeOption> employees;
   final List<RequestTypeOption> requestTypes;
   final List<TimeFrameOption> timeFrames;
+  /// user_scope from API: "all" | "department" | "individual"
+  final String userScope;
+  /// user_role from API: e.g. "top_hr" | "manager" | "employee"
+  final String userRole;
 
   ReportFilterOptionsModel({
     required this.departments,
     required this.employees,
     required this.requestTypes,
     required this.timeFrames,
+    this.userScope = 'all',
+    this.userRole = '',
   });
 
   factory ReportFilterOptionsModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +35,8 @@ class ReportFilterOptionsModel {
               ?.map((e) => TimeFrameOption.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      userScope: json['user_scope']?.toString() ?? 'all',
+      userRole: json['user_role']?.toString() ?? '',
     );
   }
 }

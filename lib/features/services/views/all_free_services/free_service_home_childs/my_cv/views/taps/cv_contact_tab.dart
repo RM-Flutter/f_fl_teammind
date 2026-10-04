@@ -15,18 +15,30 @@ class CVContactTab extends StatelessWidget {
     final contact = viewModel.cvData?.contact ?? cvData?.contact;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          
-          
-          CVInfoItem(
-            label: 'PHONE',
-            value: contact?.phone,
-            isRequired: true,
-            icon: Icons.phone,
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: 'PHONE',
+                  value: contact?.phone,
+                  isRequired: true,
+                  icon: Icons.phone,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: 'WHATSAPP',
+                  value: contact?.whatsapp,
+                  icon: Icons.chat_bubble_outline,
+                ),
+              ),
+            ],
           ),
           CVInfoItem(
             label: 'EMAIL',
@@ -34,20 +46,24 @@ class CVContactTab extends StatelessWidget {
             isRequired: true,
             icon: Icons.email_outlined,
           ),
-          CVInfoItem(
-            label: 'LINKEDIN',
-            value: contact?.linkedin,
-            icon: Icons.link,
-          ),
-          CVInfoItem(
-            label: 'BEHANCE',
-            value: contact?.behance,
-            icon: Icons.brush,
-          ),
-          CVInfoItem(
-            label: 'WHATSAPP',
-            value: contact?.whatsapp,
-            icon: Icons.chat_bubble_outline,
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: 'LINKEDIN',
+                  value: contact?.linkedin,
+                  icon: Icons.link,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: 'BEHANCE',
+                  value: contact?.behance,
+                  icon: Icons.brush,
+                ),
+              ),
+            ],
           ),
         ],
       ),

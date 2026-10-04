@@ -17,13 +17,11 @@ class CVEducationTab extends StatelessWidget {
     final educationList = viewModel.cvData?.education ?? cvData?.education;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          
-          
           // Education Section
           _buildSectionTitle('EDUCATION'),
 
@@ -35,8 +33,6 @@ class CVEducationTab extends StatelessWidget {
       ),
     );
   }
-
-  
 
   Widget _buildSectionTitle(String title) {
     return Container(
@@ -65,7 +61,7 @@ class CVEducationTab extends StatelessWidget {
 
   Widget _buildAddNewItem(String label) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, bottom: 8),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         '• $label',
         style: TextStyle(
@@ -78,7 +74,7 @@ class CVEducationTab extends StatelessWidget {
 
   Widget _buildEducationItem(CVEducation edu) {
     return Container(
-      margin: const EdgeInsets.only(left: 16, bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -88,26 +84,44 @@ class CVEducationTab extends StatelessWidget {
             isRequired: true,
           ),
           CVInfoItem(
-            label: 'COUNTRY',
-            value: edu.countryTitle ?? edu.countryId?.toString(),
-          ),
-          CVInfoItem(
-            label: 'GOVERNORATE/STATE',
-            value: edu.stateTitle ?? edu.stateId?.toString(),
-            isRequired: true,
-          ),
-          CVInfoItem(
-            label: 'DATE FROM',
-            value: edu.dateFrom,
-          ),
-          CVInfoItem(
-            label: 'DATE TO (OR PRESENT)',
-            value: edu.dateTo,
-          ),
-          CVInfoItem(
             label: "BACHELOR'S/MASTER/BOARD CERTIFICATE NAME",
             value: edu.certificateName,
             isRequired: true,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: 'COUNTRY',
+                  value: edu.countryTitle ?? edu.countryId?.toString(),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: 'GOVERNORATE/STATE',
+                  value: edu.stateTitle ?? edu.stateId?.toString(),
+                  isRequired: true,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CVInfoItem(
+                  label: 'DATE FROM',
+                  value: edu.dateFrom,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CVInfoItem(
+                  label: 'DATE TO (OR PRESENT)',
+                  value: edu.dateTo,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -116,36 +130,54 @@ class CVEducationTab extends StatelessWidget {
 
   Widget _buildEmptyEducationForm() {
     return Container(
-      margin: const EdgeInsets.only(left: 16),
-      child: const Column(
+      margin: EdgeInsets.zero,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CVInfoItem(
+          const CVInfoItem(
             label: 'UNIVERSITY/TRAINING CENTER NAME',
             value: null,
             isRequired: true,
           ),
-          CVInfoItem(
-            label: 'COUNTRY',
-            value: null,
-          ),
-          CVInfoItem(
-            label: 'GOVERNORATE/STATE',
-            value: null,
-            isRequired: true,
-          ),
-          CVInfoItem(
-            label: 'DATE FROM',
-            value: null,
-          ),
-          CVInfoItem(
-            label: 'DATE TO (OR PRESENT)',
-            value: null,
-          ),
-          CVInfoItem(
+          const CVInfoItem(
             label: "BACHELOR'S/MASTER/BOARD CERTIFICATE NAME",
             value: null,
             isRequired: true,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: const CVInfoItem(
+                  label: 'COUNTRY',
+                  value: null,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: const CVInfoItem(
+                  label: 'GOVERNORATE/STATE',
+                  value: null,
+                  isRequired: true,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: const CVInfoItem(
+                  label: 'DATE FROM',
+                  value: null,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: const CVInfoItem(
+                  label: 'DATE TO (OR PRESENT)',
+                  value: null,
+                ),
+              ),
+            ],
           ),
         ],
       ),
