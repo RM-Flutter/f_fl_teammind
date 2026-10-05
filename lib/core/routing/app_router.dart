@@ -98,6 +98,10 @@ import '../routing/app_router_transitions.dart';
 import '../routing/not_found/not_found_screen.dart';
 import '../services/app_config_service.dart';
 import 'package:flutter/material.dart';
+
+import 'package:app_test/features/cv_hub/views/cv_hub_interviews_screen.dart';
+import 'package:app_test/features/cv_hub/views/cv_hub_interview_details_screen.dart';
+
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -206,6 +210,8 @@ enum AppRoutes {
   teamTodayStatus,
   instanceSuspended,
   licenceDenied,
+  cvHubInterviews,
+  cvHubInterviewDetails,
 }
 
 const TestVSync ticker = TestVSync();
@@ -511,6 +517,28 @@ GoRouter goRouter(BuildContext context) {
                       id: id,
                     ),
                   );
+                },
+              ),
+
+              GoRoute(
+                path: 'cv-hub-interviews',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.cvHubInterviews.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return const MaterialPage(child: CvHubInterviewsScreen());
+                },
+              ),
+              GoRoute(
+                path: 'cv-hub-interview-details/:id',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.cvHubInterviewDetails.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  final id = state.pathParameters['id'] ?? '';
+                  return MaterialPage(child: CvHubInterviewDetailsScreen(id: id));
                 },
               ),
               GoRoute(

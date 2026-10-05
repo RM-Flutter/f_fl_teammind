@@ -178,6 +178,16 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
+                                title: 'CV Hub Interviews'.tr(),
+                                src: "assets/icons/meetings.svg", 
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.cvHubInterviews.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
+                            if (PackageHelper.hasPackage('emp-payroll'))
+                              DefaultListTile(
                                 title: AppStrings.expenseClaims.tr(),
                                 src: AppIcons.payroll, // Assuming payroll icon is fine, or we can use another one
                                 onTap: () async => await context.pushNamed(

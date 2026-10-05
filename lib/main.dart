@@ -16,6 +16,10 @@ import 'features/overtime_requests/controllers/overtime_requests_controller.dart
 import 'features/daily_reports/controllers/daily_reports_controller.dart';
 import 'core/services/app_config_service.dart';
 import 'package:flutter/material.dart';
+
+import 'package:app_test/features/cv_hub/controllers/cv_hub_interviews_controller.dart';
+import 'package:app_test/features/cv_hub/controllers/cv_hub_interview_details_controller.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'core/services/internet_check.dart';
@@ -143,6 +147,9 @@ void main() async {
               create: (context) => OvertimeRequestsProvider()),
           ChangeNotifierProvider(
               create: (context) => DailyReportsProvider()),
+          ChangeNotifierProvider(create: (_) => CvHubInterviewsController()),
+          ChangeNotifierProvider(create: (_) => CvHubInterviewDetailsController()),
+
         ],
         child: MyApp(),
       )));

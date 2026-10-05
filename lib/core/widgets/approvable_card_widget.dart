@@ -6,6 +6,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/features/cv_hub/models/cv_hub_models.dart';
+
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
@@ -135,6 +137,21 @@ class ApprovableCardWidget extends StatelessWidget {
           sub += ' • $formattedDate';
         }
         subtitle = sub;
+      } else if (request is InterviewModel) {
+        final interview = request as InterviewModel;
+        takeAction = false;
+        takeActionAsSomeoneElse = false;
+        status = interview.status;
+        employeeName = interview.candidate?.fullName ?? 'Unknown Candidate'.tr();
+        id = interview.id.toString();
+        approvableType = 'interview';
+        
+        title = '${interview.candidate?.job?.title ?? ''} • ${interview.interviewType ?? ''}';
+        subtitle = interview.scheduledAt ?? '';
+        
+        if (interview.myEvaluation != null) {
+           subtitle += ' • ${'Evaluated'.tr()}';
+        }
       } else {
         final dyn = request as dynamic;
         takeAction = dyn.takeAction == true;
