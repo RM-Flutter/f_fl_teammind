@@ -69,6 +69,8 @@ import 'package:app_test/features/daily_reports/views/daily_report_details_scree
 import 'package:app_test/features/daily_reports/views/add_edit_daily_report_screen.dart';
 import 'package:app_test/features/salary_advance_requests/views/salary_advance_list_screen.dart';
 import 'package:app_test/features/salary_advance_requests/views/create_salary_advance_screen.dart';
+import 'package:app_test/features/expense_claim_requests/views/expense_claim_list_screen.dart';
+import 'package:app_test/features/expense_claim_requests/views/create_expense_claim_screen.dart';
 
 import 'package:app_test/features/services/views/all_free_services/free_services_home_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/my_cv_screen.dart';
@@ -505,10 +507,31 @@ GoRouter goRouter(BuildContext context) {
                   final id = state.pathParameters['id'] ?? '';
                   return MaterialPage(
                     child: ApprovableDetailsScreen(
-                      type: 'expense_claims',
+                      type: 'employee_expense_claims',
                       id: id,
                     ),
                   );
+                },
+              ),
+              GoRoute(
+                path: 'expense-claim-requests',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.expenseClaimList.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  final extra = state.extra is Map ? state.extra as Map<String, dynamic> : null;
+                  return MaterialPage(child: ExpenseClaimListScreen(extra: extra));
+                },
+              ),
+              GoRoute(
+                path: 'expense-claim-create',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.expenseClaimCreate.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return const MaterialPage(child: CreateExpenseClaimScreen());
                 },
               ),
               GoRoute(

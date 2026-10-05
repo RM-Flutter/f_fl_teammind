@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
+import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
 import 'package:app_test/core/widgets/quick_action_sheet.dart';
 import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
 
@@ -105,6 +106,35 @@ class ApprovableCardWidget extends StatelessWidget {
           details += ' • ${isArabic ? 'من' : 'From'}: $formattedFrom';
         }
         subtitle = details;
+      } else if (request is ExpenseClaimModel) {
+        final ec = request as ExpenseClaimModel;
+        takeAction = ec.takeAction == true;
+        takeActionAsSomeoneElse = ec.canTakeActionAsSomeoneElse == true;
+        status = ec.status;
+        employeeName = ec.employeeName ?? '';
+        id = ec.id?.toString() ?? '';
+        approvableType = 'employee_expense_claims';
+
+        // Title = reason (or money value if reason is empty)
+        final amount = ec.moneyValue ?? '0';
+        title = ec.reason?.isNotEmpty == true
+            ? ec.reason!
+            : '$amount ${isArabic ? 'ج.م' : 'EGP'}';
+
+        // Subtitle = amount + category
+        String sub = '$amount ${isArabic ? 'ج.م' : 'EGP'}';
+        if (ec.categoryName != null && ec.categoryName!.isNotEmpty) {
+          sub += ' • ${ec.categoryName}';
+        } else if (ec.category != null && ec.category!.isNotEmpty) {
+          sub += ' • ${ec.category}';
+        }
+        if (ec.dateFrom != null && ec.dateFrom!.isNotEmpty) {
+          final formattedDate =
+              DateService.formatDate(isArabic ? 'ar' : 'en', context, ec.dateFrom) ??
+                  ec.dateFrom!;
+          sub += ' • $formattedDate';
+        }
+        subtitle = sub;
       } else {
         final dyn = request as dynamic;
         takeAction = dyn.takeAction == true;

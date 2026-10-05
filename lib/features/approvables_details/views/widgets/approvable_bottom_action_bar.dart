@@ -82,7 +82,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
             title: AppStrings.statistics.tr(),
             color: Color(AppColors.secondaryButton),
             onPressed: () async {
-              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance') {
+              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance' || type == 'employee_expense_claims') {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
                   context,
                   details.employeeId.toString(),
@@ -128,7 +128,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
             title: AppStrings.statistics.tr(),
             color: Color(AppColors.secondaryButton),
             onPressed: () async {
-              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance') {
+              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance' || type == 'employee_expense_claims') {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
                   context,
                   details.employeeId.toString(),

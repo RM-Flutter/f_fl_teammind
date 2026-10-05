@@ -1,12 +1,17 @@
+import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
+
 import 'dart:convert';
 
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/models/requests_model.dart';
+import '../../../../core/services/alert_service/alerts_service.dart';
 import '../../../../core/services/requests_services.dart';
 import '../../shared/models/employee_profile_model.dart';
 import '../../shared/repos/employee_repo.dart';
@@ -27,6 +32,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
   List<DailyReportModel>? dailyReports;
   List<OvertimeRequestModel>? overtimeRequests;
   List<SalaryAdvanceRequestModel>? salaryAdvanceRequestsList;
+  List<ExpenseClaimModel>? expenseClaimRequestsList;
 
   void updateLoadingStatus({required bool laodingValue}) {
     isLoading = laodingValue;
@@ -61,6 +67,8 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       await getOvertimeRequestsList(context, empId: empId, getTeam: getTeam);
     } else if (index == 7 && salaryAdvanceRequestsList == null) {
       await getSalaryAdvanceRequestsList(context, empId: empId, getTeam: getTeam);
+    } else if (index == 10 && expenseClaimRequestsList == null) {
+      await getExpenseClaimRequestsList(context, empId: empId, getTeam: getTeam);
     }
   }
 
@@ -186,6 +194,49 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint("Error fetching overtime requests: $e");
+    }
+  }
+
+
+  Future<void> getExpenseClaimRequestsList(BuildContext context,
+      {required String empId, required bool getTeam}) async {
+    try {
+      final response = getTeam
+          ? await RequestsServices.getManagerApprovables(
+              context: context,
+              type: 'employee_expense_claims',
+              scope: 'team',
+              employeesIds: [empId],
+              perPage: 6,
+            )
+          : await RequestsServices.getMyApprovables(
+              context: context,
+              type: 'employee_expense_claims',
+              perPage: 6,
+            );
+      if (response.success && response.data != null) {
+        final dynamic rawData = response.data!['approvables'] ??
+            response.data!['data'] ??
+            response.data!['requests'];
+        List<dynamic> listData = [];
+        if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+          listData = rawData['data'];
+        } else if (rawData is List) {
+          listData = rawData;
+        }
+
+        expenseClaimRequestsList = listData
+            .map((e) => ExpenseClaimModel.fromApprovableJson(e))
+            .toList();
+        notifyListeners();
+      } else {
+        AlertsService.error(
+            context: context,
+            message: response.message ?? 'Failed to load requests',
+            title: AppStrings.failed.tr());
+      }
+    } catch (e) {
+      debugPrint("Error fetching expense claims: $e");
     }
   }
 

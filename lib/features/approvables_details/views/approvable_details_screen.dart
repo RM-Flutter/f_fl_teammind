@@ -112,10 +112,10 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
               final msg = state.message.toLowerCase();
               if (msg.contains('something went wrong') ||
                   msg.contains('حدث خطأ')) {
-                context.goNamed(
-                  AppRoutes.home.name,
-                  pathParameters: {'lang': isArabic ? 'ar' : 'en'},
-                );
+                // context.goNamed(
+                //   AppRoutes.home.name,
+                //   pathParameters: {'lang': isArabic ? 'ar' : 'en'},
+                // );
               }
             } else if (state is ApprovableDetailsLoaded &&
                 widget.autoOpenAction != AutoOpenAction.none) {

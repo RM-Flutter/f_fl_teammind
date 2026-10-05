@@ -22,6 +22,8 @@ import 'package:app_test/features/employee_profiles/details/views/widgets/reward
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/expense_claims_section_widget.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../controller/employee_details_controller.dart';
@@ -70,6 +72,11 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     if (PackageHelper.hasPackage('emp-payroll')) {
       items.add(ProfileTabModel(title: 'salary_advance_requests'.tr(), index: 7));
       items.add(ProfileTabModel(title: 'rewards_and_penalties'.tr(), index: 8));
+    }
+
+
+    if (PackageHelper.hasPackage('emp-payroll')) {
+      items.add(ProfileTabModel(title: AppStrings.expenseClaims.tr(), index: 10));
     }
 
     if (PackageHelper.hasPackage('emp-requests')) {
@@ -235,6 +242,15 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                         } else if (actualIndex == 8) {
                                           return RewardsAndPenaltiesSectionWidget(
                                             employee: viewModel.employee,
+                                          );
+                                        
+                                        } else if (actualIndex == 10) {
+                                          if (viewModel.expenseClaimRequestsList == null) return const Center(child: CircularProgressIndicator());
+                                          return ExpenseClaimsSectionWidget(
+                                            employee: viewModel.employee,
+                                            requests: viewModel.expenseClaimRequestsList,
+                                            id: viewModel.employee!.id.toString(),
+                                            empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (actualIndex == 9) {
                                           return AssetsSectionWidget(employee: viewModel.employee);

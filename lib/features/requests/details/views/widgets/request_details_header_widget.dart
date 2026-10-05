@@ -406,11 +406,14 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')}":
                                     "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
                                     isFullRow: true,
-                                    trailing: InfoTileWidget(
-                                        width: 100,
-                                        background: Color(AppColors.secondaryButton),
-                                        imgPath: Icons.access_time,
-                                        title: '${widget.request.duration} ${widget.request.durationType.toString().tr()}'),
+                                    trailing: (widget.request.duration != null && widget.request.duration.toString() != 'null')
+                                        ? InfoTileWidget(
+                                            width: 100,
+                                            background: Color(AppColors.secondaryButton),
+                                            imgPath: Icons.access_time,
+                                            title: '${widget.request.duration} ${widget.request.durationType != null && widget.request.durationType.toString() != 'null' ? widget.request.durationType.toString().tr() : ''}'.trim(),
+                                          )
+                                        : null,
                                   ),
 
                                   // Employee info if different user

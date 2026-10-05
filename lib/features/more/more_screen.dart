@@ -133,15 +133,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ),
                             SizedBox(height : 15),
-                            // DefaultListTile(
-                            //     title: AppStrings.expenseClaims.tr(),
-                            //     src: AppIcons.payroll,
-                            //     onTap: () async => await context.pushNamed(
-                            //         AppRoutes.expenseClaimList.name,
-                            //         pathParameters: {
-                            //           'lang': context.locale.languageCode
-                            //         }),
-                            //   ),
+                            // Removed redundant block
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
                                 title: AppStrings.payroll.tr(),
@@ -154,15 +146,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode
                                 }),
                               ),
-                            // DefaultListTile(
-                            //     title: AppStrings.expenseClaims.tr(),
-                            //     src: AppIcons.payroll,
-                            //     onTap: () async => await context.pushNamed(
-                            //         AppRoutes.expenseClaimList.name,
-                            //         pathParameters: {
-                            //           'lang': context.locale.languageCode
-                            //         }),
-                            //   ),
+                            // Removed redundant block
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
                                 title: AppStrings.salaryAdvanceRequests.tr(),
@@ -192,15 +176,16 @@ class _MoreScreenState extends State<MoreScreen> {
                                       'lang': context.locale.languageCode
                                     }),
                               ),
-                            // DefaultListTile(
-                            //     title: AppStrings.expenseClaims.tr(),
-                            //     src: AppIcons.payroll,
-                            //     onTap: () async => await context.pushNamed(
-                            //         AppRoutes.expenseClaimList.name,
-                            //         pathParameters: {
-                            //           'lang': context.locale.languageCode
-                            //         }),
-                            //   ),
+                            if (PackageHelper.hasPackage('emp-payroll'))
+                              DefaultListTile(
+                                title: AppStrings.expenseClaims.tr(),
+                                src: AppIcons.payroll, // Assuming payroll icon is fine, or we can use another one
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.expenseClaimList.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
                             if (PackageHelper.hasPackage('emp-payroll'))
                               DefaultListTile(
                                   title: AppStrings.rewardsAndPenalties.tr(),
