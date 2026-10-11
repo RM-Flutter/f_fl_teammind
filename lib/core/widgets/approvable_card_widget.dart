@@ -22,6 +22,7 @@ class ApprovableCardWidget extends StatelessWidget {
   final VoidCallback? onLongPress;
   final VoidCallback? onActionTaken;
   final EdgeInsetsGeometry? margin;
+  final Widget? customTrailing;
 
   const ApprovableCardWidget({
     Key? key,
@@ -31,6 +32,7 @@ class ApprovableCardWidget extends StatelessWidget {
     this.onLongPress,
     this.onActionTaken,
     this.margin,
+    this.customTrailing,
   }) : super(key: key);
 
   /// Resolves the approvable type and id from the request object.
@@ -148,10 +150,6 @@ class ApprovableCardWidget extends StatelessWidget {
         
         title = '${interview.candidate?.job?.title ?? ''} • ${interview.interviewType ?? ''}';
         subtitle = interview.scheduledAt ?? '';
-        
-        if (interview.myEvaluation != null) {
-           subtitle += ' • ${'Evaluated'.tr()}';
-        }
       } else {
         final dyn = request as dynamic;
         takeAction = dyn.takeAction == true;
@@ -431,7 +429,15 @@ class ApprovableCardWidget extends StatelessWidget {
                   return const SizedBox.shrink();
                 },
               ),
-            if (info.status != null &&
+            if (customTrailing != null) ...[
+              const SizedBox(width: 8),
+              customTrailing!,
+            ] else if (request is InterviewModel) ...[
+              const SizedBox(width: 8),
+              _EvaluationStatusBadge(
+                isEvaluated: (request as InterviewModel).myEvaluation != null,
+              ),
+            ] else if (info.status != null &&
                 info.status!.trim().isNotEmpty &&
                 info.status!.trim().toLowerCase() != 'null') ...[
               const SizedBox(width: 8),
@@ -500,6 +506,50 @@ class _ActionBadge extends StatelessWidget {
               fontSize: 10,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Small badge shown on interview cards indicating whether evaluation is completed or required.
+class _EvaluationStatusBadge extends StatelessWidget {
+  final bool isEvaluated;
+
+  const _EvaluationStatusBadge({required this.isEvaluated});
+
+  @override
+  Widget build(BuildContext context) {
+    final Color color = isEvaluated
+        ? Color(AppColors.successGreen)
+        : const Color(0xFFE65100);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.35), width: 0.8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isEvaluated
+                ? Icons.check_circle_outline_rounded
+                : Icons.pending_actions_rounded,
+            size: 13,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            isEvaluated ? 'Evaluated'.tr() : 'Required'.tr(),
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

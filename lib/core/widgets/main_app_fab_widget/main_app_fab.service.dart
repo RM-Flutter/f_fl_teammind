@@ -1749,7 +1749,7 @@ abstract class MainFabServices {
   static Future<void> addFingerprintUsingNFC(
       {required BuildContext context}) async {
     try {
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
 
       _CapturedFaceData? capturedFace;
@@ -1854,7 +1854,7 @@ abstract class MainFabServices {
 
       _CapturedFaceData? capturedFace;
       DateTime? qrScanSuccessTime;
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
 
       if (showFaceVerify) {
         debugPrint("📱 Starting face verification for Bluetooth fingerprint...");
@@ -2049,7 +2049,7 @@ abstract class MainFabServices {
     try {
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       _CapturedFaceData? capturedFace;
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
       if (showFaceVerify) {
         capturedFace = await captureEmployeeFaceAndVerify(context);
         if (capturedFace == null) {
@@ -2293,7 +2293,7 @@ abstract class MainFabServices {
       // Face verification is not supported on web, so we force it to false
       final bool showFaceVerify = (kIsWeb || PlatformIs.web) 
           ? false 
-          : AppConstants.fingerprintFaceChallengeEnabled;
+          : AppConstants.showFaceVerifyForFingerprint;
           
       if (showFaceVerify) {
         debugPrint("📍 Starting face verification for GPS fingerprint...");
@@ -2391,7 +2391,7 @@ abstract class MainFabServices {
       final bool isOnline = await ConnectionsService.isOnline();
       // في كل أنواع البصمات الأخرى الكاميرا تفتح لو مفتاح الكاميرا مفعّل حتى في وضع الأوفلاين.
       // هنا كانت مربوطة بوجود إنترنت، فتم فصلها عن isOnline عشان QR يتصرف نفس التصرف.
-      final bool showFaceVerify = AppConstants.fingerprintFaceChallengeEnabled;
+      final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
       if (showFaceVerify) {
         debugPrint("📱 Starting face verification for QR Code fingerprint...");
         final faceContext = rootNavigatorKey.currentContext ?? context;

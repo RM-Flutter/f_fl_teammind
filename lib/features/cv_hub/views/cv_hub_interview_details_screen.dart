@@ -529,36 +529,89 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
-DropdownButtonFormField<String>(
-                  value: _recommendation,
-                  style: TextStyle(color: Color(AppColors.titleText)),
-                  dropdownColor: Color(AppColors.cardBackground),
-                  decoration: InputDecoration(
-                    labelText: 'Recommendation'.tr(),
-                    labelStyle: TextStyle(color: Color(AppColors.subTitleText)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Color(AppColors.border)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Color(AppColors.border)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Color(AppColors.c1)),
-                    ),
-                    filled: true,
-                    fillColor: Color(AppColors.cardBackground),
-                  ),
-                  items: ['Accept', 'Reject', 'Need Another Interview'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value.tr(), style: TextStyle(color: Color(AppColors.titleText))),
+                FormField<String>(
+                  initialValue: _recommendation,
+                  validator: (val) => (_recommendation == null || _recommendation!.isEmpty) ? 'Required'.tr() : null,
+                  builder: (state) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            hoverColor: Colors.grey.shade100,
+                            highlightColor: Colors.grey.shade200,
+                          ),
+                          child: PopupMenuButton<String>(
+                            position: PopupMenuPosition.under,
+                            color: Colors.white,
+                            surfaceTintColor: Colors.transparent,
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(color: Colors.grey.shade200),
+                            ),
+                            onSelected: (val) {
+                              setState(() {
+                                _recommendation = val;
+                                state.didChange(val);
+                              });
+                            },
+                            itemBuilder: (context) => ['Accept', 'Reject', 'Need Another Interview'].map((String value) {
+                              final isSelected = _recommendation == value;
+                              return PopupMenuItem<String>(
+                                value: value,
+                                height: 44,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        value.tr(),
+                                        style: TextStyle(
+                                          color: isSelected ? Color(AppColors.buttons) : Colors.black87,
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    if (isSelected)
+                                      Icon(Icons.check, size: 18, color: Color(AppColors.buttons)),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                labelText: 'Recommendation'.tr(),
+                                labelStyle: TextStyle(color: Color(AppColors.subTitleText)),
+                                errorText: state.errorText,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Color(AppColors.border)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: state.hasError ? Color(AppColors.failureRed) : Color(AppColors.border),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Color(AppColors.c1)),
+                                ),
+                                filled: true,
+                                fillColor: Color(AppColors.cardBackground),
+                                suffixIcon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                              ),
+                              child: Text(
+                                _recommendation != null ? _recommendation!.tr() : '',
+                                style: TextStyle(color: Color(AppColors.titleText), fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
-                  }).toList(),
-                  onChanged: (val) => setState(() => _recommendation = val),
-                  validator: (val) => val == null ? 'Required'.tr() : null,
+                  },
                 ),
                 const SizedBox(height: 16),
                 _buildFormField(

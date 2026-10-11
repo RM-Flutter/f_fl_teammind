@@ -199,11 +199,10 @@ class _MultiSelectionSheetContentState
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (_, controller) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
+        return Material(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               // Handle Bar

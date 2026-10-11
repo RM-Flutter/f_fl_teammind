@@ -18,6 +18,7 @@ import '../../cubit/approvable_details_cubit.dart';
 import '../../data/models/approvable_details_model.dart';
 import 'manager_take_action_modal.dart';
 import 'overtime_update_dialog.dart';
+import 'expense_claim_update_amount_dialog.dart';
 import 'overlapping_vacations_sheet.dart';
 
 class ApprovableBottomActionBar extends StatelessWidget {
@@ -253,6 +254,14 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   id: id,
                   type: type,
                   currentOvertime: details.duration,
+                );
+              } else if (type == 'employee_expense_claims') {
+                ExpenseClaimUpdateAmountDialog.show(
+                  context,
+                  cubit: cubit,
+                  id: id,
+                  type: type,
+                  details: details,
                 );
               } else {
                 OvertimeUpdateDialog.show(

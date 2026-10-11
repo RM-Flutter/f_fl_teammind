@@ -260,6 +260,8 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
       value: controller.categoryController.text.isEmpty
           ? null
           : controller.categoryController.text,
+      dropdownColor: Colors.white,
+      style: const TextStyle(color: Colors.black, fontSize: 14),
       decoration: InputDecoration(
         labelText: 'category'.tr(),
         labelStyle: AppStyles.content(context)
@@ -290,7 +292,14 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
             : cat['label']!;
         return DropdownMenuItem<String>(
           value: cat['value'],
-          child: Text(label),
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         );
       }).toList(),
       onChanged: (value) {

@@ -1,4 +1,7 @@
 {
+  "10": "October",
+  "11": "November",
+  "12": "December",
   "take_action": "Take Action",
   "takeAction": "Take Action",
   "salary_advance_requests": "Salary Advance Requests",
@@ -15,7 +18,7 @@
   "asset_status": "Asset",
   "assignment_status": "Assignment",
   "active": "Active",
-  "inactive": "Not Active",
+  "inactive": "Inactive",
   "approved": "Approved",
   "applied": "Applied",
   "waiting": "Waiting",
@@ -459,9 +462,6 @@
   "07": "July",
   "08": "August",
   "09": "September",
-  "10": "October",
-  "11": "November",
-  "12": "December",
   "noWiFiNetworksFound": "No Wi-Fi networks found",
   "wiFiScanPermissionIsRequired": "Wi-Fi scan permission is required",
   "pleaseTakePhotoBeforeAddingFingerprint": "Please Take Photo Before Adding Fingerprint",
@@ -1355,5 +1355,15 @@
   "Reject": "Reject",
   "Need Another Interview": "Need Another Interview",
   "No interviews assigned.": "No interviews assigned.",
-  "CV Hub Interviews": "CV Hub Interviews"
+  "CV Hub Interviews": "CV Hub Interviews",
+  "period_type": "Period Type",
+  "time_frame": "Time Frame",
+  "from_to": "Custom Dates",
+  "compare_with": "Compare With",
+  "compare_period_type": "Compare Period Type",
+  "compare_time_period": "Compare Time Frame",
+  "compare_date_range": "Compare Date Range",
+  "select_date_range": "Select Date Range",
+  "date_range": "Date Range",
+  "please_select_request_type": "Please select at least one request type."
 }

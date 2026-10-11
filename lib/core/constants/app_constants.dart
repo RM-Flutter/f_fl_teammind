@@ -79,8 +79,11 @@ abstract class AppConstants {
     fpScanSteps = contains('fp_scan_steps');
   }
 
-  /// للتوافق مع الكود القديم: نفس fingerprintFaceChallengeEnabled.
-  static bool get showFaceVerifyForFingerprint => fingerprintFaceChallengeEnabled;
+  /// للتوافق مع الكود القديم: أي من هذه المفاتيح يستدعي فتح الكاميرا.
+  static bool get showFaceVerifyForFingerprint => 
+      fingerprintFaceChallengeEnabled || 
+      fingerprintLivenessChallengesEnabled || 
+      fingerprintFaceProfileVerificationEnabled;
 
   static const String _defaultBase = "https://emplive.r-m.dev";
 

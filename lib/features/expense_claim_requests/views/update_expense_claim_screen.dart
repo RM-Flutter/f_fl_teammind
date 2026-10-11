@@ -289,6 +289,8 @@ class _UpdateExpenseClaimScreenState extends State<UpdateExpenseClaimScreen> {
 
     return DropdownButtonFormField<String>(
       value: currentValue,
+      dropdownColor: Colors.white,
+      style: const TextStyle(color: Colors.black, fontSize: 14),
       decoration: InputDecoration(
         labelText: 'category'.tr(),
         labelStyle:
@@ -318,7 +320,14 @@ class _UpdateExpenseClaimScreenState extends State<UpdateExpenseClaimScreen> {
             : cat['label']!;
         return DropdownMenuItem<String>(
           value: cat['value'],
-          child: Text(label),
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         );
       }).toList(),
       onChanged: (value) {

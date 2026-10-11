@@ -29,11 +29,22 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   void initState() {
     super.initState();
     _viewModel = ReportsViewModel();
-    if (widget.report.filtersConfig.defaultPeriodType == 'time_frame' &&
+
+    _currentFilters['department_ids'] = <int>[];
+    _currentFilters['employee_ids'] = <int>[];
+    _currentFilters['request_type_ids'] = null;
+    
+    final defaultPeriodType = widget.report.filtersConfig.defaultPeriodType;
+    _currentFilters['use_time_period'] = true;
+    _currentFilters['period_type'] = defaultPeriodType.isNotEmpty ? defaultPeriodType : 'time_frame';
+
+    if (_currentFilters['period_type'] == 'time_frame' &&
         widget.report.filtersConfig.defaultTimeFrame.isNotEmpty) {
-      _currentFilters['time_frame'] =
-          widget.report.filtersConfig.defaultTimeFrame;
+      _currentFilters['time_frame'] = widget.report.filtersConfig.defaultTimeFrame;
     }
+    
+    _currentFilters['compare'] = false;
+    _currentFilters['compare_period_type'] = 'time_frame';
 
     _viewModel.fetchFilterOptions(context, widget.report.key).then((_) {
       _loadReportData();
@@ -41,12 +52,22 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   }
 
   Future<void> _loadReportData() async {
+    final Map<String, dynamic> requestFilters = Map<String, dynamic>.from(_currentFilters);
+    
+    if (requestFilters['use_time_period'] == false) {
+      requestFilters.remove('period_type');
+      requestFilters.remove('time_frame');
+      requestFilters.remove('date_from');
+      requestFilters.remove('date_to');
+    }
+    requestFilters.remove('use_time_period');
+    
     if (widget.report.viewType == 'flutter') {
-      _currentFilters['report_key'] = widget.report.key;
-      await _viewModel.fetchReportData(context, _currentFilters);
+      requestFilters['report_key'] = widget.report.key;
+      await _viewModel.fetchReportData(context, requestFilters);
     } else {
       await _viewModel.fetchWebviewUrl(
-          context, widget.report.key, _currentFilters);
+          context, widget.report.key, requestFilters);
     }
   }
 
@@ -58,11 +79,10 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Color(AppColors.background),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
+        return Material(
+          color: Color(AppColors.background),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          clipBehavior: Clip.antiAlias,
           child: FiltersBottomSheet(
             filtersConfig: widget.report.filtersConfig,
             filterOptions: _viewModel.currentFilterOptions!,
