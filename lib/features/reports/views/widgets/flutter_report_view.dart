@@ -2,37 +2,96 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/reports/data/models/report_data_model.dart';
+import 'package:app_test/features/reports/views/widgets/report_compare_tabs.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class FlutterReportView extends StatelessWidget {
+class FlutterReportView extends StatefulWidget {
   final ReportDataModel reportData;
+  final String? currentSubtitle;
+  final String? compareSubtitle;
 
-  const FlutterReportView({Key? key, required this.reportData}) : super(key: key);
+  const FlutterReportView({
+    Key? key,
+    required this.reportData,
+    this.currentSubtitle,
+    this.compareSubtitle,
+  }) : super(key: key);
+
+  @override
+  State<FlutterReportView> createState() => _FlutterReportViewState();
+}
+
+class _FlutterReportViewState extends State<FlutterReportView> {
+  int _selectedTabIndex = 0;
+
+  @override
+  void didUpdateWidget(covariant FlutterReportView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.reportData.compare == null) {
+      _selectedTabIndex = 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final hasCompare = widget.reportData.compare != null;
+    final activeData = (hasCompare && _selectedTabIndex == 1)
+        ? widget.reportData.compare!
+        : widget.reportData;
+
     return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildSummaryCard(context),
+          if (hasCompare) ...[
+            ReportCompareTabs(
+              selectedIndex: _selectedTabIndex,
+              onTabSelected: (idx) => setState(() => _selectedTabIndex = idx),
+              currentSubtitle: widget.currentSubtitle ??
+                  ((widget.reportData.period.from.isNotEmpty && widget.reportData.period.to.isNotEmpty)
+                      ? '${widget.reportData.period.from} → ${widget.reportData.period.to}'
+                      : null),
+              compareSubtitle: widget.compareSubtitle ??
+                  ((widget.reportData.compare?.period != null &&
+                          widget.reportData.compare!.period.from.isNotEmpty &&
+                          widget.reportData.compare!.period.to.isNotEmpty)
+                      ? '${widget.reportData.compare!.period.from} → ${widget.reportData.compare!.period.to}'
+                      : null),
+            ),
+            const SizedBox(height: 16),
+          ],
+          _buildSummaryCard(context, activeData),
+          const SizedBox(height: 16),
+          _buildAttendanceChart(context, activeData),
           const SizedBox(height: 20),
           Text(
             'employees_list'.tr(),
             style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           const SizedBox(height: 12),
-          ...reportData.employees.map((emp) => _buildEmployeeCard(context, emp)),
+          if (activeData.employees.isEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              alignment: Alignment.center,
+              child: Text(
+                'noDataFounded'.tr(),
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+              ),
+            )
+          else
+            ...activeData.employees.map((emp) => _buildEmployeeCard(context, emp)),
         ],
       ),
     );
   }
 
   /// ─── Summary Card ────────────────────────────────────────────────────────
-  Widget _buildSummaryCard(BuildContext context) {
-    final s = reportData.summary;
+  Widget _buildSummaryCard(BuildContext context, ReportDataModel data) {
+    final s = data.summary;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -52,7 +111,7 @@ class FlutterReportView extends StatelessWidget {
               Icon(Icons.calendar_month_outlined, size: 16, color: Color(AppColors.buttons)),
               const SizedBox(width: 8),
               Text(
-                '${reportData.period.from}  →  ${reportData.period.to}',
+                '${data.period.from}  →  ${data.period.to}',
                 style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
             ],
@@ -75,6 +134,133 @@ class FlutterReportView extends StatelessWidget {
             _buildInfoRow(context, icon: Icons.more_time_outlined, label: 'total_overtime'.tr(), value: s.totalOvertimeReadable, valueColor: Color(AppColors.buttons)),
         ],
       ),
+    );
+  }
+
+  /// ─── Attendance Donut Chart ───────────────────────────────────────────────
+  Widget _buildAttendanceChart(BuildContext context, ReportDataModel data) {
+    final att = data.summary.totalAttendanceDays;
+    final abs = data.summary.totalAbsenceDays;
+    final total = att + abs;
+
+    if (total <= 0) return const SizedBox.shrink();
+
+    final attPct = (att / total * 100).toStringAsFixed(0);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.pie_chart_outline, size: 20, color: Color(AppColors.buttons)),
+              const SizedBox(width: 8),
+              Text(
+                'attendance_summary_chart'.tr(),
+                style: AppStyles.blackContent(context).copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          SizedBox(
+            height: 180,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                PieChart(
+                  PieChartData(
+                    sectionsSpace: 3,
+                    centerSpaceRadius: 52,
+                    startDegreeOffset: -90,
+                    sections: [
+                      if (att > 0)
+                        PieChartSectionData(
+                          value: att.toDouble(),
+                          color: const Color(0xFF10B981),
+                          title: '$attPct%',
+                          radius: 36,
+                          titleStyle: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      if (abs > 0)
+                        PieChartSectionData(
+                          value: abs.toDouble(),
+                          color: const Color(0xFFEF4444),
+                          title: '${((abs / total) * 100).toStringAsFixed(0)}%',
+                          radius: 36,
+                          titleStyle: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '$attPct%',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(AppColors.buttons),
+                      ),
+                    ),
+                    Text(
+                      'attendance'.tr(),
+                      style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildChartLegendItem('attendance_days'.tr(), att, total, const Color(0xFF10B981)),
+              const SizedBox(width: 24),
+              _buildChartLegendItem('absence_days'.tr(), abs, total, const Color(0xFFEF4444)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChartLegendItem(String label, int count, int total, Color color) {
+    final pct = total > 0 ? (count / total * 100).toStringAsFixed(1) : '0';
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '$label: $count ($pct%)',
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
+        ),
+      ],
     );
   }
 

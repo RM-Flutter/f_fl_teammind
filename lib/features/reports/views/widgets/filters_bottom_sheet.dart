@@ -79,6 +79,16 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
           ? widget.filtersConfig.defaultTimeFrame 
           : (widget.filterOptions.timeFrames.isNotEmpty ? widget.filterOptions.timeFrames.first.key : null);
     }
+
+    if (widget.filtersConfig.lockTimePeriod) {
+      _filters['use_time_period'] = true;
+      if (widget.filtersConfig.defaultPeriodType.isNotEmpty) {
+        _filters['period_type'] = widget.filtersConfig.defaultPeriodType;
+      }
+      if (widget.filtersConfig.defaultTimeFrame.isNotEmpty) {
+        _filters['time_frame'] = widget.filtersConfig.defaultTimeFrame;
+      }
+    }
     
     _filters['compare'] ??= false;
     _filters['compare_period_type'] ??= 'time_frame';
@@ -90,19 +100,30 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
     }
   }
 
-  InputDecoration _dropdownDecoration(String label) {
+  InputDecoration _dropdownDecoration(String label, {bool isLocked = false, Widget? suffixIcon}) {
     return InputDecoration(
       labelText: label,
-      labelStyle: AppStyles.hintContent(context),
+      labelStyle: isLocked 
+          ? AppStyles.hintContent(context).copyWith(color: Colors.grey.shade600)
+          : AppStyles.hintContent(context),
       filled: true,
-      fillColor: Color(AppColors.inputFill),
+      fillColor: isLocked ? Colors.grey.shade100 : Color(AppColors.inputFill),
+      suffixIcon: isLocked
+          ? const Icon(Icons.lock_outline, size: 20, color: Colors.grey)
+          : suffixIcon,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: Color(AppColors.inputBorder)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Color(AppColors.inputBorder)),
+        borderSide: BorderSide(
+          color: isLocked ? Colors.grey.shade300 : Color(AppColors.inputBorder),
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -146,7 +167,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
     }
   }
 
-  Widget _buildDateRangePicker(String title, String fromKey, String toKey) {
+  Widget _buildDateRangePicker(String title, String fromKey, String toKey, {bool isLocked = false}) {
     final fromDate = _filters[fromKey] as String?;
     final toDate = _filters[toKey] as String?;
     final text = (fromDate != null && toDate != null) 
@@ -154,14 +175,23 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
         : 'select_date_range'.tr();
 
     return InkWell(
-      onTap: () => _selectDateRange(fromKey, toKey),
+      onTap: isLocked ? null : () => _selectDateRange(fromKey, toKey),
       child: InputDecorator(
-        decoration: _dropdownDecoration(title),
+        decoration: _dropdownDecoration(title, isLocked: isLocked),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(text, style: AppStyles.content(context)),
-            Icon(Icons.calendar_today, color: Color(AppColors.buttons), size: 20),
+            Text(
+              text,
+              style: isLocked
+                  ? AppStyles.content(context).copyWith(color: Colors.grey.shade600)
+                  : AppStyles.content(context),
+            ),
+            Icon(
+              isLocked ? Icons.lock_outline : Icons.calendar_today,
+              color: isLocked ? Colors.grey : Color(AppColors.buttons),
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -170,6 +200,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isLocked = widget.filtersConfig.lockTimePeriod;
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -306,39 +337,82 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
               const SizedBox(height: 16),
             ],
 
-            // We completely hide the time period section if it's locked to keep the UI clean,
-            // because the user can't change it anyway. The default values will still be sent.
-            if (widget.filtersConfig.showTimePeriod && !widget.filtersConfig.lockTimePeriod) ...[
+            if (widget.filtersConfig.showTimePeriod) ...[
               Material(
                 color: Colors.transparent,
                 child: SwitchListTile(
-                  title: Text('time_period'.tr(), style: AppStyles.content(context)),
-                  value: _filters['use_time_period'] ?? true,
-                  activeColor: Color(AppColors.buttons),
-                  onChanged: (val) {
-                    setState(() {
-                      _filters['use_time_period'] = val;
-                    });
-                  },
+                  title: Row(
+                    children: [
+                      Text('time_period'.tr(), style: AppStyles.content(context)),
+                      if (isLocked) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.lock_outline, size: 12, color: Colors.grey.shade700),
+                              const SizedBox(width: 4),
+                              Text(
+                                'locked_period'.tr(),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey.shade700,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  value: isLocked ? true : (_filters['use_time_period'] ?? true),
+                  activeColor: isLocked ? Colors.grey.shade400 : Color(AppColors.buttons),
+                  onChanged: isLocked
+                      ? null
+                      : (val) {
+                          setState(() {
+                            _filters['use_time_period'] = val;
+                          });
+                        },
                 ),
               ),
-              if (_filters['use_time_period'] ?? true) ...[
+              if (isLocked || (_filters['use_time_period'] ?? true)) ...[
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  decoration: _dropdownDecoration('period_type'.tr()),
+                  decoration: _dropdownDecoration('period_type'.tr(), isLocked: isLocked),
                   value: _filters['period_type'] as String?,
                   isExpanded: true,
+                  icon: isLocked
+                      ? const SizedBox.shrink()
+                      : const Icon(Icons.arrow_drop_down),
                   items: [
                     DropdownMenuItem<String>(
                       value: 'time_frame',
-                      child: Text('time_frame'.tr(), style: AppStyles.content(context)),
+                      child: Text(
+                        'time_frame'.tr(),
+                        style: isLocked
+                            ? AppStyles.content(context).copyWith(color: Colors.black87)
+                            : AppStyles.content(context),
+                      ),
                     ),
                     DropdownMenuItem<String>(
                       value: 'from_to',
-                      child: Text('from_to'.tr(), style: AppStyles.content(context)),
+                      child: Text(
+                        'from_to'.tr(),
+                        style: isLocked
+                            ? AppStyles.content(context).copyWith(color: Colors.black87)
+                            : AppStyles.content(context),
+                      ),
                     ),
                   ],
-                  onChanged: widget.filtersConfig.lockTimePeriod
+                  onChanged: isLocked
                       ? null
                       : (val) {
                           setState(() {
@@ -350,18 +424,26 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
 
                 if (_filters['period_type'] == 'time_frame' && _hasTimeFrames) ...[
                   DropdownButtonFormField<String>(
-                    decoration: _dropdownDecoration('time_period'.tr()),
+                    decoration: _dropdownDecoration('time_period'.tr(), isLocked: isLocked),
                     value: _filters['time_frame'] as String?,
                     isExpanded: true,
+                    icon: isLocked
+                        ? const SizedBox.shrink()
+                        : const Icon(Icons.arrow_drop_down),
                     items: [
                       ...widget.filterOptions.timeFrames.map((tf) {
                         return DropdownMenuItem<String>(
                           value: tf.key,
-                          child: Text(tf.label, style: AppStyles.content(context)),
+                          child: Text(
+                            tf.label,
+                            style: isLocked
+                                ? AppStyles.content(context).copyWith(color: Colors.black87)
+                                : AppStyles.content(context),
+                          ),
                         );
                       }),
                     ],
-                    onChanged: widget.filtersConfig.lockTimePeriod
+                    onChanged: isLocked
                         ? null
                         : (val) {
                             setState(() {
@@ -373,7 +455,27 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 ],
 
                 if (_filters['period_type'] == 'from_to') ...[
-                  _buildDateRangePicker('date_range'.tr(), 'date_from', 'date_to'),
+                  _buildDateRangePicker('date_range'.tr(), 'date_from', 'date_to', isLocked: isLocked),
+                  const SizedBox(height: 16),
+                ],
+
+                if (isLocked) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.info_outline, size: 15, color: Colors.grey.shade600),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'period_locked_info'.tr(),
+                            style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 16),
                 ],
               ],

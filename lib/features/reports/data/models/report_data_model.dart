@@ -3,12 +3,14 @@ class ReportDataModel {
   final ReportPeriod period;
   final ReportSummary summary;
   final List<ReportEmployeeData> employees;
+  final ReportDataModel? compare;
 
   ReportDataModel({
     required this.reportKey,
     required this.period,
     required this.summary,
     required this.employees,
+    this.compare,
   });
 
   factory ReportDataModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,9 @@ class ReportDataModel {
               ?.map((e) => ReportEmployeeData.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      compare: json['compare'] != null && json['compare'] is Map<String, dynamic>
+          ? ReportDataModel.fromJson(json['compare'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

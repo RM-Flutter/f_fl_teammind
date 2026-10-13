@@ -71,6 +71,7 @@ import 'package:app_test/features/salary_advance_requests/views/salary_advance_l
 import 'package:app_test/features/salary_advance_requests/views/create_salary_advance_screen.dart';
 import 'package:app_test/features/expense_claim_requests/views/expense_claim_list_screen.dart';
 import 'package:app_test/features/expense_claim_requests/views/create_expense_claim_screen.dart';
+import 'package:app_test/features/commissions/views/commission_list_screen.dart';
 
 import 'package:app_test/features/services/views/all_free_services/free_services_home_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/my_cv_screen.dart';
@@ -212,6 +213,7 @@ enum AppRoutes {
   licenceDenied,
   cvHubInterviews,
   cvHubInterviewDetails,
+  commissionList,
 }
 
 const TestVSync ticker = TestVSync();
@@ -539,6 +541,16 @@ GoRouter goRouter(BuildContext context) {
                   if (lang != null) context.setLocale(Locale(lang));
                   final id = state.pathParameters['id'] ?? '';
                   return MaterialPage(child: CvHubInterviewDetailsScreen(id: id));
+                },
+              ),
+              GoRoute(
+                path: 'commissions',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.commissionList.name,
+                pageBuilder: (context, state) {
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) context.setLocale(Locale(lang));
+                  return const MaterialPage(child: CommissionListScreen());
                 },
               ),
               GoRoute(

@@ -205,6 +205,17 @@ class _MoreScreenState extends State<MoreScreen> {
                                       extra: {'employeeName': gCache['name'], 'employeeId': gCache['employee_profile_id'].toString()},
                                       pathParameters: {'lang': context.locale.languageCode})
                               ),
+                            if (PackageHelper.hasPackage('emp-payroll'))
+                              DefaultListTile(
+                                title: AppStrings.commissions.tr(),
+                                src: AppIcons.payroll,
+                                onTap: () async => await context.pushNamed(
+                                  AppRoutes.commissionList.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode,
+                                  },
+                                ),
+                              ),
                             if (PackageHelper.hasPackage('fingerprint-sys'))
                               DefaultListTile(
                                 title: AppStrings.overtimeRequests.tr(),

@@ -356,6 +356,7 @@ abstract class AppStrings {
   static const salaryAdvance = "salaryAdvance";
   static const salaryAdvanceRequests = "salary_advance_requests";
   static const expenseClaims = "expense_claims";
+  static const commissions = "commissions";
   static const totalSpecialAndBonuses = "totalSpecialAndBonuses";
   static const jobTitle = "jobTitle";
   static const netSalary = "netSalary";

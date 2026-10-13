@@ -3,9 +3,13 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/reports/controllers/reports_view_model.dart';
 import 'package:app_test/features/reports/data/models/report_catalog_model.dart';
+import 'package:app_test/features/reports/views/widgets/annual_leave_entitlement_report_view.dart';
+import 'package:app_test/features/reports/views/widgets/employee_leave_schedule_report_view.dart';
 import 'package:app_test/features/reports/views/widgets/filters_bottom_sheet.dart';
 import 'package:app_test/features/reports/views/widgets/flutter_report_view.dart';
+import 'package:app_test/features/reports/views/widgets/leave_requests_report_view.dart';
 import 'package:app_test/features/reports/views/widgets/report_details_shimmer.dart';
+import 'package:app_test/features/reports/views/widgets/requests_summary_report_view.dart';
 import 'package:app_test/features/reports/views/widgets/webview_report_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -144,6 +148,124 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
     );
   }
 
+  String? _calculateDateRangeForTimeFrame(String key) {
+    final now = DateTime.now();
+    DateTime? from;
+    DateTime? to;
+    String fmt(DateTime d) => DateFormat('yyyy-MM-dd').format(d);
+
+    switch (key.toLowerCase()) {
+      case 'today':
+        from = DateTime(now.year, now.month, now.day);
+        to = from;
+        break;
+      case 'yesterday':
+        from = DateTime(now.year, now.month, now.day - 1);
+        to = from;
+        break;
+      case 'this_week':
+        from = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+        to = from.add(const Duration(days: 6));
+        break;
+      case 'last_week':
+        final thisWeekStart = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+        from = thisWeekStart.subtract(const Duration(days: 7));
+        to = from.add(const Duration(days: 6));
+        break;
+      case 'this_month':
+        from = DateTime(now.year, now.month, 1);
+        to = DateTime(now.year, now.month + 1, 0);
+        break;
+      case 'last_month':
+        from = DateTime(now.year, now.month - 1, 1);
+        to = DateTime(now.year, now.month, 0);
+        break;
+      case 'this_year':
+        from = DateTime(now.year, 1, 1);
+        to = DateTime(now.year, 12, 31);
+        break;
+      case 'last_year':
+        from = DateTime(now.year - 1, 1, 1);
+        to = DateTime(now.year - 1, 12, 31);
+        break;
+      case 'this_quarter':
+        final currentQuarter = ((now.month - 1) / 3).floor();
+        from = DateTime(now.year, currentQuarter * 3 + 1, 1);
+        to = DateTime(now.year, (currentQuarter + 1) * 3 + 1, 0);
+        break;
+      case 'last_quarter':
+        final prevQuarter = ((now.month - 1) / 3).floor() - 1;
+        if (prevQuarter < 0) {
+          from = DateTime(now.year - 1, 10, 1);
+          to = DateTime(now.year - 1, 12, 31);
+        } else {
+          from = DateTime(now.year, prevQuarter * 3 + 1, 1);
+          to = DateTime(now.year, (prevQuarter + 1) * 3 + 1, 0);
+        }
+        break;
+      case 'last_7_days':
+        from = DateTime(now.year, now.month, now.day - 6);
+        to = DateTime(now.year, now.month, now.day);
+        break;
+      case 'last_30_days':
+        from = DateTime(now.year, now.month, now.day - 29);
+        to = DateTime(now.year, now.month, now.day);
+        break;
+      case 'last_90_days':
+        from = DateTime(now.year, now.month, now.day - 89);
+        to = DateTime(now.year, now.month, now.day);
+        break;
+      default:
+        return null;
+    }
+    return '${fmt(from)} → ${fmt(to)}';
+  }
+
+  String? _getDateDescription({required bool isCompare}) {
+    final rawData = _viewModel.rawReportData;
+    if (rawData != null) {
+      final periodSource = isCompare
+          ? (rawData['compare'] is Map<String, dynamic> ? rawData['compare']['period'] : null)
+          : rawData['period'];
+      if (periodSource is Map<String, dynamic>) {
+        final from = periodSource['from']?.toString() ?? '';
+        final to = periodSource['to']?.toString() ?? '';
+        if (from.isNotEmpty && to.isNotEmpty) {
+          return '$from → $to';
+        }
+      }
+    }
+
+    final periodType = isCompare
+        ? (_currentFilters['compare_period_type'] as String? ?? 'time_frame')
+        : (_currentFilters['period_type'] as String? ?? 'time_frame');
+
+    if (periodType == 'from_to') {
+      final fromKey = isCompare ? 'compare_date_from' : 'date_from';
+      final toKey = isCompare ? 'compare_date_to' : 'date_to';
+      final from = _currentFilters[fromKey] as String?;
+      final to = _currentFilters[toKey] as String?;
+      if (from != null && to != null && from.isNotEmpty && to.isNotEmpty) {
+        return '$from → $to';
+      }
+    } else {
+      final tfKey = isCompare ? 'compare_time_frame' : 'time_frame';
+      final selectedTf = _currentFilters[tfKey] as String? ??
+          (isCompare ? null : widget.report.filtersConfig.defaultTimeFrame);
+      if (selectedTf != null && selectedTf.isNotEmpty) {
+        final computed = _calculateDateRangeForTimeFrame(selectedTf);
+        if (computed != null) return computed;
+
+        final options = _viewModel.currentFilterOptions?.timeFrames;
+        final match = options?.where((e) => e.key == selectedTf).firstOrNull;
+        if (match != null && match.label.isNotEmpty) return match.label;
+
+        return selectedTf;
+      }
+    }
+    return null;
+  }
+
   Widget _buildBody(BuildContext context, ReportsViewModel viewModel) {
     if (viewModel.isLoadingFilters) {
       return const ReportDetailsShimmer();
@@ -182,9 +304,59 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             child: Text(viewModel.dataError!,
                 style: AppStyles.redContent(context)));
       }
-      if (viewModel.currentReportData != null) {
-        return FlutterReportView(reportData: viewModel.currentReportData!);
+
+      final currentSubtitle = _getDateDescription(isCompare: false);
+      final compareSubtitle = _getDateDescription(isCompare: true);
+
+      switch (widget.report.key) {
+        case 'requests-summary':
+          if (viewModel.requestsSummaryData != null) {
+            return RequestsSummaryReportView(
+              data: viewModel.requestsSummaryData!,
+              currentSubtitle: currentSubtitle,
+              compareSubtitle: compareSubtitle,
+            );
+          }
+          break;
+        case 'leave-requests':
+          if (viewModel.leaveRequestsData != null) {
+            return LeaveRequestsReportView(
+              data: viewModel.leaveRequestsData!,
+              currentSubtitle: currentSubtitle,
+              compareSubtitle: compareSubtitle,
+            );
+          }
+          break;
+        case 'employee-leave-schedule':
+          if (viewModel.leaveScheduleData != null) {
+            return EmployeeLeaveScheduleReportView(
+              data: viewModel.leaveScheduleData!,
+              currentSubtitle: currentSubtitle,
+              compareSubtitle: compareSubtitle,
+            );
+          }
+          break;
+        case 'annual-leave-entitlement':
+          if (viewModel.annualLeaveEntitlementData != null) {
+            return AnnualLeaveEntitlementReportView(
+              data: viewModel.annualLeaveEntitlementData!,
+              currentSubtitle: currentSubtitle,
+              compareSubtitle: compareSubtitle,
+            );
+          }
+          break;
+        case 'attendance-report':
+        default:
+          if (viewModel.currentReportData != null) {
+            return FlutterReportView(
+              reportData: viewModel.currentReportData!,
+              currentSubtitle: currentSubtitle,
+              compareSubtitle: compareSubtitle,
+            );
+          }
+          break;
       }
+
       return const ReportDetailsShimmer();
     } else {
       if (viewModel.isLoadingWebview) {

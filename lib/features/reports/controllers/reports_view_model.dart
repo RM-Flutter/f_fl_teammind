@@ -1,7 +1,11 @@
+import 'package:app_test/features/reports/data/models/annual_leave_entitlement_report_model.dart';
+import 'package:app_test/features/reports/data/models/employee_leave_schedule_report_model.dart';
+import 'package:app_test/features/reports/data/models/leave_requests_report_model.dart';
 import 'package:app_test/features/reports/data/models/report_catalog_model.dart';
 import 'package:app_test/features/reports/data/models/report_filter_options_model.dart';
 import 'package:app_test/features/reports/data/models/report_data_model.dart';
 import 'package:app_test/features/reports/data/models/report_webview_model.dart';
+import 'package:app_test/features/reports/data/models/requests_summary_report_model.dart';
 import 'package:app_test/features/reports/data/repos/reports_repo.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +18,14 @@ class ReportsViewModel extends ChangeNotifier {
   bool isLoadingFilters = false;
   String? filtersError;
 
+  // Report data models
   ReportDataModel? currentReportData;
+  RequestsSummaryReportModel? requestsSummaryData;
+  LeaveRequestsReportModel? leaveRequestsData;
+  EmployeeLeaveScheduleReportModel? leaveScheduleData;
+  AnnualLeaveEntitlementReportModel? annualLeaveEntitlementData;
+  Map<String, dynamic>? rawReportData;
+
   bool isLoadingData = false;
   String? dataError;
 
@@ -75,6 +86,11 @@ class ReportsViewModel extends ChangeNotifier {
     isLoadingData = true;
     dataError = null;
     currentReportData = null;
+    requestsSummaryData = null;
+    leaveRequestsData = null;
+    leaveScheduleData = null;
+    annualLeaveEntitlementData = null;
+    rawReportData = null;
     notifyListeners();
 
     try {
@@ -83,7 +99,27 @@ class ReportsViewModel extends ChangeNotifier {
         filters: filters,
       );
       if (result.success && result.data != null) {
-        currentReportData = ReportDataModel.fromJson(result.data!);
+        rawReportData = result.data;
+        final reportKey = (result.data!['report_key'] ?? filters['report_key'] ?? '').toString();
+
+        switch (reportKey) {
+          case 'requests-summary':
+            requestsSummaryData = RequestsSummaryReportModel.fromJson(result.data!);
+            break;
+          case 'leave-requests':
+            leaveRequestsData = LeaveRequestsReportModel.fromJson(result.data!);
+            break;
+          case 'employee-leave-schedule':
+            leaveScheduleData = EmployeeLeaveScheduleReportModel.fromJson(result.data!);
+            break;
+          case 'annual-leave-entitlement':
+            annualLeaveEntitlementData = AnnualLeaveEntitlementReportModel.fromJson(result.data!);
+            break;
+          case 'attendance-report':
+          default:
+            currentReportData = ReportDataModel.fromJson(result.data!);
+            break;
+        }
       } else {
         dataError = result.message;
       }
