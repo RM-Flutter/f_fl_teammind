@@ -213,9 +213,9 @@ class DioHelper{
       final deviceInfo = appConfigServiceProvider.deviceInformation;
       var deviceUniqueId = deviceInfo.deviceUniqueId;
 
-      // If deviceUniqueId is valid, return it
+      // If deviceUniqueId is valid, sanitize and return it
       if (deviceUniqueId.isNotEmpty && deviceUniqueId != 'Unknown Device') {
-        return deviceUniqueId;
+        return DeviceInformationService.sanitizeDeviceId(deviceUniqueId);
       }
 
       // If not valid and we have context, try to initialize device info
@@ -224,24 +224,24 @@ class DioHelper{
         final updatedDeviceInfo = appConfigServiceProvider.deviceInformation;
         deviceUniqueId = updatedDeviceInfo.deviceUniqueId;
         if (deviceUniqueId.isNotEmpty && deviceUniqueId != 'Unknown Device') {
-          return deviceUniqueId;
+          return DeviceInformationService.sanitizeDeviceId(deviceUniqueId);
         }
       }
 
       String fallbackId = CacheHelper.getString("deviceIdentifier") ?? '';
       if (fallbackId.isEmpty) {
-        fallbackId = 'fallback_${DateTime.now().millisecondsSinceEpoch}';
+        fallbackId = 'fallback-${DateTime.now().millisecondsSinceEpoch}';
         CacheHelper.setString(key: "deviceIdentifier", value: fallbackId);
       }
-      return fallbackId;
+      return DeviceInformationService.sanitizeDeviceId(fallbackId);
     } catch (e) {
       debugPrint('Error getting device unique ID: $e');
       String fallbackId = CacheHelper.getString("deviceIdentifier") ?? '';
       if (fallbackId.isEmpty) {
-        fallbackId = 'fallback_${DateTime.now().millisecondsSinceEpoch}';
+        fallbackId = 'fallback-${DateTime.now().millisecondsSinceEpoch}';
         CacheHelper.setString(key: "deviceIdentifier", value: fallbackId);
       }
-      return fallbackId;
+      return DeviceInformationService.sanitizeDeviceId(fallbackId);
     }
   }  static Future<Response> getData({@required url, @required Map<String, dynamic>? query,context,lang,  token,bool sendLang = false, Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
