@@ -79,11 +79,18 @@ abstract class AppConstants {
     fpScanSteps = contains('fp_scan_steps');
   }
 
-  /// للتوافق مع الكود القديم: أي من هذه المفاتيح يستدعي فتح الكاميرا.
-  static bool get showFaceVerifyForFingerprint => 
-      fingerprintFaceChallengeEnabled || 
-      fingerprintLivenessChallengesEnabled || 
-      fingerprintFaceProfileVerificationEnabled;
+  /// الكاميرا تفتح لو أي key من الـ keys دي موجود — كل key مستقل تماماً.
+  /// - fingerprintFaceChallengeEnabled    : تصوير وجه أساسي
+  /// - fingerprintUploadFaceImageToBackend: محتاج صورة يرفعها للباك إند
+  /// - fingerprintLivenessChallengesEnabled: محتاج كاميرا للتحديات الحية
+  /// - fingerprintFaceProfileVerificationEnabled: محتاج صورة يقارنها بالبروفايل
+  /// - fingerprintSendNoteReportToApi    : يجمع تقرير الوجه والـ GPS ويرسله في الـ note
+  static bool get showFaceVerifyForFingerprint =>
+      fingerprintFaceChallengeEnabled ||
+      fingerprintUploadFaceImageToBackend ||
+      fingerprintLivenessChallengesEnabled ||
+      fingerprintFaceProfileVerificationEnabled ||
+      fingerprintSendNoteReportToApi;
 
   static const String _defaultBase = "https://emplive.r-m.dev";
 

@@ -22,6 +22,8 @@ dependencies:
 
   gal: ^2.3.2
 
+  talker_flutter: ^5.0.0-dev.7
+  talker_dio_logger: ^5.1.20
 
   # Firebase
   cloud_firestore: ^6.1.1

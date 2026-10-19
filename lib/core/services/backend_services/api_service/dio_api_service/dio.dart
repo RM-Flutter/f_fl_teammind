@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../platform/platform_is.dart';
 import '../../../device_info_service.dart';
+import '../../../talker_service.dart';
 
 class DioHelper{
   static Dio? dio;
@@ -28,14 +29,15 @@ class DioHelper{
       'X-App-Type': (kIsWeb || PlatformIs.web) ? 'web' : 'mobile',
     };
 
-    // Add CORS headers for web platform
-    if (kIsWeb || PlatformIs.web) {
-      headers.addAll({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization, lang, device-unique-id',
-      });
-    }
+    // Note: CORS headers are response headers, so they should NOT be added to client requests.
+
+    // if (kIsWeb || PlatformIs.web) {
+    //   headers.addAll({
+    //     'Access-Control-Allow-Origin': '*',
+    //     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+    //     'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization, lang, device-unique-id',
+    //   });
+    // }
 
     dio = Dio(
         BaseOptions(
@@ -54,6 +56,7 @@ class DioHelper{
           },
         )
     );
+
     dio!.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
@@ -62,6 +65,7 @@ class DioHelper{
         error: true,
         compact: true,
         maxWidth: 90));
+    dio!.interceptors.add(TalkerLoggerService.dioLogger);
     dio!.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
@@ -224,13 +228,22 @@ class DioHelper{
         }
       }
 
-      return null;
+      String fallbackId = CacheHelper.getString("deviceIdentifier") ?? '';
+      if (fallbackId.isEmpty) {
+        fallbackId = 'fallback_${DateTime.now().millisecondsSinceEpoch}';
+        CacheHelper.setString(key: "deviceIdentifier", value: fallbackId);
+      }
+      return fallbackId;
     } catch (e) {
       debugPrint('Error getting device unique ID: $e');
-      return null;
+      String fallbackId = CacheHelper.getString("deviceIdentifier") ?? '';
+      if (fallbackId.isEmpty) {
+        fallbackId = 'fallback_${DateTime.now().millisecondsSinceEpoch}';
+        CacheHelper.setString(key: "deviceIdentifier", value: fallbackId);
+      }
+      return fallbackId;
     }
-  }
-  static Future<Response> getData({@required url, @required Map<String, dynamic>? query,context,lang,  token,bool sendLang = false, Map<String, dynamic>? data})async{
+  }  static Future<Response> getData({@required url, @required Map<String, dynamic>? query,context,lang,  token,bool sendLang = false, Map<String, dynamic>? data})async{
     final appConfigServiceProvider = Provider.of<AppConfigService>(context, listen: false);
     String? deviceUniqueId = await _getDeviceUniqueId(context, appConfigServiceProvider);
 

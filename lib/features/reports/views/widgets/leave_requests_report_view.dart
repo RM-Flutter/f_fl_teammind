@@ -353,6 +353,10 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
             ? const Color(0xFFF59E0B)
             : const Color(0xFFEF4444);
 
+    final statusText = isWaiting
+        ? 'waiting'.tr()
+        : (req.statusLabel.isNotEmpty ? req.statusLabel : req.status);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
@@ -408,7 +412,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                   border: Border.all(color: statusColor.withOpacity(0.3)),
                 ),
                 child: Text(
-                  req.statusLabel.isNotEmpty ? req.statusLabel : req.status,
+                  statusText,
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,

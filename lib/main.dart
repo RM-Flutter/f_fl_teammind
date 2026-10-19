@@ -145,11 +145,10 @@ void main() async {
               create: (context) => NotificationProviderModel()),
           ChangeNotifierProvider(
               create: (context) => OvertimeRequestsProvider()),
-          ChangeNotifierProvider(
-              create: (context) => DailyReportsProvider()),
+          ChangeNotifierProvider(create: (context) => DailyReportsProvider()),
           ChangeNotifierProvider(create: (_) => CvHubInterviewsController()),
-          ChangeNotifierProvider(create: (_) => CvHubInterviewDetailsController()),
-
+          ChangeNotifierProvider(
+              create: (_) => CvHubInterviewDetailsController()),
         ],
         child: MyApp(),
       )));

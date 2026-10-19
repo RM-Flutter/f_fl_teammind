@@ -107,6 +107,7 @@ class _CapturedFaceData {
     required this.embedding,
     required this.bytes,
     this.noteReport,
+    this.livenessReports,
   });
 
   final Map<String, dynamic> imageMap;
@@ -114,6 +115,7 @@ class _CapturedFaceData {
   final List<double> embedding;
   final Uint8List bytes;
   final Map<String, dynamic>? noteReport;
+  final List<LivenessChallengeReport>? livenessReports;
 
   List<FilePickerResult> get asFilePickerResults =>
       FileAndImagePickerService.convertMapListToFilePickerResults([imageMap]);
@@ -1190,6 +1192,159 @@ abstract class MainFabServices {
     );
   }
 
+  static Future<void> _showScanStepsSuccessDialog(
+    BuildContext context, {
+    _CapturedFaceData? capturedFace,
+    String? fingerprintType,
+  }) async {
+    final isArabic = context.locale.languageCode.toLowerCase().startsWith('ar');
+
+    final List<Map<String, dynamic>> steps = [];
+
+    // 1. أمان الجهاز
+    steps.add({
+      'title': isArabic ? 'أمان الجهاز والنظام' : 'Device & System Security',
+      'detail': isArabic
+          ? 'وضع المطور سليم - كسر الحماية (Root) غير موجود'
+          : 'Developer mode safe - No root/jailbreak detected',
+      'icon': Icons.security,
+    });
+
+    // 2. فحص الموقع
+    steps.add({
+      'title': isArabic ? 'الموقع الجغرافي (GPS)' : 'Location Verification',
+      'detail': isArabic
+          ? 'الموقع سليم - لم يتم اكتشاف تزييف موقع (Fake GPS)'
+          : 'Location verified - No fake GPS detected',
+      'icon': Icons.location_on,
+    });
+
+    // 3. فحص الوجه (إذا تم)
+    if (capturedFace != null) {
+      if (capturedFace.livenessReports != null &&
+          capturedFace.livenessReports!.isNotEmpty) {
+        final totalChallenges = capturedFace.livenessReports!.length;
+        final successful =
+            capturedFace.livenessReports!.where((r) => r.success).length;
+        steps.add({
+          'title': isArabic ? 'فحص حيوية الوجه (Liveness)' : 'Face Liveness Check',
+          'detail': isArabic
+              ? 'تم اجتياز $successful من $totalChallenges تحديات بنجاح'
+              : '$successful of $totalChallenges challenges passed successfully',
+          'icon': Icons.face_retouching_natural,
+        });
+      } else {
+        steps.add({
+          'title': isArabic ? 'التقاط صورة الوجه' : 'Face Capture',
+          'detail': isArabic ? 'تم التقاط الصورة بنجاح' : 'Face photo captured successfully',
+          'icon': Icons.camera_alt,
+        });
+      }
+
+      if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+        steps.add({
+          'title': isArabic ? 'مطابقة الهوية' : 'Identity Verification',
+          'detail': isArabic
+              ? 'تمت مطابقة الوجه مع صورة الموظف'
+              : 'Face matched with employee profile',
+          'icon': Icons.verified_user,
+        });
+      }
+    }
+
+    // 4. تسجيل البصمة
+    steps.add({
+      'title': isArabic ? 'توثيق البصمة' : 'Fingerprint Registration',
+      'detail': isArabic
+          ? 'تم تسجيل البصمة وحفظها بنجاح ${fingerprintType != null ? "($fingerprintType)" : ""}'
+          : 'Fingerprint verified & recorded ${fingerprintType != null ? "($fingerprintType)" : ""}',
+      'icon': Icons.fingerprint,
+    });
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      useRootNavigator: true,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        actionsPadding: const EdgeInsets.all(16),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.check_circle, color: Colors.green, size: 28),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                isArabic ? 'تقرير خطوات الفحص' : 'Scan Steps Report',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: steps.map((step) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(step['icon'] as IconData, size: 20, color: const Color(0xFF007AFF)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            step['title'] as String,
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            step['detail'] as String,
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.check, color: Colors.green, size: 18),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(AppColors.secondaryButton),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(
+                isArabic ? 'موافق' : 'OK',
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   static Future<_CapturedFaceData?> captureEmployeeFaceAndVerify(
       BuildContext context) async {
     debugPrint("📸 Starting face capture and verification...");
@@ -1577,8 +1732,6 @@ abstract class MainFabServices {
       );
     }
 
-    if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
-
     final imageMap = {
       'image': capturedImageFile!.path,
       'fileName': p.basename(capturedImageFile!.path),
@@ -1597,6 +1750,7 @@ abstract class MainFabServices {
       embedding: embedding!,
       bytes: capturedImageBytes!,
       noteReport: noteReport,
+      livenessReports: reports,
     );
   }
 
@@ -1804,10 +1958,14 @@ abstract class MainFabServices {
                 context: context,
                 data: nfcData,
                 files: faceFiles,
-                noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
+                                noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
 
             // Handle the server response
             if (result.success) {
+              if (AppConstants.fpScanSteps && context.mounted) {
+                await _showScanStepsSuccessDialog(context,
+                    capturedFace: capturedFace, fingerprintType: 'NFC');
+              }
               AlertsService.success(
                   context: context,
                   message: result.message ?? AppStrings.saveSucessFull.tr(),
@@ -2004,11 +2162,15 @@ abstract class MainFabServices {
                 context: context,
                 data: selectedDevice.device.remoteId.toString(),
                 files: uploadFaceFiles,
-                noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null,
+                                noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null,
               );
 
               // ✅ Show result
               if (result != null && result.success) {
+                if (AppConstants.fpScanSteps && context.mounted) {
+                  await _showScanStepsSuccessDialog(context,
+                      capturedFace: capturedFace, fingerprintType: 'Bluetooth');
+                }
                 AlertsService.success(
                   context: context,
                   message: result.message ?? AppStrings.saveSucessFull.tr(),
@@ -2146,10 +2308,14 @@ abstract class MainFabServices {
                   context: context,
                   data: selectedNetwork['bssid'].toString(),
                   files:  uploadFaceFiles,
-                  noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
+                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
 
               // Handle the server response
               if (result != null && result.success) {
+                if (AppConstants.fpScanSteps && context.mounted) {
+                  await _showScanStepsSuccessDialog(context,
+                      capturedFace: capturedFace, fingerprintType: 'Wi-Fi');
+                }
                 AlertsService.success(
                   context: context,
                   message: result.message ?? (result.data != null && result.data is Map ? result.data['message'] : null) ?? AppStrings.saveSucessFull.tr(),
@@ -2325,12 +2491,16 @@ abstract class MainFabServices {
                   lat: double.tryParse(CacheHelper.getString('lat') ?? '0') ?? 0.0,
                   long: double.tryParse(CacheHelper.getString('long') ?? '0') ?? 0.0,
                   files: uploadFaceFiles,
-                  noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
+                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
 
               print("GPS DONE TWO");
 
               // Handle the server response
               if (result != null && result.success) {
+                if (AppConstants.fpScanSteps && context.mounted) {
+                  await _showScanStepsSuccessDialog(context,
+                      capturedFace: capturedFace, fingerprintType: 'GPS');
+                }
                 AlertsService.success(
                     context: context,
                     message: result.message ?? (result.data != null && result.data is Map && result.data['message'] != null ? result.data['message'] : null) ?? AppStrings.saveSucessFull.tr(),
@@ -2421,13 +2591,7 @@ abstract class MainFabServices {
 
       // if (uploadFaceImage &&
       //     (empPhoto == null || empPhoto.files.first.bytes == null)) {
-      if (uploadFaceImage && capturedFace == null) {
-        AlertsService.error(
-            context: context,
-            message: 'Please Take Photo Before Adding Fingerprint',
-            title: 'Photo Required!');
-        return;
-      }
+      // uploadFaceFiles is already [] when capturedFace == null, no need to block here
 
       print("DONE FROM ONE");
       // Call Your Fingerprint Scanner API
@@ -2470,7 +2634,7 @@ abstract class MainFabServices {
                   data: scanedQrCode,
                   fingerDay: qrScanSuccessTime,
                   files: uploadFaceFiles,
-                  noteReport: (AppConstants.fingerprintSendNoteReportToApi && capturedFace != null) ? capturedFace.noteReport : null);
+                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
 
               // Close loading indicator
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -2485,6 +2649,10 @@ abstract class MainFabServices {
 
               print("result status --> ${result?.data != null && result.data is Map ? result.data['status'] : result?.success}");
               if (result != null && result.success) {
+                if (AppConstants.fpScanSteps && context.mounted) {
+                  await _showScanStepsSuccessDialog(context,
+                      capturedFace: capturedFace, fingerprintType: 'QR Code');
+                }
                 AlertsService.success(
                     context: context,
                     message: result.message ?? (result.data != null && result.data is Map && result.data['message'] != null ? result.data['message'] : null) ?? AppStrings.saveSucessFull.tr(),

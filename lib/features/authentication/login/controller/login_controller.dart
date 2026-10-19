@@ -19,6 +19,7 @@ import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/device_info_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../create_account/views/create_account_screen.dart';
 import '../../forgot_password/views/forget_password_screen.dart';
@@ -125,7 +126,6 @@ class AuthenticationController extends ChangeNotifier {
   }
   Future<void> login({required BuildContext context, phones, cCode, email, password, loginType, bool noti = true}) async {
     if (email == null && phones == null && formKey.currentState?.validate() == true) {
-      // التحقق من صحة رقم الهاتف قبل الإرسال
       if (isPhoneLogin) {
         final phoneText = phoneController.text.trim();
         if (phoneText.isEmpty) {
@@ -157,6 +157,13 @@ class AuthenticationController extends ChangeNotifier {
 
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
+      if (appConfigServiceProvider.deviceInformation.deviceUniqueId == null ||
+          appConfigServiceProvider.deviceInformation.deviceUniqueId.isEmpty ||
+          appConfigServiceProvider.deviceInformation.deviceUniqueId == 'Unknown Device') {
+        await DeviceInformationService.initializeAndSetDeviceInfo(
+            context: context);
+      }
+
       final completePhoneNumber = (countryCodeController.text.isEmpty
           ? '${phoneController.text}'
           : countryCodeController.text + phoneController.text)
@@ -220,6 +227,13 @@ class AuthenticationController extends ChangeNotifier {
 
       final appConfigServiceProvider =
       Provider.of<AppConfigService>(context, listen: false);
+      if (appConfigServiceProvider.deviceInformation.deviceUniqueId == null ||
+          appConfigServiceProvider.deviceInformation.deviceUniqueId!.isEmpty ||
+          appConfigServiceProvider.deviceInformation.deviceUniqueId == 'Unknown Device') {
+        await DeviceInformationService.initializeAndSetDeviceInfo(
+            context: context);
+      }
+
       final completePhoneNumber =
       (cCode != null && cCode.isEmpty
           ? '${phones.text}'

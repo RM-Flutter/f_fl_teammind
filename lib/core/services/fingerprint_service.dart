@@ -425,15 +425,24 @@ abstract class FingerprintService {
       debugPrint('⚠️ No double check data available (WiFi and Bluetooth not available)');
     }
 
-    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
+   if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null && noteReport.isNotEmpty) {
       formData['note'] = jsonEncode(noteReport);
     }
     print("formData is --> $formData");
     if (await ConnectionsService.isOnline() == true) {
-      //ONLINE CASE: التحقق من fake GPS أولاً (عند تفعيل المفتاح فقط)
-      final fakeGPSCheck = AppConstants.fingerprintBlockOnFakeGps ? await _checkFakeGPS() : null;
+      // ONLINE CASE:
+      // نشغّل GPS check لو أي من هذه المفاتيح محتاجه — كل key مستقل بعدين
+      final bool needsGpsCheck =
+          AppConstants.fingerprintBlockOnFakeGps ||
+          AppConstants.fingerprintVerifyGpsNetworkComparison ||
+          AppConstants.fingerprintSendNoteReportToApi; // يجمع GPS وحده لإرسال التقرير
+      final Map<String, dynamic>? fakeGPSCheck =
+          needsGpsCheck ? await _checkFakeGPS() : null;
 
-      if (AppConstants.fingerprintBlockOnFakeGps && fakeGPSCheck != null && fakeGPSCheck['blockFingerprint'] == true) {
+      // fingerprint_block_on_fake_gps: مستقل — يمنع البصمة لو GPS مزيف
+      if (AppConstants.fingerprintBlockOnFakeGps &&
+          fakeGPSCheck != null &&
+          fakeGPSCheck['blockFingerprint'] == true) {
         debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
         String errorMessage;
         String errorTitle = AppStrings.failed.tr();
@@ -449,7 +458,6 @@ abstract class FingerprintService {
           errorTitle = AppStrings.fakeGPSDetected.tr();
         }
 
-        // عرض رسالة للمستخدم مباشرة
         if (context.mounted) {
           AlertsService.error(
             context: context,
@@ -464,6 +472,7 @@ abstract class FingerprintService {
         );
       }
 
+      // fingerprint_send_note_report_to_api: مستقل — يرسل التقرير
       if (AppConstants.fingerprintSendNoteReportToApi) {
         final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
         if (mergedNoteReport.isNotEmpty) {
@@ -480,10 +489,19 @@ abstract class FingerprintService {
         allData: true,
       );
     } else {
-      //OFFLINE CASE: التحقق من fake GPS عند تفعيل المفتاح فقط
-      final fakeGPSCheck = AppConstants.fingerprintBlockOnFakeGps ? await _checkFakeGPS() : null;
+      // OFFLINE CASE:
+      // نشغّل GPS check لو أي من هذه المفاتيح محتاجه — كل key مستقل بعدين
+      final bool needsGpsCheckOffline =
+          AppConstants.fingerprintBlockOnFakeGps ||
+          AppConstants.fingerprintVerifyGpsNetworkComparison ||
+          AppConstants.fingerprintSendNoteReportToApi; // يجمع GPS وحده لإرسال التقرير
+      final Map<String, dynamic>? fakeGPSCheck =
+          needsGpsCheckOffline ? await _checkFakeGPS() : null;
 
-      if (AppConstants.fingerprintBlockOnFakeGps && fakeGPSCheck != null && fakeGPSCheck['blockFingerprint'] == true) {
+      // fingerprint_block_on_fake_gps: مستقل — يمنع البصمة لو GPS مزيف
+      if (AppConstants.fingerprintBlockOnFakeGps &&
+          fakeGPSCheck != null &&
+          fakeGPSCheck['blockFingerprint'] == true) {
         debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
         String errorMessage;
         String errorTitle = AppStrings.failed.tr();
@@ -513,7 +531,12 @@ abstract class FingerprintService {
         );
       }
 
-      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline ? await _verifyGPSTimestampOffline() : null;
+      // fingerprint_verify_gps_timestamp_offline: مستقل
+      final gpsVerification = AppConstants.fingerprintVerifyGpsTimestampOffline
+          ? await _verifyGPSTimestampOffline()
+          : null;
+
+      // fingerprint_send_note_report_to_api: مستقل — يرسل التقرير
       if (AppConstants.fingerprintSendNoteReportToApi) {
         final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, gpsVerification, fakeGPSCheck);
         if (mergedNoteReport.isNotEmpty) {
@@ -685,10 +708,49 @@ abstract class FingerprintService {
       'finger_day':
       DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(fingerDay ?? DateTime.now()),
     };
-    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
+   if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null && noteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(noteReport);
     }
     if (await ConnectionsService.isOnline() == true) {
+      // ONLINE CASE: نشغّل GPS check لو أي من هذه المفاتيح محتاجه
+      final bool needsGpsCheck =
+          AppConstants.fingerprintBlockOnFakeGps ||
+          AppConstants.fingerprintVerifyGpsNetworkComparison ||
+          AppConstants.fingerprintSendNoteReportToApi;
+      final Map<String, dynamic>? fakeGPSCheck =
+          needsGpsCheck ? await _checkFakeGPS() : null;
+
+      // fingerprint_block_on_fake_gps: مستقل — يمنع البصمة لو GPS مزيف
+      if (AppConstants.fingerprintBlockOnFakeGps &&
+          fakeGPSCheck != null &&
+          fakeGPSCheck['blockFingerprint'] == true) {
+        debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
+        String errorMessage;
+        String errorTitle = AppStrings.failed.tr();
+        if (fakeGPSCheck['isMockLocation'] == true) {
+          errorMessage = AppStrings.mockLocationDetected.tr();
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        } else if (fakeGPSCheck['isLowAccuracy'] == true) {
+          errorMessage = '${AppStrings.lowGPSAccuracy.tr()}: ${fakeGPSCheck['accuracy']?.toStringAsFixed(2) ?? 'N/A'}m';
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        } else {
+          errorMessage = AppStrings.suspiciousGPSData.tr();
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        }
+        if (context.mounted) {
+          AlertsService.error(context: context, message: errorMessage, title: errorTitle);
+        }
+        return OperationResult<Map<String, dynamic>>(success: false, message: errorMessage);
+      }
+
+      // fingerprint_send_note_report_to_api: مستقل — يرسل التقرير مع GPS
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
+      }
+
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
@@ -729,10 +791,49 @@ abstract class FingerprintService {
       'data': encoded,
       'finger_day': DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(fingerDay ?? DateTime.now()),
     };
-    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
+   if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null && noteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(noteReport);
     }
     if (await ConnectionsService.isOnline() == true) {
+      // ONLINE CASE: نشغّل GPS check لو أي من هذه المفاتيح محتاجه
+      final bool needsGpsCheck =
+          AppConstants.fingerprintBlockOnFakeGps ||
+          AppConstants.fingerprintVerifyGpsNetworkComparison ||
+          AppConstants.fingerprintSendNoteReportToApi;
+      final Map<String, dynamic>? fakeGPSCheck =
+          needsGpsCheck ? await _checkFakeGPS() : null;
+
+      // fingerprint_block_on_fake_gps: مستقل — يمنع البصمة لو GPS مزيف
+      if (AppConstants.fingerprintBlockOnFakeGps &&
+          fakeGPSCheck != null &&
+          fakeGPSCheck['blockFingerprint'] == true) {
+        debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
+        String errorMessage;
+        String errorTitle = AppStrings.failed.tr();
+        if (fakeGPSCheck['isMockLocation'] == true) {
+          errorMessage = AppStrings.mockLocationDetected.tr();
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        } else if (fakeGPSCheck['isLowAccuracy'] == true) {
+          errorMessage = '${AppStrings.lowGPSAccuracy.tr()}: ${fakeGPSCheck['accuracy']?.toStringAsFixed(2) ?? 'N/A'}m';
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        } else {
+          errorMessage = AppStrings.suspiciousGPSData.tr();
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        }
+        if (context.mounted) {
+          AlertsService.error(context: context, message: errorMessage, title: errorTitle);
+        }
+        return OperationResult<Map<String, dynamic>>(success: false, message: errorMessage);
+      }
+
+      // fingerprint_send_note_report_to_api: مستقل — يرسل التقرير مع GPS
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
+      }
+
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
@@ -772,10 +873,49 @@ abstract class FingerprintService {
       'finger_day':
       DateFormat('yyyy-MM-dd HH:mm:ss' , "en").format(fingerDay ?? DateTime.now()),
     };
-    if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null) {
+   if (AppConstants.fingerprintSendNoteReportToApi && noteReport != null && noteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(noteReport);
     }
     if (await ConnectionsService.isOnline() == true) {
+      // ONLINE CASE: نشغّل GPS check لو أي من هذه المفاتيح محتاجه
+      final bool needsGpsCheck =
+          AppConstants.fingerprintBlockOnFakeGps ||
+          AppConstants.fingerprintVerifyGpsNetworkComparison ||
+          AppConstants.fingerprintSendNoteReportToApi;
+      final Map<String, dynamic>? fakeGPSCheck =
+          needsGpsCheck ? await _checkFakeGPS() : null;
+
+      // fingerprint_block_on_fake_gps: مستقل — يمنع البصمة لو GPS مزيف
+      if (AppConstants.fingerprintBlockOnFakeGps &&
+          fakeGPSCheck != null &&
+          fakeGPSCheck['blockFingerprint'] == true) {
+        debugPrint('🚫 Fingerprint blocked due to fake GPS: ${fakeGPSCheck['message']}');
+        String errorMessage;
+        String errorTitle = AppStrings.failed.tr();
+        if (fakeGPSCheck['isMockLocation'] == true) {
+          errorMessage = AppStrings.mockLocationDetected.tr();
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        } else if (fakeGPSCheck['isLowAccuracy'] == true) {
+          errorMessage = '${AppStrings.lowGPSAccuracy.tr()}: ${fakeGPSCheck['accuracy']?.toStringAsFixed(2) ?? 'N/A'}m';
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        } else {
+          errorMessage = AppStrings.suspiciousGPSData.tr();
+          errorTitle = AppStrings.fakeGPSDetected.tr();
+        }
+        if (context.mounted) {
+          AlertsService.error(context: context, message: errorMessage, title: errorTitle);
+        }
+        return OperationResult<Map<String, dynamic>>(success: false, message: errorMessage);
+      }
+
+      // fingerprint_send_note_report_to_api: مستقل — يرسل التقرير مع GPS
+      if (AppConstants.fingerprintSendNoteReportToApi) {
+        final mergedNoteReport = _mergeNoteReportWithGPSVerification(noteReport, null, fakeGPSCheck);
+        if (mergedNoteReport.isNotEmpty) {
+          requestBody['note'] = jsonEncode(mergedNoteReport);
+        }
+      }
+
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_test/core/services/talker_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -412,65 +413,100 @@ class AppConfigService extends ChangeNotifier {
   }
 
   /// remove all local config values
+  /// remove all local config values
   Future<bool> resetConfig() async {
-    if (_prefs == null) return false;
+    try {
+      if (_prefs == null) return false;
 
-    // Fetch all keys from shared preferences
-    var keys = _prefs!.getKeys();
-    var result = true;
+      // Fetch all keys from shared preferences
+      var keys = _prefs!.getKeys();
+      var result = true;
 
-    for (var key in keys) {
-      // Skip the "dateWatchScreen" key
-      if (key != "dateWatchScreen") {
-        var r = await _prefs!.remove(key);
-        if (!r) result = false;
+      for (var key in keys) {
+        // Skip the "dateWatchScreen" key
+        if (key != "dateWatchScreen") {
+          var r = await _prefs!.remove(key);
+          if (!r) result = false;
+        }
       }
-    }
 
-    return result;
+      return result;
+    } catch (e, stack) {
+      TalkerLoggerService.error("Error in resetConfig", e, stack);
+      return false;
+    }
   }
 
   /// save data localy
   Future<bool> setValueMap(dynamic key, Map v) async {
-    if (_prefs == null) return false;
-    await _prefs?.setString(key.toString(), json.encode(v));
-    return true;
+    try {
+      if (_prefs == null) return false;
+      await _prefs?.setString(key.toString(), json.encode(v));
+      return true;
+    } catch (e, stack) {
+      TalkerLoggerService.error("Error saving map $key", e, stack);
+      return false;
+    }
   }
 
   /// save data localy
   Future<bool> setValueString(dynamic key, String? v) async {
-    if (_prefs == null) {
-      await init();
-      if (_prefs == null) return false;
+    try {
+      if (_prefs == null) {
+        await init();
+        if (_prefs == null) return false;
+      }
+      if (v == null) {
+        await _prefs?.remove(key.toString());
+      } else {
+        await _prefs?.setString(key.toString(), v);
+      }
+      return true;
+    } catch (e) {
+      TalkerLoggerService.error("Error saving string $key: $e");
+      return false;
     }
-    if (v == null) {
-      await _prefs?.remove(key.toString());
-    } else {
-      await _prefs?.setString(key.toString(), v);
-      // Force a reload to ensure the value is persisted (especially important on web)
-      await _prefs?.reload();
-    }
-    return true;
   }
 
   /// save data localy
   Future<bool> setValueBool(dynamic key, bool v) async {
-    if (_prefs == null) return false;
-    await _prefs?.setBool(key.toString(), v);
-    return true;
+    try {
+      if (_prefs == null) {
+        await init();
+        if (_prefs == null) return false;
+      }
+      await _prefs?.setBool(key.toString(), v);
+      return true;
+    } catch (e) {
+      TalkerLoggerService.error("Error saving bool $key: $e");
+      return false;
+    }
   }
 
   /// save data localy
   Future<bool> setValueInt(dynamic key, int v) async {
-    if (_prefs == null) return false;
-    await _prefs?.setInt(key.toString(), v);
-    return true;
+    try {
+      if (_prefs == null) {
+        await init();
+        if (_prefs == null) return false;
+      }
+      await _prefs?.setInt(key.toString(), v);
+      return true;
+    } catch (e) {
+      TalkerLoggerService.error("Error saving int $key: $e");
+      return false;
+    }
   }
 
   /// get data localy
   String getValueString(dynamic key) {
-    if (_prefs == null) return '';
-    return _prefs?.getString(key.toString()) ?? '';
+    try {
+      if (_prefs == null) return '';
+      return _prefs?.getString(key.toString()) ?? '';
+    } catch (e) {
+      TalkerLoggerService.error("Error getting string $key: $e");
+      return '';
+    }
   }
 
   /// check if data exist
@@ -481,19 +517,36 @@ class AppConfigService extends ChangeNotifier {
 
   /// get data localy
   Map<String, dynamic> getValueMap(dynamic key) {
-    return json.decode(_prefs?.getString(key.toString()) ?? '{}') ?? {};
+    try {
+      if (_prefs == null) return {};
+      return json.decode(_prefs?.getString(key.toString()) ?? '{}') ?? {};
+    } catch (e, stack) {
+      TalkerLoggerService.error("Error getting map $key", e, stack);
+      return {};
+    }
   }
 
   /// get data localy
   int getValueInt(dynamic key) {
-    return _prefs?.getInt(key.toString()) ?? 0;
+    try {
+      if (_prefs == null) return 0;
+      return _prefs?.getInt(key.toString()) ?? 0;
+    } catch (e, stack) {
+      TalkerLoggerService.error("Error getting int $key", e, stack);
+      return 0;
+    }
   }
 
   /// get data localy
   bool getValueBool(dynamic key, {bool defaultValue = false}) {
-    return _prefs?.getBool(key.toString()) ?? defaultValue;
+    try {
+      if (_prefs == null) return defaultValue;
+      return _prefs?.getBool(key.toString()) ?? defaultValue;
+    } catch (e, stack) {
+      TalkerLoggerService.error("Error getting bool $key", e, stack);
+      return defaultValue;
+    }
   }
-
   Future<void> clearToken({bool? notify = true}) async {
     if (_prefs == null) await init();
     // Remove token from SharedPreferences
