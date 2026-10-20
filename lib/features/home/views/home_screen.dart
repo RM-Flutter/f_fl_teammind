@@ -357,6 +357,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
+        // Tracking Preview Banner (Quick access for design review)
+        // const TrackingHomePreviewBanner(),
+
         // Customize Button Row
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
