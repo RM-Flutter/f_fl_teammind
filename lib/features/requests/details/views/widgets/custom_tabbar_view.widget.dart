@@ -3,9 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/services/localization_service.dart';
-
+import 'dart:convert';
+import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/features/tracking/views/widgets/tracking_section_employee.dart';
+import 'package:app_test/features/tracking/views/widgets/tracking_section_manager.dart';
 import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/services/localization_service.dart';
 
 
 class CustomTabbarViewRequestDetails extends StatelessWidget {
@@ -18,11 +22,22 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
         fontSize: 10.5, 
         fontWeight: FontWeight.bold
     );
+    var jsonString = CacheHelper.getString("US1");
+    UserSettingsModel? userSettings;
+    if (jsonString != null && jsonString.isNotEmpty) {
+      try {
+        final gCache = json.decode(jsonString) as Map<String, dynamic>;
+        userSettings = UserSettingsModel.fromJson(gCache);
+      } catch (_) {}
+    }
+    final bool isMyRequest = userSettings?.empId != null &&
+        request.employeeId != null &&
+        userSettings!.empId == request.employeeId;
+
     return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: 8, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Column(
           children: [
             Container(
@@ -31,14 +46,13 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
               ),
               height: 52,
-              padding: EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
               child: TabBar(
                 dividerColor: Colors.transparent,
-                indicatorPadding: EdgeInsets.symmetric(horizontal: 4),
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: 2),
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
-                  color:  Color(AppColors.buttons),
+                  color: Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(30),
                 ),
                 labelColor: Colors.white,
@@ -47,46 +61,52 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 unselectedLabelColor: Colors.white,
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabs: [
-                  Container(
-                      margin: EdgeInsets.zero,
-                      child:  Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppStrings.reason.tr().toUpperCase(),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      )),
-                  Container(
-                    margin: EdgeInsets.zero,
-                    child: Tab(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          AppStrings.managerResponse.tr().toUpperCase(),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.reason.tr().toUpperCase(),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ),
-                  Container(
-                      margin: EdgeInsets.zero,
-                      child: Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppStrings.information.tr().toUpperCase(),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      )),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.managerResponse.tr().toUpperCase(),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.information.tr().toUpperCase(),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        LocalizationService.isArabic(context: context)
+                            ? 'التتبع 📍'
+                            : 'TRACKING 📍',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -242,7 +262,17 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                               itemCount: request.seenBy.length)
                         ],
                       ),
-                    )
+                    ),
+                    // Tab 4: Tracking
+                    SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8, bottom: 20),
+                        child: isMyRequest
+                            ? TrackingSectionEmployee(request: request)
+                            : TrackingSectionManager(request: request),
+                      ),
+                    ),
                   ],
                 ),
               ),

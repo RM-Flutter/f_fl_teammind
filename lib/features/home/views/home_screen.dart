@@ -32,6 +32,7 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/routing/app_router.dart';
 import '../../tasks/views/main_tasks_layout/widgets/task_list_tile_widget.dart';
+import '../../tracking/views/widgets/tracking_home_preview_banner.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 

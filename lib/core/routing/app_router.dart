@@ -23,6 +23,8 @@ import 'package:app_test/features/requests/main_request_layout/views/requests_sc
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import '../../features/authentication/login/views/login_screen.dart';
+import '../../features/tracking/views/screens/live_group_map_screen.dart';
+import '../../features/tracking/views/screens/tracking_demo_hub_screen.dart';
 import '../../features/authentication/login/views/update_main_data.dart';
 import '../../features/complaints/views/complain_list/complains_screen.dart';
 import '../../features/complaints/views/complains_details/complain_details_screen.dart';
@@ -156,6 +158,8 @@ enum AppRoutes {
   evaluationRequireScreen,
   requestsById,
   requestDetails,
+  liveGroupMap,
+  trackingDemoHub,
   addRequest,
   requestsCalendar,
   employeesList,
@@ -1065,6 +1069,50 @@ GoRouter goRouter(BuildContext context) {
                     child: const TeamTodayStatusScreen(),
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'liveGroupMap',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.liveGroupMap.name,
+                pageBuilder: (context, state) {
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const LiveGroupMapScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'trackingDemoHub',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.trackingDemoHub.name,
+                pageBuilder: (context, state) {
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const TrackingDemoHubScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
                   );
                 },
               ),
