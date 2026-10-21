@@ -1,6 +1,7 @@
 import 'package:app_test/core/services/model_helpers_service.dart';
 
 import 'app_settings_model.dart';
+import 'fingerprint_security_checks.model.dart';
 import 'license.model.dart';
 
 class GeneralSettingsModel extends AppSettingsModel {
@@ -31,6 +32,7 @@ class GeneralSettingsModel extends AppSettingsModel {
   final bool? managerAbleToApproveExpenseClaims;
   final bool? hasEmployeeProfile;
   final LicenseModel? license;
+  final FingerprintSecurityChecksModel? fingerprintSecurityChecks;
 
   GeneralSettingsModel(
       {required super.lastUpdateDate,
@@ -58,7 +60,8 @@ class GeneralSettingsModel extends AppSettingsModel {
         this.managerAbleToApproveSalaryAdvances,
         this.managerAbleToApproveExpenseClaims,
         this.hasEmployeeProfile,
-        this.license});
+        this.license,
+        this.fingerprintSecurityChecks});
 
   factory GeneralSettingsModel.fromJson(Map<String, dynamic> json) {
     return GeneralSettingsModel(
@@ -130,6 +133,11 @@ class GeneralSettingsModel extends AppSettingsModel {
       managerAbleToApproveExpenseClaims: ModelHelpersService.getBoolValue(json['manager_able_to_approve_expense_claims']),
       hasEmployeeProfile: ModelHelpersService.getBoolValue(json['has_employee_profile']) ?? true,
       license: json['license'] != null ? LicenseModel.fromJson(json['license']) : null,
+      fingerprintSecurityChecks: json['fingerprint_security_checks'] != null
+          ? FingerprintSecurityChecksModel.fromJson(json['fingerprint_security_checks'] as Map<String, dynamic>?)
+          : (json['fingerprintChecks'] is List
+              ? FingerprintSecurityChecksModel.fromLegacyArray(json['fingerprintChecks'] as List<dynamic>)
+              : null),
     );
   }
 
@@ -169,6 +177,7 @@ class GeneralSettingsModel extends AppSettingsModel {
       'manager_able_to_approve_salary_advances': managerAbleToApproveSalaryAdvances,
       'manager_able_to_approve_expense_claims': managerAbleToApproveExpenseClaims,
       'license': license?.toJson(),
+      'fingerprint_security_checks': fingerprintSecurityChecks?.toJson(),
     };
   }
 }

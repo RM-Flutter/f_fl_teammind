@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_test/core/models/settings/fingerprint_security_checks.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 
 
@@ -8,75 +9,100 @@ abstract class AppConstants {
   static  List? fingerPrints = [];
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // مفاتيح أمان البصمة (11) — عند false: لا يظهر للعميل، ولا يؤثر على البصمة، ولا يُرسل للباك اند.
-  // يتم تحديثها من كاش USG → array اسمه fingerprintChecks: المفتاح داخل الـ array = true، غير موجود = false.
+  // مفاتيح أمان البصمة (13) — تدعم 3 مستويات: mandatory / optional / disabled
+  // الأولوية لـ fingerprint_security_checks (object).
+  // الـ fallback هو fingerprintChecks (array القديم) إن لم يوجد الـ object.
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// أسماء المفاتيح الـ 11 (بنفس أسماء الباك اند).
+  /// أسماء المفاتيح الـ 13 (بنفس أسماء الباك اند).
   static const List<String> fingerprintSecurityKeyNames = [
-    'fingerprint_face_challenge_enabled',
-    'fingerprint_upload_face_image_to_backend',
     'block_fingerprint_on_developer_mode',
-    'fingerprint_liveness_challenges_enabled',
-    'fingerprint_send_note_report_to_api',
-    'fingerprint_face_profile_verification_enabled',
+    'fingerprint_block_on_root_or_jailbreak',
     'fingerprint_block_on_fake_gps',
+    'fingerprint_block_on_vpn',
+    'fingerprint_verify_time_drift',
     'fingerprint_verify_gps_network_comparison',
     'fingerprint_verify_gps_timestamp_offline',
-    'fingerprint_block_on_root_or_jailbreak',
+    'fingerprint_liveness_challenges_enabled',
+    'fingerprint_face_challenge_enabled',
+    'fingerprint_face_profile_verification_enabled',
+    'fingerprint_upload_face_image_to_backend',
+    'fingerprint_send_note_report_to_api',
     'fp_scan_steps',
   ];
 
-  /// فتح الكاميرا وأخذ صورة للوجه فقط — لا تتحكم في التحقق من البروفايل ولا في رفع الصورة. عند false لا تظهر خطوة الوجه نهائياً.
-  static bool fingerprintFaceChallengeEnabled = true;
-  /// أخذ الصورة الملتقطة ورفعها للباك اند مع طلب البصمة (files). مستقل عن فتح الكاميرا وعن التحقق من البروفايل.
-  static bool fingerprintUploadFaceImageToBackend = true;
-  /// منع البصمة عند تفعيل Developer Mode على الجهاز.
-  static bool blockFingerprintOnDeveloperMode = true;
-  /// تشغيل التحديات الحية (liveness) أمام الكاميرا. عند false يُستخدم التقاط صورة بسيط بدون تحديات.
-  static bool fingerprintLivenessChallengesEnabled = true;
-  /// إرسال تقرير التحديات والـ GPS في حقل note مع طلب البصمة.
-  static bool fingerprintSendNoteReportToApi = true;
-  /// التحقق من مطابقة الصورة الملتقطة مع صورة البروفايل (US1). المسؤولة الوحيدة عن تحقق الصورة بصورة البروفايل.
-  static bool fingerprintFaceProfileVerificationEnabled = true;
-  /// منع البصمة عند اكتشاف Fake GPS / Mock Location.
-  static bool fingerprintBlockOnFakeGps = true;
-  /// مقارنة موقع GPS مع Network Location وإضافتها للـ note.
-  static bool fingerprintVerifyGpsNetworkComparison = true;
-  /// التحقق من توقيت GPS في وضع Offline وإضافته للـ note.
-  static bool fingerprintVerifyGpsTimestampOffline = true;
-  /// منع البصمة على أجهزة Root / Jailbreak.
-  static bool fingerprintBlockOnRootOrJailbreak = false;
-  /// عرض بوب أب التقرير (الريبورت) للعميل بعد انتهاء البصمة فقط. عند false لا يظهر البوب أب.
-  static bool fpScanSteps = false;
+  /// مستويات الأمان (Levels)
+  static FingerprintCheckLevel blockFingerprintOnDeveloperModeLevel = FingerprintCheckLevel.mandatory;
+  static FingerprintCheckLevel fingerprintBlockOnRootOrJailbreakLevel = FingerprintCheckLevel.mandatory;
+  static FingerprintCheckLevel fingerprintBlockOnFakeGpsLevel = FingerprintCheckLevel.mandatory;
+  static FingerprintCheckLevel fingerprintBlockOnVpnLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel fingerprintVerifyTimeDriftLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel fingerprintVerifyGpsNetworkComparisonLevel = FingerprintCheckLevel.disabled;
+  static FingerprintCheckLevel fingerprintVerifyGpsTimestampOfflineLevel = FingerprintCheckLevel.disabled;
+  static FingerprintCheckLevel fingerprintLivenessChallengesEnabledLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel fingerprintFaceChallengeEnabledLevel = FingerprintCheckLevel.disabled;
+  static FingerprintCheckLevel fingerprintFaceProfileVerificationEnabledLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel fingerprintUploadFaceImageToBackendLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel fingerprintSendNoteReportToApiLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel fpScanStepsLevel = FingerprintCheckLevel.optional;
 
-  /// تحديث مفاتيح أمان البصمة من كاش USG → array اسمه fingerprintChecks.
-  /// أي اسم مفتاح موجود داخل الـ array = قيمته true، أي اسم غير موجود = false.
-  /// الـ array مش ثابت: الباك اند ممكن يرجع كل المفاتيح أو جزء منهم حسب احتياج العميل.
+  /// Getters متوافقة مع الكود السابق (ترجع true إذا كان المفتاح مفعلاً: mandatory أو optional)
+  static bool get blockFingerprintOnDeveloperMode => blockFingerprintOnDeveloperModeLevel.isEnabled;
+  static bool get fingerprintBlockOnRootOrJailbreak => fingerprintBlockOnRootOrJailbreakLevel.isEnabled;
+  static bool get fingerprintBlockOnFakeGps => fingerprintBlockOnFakeGpsLevel.isEnabled;
+  static bool get fingerprintBlockOnVpn => fingerprintBlockOnVpnLevel.isEnabled;
+  static bool get fingerprintVerifyTimeDrift => fingerprintVerifyTimeDriftLevel.isEnabled;
+  static bool get fingerprintVerifyGpsNetworkComparison => fingerprintVerifyGpsNetworkComparisonLevel.isEnabled;
+  static bool get fingerprintVerifyGpsTimestampOffline => fingerprintVerifyGpsTimestampOfflineLevel.isEnabled;
+  static bool get fingerprintLivenessChallengesEnabled => fingerprintLivenessChallengesEnabledLevel.isEnabled;
+  static bool get fingerprintFaceChallengeEnabled => fingerprintFaceChallengeEnabledLevel.isEnabled;
+  static bool get fingerprintFaceProfileVerificationEnabled => fingerprintFaceProfileVerificationEnabledLevel.isEnabled;
+  static bool get fingerprintUploadFaceImageToBackend => fingerprintUploadFaceImageToBackendLevel.isEnabled;
+  static bool get fingerprintSendNoteReportToApi => fingerprintSendNoteReportToApiLevel.isEnabled;
+  static bool get fpScanSteps => fpScanStepsLevel.isEnabled;
+
+  /// تحديث مستويات أمان البصمة من موديل الـ object الجديد (الأولوية الأولى).
+  static void updateFingerprintSecurityFromChecksObject(FingerprintSecurityChecksModel checks) {
+    blockFingerprintOnDeveloperModeLevel = checks.blockFingerprintOnDeveloperMode;
+    fingerprintBlockOnRootOrJailbreakLevel = checks.fingerprintBlockOnRootOrJailbreak;
+    fingerprintBlockOnFakeGpsLevel = checks.fingerprintBlockOnFakeGps;
+    fingerprintBlockOnVpnLevel = checks.fingerprintBlockOnVpn;
+    fingerprintVerifyTimeDriftLevel = checks.fingerprintVerifyTimeDrift;
+    fingerprintVerifyGpsNetworkComparisonLevel = checks.fingerprintVerifyGpsNetworkComparison;
+    fingerprintVerifyGpsTimestampOfflineLevel = checks.fingerprintVerifyGpsTimestampOffline;
+    fingerprintLivenessChallengesEnabledLevel = checks.fingerprintLivenessChallengesEnabled;
+    fingerprintFaceChallengeEnabledLevel = checks.fingerprintFaceChallengeEnabled;
+    fingerprintFaceProfileVerificationEnabledLevel = checks.fingerprintFaceProfileVerificationEnabled;
+    fingerprintUploadFaceImageToBackendLevel = checks.fingerprintUploadFaceImageToBackend;
+    fingerprintSendNoteReportToApiLevel = checks.fingerprintSendNoteReportToApi;
+    fpScanStepsLevel = checks.fpScanSteps;
+  }
+
+  /// تحديث مفاتيح أمان البصمة من كاش USG:
+  /// 1) يفحص أولاً وجود object جديد: "fingerprint_security_checks"
+  /// 2) إذا لم يوجد، يتراجع للـ array القديم: "fingerprintChecks" (fallback)
   static void updateFingerprintSecurityFromUsgFingerprintChecks() {
     final jsonString = CacheHelper.getString("USG");
-    List<dynamic> list = [];
     if (jsonString != null && jsonString.isNotEmpty) {
       try {
         final gCache = json.decode(jsonString) as Map<String, dynamic>?;
-        if (gCache != null && gCache['fingerprintChecks'] is List) {
-          print("KEYS CASES -> ${gCache['fingerprintChecks']}");
-          list = gCache['fingerprintChecks'] as List<dynamic>;
+        if (gCache != null) {
+          if (gCache['fingerprint_security_checks'] is Map) {
+            final checks = FingerprintSecurityChecksModel.fromJson(
+              gCache['fingerprint_security_checks'] as Map<String, dynamic>,
+            );
+            updateFingerprintSecurityFromChecksObject(checks);
+            return;
+          } else if (gCache['fingerprintChecks'] is List) {
+            final checks = FingerprintSecurityChecksModel.fromLegacyArray(
+              gCache['fingerprintChecks'] as List<dynamic>,
+            );
+            updateFingerprintSecurityFromChecksObject(checks);
+            return;
+          }
         }
       } catch (_) {}
     }
-    bool contains(String key) => list.any((e) => e?.toString() == key);
-    fingerprintFaceChallengeEnabled = contains('fingerprint_face_challenge_enabled');
-    fingerprintUploadFaceImageToBackend = contains('fingerprint_upload_face_image_to_backend');
-    blockFingerprintOnDeveloperMode = contains('block_fingerprint_on_developer_mode');
-    fingerprintLivenessChallengesEnabled = contains('fingerprint_liveness_challenges_enabled');
-    fingerprintSendNoteReportToApi = contains('fingerprint_send_note_report_to_api');
-    fingerprintFaceProfileVerificationEnabled = contains('fingerprint_face_profile_verification_enabled');
-    fingerprintBlockOnFakeGps = contains('fingerprint_block_on_fake_gps');
-    fingerprintVerifyGpsNetworkComparison = contains('fingerprint_verify_gps_network_comparison');
-    fingerprintVerifyGpsTimestampOffline = contains('fingerprint_verify_gps_timestamp_offline');
-    fingerprintBlockOnRootOrJailbreak = contains('fingerprint_block_on_root_or_jailbreak');
-    fpScanSteps = contains('fp_scan_steps');
   }
 
   /// الكاميرا تفتح لو أي key من الـ keys دي موجود — كل key مستقل تماماً.

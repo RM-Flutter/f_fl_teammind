@@ -35,7 +35,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import '../../models/settings/fingerprint_security_checks.model.dart';
 import '../../services/connections_service.dart';
+import '../../services/vpn_detection_service.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/app_strings.dart';
 import '../../platform/platform_is.dart';
@@ -269,8 +271,10 @@ abstract class MainFabServices {
       BuildContext context) async {
     debugPrint("🔒 Checking device security for fingerprint...");
 
-    final blockOnDevMode = AppConstants.blockFingerprintOnDeveloperMode;
-    debugPrint("   Block on Dev Mode: $blockOnDevMode");
+    // 1) فحص Developer Mode إذا كان mandatory
+    final bool blockOnDevMode =
+        AppConstants.blockFingerprintOnDeveloperModeLevel == FingerprintCheckLevel.mandatory;
+    debugPrint("   Block on Dev Mode (mandatory): $blockOnDevMode");
 
     if (blockOnDevMode) {
       final bool devModeOnDevice = await _isDeveloperModeEnabled();
@@ -295,7 +299,8 @@ abstract class MainFabServices {
       }
     }
 
-    if (AppConstants.fingerprintBlockOnRootOrJailbreak) {
+    // 2) فحص Root / Jailbreak إذا كان mandatory
+    if (AppConstants.fingerprintBlockOnRootOrJailbreakLevel == FingerprintCheckLevel.mandatory) {
       final bool isRooted = await _isDeviceRootedOrJailbroken();
       debugPrint("   Root/Jailbreak: $isRooted");
       if (isRooted) {
@@ -303,6 +308,28 @@ abstract class MainFabServices {
           context,
           en: 'Fingerprint is blocked on rooted or jailbroken devices.',
           ar: 'البصمة غير متاحة على أجهزة الـ Root أو الـ Jailbreak.',
+        );
+        final dialogContext = rootNavigatorKey.currentContext ?? context;
+        if (dialogContext.mounted) {
+          AlertsService.error(
+            context: dialogContext,
+            title: AppStrings.failed.tr(),
+            message: msg,
+          );
+        }
+        return false;
+      }
+    }
+
+    // 3) فحص VPN إذا كان mandatory
+    if (AppConstants.fingerprintBlockOnVpnLevel == FingerprintCheckLevel.mandatory) {
+      final vpnCheck = await VpnDetectionService.checkVpn();
+      debugPrint("   VPN active: ${vpnCheck['isVpnActive']}");
+      if (vpnCheck['isVpnActive'] == true) {
+        final msg = _localized(
+          context,
+          en: 'Fingerprint is blocked because VPN is active on this device.',
+          ar: 'تم إيقاف البصمة بسبب تفعيل اتصال VPN على هذا الجهاز.',
         );
         final dialogContext = rootNavigatorKey.currentContext ?? context;
         if (dialogContext.mounted) {
@@ -1325,19 +1352,17 @@ abstract class MainFabServices {
           ),
         ),
         actions: [
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.secondaryButton),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(
-                isArabic ? 'موافق' : 'OK',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size.fromHeight(45),
+              backgroundColor: Color(AppColors.secondaryButton),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(
+              isArabic ? 'موافق' : 'OK',
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -1657,6 +1682,7 @@ abstract class MainFabServices {
     showProcessingDialog();
     double? similarity;
     List<double>? embedding;
+    Map<String, dynamic>? faceProfileCheckFailed;
 
     try {
       final analysis = await _processFace(
@@ -1667,14 +1693,23 @@ abstract class MainFabServices {
       if (analysis == null || !analysis.hasFace || !analysis.hasEmbedding) {
         hideProcessingDialog();
         if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
-          _showWarning(
-            context,
-            en: 'Face not detected in captured image. Please try again.',
-            ar: 'لم يتم اكتشاف الوجه في الصورة الملتقطة. يرجى المحاولة مرة أخرى.',
-          );
-          if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
-          await _deleteFileIfExists(capturedImageFile!);
-          return null;
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            _showWarning(
+              context,
+              en: 'Face not detected in captured image. Please try again.',
+              ar: 'لم يتم اكتشاف الوجه في الصورة الملتقطة. يرجى المحاولة مرة أخرى.',
+            );
+            if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+            await _deleteFileIfExists(capturedImageFile!);
+            return null;
+          } else {
+            faceProfileCheckFailed = {
+              'status': 'failed',
+              'message': 'Face not detected in captured image',
+              'detected_at': DateTime.now().toIso8601String(),
+            };
+          }
         }
         embedding = List.filled(512, 0.0);
       } else {
@@ -1692,39 +1727,62 @@ abstract class MainFabServices {
     if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
       if (similarity == null) {
         debugPrint('Similarity calculation returned null');
-        await _deleteFileIfExists(capturedImageFile!);
-        _showWarning(
-          context,
-          en: 'Face verification failed. Please try again.',
-          ar: 'فشل التحقق من الوجه. يرجى المحاولة مرة أخرى.',
-        );
-        if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
-        return null;
-      }
-      debugPrint('Face verification similarity score: ' + similarity.toString());
-      if (similarity < _minProfileSimilarity) {
-        await _deleteFileIfExists(capturedImageFile!);
-        _showWarning(
-          context,
-          en:
-          'Face verification failed. Please make sure the employee you are registering is standing in front of the camera.',
-          ar: 'لم يتم قبول التحقق من الوجه. تأكد أن الموظف صاحب البصمة واقف أمام الكاميرا.',
-          details: {
-            _localized(context, en: 'Similarity', ar: 'التشابه'):
-            similarity.toStringAsFixed(3),
-            _localized(context, en: 'Required', ar: 'المطلوب'):
-            _minProfileSimilarity.toStringAsFixed(2),
-          },
-        );
-        if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
-        return null;
+        if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+            FingerprintCheckLevel.mandatory) {
+          await _deleteFileIfExists(capturedImageFile!);
+          _showWarning(
+            context,
+            en: 'Face verification failed. Please try again.',
+            ar: 'فشل التحقق من الوجه. يرجى المحاولة مرة أخرى.',
+          );
+          if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+          return null;
+        } else {
+          faceProfileCheckFailed = {
+            'status': 'failed',
+            'message': 'Face verification similarity calculation returned null',
+            'detected_at': DateTime.now().toIso8601String(),
+          };
+        }
+      } else {
+        debugPrint('Face verification similarity score: ' + similarity.toString());
+        if (similarity < _minProfileSimilarity) {
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            await _deleteFileIfExists(capturedImageFile!);
+            _showWarning(
+              context,
+              en:
+              'Face verification failed. Please make sure the employee you are registering is standing in front of the camera.',
+              ar: 'لم يتم قبول التحقق من الوجه. تأكد أن الموظف صاحب البصمة واقف أمام الكاميرا.',
+              details: {
+                _localized(context, en: 'Similarity', ar: 'التشابه'):
+                similarity.toStringAsFixed(3),
+                _localized(context, en: 'Required', ar: 'المطلوب'):
+                _minProfileSimilarity.toStringAsFixed(2),
+              },
+            );
+            if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+            return null;
+          } else {
+            faceProfileCheckFailed = {
+              'status': 'failed',
+              'message':
+                  'Face similarity score ${similarity.toStringAsFixed(3)} is below minimum ${_minProfileSimilarity.toStringAsFixed(2)}',
+              'similarity': similarity,
+              'min_similarity': _minProfileSimilarity,
+              'detected_at': DateTime.now().toIso8601String(),
+            };
+          }
+        }
       }
     }
 
     // نظهر رسالة "identity / face verification successful" فقط
-    // لو اللّيفنس والتطابق مع صورة البروفايل مفعّلين معاً
+    // لو اللّيفنس والتطابق مع صورة البروفايل مفعّلين معاً ونجح الفحص
     if (AppConstants.fingerprintLivenessChallengesEnabled &&
-        AppConstants.fingerprintFaceProfileVerificationEnabled) {
+        AppConstants.fingerprintFaceProfileVerificationEnabled &&
+        faceProfileCheckFailed == null) {
       AlertsService.success(
         context: context,
         title: AppStrings.success.tr(),
@@ -1740,6 +1798,13 @@ abstract class MainFabServices {
 
     // Create noteReport from reports
     final noteReport = _createNoteReport(reports);
+    if (faceProfileCheckFailed != null) {
+      final existingFailed = (noteReport['security_checks_failed'] as Map<String, dynamic>?) ?? {};
+      noteReport['security_checks_failed'] = {
+        ...existingFailed,
+        'fingerprint_face_profile_verification_enabled': faceProfileCheckFailed,
+      };
+    }
 
     // Print noteReport for debugging
     debugPrint('noteReport is ---> ${jsonEncode(noteReport)}');

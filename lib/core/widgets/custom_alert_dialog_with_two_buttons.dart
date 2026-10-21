@@ -32,65 +32,74 @@ Future<void> customAlertDialogWithTwoButtons(
     barrierDismissible: false,
     barrierColor: Theme.of(dialogContext).dialogTheme.barrierColor,
     builder: (BuildContext builderContext) {
-      return AlertDialog(
-        iconPadding:
-            const EdgeInsets.only(right: 24, left: 24, bottom: 32, top: 32),
-        titlePadding:
-            const EdgeInsets.only(top: 24, right: 24, left: 24, bottom: 24),
-        contentPadding: const EdgeInsets.only(bottom: 32, right: 24, left: 24),
-        actionsPadding: const EdgeInsets.only(bottom: 18, right: 8, left: 8),
-        contentTextStyle: Theme.of(builderContext).dialogTheme.contentTextStyle,
-        icon: icon != null ? SvgPicture.asset(icon) : null,
-        title: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Color(AppColors.secondaryButton),
-              fontWeight: FontWeight.w700,
-              fontSize: 18),
-        ),
-        content: Text(
-          content,
-          textAlign: TextAlign.center,
-          style: Theme.of(builderContext).dialogTheme.contentTextStyle,
-        ),
-        actions: <Widget>[
-          Row(
-            children: [
-              Expanded(
-                  //   flex: 2,
-                  child: CustomElevatedButton(
-                titleSize: AppSizes.s12,
-                title: actionLeftText,
-                onPressed: () async {
-                  if (builderContext.mounted) {
-                    Navigator.of(builderContext, rootNavigator: true).pop();
-                  }
-                },
-              )),
-              const SizedBox(width: 8),
-              Expanded(
-                  //   flex: 2,
-                  child: CustomElevatedButton(
-                titleSize: AppSizes.s12,
-                title: actionRightText,
-                onPressed: () async {
-                  await onRightActionPressed();
-                  if (builderContext.mounted) {
-                    Navigator.of(builderContext, rootNavigator: true).pop();
-                  }
-                },
-              )),
-            ],
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (icon != null) ...[
+                  SvgPicture.asset(icon),
+                  const SizedBox(height: 16),
+                ],
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(AppColors.secondaryButton),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  content,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(builderContext).dialogTheme.contentTextStyle ??
+                      TextStyle(
+                        color: Color(AppColors.black),
+                        fontSize: 14,
+                      ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomElevatedButton(
+                        width: double.infinity,
+                        titleSize: AppSizes.s12,
+                        title: actionLeftText,
+                        onPressed: () async {
+                          if (builderContext.mounted) {
+                            Navigator.of(builderContext, rootNavigator: true).pop();
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: CustomElevatedButton(
+                        width: double.infinity,
+                        titleSize: AppSizes.s12,
+                        title: actionRightText,
+                        onPressed: () async {
+                          await onRightActionPressed();
+                          if (builderContext.mounted) {
+                            Navigator.of(builderContext, rootNavigator: true).pop();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          // SizedBox(height: 12),
-          // Expanded(
-          //   child: ButtonWidget(
-          //     onPressed: () {},
-          //     title: 'CLOSE',
-          //   ),
-          // ),
-        ],
+        ),
       );
     },
   );

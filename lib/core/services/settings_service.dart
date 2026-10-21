@@ -286,7 +286,13 @@ abstract class AppSettingsService {
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
         DynamicAppConfigService.clearCache();
-        AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+        if (generalSettingsModel.fingerprintSecurityChecks != null) {
+          AppConstants.updateFingerprintSecurityFromChecksObject(
+            generalSettingsModel.fingerprintSecurityChecks!,
+          );
+        } else {
+          AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+        }
       }
       if((need == null || need.contains('user2_settings')) &&result.data!['user2_settings'] != null){
         if ((need == null || need.contains('user2_settings')) &&result.data!['user2_settings']['data'] != null){
@@ -436,6 +442,7 @@ abstract class AppSettingsService {
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
         DynamicAppConfigService.clearCache();
+        AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
       }
       if(result.data!['user2_settings'] != null){
         if (result.data!['user2_settings']['data'] != null){

@@ -311,6 +311,13 @@ class FingerprintViewModel extends ChangeNotifier {
         }
       }
 
+      // Add security_report if provided
+      if (fingerprint['security_report'] != null) {
+        final secReport = fingerprint['security_report'];
+        final secValue = secReport is String ? secReport : jsonEncode(secReport);
+        formData.fields.add(MapEntry('fingerprints[$i][security_report]', secValue));
+      }
+
       // Files — ضغط الصور قبل الإرسال (أونلاين وأوفلاين) لتقليل المساحة
       if (fingerprint['files'] != null) {
         var filesList = fingerprint['files'];
@@ -351,6 +358,10 @@ class FingerprintViewModel extends ChangeNotifier {
         'data': fingerprint['data'],
         'finger_day': fingerprint['finger_day'],
       };
+
+      if (fingerprint['security_report'] != null) {
+        entry['security_report'] = fingerprint['security_report'];
+      }
 
       if (fingerprint['files'] != null && fingerprint['files'].isNotEmpty) {
         List<Map<String, dynamic>> files = [];

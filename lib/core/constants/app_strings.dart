@@ -656,6 +656,11 @@ abstract class AppStrings {
   static const fingerprintBlockedFakeGPS = "fingerprintBlockedFakeGPS";
   static const lowGPSAccuracy = "lowGPSAccuracy";
   static const suspiciousGPSData = "suspiciousGPSData";
+  static const developerModeDetected = "developerModeDetected";
+  static const rootedDeviceDetected = "rootedDeviceDetected";
+  static const vpnDetected = "vpnDetected";
+  static const timeDriftDetected = "timeDriftDetected";
+  static const securityCheckFailed = "securityCheckFailed";
   static const requestTerms = "requestTerms";
   static const noRequestTypes = "noRequestTypes";
 
