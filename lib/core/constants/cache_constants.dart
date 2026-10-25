@@ -30,6 +30,7 @@ class CacheConsts {
         final decoded = json.decode(jsonString);
         if (decoded is Map<String, dynamic>) {
           us1Cache = decoded;
+          AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
         }
       } catch (e) {
         debugPrint("Error decoding US1 in initUS1: $e");

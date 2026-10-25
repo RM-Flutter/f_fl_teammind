@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
@@ -68,6 +69,7 @@ void main() async {
   registerErrorHandlers();
   await EasyLocalization.ensureInitialized();
   await CacheHelper.init();
+  AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
   FcmTokenService.initAtAppStart();
   await LocalNotificationService.init();
 

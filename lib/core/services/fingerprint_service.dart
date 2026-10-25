@@ -480,12 +480,13 @@ abstract class FingerprintService {
       securityChecksFailed: securityResult.failedOptionals,
     );
 
-    if (AppConstants.fingerprintSendNoteReportToApi &&
+    if ((AppConstants.fingerprintSendNoteReportToApi ||
+            securityResult.failedOptionals.isNotEmpty) &&
         mergedNoteReport.isNotEmpty) {
       formData['note'] = jsonEncode(mergedNoteReport);
     }
 
-    print("formData is --> $formData");
+    debugPrint("📤 [QR Fingerprint Payload]: $formData");
     if (isOnline) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
         url,
@@ -566,10 +567,13 @@ abstract class FingerprintService {
       securityChecksFailed: securityResult.failedOptionals,
     );
 
-    if (AppConstants.fingerprintSendNoteReportToApi &&
+    if ((AppConstants.fingerprintSendNoteReportToApi ||
+            securityResult.failedOptionals.isNotEmpty) &&
         mergedNoteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(mergedNoteReport);
     }
+
+    debugPrint("📤 [GPS Fingerprint Payload]: $requestBody");
 
     if (isOnline) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -721,10 +725,13 @@ abstract class FingerprintService {
       securityChecksFailed: securityResult.failedOptionals,
     );
 
-    if (AppConstants.fingerprintSendNoteReportToApi &&
+    if ((AppConstants.fingerprintSendNoteReportToApi ||
+            securityResult.failedOptionals.isNotEmpty) &&
         mergedNoteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(mergedNoteReport);
     }
+
+    debugPrint("📤 [GPS Fingerprint Payload]: $requestBody");
 
     if (isOnline) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -792,10 +799,13 @@ abstract class FingerprintService {
       securityChecksFailed: securityResult.failedOptionals,
     );
 
-    if (AppConstants.fingerprintSendNoteReportToApi &&
+    if ((AppConstants.fingerprintSendNoteReportToApi ||
+            securityResult.failedOptionals.isNotEmpty) &&
         mergedNoteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(mergedNoteReport);
     }
+
+    debugPrint("📤 [GPS Fingerprint Payload]: $requestBody");
 
     if (isOnline) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(
@@ -862,10 +872,13 @@ abstract class FingerprintService {
       securityChecksFailed: securityResult.failedOptionals,
     );
 
-    if (AppConstants.fingerprintSendNoteReportToApi &&
+    if ((AppConstants.fingerprintSendNoteReportToApi ||
+            securityResult.failedOptionals.isNotEmpty) &&
         mergedNoteReport.isNotEmpty) {
       requestBody['note'] = jsonEncode(mergedNoteReport);
     }
+
+    debugPrint("📤 [GPS Fingerprint Payload]: $requestBody");
 
     if (isOnline) {
       return await DioApiService().postWithFormData<Map<String, dynamic>>(

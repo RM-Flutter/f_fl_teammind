@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'package:app_test/core/models/settings/fingerprint_security_checks.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -76,24 +77,93 @@ abstract class AppConstants {
     fingerprintUploadFaceImageToBackendLevel = checks.fingerprintUploadFaceImageToBackend;
     fingerprintSendNoteReportToApiLevel = checks.fingerprintSendNoteReportToApi;
     fpScanStepsLevel = checks.fpScanSteps;
+
+    debugPrint("🛡️ [FingerprintSecurity] Updated checks: ${checks.toJson()}");
+    debugPrint("📸 [FingerprintSecurity] showFaceVerifyForFingerprint = $showFaceVerifyForFingerprint");
+    debugPrint("   - uploadFaceImage: $fingerprintUploadFaceImageToBackend");
+    debugPrint("   - profileVerification: $fingerprintFaceProfileVerificationEnabled");
+    debugPrint("   - livenessChallenges: $fingerprintLivenessChallengesEnabled");
+    debugPrint("   - faceChallenge: $fingerprintFaceChallengeEnabled");
+    debugPrint("   - sendNoteReport: $fingerprintSendNoteReportToApi");
   }
 
-  /// تحديث مفاتيح أمان البصمة من كاش USG:
-  /// 1) يفحص أولاً وجود object جديد: "fingerprint_security_checks"
-  /// 2) إذا لم يوجد، يتراجع للـ array القديم: "fingerprintChecks" (fallback)
-  static void updateFingerprintSecurityFromUsgFingerprintChecks() {
-    final jsonString = CacheHelper.getString("USG");
-    if (jsonString != null && jsonString.isNotEmpty) {
+  /// بحث عميق عن fingerprint_security_checks في أي بنية بيانات (Map أو List أو String JSON)
+  static Map<String, dynamic>? _findSecurityChecksMap(dynamic data) {
+    if (data == null) return null;
+    if (data is String) {
       try {
-        final gCache = json.decode(jsonString) as Map<String, dynamic>?;
+        final decoded = json.decode(data);
+        return _findSecurityChecksMap(decoded);
+      } catch (_) {
+        return null;
+      }
+    }
+    if (data is Map) {
+      if (data['fingerprint_security_checks'] is Map) {
+        return Map<String, dynamic>.from(data['fingerprint_security_checks'] as Map);
+      }
+      for (final value in data.values) {
+        final found = _findSecurityChecksMap(value);
+        if (found != null) return found;
+      }
+    }
+    if (data is List) {
+      for (final item in data) {
+        final found = _findSecurityChecksMap(item);
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
+
+  /// محاولة استخراج وتحديث fingerprint_security_checks من أي Map أو String (ريسبونس API، كاش USG، كاش US1، إلخ)
+  static bool tryUpdateSecurityChecks(dynamic data) {
+    if (data == null) return false;
+    try {
+      final checksMap = _findSecurityChecksMap(data);
+
+      if (checksMap != null && checksMap.isNotEmpty) {
+        final checks = FingerprintSecurityChecksModel.fromJson(checksMap);
+        updateFingerprintSecurityFromChecksObject(checks);
+        final encoded = json.encode(checksMap);
+        CacheHelper.setString(key: "FINGERPRINT_SECURITY_CHECKS", value: encoded);
+        return true;
+      }
+    } catch (e) {
+      debugPrint("⚠️ [AppConstants] Error extracting security checks: $e");
+    }
+    return false;
+  }
+
+  /// تحديث مفاتيح أمان البصمة من الكاش:
+  /// 1) يفحص أولاً الكاش المخصص "FINGERPRINT_SECURITY_CHECKS" (أولوية مطلقة)
+  /// 2) ثم كاش "USG" (object ثم fallback للـ legacy array فقط إذا لم يوجد كاش مخصص)
+  /// 3) ثم كاش "US1"
+  static void updateFingerprintSecurityFromUsgFingerprintChecks() {
+    // 1. فحص الكاش المخصص المباشر
+    final dedicated = CacheHelper.getString("FINGERPRINT_SECURITY_CHECKS");
+    if (dedicated != null && dedicated.isNotEmpty && dedicated != "null") {
+      try {
+        final decoded = json.decode(dedicated);
+        if (decoded is Map<String, dynamic>) {
+          final checks = FingerprintSecurityChecksModel.fromJson(decoded);
+          updateFingerprintSecurityFromChecksObject(checks);
+          debugPrint("✅ [AppConstants] Loaded from FINGERPRINT_SECURITY_CHECKS dedicated cache");
+          return;
+        }
+      } catch (e) {
+        debugPrint("⚠️ [AppConstants] Error decoding FINGERPRINT_SECURITY_CHECKS: $e");
+      }
+    }
+
+    // 2. فحص كاش USG
+    final jsonString = CacheHelper.getString("USG");
+    if (jsonString != null && jsonString.isNotEmpty && jsonString != "null") {
+      try {
+        final gCache = json.decode(jsonString);
         if (gCache != null) {
-          if (gCache['fingerprint_security_checks'] is Map) {
-            final checks = FingerprintSecurityChecksModel.fromJson(
-              gCache['fingerprint_security_checks'] as Map<String, dynamic>,
-            );
-            updateFingerprintSecurityFromChecksObject(checks);
-            return;
-          } else if (gCache['fingerprintChecks'] is List) {
+          if (tryUpdateSecurityChecks(gCache)) return;
+          if (gCache is Map && gCache['fingerprintChecks'] is List) {
             final checks = FingerprintSecurityChecksModel.fromLegacyArray(
               gCache['fingerprintChecks'] as List<dynamic>,
             );
@@ -101,6 +171,15 @@ abstract class AppConstants {
             return;
           }
         }
+      } catch (_) {}
+    }
+
+    // 3. فحص كاش US1
+    final us1String = CacheHelper.getString("US1");
+    if (us1String != null && us1String.isNotEmpty && us1String != "null") {
+      try {
+        final us1Cache = json.decode(us1String);
+        if (us1Cache != null && tryUpdateSecurityChecks(us1Cache)) return;
       } catch (_) {}
     }
   }

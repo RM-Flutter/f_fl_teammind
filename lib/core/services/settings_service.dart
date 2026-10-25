@@ -245,6 +245,7 @@ abstract class AppSettingsService {
           allData: allData);
     }
     if (result.success && result.data != null && (result.data?.isNotEmpty ?? false)) {
+      AppConstants.tryUpdateSecurityChecks(result.data);
       if (settingType == SettingsType.startupSettings &&
           sendNotificationToken &&
           fcm_token != null &&
@@ -276,6 +277,7 @@ abstract class AppSettingsService {
           prefs = await SharedPreferences.getInstance();
           final jsonString = json.encode(result.data!['user_settings']['data']); // Convert JSON to String
           await prefs.setString("US1", jsonString);
+          AppConstants.tryUpdateSecurityChecks(result.data!['user_settings']['data']);
         }
       }
       if ((need == null || need.contains('general_settings')) &&result.data!['general_settings']['data'] != null){
@@ -286,10 +288,9 @@ abstract class AppSettingsService {
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
         DynamicAppConfigService.clearCache();
-        if (generalSettingsModel.fingerprintSecurityChecks != null) {
-          AppConstants.updateFingerprintSecurityFromChecksObject(
-            generalSettingsModel.fingerprintSecurityChecks!,
-          );
+        if (result.data!['general_settings']['data'] != null &&
+            result.data!['general_settings']['data']['fingerprint_security_checks'] != null) {
+          AppConstants.tryUpdateSecurityChecks(result.data!['general_settings']['data']['fingerprint_security_checks']);
         } else {
           AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
         }
@@ -328,6 +329,7 @@ abstract class AppSettingsService {
           if (jsonString != null) {
             gCache = json.decode(jsonString) as Map<String, dynamic>;
           }
+          AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
         }
       }
       appConfigServiceProvider.setSettings(
@@ -412,6 +414,7 @@ abstract class AppSettingsService {
     if (result.success &&
         result.data != null &&
         (result.data?.isNotEmpty ?? false)) {
+      AppConstants.tryUpdateSecurityChecks(result.data);
       // Update Stored Setting with the new settings
       if(result.data!['user_settings'] != null &&
           result.data!['user_settings']['status']  != false &&

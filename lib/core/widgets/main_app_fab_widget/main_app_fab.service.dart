@@ -367,13 +367,17 @@ abstract class MainFabServices {
   static Future<void> getFingerprintActionMethodDependsOnFingerprintMethod(
       {required BuildContext context,
         required String fingerprintMethod}) async {
+    // تحديث مفاتيح الأمان من الكاش للتأكد من استخدام أحدث إعدادات
+    AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+    final safeContext = rootNavigatorKey.currentContext ?? context;
+
     // تحقق أولاً من أمان الجهاز قبل تنفيذ أي طريقة بصمة
-    final allowed = await _ensureDeviceSecurityForFingerprint(context);
+    final allowed = await _ensureDeviceSecurityForFingerprint(safeContext);
     if (!allowed) return;
 
     if (kIsWeb || PlatformIs.web) {
       debugPrint("✅ Opening GPS fingerprint for WEB");
-      await addFingerprintUsingGPS(context: context);
+      await addFingerprintUsingGPS(context: safeContext);
       return;
     }
 
@@ -382,24 +386,24 @@ abstract class MainFabServices {
     switch (method) {
       case 'fp_scan':
         debugPrint("✅ Opening QR Code fingerprint");
-        await addFingerprintUsingQrCode(context: context);
+        await addFingerprintUsingQrCode(context: safeContext);
         return;
       case 'fp_navigate':
       case 'custom_fp_navigate':
         debugPrint("✅ Opening GPS fingerprint");
-        await addFingerprintUsingGPS(context: context);
+        await addFingerprintUsingGPS(context: safeContext);
         return;
       case 'fp_wifi':
         debugPrint("✅ Opening WiFi fingerprint");
-        await addFingerprintUsingWiFi(context: context);
+        await addFingerprintUsingWiFi(context: safeContext);
         return;
       case 'fp_bluetooth':
         debugPrint("✅ Opening Bluetooth fingerprint");
-        await addFingerprintUsingBluetooth(context: context);
+        await addFingerprintUsingBluetooth(context: safeContext);
         return;
       case 'fp_nfc':
         debugPrint("✅ Opening NFC fingerprint");
-        await addFingerprintUsingNFC(context: context);
+        await addFingerprintUsingNFC(context: safeContext);
         return;
       case 'fp_machine':
         debugPrint("⚠️ Machine fingerprint not implemented");
@@ -407,7 +411,7 @@ abstract class MainFabServices {
       default:
         debugPrint("❌ Unknown fingerprint method: $method");
         AlertsService.error(
-            context: context,
+            context: safeContext,
             message: AppStrings.failed.tr(),
             title: AppStrings.failed.tr());
     }
@@ -858,44 +862,31 @@ abstract class MainFabServices {
         String? cancelLabel,
       }) async {
     debugPrint("📋 Showing instruction sheet: $title");
-    if (!context.mounted) {
-      debugPrint("❌ Context not mounted, cannot show instruction sheet");
-      return false;
+    final dialogContext = rootNavigatorKey.currentContext ?? context;
+    if (!dialogContext.mounted) {
+      debugPrint("⚠️ Dialog context not mounted, proceeding directly to camera");
+      return true;
     }
     try {
-      // Get root navigator context if available to display dialog on top of the overlay
-      final dialogContext = rootNavigatorKey.currentContext ?? context;
-
-      // Check if dialog context is available and mounted
-      if (!dialogContext.mounted) {
-        debugPrint("❌ Dialog context not mounted");
-        return false;
-      }
-
       final bool? result = await showModalBottomSheet<bool>(
-        context: dialogContext, // Use root navigator context
+        context: dialogContext,
         isScrollControlled: true,
-        useRootNavigator: true, // Use root navigator to ensure it works in offline screen
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         builder: (sheetContext) {
           debugPrint("📋 Building instruction sheet UI");
-          // Use try-catch to safely get theme
           ThemeData theme;
           try {
             theme = Theme.of(sheetContext);
           } catch (e) {
-            debugPrint("⚠️ Error getting theme, using default: $e");
             theme = ThemeData.light();
           }
 
           double bottomInset = 0;
           try {
             bottomInset = MediaQuery.of(sheetContext).viewInsets.bottom;
-          } catch (e) {
-            debugPrint("⚠️ Error getting viewInsets: $e");
-          }
+          } catch (_) {}
 
           return Padding(
             padding: EdgeInsets.only(
@@ -925,7 +916,7 @@ abstract class MainFabServices {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Color(AppColors.secondaryButton)),
                     ),
-                    onPressed: () => Navigator.of(sheetContext, rootNavigator: true).pop(true),
+                    onPressed: () => Navigator.of(sheetContext).pop(true),
                     child: Text(
                       actionLabel,
                       style: theme.textTheme.headlineSmall?.copyWith(color: Colors.white) ?? const TextStyle(color: Colors.white),
@@ -937,7 +928,7 @@ abstract class MainFabServices {
                   SizedBox(
                     width: double.infinity,
                     child: TextButton(
-                      onPressed: () => Navigator.of(sheetContext, rootNavigator: true).pop(false),
+                      onPressed: () => Navigator.of(sheetContext).pop(false),
                       child: Text(
                         cancelLabel,
                         style: theme.textTheme.headlineSmall?.copyWith(color: Color(AppColors.secondaryButton)) ?? TextStyle(color: Color(AppColors.secondaryButton)),
@@ -952,12 +943,10 @@ abstract class MainFabServices {
       );
       debugPrint("📋 Instruction sheet result: $result");
 
-      return result ?? false;
+      return result ?? true;
     } catch (e, stackTrace) {
-      debugPrint("❌ Error showing instruction sheet: $e");
-      debugPrint("Stack trace: $stackTrace");
-
-      return false;
+      debugPrint("⚠️ Error showing instruction sheet: $e, proceeding directly to camera");
+      return true;
     }
   }
 
@@ -1020,13 +1009,20 @@ abstract class MainFabServices {
 
   static Future<double?> _calculateSimilarityWithProfile(
       BuildContext context, List<double> candidateEmbedding) async {
+    final safeContext = rootNavigatorKey.currentContext ?? context;
+    final bool isMandatory = AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+        FingerprintCheckLevel.mandatory;
+
     final jsonString = CacheHelper.getString("US1");
     if (jsonString == null || jsonString.isEmpty) {
-      AlertsService.error(
-        context: context,
-        title: AppStrings.failed.tr(),
-        message: AppStrings.faceVerificationFailure.tr(),
-      );
+      debugPrint("⚠️ [ProfileFace] US1 cache is empty, cannot compare face");
+      if (isMandatory && safeContext.mounted) {
+        AlertsService.error(
+          context: safeContext,
+          title: AppStrings.failed.tr(),
+          message: AppStrings.faceVerificationFailure.tr(),
+        );
+      }
       return null;
     }
 
@@ -1035,18 +1031,21 @@ abstract class MainFabServices {
     final String? photoUrl = cache['photo'] as String?;
 
     if (photoUrl == null || photoUrl.isEmpty) {
-      AlertsService.error(
-        context: context,
-        title: AppStrings.failed.tr(),
-        message: AppStrings.faceVerificationFailure.tr(),
-      );
+      debugPrint("⚠️ [ProfileFace] No profile photo URL in US1 cache");
+      if (isMandatory && safeContext.mounted) {
+        AlertsService.error(
+          context: safeContext,
+          title: AppStrings.failed.tr(),
+          message: AppStrings.faceVerificationFailure.tr(),
+        );
+      }
       return null;
     }
 
-    if (!context.mounted) return null;
+    if (!safeContext.mounted) return null;
 
     showDialog(
-      context: context,
+      context: safeContext,
       useRootNavigator: true,
       barrierDismissible: false,
       builder: (_) => const Center(child: CircularProgressIndicator()),
@@ -1061,15 +1060,16 @@ abstract class MainFabServices {
         final isConnected = await ConnectionsService.isOnline();
         if (!isConnected) {
           debugPrint('⚠️ Offline mode: Skipping face verification');
-          // Return a high similarity to allow proceeding in offline mode
-          // Don't close dialog here, let finally block handle it
           return 1.0;
         } else {
-          AlertsService.error(
-            context: context,
-            title: AppStrings.failed.tr(),
-            message: AppStrings.faceVerificationFailure.tr(),
-          );
+          debugPrint('⚠️ [ProfileFace] Failed to download profile photo');
+          if (isMandatory && safeContext.mounted) {
+            AlertsService.error(
+              context: safeContext,
+              title: AppStrings.failed.tr(),
+              message: AppStrings.faceVerificationFailure.tr(),
+            );
+          }
           return null;
         }
       }
@@ -1081,11 +1081,14 @@ abstract class MainFabServices {
           !reference.hasFace ||
           !reference.hasEmbedding ||
           !reference.isFrontal) {
-        AlertsService.error(
-          context: context,
-          title: AppStrings.failed.tr(),
-          message: AppStrings.faceVerificationFailure.tr(),
-        );
+        debugPrint('⚠️ [ProfileFace] Profile photo has no valid frontal face');
+        if (isMandatory && safeContext.mounted) {
+          AlertsService.error(
+            context: safeContext,
+            title: AppStrings.failed.tr(),
+            message: AppStrings.faceVerificationFailure.tr(),
+          );
+        }
         return null;
       }
 
@@ -1093,27 +1096,27 @@ abstract class MainFabServices {
     } catch (error) {
       debugPrint('⚠️ Error while verifying profile face: $error');
 
-      // Check if offline and allow proceeding
       final isConnected = await ConnectionsService.isOnline();
       if (!isConnected) {
         debugPrint('⚠️ Offline mode: Skipping face verification due to error');
-        // Return a high similarity to allow proceeding in offline mode
-        // Don't close dialog here, let finally block handle it
         return 1.0;
       }
 
-      AlertsService.error(
-        context: context,
-        title: AppStrings.failed.tr(),
-        message: AppStrings.faceVerificationFailure.tr(),
-      );
+      if (isMandatory && safeContext.mounted) {
+        AlertsService.error(
+          context: safeContext,
+          title: AppStrings.failed.tr(),
+          message: AppStrings.faceVerificationFailure.tr(),
+        );
+      }
       return null;
     } finally {
       // Always close dialog in finally block
       try {
-        if (context.mounted &&
-            Navigator.of(context, rootNavigator: true).canPop()) {
-          Navigator.of(context, rootNavigator: true).pop();
+        final popContext = rootNavigatorKey.currentContext ?? safeContext;
+        if (popContext.mounted &&
+            Navigator.of(popContext, rootNavigator: true).canPop()) {
+          Navigator.of(popContext, rootNavigator: true).pop();
         }
       } catch (e) {
         debugPrint('⚠️ Error closing dialog: $e');
@@ -1311,7 +1314,11 @@ abstract class MainFabServices {
             Expanded(
               child: Text(
                 isArabic ? 'تقرير خطوات الفحص' : 'Scan Steps Report',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Color(AppColors.black),
+                ),
               ),
             ),
           ],
@@ -1373,22 +1380,33 @@ abstract class MainFabServices {
   static Future<_CapturedFaceData?> captureEmployeeFaceAndVerify(
       BuildContext context) async {
     debugPrint("📸 Starting face capture and verification...");
+    final safeContext = rootNavigatorKey.currentContext ?? (context.mounted ? context : null);
+    if (safeContext == null || !safeContext.mounted) {
+      debugPrint("❌ No valid mounted context available for face capture");
+      return null;
+    }
+
     if (PlatformIs.web) {
       debugPrint("❌ Web platform not supported");
       AlertsService.error(
-        context: context,
+        context: safeContext,
         title: AppStrings.failed.tr(),
         message: 'Face recognition is not supported on web platform',
       );
       return null;
     }
-    debugPrint("📸 Loading FaceNet model...");
-    await _loadModel();
-    debugPrint("📸 FaceNet model loaded");
-
-    if (!context.mounted) {
-      debugPrint("❌ Context not mounted after loading model");
-      return null;
+    if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+      debugPrint("📸 Loading FaceNet model...");
+      try {
+        await _loadModel();
+        debugPrint("📸 FaceNet model loaded");
+      } catch (e) {
+        debugPrint("⚠️ FaceNet model failed to load: $e");
+        if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+            FingerprintCheckLevel.mandatory) {
+          rethrow;
+        }
+      }
     }
 
     // البوب أب "Start verification" تظهر فقط لو fingerprint_liveness_challenges_enabled مفعّل
@@ -1399,26 +1417,26 @@ abstract class MainFabServices {
     if (requiresAdvancedVerification) {
       debugPrint("📸 Showing instruction sheet (liveness challenges enabled)...");
       final bool introAccepted = await _showInstructionSheet(
-        context,
+        safeContext,
         title: _localized(
-          context,
+          safeContext,
           en: 'Face verification',
           ar: 'التحقق من الوجه',
         ),
         message: _localized(
-          context,
+          safeContext,
           en:
           'You will be asked to perform a random challenge. Please follow the on-screen instructions.',
           ar:
           'سيُطلب منك تنفيذ تحدّي عشوائي. يرجى اتباع التعليمات المعروضة على الشاشة.',
         ),
         actionLabel: _localized(
-          context,
+          safeContext,
           en: 'Start verification',
           ar: 'بدء التحقق',
         ),
         cancelLabel: _localized(
-          context,
+          safeContext,
           en: 'Cancel',
           ar: 'إلغاء',
         ),
@@ -1440,7 +1458,7 @@ abstract class MainFabServices {
     debugPrint("📸 Camera permission: $hasPermission");
     if (!hasPermission) {
       // Use rootNavigatorKey.currentContext if context is not mounted
-      final warningContext = rootNavigatorKey.currentContext ?? context;
+      final warningContext = rootNavigatorKey.currentContext ?? safeContext;
       if (warningContext.mounted) {
         _showWarning(
           warningContext,
@@ -1460,10 +1478,13 @@ abstract class MainFabServices {
     List<LivenessChallengeReport>? allReportsFromScreen;
 
     if (!AppConstants.fingerprintLivenessChallengesEnabled) {
-      // تقاطيع صورة واحدة بدون تحديات (لا يظهر للعميل أي تحدي حي)
+      // التقاط صورة واحدة بدون تحديات (لا يظهر للعميل أي تحدي حي)
       final picker = ImagePicker();
-      final XFile? photo = await picker.pickImage(source: ImageSource.camera);
-      if (photo == null || !context.mounted) return null;
+      final XFile? photo = await picker.pickImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.front,
+      );
+      if (photo == null) return null;
       try {
         capturedImageFile = File(photo.path);
         capturedImageBytes = await capturedImageFile!.readAsBytes();
@@ -1479,63 +1500,86 @@ abstract class MainFabServices {
       LivenessChallengeReport? report;
       try {
         // Use rootNavigatorKey.currentContext instead of context to avoid mounted issues
-        final cameraContext = rootNavigatorKey.currentContext;
-        if (cameraContext == null || !cameraContext.mounted) {
-          debugPrint("❌ Camera context not available or not mounted");
-          // Try to use original context as fallback
-          if (!context.mounted) {
-            debugPrint("❌ Original context also not mounted");
-            return null;
-          }
-          debugPrint("📸 Using original context as fallback");
-          report = await Navigator.of(context, rootNavigator: true).push<LivenessChallengeReport>(
-            MaterialPageRoute(
-              builder: (ctx) => LivenessChallengeCameraScreen(
-                challenge: challenge,
-                onComplete: (report, imageBytes) {
-                  if (report.success && imageBytes != null) {
-                    capturedImageBytes = imageBytes;
-                  }
-                },
-                onAllReports: (allReports) {
-                  // Store all reports including failed ones (timeouts)
-                  allReportsFromScreen = allReports;
-                },
-              ),
+        final cameraContext = rootNavigatorKey.currentContext ?? safeContext;
+        debugPrint("📸 Opening camera screen for challenge: ${challenge.name}");
+        report = await Navigator.of(cameraContext, rootNavigator: true).push<LivenessChallengeReport>(
+          MaterialPageRoute(
+            builder: (ctx) => LivenessChallengeCameraScreen(
+              challenge: challenge,
+              onComplete: (report, imageBytes) {
+                if (report.success && imageBytes != null) {
+                  capturedImageBytes = imageBytes;
+                }
+              },
+              onAllReports: (allReports) {
+                // Store all reports including failed ones (timeouts)
+                allReportsFromScreen = allReports;
+              },
             ),
-          );
-        } else {
-          debugPrint("📸 Opening camera screen for challenge: ${challenge.name}");
-          report = await Navigator.of(cameraContext, rootNavigator: true).push<LivenessChallengeReport>(
-            MaterialPageRoute(
-              builder: (ctx) => LivenessChallengeCameraScreen(
-                challenge: challenge,
-                onComplete: (report, imageBytes) {
-                  if (report.success && imageBytes != null) {
-                    capturedImageBytes = imageBytes;
-                  }
-                },
-                onAllReports: (allReports) {
-                  // Store all reports including failed ones (timeouts)
-                  allReportsFromScreen = allReports;
-                },
-              ),
-            ),
-          );
-        }
+          ),
+        );
         debugPrint("📸 Camera screen returned: ${report != null ? 'report received' : 'null'}");
       } catch (e) {
         debugPrint('Error opening camera screen: $e');
-        // Use rootNavigatorKey.currentContext for showing warning too
-        final warningContext = rootNavigatorKey.currentContext ?? context;
-        if (warningContext.mounted) {
-          _showWarning(
-            warningContext,
-            en: 'Failed to open camera. Please try again.',
-            ar: 'فشل فتح الكاميرا. يرجى المحاولة مرة أخرى.',
-          );
+        if (AppConstants.fingerprintLivenessChallengesEnabledLevel == FingerprintCheckLevel.optional) {
+          debugPrint('📸 Liveness challenge error, falling back to standard front camera...');
+          try {
+            final picker = ImagePicker();
+            final XFile? photo = await picker.pickImage(
+              source: ImageSource.camera,
+              preferredCameraDevice: CameraDevice.front,
+            );
+            if (photo != null) {
+              capturedImageFile = File(photo.path);
+              capturedImageBytes = await capturedImageFile!.readAsBytes();
+              challengeCompleted = true;
+              break;
+            }
+          } catch (pickerErr) {
+            debugPrint('Error in fallback camera picker: $pickerErr');
+          }
         }
-        return null;
+        if (!challengeCompleted) {
+          final warningContext = rootNavigatorKey.currentContext ?? safeContext;
+          if (warningContext.mounted) {
+            _showWarning(
+              warningContext,
+              en: 'Failed to open camera. Please try again.',
+              ar: 'فشل فتح الكاميرا. يرجى المحاولة مرة أخرى.',
+            );
+          }
+          return null;
+        }
+      }
+
+      if (report == null && !challengeCompleted) {
+        if (AppConstants.fingerprintLivenessChallengesEnabledLevel == FingerprintCheckLevel.optional &&
+            (AppConstants.fingerprintFaceProfileVerificationEnabled ||
+             AppConstants.fingerprintUploadFaceImageToBackend)) {
+          debugPrint('📸 Liveness returned null, falling back to standard front camera...');
+          try {
+            final picker = ImagePicker();
+            final XFile? photo = await picker.pickImage(
+              source: ImageSource.camera,
+              preferredCameraDevice: CameraDevice.front,
+            );
+            if (photo != null) {
+              capturedImageFile = File(photo.path);
+              capturedImageBytes = await capturedImageFile!.readAsBytes();
+              challengeCompleted = true;
+              break;
+            }
+          } catch (pickerErr) {
+            debugPrint('Error in fallback camera picker: $pickerErr');
+          }
+        }
+        if (!challengeCompleted) {
+          return null;
+        }
+      }
+
+      if (challengeCompleted) {
+        break;
       }
 
       if (report == null) {
@@ -1716,7 +1760,7 @@ abstract class MainFabServices {
         embedding = analysis.embedding!;
       }
       if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
-        similarity = await _calculateSimilarityWithProfile(context, embedding);
+        similarity = await _calculateSimilarityWithProfile(safeContext, embedding);
       } else {
         similarity = 1.0;
       }
@@ -1731,11 +1775,11 @@ abstract class MainFabServices {
             FingerprintCheckLevel.mandatory) {
           await _deleteFileIfExists(capturedImageFile!);
           _showWarning(
-            context,
+            safeContext,
             en: 'Face verification failed. Please try again.',
             ar: 'فشل التحقق من الوجه. يرجى المحاولة مرة أخرى.',
           );
-          if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+          if (AppConstants.fpScanSteps) await _showLivenessReport(safeContext, reports);
           return null;
         } else {
           faceProfileCheckFailed = {
@@ -1751,18 +1795,18 @@ abstract class MainFabServices {
               FingerprintCheckLevel.mandatory) {
             await _deleteFileIfExists(capturedImageFile!);
             _showWarning(
-              context,
+              safeContext,
               en:
               'Face verification failed. Please make sure the employee you are registering is standing in front of the camera.',
               ar: 'لم يتم قبول التحقق من الوجه. تأكد أن الموظف صاحب البصمة واقف أمام الكاميرا.',
               details: {
-                _localized(context, en: 'Similarity', ar: 'التشابه'):
+                _localized(safeContext, en: 'Similarity', ar: 'التشابه'):
                 similarity.toStringAsFixed(3),
-                _localized(context, en: 'Required', ar: 'المطلوب'):
+                _localized(safeContext, en: 'Required', ar: 'المطلوب'):
                 _minProfileSimilarity.toStringAsFixed(2),
               },
             );
-            if (AppConstants.fpScanSteps) await _showLivenessReport(context, reports);
+            if (AppConstants.fpScanSteps) await _showLivenessReport(safeContext, reports);
             return null;
           } else {
             faceProfileCheckFailed = {
@@ -1968,16 +2012,35 @@ abstract class MainFabServices {
   static Future<void> addFingerprintUsingNFC(
       {required BuildContext context}) async {
     try {
+      AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+      final safeContext = rootNavigatorKey.currentContext ?? context;
       final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
 
       _CapturedFaceData? capturedFace;
       if (showFaceVerify) {
-        capturedFace = await captureEmployeeFaceAndVerify(context);
-        if (capturedFace == null) {
+        try {
+          capturedFace = await captureEmployeeFaceAndVerify(safeContext);
+        } catch (e) {
+          debugPrint('⚠️ Face capture failed in NFC: $e');
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            if (safeContext.mounted) {
+              AlertsService.error(
+                context: safeContext,
+                title: AppStrings.failed.tr(),
+                message: 'Face verification failed: $e',
+              );
+            }
+            return;
+          }
+          capturedFace = null;
+        }
+        if (capturedFace == null &&
+            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+                FingerprintCheckLevel.mandatory) {
           return;
         }
-        await _deleteFileIfExists(capturedFace.file);
       }
 
       final List<FilePickerResult> faceFiles =
@@ -2053,6 +2116,10 @@ abstract class MainFabServices {
               message: e.toString(),
               title: AppStrings.failed.tr(),
             );
+          } finally {
+            if (capturedFace != null) {
+              await _deleteFileIfExists(capturedFace.file);
+            }
           }
         },
       );
@@ -2069,7 +2136,9 @@ abstract class MainFabServices {
   static Future<void> addFingerprintUsingBluetooth({required BuildContext context,}) async {
     debugPrint("📱 Starting Bluetooth fingerprint process...");
     try {
-      if (!context.mounted) {
+      AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+      final safeContext = rootNavigatorKey.currentContext ?? context;
+      if (!safeContext.mounted) {
         debugPrint("❌ Context not mounted in addFingerprintUsingBluetooth");
         return;
       }
@@ -2081,11 +2150,28 @@ abstract class MainFabServices {
 
       if (showFaceVerify) {
         debugPrint("📱 Starting face verification for Bluetooth fingerprint...");
-        capturedFace = await captureEmployeeFaceAndVerify(context);
-        if (capturedFace == null) {
+        try {
+          capturedFace = await captureEmployeeFaceAndVerify(safeContext);
+        } catch (e) {
+          debugPrint('⚠️ Face capture failed in Bluetooth: $e');
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            if (safeContext.mounted) {
+              AlertsService.error(
+                context: safeContext,
+                title: AppStrings.failed.tr(),
+                message: 'Face verification failed: $e',
+              );
+            }
+            return;
+          }
+          capturedFace = null;
+        }
+        if (capturedFace == null &&
+            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+                FingerprintCheckLevel.mandatory) {
           return;
         }
-        await _deleteFileIfExists(capturedFace.file);
       }
       final List<FilePickerResult> uploadFaceFiles =
       uploadFaceImage && capturedFace != null
@@ -2254,6 +2340,10 @@ abstract class MainFabServices {
                 message: e.toString(),
                 title: AppStrings.failed.tr(),
               );
+            } finally {
+              if (capturedFace != null) {
+                await _deleteFileIfExists(capturedFace.file);
+              }
             }
           }
       );
@@ -2274,15 +2364,35 @@ abstract class MainFabServices {
   // Adding Fingerprint Using Wifi
   static Future<void> addFingerprintUsingWiFi({required BuildContext context,}) async {
     try {
+      AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+      final safeContext = rootNavigatorKey.currentContext ?? context;
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       _CapturedFaceData? capturedFace;
       final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
       if (showFaceVerify) {
-        capturedFace = await captureEmployeeFaceAndVerify(context);
-        if (capturedFace == null) {
+        debugPrint("📱 Starting face verification for WiFi fingerprint...");
+        try {
+          capturedFace = await captureEmployeeFaceAndVerify(safeContext);
+        } catch (e) {
+          debugPrint('⚠️ Face capture failed in WiFi: $e');
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            if (safeContext.mounted) {
+              AlertsService.error(
+                context: safeContext,
+                title: AppStrings.failed.tr(),
+                message: 'Face verification failed: $e',
+              );
+            }
+            return;
+          }
+          capturedFace = null;
+        }
+        if (capturedFace == null &&
+            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+                FingerprintCheckLevel.mandatory) {
           return;
         }
-        await _deleteFileIfExists(capturedFace.file);
       }
       final List<FilePickerResult> uploadFaceFiles =
       uploadFaceImage && capturedFace != null
@@ -2402,6 +2512,10 @@ abstract class MainFabServices {
                 message: e.toString(),
                 title: AppStrings.failed.tr(),
               );
+            } finally {
+              if (capturedFace != null) {
+                await _deleteFileIfExists(capturedFace.file);
+              }
             }
           }
       );
@@ -2464,14 +2578,16 @@ abstract class MainFabServices {
   // Add Fingerprint Using GPS
   static Future<void> addFingerprintUsingGPS({required BuildContext context,}) async {
     debugPrint("📍 Starting GPS fingerprint process...");
+    AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+    final safeContext = rootNavigatorKey.currentContext ?? context;
     OverlayEntry? loadingOverlay;
     try {
-      if (!context.mounted) {
+      if (!safeContext.mounted) {
         debugPrint("❌ Context not mounted in addFingerprintUsingGPS");
         return;
       }
       // لودينج في نص الشاشة عبر overlay الـ Navigator (Overlay.of قد يفشل مع go_router)
-      final overlayContext = rootNavigatorKey.currentContext ?? context;
+      final overlayContext = rootNavigatorKey.currentContext ?? safeContext;
       if (overlayContext.mounted) {
         loadingOverlay = OverlayEntry(
           builder: (ctx) => Material(
@@ -2509,7 +2625,7 @@ abstract class MainFabServices {
         }
       }
       debugPrint("📍 Getting current location...");
-      await getCurrentLocation(context);
+      await getCurrentLocation(safeContext);
       debugPrint("📍 Location obtained");
       // إخفاء اللودينج
       if (loadingOverlay != null) {
@@ -2525,14 +2641,42 @@ abstract class MainFabServices {
       final bool showFaceVerify = (kIsWeb || PlatformIs.web) 
           ? false 
           : AppConstants.showFaceVerifyForFingerprint;
+
+      Map<String, dynamic>? webSkipNote;
+      if ((kIsWeb || PlatformIs.web) && AppConstants.showFaceVerifyForFingerprint) {
+        debugPrint("ℹ️ [Web] Face verification skipped — not supported on web platform");
+        webSkipNote = {
+          'face_verification_skipped': {
+            'reason': 'Web platform does not support camera/FaceNet',
+            'skipped_at': DateTime.now().toIso8601String(),
+          }
+        };
+      }
           
       if (showFaceVerify) {
         debugPrint("📍 Starting face verification for GPS fingerprint...");
-        capturedFace = await captureEmployeeFaceAndVerify(context);
-        if (capturedFace == null) {
+        try {
+          capturedFace = await captureEmployeeFaceAndVerify(safeContext);
+        } catch (e) {
+          debugPrint('⚠️ Face capture failed in GPS: $e');
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            if (safeContext.mounted) {
+              AlertsService.error(
+                context: safeContext,
+                title: AppStrings.failed.tr(),
+                message: 'Face verification failed: $e',
+              );
+            }
+            return;
+          }
+          capturedFace = null;
+        }
+        if (capturedFace == null &&
+            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+                FingerprintCheckLevel.mandatory) {
           return;
         }
-        await _deleteFileIfExists(capturedFace.file);
       }
       final List<FilePickerResult> uploadFaceFiles =
       uploadFaceImage && capturedFace != null
@@ -2550,13 +2694,19 @@ abstract class MainFabServices {
           },
           onRightActionPressed: ()async{
             try {
+              final effectiveNoteReport = <String, dynamic>{
+                if (capturedFace?.noteReport != null) ...capturedFace!.noteReport!,
+                if (webSkipNote != null) ...webSkipNote,
+              };
               result = await FingerprintService.addGPSFingerprint(
                   context: context,
                   type: 'fp_navigate',
                   lat: double.tryParse(CacheHelper.getString('lat') ?? '0') ?? 0.0,
                   long: double.tryParse(CacheHelper.getString('long') ?? '0') ?? 0.0,
                   files: uploadFaceFiles,
-                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
+                  noteReport: (AppConstants.fingerprintSendNoteReportToApi || webSkipNote != null)
+                      ? effectiveNoteReport
+                      : null);
 
               print("GPS DONE TWO");
 
@@ -2585,6 +2735,10 @@ abstract class MainFabServices {
                 message: e.toString(),
                 title: AppStrings.failed.tr(),
               );
+            } finally {
+              if (capturedFace != null) {
+                await _deleteFileIfExists(capturedFace.file);
+              }
             }
           }
       );
@@ -2611,7 +2765,9 @@ abstract class MainFabServices {
       {required BuildContext context}) async {
     debugPrint("📱 Starting QR Code fingerprint process...");
     try {
-      if (!context.mounted) {
+      AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
+      final safeContext = rootNavigatorKey.currentContext ?? context;
+      if (!safeContext.mounted) {
         debugPrint("❌ Context not mounted in addFingerprintUsingQrCode");
         return;
       }
@@ -2630,11 +2786,28 @@ abstract class MainFabServices {
       if (showFaceVerify) {
         debugPrint("📱 Starting face verification for QR Code fingerprint...");
         final faceContext = rootNavigatorKey.currentContext ?? context;
-        capturedFace = await captureEmployeeFaceAndVerify(faceContext);
-        if (capturedFace == null) {
+        try {
+          capturedFace = await captureEmployeeFaceAndVerify(faceContext);
+        } catch (e) {
+          debugPrint('⚠️ Face capture failed in QR: $e');
+          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+              FingerprintCheckLevel.mandatory) {
+            if (faceContext.mounted) {
+              AlertsService.error(
+                context: faceContext,
+                title: AppStrings.failed.tr(),
+                message: 'Face verification failed: $e',
+              );
+            }
+            return;
+          }
+          capturedFace = null;
+        }
+        if (capturedFace == null &&
+            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
+                FingerprintCheckLevel.mandatory) {
           return;
         }
-        await _deleteFileIfExists(capturedFace.file);
       }
 
       final qrContext = rootNavigatorKey.currentContext ?? context;
@@ -2747,6 +2920,10 @@ abstract class MainFabServices {
                 message: e.toString(),
                 title: AppStrings.failed.tr(),
               );
+            } finally {
+              if (capturedFace != null) {
+                await _deleteFileIfExists(capturedFace.file);
+              }
             }
           }
       );
