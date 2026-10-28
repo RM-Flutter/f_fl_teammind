@@ -114,6 +114,9 @@ import '../services/telegram_error_service.dart';
 import '../widgets/webview_offers.dart';
 import 'package:app_test/features/more/files_center/views/files_center_screen.dart';
 import 'package:app_test/features/reports/views/reports_catalog_screen.dart';
+import 'package:app_test/features/shifts/views/shifts_scheduler_webview_screen.dart';
+import 'package:app_test/features/shifts/views/shift_change_requests_screen.dart';
+import 'package:app_test/features/shifts/views/add_shift_change_request_screen.dart';
 
 enum AppRoutes {
   reportsCatalog,
@@ -218,6 +221,9 @@ enum AppRoutes {
   cvHubInterviews,
   cvHubInterviewDetails,
   commissionList,
+  shiftsScheduler,
+  shiftChangeRequests,
+  addShiftChangeRequest,
 }
 
 const TestVSync ticker = TestVSync();
@@ -1067,6 +1073,93 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: const TeamTodayStatusScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'shiftsScheduler',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.shiftsScheduler.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const ShiftsSchedulerWebViewScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'shiftChangeRequests',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.shiftChangeRequests.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
+                  final extraMap = state.extra is Map<String, dynamic>
+                      ? state.extra as Map<String, dynamic>
+                      : null;
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: ShiftChangeRequestsScreen(extra: extraMap),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'addShiftChangeRequest',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.addShiftChangeRequest.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const AddShiftChangeRequestScreen(),
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
                   );

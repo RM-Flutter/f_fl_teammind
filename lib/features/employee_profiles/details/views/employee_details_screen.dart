@@ -23,6 +23,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/expense_claims_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/shift_change_requests_section_widget.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +78,26 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
 
     if (PackageHelper.hasPackage('emp-payroll')) {
       items.add(ProfileTabModel(title: AppStrings.expenseClaims.tr(), index: 10));
+    }
+
+    Map<String, dynamic>? us2Cache;
+    final us2String = CacheHelper.getString("US2");
+    if (us2String != null && us2String.isNotEmpty) {
+      try {
+        us2Cache = json.decode(us2String) as Map<String, dynamic>;
+      } catch (_) {}
+    }
+    final bool isCurrentUserShifts =
+        us2Cache?['worktime']?['working_hours_type']?.toString() == 'shifts';
+    final bool employeeIsShifts = viewModel.employee?.workingHoursType == 'shifts' ||
+        viewModel.employee?.workingHours?.workingHoursType == 'shifts' ||
+        (viewModel.employee?.thisWeekShifts != null &&
+            viewModel.employee!.thisWeekShifts!.isNotEmpty);
+
+    if (PackageHelper.hasPackage('emp-requests') &&
+        ((getTeam == false && isCurrentUserShifts) ||
+            (getTeam == true && employeeIsShifts))) {
+      items.add(ProfileTabModel(title: AppStrings.shiftChangeRequests.tr(), index: 11));
     }
 
     if (PackageHelper.hasPackage('emp-requests')) {
@@ -249,6 +270,14 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                           return ExpenseClaimsSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.expenseClaimRequestsList,
+                                            id: viewModel.employee!.id.toString(),
+                                            empName: viewModel.employee!.name.toString(),
+                                          );
+                                        } else if (actualIndex == 11) {
+                                          if (viewModel.shiftChangeRequestsList == null) return const Center(child: CircularProgressIndicator());
+                                          return ShiftChangeRequestsSectionWidget(
+                                            employee: viewModel.employee,
+                                            requests: viewModel.shiftChangeRequestsList,
                                             id: viewModel.employee!.id.toString(),
                                             empName: viewModel.employee!.name.toString(),
                                           );

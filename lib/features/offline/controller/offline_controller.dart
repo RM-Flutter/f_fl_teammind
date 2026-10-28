@@ -60,16 +60,41 @@ class OfflineController with ChangeNotifier {
     try {
       userSettingsModel = UserSettingsModel.fromJson(gCache);
       final fingerprints = userSettingsModel.avFingerprint;
-      print("fingerprints --> ${fingerprints}");
-      if (fingerprints != null && fingerprints is Map) {
-        fingerprints.forEach((key, value) {
-          if (value == 'active_all' || value == 'active_some') {
-            _usersFingerprints.add(key);
-            print("_usersFingerprints --> $_usersFingerprints");
+      final allowedTypes = userSettingsModel.allowedFingerprintTypes;
+
+      bool isTypeAllowed(String key) {
+        if (allowedTypes != null && allowedTypes.isNotEmpty) {
+          final raw = allowedTypes[key] ??
+              (key == 'custom_fp_navigate' ? allowedTypes['fp_navigate'] : null);
+          if (raw is bool) return raw;
+          if (raw != null) {
+            final s = raw.toString().toLowerCase().trim();
+            return s == 'true' || s == '1' || s == 'active_all' || s == 'active_some';
           }
-        });
-      } else {
-        print("⚠️ fingerprints is null or not a Map");
+          return false;
+        }
+        if (fingerprints != null && fingerprints.isNotEmpty) {
+          final raw = fingerprints[key];
+          final s = raw?.toString().toLowerCase().trim();
+          return s == 'active_all' || s == 'active_some' || s == 'true';
+        }
+        return false;
+      }
+
+      const orderedKeys = <String>[
+        'fp_scan',
+        'fp_navigate',
+        'custom_fp_navigate',
+        'fp_wifi',
+        'fp_bluetooth',
+      ];
+      for (final key in orderedKeys) {
+        if (isTypeAllowed(key)) {
+          if (key == 'custom_fp_navigate' && _usersFingerprints.contains('fp_navigate')) {
+            continue;
+          }
+          _usersFingerprints.add(key);
+        }
       }
     } catch (e) {
       debugPrint("❌ Error initializing fingerprints: $e");

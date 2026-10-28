@@ -54,6 +54,27 @@ class GeneralSectionWidget extends StatelessWidget {
       fontWeight: FontWeight.w700,
       fontSize: 14,
     );
+    final bool isMyProfile = gCache != null &&
+        employee?.id != null &&
+        employee!.id.toString() ==
+            (gCache['empId'] ?? gCache['employee_profile_id']).toString();
+    final String? us2WorkingHoursType = us2Cache is Map
+        ? (us2Cache['worktime'] is Map
+            ? us2Cache['worktime']['working_hours_type']?.toString()
+            : null)
+        : null;
+    final bool isShifts = employee?.workingHoursType == "shifts" ||
+        employee?.workingHours?.workingHoursType == "shifts" ||
+        (isMyProfile && us2WorkingHoursType == "shifts") ||
+        (employee?.thisWeekShifts != null &&
+            employee!.thisWeekShifts!.isNotEmpty);
+    final String? effectiveWorkingHoursType =
+        (employee?.workingHoursType != null &&
+                employee!.workingHoursType!.isNotEmpty)
+            ? employee!.workingHoursType
+            : (employee?.workingHours?.workingHoursType ??
+                (isMyProfile ? us2WorkingHoursType : null));
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -86,8 +107,9 @@ class GeneralSectionWidget extends StatelessWidget {
           ],
           if ((employee?.hireDate != null &&
                   employee?.hireDate?.isNotEmpty == true) ||
-              (employee?.workingHoursType != null &&
-                  employee?.workingHoursType?.isNotEmpty == true) ||
+              (effectiveWorkingHoursType != null &&
+                  effectiveWorkingHoursType.isNotEmpty) ||
+              isShifts ||
               (employee?.workingHoursType != null &&
                   employee?.workingHours?.dailyWorkingHours?.isNotEmpty ==
                       true) ||
@@ -156,18 +178,20 @@ class GeneralSectionWidget extends StatelessWidget {
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WORK HOURS TYPE
-            if (employee?.workingHoursType != null &&
-                employee?.workingHoursType?.isNotEmpty == true)
+            if (effectiveWorkingHoursType != null &&
+                effectiveWorkingHoursType.isNotEmpty)
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
                 title: AppStrings.workHoursType.tr().toUpperCase(),
-                trailingTitle: employee?.workingHoursType.toString().tr().toUpperCase() ?? '',
+                trailingTitle: effectiveWorkingHoursType.toString().tr().toUpperCase(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
-            if ((employee?.workingHoursType.toString().tr() == "عدد الساعات اليومية" ||
-                employee?.workingHoursType.toString().tr() == "According Hours Count" ) || (employee?.workingHoursType.toString().tr() == "ساعات حرة" ||
-                employee?.workingHoursType.toString().tr() == "Free Hours" ))
+            if (!isShifts &&
+                ((effectiveWorkingHoursType.toString().tr() == "عدد الساعات اليومية" ||
+                        effectiveWorkingHoursType.toString().tr() == "According Hours Count") ||
+                    (effectiveWorkingHoursType.toString().tr() == "ساعات حرة" ||
+                        effectiveWorkingHoursType.toString().tr() == "Free Hours")))
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
@@ -175,8 +199,11 @@ class GeneralSectionWidget extends StatelessWidget {
                 trailingTitle: employee?.workingHours?.dailyWorkingHours ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
-            // WORK HOURS
-            if (employee?.workingHours != null && (employee!.workingHours!.dailyWorkingHoursStart != null || employee!.workingHours!.dailyWorkingHoursEnd != null))
+            // WORK HOURS (only shown when NOT working on shifts)
+            if (!isShifts &&
+                employee?.workingHours != null &&
+                (employee!.workingHours!.dailyWorkingHoursStart != null ||
+                    employee!.workingHours!.dailyWorkingHoursEnd != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
@@ -184,7 +211,10 @@ class GeneralSectionWidget extends StatelessWidget {
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}".toUpperCase(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
-            if (employee?.workingHours != null && (employee!.workingHours!.dailyWorkingHoursFrom != null || employee!.workingHours!.dailyWorkingHoursTo != null))
+            if (!isShifts &&
+                employee?.workingHours != null &&
+                (employee!.workingHours!.dailyWorkingHoursFrom != null ||
+                    employee!.workingHours!.dailyWorkingHoursTo != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
                 title: AppStrings.workHours.tr().toUpperCase(),
@@ -192,14 +222,21 @@ class GeneralSectionWidget extends StatelessWidget {
                     : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}".toUpperCase(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
-            if (employee?.workingHoursType.toString().tr() == "ساعات ثابتة" ||
-                employee?.workingHoursType.toString().tr() == "Fixed Hours" )
-              ProfileTile(
-                isTitleOnly: false,
-                isList: false,
-                title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
-                trailingTitle: "${employee?.workingHours?.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}".toUpperCase(),
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
+            if (effectiveWorkingHoursType.toString().tr() == "ساعات ثابتة" ||
+                effectiveWorkingHoursType.toString().tr() == "Fixed Hours" ||
+                isShifts)
+              if (employee?.workingHours?.allowedDelayMinutes != null)
+                ProfileTile(
+                  isTitleOnly: false,
+                  isList: false,
+                  title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
+                  trailingTitle: "${employee?.workingHours?.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}".toUpperCase(),
+                  icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
+                ),
+            // THIS WEEK SHIFTS (shown instead of fixed working hours when type is shifts)
+            if (isShifts)
+              ThisWeekShiftsDisplayWidget(
+                shifts: employee?.thisWeekShifts ?? const [],
               ),
             //WEEKENDS
             Builder(
@@ -432,6 +469,230 @@ class WeekendDisplayWidget extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class ThisWeekShiftsDisplayWidget extends StatelessWidget {
+  final List<EmpWeekShift> shifts;
+
+  const ThisWeekShiftsDisplayWidget({super.key, required this.shifts});
+
+  String _formatDate(BuildContext context, String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return '';
+    try {
+      final parsed = DateTime.parse(rawDate.trim());
+      final locale = LocalizationService.isArabic(context: context) ? 'ar' : 'en';
+      return DateFormat('EEE, yyyy-MM-dd', locale).format(parsed);
+    } catch (_) {
+      return rawDate.split(' ').first;
+    }
+  }
+
+  String _formatTime(BuildContext context, String? rawTime) {
+    if (rawTime == null || rawTime.isEmpty) return '';
+    final locale = LocalizationService.isArabic(context: context) ? 'ar' : 'en';
+    final clean = rawTime.trim();
+    try {
+      final parsed = DateTime.parse(clean);
+      return DateFormat('h:mm a', locale).format(parsed);
+    } catch (_) {}
+    final timePart = clean.contains(' ') ? clean.split(' ').last : clean;
+    try {
+      final parsed = DateFormat('HH:mm:ss').parseStrict(timePart);
+      return DateFormat('h:mm a', locale).format(parsed);
+    } catch (_) {
+      try {
+        final parsed = DateFormat('HH:mm').parseStrict(timePart);
+        return DateFormat('h:mm a', locale).format(parsed);
+      } catch (_) {
+        return timePart;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12, left: 8, right: 8),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+        border: Border.all(color: Colors.grey.withOpacity(0.05)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Image.asset(
+                "assets/images/new-cale.png",
+                width: 20,
+                height: 20,
+                color: Color(AppColors.buttons),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  AppStrings.thisWeekShifts.tr().toUpperCase(),
+                  style: AppStyles.blackContent(context).copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (shifts.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Text(
+                AppStrings.noShiftsThisWeek.tr(),
+                style: AppStyles.blackContent(context).copyWith(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: shifts.map((shift) {
+                  final startStr = _formatTime(context, shift.startTime);
+                  final endStr = _formatTime(context, shift.endTime);
+                  final dateStr = _formatDate(context, shift.date);
+                  final breakStart = _formatTime(context, shift.breakDurationStartTime);
+                  final breakEnd = _formatTime(context, shift.breakDurationEndTime);
+                  final hasBreak = breakStart.isNotEmpty && breakEnd.isNotEmpty;
+                  final hasModifier = shift.financialModifier != null &&
+                      shift.financialModifier != 1;
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Color(AppColors.cardBackground),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Color(AppColors.buttons).withOpacity(0.25),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                shift.shiftName ?? AppStrings.shifts.tr(),
+                                style: AppStyles.blackContent(context).copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  color: Color(AppColors.buttons),
+                                ),
+                              ),
+                            ),
+                            if (hasModifier)
+                              Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  "x${shift.financialModifier}",
+                                  style: AppStyles.blackContent(context).copyWith(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.orange.shade800,
+                                  ),
+                                ),
+                              ),
+                            if (shift.status != null && shift.status!.isNotEmpty)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Color(AppColors.buttons).withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  shift.status!.tr().toUpperCase(),
+                                  style: AppStyles.blackContent(context).copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(AppColors.buttons),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            const Icon(Icons.calendar_today_outlined,
+                                size: 13, color: Colors.grey),
+                            const SizedBox(width: 6),
+                            Text(
+                              dateStr,
+                              style: AppStyles.blackContent(context)
+                                  .copyWith(fontSize: 12),
+                            ),
+                            const Spacer(),
+                            if (startStr.isNotEmpty || endStr.isNotEmpty) ...[
+                              const Icon(Icons.access_time,
+                                  size: 14, color: Colors.grey),
+                              const SizedBox(width: 4),
+                              Text(
+                                "$startStr - $endStr",
+                                style: AppStyles.blackContent(context).copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        if (hasBreak || (shift.breakDuration != null && shift.breakDuration! > 0)) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(Icons.free_breakfast_outlined,
+                                  size: 13, color: Colors.grey),
+                              const SizedBox(width: 6),
+                              Text(
+                                hasBreak
+                                    ? "${AppStrings.breakTime.tr()}: $breakStart - $breakEnd"
+                                    : "${AppStrings.breakTime.tr()}: ${shift.breakDuration} ${AppStrings.hours.tr()}",
+                                style: AppStyles.blackContent(context).copyWith(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
         ],
       ),
     );

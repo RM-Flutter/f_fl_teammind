@@ -1162,4 +1162,13 @@ abstract class AppStrings {
   static const primaryColor = "primaryColor";
   static const secondaryColor = "secondaryColor";
   static const thirdColor = "thirdColor";
+
+  // Shifts Feature
+  static const shifts = "shifts";
+  static const shiftsSchedule = "shifts_schedule";
+  static const shiftChangeRequests = "shift_change_requests";
+  static const addShiftChangeRequest = "add_shift_change_request";
+  static const thisWeekShifts = "this_week_shifts";
+  static const noShiftsThisWeek = "no_shifts_this_week";
+  static const breakTime = "break_time";
 }

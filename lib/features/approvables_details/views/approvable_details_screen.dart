@@ -46,6 +46,13 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
     if (_modalOpened || widget.autoOpenAction == AutoOpenAction.none) return;
     _modalOpened = true;
 
+    final bool isAsSomeoneElse =
+        widget.autoOpenAction == AutoOpenAction.takeActionAsSomeoneElse;
+    final bool canProceed = isAsSomeoneElse
+        ? details.canTakeActionAsSomeoneElse == true
+        : details.takeAction == true;
+    if (!canProceed) return;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       showModalBottomSheet(

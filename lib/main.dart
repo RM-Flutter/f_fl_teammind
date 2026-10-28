@@ -14,6 +14,7 @@ import 'app.dart';
 import 'core/services/fcm_token.service.dart';
 import 'features/more/user_device/controllers/user_device_controller.dart';
 import 'features/overtime_requests/controllers/overtime_requests_controller.dart';
+import 'features/shifts/controllers/shift_change_controller.dart';
 import 'features/daily_reports/controllers/daily_reports_controller.dart';
 import 'core/services/app_config_service.dart';
 import 'package:flutter/material.dart';
@@ -147,6 +148,8 @@ void main() async {
               create: (context) => NotificationProviderModel()),
           ChangeNotifierProvider(
               create: (context) => OvertimeRequestsProvider()),
+          ChangeNotifierProvider(
+              create: (context) => ShiftChangeController()),
           ChangeNotifierProvider(create: (context) => DailyReportsProvider()),
           ChangeNotifierProvider(create: (_) => CvHubInterviewsController()),
           ChangeNotifierProvider(

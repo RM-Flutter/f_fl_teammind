@@ -12,6 +12,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
+import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
 import 'package:app_test/core/widgets/quick_action_sheet.dart';
 import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
 
@@ -139,6 +140,42 @@ class ApprovableCardWidget extends StatelessWidget {
           sub += ' • $formattedDate';
         }
         subtitle = sub;
+      } else if (request is ShiftChangeRequestModel) {
+        final sc = request as ShiftChangeRequestModel;
+        takeAction = sc.takeAction == true;
+        takeActionAsSomeoneElse = sc.canTakeActionAsSomeoneElse == true;
+        status = sc.status;
+        id = sc.id?.toString() ?? '';
+        approvableType = 'shift_change_requests';
+
+        final reqName = sc.requesterEmployeeName ?? sc.employeeName ?? '';
+        final recName = sc.receiverEmployeeName ?? '';
+        employeeName = recName.isNotEmpty ? '$reqName ↔ $recName' : reqName;
+
+        final reqShift = sc.requesterShiftName ?? '';
+        final recShift = sc.receiverShiftName ?? '';
+        if (sc.isTwoWaySwap && recShift.isNotEmpty) {
+          title = '$reqShift ↔ $recShift';
+        } else {
+          title = reqShift.isNotEmpty
+              ? '$reqShift (${isArabic ? 'تحويل شيفت' : 'Shift Transfer'})'
+              : (isArabic ? 'طلب تبديل شيفت' : 'Shift Change Request');
+        }
+
+        final String fromDate = sc.dateFrom != null && sc.dateFrom!.isNotEmpty
+            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, sc.dateFrom) ??
+                sc.dateFrom!.split(' ').first)
+            : '';
+        final String toDate = sc.dateTo != null && sc.dateTo!.isNotEmpty
+            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, sc.dateTo) ??
+                sc.dateTo!.split(' ').first)
+            : '';
+
+        if (fromDate.isNotEmpty && toDate.isNotEmpty && fromDate != toDate) {
+          subtitle = '$fromDate ↔ $toDate';
+        } else {
+          subtitle = fromDate;
+        }
       } else if (request is InterviewModel) {
         final interview = request as InterviewModel;
         takeAction = false;

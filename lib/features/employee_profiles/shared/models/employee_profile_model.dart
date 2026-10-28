@@ -44,6 +44,7 @@ class EmployeeProfileModel {
   final String? jobLevel;
   final List<EmpRewardPenalty>? rewardsAndPenalties;
   final EmpTodayAttendance? todayAttendance;
+  final List<EmpWeekShift>? thisWeekShifts;
 
   EmployeeProfileModel({
     this.id,
@@ -83,6 +84,7 @@ class EmployeeProfileModel {
     this.jobLevel,
     this.rewardsAndPenalties,
     this.todayAttendance,
+    this.thisWeekShifts,
   })  : totalDeductions = _calculateTotalAmount(
             basicSalary, payrollDeductions?.map((d) => d.value).toList()),
         additions = _calculateTotalAmount(
@@ -221,6 +223,12 @@ class EmployeeProfileModel {
       todayAttendance: json['today_attendance'] != null
           ? EmpTodayAttendance.fromJson(json['today_attendance'])
           : null,
+      thisWeekShifts:
+          (json['this_week_shifts'] ?? json['This_week_shifts']) is List
+              ? List<EmpWeekShift>.from(
+                  ((json['this_week_shifts'] ?? json['This_week_shifts']) as List)
+                      .map((item) => EmpWeekShift.fromJson(item)))
+              : null,
     );
   }
 
@@ -249,6 +257,8 @@ class EmployeeProfileModel {
       'balance': balance?.map((item) => item.toJson()).toList(),
       'weekend': weekends,
       'working_hours': workingHours?.toJson(),
+      'this_week_shifts':
+          thisWeekShifts?.map((item) => item.toJson()).toList(),
       'basic_salary': basicSalary,
       'payroll_deductions':
           payrollDeductions?.map((item) => item.toJson()).toList(),
@@ -283,7 +293,10 @@ class EmployeeProfileModel {
       String? employeeStatus,
       String? employmentType,
       String? jobLevel,
-      String? jobTitle}) {
+      String? jobTitle,
+      String? workingHoursType,
+      EmpWorkingHours? workingHours,
+      List<EmpWeekShift>? thisWeekShifts}) {
     return EmployeeProfileModel(
         id: id ?? this.id,
         avatar: avatar ?? this.avatar,
@@ -303,7 +316,10 @@ class EmployeeProfileModel {
         employeeStatus: employeeStatus ?? this.employeeStatus,
         employmentType: employmentType ?? this.employmentType,
         jobLevel: jobLevel ?? this.jobLevel,
-        jobTitle: jobTitle ?? this.jobTitle);
+        jobTitle: jobTitle ?? this.jobTitle,
+        workingHoursType: workingHoursType ?? this.workingHoursType,
+        workingHours: workingHours ?? this.workingHours,
+        thisWeekShifts: thisWeekShifts ?? this.thisWeekShifts);
   }
 
   @override
@@ -965,6 +981,82 @@ class EmpTodayAttendance {
       'status': status,
       'clock_in_time': clockInTime,
       'clock_out_time': clockOutTime,
+    };
+  }
+}
+
+class EmpWeekShift {
+  final int? id;
+  final int? employeeId;
+  final int? shiftId;
+  final String? shiftName;
+  final String? date;
+  final String? status;
+  final num? financialModifier;
+  final String? startTime;
+  final String? endTime;
+  final String? breakDurationStartTime;
+  final String? breakDurationEndTime;
+  final num? breakDuration;
+  final String? notes;
+
+  EmpWeekShift({
+    this.id,
+    this.employeeId,
+    this.shiftId,
+    this.shiftName,
+    this.date,
+    this.status,
+    this.financialModifier,
+    this.startTime,
+    this.endTime,
+    this.breakDurationStartTime,
+    this.breakDurationEndTime,
+    this.breakDuration,
+    this.notes,
+  });
+
+  factory EmpWeekShift.fromJson(Map<String, dynamic> json) {
+    return EmpWeekShift(
+      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? ''),
+      employeeId: json['employee_id'] is int
+          ? json['employee_id']
+          : int.tryParse(json['employee_id']?.toString() ?? ''),
+      shiftId: json['shift_id'] is int
+          ? json['shift_id']
+          : int.tryParse(json['shift_id']?.toString() ?? ''),
+      shiftName: json['shift_name']?.toString(),
+      date: json['date']?.toString(),
+      status: json['status']?.toString(),
+      financialModifier: json['financial_modifier'] is num
+          ? json['financial_modifier'] as num
+          : num.tryParse(json['financial_modifier']?.toString() ?? ''),
+      startTime: json['start_time']?.toString(),
+      endTime: json['end_time']?.toString(),
+      breakDurationStartTime: json['break_duration_start_time']?.toString(),
+      breakDurationEndTime: json['break_duration_end_time']?.toString(),
+      breakDuration: json['break_duration'] is num
+          ? json['break_duration'] as num
+          : num.tryParse(json['break_duration']?.toString() ?? ''),
+      notes: json['notes']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'employee_id': employeeId,
+      'shift_id': shiftId,
+      'shift_name': shiftName,
+      'date': date,
+      'status': status,
+      'financial_modifier': financialModifier,
+      'start_time': startTime,
+      'end_time': endTime,
+      'break_duration_start_time': breakDurationStartTime,
+      'break_duration_end_time': breakDurationEndTime,
+      'break_duration': breakDuration,
+      'notes': notes,
     };
   }
 }

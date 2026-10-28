@@ -33,6 +33,7 @@ class UserSettingsModel extends AppSettingsModel {
   final dynamic asset;
   final Map<String, dynamic>? avFingerprint;
   final Map<String, dynamic>? avFingerprintLocations;
+  final Map<String, dynamic>? allowedFingerprintTypes;
   final String? licenseType;
 
   UserSettingsModel({
@@ -67,6 +68,7 @@ class UserSettingsModel extends AppSettingsModel {
     this.asset,
     this.avFingerprint,
     this.avFingerprintLocations,
+    this.allowedFingerprintTypes,
     this.licenseType,
   });
 
@@ -122,6 +124,8 @@ class UserSettingsModel extends AppSettingsModel {
       avFingerprint: json['av_fingerprint'] as Map<String, dynamic>?,
       avFingerprintLocations:
           json['av_fingerprint_locations'] as Map<String, dynamic>?,
+      allowedFingerprintTypes:
+          json['allowed_fingerprint_types'] as Map<String, dynamic>?,
       licenseType: json['license_type']?.toString(),
     );
   }
@@ -165,6 +169,7 @@ class UserSettingsModel extends AppSettingsModel {
       'asset': asset,
       'av_fingerprint': avFingerprint,
       'av_fingerprint_locations': avFingerprintLocations,
+      'allowed_fingerprint_types': allowedFingerprintTypes,
       'license_type': licenseType,
     };
   }

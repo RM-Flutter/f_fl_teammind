@@ -198,11 +198,17 @@ class Worktime {
   final String? workingHoursType;
   final String? workingHoursFrom;
   final String? workingHoursTo;
+  final String? allowedDelayMinutes;
+  final String? workingShiftType;
+
+  bool get isShifts => workingHoursType == 'shifts';
 
   Worktime({
     this.workingHoursType,
     this.workingHoursFrom,
     this.workingHoursTo,
+    this.allowedDelayMinutes,
+    this.workingShiftType,
   });
 
   factory Worktime.fromJson(Map<String, dynamic> json) {
@@ -210,12 +216,18 @@ class Worktime {
       workingHoursType: json['working_hours_type']?.toString(),
       workingHoursFrom: json['working_hours_from']?.toString(),
       workingHoursTo: json['working_hours_to']?.toString(),
+      allowedDelayMinutes: json['allowed_delay_minutes']?.toString(),
+      workingShiftType: json['working_shift_type']?.toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'working_hours_type': workingHoursType,
+      if (workingHoursFrom != null) 'working_hours_from': workingHoursFrom,
+      if (workingHoursTo != null) 'working_hours_to': workingHoursTo,
+      if (allowedDelayMinutes != null) 'allowed_delay_minutes': allowedDelayMinutes,
+      if (workingShiftType != null) 'working_shift_type': workingShiftType,
     };
   }
 }

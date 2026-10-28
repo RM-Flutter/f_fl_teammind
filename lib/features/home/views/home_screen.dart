@@ -265,11 +265,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ))),
             )
           ],
-          floatingActionButton: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal:
-                    LocalizationService.isArabic(context: context) ? 35 : 0),
-            child: MainAppFabWidget(requests: false, viewRequest: true),
+          floatingActionButton: Consumer<HomeController>(
+            builder: (context, viewModel, child) => Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal:
+                      LocalizationService.isArabic(context: context) ? 35 : 0),
+              child: MainAppFabWidget(requests: false, viewRequest: true),
+            ),
           ),
           children: [
             Consumer<HomeController>(

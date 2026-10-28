@@ -123,14 +123,33 @@ class ExpandableFabState extends State<ExpandableFab>
   List<Widget> _buildExpandableFabButton() {
     final List<Widget> children = <Widget>[];
     final count = widget.children.length;
-    final step = AppSizes.s90 / (count - 1);
+    if (count == 0) return children;
+
+    if (count == 1) {
+      children.add(_ExpandableFab(
+        directionDegrees: 0.0,
+        maxDistance: AppSizes.s30 * 2.5,
+        progress: _expandAnimation,
+        child: widget.children[0],
+      ));
+      return children;
+    }
+
+    // Order compactly from bottom (0 deg) towards top (up to 90 deg) without wide gaps
+    final double effectiveDistance = count == 2
+        ? AppSizes.s30 * 2.8
+        : (count == 3 ? AppSizes.s30 * 3.3 : widget.distance);
+
+    final double step = count == 2
+        ? 35.0
+        : (count == 3 ? 32.0 : (AppSizes.s90 / (count - 1)));
 
     for (var i = 0, angleInDegrees = 0.0;
-    i < count;
-    i++, angleInDegrees += step) {
+        i < count;
+        i++, angleInDegrees += step) {
       children.add(_ExpandableFab(
           directionDegrees: angleInDegrees,
-          maxDistance: widget.distance,
+          maxDistance: effectiveDistance,
           progress: _expandAnimation,
           child: widget.children[i]));
     }

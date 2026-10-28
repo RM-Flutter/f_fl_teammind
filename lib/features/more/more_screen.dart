@@ -77,6 +77,22 @@ class _MoreScreenState extends State<MoreScreen> {
       gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
+    Map<String, dynamic>? us2Cache;
+    final us2String = CacheHelper.getString("US2");
+    if (us2String != null && us2String.isNotEmpty) {
+      try {
+        us2Cache = json.decode(us2String) as Map<String, dynamic>;
+      } catch (_) {}
+    }
+    final bool isShiftsEmployee =
+        us2Cache?['worktime']?['working_hours_type']?.toString() == 'shifts';
+    final bool isManagementUser = gCache != null &&
+        ((gCache['is_teamleader_in'] is List &&
+                (gCache['is_teamleader_in'] as List).isNotEmpty) ||
+            (gCache['is_manager_in'] is List &&
+                (gCache['is_manager_in'] as List).isNotEmpty) ||
+            gCache['is_hr'] == true ||
+            gCache['top_management'] == true);
 
     return Consumer<HomeController>(
       builder: (context, value, child) {
@@ -236,6 +252,26 @@ class _MoreScreenState extends State<MoreScreen> {
                                       'lang': context.locale.languageCode
                                     }),
                               ),
+                            if (isShiftsEmployee && !isManagementUser)
+                              DefaultListTile(
+                                title: AppStrings.shiftsSchedule.tr(),
+                                icon: Icons.calendar_month_rounded,
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.shiftsScheduler.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
+                            if (isShiftsEmployee || isManagementUser)
+                              DefaultListTile(
+                                title: AppStrings.shiftChangeRequests.tr(),
+                                icon: Icons.swap_horiz_rounded,
+                                onTap: () async => await context.pushNamed(
+                                    AppRoutes.shiftChangeRequests.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    }),
+                              ),
                             if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) SizedBox(height : 15),
                            if(gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty|| gCache['is_hr'] == true || gCache['top_management'] == true) Padding(
                              padding: EdgeInsets.symmetric(horizontal: 24),
@@ -309,6 +345,19 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
+                            if (isManagementUser)
+                              DefaultListTile(
+                                title: AppStrings.shiftsSchedule.tr(),
+                                icon: Icons.calendar_month_rounded,
+                                onTap: () async {
+                                  await context.pushNamed(
+                                    AppRoutes.shiftsScheduler.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode,
+                                    },
+                                  );
+                                },
+                              ),
                             SizedBox(height : 15),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 24),

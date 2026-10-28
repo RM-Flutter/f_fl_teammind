@@ -28,6 +28,8 @@ import 'package:app_test/core/widgets/approvable_card_widget.dart';
 
 import 'package:app_test/features/employee_profiles/details/views/widgets/overtime_requests_section_widget.dart';
 import 'package:app_test/features/employee_profiles/details/views/widgets/salary_advance_section_widget.dart';
+import 'package:app_test/features/employee_profiles/details/views/widgets/shift_change_requests_section_widget.dart';
+import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
 
 class RequestDetailsViewModel extends ChangeNotifier {
   bool? isLoading = false;
@@ -104,7 +106,29 @@ class RequestDetailsViewModel extends ChangeNotifier {
         String title = '';
         final isArabic = LocalizationService.isArabic(context: context);
 
-        if (type.contains('overtime')) {
+        if (type == 'shift_change_requests') {
+          final reqs = listData
+              .whereType<Map<String, dynamic>>()
+              .map((e) => ShiftChangeRequestModel.fromApprovableJson(e))
+              .toList();
+          if (reqs.isEmpty) {
+            if (context.mounted) {
+              AlertsService.info(
+                context: context,
+                message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests',
+                title: AppStrings.information.tr(),
+              );
+            }
+            return;
+          }
+          title = AppStrings.shiftChangeRequests.tr();
+          contentWidget = ShiftChangeRequestsSectionWidget(
+            employee: null,
+            requests: reqs,
+            id: empId,
+            empName: empName,
+          );
+        } else if (type.contains('overtime')) {
           final reqs = listData.map((e) => OvertimeRequestModel.fromJson(e)).toList();
           if (reqs.isEmpty) {
             AlertsService.info(context: context, message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests', title: AppStrings.information.tr());

@@ -88,7 +88,10 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 0),
                 child: TabBarView(
                   children: [
-                    ReasonTab(reason: details.reason),
+                    ReasonTab(
+                      reason: details.reason,
+                      details: details,
+                    ),
                     ManagerResponseTab(requiredApprovals: details.requiredApprovals),
                     InformationTab(
                       createdAt: details.createdAt,

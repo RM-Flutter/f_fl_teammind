@@ -21,6 +21,7 @@ import 'package:app_test/features/daily_reports/models/daily_report_model.dart';
 import 'package:app_test/features/daily_reports/services/daily_reports_service.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/repos/salary_advance_repo.dart';
+import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
 
 class EmployeeDetailsViewModel extends ChangeNotifier {
   EmployeeProfileModel? employee;
@@ -33,6 +34,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
   List<OvertimeRequestModel>? overtimeRequests;
   List<SalaryAdvanceRequestModel>? salaryAdvanceRequestsList;
   List<ExpenseClaimModel>? expenseClaimRequestsList;
+  List<ShiftChangeRequestModel>? shiftChangeRequestsList;
 
   void updateLoadingStatus({required bool laodingValue}) {
     isLoading = laodingValue;
@@ -69,6 +71,8 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       await getSalaryAdvanceRequestsList(context, empId: empId, getTeam: getTeam);
     } else if (index == 10 && expenseClaimRequestsList == null) {
       await getExpenseClaimRequestsList(context, empId: empId, getTeam: getTeam);
+    } else if (index == 11 && shiftChangeRequestsList == null) {
+      await getShiftChangeRequestsList(context, empId: empId, getTeam: getTeam);
     }
   }
 
@@ -272,6 +276,48 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint("Error fetching salary advances: $e");
+    }
+  }
+
+  Future<void> getShiftChangeRequestsList(BuildContext context,
+      {required String empId, required bool getTeam}) async {
+    try {
+      final response = getTeam
+          ? await RequestsServices.getManagerApprovables(
+              context: context,
+              type: 'shift_change_requests',
+              scope: 'team',
+              employeesIds: [empId],
+              perPage: 6,
+            )
+          : await RequestsServices.getMyApprovables(
+              context: context,
+              type: 'shift_change_requests',
+              perPage: 6,
+            );
+      if (response.success && response.data != null) {
+        final dynamic rawData = response.data!['approvables'] ??
+            response.data!['data'] ??
+            response.data!['requests'];
+        List<dynamic> listData = [];
+        if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+          listData = rawData['data'];
+        } else if (rawData is List) {
+          listData = rawData;
+        }
+        shiftChangeRequestsList = listData
+            .whereType<Map<String, dynamic>>()
+            .map((e) => ShiftChangeRequestModel.fromApprovableJson(e))
+            .toList();
+        notifyListeners();
+      } else {
+        shiftChangeRequestsList = [];
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error fetching shift change requests: $e");
+      shiftChangeRequestsList = [];
+      notifyListeners();
     }
   }
 }

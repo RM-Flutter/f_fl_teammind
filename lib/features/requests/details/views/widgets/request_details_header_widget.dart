@@ -284,44 +284,62 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               ),
               child: Column(
                 children: [
-                  AppBarWithBookmark(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    centerTitle: true,
-                    routeName: AppRoutes.requestDetails.name,
-                    defaultTitle: AppSettingsService.getRequestTitleFromGenenralSettings(
-                        context: context, requestId: request.typeId.toString()) ??
-                        '',
-                    title: AppSettingsService.getRequestTitleFromGenenralSettings(
-                        context: context, requestId: request.typeId.toString()) ??
-                        '',
-                    titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
-                    bookmarkIconColor: Colors.white,
-                    leading: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: InkWell(
-                        onTap: () {
-                          if (context.canPop()) {
-                            context.pop(); // هيرجع لورا
-                          } else {
-                            context.goNamed(AppRoutes.home.name,
-                                pathParameters: {'lang': context.locale.languageCode,});
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_sharp,
-                            color: Colors.white,
-                            size: 18,
+                  Builder(builder: (context) {
+                    String headerTitle = AppSettingsService.getRequestTitleFromGenenralSettings(
+                            context: context, requestId: request.typeId.toString()) ??
+                        '';
+                    if (headerTitle.isEmpty) {
+                      try {
+                        final appType = (request as dynamic).approvableType?.toString();
+                        final isAr = LocalizationService.isArabic(context: context);
+                        if (appType == 'shift_change_requests') {
+                          headerTitle = isAr ? 'طلب تبديل شيفت' : 'Shift Change Request';
+                        } else if (appType == 'overtime' || appType == 'overtime_requests') {
+                          headerTitle = AppStrings.overtimeRequests.tr();
+                        } else if (appType == 'salary_advance' || appType == 'salary_advance_requests') {
+                          headerTitle = isAr ? 'طلب سلفة' : 'Salary Advance Request';
+                        } else if (appType == 'employee_expense_claims') {
+                          headerTitle = isAr ? 'مطالبة مصروفات' : 'Expense Claim';
+                        }
+                      } catch (_) {}
+                    }
+                    return AppBarWithBookmark(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      centerTitle: true,
+                      routeName: AppRoutes.requestDetails.name,
+                      defaultTitle: headerTitle,
+                      title: headerTitle,
+                      titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
+                      bookmarkIconColor: Colors.white,
+                      leading: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: InkWell(
+                          onTap: () {
+                            if (context.canPop()) {
+                              context.pop(); // هيرجع لورا
+                            } else {
+                              context.goNamed(AppRoutes.home.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode,
+                                  });
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_back_sharp,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                   SizedBox(height: 18),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12),
@@ -452,6 +470,49 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                       imgPath: Icons.category_outlined,
                                       title: request.typeName.toString(),
                                     ),
+
+                                  // Shift Change Request specific two-party info tiles
+                                  Builder(builder: (context) {
+                                    try {
+                                      if ((request as dynamic).approvableType == 'shift_change_requests') {
+                                        final reqShift = (request as dynamic).requesterShiftName?.toString() ?? '';
+                                        final recShift = (request as dynamic).receiverShiftName?.toString() ?? '';
+                                        final recEmpName = (request as dynamic).receiverEmployee?.name?.toString() ?? '';
+                                        final recEmpId = (request as dynamic).receiverEmployeeId;
+                                        return Wrap(
+                                          spacing: 12,
+                                          runSpacing: 12,
+                                          children: [
+                                            if (recEmpName.isNotEmpty)
+                                              InfoTileWidget(
+                                                onTap: recEmpId != null
+                                                    ? () {
+                                                        context.pushNamed(
+                                                          'employeeDetails',
+                                                          pathParameters: {
+                                                            'id': recEmpId.toString(),
+                                                            'lang': context.locale.languageCode,
+                                                          },
+                                                        );
+                                                      }
+                                                    : null,
+                                                imgPath: Icons.swap_horiz_rounded,
+                                                title: recEmpName,
+                                                isHighLight: true,
+                                              ),
+                                            if (reqShift.isNotEmpty)
+                                              InfoTileWidget(
+                                                imgPath: Icons.schedule_rounded,
+                                                title: ((request as dynamic).receiverShiftAssignmentId != null && recShift.isNotEmpty)
+                                                    ? '$reqShift ↔ $recShift'
+                                                    : reqShift,
+                                              ),
+                                          ],
+                                        );
+                                      }
+                                    } catch (_) {}
+                                    return const SizedBox.shrink();
+                                  }),
 
                                   // Money value if present
                                   if (request.moneyValue != null && (double.tryParse(request.moneyValue.toString()) ?? 0) > 0)

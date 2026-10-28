@@ -1411,5 +1411,15 @@
   "current_period": "الفترة الحالية",
   "compare_period": "فترة المقارنة",
   "locked_period": "مغلق",
-  "period_locked_info": "الفترة الزمنية محددة وثابتة لهذا التقرير ولا يمكن تعديلها."
+  "period_locked_info": "الفترة الزمنية محددة وثابتة لهذا التقرير ولا يمكن تعديلها.",
+  "shifts": "الشيفتات",
+  "shifts_schedule": "جدول الشيفتات",
+  "shift_change_requests": "طلبات تبديل الشيفتات",
+  "add_shift_change_request": "إضافة طلب تبديل شيفت",
+  "this_week_shifts": "شفتات هذا الأسبوع",
+  "no_shifts_this_week": "لا توجد شفتات مسجلة لهذا الأسبوع",
+  "break_time": "وقت الاستراحة",
+  "assigned": "معين",
+  "swapped": "مُبدّل",
+  "shift": "شيفت"
 }

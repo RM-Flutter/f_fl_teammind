@@ -14,7 +14,9 @@ import 'package:app_test/features/approvables_details/views/widgets/manager_take
 import 'package:app_test/features/approvables_details/views/widgets/manager_take_action/action_type_toggle.dart';
 import 'package:app_test/features/approvables_details/views/widgets/manager_take_action/approver_employee_dropdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
+import 'package:app_test/core/routing/app_router.dart';
 
 /// A self-contained bottom sheet that fetches the approvable details internally
 /// and renders the take-action / take-action-as-someone-else form.
@@ -316,6 +318,125 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                     },
                     child: Text(isArabic ? 'إعادة المحاولة' : 'Retry'),
                   ),
+                ],
+              ),
+            )
+          else if (_details != null &&
+              (_details!.hasProblem == true ||
+                  _details!.isValid == false ||
+                  (widget.isAsSomeoneElse
+                      ? _details!.canTakeActionAsSomeoneElse != true
+                      : _details!.takeAction != true)))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFEBEE),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.red.shade300),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.warning_amber_rounded,
+                                color: Colors.red.shade700, size: 22),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                (_details!.hasProblem == true ||
+                                        _details!.isValid == false)
+                                    ? (isArabic
+                                        ? 'يتعذر اتخاذ إجراء بسبب تعارض في الجدول'
+                                        : 'Action blocked due to schedule conflict')
+                                    : (isArabic
+                                        ? 'لا يمكن اتخاذ إجراء على هذا الطلب حالياً'
+                                        : 'Cannot take action on this request currently'),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.5,
+                                  color: Colors.red.shade800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_details!.problemMessage != null &&
+                            _details!.problemMessage!.trim().isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            _details!.problemMessage!.trim(),
+                            style: TextStyle(
+                              fontSize: 12.5,
+                              color: Colors.red.shade900,
+                            ),
+                          ),
+                        ],
+                        if (_details!.problems != null &&
+                            _details!.problems!.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          ..._details!.problems!
+                              .map((p) => p is Map
+                                  ? (p['message'] ??
+                                          p['description'] ??
+                                          p.toString())
+                                      .toString()
+                                      .trim()
+                                  : p.toString().trim())
+                              .where((s) =>
+                                  s.isNotEmpty &&
+                                  s != (_details!.problemMessage?.trim() ?? ''))
+                              .map(
+                                (s) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: Text(
+                                    '• $s',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.red.shade900,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (_details!.hasProblem == true ||
+                      _details!.isValid == false ||
+                      _details!.isShiftChangeRequest) ...[
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Color(AppColors.buttons),
+                        side: BorderSide(color: Color(AppColors.buttons)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                      label: Text(
+                        isArabic ? 'عرض تفاصيل الطلب' : 'View Request Details',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        widget.parentContext.pushNamed(
+                          AppRoutes.approvableDetails.name,
+                          pathParameters: {
+                            'lang': widget.parentContext.locale.languageCode,
+                            'type': widget.type,
+                            'id': widget.id,
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ],
               ),
             )

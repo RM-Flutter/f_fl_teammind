@@ -83,11 +83,17 @@ class ApprovableBottomActionBar extends StatelessWidget {
             title: AppStrings.statistics.tr(),
             color: Color(AppColors.secondaryButton),
             onPressed: () async {
-              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance' || type == 'employee_expense_claims') {
+              if (type == 'overtime_requests' ||
+                  type == 'overtime' ||
+                  type == 'salary_advance_requests' ||
+                  type == 'salary_advance' ||
+                  type == 'employee_expense_claims' ||
+                  type == 'shift_change_requests' ||
+                  details.isShiftChangeRequest) {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
                   context,
                   details.employeeId.toString(),
-                  type: type,
+                  type: details.isShiftChangeRequest ? 'shift_change_requests' : type,
                   empName: details.employeeName?.toString() ?? '',
                 );
               } else {
@@ -129,11 +135,17 @@ class ApprovableBottomActionBar extends StatelessWidget {
             title: AppStrings.statistics.tr(),
             color: Color(AppColors.secondaryButton),
             onPressed: () async {
-              if (type == 'overtime_requests' || type == 'overtime' || type == 'salary_advance_requests' || type == 'salary_advance' || type == 'employee_expense_claims') {
+              if (type == 'overtime_requests' ||
+                  type == 'overtime' ||
+                  type == 'salary_advance_requests' ||
+                  type == 'salary_advance' ||
+                  type == 'employee_expense_claims' ||
+                  type == 'shift_change_requests' ||
+                  details.isShiftChangeRequest) {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
                   context,
                   details.employeeId.toString(),
-                  type: type,
+                  type: details.isShiftChangeRequest ? 'shift_change_requests' : type,
                   empName: details.employeeName?.toString() ?? '',
                 );
               } else {

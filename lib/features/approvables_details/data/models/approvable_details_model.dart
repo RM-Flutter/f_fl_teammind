@@ -29,6 +29,24 @@ class ApprovableDetailsModel {
   final List<dynamic>? files;
   final List<EmployeeActionModel>? employeeActions;
 
+  // Extra fields for Shift Change Requests & Shift/Leave conflicts
+  final ProfileModel? requesterEmployee;
+  final ProfileModel? receiverEmployee;
+  final int? requesterEmployeeId;
+  final int? receiverEmployeeId;
+  final int? requesterShiftId;
+  final int? receiverShiftId;
+  final String? requesterShiftName;
+  final String? receiverShiftName;
+  final int? requesterShiftAssignmentId;
+  final int? receiverShiftAssignmentId;
+  final String? requesterDate;
+  final String? receiverDate;
+  final bool? isValid;
+  final bool? hasProblem;
+  final String? problemMessage;
+  final List<dynamic>? problems;
+
   dynamic get from => dateFrom;
   dynamic get to => dateTo;
   dynamic get durationType => unit;
@@ -37,6 +55,8 @@ class ApprovableDetailsModel {
   dynamic get departmentName => department?.title;
   dynamic get statusUpdate => updatedAt;
   dynamic get managerReply => requiredApprovals ?? [];
+  bool get isShiftChangeRequest => approvableType == 'shift_change_requests';
+  bool get isTwoWayShiftSwap => receiverShiftAssignmentId != null;
 
   ApprovableDetailsModel({
     this.id,
@@ -66,16 +86,66 @@ class ApprovableDetailsModel {
     this.notes,
     this.files,
     this.employeeActions,
+    this.requesterEmployee,
+    this.receiverEmployee,
+    this.requesterEmployeeId,
+    this.receiverEmployeeId,
+    this.requesterShiftId,
+    this.receiverShiftId,
+    this.requesterShiftName,
+    this.receiverShiftName,
+    this.requesterShiftAssignmentId,
+    this.receiverShiftAssignmentId,
+    this.requesterDate,
+    this.receiverDate,
+    this.isValid,
+    this.hasProblem,
+    this.problemMessage,
+    this.problems,
   });
 
   factory ApprovableDetailsModel.fromJson(Map<String, dynamic> json) {
+    final reqEmp = json['requester_employee'] is Map<String, dynamic>
+        ? ProfileModel.fromJson(json['requester_employee'] as Map<String, dynamic>)
+        : null;
+    final recEmp = json['receiver_employee'] is Map<String, dynamic>
+        ? ProfileModel.fromJson(json['receiver_employee'] as Map<String, dynamic>)
+        : null;
+
+    // profile fallback: profile -> employee -> requester_employee
+    final ProfileModel? profileVal = json['profile'] is Map<String, dynamic>
+        ? ProfileModel.fromJson(json['profile'] as Map<String, dynamic>)
+        : (json['employee'] is Map<String, dynamic>
+            ? ProfileModel.fromJson(json['employee'] as Map<String, dynamic>)
+            : reqEmp);
+
+    final bool hasProblemVal = (json['has_problem'] as bool?) == true;
+    final bool isValidVal = (json['is_valid'] as bool?) != false; // null treated as valid
+    final bool conflictBlocked = hasProblemVal || !isValidVal;
+
+    final bool rawTakeAction =
+        (json['can_take_action'] ?? json['take_action']) as bool? ?? false;
+    final bool rawCanTakeActionAsSomeoneElse =
+        (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else'])
+                as bool? ??
+            false;
+    final bool rawCanUpdateApproval =
+        (json['can_update_approval'] ?? json['can_update'] ?? json['update_approval'])
+                as bool? ??
+            false;
+
+    final int? levelVal = json['level'] is int
+        ? json['level']
+        : int.tryParse(json['level']?.toString() ?? '');
+
     return ApprovableDetailsModel(
       id: json['id'],
       approvableType: json['approvable_type'],
       status: json['status'],
-      takeAction: (json['can_take_action'] ?? json['take_action']) as bool? ?? false,
-      canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool? ?? false,
-      canUpdateApproval: (json['can_update_approval'] ?? json['can_update'] ?? json['update_approval']) as bool? ?? false,
+      takeAction: conflictBlocked ? false : rawTakeAction,
+      canTakeActionAsSomeoneElse:
+          conflictBlocked ? false : rawCanTakeActionAsSomeoneElse,
+      canUpdateApproval: conflictBlocked ? false : rawCanUpdateApproval,
       waitingCancel: json['waiting_cancel'] as bool?,
       hasOverlapping: json['has_overlapping'] as bool? ?? false,
       createdAt: json['created_at'],
@@ -92,9 +162,7 @@ class ApprovableDetailsModel {
       department: json['department'] != null
           ? DepartmentModel.fromJson(json['department'] as Map<String, dynamic>)
           : null,
-      profile: json['profile'] != null
-          ? ProfileModel.fromJson(json['profile'] as Map<String, dynamic>)
-          : null,
+      profile: profileVal,
       typeId: json['type_id'],
       typeName: json['type_name'],
       duration: json['duration'] is num
@@ -105,7 +173,7 @@ class ApprovableDetailsModel {
       dateFrom: json['date_from'],
       dateTo: json['date_to'],
       reason: json['reason'],
-      level: json['level'],
+      level: levelVal,
       notes: json['notes'],
       files: json['files'] as List<dynamic>?,
       employeeActions: json['employee_actions'] != null
@@ -113,6 +181,34 @@ class ApprovableDetailsModel {
               .map((e) => EmployeeActionModel.fromJson(e))
               .toList()
           : null,
+      requesterEmployee: reqEmp,
+      receiverEmployee: recEmp,
+      requesterEmployeeId: json['requester_employee_id'] is int
+          ? json['requester_employee_id']
+          : int.tryParse(json['requester_employee_id']?.toString() ?? ''),
+      receiverEmployeeId: json['receiver_employee_id'] is int
+          ? json['receiver_employee_id']
+          : int.tryParse(json['receiver_employee_id']?.toString() ?? ''),
+      requesterShiftId: json['requester_shift_id'] is int
+          ? json['requester_shift_id']
+          : int.tryParse(json['requester_shift_id']?.toString() ?? ''),
+      receiverShiftId: json['receiver_shift_id'] is int
+          ? json['receiver_shift_id']
+          : int.tryParse(json['receiver_shift_id']?.toString() ?? ''),
+      requesterShiftName: json['requester_shift_name']?.toString(),
+      receiverShiftName: json['receiver_shift_name']?.toString(),
+      requesterShiftAssignmentId: json['requester_shift_assignment_id'] is int
+          ? json['requester_shift_assignment_id']
+          : int.tryParse(json['requester_shift_assignment_id']?.toString() ?? ''),
+      receiverShiftAssignmentId: json['receiver_shift_assignment_id'] is int
+          ? json['receiver_shift_assignment_id']
+          : int.tryParse(json['receiver_shift_assignment_id']?.toString() ?? ''),
+      requesterDate: json['requester_date']?.toString() ?? json['date_from']?.toString(),
+      receiverDate: json['receiver_date']?.toString() ?? json['date_to']?.toString(),
+      isValid: json['is_valid'] as bool?,
+      hasProblem: hasProblemVal,
+      problemMessage: json['problem_message']?.toString(),
+      problems: json['problems'] is List ? json['problems'] as List<dynamic> : null,
     );
   }
 }

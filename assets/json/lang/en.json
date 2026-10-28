@@ -1413,5 +1413,15 @@
   "current_period": "Current Period",
   "compare_period": "Comparison Period",
   "locked_period": "Locked",
-  "period_locked_info": "The time period is fixed for this report and cannot be modified."
+  "period_locked_info": "The time period is fixed for this report and cannot be modified.",
+  "shifts": "Shifts",
+  "shifts_schedule": "Shifts Schedule",
+  "shift_change_requests": "Shift Change Requests",
+  "add_shift_change_request": "Add Shift Change Request",
+  "this_week_shifts": "This Week Shifts",
+  "no_shifts_this_week": "No shifts scheduled for this week",
+  "break_time": "Break",
+  "assigned": "Assigned",
+  "swapped": "Swapped",
+  "shift": "Shift"
 }

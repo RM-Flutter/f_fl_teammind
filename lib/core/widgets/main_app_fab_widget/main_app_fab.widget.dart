@@ -36,41 +36,85 @@ class MainAppFabWidget extends StatelessWidget {
       UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
 
-    userSettingsModel = UserSettingsModel.fromJson(gCache);
-    final userSettingsFingerprints = userSettingsModel.avFingerprint;
-    List<String>? avFingerprints;
-    if (userSettingsFingerprints?.entries != null &&
-        userSettingsFingerprints?.entries.isNotEmpty == true) {
-      for (MapEntry entry in userSettingsFingerprints!.entries) {
-        if ((entry.value as String?)?.toLowerCase().trim() == 'active_all' ||
-            (entry.value as String?)?.toLowerCase().trim() == 'active_some') {
-          avFingerprints ??= [];
-          avFingerprints.add(entry.key);
-          avFingerprints.remove("fp_machine");
+    userSettingsModel = gCache != null ? UserSettingsModel.fromJson(gCache) : null;
+    final userSettingsFingerprints = userSettingsModel?.avFingerprint;
+    final allowedTypes = userSettingsModel?.allowedFingerprintTypes;
+
+    bool isTypeAllowed(String key) {
+      if (allowedTypes != null && allowedTypes.isNotEmpty) {
+        final raw = allowedTypes[key] ??
+            (key == 'custom_fp_navigate' ? allowedTypes['fp_navigate'] : null);
+        if (raw is bool) return raw;
+        if (raw != null) {
+          final s = raw.toString().toLowerCase().trim();
+          return s == 'true' || s == '1' || s == 'active_all' || s == 'active_some';
+        }
+        return false;
+      }
+      if (userSettingsFingerprints != null && userSettingsFingerprints.isNotEmpty) {
+        final raw = userSettingsFingerprints[key];
+        final s = raw?.toString().toLowerCase().trim();
+        return s == 'active_all' || s == 'active_some' || s == 'true';
+      }
+      return false;
+    }
+
+    // Standard bottom-to-top priority order ( excluding fp_machine )
+    const orderedKeys = <String>[
+      'fp_scan',
+      'fp_navigate',
+      'custom_fp_navigate',
+      'fp_wifi',
+      'fp_bluetooth',
+    ];
+
+    List<String> avFingerprints = [];
+    for (final key in orderedKeys) {
+      if (isTypeAllowed(key)) {
+        if (key == 'custom_fp_navigate' && avFingerprints.contains('fp_navigate')) {
+          continue;
+        }
+        avFingerprints.add(key);
+      }
+    }
+
+    // Include any additional keys from map if not already checked
+    if (userSettingsFingerprints != null) {
+      for (final entry in userSettingsFingerprints.entries) {
+        final k = entry.key;
+        if (k == 'fp_machine' || avFingerprints.contains(k)) continue;
+        if (k == 'custom_fp_navigate' && avFingerprints.contains('fp_navigate')) continue;
+        if (isTypeAllowed(k)) {
+          avFingerprints.add(k);
         }
       }
-      if (kIsWeb || PlatformIs.web) {
-        // On web, only allow location-based fingerprint methods
-        avFingerprints?.removeWhere((method) =>
-            method != 'fp_navigate' && method != 'custom_fp_navigate');
-        if (avFingerprints == null || avFingerprints.isEmpty) {
-          avFingerprints = ['fp_navigate']; // Force show location if empty
-        }
+    }
+
+    if (kIsWeb || PlatformIs.web) {
+      // On web, only allow location-based fingerprint methods
+      avFingerprints.removeWhere(
+          (method) => method != 'fp_navigate' && method != 'custom_fp_navigate');
+      if (avFingerprints.isEmpty && isTypeAllowed('fp_navigate')) {
+        avFingerprints = ['fp_navigate'];
       }
     }
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
         if (PackageHelper.hasPackage('fingerprint-sys') &&
-            userSettingsFingerprints != null &&
-            userSettingsFingerprints.isNotEmpty == true &&
-            avFingerprints != null &&
-            avFingerprints.isNotEmpty == true)
+            avFingerprints.isNotEmpty)
           Container(
-            margin:  EdgeInsets.only(bottom: (viewRequest == true && PackageHelper.hasPackage('emp-requests')) ? AppSizes.s75 :  35),
+            margin: EdgeInsets.only(
+                bottom: (viewRequest == true &&
+                        PackageHelper.hasPackage('emp-requests'))
+                    ? AppSizes.s75
+                    : 35),
             child: ExpandableFab(
-                distance: (avFingerprints.length < 4) ? AppSizes.s30 * 4 : AppSizes.s30 * avFingerprints.length,
-                children: avFingerprints.map(
+                distance: (avFingerprints.length < 4)
+                    ? AppSizes.s30 * 4
+                    : AppSizes.s30 * avFingerprints.length,
+                children: avFingerprints
+                    .map(
                       (String fingerprintMethod) => ActionButton(
                         icon: Icon(
                           MainFabServices.getFingerprintMethodIcon(
