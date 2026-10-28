@@ -89,14 +89,13 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     }
     final bool isCurrentUserShifts =
         us2Cache?['worktime']?['working_hours_type']?.toString() == 'shifts';
-    final bool employeeIsShifts = viewModel.employee?.workingHoursType == 'shifts' ||
-        viewModel.employee?.workingHours?.workingHoursType == 'shifts' ||
-        (viewModel.employee?.thisWeekShifts != null &&
-            viewModel.employee!.thisWeekShifts!.isNotEmpty);
 
     if (PackageHelper.hasPackage('emp-requests') &&
-        ((getTeam == false && isCurrentUserShifts) ||
-            (getTeam == true && employeeIsShifts))) {
+        isCurrentUserShifts &&
+        (getTeam == false ||
+            viewModel.employee?.workingHoursType == 'shifts' ||
+            viewModel.employee?.workingHours?.workingHoursType == 'shifts' ||
+            viewModel.employee?.thisWeekShifts != null)) {
       items.add(ProfileTabModel(title: AppStrings.shiftChangeRequests.tr(), index: 11));
     }
 

@@ -30,46 +30,6 @@ class ShiftChangeRequestsService {
     );
   }
 
-  /// GET /api/emp_requests/v1/shift-change-requests/shifts
-  static Future<OperationResult<Map<String, dynamic>>> getDepartmentShifts({
-    required BuildContext context,
-  }) async {
-    final url = '$empRequestsBaseUrl/shifts';
-    return await DioApiService().get<Map<String, dynamic>>(
-      url,
-      context: context,
-      dataKey: '',
-      allData: true,
-      checkOnTokenExpiration: true,
-    );
-  }
-
-  /// GET /api/emp_requests/v1/shift-change-requests/assignments?employee_id=...&date=...&shift_id=...
-  static Future<OperationResult<Map<String, dynamic>>> getEmployeeAssignments({
-    required BuildContext context,
-    required int employeeId,
-    required String date,
-    int? shiftId,
-  }) async {
-    final url = '$empRequestsBaseUrl/assignments';
-    final Map<String, dynamic> queryParams = {
-      'employee_id': employeeId,
-      'date': date,
-    };
-    if (shiftId != null) {
-      queryParams['shift_id'] = shiftId;
-    }
-
-    return await DioApiService().get<Map<String, dynamic>>(
-      url,
-      context: context,
-      dataKey: '',
-      queryParameters: queryParams,
-      allData: true,
-      checkOnTokenExpiration: true,
-    );
-  }
-
   /// POST /api/emp_requests/v1/shift-change-requests
   static Future<OperationResult<Map<String, dynamic>>> createShiftChangeRequest({
     required BuildContext context,

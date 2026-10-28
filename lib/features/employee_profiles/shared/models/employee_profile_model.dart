@@ -200,15 +200,15 @@ class EmployeeProfileModel {
       // json['basic_salary'] is num?
       //     ? (json['basic_salary'] as num?)?.toDouble()
       //     : num.tryParse(json['basic_salary'])?.toDouble(),
-      payrollDeductions: json['payroll_deductions'] != null
+      payrollDeductions: json['payroll_deductions'] is List
           ? List<EmpPayrollDeduction>.from(json['payroll_deductions']
               .map((item) => EmpPayrollDeduction.fromJson(item)))
           : null,
-      payrollSpecialBonus: json['payroll_special_bonus'] != null
+      payrollSpecialBonus: json['payroll_special_bonus'] is List
           ? List<EmpPayrollBonus>.from(json['payroll_special_bonus']
               .map((item) => EmpPayrollBonus.fromJson(item)))
           : null,
-      payrolls: json['payrolls'] != null
+      payrolls: json['payrolls'] is List
           ? List<EmpPayroll>.from(
               json['payrolls'].map((item) => EmpPayroll.fromJson(item)))
           : null,
@@ -746,11 +746,11 @@ class EmpPayroll {
               : (json['net_payable'] as num).toDouble())
           : null,
       status: json['status'],
-      payrollDeductions: json['payroll_deductions'] != null
+      payrollDeductions: json['payroll_deductions'] is List
           ? List<EmpPayrollDeduction>.from(json['payroll_deductions']
               .map((item) => EmpPayrollDeduction.fromJson(item)))
           : null,
-      payrollSpecialBonus: json['payroll_special_bonus'] != null
+      payrollSpecialBonus: json['payroll_special_bonus'] is List
           ? List<EmpPayrollBonus>.from(json['payroll_special_bonus']
               .map((item) => EmpPayrollBonus.fromJson(item)))
           : null,

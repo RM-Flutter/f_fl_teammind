@@ -66,8 +66,7 @@ class GeneralSectionWidget extends StatelessWidget {
     final bool isShifts = employee?.workingHoursType == "shifts" ||
         employee?.workingHours?.workingHoursType == "shifts" ||
         (isMyProfile && us2WorkingHoursType == "shifts") ||
-        (employee?.thisWeekShifts != null &&
-            employee!.thisWeekShifts!.isNotEmpty);
+        employee?.thisWeekShifts != null;
     final String? effectiveWorkingHoursType =
         (employee?.workingHoursType != null &&
                 employee!.workingHoursType!.isNotEmpty)

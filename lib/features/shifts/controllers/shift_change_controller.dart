@@ -29,15 +29,10 @@ class ShiftChangeController extends ChangeNotifier {
 
   // Scheduler Calendar & Assignments state for Add Shift Change Request
   bool isCalendarLoading = false;
-  bool isDepartmentShiftsLoading = false;
-  bool isColleagueAssignmentsLoading = false;
   String? calendarActualFrom;
   String? calendarActualTo;
   String? calendarErrorMessage;
-  String? colleagueAssignmentsError;
   List<SchedulerEmployeeModel> calendarEmployees = [];
-  List<ShiftDefinitionModel> departmentShifts = [];
-  List<ShiftAssignmentModel> colleagueAssignments = [];
 
   bool get isHrOrTopManagement {
     if (UserSettingConst.userSettings == null) return false;
@@ -282,87 +277,6 @@ class ShiftChangeController extends ChangeNotifier {
     }
 
     isCalendarLoading = false;
-    notifyListeners();
-  }
-
-  /// Fetch department shifts sorted by start time (GET /shifts)
-  Future<void> fetchDepartmentShifts(BuildContext context) async {
-    isDepartmentShiftsLoading = true;
-    notifyListeners();
-
-    try {
-      final response = await ShiftChangeRequestsService.getDepartmentShifts(
-        context: context,
-      );
-
-      if (response.success &&
-          response.data != null &&
-          response.data!['status'] == true &&
-          response.data!['shifts'] is List) {
-        final List<dynamic> shiftsList = response.data!['shifts'];
-        departmentShifts = shiftsList
-            .whereType<Map<String, dynamic>>()
-            .map((e) => ShiftDefinitionModel.fromJson(e))
-            .toList();
-      } else {
-        departmentShifts = [];
-      }
-    } catch (e) {
-      debugPrint("Error fetching department shifts: $e");
-      departmentShifts = [];
-    }
-
-    isDepartmentShiftsLoading = false;
-    notifyListeners();
-  }
-
-  void clearColleagueAssignmentsLookup() {
-    colleagueAssignments = [];
-    colleagueAssignmentsError = null;
-    notifyListeners();
-  }
-
-  /// Fetch colleague's assignments on a given date (GET /assignments)
-  Future<void> fetchColleagueAssignments(
-    BuildContext context, {
-    required int employeeId,
-    required String date,
-    int? shiftId,
-  }) async {
-    isColleagueAssignmentsLoading = true;
-    colleagueAssignmentsError = null;
-    notifyListeners();
-
-    try {
-      final response = await ShiftChangeRequestsService.getEmployeeAssignments(
-        context: context,
-        employeeId: employeeId,
-        date: date,
-        shiftId: shiftId,
-      );
-
-      if (response.success &&
-          response.data != null &&
-          response.data!['status'] == true &&
-          response.data!['assignments'] is List) {
-        final List<dynamic> assignList = response.data!['assignments'];
-        colleagueAssignments = assignList
-            .whereType<Map<String, dynamic>>()
-            .map((e) => ShiftAssignmentModel.fromJson(e))
-            .toList();
-      } else {
-        colleagueAssignments = [];
-        final errMsg = response.data?['message']?.toString() ?? response.message;
-        if (errMsg != null && errMsg.trim().isNotEmpty) {
-          colleagueAssignmentsError = errMsg.trim();
-        }
-      }
-    } catch (e) {
-      debugPrint("Error fetching colleague assignments: $e");
-      colleagueAssignments = [];
-    }
-
-    isColleagueAssignmentsLoading = false;
     notifyListeners();
   }
 
