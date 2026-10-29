@@ -35,6 +35,82 @@ class ComplaintsController extends ChangeNotifier {
  String? errorAddCommentMessage;
  String? errorAddRequestMessage;
  final picker = ImagePicker();
+
+ // Complaints and Suggestions
+ String complainType = 'complaint'; // 'complaint', 'suggestion', 'other'
+ String complainRelatedTo = 'department'; // 'department', 'person'
+ String? selectedComplainDepartmentId;
+ String? selectedComplainEmployeeId;
+ List<Map<String, dynamic>> complainDepartments = [];
+ List<Map<String, dynamic>> complainEmployees = [];
+ bool isComplainLoadingData = false;
+
+ void setComplainType(String type) {
+  complainType = type;
+  notifyListeners();
+ }
+
+ void setComplainRelatedTo(String relatedTo) {
+  complainRelatedTo = relatedTo;
+  notifyListeners();
+ }
+
+ void setComplainDepartment(String? departmentId) {
+  selectedComplainDepartmentId = departmentId;
+  selectDepartment = departmentId;
+  notifyListeners();
+ }
+
+ void setComplainEmployee(String? employeeId) {
+  selectedComplainEmployeeId = employeeId;
+  notifyListeners();
+ }
+
+ Future<void> fetchComplainData(BuildContext context) async {
+  isComplainLoadingData = true;
+  notifyListeners();
+  try {
+   final depResponse = await DioHelper.getData(
+    url: "/rm_general/v1/json/departments",
+    context: context,
+   );
+   if (depResponse.data is List) {
+    complainDepartments = (depResponse.data as List).map<Map<String, dynamic>>((e) {
+     return <String, dynamic>{
+      'id': e['value']?.toString() ?? e['id']?.toString(),
+      'name': e['label']?.toString() ?? e['name']?.toString() ?? e['title']?.toString(),
+     };
+    }).toList();
+   } else if (depResponse.data != null && depResponse.data['data'] is List) {
+    complainDepartments = (depResponse.data['data'] as List).map<Map<String, dynamic>>((e) {
+     return <String, dynamic>{
+      'id': e['id']?.toString() ?? e['value']?.toString(),
+      'name': e['title']?.toString() ?? e['name']?.toString() ?? e['label']?.toString(),
+     };
+    }).toList();
+   }
+
+   final empResponse = await DioHelper.getData(
+    url: "/emp_requests/v1/employees",
+    context: context,
+   );
+   if (empResponse.data != null && empResponse.data['employees'] is List) {
+    complainEmployees = (empResponse.data['employees'] as List).map<Map<String, dynamic>>((e) {
+     return <String, dynamic>{
+      'id': e['id']?.toString(),
+      'name': e['name']?.toString() ?? '',
+      'job_title': e['job_title']?.toString() ?? '',
+      'department': e['department']?.toString() ?? '',
+     };
+    }).toList();
+   }
+  } catch (e) {
+   debugPrint("Error fetching complain data: $e");
+  } finally {
+   isComplainLoadingData = false;
+   notifyListeners();
+  }
+ }
  bool hasMore = true;
  final ScrollController controller = ScrollController();
  final int expectedPageSize = 9;
@@ -320,38 +396,43 @@ class ComplaintsController extends ChangeNotifier {
  Future<void> addRequest(BuildContext context, {List<XFile>? images}) async {
   isAddRequestLoading = true;
   notifyListeners();
-  var response;
-  FormData formData = FormData.fromMap({
-   if(subjectController.text != null && subjectController.text.isNotEmpty)"title" : subjectController.text,
-   if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
-   "type_id" : selectDepartment.toString(),
-   "main_thumbnail[]": images != null
-     ? await Future.wait(
-     images.map((file) async => await MultipartFile.fromFile(file.path, filename: file.name))
-   )
-     : [],
-  });
   try {
-   if(images != null && images.isNotEmpty){
-    response = await DioHelper.postData(
-      url: "/rm_postcontrol/v1/add_request",
-      context: context,
-      data: formData
-    );
-   }else{
-    response = await DioHelper.postData(
-      url: "/rm_postcontrol/v1/add_request",
-      context: context,
-      data: {
-       if(subjectController.text != null && subjectController.text.isNotEmpty) "title" : subjectController.text,
-       if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
-       "type_id" : selectDepartment.toString(),
-      }
+   final Map<String, dynamic> formMap = {
+    if (subjectController.text.isNotEmpty) "title": subjectController.text,
+    if (detailsController.text.isNotEmpty) "content": detailsController.text,
+    "type": complainType,
+    "related_to": complainRelatedTo,
+   };
+
+   if (complainRelatedTo == 'person') {
+    if (selectedComplainEmployeeId != null && selectedComplainEmployeeId!.isNotEmpty) {
+     formMap["related_profile_id"] = selectedComplainEmployeeId;
+    }
+   } else {
+    if (selectedComplainDepartmentId != null && selectedComplainDepartmentId!.isNotEmpty) {
+     formMap["department_id"] = selectedComplainDepartmentId;
+    } else if (selectDepartment != null && selectDepartment!.isNotEmpty) {
+     formMap["department_id"] = selectDepartment;
+    }
+   }
+
+   if (images != null && images.isNotEmpty) {
+    formMap["main_thumbnail[]"] = await Future.wait(
+     images.map((file) async => await MultipartFile.fromFile(file.path, filename: file.name)),
     );
    }
-   if(response.data['status']== false){
+
+   FormData formData = FormData.fromMap(formMap);
+
+   final response = await DioHelper.postData(
+    url: "/emp_requests/v1/complain",
+    context: context,
+    data: formData,
+   );
+
+   if (response.data['status'] == false) {
     Fluttertoast.showToast(
-      msg: response.data['message'],
+      msg: response.data['message'] ?? 'Failed to send request',
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 5,
@@ -359,7 +440,7 @@ class ComplaintsController extends ChangeNotifier {
       textColor: Colors.white,
       fontSize: 16.0,
     );
-   }else{
+   } else {
     isAddRequestSuccess = true;
     showModalBottomSheet(
      context: context,
@@ -370,14 +451,12 @@ class ComplaintsController extends ChangeNotifier {
      },
     );
    }
-   isAddRequestLoading = false;
-   notifyListeners();
   } catch (error) {
-   errorAddRequestMessage = error is DioError
+   errorAddRequestMessage = error is DioException
      ? error.response?.data['message'] ?? 'Something went wrong'
      : error.toString();
    Fluttertoast.showToast(
-     msg:errorAddRequestMessage!,
+     msg: errorAddRequestMessage!,
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,
      timeInSecForIosWeb: 5,
@@ -388,7 +467,6 @@ class ComplaintsController extends ChangeNotifier {
   } finally {
    isAddRequestLoading = false;
    notifyListeners();
-
   }
  }
  Future<File?> _compressImage(File file) async {

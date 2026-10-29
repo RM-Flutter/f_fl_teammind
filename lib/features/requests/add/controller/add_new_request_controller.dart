@@ -31,7 +31,7 @@ import 'package:image_picker/image_picker.dart';
 class AddNewRequestController extends ChangeNotifier {
   Map<String, dynamic>? selectedRequestType;
   String? selectReqId;
-  bool? isAddRequestLoading = false;
+  bool isAddRequestLoading = false;
   String? errorAddRequestMessage;
   List<Map<String, dynamic>>? requestsTypes;
   TextEditingController controller = TextEditingController();
@@ -63,6 +63,84 @@ class AddNewRequestController extends ChangeNotifier {
   bool isLoading = false;
   String? selectedRequestTypes;
   final picker = ImagePicker();
+
+  // Complaints and Suggestions
+  String complainType = 'complaint'; // 'complaint', 'suggestion', 'other'
+  String complainRelatedTo = 'department'; // 'department', 'person'
+  String? selectedComplainDepartmentId;
+  String? selectedComplainEmployeeId;
+  List<Map<String, dynamic>> complainDepartments = [];
+  List<Map<String, dynamic>> complainEmployees = [];
+  bool isComplainLoadingData = false;
+
+  void setComplainType(String type) {
+    complainType = type;
+    notifyListeners();
+  }
+
+  void setComplainRelatedTo(String relatedTo) {
+    complainRelatedTo = relatedTo;
+    notifyListeners();
+  }
+
+  void setComplainDepartment(String? departmentId) {
+    selectedComplainDepartmentId = departmentId;
+    selectedRequestTypes = departmentId;
+    notifyListeners();
+  }
+
+  void setComplainEmployee(String? employeeId) {
+    selectedComplainEmployeeId = employeeId;
+    notifyListeners();
+  }
+
+  Future<void> fetchComplainData(BuildContext context) async {
+    isComplainLoadingData = true;
+    notifyListeners();
+    try {
+      // 1. Fetch departments from /rm_general/v1/json/departments
+      final depResponse = await DioHelper.getData(
+        url: "/rm_general/v1/json/departments",
+        context: context,
+      );
+      if (depResponse.data is List) {
+        complainDepartments = (depResponse.data as List).map<Map<String, dynamic>>((e) {
+          return <String, dynamic>{
+            'id': e['value']?.toString() ?? e['id']?.toString(),
+            'name': e['label']?.toString() ?? e['name']?.toString() ?? e['title']?.toString(),
+          };
+        }).toList();
+      } else if (depResponse.data != null && depResponse.data['data'] is List) {
+        complainDepartments = (depResponse.data['data'] as List).map<Map<String, dynamic>>((e) {
+          return <String, dynamic>{
+            'id': e['id']?.toString() ?? e['value']?.toString(),
+            'name': e['title']?.toString() ?? e['name']?.toString() ?? e['label']?.toString(),
+          };
+        }).toList();
+      }
+
+      // 2. Fetch employees from /emp_requests/v1/employees
+      final empResponse = await DioHelper.getData(
+        url: "/emp_requests/v1/employees",
+        context: context,
+      );
+      if (empResponse.data != null && empResponse.data['employees'] is List) {
+        complainEmployees = (empResponse.data['employees'] as List).map<Map<String, dynamic>>((e) {
+          return <String, dynamic>{
+            'id': e['id']?.toString(),
+            'name': e['name']?.toString() ?? '',
+            'job_title': e['job_title']?.toString() ?? '',
+            'department': e['department']?.toString() ?? '',
+          };
+        }).toList();
+      }
+    } catch (e) {
+      debugPrint("Error fetching complain data: $e");
+    } finally {
+      isComplainLoadingData = false;
+      notifyListeners();
+    }
+  }
   List status = [
     "waiting", "waiting_seen", "approved", "refused", "canceled"
   ];
@@ -1065,59 +1143,62 @@ class AddNewRequestController extends ChangeNotifier {
     }
   }
   Future<void> createNewComplaint(BuildContext context, {List<XFile>? images}) async {
-    // images = listAttachmentPersonalImage
-    //      .map((e) => XFile(e["upload"].path)) // تحويل File → XFile
-    //      .toList();
     isAddRequestLoading = true;
     notifyListeners();
-    var response;
-    FormData formData = FormData.fromMap({
-      if(subjectController.text != null && subjectController.text.isNotEmpty)"title" : subjectController.text,
-      if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
-      "department_id" : selectedRequestTypes.toString(),
-      "main_thumbnail[]": images != null
-          ? !kIsWeb? await Future.wait(
-          images.map((file) async =>await MultipartFile.fromFile(file.path, filename: file.name))
-      ):await Future.wait(
-        images.map((file) async {
-          final bytes = await file.readAsBytes();
-          return MultipartFile.fromBytes(
-            bytes,
-            filename: file.name,
-          );
-        }),
-      )
-          : [],
-    });
     try {
-      if(images != null && images.isNotEmpty){
-        response = await DioHelper.postData(
-            url: "/emp_requests/v1/complain",
-            context: context,
-            data: formData
-        );
-      }else{
-        response = await DioHelper.postData(
-            url: "/emp_requests/v1/complain",
-            context: context,
-            data: {
-              if(subjectController.text != null && subjectController.text.isNotEmpty) "title" : subjectController.text,
-              if(detailsController.text != null && detailsController.text.isNotEmpty) "content" : detailsController.text,
-              "department_id" : selectedRequestTypes.toString(),
-            }
-        );
+      final Map<String, dynamic> formMap = {
+        if (subjectController.text.isNotEmpty) "title": subjectController.text,
+        if (detailsController.text.isNotEmpty) "content": detailsController.text,
+        "type": complainType, // complaint | suggestion | other
+        "related_to": complainRelatedTo, // person | department
+      };
+
+      if (complainRelatedTo == 'person') {
+        if (selectedComplainEmployeeId != null && selectedComplainEmployeeId!.isNotEmpty) {
+          formMap["related_profile_id"] = selectedComplainEmployeeId;
+        }
+      } else {
+        if (selectedComplainDepartmentId != null && selectedComplainDepartmentId!.isNotEmpty) {
+          formMap["department_id"] = selectedComplainDepartmentId;
+        } else if (selectedRequestTypes != null && selectedRequestTypes!.isNotEmpty) {
+          formMap["department_id"] = selectedRequestTypes;
+        }
       }
-      if(response.data['status']== false){
+
+      if (images != null && images.isNotEmpty) {
+        if (!kIsWeb) {
+          formMap["main_thumbnail[]"] = await Future.wait(
+            images.map((file) async => await MultipartFile.fromFile(file.path, filename: file.name)),
+          );
+        } else {
+          formMap["main_thumbnail[]"] = await Future.wait(
+            images.map((file) async {
+              final bytes = await file.readAsBytes();
+              return MultipartFile.fromBytes(bytes, filename: file.name);
+            }),
+          );
+        }
+      }
+
+      FormData formData = FormData.fromMap(formMap);
+
+      final response = await DioHelper.postData(
+        url: "/emp_requests/v1/complain",
+        context: context,
+        data: formData,
+      );
+
+      if (response.data['status'] == false) {
         Fluttertoast.showToast(
-            msg: response.data['message'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
+          msg: response.data['message'] ?? 'Failed to send request',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
-      }else{
+      } else {
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
@@ -1127,7 +1208,6 @@ class AddNewRequestController extends ChangeNotifier {
               title: AppStrings.goToComplain.tr().toUpperCase(),
               onTap: () async {
                 Navigator.pop(context); // close bottom sheet
-                // Use goNamed directly, GoRouter will handle clearing the stack up to complainScreen
                 GoRouter.of(context).goNamed(
                   AppRoutes.complainScreen.name,
                   pathParameters: {'lang': context.locale.languageCode},
@@ -1137,25 +1217,22 @@ class AddNewRequestController extends ChangeNotifier {
           },
         );
       }
-      isAddRequestLoading = false;
-      notifyListeners();
     } catch (error) {
-      errorAddRequestMessage = error is DioError
+      errorAddRequestMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
       Fluttertoast.showToast(
-          msg:errorAddRequestMessage!,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
+        msg: errorAddRequestMessage!,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     } finally {
       isAddRequestLoading = false;
       notifyListeners();
-
     }
   }
   Future<File?> _compressImage(File file) async {

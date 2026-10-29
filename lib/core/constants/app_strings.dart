@@ -1171,4 +1171,12 @@ abstract class AppStrings {
   static const thisWeekShifts = "this_week_shifts";
   static const noShiftsThisWeek = "no_shifts_this_week";
   static const breakTime = "break_time";
+
+  // Complaints and Suggestions
+  static const suggestion = "suggestion";
+  static const relatedTo = "relatedTo";
+  static const person = "person";
+  static const selectEmployee = "selectEmployee";
+  // static const selectDepartment = "selectDepartment";
+  // static const requestType = "requestType";
 }

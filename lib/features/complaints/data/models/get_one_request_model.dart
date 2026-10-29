@@ -26,6 +26,10 @@ class GetOneComplainsRequestModel {
 
 class Complain {
  int? id;
+ String? type;
+ String? relatedTo;
+ int? relatedProfileId;
+ RelatedProfile? relatedProfile;
  int? departmentId;
  String? departmentName;
  String? commentStatus;
@@ -39,6 +43,10 @@ class Complain {
  Ptype? pType;
  Complain(
    {this.id,
+    this.type,
+    this.relatedTo,
+    this.relatedProfileId,
+    this.relatedProfile,
     this.pType,
     this.departmentId,
     this.departmentName,
@@ -53,6 +61,12 @@ class Complain {
 
  Complain.fromJson(Map<String, dynamic> json) {
   id = json['id'];
+  type = json['type'];
+  relatedTo = json['related_to'];
+  relatedProfileId = json['related_profile_id'];
+  relatedProfile = json['related_profile'] != null
+    ? RelatedProfile.fromJson(json['related_profile'])
+    : null;
   departmentName = json['department_name'];
   departmentId = json['department_id'];
   subject = json['subject'];
@@ -76,6 +90,12 @@ class Complain {
  Map<String, dynamic> toJson() {
   final Map<String, dynamic> data = new Map<String, dynamic>();
   data['id'] = this.id;
+  data['type'] = this.type;
+  data['related_to'] = this.relatedTo;
+  data['related_profile_id'] = this.relatedProfileId;
+  if (this.relatedProfile != null) {
+   data['related_profile'] = this.relatedProfile!.toJson();
+  }
   data['department_id'] = this.departmentId;
   data['subject'] = this.subject;
   data['details'] = this.details;
@@ -89,6 +109,25 @@ class Complain {
   }
   data['created_at'] = this.createdAt;
   data['pstatus'] = this.pstatus;
+  return data;
+ }
+}
+
+class RelatedProfile {
+ int? id;
+ String? name;
+
+ RelatedProfile({this.id, this.name});
+
+ RelatedProfile.fromJson(Map<String, dynamic> json) {
+  id = json['id'];
+  name = json['name'];
+ }
+
+ Map<String, dynamic> toJson() {
+  final Map<String, dynamic> data = <String, dynamic>{};
+  data['id'] = id;
+  data['name'] = name;
   return data;
  }
 }

@@ -1421,5 +1421,11 @@
   "break_time": "وقت الاستراحة",
   "assigned": "معين",
   "swapped": "مُبدّل",
-  "shift": "شيفت"
+  "shift": "شيفت",
+  "suggestion": "اقتراح",
+  "relatedTo": "الجهة المعنية",
+  "person": "موظف",
+  "selectEmployee": "اختر الموظف",
+  "selectDepartment": "اختر الإدارة",
+  "requestType": "نوع الطلب"
 }

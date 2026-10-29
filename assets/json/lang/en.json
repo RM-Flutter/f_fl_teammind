@@ -1423,5 +1423,11 @@
   "break_time": "Break",
   "assigned": "Assigned",
   "swapped": "Swapped",
-  "shift": "Shift"
+  "shift": "Shift",
+  "suggestion": "Suggestion",
+  "relatedTo": "Related to",
+  "person": "Employee",
+  "selectEmployee": "Select Employee",
+  "selectDepartment": "Select Department",
+  "requestType": "Request Type"
 }

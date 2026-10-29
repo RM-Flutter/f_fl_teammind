@@ -138,11 +138,20 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                  var request = value.requests[index];
+                 final String? reqType = request['type']?.toString();
+                 final String? relTo = request['related_to']?.toString();
+                 final String? target = relTo == 'person'
+                     ? (request['related_profile'] != null ? request['related_profile']['name']?.toString() : null)
+                     : request['department_name']?.toString();
+
                  return defaultRequestContainer(
                     "mine",
                     id: request['id'],
                     containerColor: Colors.white,
                     title: request['subject'],
+                    requestType: reqType,
+                    relatedTo: relTo,
+                    targetName: target,
                     date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
                       .format(DateTime.parse(request['created_at'].toString())),
                     status: request['pstatus'].toString().tr(),
@@ -167,11 +176,20 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                  var request = value.requestsTeam[index];
+                 final String? reqType = request['type']?.toString();
+                 final String? relTo = request['related_to']?.toString();
+                 final String? target = relTo == 'person'
+                     ? (request['related_profile'] != null ? request['related_profile']['name']?.toString() : null)
+                     : request['department_name']?.toString();
+
                  return defaultRequestContainer(
                     "myTeam",
                     id: request['id'],
                     containerColor: Colors.white,
                     title: request['subject'],
+                    requestType: reqType,
+                    relatedTo: relTo,
+                    targetName: target,
                     date: DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
                       .format(DateTime.parse(request['created_at'].toString())),
                     status: request['pstatus'].toString().tr(),
@@ -207,6 +225,9 @@ class _ComplainScreenState extends State<ComplainScreen> {
     Color? titleColor,
     Color? dateColor,
     required dynamic id,
+    String? requestType,
+    String? relatedTo,
+    String? targetName,
   }) {
     IconData statusIcon;
     Color iconColor;
@@ -246,7 +267,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
         ),
         shadows: [
           BoxShadow(
-            color: Color(AppColors.disableButton).withOpacity(0.5),
+            color: Color(AppColors.disableButton).withValues(alpha: 0.5),
             blurRadius: AppSizes.s5,
             spreadRadius: 1,
           )
@@ -270,6 +291,39 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if ((requestType != null && requestType.isNotEmpty) ||
+                      (targetName != null && targetName.isNotEmpty)) ...[
+                    Row(
+                      children: [
+                        if (requestType != null && requestType.isNotEmpty) ...[
+                          _buildTypeBadge(requestType, context),
+                          const SizedBox(width: 8),
+                        ],
+                        if (targetName != null && targetName.isNotEmpty) ...[
+                          Icon(
+                            relatedTo == 'person'
+                                ? Icons.person_outline
+                                : Icons.business_outlined,
+                            size: 13,
+                            color: Colors.grey.shade600,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              targetName,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                  ],
                   Text(
                     "$title",
                     style: AppStyles.blackContent(context).copyWith(
@@ -281,7 +335,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 6),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       Text(
@@ -293,18 +347,15 @@ class _ComplainScreenState extends State<ComplainScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text("|", style: TextStyle(color: Colors.grey.withOpacity(0.3))),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text("|", style: TextStyle(color: Colors.grey.shade400)),
                       ),
-                      Opacity(
-                        opacity: 0.7,
-                        child: Text(
-                          date,
-                          style: AppStyles.greyContent(context).copyWith(
-                            color: Color(AppColors.divider),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                          ),
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: dateColor ?? Colors.grey.shade700,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -320,6 +371,59 @@ class _ComplainScreenState extends State<ComplainScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTypeBadge(String? type, BuildContext context) {
+    if (type == null || type.isEmpty) return const SizedBox.shrink();
+    Color bgColor;
+    Color textColor;
+    String label;
+    IconData icon;
+
+    switch (type.toLowerCase()) {
+      case 'suggestion':
+        bgColor = const Color(0xFFE8F5E9);
+        textColor = const Color(0xFF2E7D32);
+        label = AppStrings.suggestion.tr();
+        icon = Icons.lightbulb_outline;
+        break;
+      case 'other':
+        bgColor = const Color(0xFFEDE7F6);
+        textColor = const Color(0xFF512DA8);
+        label = AppStrings.other.tr();
+        icon = Icons.more_horiz;
+        break;
+      case 'complaint':
+      default:
+        bgColor = const Color(0xFFFFEBEE);
+        textColor = const Color(0xFFC62828);
+        label = AppStrings.complaint.tr();
+        icon = Icons.report_problem_outlined;
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: textColor),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+        ],
       ),
     );
   }
