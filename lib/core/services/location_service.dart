@@ -104,12 +104,14 @@ abstract class LocationService {
       bool isLowAccuracy = accuracy > 100; // أكثر من 100 متر يعتبر دقة منخفضة
 
       // التحقق من speed - إذا كانت speed غير منطقية قد تكون fake
+      // ملاحظة: السرعة السالبة (< 0 أو -1.0) في نظام أندرويد تعني أن السرعة غير متوفرة (Speed not available)
+      // عندما يكون الجهاز ثابتاً، وليست تلاعباً. نعتبرها مشبوهة فقط إذا كانت سرعة خيالية وغير منطقية (> 300 م/ث).
       double speed = position.speed;
-      bool isSuspiciousSpeed = speed < 0;
+      bool isSuspiciousSpeed = speed.isFinite && speed > 300;
 
       // التحقق من altitude - إذا كانت altitude غير منطقية قد تكون fake
       double altitude = position.altitude;
-      bool isSuspiciousAltitude = altitude < -500 || altitude > 10000;
+      bool isSuspiciousAltitude = altitude.isFinite && (altitude < -500 || altitude > 10000);
 
       bool isFakeGPS = isMockLocation || isLowAccuracy || isSuspiciousSpeed || isSuspiciousAltitude;
 
