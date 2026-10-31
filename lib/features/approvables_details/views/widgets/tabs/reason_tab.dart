@@ -209,27 +209,6 @@ class ReasonTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                isTwoWay ? Icons.swap_horiz_rounded : Icons.arrow_forward_rounded,
-                color: Color(AppColors.buttons),
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isTwoWay
-                    ? (isArabic ? 'تبديل شيفت بين طرفين' : 'Two-Way Shift Swap')
-                    : (isArabic ? 'تحويل شيفت لموظف آخر' : 'One-Way Shift Transfer'),
-                style: AppStyles.primaryContent(context).copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: Color(AppColors.buttons),
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: 20),
           // Party 1: Requester
           _buildPartyRow(
             context: context,

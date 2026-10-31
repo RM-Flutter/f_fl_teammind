@@ -128,12 +128,12 @@ class DepartmentModel {
           ? WorkingHoursType.fromJson(
               json['working_hours_type'] as Map<String, dynamic>)
           : null,
-      dailyWorkingHours: json['daily_working_hours'] as String?,
-      allowedDelayMinutes: json['allowed_delay_minutes'] as String?,
-      workingHoursFrom: json['working_hours_from'] as String?,
-      workingHoursTo: json['working_hours_to'] as String?,
-      workingHoursFromStart: json['working_hours_from_start'] as String?,
-      workingHoursFromEnd: json['working_hours_from_end'] as String?,
+      dailyWorkingHours: json['daily_working_hours']?.toString(),
+      allowedDelayMinutes: json['allowed_delay_minutes']?.toString(),
+      workingHoursFrom: json['working_hours_from']?.toString(),
+      workingHoursTo: json['working_hours_to']?.toString(),
+      workingHoursFromStart: json['working_hours_from_start']?.toString(),
+      workingHoursFromEnd: json['working_hours_from_end']?.toString(),
       requestTypes: (json['request_types'] as List<dynamic>?)
           ?.map((e) => RequestType.fromJson(e as Map<String, dynamic>))
           .toList(),

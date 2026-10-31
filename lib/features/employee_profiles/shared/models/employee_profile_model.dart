@@ -470,13 +470,13 @@ class EmpWorkingHours {
 
   factory EmpWorkingHours.fromJson(Map<String, dynamic> json) {
     return EmpWorkingHours(
-      dailyWorkingHours: json['daily_working_hours'],
-      dailyWorkingHoursStart: json['working_hours_from_start'],
-      dailyWorkingHoursEnd: json['working_hours_from_end'],
-      dailyWorkingHoursFrom: json['working_hours_from'],
-      allowedDelayMinutes: json['allowed_delay_minutes'],
-      dailyWorkingHoursTo: json['working_hours_to'],
-      workingHoursType: json['working_hours_type'],
+      dailyWorkingHours: json['daily_working_hours']?.toString(),
+      dailyWorkingHoursStart: json['working_hours_from_start']?.toString(),
+      dailyWorkingHoursEnd: json['working_hours_from_end']?.toString(),
+      dailyWorkingHoursFrom: json['working_hours_from']?.toString(),
+      allowedDelayMinutes: json['allowed_delay_minutes']?.toString(),
+      dailyWorkingHoursTo: json['working_hours_to']?.toString(),
+      workingHoursType: json['working_hours_type']?.toString(),
     );
   }
 
