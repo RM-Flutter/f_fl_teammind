@@ -18,6 +18,7 @@ import '../services/backend_services/api_service/dio_api_service/shared.dart';
 import '../services/layout_service.dart';
 import '../services/localization_service.dart';
 import '../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'fade_slide_in.dart';
 
 class VacationListWidget extends StatelessWidget {
   final bool? isInRequestsPage;
@@ -25,9 +26,12 @@ class VacationListWidget extends StatelessWidget {
   final double? paddingBetweenVocations;
   final double? sectionPadding;
   final List<RequestModel>? requests;
+  /// Slide the cards in one by one when first shown (used on the home page).
+  final bool animateEntrance;
 
   const VacationListWidget(
       {super.key,
+        this.animateEntrance = false,
         this.requests,
         required this.tap,
         this.paddingBetweenVocations = AppSizes.s12,
@@ -160,7 +164,17 @@ class VacationListWidget extends StatelessWidget {
                         3,
                     height: 110,
                   )))
-              : vacationWidgets,
+              : (animateEntrance
+                  ? [
+                      for (int i = 0; i < vacationWidgets.length; i++)
+                        FadeSlideIn(
+                          delay: Duration(milliseconds: 150 * i),
+                          offsetX: LocalizationService.isArabic(context: context) ? -0.5 : 0.5,
+                          offsetY: 0,
+                          child: vacationWidgets[i],
+                        ),
+                    ]
+                  : vacationWidgets),
         ),
       ),
     );

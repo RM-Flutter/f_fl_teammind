@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app_test/core/helpers/package_helper.dart';
+import 'package:app_test/core/widgets/fade_slide_in.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/cache_constants.dart';
@@ -501,7 +502,11 @@ class _HomeScreenState extends State<HomeScreen> {
         bottom: AppSizes.s12,
         top: AppSizes.s8,
       ),
-      child: Material(
+      child: FadeSlideIn(
+        delay: Duration(milliseconds: 90 * index),
+        offsetY: 0.02,
+        beginScale: 1,
+        child: Material(
         color: Colors.transparent,
         child: Stack(
           children: [
@@ -583,6 +588,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
           ],
         ),
+      ),
       ),
     );
   }

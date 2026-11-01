@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
+import 'package:app_test/core/widgets/fade_slide_in.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/widgets/request_card.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -77,22 +78,25 @@ class RequestsWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-              ...requests.take(5).map(
-                (req) => ApprovableCardWidget(
-                  request: req,
+              ...requests.take(5).toList().asMap().entries.map(
+                (entry) => ScrollRevealItem(
+                  initialDelay: Duration(milliseconds: 120 * entry.key),
+                  child: ApprovableCardWidget(
+                  request: entry.value,
                   isForDepartment: requestType != GetRequestsTypes.mine,
                   onActionTaken: onActionTaken,
                   onTap: () async => await context.pushNamed(
                     AppRoutes.requestDetails.name,
-                    extra: req,
+                    extra: entry.value,
                     pathParameters: {
                       'type': requestType.name,
-                      'id': req!.id.toString(),
+                      'id': entry.value!.id.toString(),
                       'lang': context.locale.languageCode,
                     },
                   ),
                 ),
               )
+                ),
             ],
           ),
         );

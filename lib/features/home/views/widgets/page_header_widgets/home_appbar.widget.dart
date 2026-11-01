@@ -304,6 +304,7 @@ class HomeAppbarWidget extends StatelessWidget {
                               child: VacationListWidget(
                                 requests: requests,
                                 tap: true,
+                                animateEntrance: true,
                               ),
                             ),
                           ),
