@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -111,7 +112,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               await launchUrl(uri, mode: LaunchMode.externalApplication);
             }
 
-            Fluttertoast.showToast(
+            AppToast.showToast(
               msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
               backgroundColor: Colors.green,
               textColor: Colors.white,
@@ -127,7 +128,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
             } catch (e2) {
-              Fluttertoast.showToast(
+              AppToast.showToast(
                 msg: 'Error opening file: $e2',
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
@@ -138,7 +139,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           }
         }
       } catch (e) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: 'Error downloading file: $e',
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -187,7 +188,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
       if (mounted) Navigator.of(context).pop();
       await OpenFilex.open(filePath);
       if (mounted) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
           backgroundColor: Colors.green,
           textColor: Colors.white,
@@ -197,7 +198,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     } catch (e) {
       if (mounted) Navigator.of(context).pop();
       if (mounted) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: '$e',
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -240,7 +241,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
   Future<void> _downloadSingleFile(String fileUrl, String fileName) async {
     final permissionGranted = await requestStoragePermission();
     if (!permissionGranted) {
-      Fluttertoast.showToast(msg: 'Storage permission is required to download files.');
+      AppToast.showToast(msg: 'Storage permission is required to download files.');
       return;
     }
     try {
@@ -359,7 +360,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                     msg: request.status.toString().tr(),
                                     backgroundColor: request.status == "canceled" || request.status == "refused"
                                         ? Colors.red

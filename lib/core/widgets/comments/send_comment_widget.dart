@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:app_test/core/platform/platform_is.dart';
@@ -77,7 +78,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
       print("Error starting recording: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error starting recording: $e")),
+          SnackBar(content: Text(AppErrorReporter.safeMessage(e))),
         );
       }
     }
@@ -214,7 +215,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
             print("Error stopping recording: $e");
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error stopping recording: $e")),
+                SnackBar(content: Text(AppErrorReporter.safeMessage(e))),
               );
             }
           } finally {

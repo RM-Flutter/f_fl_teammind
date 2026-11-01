@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -121,7 +122,7 @@ class PayrollDetailsViewModel extends ChangeNotifier {
       isLoadingPdf = false;
       AlertsService.error(
           context: context,
-          message: e.toString(),
+          message: AppErrorReporter.safeMessage(e),
           title: AppStrings.failed.tr());
       notifyListeners();
     }

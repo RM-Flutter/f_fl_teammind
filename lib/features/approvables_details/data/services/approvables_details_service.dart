@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class ApprovablesDetailsService {
       );
     } catch (e) {
       debugPrint("Error in getApprovableDetails: $e");
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 
@@ -68,7 +69,7 @@ class ApprovablesDetailsService {
         message: response.data?['message']?.toString() ?? 'Failed to send remember',
       );
     } catch (e) {
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 
@@ -98,7 +99,7 @@ class ApprovablesDetailsService {
         message: response.data?['message']?.toString() ?? 'Failed to send ask ignore',
       );
     } catch (e) {
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 
@@ -133,7 +134,7 @@ class ApprovablesDetailsService {
       );
     } catch (e) {
       debugPrint("Error in getCurrentLevelApprovers: $e");
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 
@@ -190,7 +191,7 @@ class ApprovablesDetailsService {
       );
     } catch (e) {
       debugPrint("Error in takeAction: $e");
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 
@@ -249,7 +250,7 @@ class ApprovablesDetailsService {
       );
     } catch (e) {
       debugPrint("Error in takeActionAsSomeoneElse: $e");
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 
@@ -278,7 +279,7 @@ class ApprovablesDetailsService {
       );
     } catch (e) {
       debugPrint('Error in getOverlappingVacations: $e');
-      return OperationResult(success: false, message: e.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(e));
     }
   }
 }

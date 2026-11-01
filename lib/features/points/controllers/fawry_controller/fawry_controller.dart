@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -201,7 +202,7 @@ class FawryController extends ChangeNotifier {
               message: response.data['message'],
             );
           }else{
-            Fluttertoast.showToast(
+            AppToast.showToast(
                 msg:response.data['message'],
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
@@ -315,7 +316,7 @@ class FawryController extends ChangeNotifier {
         );
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Fluttertoast.showToast(
+          AppToast.showToast(
               msg: response.data['message'],
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,

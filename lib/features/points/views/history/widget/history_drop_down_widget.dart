@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +15,7 @@ class HistoryDropDownWidget extends StatelessWidget {
   HistoryDropDownWidget({this.code, this.notes});
   void copyToClipboard(BuildContext context, {text}) {
     Clipboard.setData(ClipboardData(text: text));
-    Fluttertoast.showToast(
+    AppToast.showToast(
         msg: AppStrings.textCopiedToClipboard.tr(),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,

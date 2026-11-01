@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:app_test/features/points/views/prize/widgets/raya/widgets/bottom_sheet_external_success.dart';
 import 'package:app_test/features/points/views/prize/widgets/raya/raya_add_data_bottomsheet.dart';
@@ -57,7 +58,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
   }
   void copyToClipboard(BuildContext context, {text}) {
     Clipboard.setData(ClipboardData(text: text));
-    Fluttertoast.showToast(
+    AppToast.showToast(
         msg: AppStrings.textCopiedToClipboard.tr(),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,

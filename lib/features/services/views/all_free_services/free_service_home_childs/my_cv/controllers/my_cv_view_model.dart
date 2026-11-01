@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_test/core/platform/platform_is.dart';
@@ -68,7 +69,7 @@ class MyCVViewModel extends ChangeNotifier {
       _loadProfilePhoto();
     } catch (e) {
       debugPrint('Error loading CV data: $e');
-      errorMessage = e.toString();
+      errorMessage = AppErrorReporter.safeMessage(e);
     }
 
     if (!_disposed) {

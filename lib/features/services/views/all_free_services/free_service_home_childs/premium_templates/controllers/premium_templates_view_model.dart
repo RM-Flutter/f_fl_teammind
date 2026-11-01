@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/crud_operation.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/premium_templates/data/models/premium_file_model.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class PremiumFilesViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       if (_disposed) return;
-      errorMessage = 'Error loading premium files: ${e.toString()}';
+      errorMessage = AppErrorReporter.safeMessage(e);
       updateLoadingStatus(loadingValue: false);
       notifyListeners();
     }

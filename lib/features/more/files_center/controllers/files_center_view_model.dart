@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/features/more/files_center/data/models/files_center_model.dart';
 import 'package:app_test/features/more/files_center/data/repos/files_center_repo.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class FilesCenterViewModel extends ChangeNotifier {
         errorMessage = result.message;
       }
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = AppErrorReporter.safeMessage(e);
       debugPrint("Error fetching files center files: $e");
     }
   }

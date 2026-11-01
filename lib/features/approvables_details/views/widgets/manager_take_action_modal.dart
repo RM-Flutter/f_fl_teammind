@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,7 +76,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
         setState(() {
           _errorMessage = msg;
         });
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: msg,
           backgroundColor: Colors.red,
           textColor: Colors.white,

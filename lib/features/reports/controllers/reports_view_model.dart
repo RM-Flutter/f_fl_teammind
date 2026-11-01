@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/features/reports/data/models/annual_leave_entitlement_report_model.dart';
 import 'package:app_test/features/reports/data/models/employee_leave_schedule_report_model.dart';
 import 'package:app_test/features/reports/data/models/leave_requests_report_model.dart';
@@ -51,7 +52,7 @@ class ReportsViewModel extends ChangeNotifier {
         catalogError = result.message;
       }
     } catch (e) {
-      catalogError = e.toString();
+      catalogError = AppErrorReporter.safeMessage(e);
     }
 
     isLoadingCatalog = false;
@@ -75,7 +76,7 @@ class ReportsViewModel extends ChangeNotifier {
         filtersError = result.message;
       }
     } catch (e) {
-      filtersError = e.toString();
+      filtersError = AppErrorReporter.safeMessage(e);
     }
 
     isLoadingFilters = false;
@@ -124,7 +125,7 @@ class ReportsViewModel extends ChangeNotifier {
         dataError = result.message;
       }
     } catch (e) {
-      dataError = e.toString();
+      dataError = AppErrorReporter.safeMessage(e);
     }
 
     isLoadingData = false;
@@ -149,7 +150,7 @@ class ReportsViewModel extends ChangeNotifier {
         webviewError = result.message;
       }
     } catch (e) {
-      webviewError = e.toString();
+      webviewError = AppErrorReporter.safeMessage(e);
     }
 
     isLoadingWebview = false;

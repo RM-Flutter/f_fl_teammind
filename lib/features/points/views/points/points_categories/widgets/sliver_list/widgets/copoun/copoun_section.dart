@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -165,7 +166,7 @@ class CopounSection extends StatelessWidget {
                                 }
                                 else {
                                   if (provider.copounModel!.status == true) {
-                                    Fluttertoast.showToast(
+                                    AppToast.showToast(
                                         msg: provider.copounModel!.message!,
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,
@@ -177,7 +178,7 @@ class CopounSection extends StatelessWidget {
                                     copounCodeController.clear();
                                   }
                                   else {
-                                    Fluttertoast.showToast(
+                                    AppToast.showToast(
                                         msg: provider.copounModel!.message!,
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,

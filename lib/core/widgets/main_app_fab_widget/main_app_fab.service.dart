@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -1963,7 +1965,7 @@ abstract class MainFabServices {
     // Assuming you have a method to save data in shared preferences
     await _saveFingerprintsToPreferences();
 
-    Fluttertoast.showToast(
+    AppToast.showToast(
         msg: AppStrings.saveSucessFull.tr(),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
@@ -2029,7 +2031,7 @@ abstract class MainFabServices {
               AlertsService.error(
                 context: safeContext,
                 title: AppStrings.failed.tr(),
-                message: 'Face verification failed: $e',
+                message: AppErrorReporter.safeMessage(e),
               );
             }
             return;
@@ -2113,7 +2115,7 @@ abstract class MainFabServices {
             }
             AlertsService.error(
               context: context,
-              message: e.toString(),
+              message: AppErrorReporter.safeMessage(e),
               title: AppStrings.failed.tr(),
             );
           } finally {
@@ -2160,7 +2162,7 @@ abstract class MainFabServices {
               AlertsService.error(
                 context: safeContext,
                 title: AppStrings.failed.tr(),
-                message: 'Face verification failed: $e',
+                message: AppErrorReporter.safeMessage(e),
               );
             }
             return;
@@ -2337,7 +2339,7 @@ abstract class MainFabServices {
             } catch (e) {
               AlertsService.error(
                 context: context,
-                message: e.toString(),
+                message: AppErrorReporter.safeMessage(e),
                 title: AppStrings.failed.tr(),
               );
             } finally {
@@ -2351,7 +2353,7 @@ abstract class MainFabServices {
       debugPrint('Error Adding Bluetooth Fingerprint: $e');
       AlertsService.error(
         context: context,
-        message: e.toString(),
+        message: AppErrorReporter.safeMessage(e),
         title: AppStrings.failed.tr(),
       );
     }
@@ -2381,7 +2383,7 @@ abstract class MainFabServices {
               AlertsService.error(
                 context: safeContext,
                 title: AppStrings.failed.tr(),
-                message: 'Face verification failed: $e',
+                message: AppErrorReporter.safeMessage(e),
               );
             }
             return;
@@ -2509,7 +2511,7 @@ abstract class MainFabServices {
             } catch (e) {
               AlertsService.error(
                 context: context,
-                message: e.toString(),
+                message: AppErrorReporter.safeMessage(e),
                 title: AppStrings.failed.tr(),
               );
             } finally {
@@ -2524,7 +2526,7 @@ abstract class MainFabServices {
       debugPrint('Error Adding Wi-Fi Fingerprint: $e');
       AlertsService.error(
         context: context,
-        message: e.toString(),
+        message: AppErrorReporter.safeMessage(e),
         title: AppStrings.failed.tr(),
       );
       return;
@@ -2665,7 +2667,7 @@ abstract class MainFabServices {
               AlertsService.error(
                 context: safeContext,
                 title: AppStrings.failed.tr(),
-                message: 'Face verification failed: $e',
+                message: AppErrorReporter.safeMessage(e),
               );
             }
             return;
@@ -2732,7 +2734,7 @@ abstract class MainFabServices {
             } catch (e) {
               AlertsService.error(
                 context: context,
-                message: e.toString(),
+                message: AppErrorReporter.safeMessage(e),
                 title: AppStrings.failed.tr(),
               );
             } finally {
@@ -2753,7 +2755,7 @@ abstract class MainFabServices {
       if (context.mounted) {
         AlertsService.error(
             context: context,
-            message: e.toString(),
+            message: AppErrorReporter.safeMessage(e),
             title: AppStrings.failed.tr());
       }
       return;
@@ -2796,7 +2798,7 @@ abstract class MainFabServices {
               AlertsService.error(
                 context: faceContext,
                 title: AppStrings.failed.tr(),
-                message: 'Face verification failed: $e',
+                message: AppErrorReporter.safeMessage(e),
               );
             }
             return;
@@ -2917,7 +2919,7 @@ abstract class MainFabServices {
               });
               AlertsService.error(
                 context: context,
-                message: e.toString(),
+                message: AppErrorReporter.safeMessage(e),
                 title: AppStrings.failed.tr(),
               );
             } finally {
@@ -2933,7 +2935,7 @@ abstract class MainFabServices {
           'Error Happeded While Adding Fingerprint Using Qrcode! Error :-> $e');
       AlertsService.error(
           context: context,
-          message: e.toString(),
+          message: AppErrorReporter.safeMessage(e),
           title: AppStrings.failed.tr());
     }
   }

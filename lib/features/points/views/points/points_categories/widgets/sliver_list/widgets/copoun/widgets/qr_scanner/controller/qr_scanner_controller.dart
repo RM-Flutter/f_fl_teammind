@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:async';
 
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
@@ -50,7 +52,7 @@ class QRScannerController extends ChangeNotifier{
       if (value.data['status'] == false) {
         if (context.mounted) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Fluttertoast.showToast(
+            AppToast.showToast(
                 msg: value.data['message'],
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
@@ -64,7 +66,7 @@ class QRScannerController extends ChangeNotifier{
       } else if (value.data['status'] == true) {
         if (context.mounted) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Fluttertoast.showToast(
+            AppToast.showToast(
                 msg: value.data['message'],
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
@@ -81,7 +83,7 @@ class QRScannerController extends ChangeNotifier{
       errorMessage = value.data['message'];
     } catch (e) {
       isError = true;
-      errorMessage = e.toString();
+      errorMessage = AppErrorReporter.safeMessage(e);
       print("ERROR--> $errorMessage");
     } finally {
       isLoading = false;

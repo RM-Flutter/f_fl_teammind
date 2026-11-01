@@ -1,4 +1,6 @@
 
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +83,7 @@ class PointsController extends ChangeNotifier {
         prizes.clear(); // Clear only when loading the first page
       }
       if(response.data['status'] == false){
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg:response.data['message'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -103,7 +105,7 @@ class PointsController extends ChangeNotifier {
       getPrizeErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: error.toString(),
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -157,7 +159,7 @@ class PointsController extends ChangeNotifier {
       }
       if(response.data['status'] == false){
         status = false;
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg:response.data['message'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -181,7 +183,7 @@ class PointsController extends ChangeNotifier {
       getPrizeErrorMessage = error is DioError
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: error.toString(),
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -213,7 +215,7 @@ class PointsController extends ChangeNotifier {
           redeemCode = value.data['code'];
         }
         isRedeemSuccess = true;
-        // Fluttertoast.showToast(
+        // AppToast.showToast(
         //     msg: value.data['message'],
         //     toastLength: Toast.LENGTH_LONG,
         //     gravity: ToastGravity.BOTTOM,
@@ -223,7 +225,7 @@ class PointsController extends ChangeNotifier {
         //     fontSize: 16.0
         // );
       }else{
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: value.data['message'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -243,7 +245,7 @@ class PointsController extends ChangeNotifier {
       if (error is DioError) {
         postPrizeErrorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        postPrizeErrorMessage = error.toString();
+        postPrizeErrorMessage = AppErrorReporter.safeMessage(error);
       }
       print("postPrizeErrorMessage --> $postPrizeErrorMessage");
       AlertsService.error(
@@ -270,7 +272,7 @@ class PointsController extends ChangeNotifier {
         isRedeemSuccess = true;
         if(value.data['data'] != null){ userName = value.data['data']['user_namme'];}
       }else{
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: value.data['message'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -290,10 +292,10 @@ class PointsController extends ChangeNotifier {
       if (error is DioError) {
         postPrizeErrorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        postPrizeErrorMessage = error.toString();
+        postPrizeErrorMessage = AppErrorReporter.safeMessage(error);
       }
       print("postPrizeErrorMessage --> $postPrizeErrorMessage");
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: postPrizeErrorMessage!,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,

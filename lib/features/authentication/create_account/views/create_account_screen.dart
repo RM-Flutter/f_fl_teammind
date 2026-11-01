@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/features/authentication/create_account/controller/create_account_controller.dart';
 import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -106,7 +107,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   titleSize: (kIsWeb || PlatformIs.web) ? 14 : 14.sp,
                                   onPressed: () async {
                                     if(viewModel.phoneController.text.isEmpty){
-                                      Fluttertoast.showToast(
+                                      AppToast.showToast(
                                           msg: AppStrings.phoneNumberIsRequired.tr(),
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,

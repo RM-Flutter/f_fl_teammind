@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,7 +26,7 @@ class ConditionController with ChangeNotifier {
     result.fold(
           (failure) {
         errorMessage = failure.error;
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: failure.error.toString(),
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,

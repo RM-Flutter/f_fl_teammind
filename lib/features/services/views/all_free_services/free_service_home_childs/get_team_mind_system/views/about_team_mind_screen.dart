@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -174,7 +175,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${AppStrings.failed.tr()}: $e')),
+          SnackBar(content: Text(AppErrorReporter.safeMessage(e))),
         );
       }
     }

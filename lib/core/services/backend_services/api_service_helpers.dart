@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -76,18 +77,21 @@ abstract class ApiServiceHelpers {
       {required Map responseJsonData,
         required String dataKey,
         bool? allData = false}) {
-    return OperationResult(
-      success: responseJsonData['status'] is bool
-          ? responseJsonData['status']
-          : responseJsonData['status']?.toString() == "true",
-      message: responseJsonData['message'] is Map ||
+    final success = responseJsonData['status'] is bool
+        ? responseJsonData['status']
+        : responseJsonData['status']?.toString() == "true";
+    final rawMessage = responseJsonData['message'] is Map ||
           responseJsonData['message'] == null
           ? (responseJsonData['messageAr'] ??
           responseJsonData['errorString'] ??
           responseJsonData['fullMessagesString'] ??
           responseJsonData['errorCodeString'] ??
           'No Server Error!')
-          : responseJsonData['message'],
+          : responseJsonData['message'];
+    return OperationResult(
+      success: success,
+      // A failed response must never carry technical text (e.g. SQL errors) to the UI
+      message: success == true ? rawMessage : AppErrorReporter.safeMessage(rawMessage?.toString()),
       data: allData == true ? responseJsonData : responseJsonData[dataKey],
       checkAuth: responseJsonData['check_auth'],
       errorCodeString: responseJsonData['errorCodeString']?.toString(),

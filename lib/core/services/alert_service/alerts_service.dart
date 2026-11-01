@@ -10,6 +10,7 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/app_colors.dart';
 import 'custom_alert.dart';
+import '../app_error_reporter.dart';
 
 enum DialogAnimationTypes { none, feedIn, open, opacity }
 
@@ -95,6 +96,12 @@ abstract class AlertsService {
   }) {
     // Check if the context is mounted before proceeding
     if (!context.mounted) return;
+
+    // Never show technical text: swap it for the friendly message (and report it to Telegram)
+    message = AppErrorReporter.safeMessage(message);
+    if (AppErrorReporter.isTechnical(title)) {
+      title = AppStrings.somethingWentWrong.tr();
+    }
 
     final snackBar = SnackBar(
       duration: const Duration(seconds: 5),

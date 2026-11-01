@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
@@ -19,7 +20,7 @@ class AboutUsLogicProvider extends ChangeNotifier{
       if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
       isLoading = false;
     });

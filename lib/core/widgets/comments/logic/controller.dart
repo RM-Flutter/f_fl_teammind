@@ -1,4 +1,5 @@
 
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -127,7 +128,7 @@ class CommentProvider extends ChangeNotifier{
             } catch (e) {
               print("Error handling voice file on web: $e");
               // إذا فشل كل شيء، تخطي إرسال الصوت
-              Fluttertoast.showToast(
+              AppToast.showToast(
                 msg: "Error uploading voice message. Please try again.",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
@@ -165,7 +166,7 @@ class CommentProvider extends ChangeNotifier{
       }
 
       if (response.data['status'] == false) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: response.data['message'],
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -176,7 +177,7 @@ class CommentProvider extends ChangeNotifier{
         );
       } else {
         isAddCommentSuccess = true;
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: response.data['message'],
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -200,7 +201,7 @@ class CommentProvider extends ChangeNotifier{
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
 
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: errorAddCommentMessage!,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
@@ -319,7 +320,7 @@ class CommentProvider extends ChangeNotifier{
     } catch (e) {
       print("Error getting image from camera: $e");
       if (kIsWeb || PlatformIs.web) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: "Error selecting image. Please try again.",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -362,7 +363,7 @@ class CommentProvider extends ChangeNotifier{
     } catch (e) {
       print("Error getting image from gallery: $e");
       if (kIsWeb || PlatformIs.web) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: "Error selecting image. Please try again.",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,

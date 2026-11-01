@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -9,7 +10,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -201,7 +201,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
   Future<void> _downloadFile(FilesCenterModel file) async {
     final fileUrl = file.fileUrl;
     if (fileUrl == null || fileUrl.isEmpty) {
-      Fluttertoast.showToast(msg: "No file URL available");
+      AppToast.showToast(msg: "No file URL available");
       return;
     }
 
@@ -211,10 +211,10 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         } else {
-          Fluttertoast.showToast(msg: "Could not open file URL");
+          AppToast.showToast(msg: "Could not open file URL");
         }
       } catch (e) {
-        Fluttertoast.showToast(msg: "Error opening file: $e");
+        AppToast.showToast(msg: "Error opening file: $e");
       }
       return;
     }
@@ -239,7 +239,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
       }
 
       if (!hasPermission) {
-        Fluttertoast.showToast(msg: "Storage permission required");
+        AppToast.showToast(msg: "Storage permission required");
         setState(() { _downloadProgress.remove(fileId); });
         return;
       }
@@ -274,11 +274,11 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
         },
       );
 
-      Fluttertoast.showToast(msg: "File downloaded to $savePath");
+      AppToast.showToast(msg: "File downloaded to $savePath");
       await OpenFilex.open(savePath);
 
     } catch (e) {
-      Fluttertoast.showToast(msg: "Error downloading file: $e");
+      AppToast.showToast(msg: "Error downloading file: $e");
     } finally {
       if (mounted) {
         setState(() {

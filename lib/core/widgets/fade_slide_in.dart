@@ -98,53 +98,47 @@ class _ScrollRevealItemState extends State<ScrollRevealItem>
   late final Animation<double> _scale =
       Tween<double>(begin: 0.94, end: 1).animate(_curve);
 
-  final List<ScrollPosition> _positions = [];
   final List<ScrollableState> _scrollables = [];
   bool _revealed = false;
-  bool _firstCheck = true;
+  bool _frameCheckQueued = false;
+  final DateTime _createdAt = DateTime.now();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Listen to every scrollable above this item: the nearest one can be a shrink-wrapped,
+    // Every vertical scrollable above this item: the nearest one can be a shrink-wrapped,
     // non-scrolling list while the real page scroll is further up.
-    for (final p in _positions) {
-      p.removeListener(_scheduleCheck);
-    }
-    _positions.clear();
     _scrollables.clear();
     context.visitAncestorElements((element) {
       if (element is StatefulElement && element.state is ScrollableState) {
-        final position = (element.state as ScrollableState).position;
-        position.addListener(_scheduleCheck);
-        _positions.add(position);
         _scrollables.add(element.state as ScrollableState);
       }
       return true;
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) => _check());
+    _queueFrameCheck();
   }
 
-  bool _checkScheduled = false;
-
-  /// Scroll listeners fire before layout, so positions are stale; check after the frame instead.
-  void _scheduleCheck() {
-    if (_checkScheduled || _revealed) return;
-    _checkScheduled = true;
+  /// Check the position after every frame until revealed. The item can move into view without
+  /// any scroll (data loads, header settles, sections above animate), so scroll events alone
+  /// are not enough. Post-frame callbacks never force a frame, so an idle screen costs nothing.
+  void _queueFrameCheck() {
+    if (_revealed || _frameCheckQueued) return;
+    _frameCheckQueued = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkScheduled = false;
+      _frameCheckQueued = false;
+      if (!mounted || _revealed) return;
       _check();
+      _queueFrameCheck();
     });
   }
 
   void _check() {
-    if (_revealed || !mounted) return;
     final box = context.findRenderObject();
     if (box is! RenderBox || !box.hasSize || !box.attached) return;
     final top = box.localToGlobal(Offset.zero).dy;
-    // Reveal only once the item is well inside every vertical scrollable's viewport (and the
-    // screen), so the entrance is actually seen while scrolling.
-    const inset = 90.0;
+    // Reveal once the item is a little inside every vertical scrollable's viewport (and the
+    // screen), so the entrance is actually seen.
+    const inset = 40.0;
     var limit = MediaQuery.of(context).size.height - inset;
     for (final scrollable in _scrollables) {
       final axis = scrollable.widget.axisDirection;
@@ -154,28 +148,23 @@ class _ScrollRevealItemState extends State<ScrollRevealItem>
       final bottom = viewport.localToGlobal(Offset(0, viewport.size.height)).dy;
       if (bottom - inset < limit) limit = bottom - inset;
     }
-    if (top < limit) {
-      _revealed = true;
-      for (final p in _positions) {
-        p.removeListener(_scheduleCheck);
-      }
-      final delay = _firstCheck ? widget.initialDelay : Duration.zero;
-      if (delay == Duration.zero) {
-        _controller.forward();
-      } else {
-        Future.delayed(delay, () {
-          if (mounted) _controller.forward();
-        });
-      }
+    if (top >= limit) return;
+
+    _revealed = true;
+    // Items visible while the screen is first settling keep their staggered delay
+    final settling = DateTime.now().difference(_createdAt) < const Duration(milliseconds: 1500);
+    final delay = settling ? widget.initialDelay : Duration.zero;
+    if (delay == Duration.zero) {
+      _controller.forward();
+    } else {
+      Future.delayed(delay, () {
+        if (mounted) _controller.forward();
+      });
     }
-    _firstCheck = false;
   }
 
   @override
   void dispose() {
-    for (final p in _positions) {
-      p.removeListener(_scheduleCheck);
-    }
     _controller.dispose();
     super.dispose();
   }

@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -266,7 +267,7 @@ class FingerprintViewModel extends ChangeNotifier {
       if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
 
       AlertsService.error(

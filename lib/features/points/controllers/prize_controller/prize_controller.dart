@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class PrizeController with ChangeNotifier {
 
     result.fold(
           (failure) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: failure.error,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -78,7 +79,7 @@ class PrizeController with ChangeNotifier {
 
     result.fold(
           (failure){
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: failure.error,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -138,7 +139,7 @@ class PrizeController with ChangeNotifier {
     result.fold((failure) {
       _status = RedeemPrizeStatus.failure;
       _errorMessages = failure.error;
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: failure.error,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,

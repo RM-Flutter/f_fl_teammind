@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -269,7 +270,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
       }
     } catch (ex) {
       AlertsService.error(
-          context: context, message: ex.toString(), title: 'Failed !');
+          context: context, message: AppErrorReporter.safeMessage(ex), title: 'Failed !');
       return;
     }
   }
@@ -301,7 +302,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
       }
     } catch (ex) {
       AlertsService.error(
-          context: context, message: ex.toString(), title: 'Failed !');
+          context: context, message: AppErrorReporter.safeMessage(ex), title: 'Failed !');
       return;
     }
   }
@@ -343,7 +344,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       isLoading = false;
-      errorMessage = e.toString();
+      errorMessage = AppErrorReporter.safeMessage(e);
       print("ERROR IS ---> ${e.toString()}");
       if (context.mounted) {
         AlertsService.error(

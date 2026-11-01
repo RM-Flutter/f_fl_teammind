@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:html' if (dart.library.io) '../../../../core/services/dart_html_stub.dart' as html;
 
 import '../../../../core/constants/app_colors.dart';
@@ -44,10 +44,10 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
           downloadAnchor.remove();
           html.Url.revokeObjectUrl(blobUrl);
         }).catchError((e) {
-          Fluttertoast.showToast(msg: "Download failed: $e");
+          AppToast.showToast(msg: "Download failed: $e");
         });
       } catch (e) {
-        Fluttertoast.showToast(msg: "Error: $e");
+        AppToast.showToast(msg: "Error: $e");
       }
       return;
     }
@@ -92,14 +92,14 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       if (mounted) Navigator.of(context).pop();
       await OpenFilex.open(filePath);
       
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: '✅ ${'downloaded'.tr()}: $fileName',
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
     } catch (e) {
       if (mounted) Navigator.of(context).pop();
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: 'Error: $e',
         backgroundColor: Colors.red,
         textColor: Colors.white,

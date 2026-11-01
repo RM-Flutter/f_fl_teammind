@@ -20,6 +20,7 @@ import '../../../../platform/platform_is.dart';
 import '../../../app_config_service.dart';
 import '../../../sentry_serivce.dart';
 import '../../../telegram_error_service.dart';
+import '../../../app_error_reporter.dart';
 import '../../api_service_helpers.dart';
 import '../../backend_services_interface.dart';
 import 'dio_adapter_reset.dart' as adapter_reset;
@@ -104,7 +105,20 @@ class DioApiService implements BackEndServicesInterface {
   }
 
   // Get user-friendly error message
+  /// Message for the UI: technical text is replaced by the friendly message and reported.
   String _getErrorMessage(DioException error) {
+    return AppErrorReporter.safeMessage(
+      _rawErrorMessage(error),
+      stackTrace: error.stackTrace,
+      extra: {
+        'url': error.requestOptions.uri.toString(),
+        'method': error.requestOptions.method,
+        'status': error.response?.statusCode,
+      },
+    );
+  }
+
+  String _rawErrorMessage(DioException error) {
     if (error.response?.data != null && error.response!.data is Map) {
       try {
         final parsed = ApiServiceHelpers.parseResponse(
@@ -432,7 +446,7 @@ class DioApiService implements BackEndServicesInterface {
           'dataKey': dataKey,
         },
       );
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -510,7 +524,7 @@ class DioApiService implements BackEndServicesInterface {
           'dataKey': dataKey,
         },
       );
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -670,7 +684,7 @@ class DioApiService implements BackEndServicesInterface {
       );
       return OperationResult<T>(
         success: false,
-        message: err.toString(),
+        message: AppErrorReporter.safeMessage(err),
       );
     }
   }
@@ -794,7 +808,7 @@ class DioApiService implements BackEndServicesInterface {
     }  catch (err, t) {
       debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -855,7 +869,7 @@ class DioApiService implements BackEndServicesInterface {
     }  catch (err, t) {
       debugPrint(
           '--------- Failed delete() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -941,7 +955,7 @@ class DioApiService implements BackEndServicesInterface {
           'Failed postFileWith_dio ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
       return OperationResult<T>(
         success: false,
-        message: err.toString(),
+        message: AppErrorReporter.safeMessage(err),
       );
     }
   }
@@ -970,7 +984,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1004,7 +1018,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed get() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1058,7 +1072,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed post() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1107,7 +1121,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed put() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1187,7 +1201,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed postFile() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1235,7 +1249,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed postEx() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1284,7 +1298,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed putEx() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1342,7 +1356,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed getDynamic() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1391,7 +1405,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed getDynamic() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1441,7 +1455,7 @@ class DioApiService implements BackEndServicesInterface {
     } catch (err, t) {
       debugPrint(
           '--------- Failed deleteDynamic() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1491,7 +1505,7 @@ class DioApiService implements BackEndServicesInterface {
       debugPrint(
           '--------- Failed deleteDynamicEx() from Api Service ❌ \n error ${err.toString()} - in Line :- ${t.toString()}');
 
-      return OperationResult(success: false, message: err.toString());
+      return OperationResult(success: false, message: AppErrorReporter.safeMessage(err));
     }
   }
 
@@ -1525,7 +1539,7 @@ class DioApiService implements BackEndServicesInterface {
       }
     } catch (err, t) {
       return OperationResult(
-          success: false, message: err.toString() + t.toString());
+          success: false, message: AppErrorReporter.safeMessage(err, stackTrace: t));
     }
   }
 }

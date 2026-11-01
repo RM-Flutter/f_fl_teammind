@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
 import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
 import 'package:app_test/core/constants/app_colors.dart';
@@ -679,7 +680,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
   Future<void> _downloadFile(PremiumFileModel file) async {
     final fileUrl = file.fileUrl;
     if (fileUrl == null || fileUrl.isEmpty) {
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: AppStrings.noDataFounded.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -689,7 +690,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
 
     final fileName = fileUrl.split('/').last;
     if (fileName.isEmpty) {
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: AppStrings.invalidFileName.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -743,7 +744,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           _downloadingFileNames.remove(fileId);
         });
         
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
           backgroundColor: Colors.green,
           textColor: Colors.white,
@@ -755,7 +756,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           _downloadProgress.remove(fileId);
           _downloadingFileNames.remove(fileId);
         });
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: '${AppStrings.errorDownloadingFile.tr()}: $e',
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -772,7 +773,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
         _downloadProgress.remove(fileId);
         _downloadingFileNames.remove(fileId);
       });
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: AppStrings.storagePermissionRequiredForDownload.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -805,7 +806,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
         _downloadingFileNames.remove(fileId);
       });
       
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: '✅ ${AppStrings.downloaded.tr()}: $fileName',
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -816,7 +817,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
         _downloadProgress.remove(fileId);
         _downloadingFileNames.remove(fileId);
       });
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: '${AppStrings.errorDownloadingFile.tr()}: $e',
         backgroundColor: Colors.red,
         textColor: Colors.white,

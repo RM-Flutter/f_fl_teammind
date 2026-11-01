@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -218,7 +219,7 @@ class AuthenticationController extends ChangeNotifier {
       if (isPhoneLogin) {
         final phoneText = phoneController.text.trim();
         if (phoneText.isEmpty) {
-          Fluttertoast.showToast(
+          AppToast.showToast(
               msg: AppStrings.phoneNumberIsRequired.tr(),
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
@@ -231,7 +232,7 @@ class AuthenticationController extends ChangeNotifier {
         }
         // التحقق من أن الرقم يحتوي على أرقام فقط
         if (!RegExp(r'^[0-9]+$').hasMatch(phoneText)) {
-          Fluttertoast.showToast(
+          AppToast.showToast(
               msg: AppStrings.pleaseEnterValidPhoneNumber.tr(),
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
@@ -294,7 +295,7 @@ class AuthenticationController extends ChangeNotifier {
         // await getDeviceSys(context: context, status: 1);
       } else {
         _pendingAccount = null;
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -530,7 +531,7 @@ class AuthenticationController extends ChangeNotifier {
                                         curve: Curves.easeInOut,
                                       );
                                     } else {
-                                      Fluttertoast.showToast(
+                                      AppToast.showToast(
                                           msg: result.message!,
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,
@@ -608,7 +609,7 @@ class AuthenticationController extends ChangeNotifier {
                                   return await _handleLoginResponse(
                                       result: result.data!, context: context);
                                 } else {
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: result.message!,
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
@@ -647,7 +648,7 @@ class AuthenticationController extends ChangeNotifier {
                                     sendType: choosenMethod ?? 'auth_app');
                                 Navigator.pop(context);
                                 if (!result.success) {
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: result.message ??
                                           AppStrings
                                               .failed2FAVerificationPleaseTryAgain
@@ -764,7 +765,7 @@ class AuthenticationController extends ChangeNotifier {
                                         curve: Curves.easeInOut,
                                       );
                                     } else {
-                                      Fluttertoast.showToast(
+                                      AppToast.showToast(
                                           msg: result.message!,
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,
@@ -844,7 +845,7 @@ class AuthenticationController extends ChangeNotifier {
                                   return await _handleLoginResponse(
                                       result: result.data!, context: context);
                                 } else {
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: result.message!,
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
@@ -881,7 +882,7 @@ class AuthenticationController extends ChangeNotifier {
                                     method: choosenMethod ?? 'email',
                                     context: context);
                                 if (!result.success) {
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: result.message!,
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
@@ -892,7 +893,7 @@ class AuthenticationController extends ChangeNotifier {
                                   );
                                 }else{
                                   Navigator.pop(context);
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: result.message!,
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,

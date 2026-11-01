@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/notification_service/check_in_scheduler.dart';
 
 import 'dart:convert';
@@ -359,7 +360,7 @@ class HomeController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
       AlertsService.error(
           context: context,

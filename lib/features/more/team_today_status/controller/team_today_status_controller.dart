@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/features/more/team_today_status/data/models/team_today_status_model.dart';
 import 'package:dio/dio.dart';
@@ -66,7 +67,7 @@ class TeamTodayStatusController extends ChangeNotifier {
             ? resData['message'].toString()
             : 'Something went wrong';
       } else {
-        errorMessage = e.toString();
+        errorMessage = AppErrorReporter.safeMessage(e);
       }
       debugPrint('TeamTodayStatusController.fetchTeamStatus error: $e');
     } finally {

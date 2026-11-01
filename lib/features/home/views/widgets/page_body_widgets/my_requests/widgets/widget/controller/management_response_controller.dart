@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
@@ -26,7 +27,7 @@ class ManagementResponseViewModal extends ChangeNotifier {
       {required BuildContext context, required String requestId}) async {
     try {
       if (selectedRequestStatus == null) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: AppStrings.pleaseSelectAction.tr(),
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -52,7 +53,7 @@ class ManagementResponseViewModal extends ChangeNotifier {
           context: context);
       if (response.success) {
         Navigator.pop(context);
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: response.message!,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -66,7 +67,7 @@ class ManagementResponseViewModal extends ChangeNotifier {
           'lang': context.locale.languageCode
         });
       } else {
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: response.message!,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,

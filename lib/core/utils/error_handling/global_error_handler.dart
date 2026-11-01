@@ -1,84 +1,55 @@
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:app_test/core/services/telegram_error_service.dart';
-//
-// void registerErrorHandlers() {
-//   // * Show some error UI if any uncaught exception happens
-//   FlutterError.onError = (FlutterErrorDetails details) {
-//     FlutterError.presentError(details);
-//     debugPrint(details.toString());
-//     // Send to Telegram
-//     TelegramErrorService.captureException(
-//       details.exception,
-//       stackTrace: details.stack,
-//     );
-//   };
-//   // * Handle errors from the underlying platform/OS
-//   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
-//     debugPrint(error.toString());
-//     // Send to Telegram
-//     TelegramErrorService.captureException(error, stackTrace: stack);
-//     return true;
-//   };
-//   // * Show some error UI when any widget in the app fails to build
-//   ErrorWidget.builder = (FlutterErrorDetails details) {
-//     // Send to Telegram
-//     TelegramErrorService.captureException(
-//       details.exception,
-//       stackTrace: details.stack,
-//     );
-//     return Directionality(
-//       textDirection: TextDirection.ltr,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           backgroundColor: Colors.red,
-//           title: const Text('An error occurred'),
-//         ),
-//         body: Center(child: Text(details.toString())),
-//       ),
-//     );
-//   };
-// }
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/app_error_reporter.dart';
 import '../../services/sentry_serivce.dart';
 
+/// Nothing may crash the app or show a technical error to the user:
+/// every uncaught error is sent to Sentry and the Telegram channel, and the user only
+/// sees a friendly "please contact the RightMind team" message.
 void registerErrorHandlers() {
-  // * Show some error UI if any uncaught exception happens
+  // Errors thrown by the Flutter framework (build, layout, paint, gestures...)
   FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.presentError(details);
-    debugPrint(details.toString());
-    // Send to Sentry
-    SentryService.captureException(
-      details.exception,
-      stackTrace: details.stack,
-    );
+    if (kDebugMode) {
+      FlutterError.presentError(details);
+    }
+    // Layout overflows and failed network images are not crashes: report quietly, no alert
+    if (_isQuietFrameworkError(details)) {
+      if (!_isImageLoadError(details)) {
+        AppErrorReporter.report(details.exception, stackTrace: details.stack, hint: details.context?.toDescription());
+      }
+      return;
+    }
+    SentryService.captureException(details.exception, stackTrace: details.stack);
+    AppErrorReporter.handleUncaught(details.exception, details.stack, hint: details.context?.toDescription());
   };
-  // * Handle errors from the underlying platform/OS
+
+  // Uncaught async errors (futures, streams, platform channels). Returning true marks them
+  // handled, so they never crash the app.
   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
     debugPrint(error.toString());
-    // Send to Sentry
     SentryService.captureException(error, stackTrace: stack);
+    AppErrorReporter.handleUncaught(error, stack);
     return true;
   };
-  // * Show some error UI when any widget in the app fails to build
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Material(
-        color: Colors.white,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'حدث خطأ غير متوقع\n\n${details.exceptionAsString()}',
-              style: const TextStyle(color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ),
-    );
-  };
+
+  // A widget that fails to build is simply left out: the rest of the screen still shows.
+  // (FlutterError.onError above already reported it and showed the friendly message.)
+  ErrorWidget.builder = (FlutterErrorDetails details) => const SizedBox.shrink();
+}
+
+bool _isImageLoadError(FlutterErrorDetails details) {
+  final library = details.library ?? '';
+  final text = details.exceptionAsString();
+  return library.contains('image resource') ||
+      text.contains('NetworkImageLoadException') ||
+      text.contains('HttpException: Invalid statusCode') ||
+      text.contains('No host specified in URI');
+}
+
+bool _isQuietFrameworkError(FlutterErrorDetails details) {
+  final text = details.exceptionAsString();
+  return _isImageLoadError(details) ||
+      text.contains('overflowed by') ||
+      text.contains('A RenderFlex overflowed');
 }

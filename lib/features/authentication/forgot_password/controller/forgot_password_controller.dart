@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -66,7 +67,7 @@ class ForgotPasswordController extends ChangeNotifier {
         return;
       } else {
         debugPrint("ERROR FROM ${result.message!}");
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -126,7 +127,7 @@ class ForgotPasswordController extends ChangeNotifier {
       return;
     } else {
       debugPrint("ERROR FROM HERE");
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: result.message!,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -162,7 +163,7 @@ class ForgotPasswordController extends ChangeNotifier {
         if(mak == null) Navigator.pop(context, result);
         if(mak != null){ mak();}
       } else {
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,

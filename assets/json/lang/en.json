@@ -1433,5 +1433,6 @@
   "savedAccounts": "Saved accounts",
   "removeSavedAccountQuestion": "Remove this saved account from this device?",
   "tapToFillLoginForm": "Tap an account to fill the login form",
-  "download": "Download"
+  "download": "Download",
+  "unexpectedErrorContactTeam": "Something went wrong. Please contact the RightMind team."
 }

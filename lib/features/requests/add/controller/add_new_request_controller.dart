@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -530,7 +532,7 @@ class AddNewRequestController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -1189,7 +1191,7 @@ class AddNewRequestController extends ChangeNotifier {
       );
 
       if (response.data['status'] == false) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: response.data['message'] ?? 'Failed to send request',
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -1221,7 +1223,7 @@ class AddNewRequestController extends ChangeNotifier {
       errorAddRequestMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: errorAddRequestMessage!,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,

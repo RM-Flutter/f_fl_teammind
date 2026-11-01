@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -149,7 +151,7 @@ class PersonalProfileController extends ChangeNotifier {
           errorMessage = error.message ?? AppStrings.errorPleaseTryAgain.tr();
         }
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
 
       AlertsService.error(
@@ -489,7 +491,7 @@ class PersonalProfileController extends ChangeNotifier {
                             message: result.data!['message'],
                             title: AppStrings.success.tr());
                       }else{
-                        Fluttertoast.showToast(
+                        AppToast.showToast(
                             msg: result.message!,
                             toastLength: Toast.LENGTH_LONG,
                             gravity: ToastGravity.BOTTOM,
@@ -501,7 +503,7 @@ class PersonalProfileController extends ChangeNotifier {
                         return;
                       }
                     }else{
-                      Fluttertoast.showToast(
+                      AppToast.showToast(
                           msg: "${AppStrings.code.tr()} ${AppStrings.isRequired.tr()}",
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.BOTTOM,
@@ -570,7 +572,7 @@ class PersonalProfileController extends ChangeNotifier {
         );
         result.then((value)async{
           debugPrint("Update2");
-          Fluttertoast.showToast(
+          AppToast.showToast(
               msg: value.data['message'],
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
@@ -588,7 +590,7 @@ class PersonalProfileController extends ChangeNotifier {
     } catch (ex, t) {
       debugPrint(
           '${AppStrings.failedToUpdateProfilePleaseTryLater.tr()} ,${ex.toString()} at $t');
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -615,7 +617,7 @@ class PersonalProfileController extends ChangeNotifier {
       );
       result.then((value)async{
         debugPrint("Update2");
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: value.data['message'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -631,7 +633,7 @@ class PersonalProfileController extends ChangeNotifier {
     } catch (ex, t) {
       debugPrint(
           '${AppStrings.failedToUpdateProfilePleaseTryLater.tr()} ,${ex.toString()} at $t');
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg:"${ex.toString()} ${AppStrings.at.tr()} $t",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -678,7 +680,7 @@ class PersonalProfileController extends ChangeNotifier {
               );
             }
           }else{
-            Fluttertoast.showToast(
+            AppToast.showToast(
                 msg: result.data['message'] ,
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
@@ -694,7 +696,7 @@ class PersonalProfileController extends ChangeNotifier {
     } catch (ex, t) {
       debugPrint(
           '${AppStrings.failedToUpdateEmailPleaseTryLater.tr()} ,${ex.toString()} at $t');
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg:"${ex.toString()} ${AppStrings.at.tr()} $t",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -720,7 +722,7 @@ class PersonalProfileController extends ChangeNotifier {
       }
       // Vaidation
       if (phoneNumberController.text.isEmpty) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: AppStrings.pleaseEnterAPhoneNumber.tr(),
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
@@ -755,7 +757,7 @@ class PersonalProfileController extends ChangeNotifier {
                 phoneUuid: result.data?['phone_code_uuid']);
           }
         }else{
-          Fluttertoast.showToast(
+          AppToast.showToast(
               msg: result.data['message'] ,
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
@@ -770,7 +772,7 @@ class PersonalProfileController extends ChangeNotifier {
     } catch (ex, t) {
       debugPrint(
           '${AppStrings.failedToUpdatePhonePleaseTryLater.tr()} ,${ex.toString()} at $t');
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -823,7 +825,7 @@ class PersonalProfileController extends ChangeNotifier {
                   isLogin: false, token: null);
               return;
             } else {
-              Fluttertoast.showToast(
+              AppToast.showToast(
                   msg: result.message!,
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
@@ -841,7 +843,7 @@ class PersonalProfileController extends ChangeNotifier {
     } catch (ex, t) {
       debugPrint(
           '${AppStrings.failedToDeleteAccountPleaseTryLater.tr()} ,${ex.toString()} at $t');
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: "${ex.toString()} ${AppStrings.at.tr()} $t",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -982,7 +984,7 @@ class PersonalProfileController extends ChangeNotifier {
                                 if (result.data['status'] == true) {
                                   await updateUserSettingsData(context: context);
                                   Navigator.of(context).pop(context);
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: AppStrings.updatePhoneNumber.tr(),
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
@@ -1005,7 +1007,7 @@ class PersonalProfileController extends ChangeNotifier {
                                 }
                               }
                             }else{
-                              Fluttertoast.showToast(
+                              AppToast.showToast(
                                   msg: AppStrings.enterVerificationCode.tr(),
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
@@ -1129,7 +1131,7 @@ class PersonalProfileController extends ChangeNotifier {
                                 if (result.data?['status'] == true ) {
                                   await updateUserSettingsData(context: context);
                                   Navigator.of(context).pop(context);
-                                  Fluttertoast.showToast(
+                                  AppToast.showToast(
                                       msg: AppStrings.emailUpdatedSuccessfully.tr(),
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
@@ -1154,7 +1156,7 @@ class PersonalProfileController extends ChangeNotifier {
                               }
 
                             }else{
-                              Fluttertoast.showToast(
+                              AppToast.showToast(
                                   msg: AppStrings.enterVerificationCode.tr(),
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,

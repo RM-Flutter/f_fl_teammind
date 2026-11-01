@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_strings.dart';
@@ -97,7 +98,7 @@ class FilterController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -126,7 +127,7 @@ class FilterController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }

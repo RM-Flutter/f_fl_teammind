@@ -10,6 +10,7 @@ class TelegramErrorService {
   static const String _baseUrl = 'https://api.telegram.org/bot$_botToken';
 
   static String? _currentScreenName;
+  static final Map<String, DateTime> _recentlySent = {};
   static BuildContext? _currentContext;
 
   /// Set current screen name (call this when navigating to a new screen)
@@ -130,6 +131,15 @@ class TelegramErrorService {
     if (extra != null) {
       debugPrint('   Extra: $extra');
     }
+
+    // Same error at most once per 5 minutes, whichever code path reports it
+    final dedupeKey = msg.length > 300 ? msg.substring(0, 300) : msg;
+    final now = DateTime.now();
+    _recentlySent.removeWhere((_, at) => now.difference(at) > const Duration(minutes: 5));
+    if (_recentlySent.containsKey(dedupeKey)) {
+      return;
+    }
+    _recentlySent[dedupeKey] = now;
 
     // لا نرسل لـ Telegram أخطاء صورة/كاش بسبب رابط فارغ أو غير صالح (تقليل الضجيج)
     if (msg.contains('No host specified in URI') ||

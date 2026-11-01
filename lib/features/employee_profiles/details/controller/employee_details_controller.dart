@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
 
 import 'dart:convert';
@@ -91,7 +92,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
         errorMessage =
             error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -140,7 +141,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
         errorMessage =
             error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }

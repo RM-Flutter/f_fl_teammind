@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
@@ -43,7 +44,7 @@ class RequestTermsViewModel extends ChangeNotifier {
       debugPrint(
           'Error getting request types ${ex.toString()} at :- ${t.toString()}');
       requestTypes = [];
-      errorMessage = ex.toString();
+      errorMessage = AppErrorReporter.safeMessage(ex);
       isLoading = false;
       notifyListeners();
     }

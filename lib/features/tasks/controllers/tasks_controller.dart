@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -151,7 +152,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -194,7 +195,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     }
 
@@ -221,7 +222,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -271,7 +272,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
       AlertsService.error(
           context: context,
@@ -319,7 +320,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
       AlertsService.error(
           context: context,
@@ -374,7 +375,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
       AlertsService.error(
           context: context,
@@ -412,7 +413,7 @@ class TasksController extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
       AlertsService.error(
           context: context,

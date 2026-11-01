@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -121,7 +122,7 @@ class CreateAccountController extends ChangeNotifier {
       nameError = null;
       passwordError = null;
       phoneError = null;
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg: result.message!,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,

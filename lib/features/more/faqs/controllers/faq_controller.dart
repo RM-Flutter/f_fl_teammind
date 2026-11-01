@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:app_test/features/more/faqs/data/remote_data/faqs_repo.dart';
@@ -18,7 +19,7 @@ class FaqModelProvider extends ChangeNotifier{
       if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }

@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/string_convert.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
@@ -92,7 +93,7 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -275,7 +276,7 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
       notifyListeners();
       AlertsService.error(
           context: context,
-          message: e.toString(),
+          message: AppErrorReporter.safeMessage(e),
           title: AppStrings.error.tr());
     }
   }

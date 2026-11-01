@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart' as provider_pkg;
@@ -202,7 +203,7 @@ class OvertimeUpdateDialog {
                             }
 
                             // 5. Display Toast & Alert ALWAYS on main context!
-                            Fluttertoast.showToast(
+                            AppToast.showToast(
                               msg: displayMsg,
                               toastLength: Toast.LENGTH_LONG,
                               gravity: ToastGravity.BOTTOM,

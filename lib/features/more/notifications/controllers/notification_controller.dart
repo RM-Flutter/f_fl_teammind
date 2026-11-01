@@ -1,4 +1,6 @@
 
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/user_consts.dart';
@@ -139,7 +141,7 @@ class NotificationProviderModel extends ChangeNotifier {
       if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -163,7 +165,7 @@ class NotificationProviderModel extends ChangeNotifier {
       if (error is DioException) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     });
   }
@@ -438,7 +440,7 @@ class NotificationProviderModel extends ChangeNotifier {
       errorAddNotificationMessage = error is DioException
           ? error.response?.data['message'] ?? 'Something went wrong'
           : error.toString();
-      Fluttertoast.showToast(
+      AppToast.showToast(
           msg:errorAddNotificationMessage!,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -499,7 +501,7 @@ class NotificationProviderModel extends ChangeNotifier {
     } catch (e) {
       print("Error getting image from camera: $e");
       if (kIsWeb || PlatformIs.web) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: "Error selecting image. Please try again.",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -539,7 +541,7 @@ class NotificationProviderModel extends ChangeNotifier {
     } catch (e) {
       print("Error getting image from gallery: $e");
       if (kIsWeb || PlatformIs.web) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: "Error selecting image. Please try again.",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,

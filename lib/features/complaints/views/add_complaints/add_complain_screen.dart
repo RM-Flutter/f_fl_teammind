@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -131,7 +132,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                                   if (value.complainRelatedTo == 'department' &&
                                       (value.selectedComplainDepartmentId == null ||
                                           value.selectedComplainDepartmentId!.isEmpty)) {
-                                    Fluttertoast.showToast(
+                                    AppToast.showToast(
                                       msg: AppStrings.selectDepartment.tr(),
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
@@ -141,7 +142,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                                   if (value.complainRelatedTo == 'person' &&
                                       (value.selectedComplainEmployeeId == null ||
                                           value.selectedComplainEmployeeId!.isEmpty)) {
-                                    Fluttertoast.showToast(
+                                    AppToast.showToast(
                                       msg: AppStrings.selectEmployee.tr(),
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
@@ -421,7 +422,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
           one: false,
           list: value.listAttachmentPersonalImage,
         );
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: AppStrings.addImageSuccessful.tr().toUpperCase(),
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
@@ -466,7 +467,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                       one: false,
                       list: value.listAttachmentPersonalImage,
                     );
-                    Fluttertoast.showToast(
+                    AppToast.showToast(
                       msg: AppStrings.addImageSuccessful.tr().toUpperCase(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,

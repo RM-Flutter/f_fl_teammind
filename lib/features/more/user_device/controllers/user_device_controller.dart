@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -46,7 +48,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     }
   }
@@ -82,7 +84,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     }
   }
@@ -109,7 +111,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = error.toString();
+        errorMessage = AppErrorReporter.safeMessage(error);
       }
     }
   }
@@ -142,7 +144,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       debugPrint('requestNotificationPermission: $e');
     }
     if (!allowed) {
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: "الإشعارات غير مفعلة – برجاء السماح أولاً.",
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -157,7 +159,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       // FCM token: cache only (generated at app start by FcmTokenService; do not call getToken here)
       final String? token = CacheHelper.getString("fcm_token");
       if (token == null || token.isEmpty) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: "جاري تجهيز الإشعارات. أعد فتح التطبيق أو انتظر قليلاً.",
           backgroundColor: Colors.orange,
           textColor: Colors.white,
@@ -182,14 +184,14 @@ class DeviceControllerProvider extends ChangeNotifier {
       CacheHelper.setBool("status", state);
 
       if (response.data['status'] == true) {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: response.data['message'],
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
         getDeviceSysSet2(context: context, state: state);
       } else {
-        Fluttertoast.showToast(
+        AppToast.showToast(
           msg: response.data['message'],
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -209,7 +211,7 @@ class DeviceControllerProvider extends ChangeNotifier {
         errorMessage2 = error.toString();
       }
 
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: errorMessage2 ?? AppStrings.failed.tr(),
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -232,7 +234,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       if(response.data['status'] == true){
         isSuccess = true;
       }else{
-        Fluttertoast.showToast(
+        AppToast.showToast(
             msg: response.data['message'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,

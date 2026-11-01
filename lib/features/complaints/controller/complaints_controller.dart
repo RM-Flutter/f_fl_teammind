@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -187,7 +188,7 @@ class ComplaintsController extends ChangeNotifier {
    }
 
    if (response.data['status'] == false) {
-    Fluttertoast.showToast(
+    AppToast.showToast(
      msg: response.data['message'],
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,
@@ -198,7 +199,7 @@ class ComplaintsController extends ChangeNotifier {
     );
    } else {
     isAddCommentSuccess = true;
-    Fluttertoast.showToast(
+    AppToast.showToast(
      msg: response.data['message'],
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,
@@ -216,7 +217,7 @@ class ComplaintsController extends ChangeNotifier {
      ? error.response?.data['message'] ?? 'Something went wrong'
      : error.toString();
 
-   Fluttertoast.showToast(
+   AppToast.showToast(
     msg: errorAddCommentMessage!,
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
@@ -245,7 +246,7 @@ class ComplaintsController extends ChangeNotifier {
     },
    );
    if(response.data['status'] == false){
-    Fluttertoast.showToast(
+    AppToast.showToast(
       msg: response.data['message'],
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
@@ -275,7 +276,7 @@ class ComplaintsController extends ChangeNotifier {
    getRequestErrorMessage = error is DioError
      ? error.response?.data['message'] ?? 'Something went wrong'
      : error.toString();
-   Fluttertoast.showToast(
+   AppToast.showToast(
      msg: getRequestErrorMessage!,
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,
@@ -304,7 +305,7 @@ class ComplaintsController extends ChangeNotifier {
     },
    );
    if(response.data['status'] == false){
-    Fluttertoast.showToast(
+    AppToast.showToast(
       msg: response.data['message'],
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
@@ -334,7 +335,7 @@ class ComplaintsController extends ChangeNotifier {
    getRequestErrorMessage = error is DioError
      ? error.response?.data['message'] ?? 'Something went wrong'
      : error.toString();
-   Fluttertoast.showToast(
+   AppToast.showToast(
      msg: getRequestErrorMessage!,
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,
@@ -360,7 +361,7 @@ class ComplaintsController extends ChangeNotifier {
     context: context,
    );
    if(response.data['status'] == false){
-    Fluttertoast.showToast(
+    AppToast.showToast(
       msg: response.data['message'],
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
@@ -378,7 +379,7 @@ class ComplaintsController extends ChangeNotifier {
    getRequestErrorMessage = error is DioError
      ? error.response?.data['message'] ?? 'Something went wrong'
      : error.toString();
-   Fluttertoast.showToast(
+   AppToast.showToast(
      msg: getRequestErrorMessage!,
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,
@@ -431,7 +432,7 @@ class ComplaintsController extends ChangeNotifier {
    );
 
    if (response.data['status'] == false) {
-    Fluttertoast.showToast(
+    AppToast.showToast(
       msg: response.data['message'] ?? 'Failed to send request',
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
@@ -455,7 +456,7 @@ class ComplaintsController extends ChangeNotifier {
    errorAddRequestMessage = error is DioException
      ? error.response?.data['message'] ?? 'Something went wrong'
      : error.toString();
-   Fluttertoast.showToast(
+   AppToast.showToast(
      msg: errorAddRequestMessage!,
      toastLength: Toast.LENGTH_LONG,
      gravity: ToastGravity.BOTTOM,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -6,7 +7,6 @@ import 'package:app_test/features/employee_profiles/shared/models/employee_profi
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:app_test/core/services/url_launcher_service.dart';
@@ -149,14 +149,14 @@ class _AssetCardState extends State<_AssetCard> {
       if (mounted) Navigator.of(context).pop();
       await OpenFilex.open(filePath);
 
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: '✅ ${'downloaded'.tr()}: $fileName',
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
     } catch (e) {
       if (mounted) Navigator.of(context).pop();
-      Fluttertoast.showToast(
+      AppToast.showToast(
         msg: 'Error: $e',
         backgroundColor: Colors.red,
         textColor: Colors.white,

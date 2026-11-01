@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/user_consts.dart';
@@ -325,7 +326,7 @@ class ShiftChangeController extends ChangeNotifier {
       if (context.mounted) {
         AlertsService.error(
           context: context,
-          message: e.toString(),
+          message: AppErrorReporter.safeMessage(e),
           title: 'error'.tr(),
         );
       }

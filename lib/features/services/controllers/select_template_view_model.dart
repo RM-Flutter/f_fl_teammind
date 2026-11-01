@@ -1,3 +1,5 @@
+import 'package:app_test/core/services/app_error_reporter.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -75,7 +77,7 @@ class SelectTemplateViewModel extends ChangeNotifier {
       errorMessage = null;
     } catch (e) {
       if (_disposed) return;
-      errorMessage = e.toString();
+      errorMessage = AppErrorReporter.safeMessage(e);
     } finally {
       if (!_disposed) {
         isLoading = false;
@@ -296,7 +298,7 @@ class SelectTemplateViewModel extends ChangeNotifier {
   }
 
   void _showToast(String msg, {required bool isError}) {
-    Fluttertoast.showToast(
+    AppToast.showToast(
       msg: msg,
       backgroundColor: isError ? Colors.red : Colors.green,
       textColor: Colors.white,
