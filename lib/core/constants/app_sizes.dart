@@ -60,6 +60,36 @@ abstract class AppSizes {
   static const s340 = 340.0;
   static const s400 = 400.0;
   static const s600 = 600.0;
+
+  // ---------------------------------------------------------------------------
+  // Text fields (theme): Figma input height 43 = 13 + ~17 text line + 13.
+  // ---------------------------------------------------------------------------
+  static const inputHorizontalPadding = 16.0;
+  static const inputVerticalPadding = 13.0;
+
+  // ---------------------------------------------------------------------------
+  // Figma frame 375 x 812. On phones use these with `.w` / `.h` so the layout
+  // keeps the design proportions on every screen.
+  // ---------------------------------------------------------------------------
+  /// Small pill button (LOGIN, Add Company, ...).
+  static const buttonSmallWidth = 149.0;
+  static const buttonSmallHeight = 35.0;
+
+  /// Outlined CREATE NEW ACCOUNT pill pinned to the bottom of the login page.
+  static const createAccountWidth = 223.0;
+  static const createAccountHeight = 38.0;
+  static const createAccountBottom = 55.0;
+
+  /// Login page vertical rhythm.
+  static const loginContentWidth = 275.0;
+  static const loginTopSpacer = 119.0;
+  static const loginLogoTitleGap = 34.0;
+  static const loginTitleFormGap = 32.0;
+  static const loginSwitchFieldGap = 11.0;
+  static const loginFieldGap = 12.0;
+  static const loginAfterForgotGap = 26.0;
+  static const loginBelowButtonGap = 14.0;
+  static const loginForgotFontSize = 11.0;
 }
 
 /// Constant gap widths

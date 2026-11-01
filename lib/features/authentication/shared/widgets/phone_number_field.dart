@@ -21,12 +21,20 @@ class PhoneNumberField extends StatefulWidget {
   final String? phoneError;
   final void Function()? triggerFunction;
 
+  /// When set, the field starts on this country (ISO2, e.g. `EG`) and dial code
+  /// (e.g. `+20`) instead of the one detected from the IP. Used to restore a
+  /// saved login.
+  final String? forcedCountryIso;
+  final String? forcedDialCode;
+
   const PhoneNumberField({
     super.key,
     required this.controller,
     this.triggerFunction,
     this.phoneError,
     this.initialCountry ,
+    this.forcedCountryIso,
+    this.forcedDialCode,
     required this.countryCodeController,
   });
 
@@ -43,7 +51,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
   @override
   void initState() {
     super.initState();
-    widget.countryCodeController.text = CacheHelper.getString("flagCode");
+    widget.countryCodeController.text =
+        widget.forcedDialCode ?? CacheHelper.getString("flagCode");
 
     // على الويب، إضافة listener لمنع إدخال الحروف
     if (kIsWeb || PlatformIs.web) {
@@ -100,7 +109,10 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
           hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
           counter: const SizedBox.shrink(),
         ),
-        initialCountryCode: detectedCountryCode ?? widget.initialCountry ?? "EG",
+        initialCountryCode: widget.forcedCountryIso ??
+            detectedCountryCode ??
+            widget.initialCountry ??
+            "EG",
         onChanged: (value) {
           // على الويب، التأكد من أن الرقم يحتوي على أرقام فقط
           if ((kIsWeb || PlatformIs.web) && !_isFiltering) {
@@ -150,7 +162,6 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         keyboardType: TextInputType.phone,
         flagsButtonMargin: const EdgeInsets.symmetric(
           horizontal: AppSizes.s12,
-          vertical: AppSizes.s8,
         ),
         dropdownIcon: const Icon(
           Icons.arrow_drop_down,

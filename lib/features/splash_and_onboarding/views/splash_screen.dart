@@ -1,3 +1,4 @@
+import 'package:app_test/features/authentication/login/data/saved_accounts_service.dart';
 import 'dart:convert';
 import 'package:app_test/core/constants/cache_constants.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -283,6 +284,10 @@ class _SplashScreenState extends State<SplashScreen> {
       debugPrint("❌ Error in initializeHomeScreen, continuing anyway: $e\n$s");
       // Continue even if home screen initialization fails (e.g., due to network issues)
     }
+
+    // After a login, the user settings are now cached: copy the user's name and
+    // photo onto the saved account so the login list can show them.
+    await SavedAccountsService.syncProfileFromSettings();
 
     if (!mounted) return;
 

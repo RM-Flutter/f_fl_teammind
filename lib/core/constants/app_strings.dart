@@ -1179,4 +1179,9 @@ abstract class AppStrings {
   static const selectEmployee = "selectEmployee";
   // static const selectDepartment = "selectDepartment";
   // static const requestType = "requestType";
+
+  // Saved accounts (login)
+  static const savedAccounts = "savedAccounts";
+  static const removeSavedAccountQuestion = "removeSavedAccountQuestion";
+  static const tapToFillLoginForm = "tapToFillLoginForm";
 }

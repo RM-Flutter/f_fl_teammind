@@ -11,7 +11,10 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/authentication/login/controller/login_controller.dart';
 
 import '../../../../../core/platform/platform_is.dart';
+import 'package:app_test/core/services/layout_service.dart';
 
+/// Outlined "CREATE NEW ACCOUNT" pill. The login page pins it near the bottom
+/// of the screen (Figma: 223 x 38 dp, 55 dp from the bottom).
 class CreateAccountSection extends StatelessWidget {
   final Map<String, dynamic>? gCache;
   final AuthenticationController viewModel;
@@ -28,87 +31,38 @@ class CreateAccountSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+    final compact = LayoutService.isPhoneLayout(context);
+    final isWeb = kIsWeb || PlatformIs.web;
 
-    return Column(
-      children: [
-        SizedBox(height: (kIsWeb || PlatformIs.web) ? 30 : 25),
-        Container(
-          padding: EdgeInsets.only(
-            bottom: (kIsWeb || PlatformIs.web) ? AppSizes.s48 : AppSizes.s16,
-          ),
-          child: isTablet 
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s20),
-                      child: CustomElevatedButton(
-                        width: (kIsWeb || PlatformIs.web) ? AppSizes.s290 : AppSizes.s290.w,
-                        title: AppStrings.createNewAccount.tr(),
-                        isFuture: false,
-                        onPressed: () => viewModel.showCreateAccountModal(context: context),
-                        buttonStyle: ElevatedButton.styleFrom(
-                          shadowColor: Color(AppColors.shadow),
-                          foregroundColor: Color(0xffffffff),
-                          backgroundColor: Colors.transparent,
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSizes.s28.r),
-                            side: BorderSide(
-                              color: Color(0xffffffff),
-                            ),
-                          ),
-                        ),
-                        titleWidget: AutoSizeText(
-                          AppStrings.createNewAccount.tr(),
-                          maxLines: 1,
-                          minFontSize: 8,
-                          style: AppStyles.titleTextContent(context).copyWith(
-                            color: Color(0xffffffff),
-                            fontWeight: FontWeight.w400,
-                            fontSize: (kIsWeb || PlatformIs.web) ? 13 : 12.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomElevatedButton(
-                    width: (kIsWeb || PlatformIs.web) ? AppSizes.s290 : AppSizes.s290.w,
-                    title: AppStrings.createNewAccount.tr(),
-                    isFuture: false,
-                    onPressed: () => viewModel.showCreateAccountModal(context: context),
-                    buttonStyle: ElevatedButton.styleFrom(
-                      shadowColor: Color(AppColors.shadow),
-                      foregroundColor: Color(0xffffffff),
-                      backgroundColor: Colors.transparent,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.s28.r),
-                        side: BorderSide(
-                          color: Color(0xffffffff),
-                        ),
-                      ),
-                    ),
-                    titleWidget: Text(
-                      AppStrings.createNewAccount.tr(),
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        color: Color(0xffffffff),
-                        fontWeight: FontWeight.w400,
-                        fontSize: (kIsWeb || PlatformIs.web) ? 14 : 14.sp,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+    return CustomElevatedButton(
+      width: compact
+          ? AppSizes.createAccountWidth.w
+          : (isWeb ? AppSizes.s290 : AppSizes.s290.w),
+      height: compact ? AppSizes.createAccountHeight.h : null,
+      title: AppStrings.createNewAccount.tr(),
+      isFuture: false,
+      onPressed: () => viewModel.showCreateAccountModal(context: context),
+      buttonStyle: ElevatedButton.styleFrom(
+        shadowColor: Color(AppColors.shadow),
+        foregroundColor: const Color(0xffffffff),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.s28.r),
+          side: const BorderSide(color: Color(0xffffffff)),
         ),
-      ],
+      ),
+      titleWidget: AutoSizeText(
+        AppStrings.createNewAccount.tr().toUpperCase(),
+        maxLines: 1,
+        minFontSize: 8,
+        style: AppStyles.titleTextContent(context).copyWith(
+          color: const Color(0xffffffff),
+          fontWeight: FontWeight.w400,
+          fontSize: isWeb ? 14 : 12.sp,
+        ),
+      ),
     );
   }
 }

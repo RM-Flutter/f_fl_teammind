@@ -144,6 +144,7 @@ dependencies:
   workmanager: ^0.10.9
   timezone: ^0.10.1
   fl_chart: ^1.2.0
+  flutter_secure_storage: ^10.3.4
 
 dev_dependencies:
 #  flutter_launcher_icons: 0.13.1

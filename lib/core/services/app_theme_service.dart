@@ -204,7 +204,10 @@ abstract class AppThemeService {
             fontSize: AppSizes.s12,
           ),
           filled: true,
-          contentPadding: const EdgeInsets.all(AppSizes.s20),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.inputHorizontalPadding,
+            vertical: AppSizes.inputVerticalPadding,
+          ),
           fillColor: colorPalette.inputFillColor.color,
           isDense: true,
         ),

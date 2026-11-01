@@ -8,6 +8,7 @@ class CustomElevatedButton extends StatefulWidget {
   final ButtonStyle? buttonStyle;
   final Widget? titleWidget;
   final double? width;
+  final double? height;
   final double? titleSize;
   final double? radius;
   final Color? backgroundColor;
@@ -29,6 +30,7 @@ class CustomElevatedButton extends StatefulWidget {
     this.outlineColor,
     this.radius,
     this.width,
+    this.height,
     this.isFuture = true,
     this.isPrimaryBackground = true,
     this.isOutlined = false, // 👈 default false
@@ -115,7 +117,7 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               width: _isLoading ? AppSizes.s75 : targetWidth,
-              height: AppSizes.s50,
+              height: widget.height ?? AppSizes.s50,
           child: ElevatedButton(
             style: widget.buttonStyle ??
                 ElevatedButton.styleFrom(

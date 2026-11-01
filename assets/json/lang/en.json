@@ -1429,5 +1429,8 @@
   "person": "Employee",
   "selectEmployee": "Select Employee",
   "selectDepartment": "Select Department",
-  "requestType": "Request Type"
+  "requestType": "Request Type",
+  "savedAccounts": "Saved accounts",
+  "removeSavedAccountQuestion": "Remove this saved account from this device?",
+  "tapToFillLoginForm": "Tap an account to fill the login form"
 }

@@ -9,6 +9,12 @@ class LayoutService {
         MediaQuery.of(context).orientation == Orientation.portrait;
   }
 
+  /// A phone-sized, non-web layout. Pages use it to switch to the Figma sizes
+  /// (scaled with `.w` / `.h`); web and tablets keep fixed sizes.
+  static bool isPhoneLayout(BuildContext context) {
+    return !PlatformIs.web && MediaQuery.sizeOf(context).width < 600;
+  }
+
   /// check if the device is tabled
   static bool isTablet(BuildContext context) {
     return (MediaQuery.of(context).size.width >= 900 &&

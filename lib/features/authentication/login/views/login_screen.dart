@@ -11,10 +11,11 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/domain_selection_service.dart';
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/utils/overlay_gradient_widget.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:app_test/core/utils/overlay_gradient_widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:app_test/features/authentication/login/controller/login_controller.dart';
@@ -27,6 +28,7 @@ import 'widgets/login_animated_background.dart';
 import 'widgets/login_domain_bar.dart';
 import 'widgets/login_form.dart';
 import 'widgets/login_logo.dart';
+import 'widgets/saved_accounts_button.dart';
 import 'widgets/social_login_section.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -123,6 +125,27 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
       }
     }
 
+    // Figma sizes (scaled) on phones; web and tablets keep the fixed sizes.
+    final compact = LayoutService.isPhoneLayout(context);
+    final isWeb = kIsWeb || PlatformIs.web;
+    final topSpacer =
+        compact ? AppSizes.loginTopSpacer.h : (isWeb ? 40.0 : 60.0);
+    final logoTitleGap = compact
+        ? AppSizes.loginLogoTitleGap.h
+        : (isWeb ? AppSizes.s32 : AppSizes.s32.h);
+    final titleFormGap =
+        compact ? AppSizes.loginTitleFormGap.h : AppSizes.s32.h;
+    final belowButtonGap =
+        compact ? AppSizes.loginBelowButtonGap.h : AppSizes.s16.h;
+    final smallButtonWidth = compact ? AppSizes.buttonSmallWidth.w : null;
+    final smallButtonHeight = compact ? AppSizes.buttonSmallHeight.h : null;
+    // Never lower than the domain pill needs, so they cannot overlap.
+    final createAccountBottom = compact
+        ? (AppSizes.createAccountBottom.h < 62
+            ? 62.0
+            : AppSizes.createAccountBottom.h)
+        : 72.0;
+
     return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
       child: Scaffold(
@@ -139,18 +162,22 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                   Container(
                     width: double.infinity,
                     height: (kIsWeb || PlatformIs.web) ? double.infinity : null,
-                    alignment: Alignment.center,
+                    alignment:
+                        compact ? Alignment.topCenter : Alignment.center,
                     child: SingleChildScrollView(
                       child: Center(
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width < 600
-                              ? double.infinity
-                              : 450,
+                          width: (compact ? AppSizes.loginContentWidth.w : null) ??
+                              (MediaQuery.of(context).size.width < 600
+                                  ? double.infinity
+                                  : 450),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal: (kIsWeb || PlatformIs.web)
-                                  ? AppSizes.s24
-                                  : AppSizes.s24.w,
+                              horizontal: compact
+                                  ? 0
+                                  : (kIsWeb || PlatformIs.web)
+                                      ? AppSizes.s24
+                                      : AppSizes.s24.w,
                               vertical:
                                   (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
                             ),
@@ -159,14 +186,9 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SizedBox(
-                                      height:
-                                          (kIsWeb || PlatformIs.web) ? 40 : 60),
+                                  SizedBox(height: topSpacer),
                                   const LoginLogo(),
-                                  SizedBox(
-                                      height: (kIsWeb || PlatformIs.web)
-                                          ? AppSizes.s32
-                                          : AppSizes.s32.h),
+                                  SizedBox(height: logoTitleGap),
                                   // Login Page Headline
                                   AutoSizeText(
                                     "${AppStrings.loginTo.tr()}\n$accountText",
@@ -180,13 +202,15 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                       height: 1.1,
                                     ),
                                   ),
-                                  SizedBox(height: AppSizes.s32.h),
+                                  SizedBox(height: titleFormGap),
 
                                   LoginForm(viewModel: viewModel),
 
-                                  SizedBox(height: AppSizes.s16.h),
+                                  SizedBox(height: belowButtonGap),
                                   // ADD COMPANY BUTTON
                                   CustomElevatedButton(
+                                    width: smallButtonWidth,
+                                    height: smallButtonHeight,
                                     title: AppStrings.addCompany.tr(),
                                     onPressed: () async {
                                       await CacheHelper.deleteData(
@@ -205,10 +229,12 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                     },
                                     isPrimaryBackground: false,
                                   ),
-                                  SizedBox(height: AppSizes.s16.h),
+                                  SizedBox(height: belowButtonGap),
                                   if (gCache != null &&
                                       gCache['can_visit'] == true)
                                     CustomElevatedButton(
+                                      width: smallButtonWidth,
+                                      height: smallButtonHeight,
                                       title: AppStrings.visitor.tr(),
                                       onPressed: () async {},
                                       isPrimaryBackground: false,
@@ -220,15 +246,12 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                     isLoginBySocial: isLoginBySocial,
                                   ),
 
-                                  CreateAccountSection(
-                                    gCache: gCache,
-                                    viewModel: viewModel,
-                                  ),
-                                  // Room so the domain bar never covers the last widget.
+                                  // Room so the pinned CREATE NEW ACCOUNT button and the
+                                  // domain bar never cover the last widget.
                                   SizedBox(
                                       height: (kIsWeb || PlatformIs.web)
-                                          ? 64
-                                          : 64.h),
+                                          ? 150
+                                          : 150.h),
                                 ],
                               ),
                             ),
@@ -237,12 +260,24 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
+                  const SavedAccountsButton(),
                   const LanguageDropdownButton()
                 ],
               ),
             ),
             // Pinned to the real bottom of the screen: it is not lifted by the
             // keyboard, the keyboard simply covers it.
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: createAccountBottom,
+              child: Center(
+                child: CreateAccountSection(
+                  gCache: gCache,
+                  viewModel: viewModel,
+                ),
+              ),
+            ),
             const Positioned(
               left: 0,
               right: 0,

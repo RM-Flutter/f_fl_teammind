@@ -193,6 +193,15 @@ abstract class AppColors {
         0xff191C1F,
       );
 
+  /// Colour the background photo fades into at the bottom of a page (login,
+  /// splash). The company's `overlayColor` when configured, otherwise the
+  /// Figma navy.
+  static int get fadeColor =>
+      DynamicAppConfigService.hexToInt(
+        DynamicAppConfigService.getColorValue('overlayColor'),
+        0xff09075E,
+      );
+
   // Tab & Navigation Colors
   static int get tabActiveColor =>
       DynamicAppConfigService.hexToInt(

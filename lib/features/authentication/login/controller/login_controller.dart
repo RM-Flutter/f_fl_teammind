@@ -24,6 +24,9 @@ import '../../../../core/utils/app_styles.dart';
 import '../../create_account/views/create_account_screen.dart';
 import '../../forgot_password/views/forget_password_screen.dart';
 import '../data/login_repo.dart';
+import '../data/saved_account.dart';
+import '../data/saved_accounts_service.dart';
+import 'package:intl_phone_field/countries.dart' as phone_countries;
 import 'package:app_test/features/personal_profile/data/repo/personal_profile_repo.dart';
 import '../../shared/widgets/verification_tile_widget.dart';
 
@@ -50,9 +53,29 @@ class AuthenticationController extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool notificationStatus = CacheHelper.getBool("status") ?? false;
 
+  // ---- Saved accounts (per domain, stored in secure storage) ----
+  List<SavedAccount> savedAccounts = [];
+
+  /// Credentials of the login attempt in progress. They are only written to
+  /// storage once the token is actually set (see [_rememberPendingAccount]).
+  SavedAccount? _pendingAccount;
+
+  /// Country to show in the phone field after a saved account was applied.
+  String? forcedCountryIso;
+  String? forcedDialCode;
+
+  /// Changing it rebuilds the phone field so the forced country takes effect.
+  int phoneFieldVersion = 0;
+  bool _disposed = false;
+
+  AuthenticationController() {
+    loadSavedAccounts();
+  }
+
   // Triggered Automatically when the view model not used !!
   @override
   void dispose() {
+    _disposed = true;
     animationController?.dispose();
     phoneController.dispose();
     emailController.dispose();
@@ -64,7 +87,69 @@ class AuthenticationController extends ChangeNotifier {
 
   void toggleLoginMethod() {
     isPhoneLogin = !isPhoneLogin;
+    forcedCountryIso = null;
+    forcedDialCode = null;
     notifyListeners();
+  }
+
+  Future<void> loadSavedAccounts() async {
+    final accounts = await SavedAccountsService.load();
+    if (_disposed) return;
+    savedAccounts = accounts;
+    notifyListeners();
+  }
+
+  /// Fills the login form with a saved account. The user can still edit it.
+  void applySavedAccount(SavedAccount account) {
+    isPhoneLogin = account.isPhone;
+    if (account.isPhone) {
+      phoneController.text = account.identifier;
+      countryCodeController.text = account.countryCode;
+      forcedDialCode = account.countryCode;
+      forcedCountryIso = _isoForDialCode(account.countryCode);
+      phoneFieldVersion++;
+    } else {
+      emailController.text = account.identifier;
+      forcedCountryIso = null;
+      forcedDialCode = null;
+    }
+    passwordController.text = account.password;
+    notifyListeners();
+  }
+
+  Future<void> deleteSavedAccount(SavedAccount account) async {
+    final accounts = await SavedAccountsService.remove(account.id);
+    if (_disposed) return;
+    savedAccounts = accounts;
+    notifyListeners();
+  }
+
+  /// ISO2 for a dial code. Prefers the detected country when it has that code
+  /// (several countries share +1, +7, ...).
+  String? _isoForDialCode(String dialCode) {
+    final digits = dialCode.replaceAll('+', '');
+    if (digits.isEmpty) return null;
+    final detectedIso = CacheHelper.getString("flag");
+    final detectedDial = CacheHelper.getString("flagCode");
+    if (detectedDial == dialCode && detectedIso.isNotEmpty) return detectedIso;
+    for (final c in phone_countries.countries) {
+      if (c.dialCode == digits) return c.code;
+    }
+    return null;
+  }
+
+  /// Saves the credentials of the login that just completed. Never throws:
+  /// remembering an account must not break a successful login.
+  Future<void> _rememberPendingAccount() async {
+    final account = _pendingAccount;
+    _pendingAccount = null;
+    if (account == null) return;
+    try {
+      savedAccounts = await SavedAccountsService.save(account);
+      if (!_disposed) notifyListeners();
+    } catch (e) {
+      debugPrint('⚠️ Could not remember account: $e');
+    }
   }
   void initializeAnimation(TickerProvider vsync) {
     animationController = AnimationController(
@@ -75,6 +160,8 @@ class AuthenticationController extends ChangeNotifier {
         Tween<double>(begin: 0.0, end: 1.0).animate(animationController!);
   }
   Future<void> getDeviceToken({required BuildContext context}) async {
+    _pendingAccount = null;
+    await SavedAccountsService.clearPendingProfileSync();
     OperationResult<Map<String, dynamic>> result =
     await LoginRepo.getDeviceToken(
       context: context,
@@ -99,6 +186,8 @@ class AuthenticationController extends ChangeNotifier {
     }
   }
   Future<void> loginWithSocial(BuildContext context, String url) async {
+    _pendingAccount = null;
+    await SavedAccountsService.clearPendingProfileSync();
     try {
       return await launchUrl(
         Uri.parse(url),
@@ -168,6 +257,18 @@ class AuthenticationController extends ChangeNotifier {
           ? '${phoneController.text}'
           : countryCodeController.text + phoneController.text)
           .trim();
+      _pendingAccount = isPhoneLogin
+          ? SavedAccount(
+              isPhone: true,
+              identifier: phoneController.text.trim(),
+              countryCode: countryCodeController.text.trim(),
+              password: passwordController.text,
+            )
+          : SavedAccount(
+              isPhone: false,
+              identifier: emailController.text.trim(),
+              password: passwordController.text,
+            );
       OperationResult<Map<String, dynamic>> result =
       await LoginRepo.login(
           context: context,
@@ -192,6 +293,7 @@ class AuthenticationController extends ChangeNotifier {
         // );
         // await getDeviceSys(context: context, status: 1);
       } else {
+        _pendingAccount = null;
         Fluttertoast.showToast(
             msg: result.message!,
             toastLength: Toast.LENGTH_LONG,
@@ -240,6 +342,22 @@ class AuthenticationController extends ChangeNotifier {
           : cCode + phones.text ?? "")
           .trim();
       print("request login /////");
+      try {
+        _pendingAccount = isPhoneLogin
+            ? SavedAccount(
+                isPhone: true,
+                identifier: phones.text.trim(),
+                countryCode: (cCode ?? '').toString().trim(),
+                password: (password ?? '').toString(),
+              )
+            : SavedAccount(
+                isPhone: false,
+                identifier: email.text.trim(),
+                password: (password ?? '').toString(),
+              );
+      } catch (_) {
+        _pendingAccount = null;
+      }
       OperationResult<Map<String, dynamic>> result =
       await LoginRepo.login(
           context: context,
@@ -266,6 +384,7 @@ class AuthenticationController extends ChangeNotifier {
         // );
         // await getDeviceSys(context: context, status: 1);
       } else {
+        _pendingAccount = null;
         AlertsService.error(
             title: AppStrings.failed.tr(),
             context: context,
@@ -812,6 +931,7 @@ class AuthenticationController extends ChangeNotifier {
       // }
       await appConfigServiceProvider.setAuthenticationStatusWithToken(
           isLogin: true, token: result['token']);
+      await _rememberPendingAccount();
       
       if (result['update_password'] == true) {
         if (context.mounted) {
@@ -880,6 +1000,7 @@ class AuthenticationController extends ChangeNotifier {
       case AuthStatus.active:
         await appConfigServiceProvider.setAuthenticationStatusWithToken(
             isLogin: true, token: result['token']);
+        await _rememberPendingAccount();
         // Navigate to splash screen (same as mobile) - splash will handle navigation to home
         context.goNamed(
           AppRoutes.splash.name,
