@@ -7,6 +7,7 @@ import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/widgets/files_carousel_dialog.dart';
 import '../../../data/models/approvable_details_model.dart';
 
 class SingleApprovalRow extends StatelessWidget {
@@ -46,6 +47,23 @@ class SingleApprovalRow extends StatelessWidget {
     } catch (_) {
       return rawDate.split('T').first;
     }
+  }
+
+  /// Attachment URLs of this approval (normalized), from `files` or the single `file`.
+  List<String> get _attachmentUrls {
+    final raw = (item.files != null && item.files!.isNotEmpty)
+        ? item.files!.map((f) => f.toString()).toList()
+        : [if (item.file != null && item.file!.isNotEmpty) item.file!];
+    return raw.map(_normalizeFileUrl).where((u) => u.isNotEmpty).toList();
+  }
+
+  String _normalizeFileUrl(String rawUrl) {
+    final fileUrl = rawUrl.trim();
+    final match = RegExp(r'https?://[^\s,\]}\"]+').firstMatch(fileUrl);
+    if (match != null) return match.group(0)!;
+    if (fileUrl.isEmpty) return '';
+    if (fileUrl.startsWith('/')) return '${AppConstants.base}$fileUrl';
+    return 'https://$fileUrl';
   }
 
   Future<void> _openFileUrl(String rawUrl) async {
@@ -206,50 +224,45 @@ class SingleApprovalRow extends StatelessWidget {
           ),
         ],
 
-        if (item.files != null && item.files!.isNotEmpty) ...[
-          for (int i = 0; i < item.files!.length; i++) ...[
-            const SizedBox(height: 6),
-            GestureDetector(
-              onTap: () => _openFileUrl(item.files![i]),
-              child: Row(
-                children: [
-                  const Icon(Icons.attach_file_rounded,
-                      size: 14, color: Colors.blue),
-                  const SizedBox(width: 4),
-                  Text(
-                    item.files!.length == 1
-                        ? (isArabic ? 'عرض المرفق' : 'View Attachment')
-                        : (isArabic ? 'عرض المرفق ${i + 1}' : 'View Attachment ${i + 1}'),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ],
+        if (_attachmentUrls.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Material(
+            color: Colors.blue.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(10),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(10),
+              onTap: () => showFilesCarouselDialog(
+                context: context,
+                urls: _attachmentUrls,
+                onDownload: (url, _) => _openFileUrl(url),
               ),
-            ),
-          ],
-        ] else if (item.file != null && item.file!.isNotEmpty) ...[
-          const SizedBox(height: 6),
-          GestureDetector(
-            onTap: () => _openFileUrl(item.file!),
-            child: Row(
-              children: [
-                const Icon(Icons.attach_file_rounded,
-                    size: 14, color: Colors.blue),
-                const SizedBox(width: 4),
-                Text(
-                  isArabic ? 'عرض المرفق' : 'View Attachment',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 48),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.attach_file_rounded,
+                          size: 20, color: Colors.blue),
+                      const SizedBox(width: 8),
+                      Text(
+                        _attachmentUrls.length == 1
+                            ? (isArabic ? 'عرض المرفق' : 'View Attachment')
+                            : (isArabic
+                                ? 'عرض المرفقات (${_attachmentUrls.length})'
+                                : 'View Attachments (${_attachmentUrls.length})'),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],

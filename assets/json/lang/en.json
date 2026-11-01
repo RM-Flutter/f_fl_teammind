@@ -1432,5 +1432,6 @@
   "requestType": "Request Type",
   "savedAccounts": "Saved accounts",
   "removeSavedAccountQuestion": "Remove this saved account from this device?",
-  "tapToFillLoginForm": "Tap an account to fill the login form"
+  "tapToFillLoginForm": "Tap an account to fill the login form",
+  "download": "Download"
 }

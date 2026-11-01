@@ -1430,5 +1430,6 @@
   "requestType": "نوع الطلب",
   "savedAccounts": "الحسابات المحفوظة",
   "removeSavedAccountQuestion": "هل تريد حذف هذا الحساب المحفوظ من هذا الجهاز؟",
-  "tapToFillLoginForm": "اضغط على حساب لتعبئة بيانات الدخول"
+  "tapToFillLoginForm": "اضغط على حساب لتعبئة بيانات الدخول",
+  "download": "تحميل"
 }

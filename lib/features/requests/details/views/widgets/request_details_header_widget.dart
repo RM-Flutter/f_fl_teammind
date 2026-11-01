@@ -9,6 +9,7 @@ import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/widgets/files_carousel_dialog.dart';
 import 'package:app_test/features/requests/details/views/widgets/management_response_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -214,43 +215,49 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     }
   }
 
-  /// Download all files (looping)
-  Future<void> _downloadAllFiles(List files) async {
-    if (files.isEmpty) return;
+  /// Resolve a file entry (String, Map or model) into an absolute URL.
+  String _resolveFileUrl(dynamic file) {
+    String fileUrl = '';
+    if (file is String) {
+      fileUrl = file;
+    } else if (file is Map) {
+      fileUrl = file['file']?.toString() ?? file['url']?.toString() ?? '';
+    } else {
+      try {
+        fileUrl = (file as dynamic).file?.toString() ?? '';
+      } catch (_) {}
+    }
+    fileUrl = fileUrl.trim();
+    if (fileUrl.isEmpty) return '';
+    if (fileUrl.startsWith('/')) {
+      return '${AppConstants.base}$fileUrl';
+    } else if (!fileUrl.startsWith('http')) {
+      return '${AppConstants.base}/$fileUrl';
+    }
+    return fileUrl;
+  }
 
+  Future<void> _downloadSingleFile(String fileUrl, String fileName) async {
     final permissionGranted = await requestStoragePermission();
     if (!permissionGranted) {
       Fluttertoast.showToast(msg: 'Storage permission is required to download files.');
       return;
     }
-
-    for (var file in files) {
-      try {
-        String fileUrl = '';
-        if (file is String) {
-          fileUrl = file;
-        } else if (file is Map) {
-          fileUrl = file['file']?.toString() ?? file['url']?.toString() ?? '';
-        } else {
-          try {
-            fileUrl = (file as dynamic).file?.toString() ?? '';
-          } catch (_) {}
-        }
-        if (fileUrl.isEmpty) continue;
-        
-        fileUrl = fileUrl.trim();
-        if (fileUrl.startsWith('/')) {
-          fileUrl = '${AppConstants.base}$fileUrl';
-        } else if (!fileUrl.startsWith('http')) {
-          fileUrl = '${AppConstants.base}/$fileUrl';
-        }
-        
-        final String fileName = fileUrl.split('/').last;
-        await _downloadFile(fileUrl, fileName);
-      } catch (e) {
-        debugPrint('Error downloading file: $e');
-      }
+    try {
+      await _downloadFile(fileUrl, fileName);
+    } catch (e) {
+      debugPrint('Error downloading file: $e');
     }
+  }
+
+  /// Show the request files in the shared files carousel dialog.
+  void _showFilesDialog(List files) {
+    final urls = files.map(_resolveFileUrl).where((u) => u.isNotEmpty).toList();
+    showFilesCarouselDialog(
+      context: context,
+      urls: urls,
+      onDownload: _downloadSingleFile,
+    );
   }
 
   @override
@@ -519,7 +526,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                 if (request.files != null && request.files.isNotEmpty) {
                                   items.add(
                                     InfoTileWidget(
-                                      onTap: () => _downloadAllFiles(request.files),
+                                      onTap: () => _showFilesDialog(request.files),
                                       imgPath: Icons.file_download_outlined,
                                       title: AppStrings.downloadFile.tr(),
                                     ),

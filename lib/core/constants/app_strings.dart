@@ -1184,4 +1184,5 @@ abstract class AppStrings {
   static const savedAccounts = "savedAccounts";
   static const removeSavedAccountQuestion = "removeSavedAccountQuestion";
   static const tapToFillLoginForm = "tapToFillLoginForm";
+  static const download = "download";
 }
