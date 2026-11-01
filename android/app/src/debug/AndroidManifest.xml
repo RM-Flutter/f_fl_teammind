@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Local tenants (e.g. http://rm.test) have no HTTPS: let the WebView open them in debug builds only -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>

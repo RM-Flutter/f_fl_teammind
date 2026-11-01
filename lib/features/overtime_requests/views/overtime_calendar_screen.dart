@@ -202,7 +202,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                               Color bgColor = Color(AppColors.buttons);
                               if (status == 'approved') {
                                 bgColor = const Color(AppColors.green);
-                              } else if (status == 'refused' || status == 'rejected' || status == 'cancelled') {
+                              } else if (status == 'refused' || status == 'rejected' || status == 'cancelled' || status == 'canceled') {
                                 bgColor = Colors.red.shade400;
                               }
 
@@ -259,7 +259,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
     Color bgColor = Color(AppColors.buttons);
     if (status == 'approved') {
       bgColor = const Color(AppColors.green);
-    } else if (status == 'refused' || status == 'rejected' || status == 'cancelled') {
+    } else if (status == 'refused' || status == 'rejected' || status == 'cancelled' || status == 'canceled') {
       bgColor = Colors.red.shade400;
     }
 
@@ -349,7 +349,7 @@ class _OvertimeDataSource extends CalendarDataSource {
     final status = ot.status?.toLowerCase().trim();
     if (status == 'approved') {
       return const Color(AppColors.green);
-    } else if (status == 'refused' || status == 'rejected' || status == 'cancelled') {
+    } else if (status == 'refused' || status == 'rejected' || status == 'cancelled' || status == 'canceled') {
       return Colors.red.shade400;
     } else {
       return  Color(AppColors.buttons);
