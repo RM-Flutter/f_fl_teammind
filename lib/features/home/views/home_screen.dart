@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app_test/core/services/bookmark_service.dart';
 import 'dart:convert';
 import 'package:app_test/core/helpers/package_helper.dart';
 import 'package:app_test/core/widgets/fade_slide_in.dart';
@@ -336,8 +337,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (viewModel.myTasks != null && viewModel.myTasks?.isNotEmpty == true) {
       widgetsWithData.add(HomeWidgetType.myTasks);
     }
-    // Bookmarks are always available to show (it will show empty state if no bookmarks, or list)
-    widgetsWithData.add(HomeWidgetType.bookmarks);
+    // Bookmarks only appear once the user has some (otherwise the section would be empty)
+    if (BookmarkService.getAllBookmarks().isNotEmpty) {
+      widgetsWithData.add(HomeWidgetType.bookmarks);
+    }
 
     // Add widgets that have data, following the saved order
     for (final widgetType in _widgetOrder) {
@@ -353,10 +356,8 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    // Filter hidden widgets if not in edit mode
-    if (!_isEditMode) {
-      _availableWidgets.removeWhere((w) => _hiddenWidgets.contains(w.id));
-    }
+    // Hidden sections stay in the list: outside edit mode they show as a slim row with a green
+    // plus to bring them back.
 
     return Column(
       children: [
@@ -496,6 +497,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final isHidden = _hiddenWidgets.contains(widgetType.id);
 
+    if (isHidden && !_isEditMode) {
+      return Container(
+        key: ValueKey(widgetType.id),
+        margin: EdgeInsets.only(bottom: AppSizes.s8, top: AppSizes.s4),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+        child: Row(
+          children: [
+            _editCircleButton(widgetType, isHidden: true),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                _sectionTitle(widgetType),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       key: ValueKey(widgetType.id),
       margin: EdgeInsets.only(
@@ -507,89 +534,124 @@ class _HomeScreenState extends State<HomeScreen> {
         offsetY: 0.02,
         beginScale: 1,
         child: Material(
-        color: Colors.transparent,
-        child: Stack(
-          children: [
-            Opacity(
-              opacity: isHidden ? 0.5 : 1.0,
-              child: content,
+          color: Colors.transparent,
+          child: _wrapEditFrame(
+            widgetType: widgetType,
+            index: index,
+            isHidden: isHidden,
+            child: Stack(
+              children: [
+                Opacity(
+                  opacity: isHidden ? 0.5 : 1.0,
+                  child: content,
+                ),
+                // Disable tapping inside the section while customizing
+                if (_isEditMode)
+                  Positioned.fill(
+                    child: Container(color: Colors.transparent),
+                  ),
+              ],
             ),
-            if (_isEditMode) ...[
-              // Disable tapping inside widget during edit mode
-              Positioned.fill(
-                child: Container(color: Colors.transparent),
-              ),
-              // Add / Remove Button
-              Positioned(
-                top: 8,
-                left: LocalizationService.isArabic(context: context) ? null : 8,
-                right: LocalizationService.isArabic(context: context) ? 8 : null,
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (isHidden) {
-                        _hiddenWidgets.remove(widgetType.id);
-                      } else {
-                        _hiddenWidgets.add(widgetType.id);
-                      }
-                      _saveHiddenWidgets();
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: isHidden ? Colors.green : Colors.red,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(AppColors.shadow).withValues(alpha: 0.15),
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      isHidden ? Icons.add : Icons.remove,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-            // Drag handle - only this can be used to drag
-            if (_isEditMode || !_isEditMode) // Show handle always, or only in edit? Let's show always as before, but maybe gray it out if hidden
-              Positioned(
-                top: 8,
-                right: LocalizationService.isArabic(context: context) ? null : 8,
-                left: LocalizationService.isArabic(context: context) ? 8 : null,
-                child: ReorderableDragStartListener(
-                  index: index,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Color(AppColors.background).withValues(alpha: 0.95),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(AppColors.shadow).withValues(alpha: 0.15),
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.drag_handle,
-                      color: isHidden ? Colors.grey : Color(AppColors.secondaryButton),
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  String _sectionTitle(HomeWidgetType type) {
+    switch (type) {
+      case HomeWidgetType.myRequests:
+        return AppStrings.mineRequests.tr();
+      case HomeWidgetType.myTeamRequests:
+        return AppStrings.teamRequests.tr();
+      case HomeWidgetType.otherDepartmentRequests:
+        return AppStrings.otherDepartmentRequests.tr();
+      case HomeWidgetType.allCompanyRequests:
+        return AppStrings.allCompanyRequests.tr();
+      case HomeWidgetType.myTasks:
+        return AppStrings.tasks.tr();
+      case HomeWidgetType.notifications:
+        return AppStrings.myNotifications.tr();
+      case HomeWidgetType.bookmarks:
+        return AppStrings.myBookmarks.tr();
+    }
+  }
+
+  /// Small round hide (red minus) / show (green plus) button.
+  Widget _editCircleButton(HomeWidgetType widgetType, {required bool isHidden}) {
+    final color = isHidden ? Colors.green : Colors.red;
+    return InkWell(
+      customBorder: const CircleBorder(),
+      onTap: () {
+        setState(() {
+          if (isHidden) {
+            _hiddenWidgets.remove(widgetType.id);
+          } else {
+            _hiddenWidgets.add(widgetType.id);
+          }
+          _saveHiddenWidgets();
+        });
+      },
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.14),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          isHidden ? Icons.add_rounded : Icons.remove_rounded,
+          color: color,
+          size: 20,
+        ),
       ),
+    );
+  }
+
+  /// Controls shown above a section while customizing: no background, just the round button on
+  /// the start and the drag icon on the end. Same widget structure in both modes (keyed children)
+  /// so toggling edit mode doesn't remount the section and replay its animations.
+  Widget _wrapEditFrame({
+    required HomeWidgetType widgetType,
+    required int index,
+    required bool isHidden,
+    required Widget child,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (_isEditMode)
+          KeyedSubtree(
+            key: const ValueKey('edit-controls'),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 2),
+              child: Row(
+                children: [
+                  _editCircleButton(widgetType, isHidden: isHidden),
+                  // The whole remaining row is the drag area
+                  Expanded(
+                    child: ReorderableDragStartListener(
+                      index: index,
+                      child: Container(
+                        height: 36,
+                        color: Colors.transparent,
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: Icon(
+                          Icons.drag_indicator_rounded,
+                          color: isHidden
+                              ? Colors.grey.shade400
+                              : Color(AppColors.secondaryButton),
+                          size: 26,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        KeyedSubtree(key: const ValueKey('section-content'), child: child),
+      ],
     );
   }
 
