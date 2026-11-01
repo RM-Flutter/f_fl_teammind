@@ -34,6 +34,26 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
       notificationProvider.getDevices(context: context); // Load initial notifications
     });
   }
+  /// Names saved by older logins when the server couldn't tell what the device was
+  /// ("Bilinmeyen Tarayıcı" is Turkish for "Unknown Browser").
+  static bool _isUnknownLabel(String v) {
+    final t = v.trim().toLowerCase();
+    return t.isEmpty || t == 'null' || t.contains('bilinmeyen') || t.startsWith('unknown');
+  }
+
+  String _deviceTitle(Map device) {
+    final browser = device['browser']?.toString() ?? '';
+    if (!_isUnknownLabel(browser)) return browser;
+    final os = device['os']?.toString() ?? '';
+    if (!_isUnknownLabel(os)) return os;
+    return AppStrings.unknownDevice.tr();
+  }
+
+  String _deviceSubtitle(Map device) {
+    final v = device['os_version']?.toString() ?? '';
+    return _isUnknownLabel(v) ? '' : v;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DeviceControllerProvider>(
@@ -125,26 +145,43 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                             if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg", width: 24, height: 24,),
                             if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg", width: 24, height: 24,),
                             SizedBox(width: 15,),
-                            SizedBox(
-                              width : 0.5.sw,
-                              child: Text(
-                                "${value.devices[index]['browser'].toString()} (${value.devices[index]['os_version'].toString()})".toUpperCase(),
-                                maxLines: 2,
-                                style: AppStyles.darkContent(context).copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _deviceTitle(value.devices[index]).toUpperCase(),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppStyles.darkContent(context).copyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  if (_deviceSubtitle(value.devices[index]).isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 2),
+                                      child: Text(
+                                        _deviceSubtitle(value.devices[index]),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.darkContent(context).copyWith(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey.shade600),
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
-                            SizedBox(width: 15,),
+                            SizedBox(width: 10,),
                             if(appConfigServiceProvider.deviceInformation.deviceUniqueId == value.devices[index]['unique_id'].toString())Text(
                               AppStrings.currentDevice.tr(),
-                              maxLines: 2,
+                              maxLines: 1,
                               style: AppStyles.greenContent(context).copyWith(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const Spacer(),
                             if(appConfigServiceProvider.deviceInformation.deviceUniqueId != value.devices[index]['unique_id'].toString())GestureDetector(
                                 onTap: (){
                                   setState(() {
