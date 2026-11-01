@@ -1,4 +1,5 @@
 import 'package:app_test/features/authentication/login/data/saved_accounts_service.dart';
+import 'dart:async';
 import 'dart:convert';
 import 'package:app_test/core/constants/cache_constants.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -13,8 +14,6 @@ import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
-import 'package:app_test/core/widgets/dynamic_image_widget.dart';
-import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/update_app.dart';
@@ -24,7 +23,7 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/domain_selection_service.dart';
 import 'package:app_test/features/splash_and_onboarding/controller/splash_onboarding_controller.dart';
 import '../../../core/services/app_config_service.dart';
-import '../../../core/utils/overlay_gradient_widget.dart';
+import 'package:app_test/core/widgets/animated_logo_assembly.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -38,6 +37,8 @@ class _SplashScreenState extends State<SplashScreen> {
   late final HomeController homeViewModel;
   bool _initializationCompleted = false;
   bool _isInitializing = false;
+  // Completes when the logo animation has finished; navigation waits for it.
+  final Completer<void> _logoAnimationDone = Completer<void>();
   ConnectionService? _connectionService;
 
   @override
@@ -154,6 +155,12 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  /// Waits for the logo animation to finish, plus a short beat so the finished logo is seen.
+  Future<void> _waitForLogoAnimation() async {
+    await _logoAnimationDone.future;
+    await Future.delayed(const Duration(milliseconds: 400));
+  }
+
   Future<void> _handleInitialNotification() async {
     bool isArabic = LocalizationService.isArabic(context: context);
     if (isArabic) {
@@ -246,6 +253,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
 
       _isInitializing = false;
+      await _waitForLogoAnimation();
       if (mounted) {
         final lang = context.locale.languageCode;
         context.goNamed(AppRoutes.offlineScreen.name,
@@ -383,6 +391,25 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
+    // Logged-in users land on Home: start loading its data now, while the logo finishes assembling
+    try {
+      final appConfig = Provider.of<AppConfigService>(context, listen: false);
+      if (appConfig.isLogin &&
+          appConfig.token.isNotEmpty &&
+          OnboardingController.getHomeRouteFromUs1Role() == AppRoutes.home.name) {
+        Provider.of<HomeController>(context, listen: false).prefetchHome(context);
+      }
+    } catch (e) {
+      debugPrint("⚠️ Home prefetch skipped: $e");
+    }
+
+    // Let the logo finish assembling before leaving the splash
+    await _waitForLogoAnimation();
+    if (!mounted) {
+      _isInitializing = false;
+      return;
+    }
+
     // Mark splash as completed so router allows navigating away
     Provider.of<AppConfigService>(context, listen: false).hasCompletedSplash =
         true;
@@ -409,37 +436,32 @@ class _SplashScreenState extends State<SplashScreen> {
     return ChangeNotifierProvider<OnboardingController>(
         create: (context) => viewModel,
         child: Scaffold(
+            backgroundColor: Colors.white,
             body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-                !kIsWeb
-                    ? AppImages.splashScreenBackground
-                    : AppImages.splashScreenBackgroundWeb,
-                fit: BoxFit.cover),
-            const OverlayGradientWidget(),
+            Center(
+              child: AnimatedLogoAssembly(
+                width: 190,
+                onCompleted: () {
+                  if (!_logoAnimationDone.isCompleted) _logoAnimationDone.complete();
+                },
+              ),
+            ),
             Positioned(
               bottom: AppSizes.s48,
               left: AppSizes.s0,
               right: AppSizes.s0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DynamicImageWidget(
-                    imageUrl: AppImages.logo,
-                    height: AppSizes.s75,
-                    width: AppSizes.s75,
-                  ),
-                  Text(
-                    AppStrings.loading.tr(),
-                    style: LocalizationService.isArabic(context: context)
-                        ? Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(letterSpacing: 0)
-                        : Theme.of(context).textTheme.displayMedium,
-                  )
-                ],
+              child: Text(
+                AppStrings.loading.tr(),
+                textAlign: TextAlign.center,
+                style: (LocalizationService.isArabic(context: context)
+                            ? Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(letterSpacing: 0)
+                            : Theme.of(context).textTheme.displayMedium)
+                        ?.copyWith(color: const Color(0xFF080A5F)),
               ),
             ),
           ],

@@ -280,8 +280,26 @@ class HomeController extends ChangeNotifier {
     }
   }
 
+  DateTime? _prefetchedAt;
+
+  /// Starts loading the home data early (called from the splash while its animation plays).
+  /// The next [getHome] call, made when the Home screen opens, reuses this request instead of
+  /// firing a second one.
+  void prefetchHome(context) {
+    if (_disposed) return;
+    getHome(context);
+    _prefetchedAt = DateTime.now();
+  }
+
   getHome(context)async{
     if (_disposed) return;
+
+    // Reuse a recent prefetch once (it may still be loading, or already done).
+    final prefetchedAt = _prefetchedAt;
+    if (prefetchedAt != null) {
+      _prefetchedAt = null;
+      if (DateTime.now().difference(prefetchedAt) < const Duration(seconds: 30)) return;
+    }
     
     // Defer state change to avoid "setState called during build" exception when called from initState
     Future.microtask(() {

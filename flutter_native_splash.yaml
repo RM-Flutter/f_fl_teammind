@@ -18,7 +18,7 @@ flutter_native_splash:
 
   # Android 12 specific configurations
   android_12:
-    image: assets/images/general_images/logo_android12+.png
+    image: assets/images/general_images/logo_android12_padded.png
     color: "#FFFFFF"
 
   # (Optional) The alignment of the image on Android.
