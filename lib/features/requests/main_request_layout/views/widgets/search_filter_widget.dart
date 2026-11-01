@@ -607,7 +607,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
         fontSize: 10
     ),
   );
-  Widget defaultCircleColor(final Color? color, final Color? borderColor,  {width, height, radius, colors}){
+  Widget defaultCircleColor(Color? color, Color? borderColor,  {width, height, radius, colors}){
     return (color != null && color != const Color(0xff123456))?Container(
       margin:const EdgeInsets.symmetric(horizontal: 4),
       width: width,

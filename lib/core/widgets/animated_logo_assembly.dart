@@ -11,9 +11,13 @@ class AnimatedLogoAssembly extends StatefulWidget {
   /// Called once the pieces have finished assembling.
   final VoidCallback? onCompleted;
 
+  /// Show the assembled logo right away, with no animation ([onCompleted] still fires).
+  final bool skipAnimation;
+
   const AnimatedLogoAssembly({
     super.key,
     this.onCompleted,
+    this.skipAnimation = false,
     this.width = 190,
     this.duration = const Duration(milliseconds: 2200),
   });
@@ -32,8 +36,17 @@ class _AnimatedLogoAssemblyState extends State<AnimatedLogoAssembly>
       AnimationController(vsync: this, duration: widget.duration)
         ..addStatusListener((status) {
           if (status == AnimationStatus.completed) widget.onCompleted?.call();
-        })
-        ..forward();
+        });
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.skipAnimation) {
+      _controller.value = 1;
+    } else {
+      _controller.forward();
+    }
+  }
 
   @override
   void dispose() {

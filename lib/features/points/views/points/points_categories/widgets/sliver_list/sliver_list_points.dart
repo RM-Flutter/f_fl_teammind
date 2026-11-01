@@ -71,7 +71,7 @@ class SliverListPoints extends StatelessWidget {
 
 Widget defaultTap2BarItem({
   required List<String>? items,
-  final Function? onTapItem,
+  Function? onTapItem,
   double? tapBarItemsWidth,
 }) {
   return Consumer<PointsController>(

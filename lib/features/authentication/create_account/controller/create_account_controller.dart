@@ -101,7 +101,7 @@ class CreateAccountController extends ChangeNotifier {
         required String password,
         required String email,
         required int departmentId,
-        var mak,
+        mak,
         required BuildContext context}) async {
     isEmailRegister = true;
     notifyListeners();

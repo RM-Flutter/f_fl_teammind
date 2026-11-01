@@ -194,6 +194,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                     tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
                                     selectIndex: selectIndex,
                                     enableScroll: true,
+                                    fitToText: true,
                                     onTapItem: (index) {
                                       setState(() {
                                         selectIndex = index;
