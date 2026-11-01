@@ -34,7 +34,21 @@ class ProfileBalanceWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    List<Widget> balanceWidgets = balance!.asMap().entries.map((entry) {
+    List<Widget> balanceWidgets = balance!
+        .where((bal) {
+          final bool isTaken = bal.max == -1 && bal.available == -1;
+          if (!isTaken) {
+            final availNum = num.tryParse(bal.available?.toString() ?? '');
+            if (availNum != null && availNum < 0) {
+              return false;
+            }
+          }
+          return true;
+        })
+        .toList()
+        .asMap()
+        .entries
+        .map((entry) {
       final index = entry.key + 1;
       final bal = entry.value;
 

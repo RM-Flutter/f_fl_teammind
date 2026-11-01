@@ -403,137 +403,134 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
                           // Info tiles
                           Expanded(
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Wrap(
-                                spacing: 12,
-                                runSpacing: 12,
-                                children: [
-                                  // Date tile with formatting
-                                  InfoTileWidget(
-                                    background: Color(AppColors.secondaryButton),
-                                    imagePath: 'assets/images/new-cale.png',
-                                    title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
-                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
-                                    DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a') !=
-                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')?
-                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
-                                        : "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
-                                        : DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'yyyy') ==
-                                        DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')?
-                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')}":
-                                    "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
-                                    isFullRow: true,
-                                    trailing: (widget.request.duration != null && widget.request.duration.toString() != 'null')
-                                        ? InfoTileWidget(
-                                            width: 100,
-                                            background: Color(AppColors.secondaryButton),
-                                            imgPath: Icons.access_time,
-                                            title: '${widget.request.duration} ${widget.request.durationType != null && widget.request.durationType.toString() != 'null' ? widget.request.durationType.toString().tr() : ''}'.trim(),
-                                          )
-                                        : null,
-                                  ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final double availableWidth = constraints.maxWidth;
+                                const double spacing = 12.0;
 
-                                  // Employee info if different user
-                                  if (widget.uId?.toString() != widget.rId?.toString()) ...[
-                                    if (request.employeeName != null &&
-                                        request.employeeName.toString() != 'null' &&
-                                        request.employeeName.toString().trim().isNotEmpty)
-                                      InfoTileWidget(
-                                        onTap: () {
-                                          context.pushNamed(
-                                            'employeeDetails',
-                                            pathParameters: {
-                                              'id': request.employeeId.toString(),
-                                              'lang': context.locale.languageCode,
-                                            },
-                                          );
-                                        },
-                                        imgPath: Icons.person_2_outlined,
-                                        title: request.employeeName.toString(),
-                                        isHighLight: true,
-                                      ),
-                                    if (request.departmentName != null &&
-                                        request.departmentName.toString() != 'null' &&
-                                        request.departmentName.toString().trim().isNotEmpty)
-                                      InfoTileWidget(
-                                        imgPath: Icons.category_outlined,
-                                        title: request.departmentName.toString(),
-                                      ),
-                                  ],
+                                // Build list of all available detail items (no empty/dummy widgets)
+                                final List<Widget> items = [];
 
-                                  // Request type
-                                  if (request.typeName != null &&
-                                      request.typeName.toString() != 'null' &&
-                                      request.typeName.toString().trim().isNotEmpty)
+                                // Employee info
+                                if (request.employeeName != null &&
+                                    request.employeeName.toString() != 'null' &&
+                                    request.employeeName.toString().trim().isNotEmpty) {
+                                  items.add(
+                                    InfoTileWidget(
+                                      onTap: (request.employeeId != null &&
+                                              request.employeeId.toString() != 'null' &&
+                                              request.employeeId.toString() != '0' &&
+                                              request.employeeId.toString().trim().isNotEmpty)
+                                          ? () {
+                                              context.pushNamed(
+                                                'employeeDetails',
+                                                pathParameters: {
+                                                  'id': request.employeeId.toString(),
+                                                  'lang': context.locale.languageCode,
+                                                },
+                                              );
+                                            }
+                                          : null,
+                                      imgPath: Icons.person_2_outlined,
+                                      title: request.employeeName.toString(),
+                                      isHighLight: true,
+                                    ),
+                                  );
+                                }
+
+                                // Department info
+                                if (request.departmentName != null &&
+                                    request.departmentName.toString() != 'null' &&
+                                    request.departmentName.toString().trim().isNotEmpty) {
+                                  items.add(
+                                    InfoTileWidget(
+                                      imgPath: Icons.category_outlined,
+                                      title: request.departmentName.toString(),
+                                    ),
+                                  );
+                                }
+
+                                // Request type
+                                if (request.typeName != null &&
+                                    request.typeName.toString() != 'null' &&
+                                    request.typeName.toString().trim().isNotEmpty) {
+                                  items.add(
                                     InfoTileWidget(
                                       imgPath: Icons.category_outlined,
                                       title: request.typeName.toString(),
                                     ),
+                                  );
+                                }
 
-                                  // Shift Change Request specific two-party info tiles
-                                  Builder(builder: (context) {
-                                    try {
-                                      if ((request as dynamic).approvableType == 'shift_change_requests') {
-                                        final reqShift = (request as dynamic).requesterShiftName?.toString() ?? '';
-                                        final recShift = (request as dynamic).receiverShiftName?.toString() ?? '';
-                                        final recEmpName = (request as dynamic).receiverEmployee?.name?.toString() ?? '';
-                                        final recEmpId = (request as dynamic).receiverEmployeeId;
-                                        return Wrap(
-                                          spacing: 12,
-                                          runSpacing: 12,
-                                          children: [
-                                            if (recEmpName.isNotEmpty)
-                                              InfoTileWidget(
-                                                onTap: recEmpId != null
-                                                    ? () {
-                                                        context.pushNamed(
-                                                          'employeeDetails',
-                                                          pathParameters: {
-                                                            'id': recEmpId.toString(),
-                                                            'lang': context.locale.languageCode,
-                                                          },
-                                                        );
-                                                      }
-                                                    : null,
-                                                imgPath: Icons.swap_horiz_rounded,
-                                                title: recEmpName,
-                                                isHighLight: true,
-                                              ),
-                                            if (reqShift.isNotEmpty)
-                                              InfoTileWidget(
-                                                imgPath: Icons.schedule_rounded,
-                                                title: ((request as dynamic).receiverShiftAssignmentId != null && recShift.isNotEmpty)
-                                                    ? '$reqShift ↔ $recShift'
-                                                    : reqShift,
-                                              ),
-                                          ],
-                                        );
-                                      }
-                                    } catch (_) {}
-                                    return const SizedBox.shrink();
-                                  }),
+                                // Shift Change Request specific two-party info tiles
+                                try {
+                                  if ((request as dynamic).approvableType == 'shift_change_requests') {
+                                    final recEmpName = (request as dynamic).receiverEmployee?.name?.toString() ?? '';
+                                    final recEmpId = (request as dynamic).receiverEmployeeId;
+                                    final reqShift = (request as dynamic).requesterShiftName?.toString() ?? '';
+                                    final recShift = (request as dynamic).receiverShiftName?.toString() ?? '';
 
-                                  // Money value if present
-                                  if (request.moneyValue != null && (double.tryParse(request.moneyValue.toString()) ?? 0) > 0)
+                                    if (recEmpName.isNotEmpty) {
+                                      items.add(
+                                        InfoTileWidget(
+                                          onTap: recEmpId != null
+                                              ? () {
+                                                  context.pushNamed(
+                                                    'employeeDetails',
+                                                    pathParameters: {
+                                                      'id': recEmpId.toString(),
+                                                      'lang': context.locale.languageCode,
+                                                    },
+                                                  );
+                                                }
+                                              : null,
+                                          imgPath: Icons.swap_horiz_rounded,
+                                          title: recEmpName,
+                                          isHighLight: true,
+                                        ),
+                                      );
+                                    }
+                                    if (reqShift.isNotEmpty) {
+                                      items.add(
+                                        InfoTileWidget(
+                                          imgPath: Icons.schedule_rounded,
+                                          title: ((request as dynamic).receiverShiftAssignmentId != null && recShift.isNotEmpty)
+                                              ? '$reqShift ↔ $recShift'
+                                              : reqShift,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                } catch (_) {}
+
+                                // Money value if present
+                                if (request.moneyValue != null &&
+                                    (double.tryParse(request.moneyValue.toString()) ?? 0) > 0) {
+                                  items.add(
                                     InfoTileWidget(
                                       imgPath: Icons.attach_money_outlined,
                                       title:
-                                      '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr().toUpperCase()}',
+                                          '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr().toUpperCase()}',
                                     ),
+                                  );
+                                }
 
-                                  // Download files button
-                                  if (request.files != null && request.files.isNotEmpty)
+                                // Download files button
+                                if (request.files != null && request.files.isNotEmpty) {
+                                  items.add(
                                     InfoTileWidget(
                                       onTap: () => _downloadAllFiles(request.files),
                                       imgPath: Icons.file_download_outlined,
                                       title: AppStrings.downloadFile.tr(),
                                     ),
+                                  );
+                                }
 
-                                  // Requested to ignore (cancel request) button
-                                  if ((request.status == "waiting_seen" ||
-                                      request.status == "waiting") &&
-                                      request.waitingCancel == true)
+                                // Requested to ignore (cancel request) button
+                                if ((request.status == "waiting_seen" ||
+                                        request.status == "waiting") &&
+                                    request.waitingCancel == true) {
+                                  items.add(
                                     InfoTileWidget(
                                       onTap: () async {
                                         if (widget.uId == widget.rId) {
@@ -553,8 +550,77 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                       imgColor: Color(AppColors.background),
                                       title: AppStrings.requestedToIgnore.tr().toUpperCase(),
                                     ),
-                                ],
-                              ),
+                                  );
+                                }
+
+                                final int maxCols = availableWidth > 800 ? 3 : 2;
+                                final List<List<Widget>> rows = [];
+                                if (maxCols == 2) {
+                                  for (int i = 0; i < items.length; i += 2) {
+                                    if (i + 1 < items.length) {
+                                      rows.add([items[i], items[i + 1]]);
+                                    } else {
+                                      rows.add([items[i]]);
+                                    }
+                                  }
+                                } else {
+                                  if (items.length == 4) {
+                                    rows.add([items[0], items[1]]);
+                                    rows.add([items[2], items[3]]);
+                                  } else if (items.length == 5) {
+                                    rows.add([items[0], items[1], items[2]]);
+                                    rows.add([items[3], items[4]]);
+                                  } else {
+                                    for (int i = 0; i < items.length; i += maxCols) {
+                                      final end = (i + maxCols < items.length) ? i + maxCols : items.length;
+                                      rows.add(items.sublist(i, end));
+                                    }
+                                  }
+                                }
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    // Date tile with formatting (always full width at top)
+                                    InfoTileWidget(
+                                      background: Color(AppColors.secondaryButton),
+                                      imagePath: 'assets/images/new-cale.png',
+                                      title: DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy') ==
+                                          DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')?
+                                      DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a') !=
+                                          DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')?
+                                      "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'hh:mm a')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'hh:mm a')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
+                                          : "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')}"
+                                          : DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'yyyy') ==
+                                          DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')?
+                                      "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM')} ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'yyyy')}":
+                                      "${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.from, format: 'dd MMM yyyy')} : ${DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.request.to, format: 'dd MMM yyyy')}",
+                                      isFullRow: true,
+                                      trailing: (widget.request.duration != null && widget.request.duration.toString() != 'null')
+                                          ? InfoTileWidget(
+                                              width: 100,
+                                              background: Color(AppColors.secondaryButton),
+                                              imgPath: Icons.access_time,
+                                              title: '${widget.request.duration} ${widget.request.durationType != null && widget.request.durationType.toString() != 'null' ? widget.request.durationType.toString().tr() : ''}'.trim(),
+                                            )
+                                          : null,
+                                    ),
+
+                                    // Dynamic distributed rows
+                                    for (int r = 0; r < rows.length; r++) ...[
+                                      const SizedBox(height: spacing),
+                                      Row(
+                                        children: [
+                                          for (int c = 0; c < rows[r].length; c++) ...[
+                                            if (c > 0) const SizedBox(width: spacing),
+                                            Expanded(child: rows[r][c]),
+                                          ],
+                                        ],
+                                      ),
+                                    ],
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -732,15 +798,13 @@ class InfoTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color effectiveBackground = background ?? const Color(AppColors.navyBlue);
-    final double? tileWidth = width ??
-        (isFullRow == true
-            ? null
-            : (kIsWeb ? 240.0 : ((1.sw - 116) / 2)));
+    final double? tileWidth = width;
 
     return GestureDetector(
       onTap: onTap ?? (){},
       child: Container(
         width: tileWidth,
+        constraints: const BoxConstraints(minHeight: 38),
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : effectiveBackground,
             borderRadius: BorderRadius.circular(10)),

@@ -85,6 +85,17 @@ class StatisticsBalanceList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: vacationBalance!
+              .where((entry) {
+                final b = entry.value;
+                final bool isTaken = b.max == -1 && b.available == -1;
+                if (!isTaken) {
+                  final availNum = num.tryParse(b.available?.toString() ?? '');
+                  if (availNum != null && availNum < 0) {
+                    return false;
+                  }
+                }
+                return true;
+              })
               .map((entry) => Padding(
             padding:
             EdgeInsets.only(right: pVocations),

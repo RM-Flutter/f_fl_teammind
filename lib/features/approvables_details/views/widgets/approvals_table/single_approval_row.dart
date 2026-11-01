@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:html' if (dart.library.io) '../../../../../core/services/dart_html_stub.dart' as html;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/constants/app_constants.dart';
@@ -43,6 +45,45 @@ class SingleApprovalRow extends StatelessWidget {
           rawDate.split('T').first;
     } catch (_) {
       return rawDate.split('T').first;
+    }
+  }
+
+  Future<void> _openFileUrl(String rawUrl) async {
+    try {
+      String fileUrl = rawUrl.trim();
+      final match = RegExp(r'https?://[^\s,\]}\"]+').firstMatch(fileUrl);
+      if (match != null) {
+        fileUrl = match.group(0)!;
+      } else if (fileUrl.startsWith('/')) {
+        fileUrl = '${AppConstants.base}$fileUrl';
+      } else if (!fileUrl.startsWith('http://') && !fileUrl.startsWith('https://')) {
+        fileUrl = 'https://$fileUrl';
+      }
+
+      if (kIsWeb) {
+        try {
+          html.window.open(fileUrl, '_blank');
+          return;
+        } catch (e) {
+          debugPrint('Error opening file in web: $e');
+        }
+      }
+
+      final Uri uri = Uri.parse(fileUrl);
+      final bool launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+        webOnlyWindowName: '_blank',
+      );
+      if (!launched) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.platformDefault,
+          webOnlyWindowName: '_blank',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error launching url: $e');
     }
   }
 
@@ -165,28 +206,35 @@ class SingleApprovalRow extends StatelessWidget {
           ),
         ],
 
-        if (item.file != null && item.file!.isNotEmpty) ...[
+        if (item.files != null && item.files!.isNotEmpty) ...[
+          for (int i = 0; i < item.files!.length; i++) ...[
+            const SizedBox(height: 6),
+            GestureDetector(
+              onTap: () => _openFileUrl(item.files![i]),
+              child: Row(
+                children: [
+                  const Icon(Icons.attach_file_rounded,
+                      size: 14, color: Colors.blue),
+                  const SizedBox(width: 4),
+                  Text(
+                    item.files!.length == 1
+                        ? (isArabic ? 'عرض المرفق' : 'View Attachment')
+                        : (isArabic ? 'عرض المرفق ${i + 1}' : 'View Attachment ${i + 1}'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ] else if (item.file != null && item.file!.isNotEmpty) ...[
           const SizedBox(height: 6),
           GestureDetector(
-            onTap: () async {
-              try {
-                String fileUrl = item.file!;
-                if (fileUrl.startsWith('/')) {
-                  fileUrl = '${AppConstants.base}$fileUrl';
-                } else if (!fileUrl.startsWith('http')) {
-                  fileUrl = 'https://$fileUrl';
-                }
-                
-                final Uri url = Uri.parse(fileUrl);
-                await launchUrl(
-                  url,
-                  mode: LaunchMode.externalApplication,
-                  webOnlyWindowName: '_blank',
-                );
-              } catch (e) {
-                debugPrint('Error launching url: $e');
-              }
-            },
+            onTap: () => _openFileUrl(item.file!),
             child: Row(
               children: [
                 const Icon(Icons.attach_file_rounded,

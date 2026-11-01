@@ -73,7 +73,17 @@ class VacationListWidget extends StatelessWidget {
       balance = (gCache['balance'] as Map<String, dynamic>?)?.map(
             (key, value) => MapEntry(key, Balance.fromJson(value)),
       );
-      vacationBalance = balance?.entries.toList() ?? [];
+      vacationBalance = balance?.entries.where((entry) {
+        final b = entry.value;
+        final bool isTaken = b.max == -1 && b.available == -1;
+        if (!isTaken) {
+          final availNum = num.tryParse(b.available?.toString() ?? '');
+          if (availNum != null && availNum < 0) {
+            return false;
+          }
+        }
+        return true;
+      }).toList() ?? [];
 
       vacationWidgets = vacationBalance
           .map((entry) => Padding(

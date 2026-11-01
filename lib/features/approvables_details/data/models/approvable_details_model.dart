@@ -46,13 +46,17 @@ class ApprovableDetailsModel {
   final bool? hasProblem;
   final String? problemMessage;
   final List<dynamic>? problems;
+  final String? rawEmployeeName;
+  final String? rawDepartmentName;
 
   dynamic get from => dateFrom;
   dynamic get to => dateTo;
   dynamic get durationType => unit;
-  dynamic get employeeId => profile?.id;
-  dynamic get employeeName => profile?.name;
-  dynamic get departmentName => department?.title;
+  dynamic get employeeId => profile?.id ?? requesterEmployeeId;
+  dynamic get employeeName =>
+      profile?.name ?? requesterEmployee?.name ?? rawEmployeeName;
+  dynamic get departmentName =>
+      department?.title ?? profile?.department ?? rawDepartmentName;
   dynamic get statusUpdate => updatedAt;
   dynamic get managerReply => requiredApprovals ?? [];
   bool get isShiftChangeRequest => approvableType == 'shift_change_requests';
@@ -102,6 +106,8 @@ class ApprovableDetailsModel {
     this.hasProblem,
     this.problemMessage,
     this.problems,
+    this.rawEmployeeName,
+    this.rawDepartmentName,
   });
 
   factory ApprovableDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -209,6 +215,11 @@ class ApprovableDetailsModel {
       hasProblem: hasProblemVal,
       problemMessage: json['problem_message']?.toString(),
       problems: json['problems'] is List ? json['problems'] as List<dynamic> : null,
+      rawEmployeeName: json['employee_name']?.toString() ??
+          json['requester_employee_name']?.toString() ??
+          (json['employee'] is Map ? json['employee']['name']?.toString() : null),
+      rawDepartmentName: json['department_name']?.toString() ??
+          (json['department'] is String ? json['department'] as String : null),
     );
   }
 }
@@ -227,6 +238,7 @@ class RequiredApprovalModel {
   final bool? isAuto;
   final String? replay;
   final String? file;
+  final List<String>? files;
   final String? startedTime;
   final String? approvedAutoTime;
   final int? actedBy;
@@ -246,13 +258,69 @@ class RequiredApprovalModel {
     this.isAuto,
     this.replay,
     this.file,
+    this.files,
     this.startedTime,
     this.approvedAutoTime,
     this.actedBy,
     this.actor,
   });
 
+  static String? _parseFileUrl(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is List) {
+      if (raw.isEmpty) return null;
+      return _parseFileUrl(raw.first);
+    }
+    if (raw is Map) {
+      final direct = raw['file'] ??
+          raw['url'] ??
+          raw['path'] ??
+          raw['src'] ??
+          raw['link'] ??
+          raw['download_url'];
+      return _parseFileUrl(direct);
+    }
+    if (raw is String) {
+      final trimmed = raw.trim();
+      if (trimmed.isEmpty ||
+          trimmed == 'null' ||
+          trimmed == '[]' ||
+          trimmed == '{}') {
+        return null;
+      }
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+      }
+      final match = RegExp(r'https?://[^\s,\]}\"]+').firstMatch(trimmed);
+      if (match != null) {
+        return match.group(0);
+      }
+      return trimmed;
+    }
+    return null;
+  }
+
+  static List<String> _parseFilesList(dynamic raw) {
+    if (raw == null) return [];
+    if (raw is List) {
+      final List<String> result = [];
+      for (final item in raw) {
+        final parsed = _parseFileUrl(item);
+        if (parsed != null && parsed.isNotEmpty) {
+          result.add(parsed);
+        }
+      }
+      return result;
+    }
+    final single = _parseFileUrl(raw);
+    return (single != null && single.isNotEmpty) ? [single] : [];
+  }
+
   factory RequiredApprovalModel.fromJson(Map<String, dynamic> json) {
+    final parsedFiles = _parseFilesList(json['files'] ?? json['file']);
+    final parsedFile = _parseFileUrl(json['file'] ?? json['files']) ??
+        (parsedFiles.isNotEmpty ? parsedFiles.first : null);
+
     return RequiredApprovalModel(
       id: json['id'],
       type: json['type'],
@@ -270,7 +338,8 @@ class RequiredApprovalModel {
       level: json['level'],
       isAuto: json['is_auto'] as bool?,
       replay: json['replay']?.toString(),
-      file: json['file']?.toString(),
+      file: parsedFile,
+      files: parsedFiles,
       startedTime: json['started_time'],
       approvedAutoTime: json['approved_auto_time'],
       actedBy: json['acted_by'],
@@ -326,7 +395,9 @@ class ProfileModel {
       phone: json['phone']?.toString(),
       avatar: json['avatar'],
       jobTitle: json['job_title'],
-      department: json['department']?.toString(),
+      department: json['department'] is Map
+          ? (json['department']['title'] ?? json['department']['name'])?.toString()
+          : json['department']?.toString(),
       departmentId: json['department_id'],
     );
   }
@@ -359,7 +430,9 @@ class CurrentLevelApproverModel {
       phone: json['phone']?.toString(),
       avatar: json['avatar'],
       jobTitle: json['job_title'],
-      department: json['department']?.toString(),
+      department: json['department'] is Map
+          ? (json['department']['title'] ?? json['department']['name'])?.toString()
+          : json['department']?.toString(),
     );
   }
 }
