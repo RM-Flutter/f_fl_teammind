@@ -21,10 +21,15 @@ import 'package:app_test/core/services/settings_service.dart';
 
 class OnboardingController extends ChangeNotifier {
   final PageController pageController = PageController();
-  final PageController pageController2 = PageController();
   int _currentIndex = 0;
 
-  set currentIndex(int newIndex) => _currentIndex = newIndex;
+  int get currentIndex => _currentIndex;
+
+  set currentIndex(int newIndex) {
+    if (newIndex == _currentIndex) return;
+    _currentIndex = newIndex;
+    notifyListeners();
+  }
 
   /// من كاش US1: لو role = ["personal"] فقط → freeServicesHome، وإلا → home
   static String getHomeRouteFromUs1Role() {
@@ -59,7 +64,6 @@ class OnboardingController extends ChangeNotifier {
   @override
   void dispose() {
     pageController.dispose();
-    pageController2.dispose();
     super.dispose();
   }
   DateTime? safeParseDateTime(String? dateString) {
@@ -759,11 +763,6 @@ class OnboardingController extends ChangeNotifier {
         duration: const Duration(milliseconds: duration),
         curve: Curves.easeInOut,
       );
-      pageController2.nextPage(
-        duration: const Duration(milliseconds: duration),
-        curve: Curves.easeInOut,
-      );
-      currentIndex = _currentIndex + 1;
     } else {
       final appConfigService =
       Provider.of<AppConfigService>(context, listen: false);

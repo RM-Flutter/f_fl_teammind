@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Team Mind (debug) - Redmi",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "deviceId": "9a1ecca4",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "Team Mind (profile) - Redmi",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "deviceId": "9a1ecca4",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "Team Mind (release) - Redmi",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "deviceId": "9a1ecca4",
+      "flutterMode": "release"
+    },
+    {
+      "name": "Team Mind (debug) - any device",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "flutterMode": "debug"
+    }
+  ]
+}
