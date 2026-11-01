@@ -71,7 +71,6 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await CacheHelper.init();
   AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
-  FcmTokenService.initAtAppStart();
   await LocalNotificationService.init();
 
   if (kIsWeb) {
@@ -92,6 +91,9 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+
+  // Needs Firebase to be initialized first; not awaited so it never blocks startup.
+  FcmTokenService.initAtAppStart();
 
   GoRouter.optionURLReflectsImperativeAPIs = true;
   try {

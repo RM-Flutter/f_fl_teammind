@@ -217,6 +217,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/main_app_fab_widget/widgets/qrcode_Scanner_view_widget.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
@@ -363,6 +364,9 @@ class DomainSelectionService {
 
   /// Format domain: add https://webapp. prefix, but bypass if domain ends with r-m.dev or tmapp.dev
   static String _formatDomain(String cleanedDomain) {
+    if (cleanedDomain.endsWith('.test') || cleanedDomain.endsWith('.localhost')) {
+      return 'http://$cleanedDomain';
+    }
     if (cleanedDomain.endsWith('r-m.dev') || cleanedDomain.endsWith('tmapp.dev')) {
       return 'https://$cleanedDomain';
     }
@@ -642,6 +646,10 @@ class DomainSelectionService {
       ),
     ).then((value) => value ?? false);
   }
+
+  /// The domain the app is currently talking to, cleaned for display
+  /// (no scheme, path or subdomains), e.g. `emplive.r-m.dev`.
+  static String get currentCleanDomain => _cleanDomain(AppConstants.base);
 
   /// Reset domain selection (for testing or if user wants to change domain)
   static Future<void> resetDomainSelection() async {

@@ -118,7 +118,11 @@ abstract class AppSettingsService {
   static Future<Map<String, String>?> getIpCountryInfo() async {
     try {
       // final ip = ipData['ip'];
-      final geoResponse = await http.get(Uri.parse('http://ip-api.com/json'));
+      // ip-api.com free tier is http-only. The timeout keeps a slow or blocked
+      // lookup from stalling startup; callers fall back to the default country.
+      final geoResponse = await http
+          .get(Uri.parse('http://ip-api.com/json'))
+          .timeout(const Duration(seconds: 3));
       if (geoResponse.statusCode == 200) {
         final geoData = jsonDecode(geoResponse.body);
         return {
@@ -170,8 +174,10 @@ abstract class AppSettingsService {
     final flag = CacheHelper.getString("flag")?.trim();
     final flagCode = CacheHelper.getString("flagCode")?.trim();
 
+    // Runs in parallel with the settings request below instead of before it.
+    Future<void>? countryLookup;
     if (flag == null || flag.isEmpty || flagCode == null || flagCode.isEmpty) {
-      await printCountryInfo();
+      countryLookup = printCountryInfo();
     }
     var settingsData = appConfigServiceProvider.getSettings(type: settingType);
     var lastUpdateDate = settingsData?.lastUpdateDate ?? "";
@@ -244,6 +250,8 @@ abstract class AppSettingsService {
           dataKey: 'user_settings',
           allData: allData);
     }
+    // Make sure the country flag is cached before the login/phone screens read it.
+    await countryLookup;
     if (result.success && result.data != null && (result.data?.isNotEmpty ?? false)) {
       AppConstants.tryUpdateSecurityChecks(result.data);
       if (settingType == SettingsType.startupSettings &&

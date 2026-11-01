@@ -167,16 +167,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
     _isInitializing = true;
 
-    // Wait a bit to ensure ConnectionService is fully initialized
-    await Future.delayed(const Duration(milliseconds: 100));
-
     // Use saved reference or get from Provider
     final connectionService = _connectionService ??
         Provider.of<ConnectionService>(context, listen: false);
-    await connectionService.checkConnection();
-
-    // Double-check connection status after a brief delay
-    await Future.delayed(const Duration(milliseconds: 200));
+    // A single real check is enough: if it wrongly reports offline, the
+    // re-check right below (after a delay) catches it.
     await connectionService.checkConnection();
 
     // إذا ظهر أوفلاين: إعادة فحص بعد تأخير (قد يكون التطبيق جاء من شاشة أوفلاين والاتصال لم يُحدَّث بعد)
