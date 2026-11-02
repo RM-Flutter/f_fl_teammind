@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 
 import '../constants/app_strings.dart';
 import '../routing/app_router.dart';
@@ -78,6 +79,9 @@ abstract class AppErrorReporter {
     Map<String, dynamic>? extra,
     String? hint,
   }) {
+    // Every occurrence goes to the device log with a fixed tag, so errors can be collected
+    // while the phone is connected: adb logcat | grep TM-ERROR
+    _logToConsole(error, stackTrace, hint);
     try {
       final key = error.toString().length > 300 ? error.toString().substring(0, 300) : error.toString();
       final now = DateTime.now();
@@ -93,6 +97,29 @@ abstract class AppErrorReporter {
       );
     } catch (e) {
       debugPrint('AppErrorReporter.report failed: $e');
+    }
+  }
+
+  /// One compact block per error: the message, where it happened, the current route and the
+  /// first app frames of the stack (frames from Flutter/Dart internals are skipped).
+  static void _logToConsole(Object error, StackTrace? stackTrace, String? hint) {
+    try {
+      String? route;
+      final context = rootNavigatorKey.currentContext;
+      if (context != null) {
+        route = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+      }
+      final lines = (stackTrace?.toString() ?? '').split('\n').where((l) => l.trim().isNotEmpty);
+      var frames = lines.where((l) => l.contains('package:app_test/')).take(6);
+      // Framework errors (e.g. from a widget's build) may have no app frames: show the top ones
+      final label = frames.isEmpty ? '    (no app frames, top of stack:)\n' : '';
+      if (frames.isEmpty) frames = lines.take(4);
+      debugPrint('[TM-ERROR] ${error.runtimeType}: ${error.toString().split('\n').first}\n'
+          '  where: ${hint ?? '-'} | route: ${route ?? '-'}\n'
+          '$label${frames.map((l) => '    ${l.trim()}').join('\n')}\n'
+          '[TM-ERROR-END]');
+    } catch (_) {
+      // Logging must never throw
     }
   }
 

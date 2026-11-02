@@ -51,5 +51,7 @@ bool _isQuietFrameworkError(FlutterErrorDetails details) {
   final text = details.exceptionAsString();
   return _isImageLoadError(details) ||
       text.contains('overflowed by') ||
-      text.contains('A RenderFlex overflowed');
+      text.contains('A RenderFlex overflowed') ||
+      // Showing the error alert (itself a snackbar) here would repeat this error every frame
+      text.contains('SnackBar presented off screen');
 }

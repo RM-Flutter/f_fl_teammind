@@ -14,6 +14,7 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/comments/comments_widget.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
+import 'package:app_test/core/widgets/expandable_text_widget.dart';
 import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
 import 'package:app_test/features/tasks/views/details/widgets/task_details_header_widget.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
@@ -40,6 +41,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   }
   var icon;
   int? indexSelect;
+  // Sub-tasks whose long name is shown in full ("Read more")
+  final Set<int> _expandedSubTasks = {};
+  static const int _subTaskPreviewLength = 120;
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -153,8 +157,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         fontSize: 14),
                                   ),
                                   SizedBox(height: 10,),
-                                  Text(
-                                    value.getOneTaskModel!.task!.content!,
+                                  ExpandableTextWidget(
+                                    text: value.getOneTaskModel!.task!.content!,
+                                    maxLines: 5,
                                     style: AppStyles.greyContent(context).copyWith(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 13,
@@ -218,6 +223,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                   ),
                                                 ),
                                                 Expanded(
+                                                  // A long sub-task: tapping its text opens/closes it (a small
+                                                  // "Read more" link alone was too easy to miss, and the miss
+                                                  // ticked the sub-task). The circle and icon still tick it.
+                                                  child: GestureDetector(
+                                                    behavior: HitTestBehavior.opaque,
+                                                    onTap: (subTask.name?.length ?? 0) > _subTaskPreviewLength
+                                                        ? () => setState(() {
+                                                              _expandedSubTasks.contains(index)
+                                                                  ? _expandedSubTasks.remove(index)
+                                                                  : _expandedSubTasks.add(index);
+                                                            })
+                                                        : null,
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(vertical: 12),
                                                     child: Column(
@@ -226,12 +243,33 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                       children: [
                                                         Text(
                                                           subTask.name?.toUpperCase() ?? "",
+                                                          maxLines: _expandedSubTasks.contains(index) ? null : 3,
+                                                          overflow: _expandedSubTasks.contains(index)
+                                                              ? TextOverflow.visible
+                                                              : TextOverflow.ellipsis,
                                                           style: AppStyles.heading(context).copyWith(
                                                             color: Colors.black,
                                                             fontSize: 13,
                                                             fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
+                                                        // The row sits in an IntrinsicHeight, so ExpandableTextWidget
+                                                        // (LayoutBuilder) can't be used: decide by length instead.
+                                                        if ((subTask.name?.length ?? 0) > _subTaskPreviewLength)
+                                                          Padding(
+                                                            padding: EdgeInsets.only(top: 6),
+                                                            child: Text(
+                                                              (_expandedSubTasks.contains(index)
+                                                                      ? AppStrings.readLess
+                                                                      : AppStrings.readMore)
+                                                                  .tr(),
+                                                              style: TextStyle(
+                                                                color: Color(AppColors.buttonColor),
+                                                                fontWeight: FontWeight.w600,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ),
                                                         SizedBox(height: 4),
                                                         Text(
                                                           "${value.getOneTaskModel!.task!.createAt != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.createAt!)) : ""} : ${value.getOneTaskModel!.task!.dueDate != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.dueDate!)) : ""}",
@@ -243,6 +281,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                         ),
                                                       ],
                                                     ),
+                                                  ),
                                                   ),
                                                 ),
                                                 if (isCompleted)

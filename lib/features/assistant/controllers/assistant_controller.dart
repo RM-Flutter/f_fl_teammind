@@ -17,6 +17,7 @@ import '../data/models/help_entry_model.dart';
 import '../data/repos/help_repo.dart';
 import '../data/repos/user_data_repo.dart';
 import '../data/services/voice_matcher.dart';
+import '../data/services/voice_picker.dart';
 import '../data/services/wake_word_service.dart';
 
 enum AssistantState { idle, wakeListening, listeningQuestion, speaking }
@@ -66,7 +67,7 @@ class AssistantController extends ChangeNotifier with WidgetsBindingObserver {
   String _lastHeard = '';
   int _speakGen = 0;
   // الصوت المختار لكل لغة (يُحسب مرة واحدة).
-  final Map<String, Map<String, String>?> _voiceByLang = {};
+  final Map<String, VoiceChoice> _voiceByLang = {};
   Timer? _enrollTimer;
   bool _enrolling = false;
   final List<List<List<double>>> _enrollSamples = [];
@@ -672,49 +673,40 @@ class AssistantController extends ChangeNotifier with WidgetsBindingObserver {
     _speakWatchdog = Timer(Duration(milliseconds: 3000 + text.length * 110),
         () => gen == _speakGen ? _onSpeakDone() : null);
     try {
-      await _applyVoice();
-      await _tts.speak(text); // awaitSpeakCompletion: يرجع بعد انتهاء الكلام
+      // كل قطعة عربية/إنجليزية بصوتها، وإلا يتخطى الصوت الإنجليزي الكلمات العربية.
+      for (final segment in VoicePicker.split(text, _lang == 'ar' ? 'ar' : 'en')) {
+        if (gen != _speakGen) break; // أُوقف الكلام أو بدأت إجابة أخرى
+        await _applyVoice(segment.lang);
+        await _tts.speak(segment.text); // awaitSpeakCompletion: يرجع بعد انتهاء القطعة
+      }
     } catch (e) {
       debugPrint('Assistant: speak failed: $e');
     }
     if (gen == _speakGen) _onSpeakDone();
   }
 
-  /// للعربي: صوت مصري (ar-EG) لو مثبت على الجهاز، وإلا العربية العامة.
-  Future<void> _applyVoice() async {
-    final lang = _lang == 'ar' ? 'ar' : 'en';
-    if (!_voiceByLang.containsKey(lang)) {
-      _voiceByLang[lang] = lang == 'ar' ? await _findArabicRegionVoice() : null;
-      debugPrint('Assistant: voice for $lang = ${_voiceByLang[lang] ?? 'default'}');
-    }
-    final voice = _voiceByLang[lang];
-    if (voice != null) {
-      await _tts.setLanguage(voice['locale']!);
-      await _tts.setVoice(voice);
-    } else {
-      await _tts.setLanguage(lang == 'ar' ? 'ar' : 'en-US');
-    }
-  }
-
-  Future<Map<String, String>?> _findArabicRegionVoice() async {
-    try {
-      final voices = await _tts.getVoices;
-      if (voices is List) {
-        for (final v in voices) {
-          if (v is! Map) continue;
-          final locale = '${v['locale']}';
-          if (_arabicRegionLocale.hasMatch(locale)) {
-            return {'name': '${v['name']}', 'locale': locale};
-          }
-        }
+  /// صوت رجالي للغة [lang]؛ للعربي نفضّل المصري (ar-EG) لو مثبت.
+  Future<void> _applyVoice(String lang) async {
+    var choice = _voiceByLang[lang];
+    if (choice == null) {
+      List<dynamic> voices = const [];
+      try {
+        final v = await _tts.getVoices;
+        if (v is List) voices = v;
+      } catch (e) {
+        debugPrint('Assistant: cannot list voices: $e');
       }
-    } catch (e) {
-      debugPrint('Assistant: cannot list voices: $e');
+      choice = VoicePicker.pick(voices, lang, region: lang == 'ar' ? arabicRegion : null);
+      _voiceByLang[lang] = choice;
+      debugPrint('Assistant: voice for $lang = $choice');
     }
-    return null;
+    await _tts.setLanguage(choice.language);
+    if (choice.voice != null) await _tts.setVoice(choice.voice!);
+    await _tts.setPitch(choice.pitch);
   }
 
   Future<void> stopSpeaking() async {
+    _speakGen++; // يوقف باقي القطع
     try {
       await _tts.stop();
     } catch (_) {}

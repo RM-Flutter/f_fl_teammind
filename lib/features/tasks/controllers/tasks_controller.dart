@@ -110,10 +110,19 @@ class TasksController extends ChangeNotifier {
     _resetValues();
     notifyListeners();
   }
+  bool _disposed = false;
+
   @override
   void dispose() {
+    _disposed = true;
     selectedDatecontroller.dispose();
     super.dispose();
+  }
+
+  // Requests can finish after the screen was closed: ignore their updates then
+  @override
+  void notifyListeners() {
+    if (!_disposed) super.notifyListeners();
   }
 
   void _resetValues() {
@@ -187,15 +196,16 @@ class TasksController extends ChangeNotifier {
         tasks.addAll(newTasks);
         currentPage++;
       }
-      assigns = response.data['assigns'];
+      // The server leaves "assigns" out on some pages: keep the last list instead of failing
+      assigns = response.data['assigns'] ?? assigns;
 
       errorMessage = null;
       notifyListeners();
-    } catch (error) {
+    } catch (error, stackTrace) {
       if (error is DioError) {
         errorMessage = error.response?.data['message'] ?? 'Something went wrong';
       } else {
-        errorMessage = AppErrorReporter.safeMessage(error);
+        errorMessage = AppErrorReporter.safeMessage(error, stackTrace: stackTrace);
       }
     }
 
@@ -252,10 +262,12 @@ class TasksController extends ChangeNotifier {
         }
     ).then((value){
       if(value.data['status'] == true){
-        Navigator.pop(context);
+        // Add Task is opened from the task list: close only this screen (the task list
+        // reloads itself when it comes back). The alert uses the task list's context.
+        final listContext = Navigator.of(context).context;
         Navigator.pop(context);
         AlertsService.success(
-            context: context,
+            context: listContext,
             message: value.data['message'],
             title: AppStrings.success.tr());
       }else{
@@ -300,10 +312,13 @@ class TasksController extends ChangeNotifier {
       data: body,
     ).then((value){
       if(value.data['status'] == true){
+        // Edit -> details -> list: both closing screens' contexts are gone after the pops,
+        // so the message uses the navigator's context
+        final navContext = Navigator.of(context).context;
         Navigator.pop(context);
         Navigator.pop(context);
         AlertsService.success(
-            context: context,
+            context: navContext,
             message: value.data['message'],
             title: AppStrings.success.tr());
       }else{

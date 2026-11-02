@@ -29,7 +29,8 @@ class SavedAccountsSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => SavedAccountsSheet(accounts: accounts, onDelete: onDelete),
+      builder: (_) =>
+          SavedAccountsSheet(accounts: accounts, onDelete: onDelete),
     );
   }
 
@@ -73,61 +74,67 @@ class _SavedAccountsSheetState extends State<SavedAccountsSheet> {
     return SafeArea(
       child: Container(
         margin: EdgeInsets.all(12.r),
-        padding: EdgeInsets.symmetric(vertical: 16.h),
         constraints: BoxConstraints(maxHeight: 0.6.sh),
-        decoration: BoxDecoration(
+        // Material (not a decorated Container) paints the background, so the ListTile
+        // ink splashes are drawn on it instead of being hidden behind it.
+        child: Material(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Text(
-                AppStrings.savedAccounts.tr(),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Color(AppColors.buttons),
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    AppStrings.savedAccounts.tr(),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Color(AppColors.buttons),
+                    ),
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 8.h),
+                  child: Text(
+                    AppStrings.tapToFillLoginForm.tr(),
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: theme.hintColor),
+                  ),
+                ),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: _accounts.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final account = _accounts[index];
+                      return ListTile(
+                        leading: _AccountAvatar(account: account),
+                        title: Text(
+                          account.displayName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        trailing: IconButton(
+                          tooltip: AppStrings.delete.tr(),
+                          icon: const Icon(Icons.delete_outline,
+                              color: Colors.red),
+                          onPressed: () => _confirmDelete(account),
+                        ),
+                        onTap: () => Navigator.pop(context, account),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 8.h),
-              child: Text(
-                AppStrings.tapToFillLoginForm.tr(),
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.hintColor),
-              ),
-            ),
-            Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: _accounts.length,
-                separatorBuilder: (_, __) => const Divider(height: 1),
-                itemBuilder: (context, index) {
-                  final account = _accounts[index];
-                  return ListTile(
-                    leading: _AccountAvatar(account: account),
-                    title: Text(
-                      account.displayName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    trailing: IconButton(
-                      tooltip: AppStrings.delete.tr(),
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () => _confirmDelete(account),
-                    ),
-                    onTap: () => Navigator.pop(context, account),
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -99,7 +99,19 @@ void main() {
     expect(UserDataRepo.fill('no placeholders', v), 'no placeholders');
   });
 
-  test('empty caches give no values', () {
-    expect(UserDataRepo.valuesFrom(const {}, const {}, 'en', now), isEmpty);
+  test('empty caches give only the clock values', () {
+    expect(UserDataRepo.valuesFrom(const {}, const {}, 'en', now).keys.toSet(), {'time', 'today'});
+  });
+
+  test('clock and first name', () {
+    final at = DateTime(2026, 11, 2, 15, 5);
+    final en = UserDataRepo.valuesFrom(us1, us2, 'en', at);
+    expect(en['time'], '3:05 PM');
+    expect(en['today'], 'Monday, 2 November 2026');
+    expect(en['first_name'], 'Abanob');
+    final ar = UserDataRepo.valuesFrom(us1, us2, 'ar', at);
+    expect(ar['time'], '3:05 العصر');
+    expect(ar['today'], 'الاثنين 2 نوفمبر 2026');
+    expect(UserDataRepo.valuesFrom(us1, us2, 'ar', DateTime(2026, 1, 1, 9))['time'], '9:00 الصبح');
   });
 }

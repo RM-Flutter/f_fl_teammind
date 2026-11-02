@@ -1,12 +1,11 @@
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/models/assistant_message_model.dart';
 import '../../data/models/help_entry_model.dart';
+import 'assistant_actions_widget.dart';
 
 /// فقاعة رسالة: سؤال المستخدم أو رد المساعد (مع زر Open وأقرب المواضيع).
 class AssistantMessageBubbleWidget extends StatelessWidget {
@@ -44,26 +43,24 @@ class AssistantMessageBubbleWidget extends StatelessWidget {
             children: [
               Text(
                 message.text,
-                style: isUser
-                    ? AppStyles.whiteContent(context)
-                    : AppStyles.content(context),
+                textDirection: assistantTextDirection(message.text),
+                style: (isUser
+                        ? AppStyles.whiteContent(context)
+                        : AppStyles.content(context))
+                    .copyWith(fontSize: 14, height: 1.45),
               ),
               if (entry?.route != null) ...[
-                const SizedBox(height: AppSizes.s8),
-                FilledButton.icon(
-                  onPressed: () => onOpen(entry!),
-                  icon: const Icon(Icons.open_in_new, size: AppSizes.s16),
-                  label: Text(AppStrings.assistantOpen.tr()),
-                ),
+                const SizedBox(height: AppSizes.s12),
+                AssistantOpenButton(onPressed: () => onOpen(entry!)),
               ],
               if (message.suggestions.isNotEmpty) ...[
                 const SizedBox(height: AppSizes.s8),
                 Wrap(
                   spacing: AppSizes.s8,
-                  runSpacing: AppSizes.s4,
+                  runSpacing: AppSizes.s6,
                   children: [
                     for (final s in message.suggestions)
-                      ActionChip(label: Text(s.title), onPressed: () => onSuggestion(s)),
+                      AssistantSuggestionChip(label: s.title, onPressed: () => onSuggestion(s)),
                   ],
                 ),
               ],

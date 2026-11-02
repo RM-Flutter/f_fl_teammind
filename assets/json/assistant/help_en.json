@@ -1273,5 +1273,209 @@
     "kind": "data",
     "route": "userDevices",
     "managerOnly": false
+  },
+  {
+    "id": "greeting",
+    "title": "hello",
+    "keywords": [
+      "hi",
+      "hello",
+      "hey",
+      "hi there",
+      "good morning",
+      "good afternoon",
+      "good evening"
+    ],
+    "questions": [
+      "hi",
+      "hello"
+    ],
+    "answer": "Hi {first_name}! How can I help you today?",
+    "kind": "chat",
+    "noData": "Hi! How can I help you today?",
+    "managerOnly": false
+  },
+  {
+    "id": "how_are_you",
+    "title": "how are you",
+    "keywords": [
+      "how are you",
+      "how r u",
+      "how is it going",
+      "hows it going",
+      "how are things",
+      "how do you do",
+      "are you ok"
+    ],
+    "questions": [
+      "hi how are you",
+      "how is it going"
+    ],
+    "answer": "I'm doing great, thanks for asking! How can I help you?",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "who_are_you",
+    "title": "who I am",
+    "keywords": [
+      "who are you",
+      "what are you",
+      "your name",
+      "what is your name",
+      "whats your name",
+      "introduce yourself"
+    ],
+    "questions": [
+      "who are you",
+      "what is your name"
+    ],
+    "answer": "I'm Mr. TeamMind, your assistant in the TeamMind app. Ask me how to do anything in the app, or about your account: your balance, department, working hours and more.",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "who_built_you",
+    "title": "who built me",
+    "keywords": [
+      "who built you",
+      "who made you",
+      "who created you",
+      "who developed you",
+      "who programmed you",
+      "who designed you",
+      "your creator",
+      "your developer"
+    ],
+    "questions": [
+      "who built you",
+      "who made you"
+    ],
+    "answer": "I was built by the RightMind team, by Engineer Abanob Magdy.",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "what_can_you_do",
+    "title": "what I can do",
+    "keywords": [
+      "what can you do",
+      "how can you help",
+      "help me",
+      "what do you do",
+      "what can i ask"
+    ],
+    "questions": [
+      "what can you do",
+      "how can you help me"
+    ],
+    "answer": "I can tell you how to do things in the app, like requesting a leave, punching in or finding your payslip. I can also answer questions about your account: your balance, department, working hours, holidays and more. Just ask!",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "thanks",
+    "title": "thank you",
+    "keywords": [
+      "thank you",
+      "thanks",
+      "thx",
+      "appreciate it",
+      "thank u"
+    ],
+    "questions": [
+      "thank you",
+      "thanks a lot"
+    ],
+    "answer": "You're welcome! Anything else I can help with?",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "bye",
+    "title": "goodbye",
+    "keywords": [
+      "bye",
+      "goodbye",
+      "bye bye",
+      "see you",
+      "good night"
+    ],
+    "questions": [
+      "bye",
+      "see you later"
+    ],
+    "answer": "Goodbye! Just say Hey TeamMind whenever you need me.",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "time_now",
+    "title": "time now",
+    "keywords": [
+      "what time",
+      "the time",
+      "time now",
+      "current time",
+      "time is it"
+    ],
+    "questions": [
+      "what time is it",
+      "what is the time now"
+    ],
+    "answer": "It's {time} now.",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "date_today",
+    "title": "today's date",
+    "keywords": [
+      "what day",
+      "todays date",
+      "today date",
+      "the date",
+      "date today",
+      "what is today"
+    ],
+    "questions": [
+      "what day is it today",
+      "what is the date today"
+    ],
+    "answer": "Today is {today}.",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "joke",
+    "title": "a joke",
+    "keywords": [
+      "joke",
+      "tell me a joke",
+      "make me laugh",
+      "something funny"
+    ],
+    "questions": [
+      "tell me a joke"
+    ],
+    "answer": "Why did the employee bring a ladder to the office? Because they heard the salaries were going up!",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
+    "id": "weather",
+    "title": "weather",
+    "keywords": [
+      "weather",
+      "temperature",
+      "is it raining",
+      "hot outside"
+    ],
+    "questions": [
+      "what is the weather today"
+    ],
+    "answer": "I can't check the weather because I work offline on your phone. But I can help with the app and your account!",
+    "kind": "chat",
+    "managerOnly": false
   }
 ]

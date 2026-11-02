@@ -9,12 +9,13 @@
 | `data/models/assistant_message_model.dart` | A chat bubble: text, who said it, the matched entry (for the **Open** button) and suggestion chips. |
 | `data/repos/user_data_repo.dart` | `UserDataRepo`: turns the cached `start_app` settings (`US1`, `US2`) into values for account answers (`{department}`, `{balance}`, `{work_hours}`, ...) and fills answer templates. |
 | `data/repos/help_repo.dart` | `HelpRepo`: loads `assets/json/assistant/help_<lang>.json`, hides entries by package and manager role, matches a question, and detects the wake phrase. |
+| `data/services/voice_picker.dart` | `VoicePicker`: picks a **male** voice per language (iOS `gender` field, or Android Google voice codes such as `iom`/`tpd`/`ard`; prefers local voices and `ar-EG`; falls back to a deeper pitch), and splits text into Arabic and English runs so each run is read by its own voice. Without the split, the English voice silently skips Arabic names such as ابانوب. |
 | `data/services/` | Wake voice code: `voice_features.dart` (MFCC), `utterance_segmenter.dart`, `voice_matcher.dart` (DTW and `VoiceprintModel`), `wake_word_service.dart` (mic stream). |
 | `views/assistant_screen.dart` | Chat screen: bubbles, text field, mic button, wake switch. |
 | `views/widgets/assistant_message_bubble_widget.dart`, `assistant_mic_button_widget.dart` | Bubble (with Open button and chips) and mic/stop button. |
 | `views/widgets/assistant_wake_host_widget.dart` | Wrapped around the body of `MainLayoutScreen`. Its presence lets the wake loop run, so it never runs on splash or login. It also inserts the floating card into the root navigator's overlay. The shell is rebuilt with `UniqueKey()` on every navigation, so the host attaches in `initState` and detaches after the frame. Detaching inside `dispose` used to call `notifyListeners` while the tree was locked. |
 | `views/widgets/assistant_floating_widget.dart` | Sheet in the bottom half of the screen, shown over any page after "Hey TeamMind". The page above is blurred and dimmed, and tapping it closes the sheet. It shows Mr. TeamMind, what was heard, then the reply with Open, chips, close, expand and mic. It hides itself 8 s after the answer, or 4 s after hearing nothing. |
-| `views/widgets/assistant_avatar_widget.dart` | **Mr. TeamMind**, a robot character in the logo's colours (`AppColors.brandNavy` and `brandBlue`), drawn with `CustomPainter` so each part animates. Speaking: equaliser mouth that jumps on every word (`FlutterTts` progress handler), signal arcs from the antenna and a head bob. Listening: head tilt, wider eyes and an "o" mouth that follows the mic level (`onSoundLevelChange`). Idle: smile, wandering eyes and random blinks. |
+| `views/widgets/assistant_avatar_widget.dart` | **Mr. TeamMind**: a line-art character with curly hair, square glasses and a pencil behind his ear, in the logo colours (`AppColors.brandNavy` for features, `brandBlue` for face and ears). It is drawn with `CustomPainter` on a 540-unit canvas taken from the design frames, so each part animates. Idle: gentle bob, random blinks (line eyes) and an occasional ^^ smile. Listening: an "o" mouth that follows the mic level (`onSoundLevelChange`) and a small head tilt. Speaking: a ^^ smile at the start of each answer, then the mouth opens on every word (`FlutterTts` progress handler) and the pencil wiggles. |
 
 ## Help file
 
@@ -47,6 +48,10 @@ Entries with `"kind": "data"` answer from the user's own data. Their `answer` is
 ```
 
 `UserDataRepo.values(lang)` builds the values from `US1` (name, job title, email/phone and whether they are verified, birthday, hire date and length of service, department, roles, managed departments, insurance number, assets, new notifications) and `US2` (balance per request type, working hours, allowed delay, weekend, upcoming holidays, last login). A line whose value is missing is dropped. If nothing is left, the entry's `noData` text is used, or `AppStrings.assistantNoData`. To add a question about another field, add the value in `UserDataRepo.valuesFrom` and an entry that uses it.
+
+## Small talk
+
+Entries with `"kind": "chat"` handle everyday questions: greetings, "how are you" / "ازيك", the time and date, "who are you", "who built you" (the RightMind team, Engineer Abanob Magdy), "what can you do", thanks, bye, a joke, and weather (it explains it works offline). Their words are mostly fillers, so they match **whole phrases** in the normalised question rather than keywords: 4 points plus the phrase's word count, so the longer phrase wins ("hi how are you" goes to `how_are_you`, not `greeting`). The intent bonus and penalty do not apply to them. `UserDataRepo` also provides `{time}`, `{today}` and `{first_name}` for these answers.
 
 ## Matching
 

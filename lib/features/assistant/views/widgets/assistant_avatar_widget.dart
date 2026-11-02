@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 
 enum AssistantAvatarMode { idle, listening, speaking }
 
-/// شخصية "Mr. TeamMind": روبوت بألوان الشعار، مرسوم بالكود حتى يتحرك كل جزء
-/// وحده ويبقى حاداً بأي حجم.
-/// - يتكلم: الفم شرائط معادل صوت تقفز مع كل كلمة، وموجات تخرج من الهوائي، والرأس يهتز.
-/// - يستمع: الرأس يميل، العينان تتسعان، والفم "o" يكبر مع صوت المستخدم.
-/// - خامل: ابتسامة، نظرات خفيفة، ورمش عشوائي.
+/// شخصية "Mr. TeamMind": شاب بشعر مجعد ونظارة وقلم خلف أذنه، رسم خطي بلوني
+/// الشعار. مرسوم بالكود حتى يتحرك كل جزء وحده ويبقى حاداً بأي حجم.
+/// - خامل: يتمايل بهدوء، يرمش، ويبتسم أحياناً بعيون ^^.
+/// - يستمع: فم "o" يكبر ويصغر مع صوت المستخدم، والرأس يميل قليلاً.
+/// - يتكلم: الفم يفتح ويقفل مع كل كلمة، يبتسم ^^ في بداية الرد، والقلم يهتز.
 class AssistantAvatarWidget extends StatefulWidget {
   final AssistantAvatarMode mode;
 
@@ -36,307 +36,345 @@ class AssistantAvatarWidget extends StatefulWidget {
 class _AssistantAvatarWidgetState extends State<AssistantAvatarWidget>
     with TickerProviderStateMixin {
   late final AnimationController _loop =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 2400))..repeat();
-  late final AnimationController _kick =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 240));
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 2600))..repeat();
+  // فتح الفم مع كل كلمة: يفتح بسرعة ثم يقفل.
+  late final AnimationController _talk =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 260));
   late final AnimationController _blink =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 160));
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 140));
+  // لحظة الابتسامة ^^ (0..1).
+  late final AnimationController _happy =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 220));
   final _random = math.Random();
   Timer? _blinkTimer;
+  Timer? _happyTimer;
 
   @override
   void initState() {
     super.initState();
     _scheduleBlink();
+    _scheduleIdleSmile();
   }
 
   void _scheduleBlink() {
-    _blinkTimer = Timer(Duration(milliseconds: 1800 + _random.nextInt(3200)), () async {
+    _blinkTimer = Timer(Duration(milliseconds: 1800 + _random.nextInt(3000)), () async {
       if (!mounted) return;
-      await _blink.forward(from: 0);
-      if (!mounted) return;
-      await _blink.reverse();
+      if (_happy.value < 0.5) {
+        await _blink.forward(from: 0);
+        if (!mounted) return;
+        await _blink.reverse();
+      }
       if (mounted) _scheduleBlink();
     });
+  }
+
+  /// ابتسامة ^^ قصيرة كل فترة أثناء الخمول.
+  void _scheduleIdleSmile() {
+    _happyTimer = Timer(Duration(milliseconds: 6000 + _random.nextInt(5000)), () {
+      if (!mounted) return;
+      if (widget.mode == AssistantAvatarMode.idle) _smile(const Duration(milliseconds: 1400));
+      _scheduleIdleSmile();
+    });
+  }
+
+  Future<void> _smile(Duration hold) async {
+    await _happy.forward();
+    await Future.delayed(hold);
+    if (mounted) await _happy.reverse();
   }
 
   @override
   void didUpdateWidget(AssistantAvatarWidget old) {
     super.didUpdateWidget(old);
+    if (widget.mode == AssistantAvatarMode.speaking && old.mode != AssistantAvatarMode.speaking) {
+      _smile(const Duration(milliseconds: 700)); // يبدأ الرد بابتسامة
+    }
+    if (widget.mode != AssistantAvatarMode.idle && _happy.value > 0 && !_happy.isAnimating) {
+      _happy.reverse();
+    }
     if (widget.wordTick != old.wordTick && widget.mode == AssistantAvatarMode.speaking) {
-      _kick.forward(from: 0);
+      _talk.forward(from: 0);
     }
   }
 
   @override
   void dispose() {
     _blinkTimer?.cancel();
+    _happyTimer?.cancel();
     _loop.dispose();
-    _kick.dispose();
+    _talk.dispose();
     _blink.dispose();
+    _happy.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.size,
-      height: widget.size * _AvatarPainter.aspect,
+    return SizedBox.square(
+      dimension: widget.size,
       child: AnimatedBuilder(
-        animation: Listenable.merge([_loop, _kick, _blink]),
-        builder: (_, __) => CustomPaint(
-          painter: _AvatarPainter(
-            mode: widget.mode,
-            t: _loop.value,
-            kick: _kick.isAnimating ? 1 - Curves.easeOut.transform(_kick.value) : 0,
-            blink: _blink.value,
-            level: widget.level.clamp(0.0, 1.0),
-          ),
-        ),
+        animation: Listenable.merge([_loop, _talk, _blink, _happy]),
+        builder: (_, __) {
+          // فتح الفم: قمة سريعة ثم إغلاق، مع اهتزاز خفيف طول الكلام.
+          final talkPulse = _talk.isAnimating ? math.sin(math.pi * _talk.value) : 0.0;
+          final speaking = widget.mode == AssistantAvatarMode.speaking;
+          final chatter = speaking ? 0.25 + 0.2 * math.sin(2 * math.pi * _loop.value * 9) : 0.0;
+          return CustomPaint(
+            painter: _AvatarPainter(
+              mode: widget.mode,
+              t: _loop.value,
+              open: speaking ? math.max(talkPulse, chatter).clamp(0.0, 1.0) : 0,
+              blink: _blink.value,
+              happy: Curves.easeOut.transform(_happy.value),
+              level: widget.level.clamp(0.0, 1.0),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class _AvatarPainter extends CustomPainter {
-  // لوحة الرسم 100 x 112 وحدة، تُكبَّر لحجم الـ widget.
-  static const double aspect = 112 / 100;
+  // الرسم على لوحة 540 x 540 وحدة (نفس مقاس التصميم الأصلي) ثم يُكبَّر.
+  static const double _canvas = 540;
 
   final AssistantAvatarMode mode;
-  final double t, kick, blink, level;
+  final double t, open, blink, happy, level;
 
   _AvatarPainter({
     required this.mode,
     required this.t,
-    required this.kick,
+    required this.open,
     required this.blink,
+    required this.happy,
     required this.level,
   });
 
   static const navy = Color(AppColors.brandNavy);
   static const blue = Color(AppColors.brandBlue);
-  static const visor = Color(0xFF04052E);
+
+  Paint _stroke(Color c, double w) => Paint()
+    ..color = c
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = w
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round;
+
+  static final Paint _white = Paint()..color = Colors.white;
 
   double _wave(double phase, [double speed = 1]) =>
       math.sin(2 * math.pi * (t * speed - phase));
 
+  /// قوس بين النقطة الحالية و[to]، منتفخ بمقدار [bulge] عمودياً على الاتجاه.
+  static void _bump(Path p, Offset from, Offset to, double bulge) {
+    final d = to - from;
+    final n = Offset(-d.dy, d.dx) / d.distance;
+    final c = (from + to) / 2 + n * bulge;
+    p.quadraticBezierTo(c.dx, c.dy, to.dx, to.dy);
+  }
+
+  static Path _chain(List<Offset> pts, List<double> bulges, {Path? into}) {
+    final p = into ?? (Path()..moveTo(pts.first.dx, pts.first.dy));
+    for (var i = 1; i < pts.length; i++) {
+      _bump(p, pts[i - 1], pts[i], bulges[i - 1]);
+    }
+    return p;
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
-    canvas.scale(size.width / 100);
+    canvas.scale(size.width / _canvas);
 
     final speaking = mode == AssistantAvatarMode.speaking;
     final listening = mode == AssistantAvatarMode.listening;
 
-    _paintBody(canvas);
-
-    // الرأس: يهتز بخفة، ويميل نحو المستخدم أثناء الاستماع.
-    final bob = speaking ? _wave(0, 4) * 1.2 + kick * -1.5 : _wave(0) * 1.2;
-    final tilt = listening ? -0.07 * (0.4 + 0.6 * level) : 0.0;
-    canvas.save();
-    canvas.translate(50, 84 + bob);
+    // تمايل الرأس، وميل بسيط أثناء الاستماع.
+    final bob = _wave(0) * (speaking ? 6 : 4);
+    final tilt = listening ? -0.05 * (0.4 + 0.6 * level) : 0.015 * _wave(0.3);
+    canvas.translate(270, 290 + bob);
     canvas.rotate(tilt);
-    canvas.translate(-50, -84);
-    _paintAntenna(canvas, speaking, listening);
-    _paintHead(canvas);
-    _paintEyes(canvas, listening, speaking);
-    _paintMouth(canvas, speaking, listening);
-    canvas.restore();
+    canvas.translate(-270, -290);
+
+    _paintPencil(canvas, speaking);
+    _paintFace(canvas);
+    _paintHair(canvas);
+    _paintGlassesAndEyes(canvas);
+    _paintNoseAndMouth(canvas, speaking, listening);
 
     canvas.restore();
   }
 
-  void _paintBody(Canvas canvas) {
-    // الكتفان
+  // القلم خلف الأذن اليمنى (يُرسم أولاً فتغطيه الأذن).
+  void _paintPencil(Canvas canvas, bool speaking) {
+    final wiggle = (speaking ? 0.05 : 0.02) * _wave(0.1, speaking ? 3 : 1);
+    canvas.save();
+    canvas.translate(452, 276);
+    canvas.rotate(0.162 + wiggle);
     final body = RRect.fromRectAndCorners(
-      const Rect.fromLTRB(24, 90, 76, 112),
-      topLeft: const Radius.circular(16),
-      topRight: const Radius.circular(16),
+      const Rect.fromLTRB(-17, -138, 17, 88),
+      topLeft: const Radius.circular(9),
+      topRight: const Radius.circular(9),
     );
-    canvas.drawRRect(
-      body,
-      Paint()
-        ..shader = const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [navy, Color(0xFF0E1180)],
-        ).createShader(body.outerRect),
-    );
-    // الرقبة
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(const Rect.fromLTRB(44, 82, 56, 92), const Radius.circular(3)),
-      Paint()..color = const Color(0xFF14178C),
-    );
-    // ربطة العنق (Mr.)
-    final bow = Paint()..color = blue;
+    canvas.drawRRect(body, _white);
+    final tip = Path()
+      ..moveTo(-17, 88)
+      ..lineTo(0, 138)
+      ..lineTo(17, 88);
+    canvas.drawPath(tip, _white);
+    final s = _stroke(navy, 12);
+    canvas.drawRRect(body, s);
+    canvas.drawPath(tip, s);
+    canvas.drawLine(const Offset(-17, -106), const Offset(17, -106), s); // الممحاة
+    canvas.drawLine(const Offset(-6, 120), const Offset(6, 120), s..strokeWidth = 14); // سن القلم
+    canvas.restore();
+  }
+
+  void _paintFace(Canvas canvas) {
+    final blueStroke = _stroke(blue, 21);
+    // الأذنان: شكل C ممتلئ بالأبيض (الأذن اليمنى تغطي القلم).
+    for (final side in [-1.0, 1.0]) {
+      final x0 = 264 + side * 150; // خط الوجه
+      final ear = Path()
+        ..moveTo(x0, 262)
+        ..cubicTo(x0 + side * 50, 244, x0 + side * 56, 340, x0, 332);
+      canvas.drawPath(ear, _white);
+      canvas.drawPath(ear, blueStroke);
+    }
+    final face = Path()
+      ..moveTo(114, 200)
+      ..lineTo(114, 330)
+      ..cubicTo(114, 420, 182, 478, 264, 478)
+      ..cubicTo(346, 478, 414, 420, 414, 330)
+      ..lineTo(414, 200)
+      ..close();
+    canvas.drawPath(face, _white);
     canvas.drawPath(
-        Path()
-          ..moveTo(50, 96)
-          ..lineTo(39, 91)
-          ..quadraticBezierTo(37, 96, 39, 101)
-          ..close(),
-        bow);
+      Path()
+        ..moveTo(114, 200)
+        ..lineTo(114, 330)
+        ..cubicTo(114, 420, 182, 478, 264, 478)
+        ..cubicTo(346, 478, 414, 420, 414, 330)
+        ..lineTo(414, 200),
+      blueStroke,
+    );
+  }
+
+  void _paintHair(Canvas canvas) {
+    // تموج بسيط في الشعر
+    final sway = 2.0 * _wave(0.15);
+    // الحد الخارجي (من أسفل اليسار مع عقارب الساعة)، كل قوس منتفخ للخارج.
+    final outer = [
+      const Offset(100, 236),
+      const Offset(100, 146),
+      Offset(150, 80 + sway),
+      Offset(222, 56 + sway),
+      Offset(300, 50 + sway),
+      Offset(392, 98 + sway),
+      const Offset(430, 160),
+      const Offset(432, 236),
+    ];
+    final outerBulge = [-30.0, -30.0, -28.0, -30.0, -34.0, -26.0, -16.0];
+    // الحد السفلي (الغرة) من اليمين لليسار: تجاعيد منتفخة لأعلى.
+    final bangs = [
+      const Offset(432, 236),
+      const Offset(398, 206),
+      const Offset(342, 198),
+      const Offset(286, 208),
+      const Offset(226, 200),
+      const Offset(166, 210),
+      const Offset(124, 224),
+      const Offset(100, 236),
+    ];
+    final bangsBulge = [18.0, 26.0, 24.0, 26.0, 26.0, 20.0, 10.0];
+    final hair = _chain(outer, outerBulge);
+    _chain(bangs, bangsBulge, into: hair);
+    hair.close();
+    canvas.drawPath(hair, _white);
+    canvas.drawPath(hair, _stroke(navy, 19));
+  }
+
+  void _paintGlassesAndEyes(Canvas canvas) {
+    final s = _stroke(navy, 21);
+    const left = Rect.fromLTRB(132, 244, 244, 326);
+    const right = Rect.fromLTRB(284, 244, 400, 326);
+    canvas.drawRRect(RRect.fromRectAndRadius(left, const Radius.circular(18)), s);
+    canvas.drawRRect(RRect.fromRectAndRadius(right, const Radius.circular(18)), s);
+    canvas.drawLine(const Offset(244, 268), const Offset(284, 268), s); // الجسر
+    canvas.drawLine(const Offset(132, 266), const Offset(108, 264), s); // الذراعان
+    canvas.drawLine(const Offset(400, 266), const Offset(424, 264), s);
+
+    // العينان: نقطة عادية، خط عند الرمش، ^ عند الابتسامة.
+    final look = mode == AssistantAvatarMode.idle ? 4 * _wave(0.4, 0.5) : 0.0;
+    for (final c in [Offset(190 + look, 286), Offset(342 + look, 286)]) {
+      if (happy > 0.5) {
+        final h = 12 * happy;
+        canvas.drawPath(
+          Path()
+            ..moveTo(c.dx - 16, c.dy + h / 2)
+            ..quadraticBezierTo(c.dx, c.dy - h * 1.4, c.dx + 16, c.dy + h / 2),
+          _stroke(navy, 12),
+        );
+      } else if (blink > 0.5) {
+        canvas.drawLine(Offset(c.dx - 16, c.dy), Offset(c.dx + 16, c.dy), _stroke(navy, 12));
+      } else {
+        final r = 14 * (1 - blink * 0.6) * (1 - happy);
+        canvas.drawOval(
+          Rect.fromCenter(center: c, width: 28, height: 2 * r),
+          Paint()..color = navy,
+        );
+      }
+    }
+  }
+
+  void _paintNoseAndMouth(Canvas canvas, bool speaking, bool listening) {
+    final s = _stroke(navy, 18);
+    // الأنف: قوس ثابت
     canvas.drawPath(
+      Path()
+        ..moveTo(216, 384)
+        ..quadraticBezierTo(264, 362, 312, 382),
+      s,
+    );
+
+    if (listening) {
+      // فم "o" يتبع صوت المستخدم
+      final w = 42 + 12 * level, h = 32 + 14 * level;
+      canvas.drawOval(Rect.fromCenter(center: const Offset(264, 434), width: w, height: h), s);
+      return;
+    }
+    // ابتسامة على شكل U تتسع مع ^^، وتنفتح أثناء الكلام.
+    final half = 34 + 10 * happy;
+    final y = 424 - 4 * happy;
+    final l = Offset(264 - half, y), r = Offset(264 + half, y - 4);
+    final bottom = 454 + 10 * happy;
+    final o = open.clamp(0.0, 1.0);
+    if (o < 0.05) {
+      canvas.drawPath(
         Path()
-          ..moveTo(50, 96)
-          ..lineTo(61, 91)
-          ..quadraticBezierTo(63, 96, 61, 101)
-          ..close(),
-        bow);
-    canvas.drawCircle(const Offset(50, 96), 3, Paint()..color = const Color(0xFF1F6FD6));
-  }
-
-  void _paintAntenna(Canvas canvas, bool speaking, bool listening) {
-    canvas.drawLine(
-      const Offset(50, 22),
-      const Offset(50, 11),
-      Paint()
-        ..color = const Color(0xFF14178C)
-        ..strokeWidth = 3
-        ..strokeCap = StrokeCap.round,
-    );
-    // موجات إشارة مثل أقواس الشعار، تخرج أثناء الكلام.
-    if (speaking) {
-      for (var i = 0; i < 2; i++) {
-        final p = (t * 3 + i * 0.5) % 1;
-        final r = 7 + p * 9;
-        canvas.drawArc(
-          Rect.fromCircle(center: const Offset(50, 8), radius: r),
-          -math.pi * 0.8,
-          math.pi * 0.6,
-          false,
-          Paint()
-            ..color = blue.withValues(alpha: (1 - p) * 0.8)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2
-            ..strokeCap = StrokeCap.round,
-        );
-      }
-    }
-    final glow = speaking ? 0.6 + 0.4 * kick : (listening ? 0.4 + 0.6 * level : 0.25 + 0.15 * _wave(0));
-    canvas.drawCircle(
-      const Offset(50, 8),
-      6 + 3 * glow,
-      Paint()
-        ..color = blue.withValues(alpha: 0.35 * glow)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
-    );
-    canvas.drawCircle(const Offset(50, 8), 5, Paint()..color = blue);
-    canvas.drawCircle(const Offset(48.3, 6.3), 1.5, Paint()..color = Colors.white.withValues(alpha: 0.7));
-  }
-
-  void _paintHead(Canvas canvas) {
-    // الأذنان
-    final ear = Paint()..color = blue;
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(const Rect.fromLTRB(7, 42, 15, 64), const Radius.circular(4)), ear);
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(const Rect.fromLTRB(85, 42, 93, 64), const Radius.circular(4)), ear);
-
-    final head = RRect.fromRectAndRadius(const Rect.fromLTRB(13, 21, 87, 85), const Radius.circular(24));
-    canvas.drawRRect(
-      head.shift(const Offset(0, 2)),
-      Paint()
-        ..color = Colors.black.withValues(alpha: 0.18)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-    );
-    canvas.drawRRect(
-      head,
-      Paint()
-        ..shader = const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF1C2196), navy],
-        ).createShader(head.outerRect),
-    );
-
-    // شاشة الوجه
-    final face = RRect.fromRectAndRadius(const Rect.fromLTRB(21, 32, 79, 76), const Radius.circular(17));
-    canvas.drawRRect(
-      face,
-      Paint()
-        ..shader = const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF0B0E5A), visor],
-        ).createShader(face.outerRect),
-    );
-    // لمعة
-    canvas.drawArc(
-      const Rect.fromLTRB(25, 35, 60, 60),
-      math.pi * 1.05,
-      math.pi * 0.35,
-      false,
-      Paint()
-        ..color = Colors.white.withValues(alpha: 0.18)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.2
-        ..strokeCap = StrokeCap.round,
-    );
-  }
-
-  void _paintEyes(Canvas canvas, bool listening, bool speaking) {
-    // نظرات خفيفة في الخمول
-    final look = mode == AssistantAvatarMode.idle ? _wave(0.2) * 1.6 : 0.0;
-    final open = 1 - blink * 0.9;
-    final h = (listening ? 13.0 + 2 * level : 11.0) * open;
-    const w = 9.0;
-    for (final cx in [38.0, 62.0]) {
-      final rect = Rect.fromCenter(center: Offset(cx + look, 50), width: w, height: h);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect.inflate(2.5), const Radius.circular(6)),
-        Paint()
-          ..color = blue.withValues(alpha: 0.35)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+          ..moveTo(l.dx, l.dy)
+          ..quadraticBezierTo(264, bottom, r.dx, r.dy),
+        s,
       );
-      canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(4.5)), Paint()..color = blue);
-      if (open > 0.5) {
-        canvas.drawCircle(
-          Offset(cx + look - 1.6, 50 - h * 0.22),
-          1.4,
-          Paint()..color = Colors.white.withValues(alpha: 0.85),
-        );
-      }
+      return;
     }
-  }
-
-  void _paintMouth(Canvas canvas, bool speaking, bool listening) {
-    final paint = Paint()
-      ..color = blue
-      ..strokeCap = StrokeCap.round;
-    if (speaking) {
-      // شرائط معادل صوت
-      const heights = [0.55, 0.85, 1.0, 0.85, 0.55];
-      for (var i = 0; i < 5; i++) {
-        final wobble = 0.5 + 0.5 * _wave(i * 0.17, 6);
-        final hh = 2 + 8 * heights[i] * (0.35 + 0.65 * math.max(kick, wobble * 0.6));
-        canvas.drawLine(
-          Offset(40 + i * 5.0, 65 - hh / 2),
-          Offset(40 + i * 5.0, 65 + hh / 2),
-          paint..strokeWidth = 3,
-        );
-      }
-    } else if (listening) {
-      canvas.drawOval(
-        Rect.fromCenter(center: const Offset(50, 65), width: 6 + 5 * level, height: 3.5 + 5 * level),
-        paint
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.4,
-      );
-    } else {
-      canvas.drawArc(
-        const Rect.fromLTRB(42, 56, 58, 68),
-        math.pi * 0.15,
-        math.pi * 0.7,
-        false,
-        paint
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.6,
-      );
-    }
+    // فم مفتوح: الشفة العليا شبه مستقيمة والسفلى تنزل بقدر الفتح.
+    final mouth = Path()
+      ..moveTo(l.dx, l.dy)
+      ..quadraticBezierTo(264, y + 6 - 4 * o, r.dx, r.dy)
+      ..quadraticBezierTo(264, bottom + 26 * o, l.dx, l.dy)
+      ..close();
+    canvas.drawPath(mouth, Paint()..color = navy);
+    canvas.drawPath(mouth, s..strokeWidth = 14);
   }
 
   @override
   bool shouldRepaint(_AvatarPainter old) =>
-      old.t != t || old.kick != kick || old.blink != blink || old.level != level || old.mode != mode;
+      old.t != t ||
+      old.open != open ||
+      old.blink != blink ||
+      old.happy != happy ||
+      old.level != level ||
+      old.mode != mode;
 }

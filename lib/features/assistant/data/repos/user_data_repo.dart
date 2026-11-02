@@ -56,8 +56,21 @@ abstract class UserDataRepo {
       if (value != null && value.trim().isNotEmpty && value != 'null') v[key] = value.trim();
     }
 
+    // الوقت الحالي (لأسئلة الدردشة: الساعة كام؟ النهارده إيه؟)
+    final hour12 = now.hour % 12 == 0 ? 12 : now.hour % 12;
+    put('time', ar
+        ? '$hour12:${_two(now.minute)} ${now.hour < 12 ? 'الصبح' : 'بالليل'}'
+        : '$hour12:${_two(now.minute)} ${now.hour < 12 ? 'AM' : 'PM'}');
+    if (ar && now.hour >= 12 && now.hour < 18) {
+      v['time'] = '$hour12:${_two(now.minute)} العصر';
+    }
+    put('today', ar
+        ? '${_weekday(now, true)} ${now.day} ${_monthsAr[now.month - 1]} ${now.year}'
+        : '${_weekday(now, false)}, ${now.day} ${_monthsEn[now.month - 1]} ${now.year}');
+
     // الهوية
     put('name', _str(us1['name']));
+    put('first_name', _str(us1['name'])?.trim().split(RegExp(r'\s+')).first);
     put('job_title', _str(us1['job_title']));
     put('email', _str(us1['email']));
     put('phone', _str(us1['phone']));
@@ -230,6 +243,18 @@ abstract class UserDataRepo {
     }
     return null;
   }
+
+  static const _monthsEn = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  static const _monthsAr = [
+    'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+  ];
+  static const _weekdaysEn = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+  static String _weekday(DateTime d, bool ar) => _day(_weekdaysEn[d.weekday - 1], ar);
 
   static const _daysAr = {
     'saturday': 'السبت', 'sunday': 'الأحد', 'monday': 'الاثنين', 'tuesday': 'الثلاثاء',

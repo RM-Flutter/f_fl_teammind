@@ -131,6 +131,9 @@ class _AssistantScreenState extends State<AssistantScreen> {
                             style: AppStyles.hintContent(context)),
                         TextButton(
                           onPressed: c.cancelEnrollment,
+                          style: TextButton.styleFrom(
+                            textStyle: AppStyles.content(context).copyWith(fontSize: 13),
+                          ),
                           child: Text(AppStrings.assistantEnrollCancel.tr()),
                         ),
                       ],
@@ -139,9 +142,18 @@ class _AssistantScreenState extends State<AssistantScreen> {
                 else if (!kIsWeb && c.hasVoiceprint)
                   Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: TextButton(
-                      onPressed: c.startEnrollment,
-                      child: Text(AppStrings.assistantEnrollRedo.tr()),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
+                      child: TextButton.icon(
+                        onPressed: c.startEnrollment,
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(AppColors.brandBlue),
+                          textStyle: AppStyles.content(context)
+                              .copyWith(fontSize: 13, fontWeight: FontWeight.w600),
+                        ),
+                        icon: const Icon(Icons.mic_none_rounded, size: 18),
+                        label: Text(AppStrings.assistantEnrollRedo.tr()),
+                      ),
                     ),
                   ),
                 Expanded(

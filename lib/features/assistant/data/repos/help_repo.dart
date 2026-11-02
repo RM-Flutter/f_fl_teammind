@@ -109,14 +109,32 @@ abstract class HelpRepo {
   }
 
   /// درجة مدخل واحد للسؤال [q] (كلماته بعد [tokens]).
-  static double score(HelpEntryModel entry, Set<String> q) {
-    if (q.isEmpty) return 0;
-    var score = 0.0;
+  /// النص بعد التطبيع ومحاطاً بمسافات، لمطابقة جمل كاملة مثل " how are you ".
+  static String _phraseText(String text) =>
+      ' ${normalize(text).split(RegExp(r'\s+')).where((w) => w.isNotEmpty).join(' ')} ';
+
+  /// مدخلات الدردشة (`chat`) مثل "ازيك" و"how are you" كلها كلمات شائعة تُحذف
+  /// من السؤال، لذلك تُطابق كجملة كاملة في النص الأصلي: 4 + عدد كلماتها، فتغلب
+  /// الجملة الأطول ("hi how are you" -> how are you وليس hi).
+  static double _chatScore(HelpEntryModel entry, String phrase) {
+    var best = 0.0;
+    for (final k in entry.keywords) {
+      final kp = _phraseText(k);
+      if (kp.trim().isEmpty || !phrase.contains(kp)) continue;
+      final words = kp.trim().split(' ').length;
+      if (4.0 + words > best) best = 4.0 + words;
+    }
+    return best;
+  }
+
+  static double score(HelpEntryModel entry, Set<String> q, [String phrase = '']) {
+    var score = entry.isChat ? _chatScore(entry, phrase) : 0.0;
+    if (q.isEmpty) return score;
 
     // +3 لكل كلمة مفتاحية (كل كلماتها موجودة في السؤال). الكلمات التي تصبح
     // متطابقة بعد التطبيع (اجازة / اجازه) تُحسب مرة واحدة.
     final seen = <String>{};
-    for (final k in entry.keywords) {
+    for (final k in entry.isChat ? const <String>[] : entry.keywords) {
       final kt = tokens(k);
       if (kt.isEmpty || !seen.add(kt.join(' '))) continue;
       if (kt.every(q.contains)) score += 3;
@@ -163,7 +181,8 @@ abstract class HelpRepo {
   /// يختار أفضل مدخل، أو يرجّع أقرب 3 مواضيع لو الدرجة أقل من الحد.
   static HelpMatchResult match(String question, List<HelpEntryModel> entries) {
     final q = tokens(question).toSet();
-    if (q.isEmpty || entries.isEmpty) {
+    final phrase = _phraseText(question);
+    if (entries.isEmpty || (q.isEmpty && !entries.any((e) => e.isChat && _chatScore(e, phrase) > 0))) {
       return HelpMatchResult(suggestions: entries.take(maxSuggestions).toList());
     }
     // ميل بسيط نحو نوع المدخل المطابق لنوع السؤال، فيفرّق بين
@@ -171,8 +190,8 @@ abstract class HelpRepo {
     final intent = intentOf(question);
     // المكافأة فقط لمطابقة جيدة أصلاً (حتى لا ترفع سؤالاً خارج الموضوع فوق الحد).
     double total(HelpEntryModel e) {
-      final s = score(e, q);
-      if (intent == null || s <= 0) return s;
+      final s = score(e, q, phrase);
+      if (intent == null || s <= 0 || e.isChat) return s;
       if (e.kind == intent) return s >= 2 ? s + 1.5 : s;
       return math.max(0, s - 1.5);
     }

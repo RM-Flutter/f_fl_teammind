@@ -4,11 +4,12 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/assistant_controller.dart';
+import 'assistant_actions_widget.dart';
 import 'assistant_avatar_widget.dart';
 
 /// نافذة المساعد عند "Hey TeamMind": لوحة في النصف السفلي من الشاشة فوق أي
@@ -121,6 +122,7 @@ class AssistantFloatingWidget extends StatelessWidget {
                           Text(
                             text,
                             textAlign: TextAlign.center,
+                            textDirection: assistantTextDirection(text),
                             style: c.isListeningQuestion
                                 ? AppStyles.hintContent(context)
                                     .copyWith(fontSize: AppSizes.s16)
@@ -135,8 +137,8 @@ class AssistantFloatingWidget extends StatelessWidget {
                                 runSpacing: AppSizes.s4,
                                 children: [
                                   for (final s in reply.suggestions)
-                                    ActionChip(
-                                      label: Text(s.title),
+                                    AssistantSuggestionChip(
+                                      label: s.title,
                                       onPressed: () => c.answerWithEntry(s),
                                     ),
                                 ],
@@ -151,12 +153,8 @@ class AssistantFloatingWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (showReply && reply.entry?.route != null) ...[
-                        FilledButton.icon(
-                          onPressed: () => c.openEntry(context, reply.entry!),
-                          icon:
-                              const Icon(Icons.open_in_new, size: AppSizes.s16),
-                          label: Text(AppStrings.assistantOpen.tr()),
-                        ),
+                        AssistantOpenButton(
+                            onPressed: () => c.openEntry(context, reply.entry!)),
                         const SizedBox(width: AppSizes.s12),
                       ],
                       IconButton.filled(

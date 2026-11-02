@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/routing/app_router.dart' show rootNavigatorKey;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/app_images.dart';
@@ -103,31 +106,73 @@ abstract class AlertsService {
       title = AppStrings.somethingWentWrong.tr();
     }
 
-    final snackBar = SnackBar(
-      duration: const Duration(seconds: 5),
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom > 0 
-            ? MediaQuery.of(context).viewInsets.bottom + AppSizes.s10 
-            : AppSizes.s10,
-        left: 0,
-        right: 0,
-      ),
-      padding: const EdgeInsets.only(top: AppSizes.s15, bottom: AppSizes.s5),
-      backgroundColor: Colors.transparent,
-      content: CustomAlert(
-        title: title,
-        message: message,
-        contentType: type,
-        color: color,
-      ),
+    final alert = CustomAlert(
+      title: title,
+      message: message,
+      contentType: type,
+      color: color,
     );
 
-    // Use the direct context instead of the global key
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // Shown in the app's top overlay, not through a Scaffold: a floating SnackBar is laid out by
+    // every Scaffold on screen, and a screen that is closing (keyboard still open) has no room
+    // for it, which threw "SnackBar presented off screen" on every frame.
+    final overlay = rootNavigatorKey.currentState?.overlay;
+    if (overlay == null) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: _alertDuration,
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.only(bottom: AppSizes.s10),
+        padding: const EdgeInsets.only(top: AppSizes.s15, bottom: AppSizes.s5),
+        backgroundColor: Colors.transparent,
+        content: alert,
+      ));
+      return;
+    }
+
+    _currentAlert?.remove();
+    _alertTimer?.cancel();
+    late final OverlayEntry entry;
+    void dismiss() {
+      _alertTimer?.cancel();
+      if (_currentAlert == entry) _currentAlert = null;
+      if (entry.mounted) entry.remove();
+    }
+
+    entry = OverlayEntry(
+      builder: (overlayContext) {
+        final media = MediaQuery.of(overlayContext);
+        return Positioned(
+          left: 0,
+          right: 0,
+          bottom: media.viewInsets.bottom + media.padding.bottom + AppSizes.s10,
+          child: Dismissible(
+            key: UniqueKey(),
+            direction: DismissDirection.horizontal,
+            onDismissed: (_) => dismiss(),
+            child: GestureDetector(
+              onTap: dismiss,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: AppSizes.s15, bottom: AppSizes.s5),
+                  child: alert,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    _currentAlert = entry;
+    overlay.insert(entry);
+    _alertTimer = Timer(_alertDuration, dismiss);
   }
+
+  static const Duration _alertDuration = Duration(seconds: 5);
+  static OverlayEntry? _currentAlert;
+  static Timer? _alertTimer;
 
   static Future<void> showLoading(BuildContext context,
       {String title = ''}) async {

@@ -17,7 +17,8 @@ class HelpEntryModel {
   /// يُخفى المدخل لغير المديرين.
   final bool managerOnly;
 
-  /// `howto` (كيف أفعل...) أو `data` (سؤال عن بيانات حسابي: ما قسمي؟ كم رصيدي؟).
+  /// `howto` (كيف أفعل...)، `data` (سؤال عن بيانات حسابي: ما قسمي؟ كم رصيدي؟)،
+  /// أو `chat` (دردشة: أهلاً، ازيك، الساعة كام).
   /// إجابات `data` قوالب مثل {department} تُملأ من UserDataRepo.
   final String kind;
 
@@ -25,6 +26,9 @@ class HelpEntryModel {
   final String? noData;
 
   bool get isData => kind == 'data';
+
+  /// دردشة عادية: تحية، ازيك، الساعة كام، مين عملك...
+  bool get isChat => kind == 'chat';
 
   const HelpEntryModel({
     required this.id,
