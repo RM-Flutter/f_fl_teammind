@@ -17,6 +17,7 @@ Reusable widgets that several features share. Check this folder before you build
 | `shared_list_filter_widget.dart`, `active_filters_row_widget.dart` | Filter sheet and active-filter chips used by the list screens |
 | `vocation_list.widget.dart` | Vacation / balance list |
 | `notification_card.widget.dart` | Notification list item |
+| `profile_avatar_menu_widget.dart` | Wraps the user's avatar: with an employee profile a tap opens a small menu (personal profile / employee profile), without one it goes straight to the personal profile. Used on Home and More. |
 | `expandable_text_widget.dart` | Long text clamped to a few lines with a "Read more" / "Read less" toggle (only when it overflows) |
 | `slider_home_menu.dart`, `template_page.widget.dart`, `glassmorphism_card.widget.dart`, `gradient_bg_image.dart` | Layout pieces |
 | `cached_network_image_widget.dart`, `dynamic_image_widget.dart`, `full_image_screen.dart` | Images: cached, network or asset or SVG, and full screen with zoom |

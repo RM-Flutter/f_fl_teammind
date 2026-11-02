@@ -30,9 +30,15 @@ Widget defaultTapBarItem({
       );
       // Width a tab needs to show its whole title, plus the tab's horizontal padding
       double fittedWidth(String title) {
+        // measure with the style the Text really renders with (theme font, e.g. the wider Arabic one,
+        // and the user's text scale); a bare TextStyle would use the default font and come out too narrow
         final painter = TextPainter(
-          text: TextSpan(text: title.toUpperCase(), style: tabTextStyle),
+          text: TextSpan(
+            text: title.toUpperCase(),
+            style: DefaultTextStyle.of(context).style.merge(tabTextStyle),
+          ),
           textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
           maxLines: 1,
         )..layout();
         return painter.width + 28;
@@ -43,6 +49,8 @@ Widget defaultTapBarItem({
         alignment: Alignment.center,
         height: !useVertical ? 50 : null,
         width: totalWidth,
+        // clip to the rounded shape, so tabs scrolling past the edge follow the curve
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color:  Color(AppColors.secondaryButton),
           borderRadius: BorderRadius.circular(32),
@@ -51,6 +59,7 @@ Widget defaultTapBarItem({
           child: ListView.builder(
             shrinkWrap: true,
             reverse: false,
+            clipBehavior: Clip.none, // the square clip of the inner list is what cut the tabs with a hard edge
             scrollDirection: useVertical ? Axis.vertical : Axis.horizontal, // 👈 الاتجاه هنا
             physics: enableScroll == false
                 ? const NeverScrollableScrollPhysics()

@@ -1447,5 +1447,6 @@
   "seasonalContract": "عقد موسمي",
   "onCallContract": "عقد عند الطلب",
   "probationaryContract": "عقد تجريبي",
-  "remoteHybridContract": "عقد عن بعد / هجين"
+  "remoteHybridContract": "عقد عن بعد / هجين",
+  "employeeProfile": "ملف الموظف"
 }

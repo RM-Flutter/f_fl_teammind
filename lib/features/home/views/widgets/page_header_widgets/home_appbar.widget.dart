@@ -12,6 +12,7 @@ import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/widgets/profile_avatar_menu_widget.dart';
 import 'package:app_test/core/widgets/vocation_list.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -174,11 +175,8 @@ class HomeAppbarWidget extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if(us1Cache != null )InkWell(
-                              onTap: () async =>
-                                  context.pushNamed(
-                                      AppRoutes.personalProfile.name,
-                                      pathParameters: {'lang': context.locale.languageCode}),
+                            if(us1Cache != null )ProfileAvatarMenuWidget(
+                              employeeProfileId: us1Cache['employee_profile_id'],
                               child: (us1Cache != null && us1Cache['photo'] == null ||
                                   (us1Cache['photo'].isEmpty == true))
                                   ? Container(

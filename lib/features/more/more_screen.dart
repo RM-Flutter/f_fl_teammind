@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/profile_avatar_menu_widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
@@ -712,13 +713,8 @@ class _MoreScreenState extends State<MoreScreen> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(124),
-                  child: GestureDetector(
-                    onTap: () {
-                      context.pushNamed(AppRoutes.personalProfile.name,
-                          pathParameters: {
-                            'lang': context.locale.languageCode,
-                          });
-                    },
+                  child: ProfileAvatarMenuWidget(
+                    employeeProfileId: gCache?['employee_profile_id'],
                     child: kIsWeb
                         ? Image.network(
                             (gCache != null)

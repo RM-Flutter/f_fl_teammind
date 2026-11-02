@@ -1449,5 +1449,6 @@
   "seasonalContract": "Seasonal Contract",
   "onCallContract": "On-Call Contract",
   "probationaryContract": "Probationary Contract",
-  "remoteHybridContract": "Remote / Hybrid Contract"
+  "remoteHybridContract": "Remote / Hybrid Contract",
+  "employeeProfile": "Employee Profile"
 }

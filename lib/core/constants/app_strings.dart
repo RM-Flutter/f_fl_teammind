@@ -677,6 +677,7 @@ abstract class AppStrings {
   static const downloadQrCode = "downloadQrCode";
   static const copyProfileLink = "copyProfileLink";
   static const employeeProfiles = "employeeProfiles";
+  static const employeeProfile = "employeeProfile";
   static const profileLinkCopied = "profileLinkCopied";
   static const updateMyInfo = "updateMyInfo";
   static const personal = "personal";

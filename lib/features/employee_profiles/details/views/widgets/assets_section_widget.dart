@@ -539,14 +539,18 @@ class _CustomDataCard extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(Icons.check_circle_outline_rounded,
               color: Color(AppColors.buttons), size: 20),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(item,
-                style: AppStyles.blackContent(context)
-                    .copyWith(fontWeight: FontWeight.w500, fontSize: 14)),
+            child: ExpandableTextWidget(
+              text: item,
+              maxLines: 3,
+              style: AppStyles.blackContent(context)
+                  .copyWith(fontWeight: FontWeight.w500, fontSize: 14),
+            ),
           ),
         ],
       ),
