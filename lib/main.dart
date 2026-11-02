@@ -11,6 +11,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'app.dart';
+import 'features/assistant/controllers/assistant_controller.dart';
 import 'core/services/fcm_token.service.dart';
 import 'features/more/user_device/controllers/user_device_controller.dart';
 import 'features/overtime_requests/controllers/overtime_requests_controller.dart';
@@ -154,6 +155,7 @@ void main() async {
               create: (context) => ShiftChangeController()),
           ChangeNotifierProvider(create: (context) => DailyReportsProvider()),
           ChangeNotifierProvider(create: (_) => CvHubInterviewsController()),
+          ChangeNotifierProvider(create: (_) => AssistantController()),
           ChangeNotifierProvider(
               create: (_) => CvHubInterviewDetailsController()),
         ],

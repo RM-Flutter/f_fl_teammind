@@ -61,7 +61,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Team Mind needs your location to access Wi-Fi information and verify attendance.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Team Mind needs microphone access to record audio when capturing video.</string>
+	<string>Team Mind needs microphone access to record audio when capturing video and to hear your questions for the TeamMind assistant.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Team Mind uses speech recognition to understand your questions for the TeamMind assistant.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Team Mind needs photo library access to let you select and upload QR codes or photos.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

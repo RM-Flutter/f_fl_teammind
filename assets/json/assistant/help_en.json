@@ -1,0 +1,1277 @@
+[
+  {
+    "id": "punch",
+    "title": "punch in and out",
+    "keywords": [
+      "punch",
+      "check in",
+      "check out",
+      "clock in",
+      "clock out",
+      "attendance",
+      "fingerprint"
+    ],
+    "questions": [
+      "how do I punch in",
+      "how can I check out",
+      "how do I record my attendance"
+    ],
+    "answer": "Tap the round punch button in the middle of the bottom bar. The app checks your device, then verifies you by the method your company uses (location, Wi-Fi, QR code, Bluetooth or NFC), and sometimes a face check. You will see a success or failure message.",
+    "route": "fingerprint",
+    "managerOnly": false
+  },
+  {
+    "id": "punch_rejected",
+    "title": "punch rejected",
+    "keywords": [
+      "rejected",
+      "failed",
+      "punch failed",
+      "punch rejected",
+      "not working",
+      "blocked",
+      "denied",
+      "error"
+    ],
+    "questions": [
+      "why was my punch rejected",
+      "why can't I punch in",
+      "my fingerprint failed"
+    ],
+    "answer": "A punch can be rejected for these reasons: you are outside the allowed location, you are not on the office Wi-Fi, the QR code or beacon was not found, fake GPS or a VPN is on, the phone time is wrong, or the face check failed. Fix the cause (turn off VPN and fake location, enable location, stand near the office) and try again.",
+    "route": "fingerprint",
+    "managerOnly": false
+  },
+  {
+    "id": "face_check",
+    "title": "face check",
+    "keywords": [
+      "face",
+      "liveness",
+      "selfie",
+      "camera",
+      "blink"
+    ],
+    "questions": [
+      "what is the face check",
+      "why does the app ask for my face",
+      "how does face verification work"
+    ],
+    "answer": "If your company turned it on, the app records a short video with the front camera and asks you to do simple moves like blinking or turning your head. It then compares your face with your profile photo, all on your phone. Look straight at the camera in good light.",
+    "route": "fingerprint",
+    "managerOnly": false
+  },
+  {
+    "id": "punch_offline",
+    "title": "offline punch",
+    "keywords": [
+      "offline",
+      "internet",
+      "connection",
+      "pending punch",
+      "upload"
+    ],
+    "questions": [
+      "can I punch without internet",
+      "what happens to a punch when I am offline",
+      "how do I upload offline punches"
+    ],
+    "answer": "Yes. Without internet the punch is saved on your phone and uploaded automatically when the connection comes back. You can see the waiting punches on the offline punches screen.",
+    "route": "fingerPrintOffline",
+    "managerOnly": false
+  },
+  {
+    "id": "my_punches",
+    "title": "my punches",
+    "keywords": [
+      "my punches",
+      "attendance log",
+      "history",
+      "punch list",
+      "my attendance"
+    ],
+    "questions": [
+      "where can I see my punches",
+      "how do I view my attendance history",
+      "show my attendance log"
+    ],
+    "answer": "Open the Fingerprint tab in the bottom bar. It lists your punches day by day. Pick a date to see another day.",
+    "route": "fingerprint",
+    "managerOnly": false
+  },
+  {
+    "id": "request_leave",
+    "title": "request a leave",
+    "keywords": [
+      "leave",
+      "vacation",
+      "day off",
+      "holiday",
+      "annual leave",
+      "sick leave"
+    ],
+    "questions": [
+      "how do I request a leave",
+      "how can I take a day off",
+      "how do I ask for a vacation"
+    ],
+    "answer": "Open the Requests tab and tap +. Choose the leave type, pick the dates, add a reason or an attachment if needed, and submit. Your manager gets notified.",
+    "route": "addRequest",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "request_permission",
+    "title": "request a permission",
+    "keywords": [
+      "permission",
+      "early",
+      "leave early",
+      "late arrival",
+      "hours off",
+      "excuse"
+    ],
+    "questions": [
+      "how do I request a permission",
+      "how can I leave early",
+      "how do I ask for a few hours off"
+    ],
+    "answer": "Open the Requests tab and tap +. Choose the permission type, then set the date and the start and end time, add a reason and submit.",
+    "route": "addRequest",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "request_mission",
+    "title": "request a mission",
+    "keywords": [
+      "mission",
+      "business trip",
+      "work from home",
+      "remote",
+      "field work"
+    ],
+    "questions": [
+      "how do I request a mission",
+      "how do I request work from home",
+      "how can I register a business trip"
+    ],
+    "answer": "Open the Requests tab and tap +. Choose the mission or work-from-home type (the types your company enabled), fill in the dates and details, and submit.",
+    "route": "addRequest",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "request_attachment",
+    "title": "request attachment",
+    "keywords": [
+      "attachment",
+      "attach",
+      "file",
+      "document",
+      "photo",
+      "upload"
+    ],
+    "questions": [
+      "how do I attach a file to a request",
+      "can I add a medical report",
+      "how do I upload a document to my request"
+    ],
+    "answer": "In the new request form, use the attachment button to take a photo, choose from the gallery or pick a file. Some request types require an attachment.",
+    "route": "addRequest",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "request_duration",
+    "title": "request duration",
+    "keywords": [
+      "duration",
+      "weekend",
+      "weekends",
+      "days count",
+      "official holidays"
+    ],
+    "questions": [
+      "how are the leave days counted",
+      "are weekends counted in my leave",
+      "how is the duration calculated"
+    ],
+    "answer": "The app counts the duration for you from the dates you pick, and skips weekends and official holidays set by your company. For hour-based requests it counts the hours between the start and end time.",
+    "route": "addRequest",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "track_request",
+    "title": "track my request",
+    "keywords": [
+      "status",
+      "track",
+      "follow",
+      "my requests",
+      "pending",
+      "approved"
+    ],
+    "questions": [
+      "how do I track my request",
+      "where can I see the status of my request",
+      "has my request been approved"
+    ],
+    "answer": "Open the Requests tab, then the Mine list. Tap a request to see its status, the approval steps, your manager's reply and the comments.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "ask_ignore",
+    "title": "ask to ignore a request",
+    "keywords": [
+      "ignore",
+      "cancel",
+      "withdraw",
+      "delete request"
+    ],
+    "questions": [
+      "how do I cancel my request",
+      "can I withdraw a request",
+      "how do I ask to ignore my request"
+    ],
+    "answer": "Open the request from your Mine list and use the ask to ignore action at the bottom. The approver then decides whether to cancel it.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "ask_remind",
+    "title": "remind about a request",
+    "keywords": [
+      "remind",
+      "remember",
+      "reminder",
+      "slow",
+      "waiting long"
+    ],
+    "questions": [
+      "how do I remind my manager",
+      "my request is taking long",
+      "how do I send a reminder"
+    ],
+    "answer": "Open the pending request and use the remind action. It sends a reminder to the person who has to approve it.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "requests_calendar",
+    "title": "requests calendar",
+    "keywords": [
+      "calendar",
+      "schedule",
+      "month view"
+    ],
+    "questions": [
+      "where is the requests calendar",
+      "how do I see my requests on a calendar",
+      "show the calendar"
+    ],
+    "answer": "In the Requests tab, open the calendar view to see your requests on a month calendar. You can tap + there to add a new one.",
+    "route": "requestsCalendar",
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "leave_balance",
+    "title": "leave balance",
+    "keywords": [
+      "balance",
+      "remaining",
+      "left",
+      "how many days",
+      "entitlement",
+      "vacation days"
+    ],
+    "questions": [
+      "what is my leave balance",
+      "how many vacation days do I have left",
+      "what is my remaining balance"
+    ],
+    "answer": "Your current balance:\n{balance}",
+    "kind": "data",
+    "noData": "I couldn't find a balance in your account. When you add a request, only the types you still have balance for are offered.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "request_terms",
+    "title": "request terms",
+    "keywords": [
+      "terms",
+      "rules",
+      "policy",
+      "conditions",
+      "regulations"
+    ],
+    "questions": [
+      "what are the rules for requests",
+      "where are the request terms",
+      "what are the leave conditions"
+    ],
+    "answer": "Open More, then Request Terms. It shows the rules your company set for each request type.",
+    "route": "requestTermsScreen",
+    "package": "emp-requests",
+    "managerOnly": false
+  },
+  {
+    "id": "payslip",
+    "title": "payslip",
+    "keywords": [
+      "payslip",
+      "salary",
+      "payroll",
+      "pay slip",
+      "net salary",
+      "wage"
+    ],
+    "questions": [
+      "where can I see my payslip",
+      "how do I check my salary",
+      "where is my payroll"
+    ],
+    "answer": "Open More, then Payroll. Tap a month to see the gross pay, deductions, bonuses and net salary.",
+    "route": "payrollsList",
+    "package": "emp-payroll",
+    "managerOnly": false
+  },
+  {
+    "id": "payslip_pdf",
+    "title": "payslip PDF",
+    "keywords": [
+      "pdf",
+      "download payslip",
+      "print payslip"
+    ],
+    "questions": [
+      "how do I download my payslip",
+      "can I get my payslip as a PDF",
+      "how do I print my salary slip"
+    ],
+    "answer": "Open the payslip from More, then Payroll, and use the PDF button to view or download it.",
+    "route": "payrollsList",
+    "package": "emp-payroll",
+    "managerOnly": false
+  },
+  {
+    "id": "salary_advance",
+    "title": "salary advance",
+    "keywords": [
+      "advance",
+      "loan",
+      "salary advance",
+      "borrow"
+    ],
+    "questions": [
+      "how do I request a salary advance",
+      "can I ask for an advance",
+      "how do I apply for a loan"
+    ],
+    "answer": "Open More, then Salary Advance Requests, and tap add. Enter the amount and details and submit. You can follow its approval status in the same list.",
+    "route": "salaryAdvanceCreate",
+    "package": "emp-payroll",
+    "managerOnly": false
+  },
+  {
+    "id": "expense_claim",
+    "title": "expense claim",
+    "keywords": [
+      "expense",
+      "claim",
+      "reimbursement",
+      "receipt",
+      "refund"
+    ],
+    "questions": [
+      "how do I submit an expense claim",
+      "how do I get reimbursed",
+      "how do I add receipts for expenses"
+    ],
+    "answer": "Open the expense claims list from More and tap add. Enter the expense details and amount, attach the receipts, and submit for approval.",
+    "route": "expenseClaimCreate",
+    "managerOnly": false
+  },
+  {
+    "id": "rewards_penalties",
+    "title": "rewards and penalties",
+    "keywords": [
+      "reward",
+      "penalty",
+      "bonus",
+      "deduction",
+      "fine"
+    ],
+    "questions": [
+      "where can I see my rewards",
+      "how do I see my penalties",
+      "did I get a deduction"
+    ],
+    "answer": "Open More, then Rewards and Penalties. It lists the rewards and penalties added to your payroll. Tap one for details, and you can complain about it from there.",
+    "route": "rewardsAndPenalties",
+    "package": "emp-payroll",
+    "managerOnly": false
+  },
+  {
+    "id": "tasks",
+    "title": "my tasks",
+    "keywords": [
+      "task",
+      "tasks",
+      "to do",
+      "assigned"
+    ],
+    "questions": [
+      "where are my tasks",
+      "how do I see tasks assigned to me",
+      "how do I update a task status"
+    ],
+    "answer": "Open More, then Tasks. Pick a day on the top calendar to see its tasks. Open a task to change its status, tick sub-tasks and write comments.",
+    "route": "taskScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "add_task",
+    "title": "add a task",
+    "keywords": [
+      "new task",
+      "create task",
+      "add task",
+      "assign task"
+    ],
+    "questions": [
+      "how do I create a task",
+      "how do I add a new task",
+      "how can I assign a task to someone"
+    ],
+    "answer": "Open More, then Tasks, and tap add. Enter the title and description, the dates, who it is assigned to, optional sub-tasks and attachments, then save. Assigning to others may need manager access.",
+    "route": "addTaskScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "daily_report",
+    "title": "daily report",
+    "keywords": [
+      "daily report",
+      "report",
+      "work report",
+      "end of day"
+    ],
+    "questions": [
+      "how do I write my daily report",
+      "where do I add a daily report",
+      "how do I submit my work report"
+    ],
+    "answer": "Open More, then Daily Reports and tap add. Write what you did today, attach files if needed, and save. You can edit your earlier reports from the list.",
+    "route": "dailyReportsListScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "overtime",
+    "title": "overtime request",
+    "keywords": [
+      "overtime",
+      "extra hours",
+      "extra work",
+      "additional hours"
+    ],
+    "questions": [
+      "how do I request overtime",
+      "how do I ask for extra hours",
+      "how do I register overtime"
+    ],
+    "answer": "Open More, then Overtime Requests and tap add. Choose the date and the hours, add a reason, and submit for approval.",
+    "route": "addOvertimeRequestScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "shift_change",
+    "title": "shift change request",
+    "keywords": [
+      "shift",
+      "change shift",
+      "swap shift",
+      "work schedule",
+      "roster"
+    ],
+    "questions": [
+      "how do I change my shift",
+      "how do I request a different shift",
+      "how do I swap my work schedule"
+    ],
+    "answer": "Open More, then Shift Change Requests and tap add. Pick the date and the shift you want from the schedule calendar, then submit.",
+    "route": "addShiftChangeRequest",
+    "managerOnly": false
+  },
+  {
+    "id": "complaint",
+    "title": "complaint or suggestion",
+    "keywords": [
+      "complaint",
+      "complain",
+      "suggestion",
+      "feedback",
+      "report a problem"
+    ],
+    "questions": [
+      "how do I submit a complaint",
+      "where can I send a suggestion",
+      "how do I complain about something"
+    ],
+    "answer": "Open More, then Complaints, and add a new one. Choose the subject, write the details and send. You can also complain from the details of a request or a penalty.",
+    "route": "newComplainScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "commissions",
+    "title": "my commissions",
+    "keywords": [
+      "commission",
+      "commissions",
+      "sales bonus",
+      "incentive"
+    ],
+    "questions": [
+      "where can I see my commissions",
+      "how do I check my commission",
+      "where are my incentives"
+    ],
+    "answer": "Open More, then Commissions. It lists the commissions calculated for you.",
+    "route": "commissionList",
+    "managerOnly": false
+  },
+  {
+    "id": "evaluation",
+    "title": "evaluations",
+    "keywords": [
+      "evaluation",
+      "appraisal",
+      "performance",
+      "review"
+    ],
+    "questions": [
+      "where can I see my evaluation",
+      "how do I do an evaluation",
+      "where is my performance review"
+    ],
+    "answer": "Open More, then Evaluations to see your evaluations. Required evaluations that you must fill in are listed under evaluation requests.",
+    "route": "evaluationScreen",
+    "package": "emp-evaluation",
+    "managerOnly": false
+  },
+  {
+    "id": "mgr_approve",
+    "title": "approve or refuse a request",
+    "keywords": [
+      "approve",
+      "refuse",
+      "reject",
+      "accept",
+      "approval",
+      "decide"
+    ],
+    "questions": [
+      "how do I approve a request",
+      "how do I refuse an employee request",
+      "where do I take action on requests"
+    ],
+    "answer": "Open the Requests tab and switch to the My team list. Open a request, tap the action button, choose approve or refuse, write a reply and submit.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_on_behalf",
+    "title": "act on someone's behalf",
+    "keywords": [
+      "on behalf",
+      "instead of",
+      "another approver",
+      "delegate"
+    ],
+    "questions": [
+      "how do I approve on behalf of someone",
+      "can I act as another approver",
+      "how do I take action as someone else"
+    ],
+    "answer": "In the action sheet of a request, choose the approver you are acting for, then approve or refuse. It is recorded as done on their behalf.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_team_requests",
+    "title": "team requests",
+    "keywords": [
+      "team requests",
+      "my team",
+      "employees requests",
+      "incoming requests",
+      "other departments"
+    ],
+    "questions": [
+      "where can I see my team's requests",
+      "how do I view employee requests",
+      "where are the incoming requests"
+    ],
+    "answer": "Open the Requests tab and use the My team, Other departments or All company lists. You can filter by request type, department, employee, status and date.",
+    "route": "requests",
+    "params": {
+      "type": "mine"
+    },
+    "package": "emp-requests",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_team_punches",
+    "title": "team punches",
+    "keywords": [
+      "team punches",
+      "team attendance",
+      "employee punches",
+      "employee fingerprint"
+    ],
+    "questions": [
+      "how do I see my team's punches",
+      "where can I check an employee's attendance",
+      "how do I view employee fingerprints"
+    ],
+    "answer": "Open More, then Team Fingerprint. Choose an employee to see their punches.",
+    "route": "teamFingerprint",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_team_today",
+    "title": "team today status",
+    "keywords": [
+      "today status",
+      "who is present",
+      "who is absent",
+      "team status",
+      "present absent"
+    ],
+    "questions": [
+      "who is present today",
+      "how do I see who is absent",
+      "where is my team's status today"
+    ],
+    "answer": "Open More, then Team Today Status. It shows today's attendance for your team with a summary, a filter and a search.",
+    "route": "teamTodayStatus",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_employees",
+    "title": "employee directory",
+    "keywords": [
+      "employees",
+      "directory",
+      "employee profile",
+      "staff",
+      "find employee"
+    ],
+    "questions": [
+      "where is the employee list",
+      "how do I find an employee",
+      "how do I open an employee profile"
+    ],
+    "answer": "Open More, then Employees. Search or browse the list and tap an employee to open the full profile.",
+    "route": "employeesList",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_add_reward",
+    "title": "add a reward or penalty",
+    "keywords": [
+      "add reward",
+      "add penalty",
+      "give bonus",
+      "deduct"
+    ],
+    "questions": [
+      "how do I give an employee a reward",
+      "how do I add a penalty",
+      "how do I deduct from an employee"
+    ],
+    "answer": "Open More, then Rewards and Penalties and tap add. Choose an employee or department, the category, the amount or days and the date, attach files if needed, and save.",
+    "route": "addRewardsAndPenalties",
+    "package": "emp-payroll",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_notification",
+    "title": "send a notification",
+    "keywords": [
+      "send notification",
+      "announce",
+      "announcement",
+      "notify team"
+    ],
+    "questions": [
+      "how do I send a notification to my team",
+      "how do I make an announcement",
+      "how do I notify employees"
+    ],
+    "answer": "Open Notifications, tap add, write the title and message, choose the departments or employees, optionally add images, and send.",
+    "route": "addNotification",
+    "managerOnly": true
+  },
+  {
+    "id": "mgr_reports",
+    "title": "reports",
+    "keywords": [
+      "reports",
+      "report catalog",
+      "analytics",
+      "statistics"
+    ],
+    "questions": [
+      "where are the reports",
+      "how do I open reports",
+      "where can I see statistics"
+    ],
+    "answer": "Open More, then Reports. Pick a report from the catalog to open it.",
+    "route": "reportsCatalog",
+    "managerOnly": true
+  },
+  {
+    "id": "change_password",
+    "title": "change password",
+    "keywords": [
+      "password",
+      "change password",
+      "reset password",
+      "new password"
+    ],
+    "questions": [
+      "how do I change my password",
+      "how can I update my password",
+      "I want a new password"
+    ],
+    "answer": "Open More, then Update Password. Enter the new password and confirm it. If you forgot it, use Forgot password on the login screen.",
+    "route": "updatePassword",
+    "managerOnly": false
+  },
+  {
+    "id": "change_language",
+    "title": "change language",
+    "keywords": [
+      "language",
+      "arabic",
+      "english",
+      "switch language"
+    ],
+    "questions": [
+      "how do I change the language",
+      "how do I switch to Arabic",
+      "how do I use the app in English"
+    ],
+    "answer": "Open More, then Language Settings, and choose English or Arabic. The app switches right away.",
+    "route": "langSettingScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "notification_settings",
+    "title": "notification settings",
+    "keywords": [
+      "notification settings",
+      "mute",
+      "sound",
+      "alerts",
+      "customize notifications"
+    ],
+    "questions": [
+      "how do I turn off notifications",
+      "how do I customize notifications",
+      "how do I stop alerts"
+    ],
+    "answer": "Open More, then Customize Notifications. Use the switches to choose which notifications you receive. Also check that notifications are allowed in your phone settings.",
+    "route": "more",
+    "managerOnly": false
+  },
+  {
+    "id": "devices",
+    "title": "my devices",
+    "keywords": [
+      "devices",
+      "logged in devices",
+      "other phone",
+      "stop device",
+      "sessions"
+    ],
+    "questions": [
+      "where can I see my devices",
+      "how do I log out another device",
+      "which devices are logged in"
+    ],
+    "answer": "Open More, then My Devices. It lists the devices logged in to your account, and you can stop any device you do not use.",
+    "route": "userDevices",
+    "managerOnly": false
+  },
+  {
+    "id": "edit_profile",
+    "title": "edit my profile",
+    "keywords": [
+      "profile",
+      "personal info",
+      "edit profile",
+      "phone number",
+      "email",
+      "photo"
+    ],
+    "questions": [
+      "how do I edit my profile",
+      "how do I change my phone number",
+      "how do I change my profile photo"
+    ],
+    "answer": "Open More, then Personal Info. Edit your details and photo there. Email and phone can be verified from the same screen.",
+    "route": "personalProfile",
+    "managerOnly": false
+  },
+  {
+    "id": "logout",
+    "title": "log out",
+    "keywords": [
+      "log out",
+      "logout",
+      "sign out",
+      "exit account",
+      "delete account"
+    ],
+    "questions": [
+      "how do I log out",
+      "how do I sign out",
+      "how do I delete my account"
+    ],
+    "answer": "Open More, then Personal Info. Log out and delete account are at the bottom of that screen.",
+    "route": "personalProfile",
+    "managerOnly": false
+  },
+  {
+    "id": "notifications",
+    "title": "notifications",
+    "keywords": [
+      "notifications",
+      "inbox",
+      "messages",
+      "news"
+    ],
+    "questions": [
+      "where are my notifications",
+      "how do I read notifications",
+      "where can I see company news"
+    ],
+    "answer": "Open the Notifications tab in the bottom bar. Tap one to read it, react with an emoji and comment.",
+    "route": "notifications",
+    "managerOnly": false
+  },
+  {
+    "id": "files_center",
+    "title": "files center",
+    "keywords": [
+      "files",
+      "documents",
+      "company files",
+      "policies",
+      "forms"
+    ],
+    "questions": [
+      "where are the company documents",
+      "how do I find company files",
+      "where can I download a form"
+    ],
+    "answer": "Open More, then Files Center. Filter by type or status, search, and open or download the company documents.",
+    "route": "filesCenter",
+    "managerOnly": false
+  },
+  {
+    "id": "contact_us",
+    "title": "contact the company",
+    "keywords": [
+      "contact",
+      "contact us",
+      "phone",
+      "address",
+      "branch",
+      "email us"
+    ],
+    "questions": [
+      "how do I contact the company",
+      "where is the company phone number",
+      "where are the branches"
+    ],
+    "answer": "Open More, then Contact Us. You will find the company phone numbers, email, branches and a form to send a message.",
+    "route": "contactUs",
+    "managerOnly": false
+  },
+  {
+    "id": "faqs",
+    "title": "frequently asked questions",
+    "keywords": [
+      "faq",
+      "faqs",
+      "common questions",
+      "help"
+    ],
+    "questions": [
+      "where are the FAQs",
+      "where can I find help",
+      "where are the frequently asked questions"
+    ],
+    "answer": "Open More, then FAQ. It answers the most common questions about the app and the company.",
+    "route": "faqScreen",
+    "managerOnly": false
+  },
+  {
+    "id": "company_tree",
+    "title": "company structure",
+    "keywords": [
+      "org chart",
+      "structure",
+      "hierarchy",
+      "departments",
+      "company tree"
+    ],
+    "questions": [
+      "where is the company structure",
+      "how do I see the org chart",
+      "who reports to whom"
+    ],
+    "answer": "Open More, then Company Structure to see the departments and the org chart.",
+    "route": "companyTree",
+    "managerOnly": false
+  },
+  {
+    "id": "my_account",
+    "title": "my account",
+    "keywords": [
+      "account",
+      "my info",
+      "my information",
+      "my profile",
+      "my details",
+      "who am i",
+      "about me"
+    ],
+    "questions": [
+      "tell me about my account",
+      "what is my information",
+      "who am I"
+    ],
+    "answer": "Name: {name}\nJob title: {job_title}\nDepartment: {department}\nEmail: {email} ({email_status})\nPhone: {phone} ({phone_status})\nHire date: {hire_date} ({service_length})\nRoles: {roles}",
+    "kind": "data",
+    "route": "personalProfile",
+    "managerOnly": false
+  },
+  {
+    "id": "my_name",
+    "title": "my name",
+    "keywords": [
+      "name",
+      "my name",
+      "full name"
+    ],
+    "questions": [
+      "what is my name",
+      "what name is on my account"
+    ],
+    "answer": "Your name is {name}.",
+    "kind": "data",
+    "route": "personalProfile",
+    "managerOnly": false
+  },
+  {
+    "id": "my_department",
+    "title": "my department",
+    "keywords": [
+      "department",
+      "my department",
+      "section",
+      "team name",
+      "which department"
+    ],
+    "questions": [
+      "what is my department",
+      "which department am I in",
+      "what's my department name"
+    ],
+    "answer": "Your department is {department}.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "my_job_title",
+    "title": "my job title",
+    "keywords": [
+      "job title",
+      "position",
+      "my job",
+      "my role",
+      "designation"
+    ],
+    "questions": [
+      "what is my job title",
+      "what is my position"
+    ],
+    "answer": "Your job title is {job_title}.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "my_email",
+    "title": "my email",
+    "keywords": [
+      "email",
+      "mail",
+      "email address"
+    ],
+    "questions": [
+      "what is my email",
+      "which email is on my account"
+    ],
+    "answer": "Your email is {email} ({email_status}).",
+    "kind": "data",
+    "route": "personalProfile",
+    "managerOnly": false
+  },
+  {
+    "id": "my_phone",
+    "title": "my phone number",
+    "keywords": [
+      "phone number",
+      "mobile number"
+    ],
+    "questions": [
+      "what is my phone number",
+      "which number is on my account"
+    ],
+    "answer": "Your phone number is {phone} ({phone_status}).",
+    "kind": "data",
+    "route": "personalProfile",
+    "managerOnly": false
+  },
+  {
+    "id": "my_hire_date",
+    "title": "my hire date",
+    "keywords": [
+      "hire date",
+      "joined",
+      "join date",
+      "start date",
+      "how long",
+      "years of service",
+      "experience"
+    ],
+    "questions": [
+      "when did I join the company",
+      "how long have I worked here",
+      "what is my hire date"
+    ],
+    "answer": "You joined on {hire_date}.\nThat is {service_length} with the company.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "my_birthday",
+    "title": "my birthday",
+    "keywords": [
+      "birthday",
+      "birth date",
+      "date of birth",
+      "born"
+    ],
+    "questions": [
+      "when is my birthday",
+      "what is my date of birth"
+    ],
+    "answer": "Your date of birth is {birthday}.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "my_roles",
+    "title": "my roles and access",
+    "keywords": [
+      "roles",
+      "permissions",
+      "access",
+      "am i a manager",
+      "manager of",
+      "what do i manage"
+    ],
+    "questions": [
+      "what are my roles",
+      "am I a manager",
+      "which departments do I manage"
+    ],
+    "answer": "Your roles: {roles}.\nYou manage: {managed_departments}.\nYou are team leader in: {led_departments}.\nSpecial access: {special_access}.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "my_work_hours",
+    "title": "my working hours",
+    "keywords": [
+      "working hours",
+      "work hours",
+      "work time",
+      "start time",
+      "shift time",
+      "what time",
+      "delay"
+    ],
+    "questions": [
+      "what are my working hours",
+      "what time do I start work",
+      "how late can I be"
+    ],
+    "answer": "Your working hours: {work_hours}.\nAllowed delay: {allowed_delay} minutes.",
+    "kind": "data",
+    "noData": "Your working hours are not set in your account. Ask HR.",
+    "managerOnly": false
+  },
+  {
+    "id": "my_weekend",
+    "title": "my weekend",
+    "keywords": [
+      "weekend",
+      "weekly off",
+      "rest days"
+    ],
+    "questions": [
+      "what are my weekend days",
+      "which days am I off"
+    ],
+    "answer": "Your weekend: {weekend}.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "next_holiday",
+    "title": "upcoming holidays",
+    "keywords": [
+      "holiday",
+      "holidays",
+      "public holiday",
+      "official holiday",
+      "next holiday",
+      "eid"
+    ],
+    "questions": [
+      "when is the next holiday",
+      "what are the upcoming holidays"
+    ],
+    "answer": "Next holiday: {next_holiday}\nUpcoming:\n{holidays}",
+    "kind": "data",
+    "noData": "There are no upcoming official holidays in your account.",
+    "managerOnly": false
+  },
+  {
+    "id": "my_insurance",
+    "title": "my insurance number",
+    "keywords": [
+      "insurance",
+      "insurance number",
+      "social insurance"
+    ],
+    "questions": [
+      "what is my insurance number"
+    ],
+    "answer": "Your insurance number is {insurance_number}.",
+    "kind": "data",
+    "managerOnly": false
+  },
+  {
+    "id": "my_assets",
+    "title": "my assets",
+    "keywords": [
+      "assets",
+      "asset",
+      "custody",
+      "laptop",
+      "company devices",
+      "equipment"
+    ],
+    "questions": [
+      "what assets do I have",
+      "what company equipment is with me"
+    ],
+    "answer": "Assets registered to you:\n{assets}",
+    "kind": "data",
+    "noData": "No assets are registered to you.",
+    "managerOnly": false
+  },
+  {
+    "id": "my_notifications_count",
+    "title": "new notifications count",
+    "keywords": [
+      "unread",
+      "new notifications",
+      "how many notifications"
+    ],
+    "questions": [
+      "how many new notifications do I have",
+      "do I have unread notifications"
+    ],
+    "answer": "You have {new_notifications} new notifications.",
+    "kind": "data",
+    "route": "notifications",
+    "managerOnly": false
+  },
+  {
+    "id": "my_last_login",
+    "title": "last login",
+    "keywords": [
+      "last login",
+      "last time i logged in",
+      "last sign in"
+    ],
+    "questions": [
+      "when did I last log in"
+    ],
+    "answer": "Your last login was {last_login}.",
+    "kind": "data",
+    "route": "userDevices",
+    "managerOnly": false
+  }
+]

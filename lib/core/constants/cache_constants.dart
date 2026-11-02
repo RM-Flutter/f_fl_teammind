@@ -5,6 +5,11 @@ import 'package:flutter/cupertino.dart';
 import '../constants/app_constants.dart';
 
 class CacheConsts {
+  /// مفتاح تفعيل الاستماع لعبارة "Hey TeamMind" (افتراضياً مغلق).
+  static const assistantWakeEnabled = 'assistant_wake_enabled';
+
+  /// بصمة صوت المستخدم لعبارة التنشيط (JSON، تبقى على الجهاز فقط).
+  static const assistantVoiceprint = 'assistant_voiceprint';
   static var gCache;
   static var us1Cache;
   static var us2Cache;

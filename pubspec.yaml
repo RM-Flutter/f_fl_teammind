@@ -146,6 +146,10 @@ dependencies:
   fl_chart: ^1.2.0
   flutter_secure_storage: ^10.3.4
 
+  # Assistant
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.0
+
 dev_dependencies:
 #  flutter_launcher_icons: 0.13.1
   flutter_lints: 3.0.0
@@ -166,6 +170,7 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/json/lang/
+    - assets/json/assistant/
     - pubspec.yaml
     - assets/images/alerts_images/
     - assets/images/svg/

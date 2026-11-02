@@ -246,6 +246,10 @@ abstract class AppColors {
 
   static const int oC2Color = 0xffAE702B;
 
+  // ألوان شعار تيم مايند، تُستخدم لرسم شخصية "Mr. TeamMind" في المساعد.
+  static const int brandNavy = 0xFF080A5F;
+  static const int brandBlue = 0xFF3489EF;
+
   // Buttons
   static int get buttons => buttonColor;
 

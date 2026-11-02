@@ -1,6 +1,6 @@
 # TeamMind Assistant: Plan (offline, Option A)
 
-An in-app voice and text assistant that answers "how do I…" questions about the app. Everything runs on the phone. There is no backend, no AI model and no network call. Status: **planned, not started**.
+An in-app voice and text assistant that answers "how do I…" questions about the app. Everything runs on the phone. There is no backend, no AI model and no network call. Status: **implemented (steps 1–6), not yet tested on a real device**.
 
 ## Decisions
 

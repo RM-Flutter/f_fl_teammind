@@ -158,6 +158,15 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                           ),
                           SizedBox(height: 15),
+                          DefaultListTile(
+                            title: AppStrings.teamMindAssistant.tr(),
+                            icon: Icons.smart_toy_outlined,
+                            onTap: () => context.pushNamed(
+                                AppRoutes.teamMindAssistant.name,
+                                pathParameters: {
+                                  'lang': context.locale.languageCode
+                                }),
+                          ),
                           // Removed redundant block
                           if (PackageHelper.hasPackage('emp-payroll'))
                             DefaultListTile(

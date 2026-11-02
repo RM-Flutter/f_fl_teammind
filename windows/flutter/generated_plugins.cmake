@@ -11,6 +11,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_blue_plus_winrt
   flutter_inappwebview_windows
   flutter_secure_storage_windows
+  flutter_tts
   gal
   geolocator_windows
   local_auth_windows
@@ -18,6 +19,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   record_windows
   sentry_flutter
   share_plus
+  speech_to_text_windows
   syncfusion_pdfviewer_windows
   url_launcher_windows
 )

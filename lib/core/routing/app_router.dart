@@ -48,6 +48,7 @@ import '../../features/more/request_terms/views/request_terms_screen.dart';
 import '../../features/more/team_fingerprint/view/team_fingerprint_screen.dart';
 import 'package:app_test/features/more/team_today_status/views/team_today_status_screen.dart';
 import '../../features/more/update_profile/views/update_password_screen.dart';
+import '../../features/assistant/views/assistant_screen.dart';
 import '../../features/more/user_device/views/user_devices_screen.dart';
 import '../../features/offline/views/offline_screen.dart';
 import '../../features/pages/views/default_details.dart';
@@ -170,6 +171,7 @@ enum AppRoutes {
   employeeDetails,
   companyTree,
   updatePassword,
+  teamMindAssistant,
   personalProfile,
   payrollsList,
   filesCenter,
@@ -1232,6 +1234,34 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: const UpdatePasswordScreen(),
+                    animation: animationController,
+                    begin: begin ?? const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'team-mind-assistant',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.teamMindAssistant.name,
+                pageBuilder: (context, state) {
+                  Offset? begin = state.extra is Offset ? state.extra as Offset : null;
+                  final lang = state.uri.queryParameters['lang'];
+                  if (lang != null) {
+                    final locale = Locale(lang);
+                    context.setLocale(locale);
+                  }
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const AssistantScreen(),
                     animation: animationController,
                     begin: begin ?? const Offset(1.0, 0.0),
                   );

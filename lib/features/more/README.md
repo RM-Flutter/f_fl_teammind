@@ -1,6 +1,6 @@
 # more
 
-The "More" tab (`more_screen.dart`) and the smaller screens it opens. `MoreScreen` builds its menu from the cached `US1`/`USG` settings. Manager entries (team fingerprints, team today status, incoming requests, employees, reports, ...) only appear when `US1.is_manager_in` is not empty or the matching feature is enabled. The menu also links to features that live in their own folders: payrolls, tasks, evaluation, complaints, overtime, salary advance, expense claims, shifts, daily reports, reports, commissions, cv_hub, points and personal profile.
+The "More" tab (`more_screen.dart`) and the smaller screens it opens. `MoreScreen` builds its menu from the cached `US1`/`USG` settings. Manager entries (team fingerprints, team today status, incoming requests, employees, reports, ...) only appear when `US1.is_manager_in` is not empty or the matching feature is enabled. The menu also links to the TeamMind assistant (`features/assistant`) and to features that live in their own folders: payrolls, tasks, evaluation, complaints, overtime, salary advance, expense claims, shifts, daily reports, reports, commissions, cv_hub, points and personal profile.
 
 ## Sub-folders
 

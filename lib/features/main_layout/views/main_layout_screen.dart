@@ -12,6 +12,7 @@ import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 
 
 import 'package:app_test/core/helpers/package_helper.dart';
+import 'package:app_test/features/assistant/views/widgets/assistant_wake_host_widget.dart';
 
 class BottomNavigationBarModel {
   final String icon;
@@ -120,10 +121,12 @@ class MainLayoutScreen extends StatelessWidget {
               context: context, page: getBottomNavigationBarItems()[index].page);
         },
       ),
-      body: Builder(
-        builder: (context) {
-          return child;
-        },
+      body: AssistantWakeHost(
+        child: Builder(
+          builder: (context) {
+            return child;
+          },
+        ),
       ),
 
     );
