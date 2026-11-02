@@ -17,6 +17,7 @@ import '../data/models/help_entry_model.dart';
 import '../data/repos/help_repo.dart';
 import '../data/repos/user_data_repo.dart';
 import '../data/services/voice_matcher.dart';
+import '../data/services/speech_text.dart';
 import '../data/services/voice_picker.dart';
 import '../data/services/wake_word_service.dart';
 
@@ -620,6 +621,7 @@ class AssistantController extends ChangeNotifier with WidgetsBindingObserver {
     if (result.best != null) {
       reply = AssistantMessageModel(
         text: _answerText(result.best!, lang),
+        speech: _answerText(result.best!, lang, spoken: true),
         isUser: false,
         entry: result.best,
       );
@@ -634,28 +636,36 @@ class AssistantController extends ChangeNotifier with WidgetsBindingObserver {
     }
     messages.add(reply);
     notifyListeners();
-    await _speak(reply.text);
+    await _speak(reply.speech ?? reply.text);
   }
 
   /// اختيار موضوع مقترح (chip) يعرض إجابته مباشرة.
   Future<void> answerWithEntry(HelpEntryModel entry) async {
     messages.add(AssistantMessageModel(text: entry.title, isUser: true));
+    final lang = _lang == 'ar' ? 'ar' : 'en';
     final reply = AssistantMessageModel(
-        text: _answerText(entry, _lang == 'ar' ? 'ar' : 'en'), isUser: false, entry: entry);
+        text: _answerText(entry, lang),
+        speech: _answerText(entry, lang, spoken: true),
+        isUser: false,
+        entry: entry);
     messages.add(reply);
     notifyListeners();
-    await _speak(reply.text);
+    await _speak(reply.speech ?? reply.text);
   }
 
   /// نص الإجابة: ثابت، أو قالب يُملأ من بيانات حساب المستخدم (US1/US2).
-  String _answerText(HelpEntryModel entry, String lang) {
-    if (!UserDataRepo.hasPlaceholders(entry.answer)) return entry.answer;
-    return UserDataRepo.fill(entry.answer, UserDataRepo.values(lang)) ??
+  /// [spoken]: النسخة المشكّلة للنطق (speak) لو موجودة.
+  String _answerText(HelpEntryModel entry, String lang, {bool spoken = false}) {
+    final template = spoken ? (entry.speak ?? entry.answer) : entry.answer;
+    if (!UserDataRepo.hasPlaceholders(template)) return template;
+    return UserDataRepo.fill(template, UserDataRepo.values(lang)) ??
         entry.noData ??
         AppStrings.assistantNoData.tr();
   }
 
-  Future<void> _speak(String text) async {
+  Future<void> _speak(String shownText) async {
+    // أرقام وتواريخ ورموز بالعامية المصرية بدل قراءتها رقم رقم أو بالفصحى
+    final text = SpeechText.prepare(shownText, _lang == 'ar' ? 'ar' : 'en');
     await _ensureTts();
     if (!_ttsReady) {
       _setState(AssistantState.idle);
@@ -703,6 +713,8 @@ class AssistantController extends ChangeNotifier with WidgetsBindingObserver {
     await _tts.setLanguage(choice.language);
     if (choice.voice != null) await _tts.setVoice(choice.voice!);
     await _tts.setPitch(choice.pitch);
+    // العربي أبطأ قليلاً: الكلمات أطول والتشكيل يحتاج نطقاً أوضح (0.5 = السرعة العادية)
+    await _tts.setSpeechRate(lang == 'ar' ? 0.45 : 0.5);
   }
 
   Future<void> stopSpeaking() async {

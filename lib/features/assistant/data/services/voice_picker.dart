@@ -26,10 +26,12 @@ class SpeechSegment {
 
 abstract class VoicePicker {
   /// أصوات Google TTS الرجالية على أندرويد (الجزء بعد -x- في اسم الصوت).
+  /// العربي: ard فقط. قيس على موبايل حقيقي: ard طبقته ~128Hz (رجالي)، و arz صوت
+  /// ستات (كان يُختار قبل كده). arc و are غير مقاسين، فلا يُعتبرون رجالي.
   static const Set<String> _maleCodes = {
     'iol', 'iom', 'tpd', // en-US
     'gbb', 'gbd', 'rjs', // en-GB
-    'ard', 'arz', // ar-XA
+    'ard', // ar-XA
   };
 
   /// لو لم نجد صوتاً رجالياً نخفض طبقة الصوت المتاح.

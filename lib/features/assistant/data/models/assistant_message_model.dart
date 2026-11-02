@@ -5,6 +5,9 @@ class AssistantMessageModel {
   final String text;
   final bool isUser;
 
+  /// ما يُقرأ بصوت عالٍ لو يختلف عن [text] (نسخة مشكّلة من الإجابة).
+  final String? speech;
+
   /// المدخل الذي أُجيب منه (لزر "Open").
   final HelpEntryModel? entry;
 
@@ -14,6 +17,7 @@ class AssistantMessageModel {
   const AssistantMessageModel({
     required this.text,
     required this.isUser,
+    this.speech,
     this.entry,
     this.suggestions = const [],
   });

@@ -45,6 +45,19 @@ void main() {
       expect(c.isMale, isTrue);
     });
 
+    test('android: the female arz voice is never picked (real list from a phone)', () {
+      final phone = [
+        for (final n in ['arz-local', 'ard-local', 'arc-network', 'are-local', 'ard-network',
+            'arz-network', 'arc-local', 'are-network'])
+          {'name': 'ar-xa-x-$n', 'locale': 'ar'},
+        {'name': 'ar-language', 'locale': 'ar'},
+      ];
+      final c = VoicePicker.pick(phone, 'ar', region: 'EG');
+      expect(c.voice!['name'], 'ar-xa-x-ard-local');
+      expect(c.isMale, isTrue);
+      expect(c.pitch, 1);
+    });
+
     test('ios: uses the gender field and prefers the region', () {
       final ios = [
         {'name': 'Samantha', 'locale': 'en-US', 'gender': 'female'},

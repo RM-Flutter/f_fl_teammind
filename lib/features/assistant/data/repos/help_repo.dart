@@ -116,19 +116,26 @@ abstract class HelpRepo {
   /// مدخلات الدردشة (`chat`) مثل "ازيك" و"how are you" كلها كلمات شائعة تُحذف
   /// من السؤال، لذلك تُطابق كجملة كاملة في النص الأصلي: 4 + عدد كلماتها، فتغلب
   /// الجملة الأطول ("hi how are you" -> how are you وليس hi).
+  /// نفس الشيء لـ [HelpEntryModel.phrases] في أي مدخل ("مين انا" -> بيانات حسابي).
   static double _chatScore(HelpEntryModel entry, String phrase) {
-    var best = 0.0;
-    for (final k in entry.keywords) {
+    final best = _bestPhrase(entry, phrase);
+    return best == null ? 0.0 : 4.0 + best.trim().split(' ').length;
+  }
+
+  /// أطول جملة من جمل المدخل موجودة في السؤال (بعد التطبيع)، أو null.
+  static String? _bestPhrase(HelpEntryModel entry, String phrase) {
+    if (!entry.isChat && entry.phrases.isEmpty) return null;
+    String? best;
+    for (final k in [if (entry.isChat) ...entry.keywords, ...entry.phrases]) {
       final kp = _phraseText(k);
       if (kp.trim().isEmpty || !phrase.contains(kp)) continue;
-      final words = kp.trim().split(' ').length;
-      if (4.0 + words > best) best = 4.0 + words;
+      if (best == null || kp.length > best.length) best = kp;
     }
     return best;
   }
 
   static double score(HelpEntryModel entry, Set<String> q, [String phrase = '']) {
-    var score = entry.isChat ? _chatScore(entry, phrase) : 0.0;
+    var score = (entry.isChat || entry.phrases.isNotEmpty) ? _chatScore(entry, phrase) : 0.0;
     if (q.isEmpty) return score;
 
     // +3 لكل كلمة مفتاحية (كل كلماتها موجودة في السؤال). الكلمات التي تصبح
@@ -182,15 +189,26 @@ abstract class HelpRepo {
   static HelpMatchResult match(String question, List<HelpEntryModel> entries) {
     final q = tokens(question).toSet();
     final phrase = _phraseText(question);
-    if (entries.isEmpty || (q.isEmpty && !entries.any((e) => e.isChat && _chatScore(e, phrase) > 0))) {
+    if (entries.isEmpty ||
+        (q.isEmpty && !entries.any((e) => (e.isChat || e.phrases.isNotEmpty) && _chatScore(e, phrase) > 0))) {
       return HelpMatchResult(suggestions: entries.take(maxSuggestions).toList());
     }
     // ميل بسيط نحو نوع المدخل المطابق لنوع السؤال، فيفرّق بين
     // "ما رقم هاتفي؟" و"كيف أغير رقم هاتفي؟" رغم تشابه الكلمات.
     final intent = intentOf(question);
+    // جملة جزء من جملة أطول لمدخل آخر لا تُحسب: "who am i talking to" للمساعد
+    // نفسه، وليست "who am i" (بيانات حسابي).
+    final phrases = {for (final e in entries) e: _bestPhrase(e, phrase)};
+    bool inLonger(HelpEntryModel e) {
+      final mine = phrases[e];
+      if (mine == null) return false;
+      return phrases.entries.any((o) =>
+          o.key != e && o.value != null && o.value!.length > mine.length && o.value!.contains(mine));
+    }
+
     // المكافأة فقط لمطابقة جيدة أصلاً (حتى لا ترفع سؤالاً خارج الموضوع فوق الحد).
     double total(HelpEntryModel e) {
-      final s = score(e, q, phrase);
+      final s = score(e, q, inLonger(e) ? '' : phrase);
       if (intent == null || s <= 0 || e.isChat) return s;
       if (e.kind == intent) return s >= 2 ? s + 1.5 : s;
       return math.max(0, s - 1.5);

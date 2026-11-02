@@ -16,12 +16,12 @@ void registerErrorHandlers() {
     // Layout overflows and failed network images are not crashes: report quietly, no alert
     if (_isQuietFrameworkError(details)) {
       if (!_isImageLoadError(details)) {
-        AppErrorReporter.report(details.exception, stackTrace: details.stack, hint: details.context?.toDescription());
+        AppErrorReporter.report(details.exception, stackTrace: details.stack, hint: _hintOf(details));
       }
       return;
     }
     SentryService.captureException(details.exception, stackTrace: details.stack);
-    AppErrorReporter.handleUncaught(details.exception, details.stack, hint: details.context?.toDescription());
+    AppErrorReporter.handleUncaught(details.exception, details.stack, hint: _hintOf(details));
   };
 
   // Uncaught async errors (futures, streams, platform channels). Returning true marks them
@@ -36,6 +36,24 @@ void registerErrorHandlers() {
   // A widget that fails to build is simply left out: the rest of the screen still shows.
   // (FlutterError.onError above already reported it and showed the friendly message.)
   ErrorWidget.builder = (FlutterErrorDetails details) => const SizedBox.shrink();
+}
+
+/// Where it happened, plus the widget Flutter blames (with its source file and line), e.g.
+/// "during layout | Column Column:file:///.../task_screen.dart:145:18". Without the widget, an
+/// overflow or build error can't be traced to a screen.
+String? _hintOf(FlutterErrorDetails details) {
+  final where = details.context?.toDescription();
+  String? widget;
+  try {
+    final text = details.toString();
+    final line = text.split('\n').firstWhere((l) => l.contains('file:///'), orElse: () => '');
+    if (line.isNotEmpty) {
+      widget = line.trim().replaceAll(RegExp(r'file:///.*?/lib/'), 'lib/');
+    }
+  } catch (_) {}
+  return [where, widget].whereType<String>().join(' | ').trim().isEmpty
+      ? null
+      : [where, widget].whereType<String>().join(' | ');
 }
 
 bool _isImageLoadError(FlutterErrorDetails details) {

@@ -4,7 +4,15 @@ class HelpEntryModel {
   final String title;
   final List<String> keywords;
   final List<String> questions;
+
+  /// جمل كاملة تُطابق كما هي في السؤال ("مين انا"، "who am i")، لأسئلة كل كلماتها
+  /// شائعة فتُحذف قبل المقارنة بالكلمات المفتاحية.
+  final List<String> phrases;
   final String answer;
+
+  /// نص الإجابة للنطق فقط (بتشكيل على الكلمات الملتبسة واختصارات مكتوبة
+  /// بالعربي). يُعرض [answer]، ويُقرأ هذا لو موجود. نفس القوالب {..} في نفس السطور.
+  final String? speak;
 
   /// اسم الـ route (من AppRoutes) لزر "Open"، اختياري.
   final String? route;
@@ -35,7 +43,9 @@ class HelpEntryModel {
     required this.title,
     required this.keywords,
     required this.questions,
+    this.phrases = const [],
     required this.answer,
+    this.speak,
     this.route,
     this.params = const {},
     this.extra,
@@ -54,7 +64,9 @@ class HelpEntryModel {
       title: (json['title'] ?? id.replaceAll('_', ' ')).toString(),
       keywords: strings(json['keywords']),
       questions: strings(json['questions']),
+      phrases: strings(json['phrases']),
       answer: (json['answer'] ?? '').toString(),
+      speak: json['speak']?.toString(),
       route: json['route']?.toString(),
       params: (json['params'] is Map)
           ? (json['params'] as Map)

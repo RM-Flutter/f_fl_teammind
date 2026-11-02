@@ -320,7 +320,7 @@
       "how many vacation days do I have left",
       "what is my remaining balance"
     ],
-    "answer": "Your current balance:\n{balance}",
+    "answer": "Here's your current leave balance:\n{balance}",
     "kind": "data",
     "noData": "I couldn't find a balance in your account. When you add a request, only the types you still have balance for are offered.",
     "route": "requests",
@@ -998,7 +998,23 @@
       "what is my information",
       "who am I"
     ],
-    "answer": "Name: {name}\nJob title: {job_title}\nDepartment: {department}\nEmail: {email} ({email_status})\nPhone: {phone} ({phone_status})\nHire date: {hire_date} ({service_length})\nRoles: {roles}",
+    "phrases": [
+      "who am i",
+      "tell me about me",
+      "tell me about myself",
+      "what do you know about me",
+      "about me",
+      "my info",
+      "my information",
+      "my details",
+      "my profile",
+      "my account",
+      "my account details",
+      "show my profile",
+      "show my info",
+      "who i am"
+    ],
+    "answer": "Your name is {name}.\nYou work as {job_title}.\nYou're part of the {department} department.\nYour email is {email}, and it's {email_status}.\nYour phone number is {phone}, and it's {phone_status}.\nYou joined us on {hire_date}, so you've been with the company for {service_length}.\nYour roles in the system are {roles}.",
     "kind": "data",
     "route": "personalProfile",
     "managerOnly": false
@@ -1035,7 +1051,7 @@
       "which department am I in",
       "what's my department name"
     ],
-    "answer": "Your department is {department}.",
+    "answer": "You're part of the {department} department.",
     "kind": "data",
     "managerOnly": false
   },
@@ -1053,7 +1069,7 @@
       "what is my job title",
       "what is my position"
     ],
-    "answer": "Your job title is {job_title}.",
+    "answer": "You work as {job_title}.",
     "kind": "data",
     "managerOnly": false
   },
@@ -1069,7 +1085,7 @@
       "what is my email",
       "which email is on my account"
     ],
-    "answer": "Your email is {email} ({email_status}).",
+    "answer": "Your email is {email}, and it's {email_status}.",
     "kind": "data",
     "route": "personalProfile",
     "managerOnly": false
@@ -1085,7 +1101,7 @@
       "what is my phone number",
       "which number is on my account"
     ],
-    "answer": "Your phone number is {phone} ({phone_status}).",
+    "answer": "Your phone number is {phone}, and it's {phone_status}.",
     "kind": "data",
     "route": "personalProfile",
     "managerOnly": false
@@ -1107,7 +1123,7 @@
       "how long have I worked here",
       "what is my hire date"
     ],
-    "answer": "You joined on {hire_date}.\nThat is {service_length} with the company.",
+    "answer": "You joined us on {hire_date}.\nThat means you've been with the company for {service_length}.",
     "kind": "data",
     "managerOnly": false
   },
@@ -1124,7 +1140,7 @@
       "when is my birthday",
       "what is my date of birth"
     ],
-    "answer": "Your date of birth is {birthday}.",
+    "answer": "Your birthday is on {birthday}.",
     "kind": "data",
     "managerOnly": false
   },
@@ -1144,7 +1160,7 @@
       "am I a manager",
       "which departments do I manage"
     ],
-    "answer": "Your roles: {roles}.\nYou manage: {managed_departments}.\nYou are team leader in: {led_departments}.\nSpecial access: {special_access}.",
+    "answer": "Your roles in the system are {roles}.\nYou manage {managed_departments}.\nYou're a team leader in {led_departments}.\nYou also have {special_access} access.",
     "kind": "data",
     "managerOnly": false
   },
@@ -1165,7 +1181,7 @@
       "what time do I start work",
       "how late can I be"
     ],
-    "answer": "Your working hours: {work_hours}.\nAllowed delay: {allowed_delay} minutes.",
+    "answer": "You work {work_hours}.\nYou're allowed to be up to {allowed_delay} minutes late.",
     "kind": "data",
     "noData": "Your working hours are not set in your account. Ask HR.",
     "managerOnly": false
@@ -1182,7 +1198,7 @@
       "what are my weekend days",
       "which days am I off"
     ],
-    "answer": "Your weekend: {weekend}.",
+    "answer": "Your weekly days off are {weekend}.",
     "kind": "data",
     "managerOnly": false
   },
@@ -1201,7 +1217,7 @@
       "when is the next holiday",
       "what are the upcoming holidays"
     ],
-    "answer": "Next holiday: {next_holiday}\nUpcoming:\n{holidays}",
+    "answer": "Your next official holiday is {next_holiday}.\nHere's what's coming up:\n{holidays}",
     "kind": "data",
     "noData": "There are no upcoming official holidays in your account.",
     "managerOnly": false
@@ -1236,7 +1252,7 @@
       "what assets do I have",
       "what company equipment is with me"
     ],
-    "answer": "Assets registered to you:\n{assets}",
+    "answer": "Here's what's registered to you:\n{assets}",
     "kind": "data",
     "noData": "No assets are registered to you.",
     "managerOnly": false
@@ -1269,7 +1285,7 @@
     "questions": [
       "when did I last log in"
     ],
-    "answer": "Your last login was {last_login}.",
+    "answer": "You last logged in on {last_login}.",
     "kind": "data",
     "route": "userDevices",
     "managerOnly": false
@@ -1324,7 +1340,14 @@
       "your name",
       "what is your name",
       "whats your name",
-      "introduce yourself"
+      "introduce yourself",
+      "who is this",
+      "who am i talking to",
+      "who am i speaking with",
+      "are you a robot",
+      "are you a bot",
+      "are you human",
+      "are you mr teammind"
     ],
     "questions": [
       "who are you",
@@ -1374,6 +1397,39 @@
     "managerOnly": false
   },
   {
+    "id": "about_app",
+    "title": "About the TeamMind app",
+    "keywords": [
+      "tell me about the app",
+      "tell me about this app",
+      "tell me about teammind",
+      "about the app",
+      "about this app",
+      "about teammind",
+      "about team mind",
+      "what is teammind",
+      "what is team mind",
+      "what is this app",
+      "what is the app",
+      "what does this app do",
+      "what does the app do",
+      "what is the app for",
+      "what can the app do",
+      "app features",
+      "features of the app",
+      "explain the app",
+      "explain this app"
+    ],
+    "questions": [
+      "tell me about the app",
+      "what is TeamMind",
+      "what does this app do"
+    ],
+    "answer": "TeamMind is your company's HR app, built by the RightMind team. With it you can punch in and out, request leaves, permissions and missions and follow them, see your payslip, salary advances, rewards and penalties, manage your tasks and daily reports, and get company announcements. If you're a manager, you can also approve your team's requests and follow their attendance. Ask me how to do any of it!",
+    "kind": "chat",
+    "managerOnly": false
+  },
+  {
     "id": "thanks",
     "title": "thank you",
     "keywords": [
@@ -1417,7 +1473,14 @@
       "the time",
       "time now",
       "current time",
-      "time is it"
+      "time is it",
+      "what time is it",
+      "what's the time",
+      "what is the time",
+      "tell me the time",
+      "the time now",
+      "time please",
+      "do you have the time"
     ],
     "questions": [
       "what time is it",
@@ -1436,7 +1499,16 @@
       "today date",
       "the date",
       "date today",
-      "what is today"
+      "what is today",
+      "what's the date",
+      "what is the date",
+      "what day is it",
+      "what day is today",
+      "today's date",
+      "the date today",
+      "date please",
+      "which day is it",
+      "what month is it"
     ],
     "questions": [
       "what day is it today",
