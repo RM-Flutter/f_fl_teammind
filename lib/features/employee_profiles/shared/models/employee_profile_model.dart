@@ -214,7 +214,10 @@ class EmployeeProfileModel {
           : null,
       mainStatus: _parseStringOrKey(json['main_status']),
       employeeStatus: _parseStringOrKey(json['employee_status']),
-      employmentType: _parseStringOrKey(json['employment_type']),
+      // the backend sends a translated label (note its "employement" spelling), so no local translation is needed
+      employmentType: _parseStringOrKey(json['employement_type_label'] ??
+          json['employement_type'] ??
+          json['employment_type']),
       jobLevel: _parseStringOrKey(json['job_level']),
       rewardsAndPenalties: json['rewards_and_penalties'] != null
           ? List<EmpRewardPenalty>.from(json['rewards_and_penalties']

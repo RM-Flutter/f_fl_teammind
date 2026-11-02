@@ -8,6 +8,7 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/expandable_text_widget.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:app_test/features/evaluation/shared/widgets/profile_tile_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -92,13 +93,14 @@ class GeneralSectionWidget extends StatelessWidget {
             SizedBox(height: 12),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Text(employee!.jobDescription!,
-              style: AppStyles.greyContent(context).copyWith(
-                fontWeight: FontWeight.w400,
-                color:  const Color(0xff666666),
-                fontSize: 13,
-                height: 1.5,
-              ),
+              child: ExpandableTextWidget(
+                text: employee!.jobDescription!,
+                style: AppStyles.greyContent(context).copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xff666666),
+                  fontSize: 13,
+                  height: 1.5,
+                ),
               ),
 
             ),
@@ -148,15 +150,6 @@ class GeneralSectionWidget extends StatelessWidget {
                 trailingTitle: employee?.employeeStatus.toString().tr().toUpperCase() ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
               ),
-            // EMPLOYMENT TYPE
-            if (employee?.employmentType != null && employee?.employmentType?.isNotEmpty == true)
-              ProfileTile(
-                isTitleOnly: false,
-                isList: false,
-                title: AppStrings.employmentType.tr().toUpperCase(),
-                trailingTitle: employee?.employmentType.toString().tr().toUpperCase() ?? '',
-                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
-              ),
             // JOB LEVEL
             if (employee?.jobLevel != null && employee?.jobLevel?.isNotEmpty == true)
               ProfileTile(
@@ -164,6 +157,15 @@ class GeneralSectionWidget extends StatelessWidget {
                 isList: false,
                 title: AppStrings.jobLevel.tr().toUpperCase(),
                 trailingTitle: employee?.jobLevel.toString().tr().toUpperCase() ?? '',
+                icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
+              ),
+            // EMPLOYMENT TYPE (backend label; .tr() translates the raw key if the backend only sent that)
+            if (employee?.employmentType != null && employee?.employmentType?.isNotEmpty == true)
+              ProfileTile(
+                isTitleOnly: false,
+                isList: false,
+                title: AppStrings.employmentType.tr().toUpperCase(),
+                trailingTitle: employee?.employmentType?.tr().toUpperCase() ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
               ),
             //HIRE DATE
@@ -331,7 +333,7 @@ class WeekendDisplayWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 AppStrings.weekends.tr().toUpperCase(),
-                style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14),
+                style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13),
               ),
             ),
             Text(
@@ -367,7 +369,7 @@ class WeekendDisplayWidget extends StatelessWidget {
               Expanded(
                 child: Text(
                   AppStrings.weekends.tr().toUpperCase(),
-                  style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14),
+                  style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13),
                 ),
               ),
             ],

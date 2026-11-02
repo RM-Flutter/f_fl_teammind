@@ -1434,5 +1434,20 @@
   "removeSavedAccountQuestion": "Remove this saved account from this device?",
   "tapToFillLoginForm": "Tap an account to fill the login form",
   "download": "Download",
-  "unexpectedErrorContactTeam": "Something went wrong. Please contact the RightMind team."
+  "unexpectedErrorContactTeam": "Something went wrong. Please contact the RightMind team.",
+  "readMore": "Read more",
+  "readLess": "Read less",
+  "asset_received_on": "Received on",
+  "fullTime": "Full-Time",
+  "partTime": "Part-Time",
+  "permanentOpenEndedContract": "Permanent (Open-Ended) Contract",
+  "fixedTermContract": "Fixed-Term Contract",
+  "temporaryContract": "Temporary Contract",
+  "freelanceContractor": "Freelance / Contractor",
+  "consultant": "Consultant",
+  "projectBasedContract": "Project-Based Contract",
+  "seasonalContract": "Seasonal Contract",
+  "onCallContract": "On-Call Contract",
+  "probationaryContract": "Probationary Contract",
+  "remoteHybridContract": "Remote / Hybrid Contract"
 }

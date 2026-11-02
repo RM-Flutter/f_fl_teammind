@@ -1432,5 +1432,20 @@
   "removeSavedAccountQuestion": "هل تريد حذف هذا الحساب المحفوظ من هذا الجهاز؟",
   "tapToFillLoginForm": "اضغط على حساب لتعبئة بيانات الدخول",
   "download": "تحميل",
-  "unexpectedErrorContactTeam": "حدث خطأ ما. يرجى التواصل مع فريق RightMind."
+  "unexpectedErrorContactTeam": "حدث خطأ ما. يرجى التواصل مع فريق RightMind.",
+  "readMore": "اقرأ المزيد",
+  "readLess": "إقرأ أقل",
+  "asset_received_on": "تاريخ استلام الأصل",
+  "fullTime": "دوام كامل",
+  "partTime": "دوام جزئي",
+  "permanentOpenEndedContract": "عقد دائم",
+  "fixedTermContract": "عقد محدد المدة",
+  "temporaryContract": "عقد مؤقت",
+  "freelanceContractor": "مستقل / مقاول",
+  "consultant": "استشاري",
+  "projectBasedContract": "عقد قائم على المشروع",
+  "seasonalContract": "عقد موسمي",
+  "onCallContract": "عقد عند الطلب",
+  "probationaryContract": "عقد تجريبي",
+  "remoteHybridContract": "عقد عن بعد / هجين"
 }

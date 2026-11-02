@@ -924,6 +924,8 @@ abstract class AppStrings {
   static const storeCity = 'storeCity';
   static const recommendedForYou = 'recommendedForYou';
   static const seeMore = 'seeMore';
+  static const readMore = 'readMore';
+  static const readLess = 'readLess';
   static const metalPaints = 'metalPaints';
   static const bestOffers = 'bestOffers';
   static const shop = 'shop';

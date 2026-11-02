@@ -162,7 +162,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       (viewModel.currentUserSettings?.isTeamleaderIn?.isNotEmpty ?? false) &&
                       (viewModel.currentUserSettings!.isTeamleaderIn!.contains(viewModel.employee!.departmentId) == true));
 
-              return Column(
+              final page = Column(
                 children: [
                   // Page Header
                   EmployeeDetailsHeader(employee: viewModel.employee),
@@ -306,6 +306,24 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     ),
                   ),
                 ],
+              );
+
+              // Pull-to-refresh for the whole page (header included): the page sits in an always-scrollable
+              // view of screen height, and overscroll of the inner tab scroll views also triggers it.
+              return RefreshIndicator.adaptive(
+                notificationPredicate: (_) => true,
+                onRefresh: () => viewModel.refreshData(
+                  context: context,
+                  employeeId: widget.id.toString(),
+                  getTeam: getTeam ?? false,
+                  tabIndex: availableTabs[selectIndex].index,
+                ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) => SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(height: constraints.maxHeight, child: page),
+                  ),
+                ),
               );
             }
         ),

@@ -69,7 +69,10 @@ class ProfileBalanceWidget extends StatelessWidget {
       padding: EdgeInsets.only(bottom: AppSizes.s32),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(
+        // cards share the height of the tallest one, so a long title never overflows or makes them uneven
+        child: IntrinsicHeight(
+         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: balance == null
               ? List.generate(
                   3,
@@ -84,6 +87,7 @@ class ProfileBalanceWidget extends StatelessWidget {
                         height: AppSizes.s120,
                       )))
               : balanceWidgets,
+         ),
         ),
       ),
     );
@@ -156,7 +160,7 @@ class BalanceCard extends StatelessWidget {
           : null,
       child: Container(
         width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
-        height: 140,
+        constraints: const BoxConstraints(minHeight: 140),
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
           color:  Color(AppColors.secondaryButton),
@@ -197,13 +201,18 @@ class BalanceCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}'
-                      .toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: AppStyles.whiteContent(context).copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+                // FittedBox (not AutoSizeText): the row above uses IntrinsicHeight, which can't measure a LayoutBuilder
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}'
+                        .toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    style: AppStyles.whiteContent(context).copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
                 SizedBox(height: 4),

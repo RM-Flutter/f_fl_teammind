@@ -59,6 +59,25 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     updateLoadingStatus(laodingValue: false);
   }
 
+  /// Pull-to-refresh: reloads the profile and the open tab without showing the full-screen loader.
+  /// Other tabs are cleared so they load again the next time they are opened.
+  Future<void> refreshData({
+    required BuildContext context,
+    required String employeeId,
+    required bool getTeam,
+    required int tabIndex,
+  }) async {
+    await _getEmployeeData(context: context, employeeId: employeeId);
+    salaryAdvances = [];
+    dailyReports = null;
+    overtimeRequests = null;
+    salaryAdvanceRequestsList = null;
+    expenseClaimRequestsList = null;
+    shiftChangeRequestsList = null;
+    await fetchDataForIndex(tabIndex, context, getTeam: getTeam, empId: employeeId);
+    notifyListeners();
+  }
+
   Future<void> fetchDataForIndex(int index, BuildContext context, {required bool getTeam, required String empId}) async {
     if (index == 2 && (salaryAdvances == null || salaryAdvances!.isEmpty)) {
       await getSaleryAdvance(context, getTeam: getTeam, empId: empId);

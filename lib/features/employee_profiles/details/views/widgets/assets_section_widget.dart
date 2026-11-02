@@ -3,6 +3,8 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/expandable_text_widget.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_and_penalty_model.dart' show MediaFile;
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -172,189 +174,187 @@ class _AssetCardState extends State<_AssetCard> {
 
   @override
   Widget build(BuildContext context) {
+    final asset = widget.asset;
+    final accent = Color(AppColors.buttons);
+    final files = asset.signatureDocumentUrl ?? const <MediaFile>[];
+    final hasPeriod = asset.startAt?.isNotEmpty == true;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
+              blurRadius: 12,
               offset: const Offset(0, 4)),
         ],
         border: Border.all(color: Colors.grey.withOpacity(0.08)),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-      child: Row(
+      padding: const EdgeInsets.all(16),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: Color(AppColors.buttons).withOpacity(0.10),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(Icons.devices_other_rounded,
-                color: Color(AppColors.buttons), size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.asset.title ?? '',
-                  style: AppStyles.blackContent(context)
-                      .copyWith(fontWeight: FontWeight.w700, fontSize: 14),
+          // Header: icon, title and serial number
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: accent.withOpacity(0.10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                if (widget.asset.serialNumber?.isNotEmpty == true) ...[
-                  const SizedBox(height: 4),
-                  Row(children: [
-                    Icon(Icons.tag_rounded,
-                        size: 13, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
-                    Text(widget.asset.serialNumber!,
-                        style: AppStyles.greyContent(context)
-                            .copyWith(fontSize: 12)),
-                  ]),
-                ],
-                if (widget.asset.description?.isNotEmpty == true) ...[
-                  const SizedBox(height: 4),
-                  Text(widget.asset.description!,
-                      style: AppStyles.greyContent(context)
-                          .copyWith(fontSize: 12, height: 1.4)),
-                ],
-                if (widget.asset.startAt?.isNotEmpty == true) ...[
-                  const SizedBox(height: 6),
-                  Row(children: [
-                    Icon(Icons.calendar_today_rounded,
-                        size: 12, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
-                    Text(_fmt(widget.asset.startAt),
-                        style: AppStyles.greyContent(context)
-                            .copyWith(fontSize: 11)),
-                    if (widget.asset.endsAt?.isNotEmpty == true) ...[
-                      Text('  →  ',
-                          style: AppStyles.greyContent(context)
-                              .copyWith(fontSize: 11)),
-                      Text(_fmt(widget.asset.endsAt),
-                          style: AppStyles.greyContent(context)
-                              .copyWith(fontSize: 11)),
-                    ],
-                  ]),
-                ],
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
+                child: Icon(Icons.devices_other_rounded,
+                    color: accent, size: 24),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.asset.assetStatus?.isNotEmpty == true)
-                      _Badge(
-                        prefixLabel: 'asset_status'.tr(),
-                        label: widget.asset.assetStatus!.tr(),
-                        isPositive: widget.asset.assetStatus == 'active',
+                    Text(
+                      asset.title ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.blackContent(context)
+                          .copyWith(fontWeight: FontWeight.w700, fontSize: 15),
+                    ),
+                    if (asset.serialNumber?.isNotEmpty == true) ...[
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.10),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.tag_rounded,
+                                size: 12, color: Colors.grey.shade600),
+                            const SizedBox(width: 3),
+                            Flexible(
+                              child: Text(asset.serialNumber!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppStyles.greyContent(context)
+                                      .copyWith(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600)),
+                            ),
+                          ],
+                        ),
                       ),
-                    if (widget.asset.assignmentStatus?.isNotEmpty == true)
-                      _Badge(
-                        prefixLabel: 'assignment_status'.tr(),
-                        label: widget.asset.assignmentStatus!.tr(),
-                        isPositive: widget.asset.assignmentStatus == 'active',
-                        isSecondary: true,
-                      ),
+                    ],
                   ],
                 ),
-                if (widget.asset.signatureDocumentUrl != null &&
-                    widget.asset.signatureDocumentUrl!.isNotEmpty) ...[
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
+              ),
+            ],
+          ),
+          if (asset.description?.isNotEmpty == true) ...[
+            const SizedBox(height: 12),
+            ExpandableTextWidget(
+              text: asset.description!,
+              maxLines: 2,
+              style: AppStyles.greyContent(context)
+                  .copyWith(fontSize: 12.5, height: 1.5),
+            ),
+          ],
+          if (hasPeriod) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: accent.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today_rounded, size: 14, color: accent),
+                  const SizedBox(width: 8),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // the day the employee received the asset
                         Text(
-                          'attachments'.tr(),
-                          style: AppStyles.primaryContent(context).copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppSizes.s14),
+                          'asset_received_on'.tr(),
+                          style: AppStyles.greyContent(context).copyWith(fontSize: 11),
                         ),
-                        const SizedBox(height: 8),
-                        ...widget.asset.signatureDocumentUrl!
-                            .map<Widget>((file) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                            child: Row(
-                              children: [
-                                if (file.thumbnail != null &&
-                                    file.thumbnail!.isNotEmpty)
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: Image.network(
-                                      file.thumbnail!,
-                                      width: 40,
-                                      height: 40,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => Icon(
-                                          Icons.insert_drive_file_rounded,
-                                          color: Color(AppColors.buttons),
-                                          size: 40),
-                                    ),
-                                  )
-                                else
-                                  Icon(Icons.insert_drive_file_rounded,
-                                      color: Color(AppColors.buttons),
-                                      size: 40),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    file.title ?? file.type ?? 'File',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                if (file.file != null) ...[
-                                  IconButton(
-                                    icon: Icon(Icons.remove_red_eye,
-                                        color:
-                                            Color(AppColors.secondaryButton)),
-                                    onPressed: () {
-                                      UrlLauncherServiceEx.launch(
-                                        context: context,
-                                        url: file.file!,
-                                        mode: LaunchMode.externalApplication,
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.download_rounded,
-                                        color: Color(AppColors.buttons)),
-                                    onPressed: () {
-                                      final fileName =
-                                          file.file!.split('/').last;
-                                      _downloadFile(file.file!, fileName);
-                                    },
-                                  ),
-                                ]
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                        const SizedBox(height: 2),
+                        Text(
+                          asset.endsAt?.isNotEmpty == true
+                              ? '${_fmt(asset.startAt)}  →  ${_fmt(asset.endsAt)}'
+                              : _fmt(asset.startAt),
+                          style: AppStyles.blackContent(context).copyWith(
+                              fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
                       ],
                     ),
                   ),
                 ],
+              ),
+            ),
+          ],
+          if (asset.assetStatus?.isNotEmpty == true ||
+              asset.assignmentStatus?.isNotEmpty == true) ...[
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (asset.assetStatus?.isNotEmpty == true)
+                  _Badge(
+                    prefixLabel: 'asset_status'.tr(),
+                    label: asset.assetStatus!.tr(),
+                    isPositive: asset.assetStatus == 'active' ||
+                        asset.assetStatus!.toLowerCase() == 'good',
+                  ),
+                if (asset.assignmentStatus?.isNotEmpty == true)
+                  _Badge(
+                    prefixLabel: 'assignment_status'.tr(),
+                    label: asset.assignmentStatus!.tr(),
+                    isPositive: asset.assignmentStatus == 'active',
+                    isSecondary: true,
+                  ),
               ],
             ),
-          ),
+          ],
+          if (files.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Divider(height: 1, color: Colors.grey.withOpacity(0.15)),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(Icons.attach_file_rounded, size: 16, color: accent),
+                const SizedBox(width: 6),
+                Text(
+                  '${'attachments'.tr()} (${files.length})',
+                  style: AppStyles.primaryContent(context).copyWith(
+                      fontWeight: FontWeight.w700, fontSize: AppSizes.s13),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ...files.map<Widget>((file) => _AttachmentTile(
+                  file: file,
+                  onView: file.file == null
+                      ? null
+                      : () => UrlLauncherServiceEx.launch(
+                            context: context,
+                            url: file.file!,
+                            mode: LaunchMode.externalApplication,
+                          ),
+                  onDownload: file.file == null
+                      ? null
+                      : () => _downloadFile(
+                          file.file!, file.file!.split('/').last),
+                )),
+          ],
         ],
       ),
     );
@@ -363,7 +363,7 @@ class _AssetCardState extends State<_AssetCard> {
   String _fmt(String? raw) {
     if (raw == null || raw.isEmpty) return '';
     try {
-      return DateFormat('dd MMM yyyy').format(DateTime.parse(raw));
+      return DateFormat('dd MMM yyyy', context.locale.languageCode).format(DateTime.parse(raw));
     } catch (_) {
       return raw;
     }
@@ -396,7 +396,7 @@ class _Badge extends StatelessWidget {
         isSecondary ? Color(AppColors.buttons).withOpacity(0.08) : bg;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: badgeBg,
         borderRadius: BorderRadius.circular(20),
@@ -405,27 +405,114 @@ class _Badge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 6),
           if (prefixLabel != null) ...[
             Text(
               '${prefixLabel!}: ',
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: badgeColor.withOpacity(0.7),
-                letterSpacing: 0.2,
+                color: badgeColor.withOpacity(0.75),
               ),
             ),
           ],
           Text(
             label.toUpperCase(),
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: FontWeight.w800,
               color: badgeColor,
-              letterSpacing: 0.4,
+              letterSpacing: 0.3,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _AttachmentTile extends StatelessWidget {
+  final MediaFile file;
+  final VoidCallback? onView;
+  final VoidCallback? onDownload;
+
+  const _AttachmentTile({required this.file, this.onView, this.onDownload});
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = Color(AppColors.buttons);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.withOpacity(0.12)),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: (file.thumbnail != null && file.thumbnail!.isNotEmpty)
+                ? Image.network(
+                    file.thumbnail!,
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _fileIcon(accent),
+                  )
+                : _fileIcon(accent),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              file.title ?? file.type ?? 'File',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+            ),
+          ),
+          if (onView != null)
+            _RoundAction(icon: Icons.visibility_rounded, color: accent, onTap: onView!),
+          if (onDownload != null) ...[
+            const SizedBox(width: 6),
+            _RoundAction(icon: Icons.download_rounded, color: accent, onTap: onDownload!),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _fileIcon(Color accent) => Container(
+        width: 40,
+        height: 40,
+        color: accent.withOpacity(0.10),
+        child: Icon(Icons.insert_drive_file_rounded, color: accent, size: 22),
+      );
+}
+
+class _RoundAction extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _RoundAction({required this.icon, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      customBorder: const CircleBorder(),
+      child: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(color: color.withOpacity(0.10), shape: BoxShape.circle),
+        child: Icon(icon, color: color, size: 18),
       ),
     );
   }

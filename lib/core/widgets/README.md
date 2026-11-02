@@ -17,6 +17,7 @@ Reusable widgets that several features share. Check this folder before you build
 | `shared_list_filter_widget.dart`, `active_filters_row_widget.dart` | Filter sheet and active-filter chips used by the list screens |
 | `vocation_list.widget.dart` | Vacation / balance list |
 | `notification_card.widget.dart` | Notification list item |
+| `expandable_text_widget.dart` | Long text clamped to a few lines with a "Read more" / "Read less" toggle (only when it overflows) |
 | `slider_home_menu.dart`, `template_page.widget.dart`, `glassmorphism_card.widget.dart`, `gradient_bg_image.dart` | Layout pieces |
 | `cached_network_image_widget.dart`, `dynamic_image_widget.dart`, `full_image_screen.dart` | Images: cached, network or asset or SVG, and full screen with zoom |
 | `language_dropdown_button.widget.dart` | EN/AR switcher |
