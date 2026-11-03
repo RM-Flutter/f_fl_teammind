@@ -217,6 +217,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                           return AccountsSectionWidget(
                                             employee: viewModel.employee,
                                             salaryAdvance: viewModel.salaryAdvances ?? [],
+                                            payrolls: viewModel.payrolls,
+                                            isLoadingPayrolls: viewModel.isLoadingPayrolls,
                                           );
                                         } else if (actualIndex == 3) {
                                           return RequestsSectionWidget(employee: viewModel.employee);
