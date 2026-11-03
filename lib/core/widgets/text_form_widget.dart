@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../services/app_theme_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TextFormWidget extends StatelessWidget {
   final TextStyle? textStyle;
@@ -149,7 +150,7 @@ Widget defaultDropdownField(
     decoration: ShapeDecoration(
       color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.s10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         side: BorderSide(
           color: borderColor ?? Color(AppColors.border),
           width: 1.0,
@@ -214,7 +215,7 @@ Widget defaultTextFormField({
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.s8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         side: BorderSide(
           color: borderColor ?? Color(AppColors.border),
           width: 1.0,

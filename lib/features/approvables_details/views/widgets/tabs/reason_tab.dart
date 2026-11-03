@@ -4,6 +4,7 @@ import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import '../../../data/models/approvable_details_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ReasonTab extends StatelessWidget {
   final String? reason;
@@ -56,7 +57,7 @@ class ReasonTab extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: Text(
@@ -106,7 +107,7 @@ class ReasonTab extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFFFFEBEE),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.red.shade300),
       ),
       child: Column(
@@ -194,7 +195,7 @@ class ReasonTab extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -250,7 +251,7 @@ class ReasonTab extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: color.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Row(

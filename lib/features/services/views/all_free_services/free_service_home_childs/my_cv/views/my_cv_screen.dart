@@ -20,6 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class MyCVScreen extends StatefulWidget {
   const MyCVScreen({super.key});
@@ -135,7 +136,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
             return FloatingActionButton.extended(
               onPressed: _navigateToEdit,
               backgroundColor: Color(AppColors.secondaryButton),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
               icon: Icon(hasRealCV ? Icons.edit : Icons.add, color: Colors.white, size: 20),
               label: Text(
                 hasRealCV ? AppStrings.edit.tr() : AppStrings.createCV.tr(),
@@ -244,8 +245,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius:
-        BorderRadius.circular(
-            AppSizes.s30),
+        BorderRadius.circular(AppRadius.xl),
       ),
       height: AppSizes.s55,
       alignment: Alignment.centerLeft,

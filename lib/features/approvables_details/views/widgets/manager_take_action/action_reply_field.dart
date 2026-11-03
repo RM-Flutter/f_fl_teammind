@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ActionReplyField extends StatelessWidget {
   final TextEditingController controller;
@@ -40,7 +41,7 @@ class ActionReplyField extends StatelessWidget {
             filled: true,
             fillColor: const Color(0xFFF3F3F3),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: BorderSide.none,
             ),
             contentPadding: const EdgeInsets.all(12),

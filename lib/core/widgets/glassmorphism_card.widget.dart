@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class GlassmorphismCard extends StatelessWidget {
   final Widget child;
@@ -26,14 +27,14 @@ class GlassmorphismCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: borderRadius ?? BorderRadius.circular(20),
+      borderRadius: borderRadius ?? BorderRadius.circular(AppRadius.lg),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
             color: backgroundColor.withOpacity(opacity),
-            borderRadius: borderRadius ?? BorderRadius.circular(20),
+            borderRadius: borderRadius ?? BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               width: 1.5,
               color: borderColor,

@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class SuccessfulSendRequestBottomsheet extends StatelessWidget {
 
@@ -17,7 +17,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
    width: double.infinity,
    decoration: BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+    borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
    ),
    child: Column(
     children: [
@@ -50,5 +50,4 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
   );
  }
 }
-
 

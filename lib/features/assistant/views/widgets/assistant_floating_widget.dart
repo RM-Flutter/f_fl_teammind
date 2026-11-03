@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/assistant_controller.dart';
 import 'assistant_actions_widget.dart';
 import 'assistant_avatar_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// نافذة المساعد عند "Hey TeamMind": لوحة في النصف السفلي من الشاشة فوق أي
 /// صفحة، والجزء العلوي ضبابي ومعتم (الضغط عليه يغلقها). فيها الشعار المتحرك،
@@ -72,7 +73,7 @@ class AssistantFloatingWidget extends StatelessWidget {
       ),
       child: DecoratedBox(
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black26, blurRadius: 24, offset: Offset(0, -4))
@@ -80,7 +81,7 @@ class AssistantFloatingWidget extends StatelessWidget {
         ),
         child: Material(
           color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
           child: SafeArea(
             top: false,
             child: Padding(
@@ -103,7 +104,7 @@ class AssistantFloatingWidget extends StatelessWidget {
                             height: 4,
                             decoration: BoxDecoration(
                               color: Colors.black12,
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(AppRadius.xs),
                             ),
                           ),
                         ),

@@ -2,7 +2,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class CustomRequestsPageButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -29,7 +29,7 @@ class CustomRequestsPageButton extends StatelessWidget {
           ),
           backgroundColor: Color(AppColors.buttons),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
         ),
         child: Row(

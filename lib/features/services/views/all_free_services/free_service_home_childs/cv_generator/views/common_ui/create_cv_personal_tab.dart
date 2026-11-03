@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/constants/app_colors.dart';
 import '../../../../../../../../core/constants/app_strings.dart';
 import '../../../../../../../../core/utils/animated_custom_dropdown/custom_dropdown.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateCVPersonalTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -110,7 +111,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -139,7 +140,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             hintText: AppStrings.selectFamilyStatus.tr(),
             hintStyle: TextStyle(color: Colors.grey.shade600),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -201,7 +202,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,7 +251,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             hintText: AppStrings.selectGender.tr(),
             hintStyle: TextStyle(color: Colors.grey.shade600),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -308,7 +309,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           nameKey: 'title',
           hintText: AppStrings.selectNationality.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
@@ -357,7 +358,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           nameKey: 'title',
           hintText: AppStrings.selectCountry.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
@@ -406,7 +407,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           nameKey: 'title',
           hintText: AppStrings.selectStateProvince.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
@@ -455,7 +456,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           nameKey: 'title',
           hintText: AppStrings.selectCity.tr(),
           hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: const BorderSide(color: Colors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           onChanged: (value) {
@@ -468,7 +469,6 @@ class CreateCVPersonalTab extends StatelessWidget {
       ],
     );
   }
-
 
   Widget _buildProfileImageSection(BuildContext context) {
     // لم يعد يتم استخدام صورة البروفايل في هذه الشاشة

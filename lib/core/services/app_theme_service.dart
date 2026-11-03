@@ -6,14 +6,13 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/models/color_palette.model.dart';
 import 'package:app_test/core/models/color_value.model.dart';
 import 'localization_service.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 abstract class AppThemeService {
   static final ColorPalette colorPalette = ColorPalette(
     name: 'Main Theme',
     // application primary colors
     primaryColor: ColorValue(light: Color(AppColors.buttons), dark: Color(AppColors.buttons)),
-
 
     secondaryColor: ColorValue(light: Color(AppColors.secondaryButton), dark: Color(AppColors.secondaryButton)),
     tertiaryColor: ColorValue(light: const Color(AppColors.black), dark: const Color(AppColors.black)),
@@ -184,19 +183,26 @@ abstract class AppThemeService {
               fontWeight: FontWeight.w500,
               fontSize: AppSizes.s12),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s15),
+            borderRadius: AppRadius.input,
             borderSide: BorderSide(
                 color: colorPalette.inputBorderColor.color, width: AppSizes.s1),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s15),
+            borderRadius: AppRadius.input,
+            borderSide: BorderSide(color: Color(AppColors.buttons), width: 1.5),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: AppRadius.input,
             borderSide: BorderSide(
                 color: colorPalette.inputBorderColor.color, width: AppSizes.s1),
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s15),
-            borderSide: BorderSide(
-                color: colorPalette.inputBorderColor.color, width: AppSizes.s1),
+          errorBorder: OutlineInputBorder(
+            borderRadius: AppRadius.input,
+            borderSide: BorderSide(color: Color(AppColors.failureRed), width: AppSizes.s1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: AppRadius.input,
+            borderSide: BorderSide(color: Color(AppColors.failureRed), width: 1.5),
           ),
           labelStyle: TextStyle(
             color: colorPalette.inputLabelColor.color,
@@ -211,8 +217,35 @@ abstract class AppThemeService {
           fillColor: colorPalette.inputFillColor.color,
           isDense: true,
         ),
-        //application card theme
-        cardTheme: CardThemeData(color: colorPalette.tertiaryColorBackground.color),
+        // Cards: white, 12px corners, soft shadow, no border (see AppCard / app_design.dart)
+        cardTheme: CardThemeData(
+          color: Color(AppColors.cardBackground),
+          surfaceTintColor: Colors.transparent,
+          shadowColor: const Color(0x33101828),
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
+          clipBehavior: Clip.antiAlias,
+        ),
+        dividerTheme: DividerThemeData(color: Color(AppColors.divider), thickness: 1, space: 1),
+        chipTheme: ChipThemeData(
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+          side: BorderSide.none,
+          backgroundColor: Color(AppColors.chipBackground),
+          labelStyle: TextStyle(color: Color(AppColors.chipText), fontSize: 12.5, fontWeight: FontWeight.w500),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+        ),
+        dialogTheme: DialogThemeData(
+          backgroundColor: Color(AppColors.modalBackground),
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.sheet),
+        ),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Color(AppColors.modalBackground),
+          surfaceTintColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+          ),
+        ),
         // application fab theme
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: colorPalette.fabBackgroundColor.color,
@@ -242,17 +275,42 @@ abstract class AppThemeService {
           seedColor: colorPalette.primaryColor.get(isDark),
           primary: colorPalette.primaryColor.get(isDark),
         ),
+        // Buttons: all pill shaped, same height, padding and text (see AppButtonSize)
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               foregroundColor: colorPalette.quinaryTextColor.color,
               backgroundColor: colorPalette.primaryColorBackground.color,
+              elevation: 0,
+              minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.height),
+              padding: AppButtonSize.padding,
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+              textStyle: const TextStyle(fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600),
+            )),
+        filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              foregroundColor: colorPalette.quinaryTextColor.color,
+              backgroundColor: colorPalette.primaryColorBackground.color,
+              minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.height),
+              padding: AppButtonSize.padding,
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+              textStyle: const TextStyle(fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600),
+            )),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: colorPalette.primaryColorBackground.color,
+              side: BorderSide(color: colorPalette.primaryColorBackground.color, width: 1.5),
+              minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.height),
+              padding: AppButtonSize.padding,
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+              textStyle: const TextStyle(fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600),
             )),
         textButtonTheme: TextButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              fixedSize: const Size(double.infinity, double.infinity),
-              backgroundColor: Colors.transparent,
+            style: TextButton.styleFrom(
               foregroundColor: colorPalette.secondaryColor.color,
-              elevation: 0,
+              minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.compactHeight),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+              textStyle: const TextStyle(fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600),
             )),
 
         tabBarTheme: TabBarThemeData(
@@ -280,9 +338,7 @@ abstract class AppThemeService {
 
         popupMenuTheme: PopupMenuThemeData(
           color: colorPalette.tertiaryColorBackground.color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
           elevation: AppSizes.s8,
         ),
       );

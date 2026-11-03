@@ -8,6 +8,7 @@ import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PayrollDetailsBodyWidget extends StatelessWidget {
   final PayrollModel? payroll;
@@ -120,7 +121,7 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               horizontal: AppSizes.s12, vertical: AppSizes.s18),
           decoration: BoxDecoration(
             color: const Color(AppColors.lightGreyE5).withOpacity(0.4),
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

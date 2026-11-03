@@ -14,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TeamTodayStatusScreen extends StatefulWidget {
   const TeamTodayStatusScreen({super.key});
@@ -229,7 +230,7 @@ class _SummaryCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
           color: color.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(AppSizes.s12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: color.withOpacity(0.2)),
         ),
         child: Column(
@@ -297,15 +298,15 @@ class _SearchBar extends StatelessWidget {
         contentPadding:
             const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.xl),
           borderSide: BorderSide(color: Color(AppColors.inputBorder)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.xl),
           borderSide: BorderSide(color: Color(AppColors.inputBorder)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.xl),
           borderSide:
               BorderSide(color: Color(AppColors.secondaryButton), width: 1.5),
         ),
@@ -338,7 +339,7 @@ class _FilterChip extends StatelessWidget {
           color: selected
               ? Color(AppColors.secondaryButton)
               : Color(AppColors.inputFill),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           border: Border.all(
             color: selected
                 ? Color(AppColors.secondaryButton)
@@ -379,7 +380,7 @@ class _LoadingShimmer extends StatelessWidget {
                   height: 80,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                 ),
               ),
@@ -391,7 +392,7 @@ class _LoadingShimmer extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(AppRadius.xl),
             ),
           ),
           const SizedBox(height: 16),
@@ -403,7 +404,7 @@ class _LoadingShimmer extends StatelessWidget {
               height: 72,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
             ),
           ),
@@ -444,7 +445,7 @@ class _ErrorView extends StatelessWidget {
                 backgroundColor: Color(AppColors.secondaryButton),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(AppRadius.lg)),
               ),
             ),
           ],

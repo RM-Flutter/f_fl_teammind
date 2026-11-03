@@ -13,6 +13,7 @@ import 'package:app_test/features/daily_reports/controllers/daily_reports_contro
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DailyReportsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
@@ -54,7 +55,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                   boxShadow: [
                     BoxShadow(
                       color:  Color(AppColors.buttons).withOpacity(0.06),
@@ -68,7 +69,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                     onTap: () {
                       context.pushNamed(
                          AppRoutes.dailyReportDetailsScreen.name,
@@ -90,7 +91,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color:  Color(AppColors.buttons).withOpacity(0.08),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(AppRadius.md),
                                     ),
                                     child:  Icon(Icons.calendar_month_rounded, color: Color(AppColors.buttons), size: 20),
                                   ),

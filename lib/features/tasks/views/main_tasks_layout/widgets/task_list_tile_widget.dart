@@ -8,6 +8,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_strings.dart';
 import '../../../../../core/services/localization_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TaskListTileWidget extends StatelessWidget {
   final String title;
@@ -61,7 +62,7 @@ class TaskListTileWidget extends StatelessWidget {
               width: 1.0,
             ),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(AppSizes.s12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -165,15 +166,15 @@ class TaskListTileWidget extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       topRight: LocalizationService.isArabic(context: context)
                           ? const Radius.circular(0)
-                          : Radius.circular(AppSizes.s12),
+                          : Radius.circular(AppRadius.md),
                       bottomRight: LocalizationService.isArabic(context: context)
                           ? const Radius.circular(0)
-                          : Radius.circular(AppSizes.s12),
+                          : Radius.circular(AppRadius.md),
                       topLeft: LocalizationService.isArabic(context: context)
-                          ? Radius.circular(AppSizes.s12)
+                          ? Radius.circular(AppRadius.md)
                           : const Radius.circular(0),
                       bottomLeft: LocalizationService.isArabic(context: context)
-                          ? Radius.circular(AppSizes.s12)
+                          ? Radius.circular(AppRadius.md)
                           : const Radius.circular(0),
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ReportsCatalogShimmer extends StatelessWidget {
   const ReportsCatalogShimmer({super.key});
@@ -28,7 +29,7 @@ class ReportsCatalogShimmer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),

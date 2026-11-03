@@ -13,6 +13,7 @@ import '../../../../../core/services/backend_services/api_service/dio_api_servic
 import '../../../../../core/services/validation_service.dart';
 import '../../../../../core/utils/gradient_bg_image.dart';
 import '../../../../../core/widgets/button_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class WithdrawMoneyScreen extends StatefulWidget {
   var pointsPerOne;
@@ -132,7 +133,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 25, horizontal: 15),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
@@ -272,7 +273,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: const Color(0xffFFFFFF),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
                 boxShadow: [
                   BoxShadow(
                       color: const Color(0xff000000).withOpacity(0.1),

@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// A self-contained bottom sheet that fetches the approvable details internally
 /// and renders the take-action / take-action-as-someone-else form.
@@ -221,8 +222,8 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppRadius.xl),
+          topRight: Radius.circular(AppRadius.xl),
         ),
       ),
       child: Column(
@@ -237,7 +238,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
             ),
           ),
@@ -337,7 +338,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFEBEE),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                       border: Border.all(color: Colors.red.shade300),
                     ),
                     child: Column(
@@ -417,7 +418,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                         foregroundColor: Color(AppColors.buttons),
                         side: BorderSide(color: Color(AppColors.buttons)),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
                       ),
                       icon: const Icon(Icons.open_in_new_rounded, size: 18),
@@ -485,7 +486,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                             buttonStyle: ElevatedButton.styleFrom(
                               backgroundColor: Color(AppColors.buttons),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(28),
+                                borderRadius: BorderRadius.circular(AppRadius.xl),
                               ),
                             ),
                             onPressed: () async => await _submitAction(),

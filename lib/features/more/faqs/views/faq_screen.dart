@@ -9,6 +9,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/features/more/faqs/controllers/faq_controller.dart';
 import 'package:app_test/features/more/faqs/data/models/get_faq_model.dart';
 import 'package:app_test/features/more/faqs/views/widgets/faq_loading_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
@@ -99,7 +100,7 @@ class _FaqTileState extends State<FaqTile> {
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFF5F8FA), // Light blue background like in the image
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             // Top shadow
             BoxShadow(

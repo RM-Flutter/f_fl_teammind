@@ -12,6 +12,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/more/user_device/controllers/user_device_controller.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class UserDeviceScreen extends StatefulWidget {
   const UserDeviceScreen({super.key});
@@ -117,7 +118,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                             horizontal: AppSizes.s15, vertical: AppSizes.s12),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppSizes.s15),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
                         height: 100,  // Adjust height to match your layout
                       ),
@@ -130,7 +131,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                             horizontal: AppSizes.s15, vertical: AppSizes.s12),
                         decoration: BoxDecoration(
                           color: Color(AppColors.textC5),
-                          borderRadius: BorderRadius.circular(AppSizes.s15),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           boxShadow: [
                             BoxShadow(
                                 color: const Color.fromRGBO(0, 0, 0, 0.05),

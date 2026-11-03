@@ -13,6 +13,7 @@ import 'widgets/assistant_floating_widget.dart';
 import 'widgets/assistant_message_bubble_widget.dart';
 import 'widgets/assistant_avatar_widget.dart';
 import 'widgets/assistant_mic_button_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// شاشة مساعد TeamMind: محادثة نصية وصوتية بإجابات من ملف مساعدة محلي.
 class AssistantScreen extends StatefulWidget {
@@ -108,7 +109,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
                     padding: const EdgeInsets.all(AppSizes.s12),
                     decoration: BoxDecoration(
                       color: Color(AppColors.chipBackground),
-                      borderRadius: BorderRadius.circular(AppSizes.s16),
+                      borderRadius: BorderRadius.circular(AppRadius.lg),
                     ),
                     child: Column(
                       children: [

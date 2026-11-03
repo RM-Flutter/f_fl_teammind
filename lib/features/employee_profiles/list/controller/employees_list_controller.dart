@@ -12,6 +12,7 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import '../../shared/models/employee_profile_model.dart';
 import '../../shared/repos/employee_repo.dart';
 import '../data/models/department_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class EmployeesListViewModel extends ChangeNotifier {
   List<EmployeeProfileModel>? employees;
@@ -143,7 +144,7 @@ class EmployeesListViewModel extends ChangeNotifier {
           // Dropdown of Departments
           CustomDropdown.search(
               selectedValue: selectedDepartment?.toJson(),
-              borderRadius: BorderRadius.circular(AppSizes.s15),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               borderSide: Theme.of(context)
                   .inputDecorationTheme
                   .enabledBorder
@@ -175,20 +176,6 @@ class EmployeesListViewModel extends ChangeNotifier {
     filterEmployees();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import 'package:employees/modules/profiles/models/employee.model.dart';
 // import 'package:employees/services/crud_operation.service.dart';

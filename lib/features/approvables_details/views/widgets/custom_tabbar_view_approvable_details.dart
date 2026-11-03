@@ -7,6 +7,7 @@ import '../../data/models/approvable_details_model.dart';
 import 'tabs/reason_tab.dart';
 import 'tabs/manager_response_tab.dart';
 import 'tabs/information_tab.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CustomTabbarViewApprovableDetails extends StatelessWidget {
   final ApprovableDetailsModel details;
@@ -29,7 +30,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
               ),
               height: 52,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -39,7 +40,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
                   color: Color(AppColors.buttons),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
                 labelColor: Colors.white,
                 labelStyle: mainTextStyle,

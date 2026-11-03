@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class CopounSection extends StatelessWidget {
   CopounSection({super.key});
@@ -100,7 +100,7 @@ class CopounSection extends StatelessWidget {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: const Color(0xffFFFFFF),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
                             ),
                             child: TextFormField(
                               focusNode: copounCodeFocusNode,
@@ -157,7 +157,7 @@ class CopounSection extends StatelessWidget {
                             width: 224,
                             decoration: BoxDecoration(
                               color: const Color(0xFF0D3B6F),
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(AppRadius.pill),
                             ),
                             child: MaterialButton(onPressed: () {
                               provider.sendCopoun(copounCode: copounCodeController.text).then((value) {

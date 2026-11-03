@@ -1,8 +1,7 @@
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-
+import 'package:app_test/core/constants/app_design.dart';
 
 Widget buildActionCard({
   required  icon,
@@ -13,14 +12,14 @@ Widget buildActionCard({
   final bg = isDestructive ? Colors.red : Color(AppColors.secondaryButton);
   return InkWell(
     onTap: onTap,
-    borderRadius: BorderRadius.circular(12),
+    borderRadius: BorderRadius.circular(AppRadius.md),
     child: Container(
       alignment: Alignment.center,
       height: 120,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

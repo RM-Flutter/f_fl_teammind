@@ -22,6 +22,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PersonalProfileHeaderWidget extends StatelessWidget {
   final PersonalProfileController viewModel;
@@ -172,7 +173,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       Container(
                           decoration: BoxDecoration(
                             color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(AppSizes.s15),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           child: Center(
                             child: IconButton(
@@ -196,7 +197,7 @@ class PersonalProfileHeaderWidget extends StatelessWidget {
                       Container(
                           decoration: BoxDecoration(
                             color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(AppSizes.s15),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           child: Center(
                             child: IconButton(
@@ -452,8 +453,8 @@ class _CompanyInfoNotchedContainerState
                     (widget.notchRadius + widget.notchPadding),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(AppSizes.s32),
-                    topRight: Radius.circular(AppSizes.s32),
+                    topLeft: Radius.circular(AppRadius.xl),
+                    topRight: Radius.circular(AppRadius.xl),
                   ),
                   color: Colors.white,
                 ),

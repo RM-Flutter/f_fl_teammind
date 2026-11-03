@@ -15,6 +15,7 @@ import 'package:app_test/core/services/offline_overlay_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/offline/controller/offline_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class OfflineScreen extends StatefulWidget {
   const OfflineScreen({super.key});
@@ -123,13 +124,13 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                   // Background image
                   ClipRRect(
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(AppSizes.s32),
-                        bottomRight: Radius.circular(AppSizes.s32)),
+                        bottomLeft: Radius.circular(AppRadius.xl),
+                        bottomRight: Radius.circular(AppRadius.xl)),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(AppSizes.s32),
-                            bottomRight: Radius.circular(AppSizes.s32)),
+                            bottomLeft: Radius.circular(AppRadius.xl),
+                            bottomRight: Radius.circular(AppRadius.xl)),
                       ),
                       child: Image.asset(
                         "assets/images/png/home_back.png",
@@ -166,8 +167,8 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(16),
-                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(AppRadius.lg),
+                        topLeft: Radius.circular(AppRadius.lg),
                       )),
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -228,7 +229,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                         backgroundColor: Colors.red,
                                         behavior: SnackBarBehavior.floating,
                                         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                                         duration: const Duration(seconds: 2),
                                       ),
                                     );

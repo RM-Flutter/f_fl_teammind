@@ -5,6 +5,7 @@ import 'package:app_test/features/reports/views/widgets/report_compare_tabs.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestsSummaryReportView extends StatefulWidget {
   final RequestsSummaryReportModel data;
@@ -127,7 +128,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
@@ -142,7 +143,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: bgColor,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
@@ -191,7 +192,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -336,7 +337,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -399,7 +400,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
                     ),
                     const SizedBox(height: 6),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       child: LinearProgressIndicator(
                         value: (item.percentage / 100).clamp(0.0, 1.0),
                         minHeight: 8,

@@ -4,6 +4,7 @@ import 'package:app_test/main.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 
 import '../../constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TimeoutMessage {
   static int currentMessageId = 0;
@@ -160,7 +161,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
             child: MaterialButton(
                 padding: const EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
+                    borderRadius: BorderRadius.circular(AppRadius.md)),
                 color: Color(AppColors.buttons),
                 elevation: 10.0,
                 child: Padding(

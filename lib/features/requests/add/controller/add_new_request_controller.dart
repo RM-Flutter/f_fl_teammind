@@ -28,7 +28,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddNewRequestController extends ChangeNotifier {
   Map<String, dynamic>? selectedRequestType;
@@ -150,8 +150,8 @@ class AddNewRequestController extends ChangeNotifier {
       showModalBottomSheet<void>(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(AppRadius.lg),
+              topRight: Radius.circular(AppRadius.lg),
             ),
           ),
           backgroundColor: Colors.white,
@@ -500,7 +500,6 @@ class AddNewRequestController extends ChangeNotifier {
     bool hasStartTime = range.start.hour != 0 || range.start.minute != 0;
     bool hasEndTime = range.end.hour != 0 || range.end.minute != 0;
 
-
     if ((hasStartTime || hasEndTime) && startDateStr == endDateStr) {
       String startTime = timeFormatter.format(range.start);
       String endTime = timeFormatter.format(range.end);
@@ -561,8 +560,6 @@ class AddNewRequestController extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-
 
   void _getRequestTypes({required BuildContext context}) {
     try {
@@ -853,7 +850,6 @@ class AddNewRequestController extends ChangeNotifier {
         duration = totalCalendarDays;
       }
 
-
       // Convert weekend days from integer to week day names
       for (var element in weekendDays) {
         if (weekdaysMap.containsKey(element)) {
@@ -1034,7 +1030,7 @@ class AddNewRequestController extends ChangeNotifier {
                   vertical: screenHeight * 0.15,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -1092,7 +1088,7 @@ class AddNewRequestController extends ChangeNotifier {
                         vertical: screenHeight * 0.15,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
@@ -1280,7 +1276,6 @@ class AddNewRequestController extends ChangeNotifier {
       }
     }
 
-
     notifyListeners();
   }
   Future<void> getProfileImageByCam() async {
@@ -1312,7 +1307,6 @@ class AddNewRequestController extends ChangeNotifier {
         listXAttachmentPersonalImage.add(imageFileProfile);
       }
     }
-
 
     notifyListeners();
   }

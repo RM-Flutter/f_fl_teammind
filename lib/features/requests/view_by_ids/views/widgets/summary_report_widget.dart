@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../data/models/summary_report_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SummaryReportsModal extends StatelessWidget {
   final List<SummaryReportModel> summaryReports;
@@ -31,7 +32,7 @@ class SummaryReportsModal extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(AppColors.lightGreyEF),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: ListTile(
                     title: Row(

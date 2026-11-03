@@ -15,6 +15,7 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_job_info_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/common_ui/create_cv_personal_tab.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class UpdateMyInfoScreen extends StatefulWidget {
   const UpdateMyInfoScreen({super.key});
@@ -149,7 +150,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
                         foregroundColor: Colors.white,
                         minimumSize: const Size(200, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(AppRadius.xl),
                         ),
                       ),
                       child: viewModel.isSubmitting
@@ -185,8 +186,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius:
-        BorderRadius.circular(
-            AppSizes.s30),
+        BorderRadius.circular(AppRadius.xl),
       ),
       height: AppSizes.s55,
       alignment: Alignment.centerLeft,

@@ -16,7 +16,7 @@ import 'package:app_test/core/widgets/text_form_widget.dart';
 
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/check_values.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddNotificationScreen extends StatefulWidget {
   const AddNotificationScreen({super.key});
@@ -164,7 +164,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     hintText: AppStrings.searchByName.tr(),
                                                     prefixIcon: Icon(Icons.search, size: 24),
                                                     border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(8),
+                                                      borderRadius: BorderRadius.circular(AppRadius.sm),
                                                     ),
                                                   ),
                                                   onChanged: (value) {
@@ -245,7 +245,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(AppRadius.sm),
                                     side: BorderSide(
                                       color: Color(AppColors.border),
                                       width: 1.0,
@@ -364,7 +364,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(AppRadius.sm),
                                     side: BorderSide(
                                       color: Color(AppColors.border),
                                       width: 1.0,
@@ -442,7 +442,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               decoration: ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.s10),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   side: BorderSide(
                                     color: Color(AppColors.border),
                                     width: 1.0,
@@ -504,7 +504,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             decoration: ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppSizes.s10),
+                                borderRadius: BorderRadius.circular(AppRadius.sm),
                                 side: BorderSide(
                                   color: Color(AppColors.border),
                                   width: 1.0,
@@ -563,7 +563,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF000080),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
+                                      borderRadius: BorderRadius.circular(AppRadius.xl),
                                     ),
                                     elevation: 0,
                                   ),

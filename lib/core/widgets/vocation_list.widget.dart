@@ -19,6 +19,7 @@ import '../services/layout_service.dart';
 import '../services/localization_service.dart';
 import '../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'fade_slide_in.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class VacationListWidget extends StatelessWidget {
   final bool? isInRequestsPage;
@@ -120,7 +121,7 @@ class VacationListWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
                 color: Color(AppColors.buttons),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +181,6 @@ class VacationListWidget extends StatelessWidget {
     );
   }
 }
-
 
 class VacationCard extends StatelessWidget {
   final bool? isInRequestsPage;
@@ -256,7 +256,7 @@ class VacationCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
           color: Color(AppColors.secondaryButton), // Match BalanceCard color
-          borderRadius: BorderRadius.circular(12), // Match BalanceCard radius
+          borderRadius: BorderRadius.circular(AppRadius.md), // Match BalanceCard radius
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // Match BalanceCard layout

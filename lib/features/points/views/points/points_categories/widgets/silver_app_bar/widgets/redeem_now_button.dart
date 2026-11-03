@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class RedeemNowButton extends StatelessWidget {
   final bool friends;
@@ -17,7 +17,7 @@ class RedeemNowButton extends StatelessWidget {
       width: 150,
       decoration: BoxDecoration(
         color: Color(0xFFE6007E),
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(AppRadius.pill),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

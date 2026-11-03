@@ -15,6 +15,7 @@ import 'package:app_test/core/widgets/text_form_widget.dart';
 import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 
 import '../controllers/create_salary_advance_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateSalaryAdvanceScreen extends StatefulWidget {
   const CreateSalaryAdvanceScreen({super.key});
@@ -104,7 +105,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                             context: context,
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
                             ),
                             builder: (BuildContext builder) {
                               DateTime tempPickedDate = DateTime.now();
@@ -187,7 +188,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
                             border: Border.all(color: Color(AppColors.buttonSecondaryColor).withOpacity(0.3), width: 1.5, style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(AppRadius.lg),
                           ),
                           child: Column(
                             children: [
@@ -222,7 +223,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
                               color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
                               border: Border.all(color: Colors.grey.shade300),
                             ),
                             child: Row(
@@ -255,7 +256,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: Color(AppColors.buttons),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               boxShadow: [
                                 BoxShadow(
                                   color: Color(AppColors.buttons).withOpacity(0.3),
@@ -269,7 +270,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                               ),
                               onPressed: () async {
                                 bool success = await controller.submitRequest(context);
@@ -318,23 +319,23 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
         filled: true,
         fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.buttons), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.failureRed), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.failureRed), width: 2.0),
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),

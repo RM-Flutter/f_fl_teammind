@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestDetailsLoadingScreen extends StatelessWidget {
  const RequestDetailsLoadingScreen({super.key});
@@ -79,14 +80,14 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
            decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
-             borderRadius: BorderRadius.circular(16),
+             borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
            ),
            child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
              ClipRRect(
-              borderRadius: BorderRadius.circular(63),
+              borderRadius: BorderRadius.circular(AppRadius.pill),
               child: Container(
                width: 63,
                height: 63,

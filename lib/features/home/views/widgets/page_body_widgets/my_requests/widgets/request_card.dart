@@ -21,6 +21,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:convert';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestCard extends StatelessWidget {
   final request;
@@ -63,7 +64,7 @@ class RequestCard extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Color(AppColors.cardBackground),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         shadows: [
           BoxShadow(
@@ -111,7 +112,7 @@ class RequestCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFEBEE),
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                         border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
                       ),
                       child: Row(

@@ -17,6 +17,7 @@ import '../controllers/daily_reports_controller.dart';
 import '../models/daily_report_model.dart';
 import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DailyReportsListScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -89,7 +90,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
               padding: EdgeInsets.all(AppSizes.s24),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -139,7 +140,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
                           ),
                           child: Text(
@@ -160,7 +161,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                             elevation: 0,
                             padding: EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
                           ),
                           onPressed: () => Navigator.pop(context, true),
@@ -227,7 +228,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
           floatingActionButton: provider.isManagerOrHr && provider.isForDepartment ? null : FloatingActionButton.extended(
             heroTag: 'add_daily_report',
             backgroundColor: Color(AppColors.buttons),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
             elevation: 4,
             onPressed: () {
                context.pushNamed(
@@ -332,7 +333,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
       margin: EdgeInsets.only(bottom: AppSizes.s16, left: 16, right: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.buttons).withOpacity(0.06),
@@ -346,7 +347,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           onTap: () {
             context.pushNamed(
                AppRoutes.dailyReportDetailsScreen.name,
@@ -368,7 +369,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Color(AppColors.buttons).withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           child: Icon(Icons.calendar_month_rounded, color: Color(AppColors.buttons), size: 20),
                         ),

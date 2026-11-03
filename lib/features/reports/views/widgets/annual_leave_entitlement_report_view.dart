@@ -5,6 +5,7 @@ import 'package:app_test/features/reports/views/widgets/report_compare_tabs.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AnnualLeaveEntitlementReportView extends StatefulWidget {
   final AnnualLeaveEntitlementReportModel data;
@@ -72,7 +73,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Text(
                   '${activeData.employees.length} ${'employees'.tr()}',
@@ -163,7 +164,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
@@ -178,7 +179,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: bgColor,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
@@ -227,7 +228,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -259,7 +260,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF59E0B).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Text(
                   '${'usage_rate'.tr()}: ${usageRate.toStringAsFixed(1)}%',
@@ -380,7 +381,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -436,7 +437,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                   color: emp.isQualified
                       ? const Color(0xFF10B981).withOpacity(0.1)
                       : Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Text(
                   emp.isQualified ? 'qualified'.tr() : 'not_qualified'.tr(),
@@ -499,7 +500,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               ),
               const SizedBox(height: 4),
               ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
                 child: LinearProgressIndicator(
                   value: (emp.usagePercentage / 100).clamp(0.0, 1.0),
                   minHeight: 6,
@@ -546,7 +547,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
         decoration: BoxDecoration(
           color: color.withOpacity(0.06),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Column(
           children: [

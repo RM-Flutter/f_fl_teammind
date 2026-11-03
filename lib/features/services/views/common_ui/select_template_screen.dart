@@ -10,6 +10,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SelectTemplateScreen extends StatefulWidget {
   const SelectTemplateScreen({super.key});
@@ -160,7 +161,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     child: vm.isLoadingTemplate
@@ -206,7 +207,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: isSelected
             ? Border.all(color: Color(AppColors.buttons), width: 3)
             : Border.all(color: Colors.grey[300]!, width: 1),
@@ -224,7 +225,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
             children: [
               Expanded(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
                   child: imageUrl != null && imageUrl.isNotEmpty
                       ? (kIsWeb
                           ? Image.network(
@@ -308,7 +309,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Center(
                   child: Column(

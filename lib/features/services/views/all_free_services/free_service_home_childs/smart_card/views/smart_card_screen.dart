@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/rendering.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SmartCardScreen extends StatefulWidget {
   const SmartCardScreen({super.key});
@@ -57,7 +58,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -95,7 +96,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                     ),
                     child: Text(
@@ -124,7 +125,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       backgroundColor: Color(AppColors.secondaryButton),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                     ),
                     child: Text(
@@ -311,7 +312,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                         ),
                         InkWell(
                           onTap: vm.isLoading ? null : () { _showAddCompanyBottomSheet(vm); },
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(AppRadius.lg),
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
@@ -334,7 +335,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(color: Colors.grey[300]!),
                         ),
                         child: Text(
@@ -363,7 +364,6 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                             )
                             .toList(),
                       ),
-
 
                     const SizedBox(height: 32),
 
@@ -399,7 +399,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                             vm.loadSmartCardScreen(context);
                           }
                         },
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         child: _buildProfileCard(vm.employeeProfile!),
                       )
                     else
@@ -408,7 +408,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(color: Colors.grey[300]!),
                         ),
                         child: Text(
@@ -474,7 +474,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             decoration: BoxDecoration(
               color: Color(AppColors.modalBackground),
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(24)),
+                  const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
             ),
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
             child: Column(
@@ -486,7 +486,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(AppRadius.xs),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -506,7 +506,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     filled: true,
                     fillColor: Color(AppColors.cardBackground),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       borderSide: const BorderSide(color: Colors.black),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
@@ -530,7 +530,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     child: Text(
@@ -589,7 +589,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             decoration: BoxDecoration(
               color: Color(AppColors.modalBackground),
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(24)),
+                  const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
             ),
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
             child: Column(
@@ -601,7 +601,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(AppRadius.xs),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -621,7 +621,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     filled: true,
                     fillColor: Color(AppColors.cardBackground),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       borderSide: const BorderSide(color: Colors.black),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
@@ -645,7 +645,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                       backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     child: Text(
@@ -715,7 +715,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(
           color: isSelected ? Color(AppColors.secondaryButton) : Colors.grey.shade200,
           width: isSelected ? 2 : 1,
@@ -732,7 +732,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -804,7 +804,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
@@ -883,7 +883,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
             decoration: BoxDecoration(
               color: Color(AppColors.modalBackground),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -896,7 +896,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                     height: 4,
                     decoration: BoxDecoration(
                       color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(AppRadius.xs),
                     ),
                   ),
                 ),
@@ -937,7 +937,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                           backgroundColor: Colors.grey[200],
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                         ),
                         child: Text(
@@ -973,7 +973,7 @@ class _SmartCardScreenState extends State<SmartCardScreen> {
                           backgroundColor: Colors.red,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                         ),
                         child: isDeleting

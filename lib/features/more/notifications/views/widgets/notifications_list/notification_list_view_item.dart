@@ -8,7 +8,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class PainterNotificationListViewItem extends StatefulWidget {
   final List notifications;
@@ -43,12 +43,12 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 'id': notification['id'].toString(),
               });
         },
-        borderRadius: BorderRadius.circular(AppSizes.s15),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         child: Container(
           // no padding — icon fills full card height
           decoration: BoxDecoration(
             color: Color(AppColors.background),
-            borderRadius: BorderRadius.circular(AppSizes.s15),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
             boxShadow: [
               BoxShadow(

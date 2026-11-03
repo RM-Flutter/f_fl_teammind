@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/repos/payroll_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PayrollListItemWidget extends StatelessWidget {
   final PayrollModel payroll;
@@ -27,7 +28,7 @@ class PayrollListItemWidget extends StatelessWidget {
                 vertical: AppSizes.s14, horizontal: AppSizes.s16),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),

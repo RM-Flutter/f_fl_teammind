@@ -4,6 +4,7 @@ import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../screens/live_group_map_screen.dart';
 import '../screens/tracking_demo_hub_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingHomePreviewBanner extends StatelessWidget {
   const TrackingHomePreviewBanner({super.key});
@@ -23,7 +24,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.secondaryButton).withOpacity(0.3),
@@ -35,7 +36,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const TrackingDemoHubScreen()),
@@ -53,7 +54,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.18),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                         border: Border.all(color: Colors.white24),
                       ),
                       child: Row(
@@ -77,7 +78,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: const Color(0xff2D6A4F).withOpacity(0.85),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -188,12 +189,12 @@ class _BannerQuickButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(AppRadius.sm),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(color: Colors.white24),
         ),
         child: Row(

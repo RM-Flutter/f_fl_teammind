@@ -15,6 +15,7 @@ import '../../../../../controllers/history_controller/history_controller.dart';
 import '../../../../../controllers/points_controller/points_controller.dart';
 import '../../../../../data/repositories/condition_repository/condition_repository_implementation.dart';
 import '../../../../../data/repositories/history_repository/get_history_repository_implementation.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SliverListPoints extends StatelessWidget {
   const SliverListPoints({super.key});
@@ -30,8 +31,8 @@ class SliverListPoints extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20)),
+                      topRight: Radius.circular(AppRadius.lg),
+                      topLeft: Radius.circular(AppRadius.lg)),
                 ),
                 child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
@@ -88,7 +89,7 @@ Widget defaultTap2BarItem({
           width: containerWidth,
           decoration: BoxDecoration(
             color: Color(AppColors.secondaryButton),
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(AppRadius.xl),
           ),
           child: ListView.builder(
             shrinkWrap: true,
@@ -109,7 +110,7 @@ Widget defaultTap2BarItem({
                 margin: EdgeInsets.zero,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
                   color: (provider.selectedIndex == index)
                       ? Color(AppColors.buttons)
                       : Colors.transparent,

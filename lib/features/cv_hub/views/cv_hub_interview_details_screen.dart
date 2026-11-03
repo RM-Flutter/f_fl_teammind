@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/cv_hub_interview_details_controller.dart';
 import '../models/cv_hub_models.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CvHubInterviewDetailsScreen extends StatefulWidget {
   final String id;
@@ -122,7 +123,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: mainColor.withOpacity(0.08),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(AppRadius.lg),
                             ),
                             child: Text(s.name ?? '', style: TextStyle(color: mainColor, fontSize: 12, fontWeight: FontWeight.w600)),
                           )).toList(),
@@ -142,7 +143,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: Color(AppColors.scaffoldBackGround),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               border: Border.all(color: Colors.grey.shade200),
                               boxShadow: [
                                 BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
@@ -207,7 +208,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: Color(AppColors.buttons).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           child: Icon(icon, color: Color(AppColors.buttons), size: 18),
         ),
@@ -229,7 +230,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Color(AppColors.scaffoldBackGround),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
@@ -294,8 +295,8 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
+          bottomLeft: Radius.circular(AppRadius.xl),
+          bottomRight: Radius.circular(AppRadius.xl),
         ),
         image: const DecorationImage(
           image: AssetImage("assets/images/request-app-bar.png"),
@@ -377,7 +378,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                           height: 85,
                           decoration: BoxDecoration(
                             color: mainColor.withOpacity(.3),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(AppRadius.sm),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -398,7 +399,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                         height: 85,
                         decoration: BoxDecoration(
                           color: Color(AppColors.scaffoldBackGround),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         child: Column(
@@ -461,7 +462,6 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
   }
 }
 
-
 class _EvaluationForm extends StatefulWidget {
   final CvHubInterviewDetailsController controller;
   final String interviewId;
@@ -502,7 +502,7 @@ class _EvaluationFormState extends State<_EvaluationForm> {
       ),
       decoration: BoxDecoration(
         color: Color(AppColors.scaffoldBackGround),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
       child: SafeArea(
         child: SingleChildScrollView(
@@ -547,7 +547,7 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                             surfaceTintColor: Colors.transparent,
                             elevation: 4,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               side: BorderSide(color: Colors.grey.shade200),
                             ),
                             onSelected: (val) {
@@ -585,17 +585,17 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                                 labelStyle: TextStyle(color: Color(AppColors.subTitleText)),
                                 errorText: state.errorText,
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppRadius.md),
                                   borderSide: BorderSide(color: Color(AppColors.border)),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppRadius.md),
                                   borderSide: BorderSide(
                                     color: state.hasError ? Color(AppColors.failureRed) : Color(AppColors.border),
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppRadius.md),
                                   borderSide: BorderSide(color: Color(AppColors.c1)),
                                 ),
                                 filled: true,
@@ -681,15 +681,15 @@ Widget _buildFormField({
         labelText: label,
         labelStyle: TextStyle(color: Color(AppColors.subTitleText)),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.border)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.border)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.c1)),
         ),
         filled: true,

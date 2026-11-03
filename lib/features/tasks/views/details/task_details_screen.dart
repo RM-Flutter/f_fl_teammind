@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   var id;
@@ -144,7 +145,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       LinearProgressIndicator(
                                         color: Color(AppColors.buttons),
                                         value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
-                                        borderRadius: BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(AppRadius.sm),
                                         backgroundColor: Colors.transparent,
                                       ),
                                     ],
@@ -344,7 +345,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: Color(AppColors.green),
-                                        borderRadius: BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(AppRadius.sm),
 
                                       ),
                                       child: Row(
@@ -361,10 +362,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                             decoration: BoxDecoration(
                                                 color: Colors.transparent,
                                                 borderRadius: BorderRadius.only(
-                                                  topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(4) ,
-                                                  bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(4) ,
-                                                  topLeft: LocalizationService.isArabic(context: context) ?Radius.circular(5) : const Radius.circular(0) ,
-                                                  bottomLeft: LocalizationService.isArabic(context: context) ?Radius.circular(5) : const Radius.circular(0) ,
+                                                  topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(AppRadius.xs) ,
+                                                  bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(AppRadius.xs) ,
+                                                  topLeft: LocalizationService.isArabic(context: context) ?Radius.circular(AppRadius.sm) : const Radius.circular(0) ,
+                                                  bottomLeft: LocalizationService.isArabic(context: context) ?Radius.circular(AppRadius.sm) : const Radius.circular(0) ,
                                                 )
                                             ),
                                             child: (value.isLoading == true)? SizedBox(width: 24, height: 24, child: const CircularProgressIndicator(color: Colors.white,)):Icon(Icons.check, color: Colors.white, size: 24,),

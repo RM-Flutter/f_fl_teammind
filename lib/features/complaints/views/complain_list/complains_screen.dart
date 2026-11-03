@@ -21,6 +21,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../controller/complaints_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ComplainScreen extends StatefulWidget {
  const ComplainScreen({super.key});
@@ -101,7 +102,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
         padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12,),
         decoration: BoxDecoration(
          color: Colors.white,
-         borderRadius: BorderRadius.circular(AppSizes.s15),
+         borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         height: 100,
        ),
@@ -263,7 +264,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         shadows: [
           BoxShadow(
@@ -408,7 +409,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

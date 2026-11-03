@@ -13,6 +13,7 @@ import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 
 import '../controllers/create_expense_claim_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateExpenseClaimScreen extends StatefulWidget {
   const CreateExpenseClaimScreen({super.key});
@@ -76,7 +77,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Color(AppColors.buttons),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
                             child: const Icon(Icons.receipt_long_rounded,
                                 color: Colors.white, size: 22),
@@ -167,7 +168,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(AppColors.buttons),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Color(AppColors.buttons)
@@ -184,7 +185,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
+                                      borderRadius: BorderRadius.circular(AppRadius.md)),
                                 ),
                                 onPressed: () async {
                                   bool success =
@@ -271,15 +272,15 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
         filled: true,
         fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide:
               BorderSide(color: Color(AppColors.buttons), width: 1.5),
         ),
@@ -341,7 +342,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                   color: Color(AppColors.buttonSecondaryColor).withOpacity(0.3),
                   width: 1.5,
                   style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
             child: Column(
               children: [
@@ -386,7 +387,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 border: Border.all(color: Colors.grey.shade300),
               ),
               child: Row(
@@ -444,24 +445,24 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
         filled: true,
         fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Color(AppColors.buttons), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide:
               BorderSide(color: Color(AppColors.failureRed), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide:
               BorderSide(color: Color(AppColors.failureRed), width: 2.0),
         ),

@@ -23,7 +23,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/constants/user_consts.dart' show UserSettingConst;
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class HomeAppbarWidget extends StatelessWidget {
   final bool? isExpanded;
@@ -98,8 +98,8 @@ class HomeAppbarWidget extends StatelessWidget {
             : Color(AppColors.secondaryButton).withValues(alpha: 0.95),
         borderRadius: isExpanded == true
             ? BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32))
+            bottomLeft: Radius.circular(AppRadius.xl),
+            bottomRight: Radius.circular(AppRadius.xl))
             : null,
       ),
       child: Stack(
@@ -110,13 +110,13 @@ class HomeAppbarWidget extends StatelessWidget {
               if (isExpanded == true)
                 ClipRRect(
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppSizes.s32),
-                    bottomRight: Radius.circular(AppSizes.s32)),
+                    bottomLeft: Radius.circular(AppRadius.xl),
+                    bottomRight: Radius.circular(AppRadius.xl)),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(AppSizes.s32),
-                        bottomRight: Radius.circular(AppSizes.s32)),
+                        bottomLeft: Radius.circular(AppRadius.xl),
+                        bottomRight: Radius.circular(AppRadius.xl)),
                   ),
                     child: Opacity(
                       opacity: 0.5,

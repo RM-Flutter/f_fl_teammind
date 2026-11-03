@@ -14,6 +14,7 @@ import '../routing/app_router.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class GeneralListener {
   void startAll(
@@ -84,7 +85,7 @@ class GeneralListener {
 
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           // ✅ تحديد أقصى عرض في الويب علشان الشكل مايبقاش عريض أوي
           insetPadding: EdgeInsets.symmetric(
@@ -112,7 +113,7 @@ class GeneralListener {
                         await linksAction(popup: popup['go_to'], out: false);
                       },
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                         child: Image.network(
                           popup['images'][0]['file'],
                           fit: BoxFit.contain,

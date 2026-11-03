@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SelectSmartCardTemplateScreen extends StatefulWidget {
   final bool isPersonal;
@@ -410,7 +411,7 @@ class _SelectSmartCardTemplateScreenState
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     child: _isSaving
@@ -463,7 +464,7 @@ class _SelectSmartCardTemplateScreenState
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: isSelected
             ? Border.all(color: Color(AppColors.buttons), width: 3)
             : Border.all(color: Colors.grey[300]!, width: 1),
@@ -482,7 +483,7 @@ class _SelectSmartCardTemplateScreenState
               Expanded(
                 child: ClipRRect(
                   borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(12)),
+                      const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
                   child: imageUrl != null && imageUrl.isNotEmpty
                       ? Image.network(
                           imageUrl,

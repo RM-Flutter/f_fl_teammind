@@ -16,6 +16,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 
 import '../../../platform/platform_is.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CommentProvider extends ChangeNotifier{
   bool isGetCommentLoading = false;
@@ -372,13 +373,12 @@ class CommentProvider extends ChangeNotifier{
     }
   }
 
-
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(AppRadius.lg),
+              topRight: Radius.circular(AppRadius.lg),
             ),
           ),
           backgroundColor: Colors.white,

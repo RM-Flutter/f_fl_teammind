@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/searchable_dropdown_sheet.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FiltersBottomSheet extends StatefulWidget {
   final FiltersConfigModel filtersConfig;
@@ -112,21 +113,21 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
           ? const Icon(Icons.lock_outline, size: 20, color: Colors.grey)
           : suffixIcon,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: Color(AppColors.inputBorder)),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(
           color: isLocked ? Colors.grey.shade300 : Color(AppColors.inputBorder),
         ),
       ),
       disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: Colors.grey.shade300),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: Color(AppColors.inputFocusedBorder)),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -219,7 +220,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 height: 5,
                 decoration: BoxDecoration(
                   color: Color(AppColors.border),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
               ),
             ),
@@ -243,7 +244,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     .toList(),
                 nameKey: 'title',
                 borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onChanged: (vals) {
                   setState(() {
@@ -267,7 +268,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     .toList(),
                 nameKey: 'name',
                 borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onChanged: (vals) {
                   setState(() {
@@ -325,7 +326,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 })(),
                 nameKey: 'title',
                 borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onChanged: (val) {
                   setState(() {
@@ -350,7 +351,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(AppRadius.sm),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
                           child: Row(
@@ -553,7 +554,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   border: Border.all(color: Colors.red.shade200),
                 ),
                 child: Row(
@@ -576,7 +577,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 backgroundColor: Color(AppColors.buttons),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(AppRadius.md)),
               ),
               onPressed: () {
                 if (widget.filtersConfig.requestTypesRequired) {
@@ -604,7 +605,6 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 if (!clean.containsKey('department_ids')) clean['department_ids'] = [];
                 if (!clean.containsKey('employee_ids')) clean['employee_ids'] = [];
                 if (!clean.containsKey('request_type_id')) clean['request_type_id'] = null;
-
 
                 if (clean['use_time_period'] == false) {
                   clean.remove('period_type');

@@ -3,6 +3,7 @@ import 'package:app_test/features/more/notifications/controllers/notification_co
 import 'package:app_test/features/more/notifications/data/models/notification_emotion_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class NotificationReactionsWidget extends StatefulWidget {
   final dynamic notificationId;
@@ -72,7 +73,7 @@ class _NotificationReactionsWidgetState
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -148,7 +149,7 @@ class _NotificationReactionsWidgetState
               backgroundColor: Colors.white,
               surfaceTintColor: Colors.transparent,
               contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
               title: Column(
                 children: [
                   const Text(

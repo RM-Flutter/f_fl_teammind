@@ -17,6 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 class EmployeeDetailsHeader extends StatelessWidget {
   const EmployeeDetailsHeader({
     super.key,
@@ -33,15 +34,15 @@ class EmployeeDetailsHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32)),
+            bottomLeft: Radius.circular(AppRadius.xl),
+            bottomRight: Radius.circular(AppRadius.xl)),
       ),
       child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32)),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl)),
             child: Image.asset(
               "assets/images/profile-app-bar.png",
               fit: BoxFit.cover,
@@ -103,7 +104,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
                           );
                         },
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(85),
+                          borderRadius: BorderRadius.circular(AppRadius.pill),
                           child: kIsWeb
                               ? Image.network(
                                   employee!.avatar!,

@@ -5,6 +5,7 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/history_controller/history_controller.dart';
 import 'widget/history_drop_down_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class HistoryItem extends StatelessWidget {
   HistoryItem({super.key});
@@ -57,7 +58,7 @@ class HistoryItem extends StatelessWidget {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            borderRadius: BorderRadius.all(Radius.circular(AppRadius.md)),
                             boxShadow: [
                               BoxShadow(
                                   color: Colors.black.withOpacity(0.05),

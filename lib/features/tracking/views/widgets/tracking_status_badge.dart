@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/services/localization_service.dart';
 import '../../data/models/tracking_status.enum.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingStatusBadge extends StatelessWidget {
   final RequestTrackingStatus? status;
@@ -41,7 +42,7 @@ class TrackingStatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: st.backgroundColor,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: st.borderColor.withOpacity(0.6)),
       ),
       child: Row(

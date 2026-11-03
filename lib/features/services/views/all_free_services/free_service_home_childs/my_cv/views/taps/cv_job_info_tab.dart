@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CVJobInfoTab extends StatelessWidget {
   final CVDataModel? cvData;
@@ -93,7 +94,7 @@ class CVJobInfoTab extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Row(
         children: [

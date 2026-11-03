@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class EditNewTaskListWidget extends StatefulWidget {
   var subTasks;
@@ -95,7 +96,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: ListTile(
@@ -170,7 +171,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                 backgroundColor: Color(AppColors.secondaryButton),
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
               ),
               onPressed: () {

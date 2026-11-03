@@ -5,6 +5,7 @@ import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PersonalityTestScreen extends StatefulWidget {
   const PersonalityTestScreen({super.key});
@@ -219,7 +220,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
               padding: const EdgeInsets.only(bottom: 12),
               child: InkWell(
                 onTap: () => _answerQuestion(index),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -227,7 +228,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
                     color: answers[currentQuestionIndex] == index
                         ? Color(AppColors.buttons).withValues(alpha: 0.1)
                         : Color(AppColors.disableButton),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                     border: Border.all(
                       color: answers[currentQuestionIndex] == index
                           ? Color(AppColors.buttons)
@@ -316,7 +317,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
                 foregroundColor: Color(AppColors.background),
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
               ),
               child: Text(

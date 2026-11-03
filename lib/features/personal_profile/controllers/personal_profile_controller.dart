@@ -29,6 +29,7 @@ import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/features/personal_profile/data/repo/personal_profile_repo.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PersonalProfileController extends ChangeNotifier {
   bool isLoading = false;
@@ -256,13 +257,12 @@ class PersonalProfileController extends ChangeNotifier {
     }
   }
 
-
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(AppRadius.lg),
+              topRight: Radius.circular(AppRadius.lg),
             ),
           ),
           backgroundColor: Colors.white,
@@ -422,7 +422,7 @@ class PersonalProfileController extends ChangeNotifier {
                   width: AppSizes.s200,
                   height: AppSizes.s200,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppSizes.s10),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     child: QrImageView(
                       data: serial,
                       version: QrVersions.auto,
@@ -902,7 +902,7 @@ class PersonalProfileController extends ChangeNotifier {
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               backgroundColor: Colors.white,
               insetPadding: const EdgeInsets.all(AppSizes.s16),
@@ -1052,7 +1052,7 @@ class PersonalProfileController extends ChangeNotifier {
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               backgroundColor: Colors.white,
               insetPadding: const EdgeInsets.all(AppSizes.s16),

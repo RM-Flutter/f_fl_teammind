@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/features/more/language_settings/controllers/language_controller.dart';
 
 import 'package:app_test/core/constants/user_consts.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class LangSettingScreens extends StatefulWidget {
   @override
@@ -150,7 +150,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                           //       alignment: Alignment.center,
                           //       decoration: BoxDecoration(
                           //         color: Color(AppColors.secondaryButton),
-                          //         borderRadius: BorderRadius.circular(50),
+                          //         borderRadius: BorderRadius.circular(AppRadius.pill),
                           //       ),
                           //       padding: const EdgeInsets.symmetric(horizontal: 40),
                           //       child: Row(

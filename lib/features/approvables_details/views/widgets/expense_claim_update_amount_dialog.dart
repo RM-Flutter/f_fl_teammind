@@ -10,6 +10,7 @@ import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/expense_claim_requests/shared/repos/expense_claim_repo.dart';
 import '../../cubit/approvable_details_cubit.dart';
 import '../../data/models/approvable_details_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ExpenseClaimUpdateAmountDialog {
   static void show(
@@ -41,8 +42,8 @@ class ExpenseClaimUpdateAmountDialog {
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
+                  topLeft: Radius.circular(AppRadius.xl),
+                  topRight: Radius.circular(AppRadius.xl),
                 ),
               ),
               child: Column(
@@ -57,7 +58,7 @@ class ExpenseClaimUpdateAmountDialog {
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                       ),
                     ),
                   ),
@@ -118,11 +119,11 @@ class ExpenseClaimUpdateAmountDialog {
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         borderSide: BorderSide(color: Color(AppColors.buttons), width: 2),
                       ),
                     ),

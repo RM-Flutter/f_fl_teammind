@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/alert_service/custom_alert.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class UpdateCompanyInfoScreen extends StatefulWidget {
   final Map<String, dynamic> company;
@@ -460,7 +461,6 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
     }
   }
 
-
   Future<void> _save() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
@@ -571,7 +571,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
             decoration: InputDecoration(
               hintText: hint,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
           ),
@@ -600,7 +600,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             nameKey: 'title',
             hintText: AppStrings.selectCountry.tr(),
             hintStyle: TextStyle(color: Colors.grey.shade600),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             borderSide: const BorderSide(color: Colors.black),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onChanged: (value) {
@@ -646,7 +646,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             nameKey: 'title',
             hintText: AppStrings.selectStateProvince.tr(),
             hintStyle: TextStyle(color: Colors.grey.shade600),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             borderSide: const BorderSide(color: Colors.black),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onChanged: (value) {
@@ -666,7 +666,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
-        borderRadius: BorderRadius.circular(AppSizes.s30),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
       ),
       height: AppSizes.s55,
       alignment: Alignment.centerLeft,
@@ -709,7 +709,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             nameKey: 'title',
             hintText: AppStrings.selectCity.tr(),
             hintStyle: TextStyle(color: Colors.grey.shade600),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             borderSide: const BorderSide(color: Colors.black),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onChanged: (value) {
@@ -748,7 +748,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectName.tr(),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
               ),
             ),
             const SizedBox(height: 12),
@@ -758,7 +758,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectDescription.tr(),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
               ),
               maxLines: 2,
             ),
@@ -769,7 +769,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectLink.tr(),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
               ),
               keyboardType: TextInputType.url,
             ),
@@ -874,7 +874,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
                                 labelText: '${AppStrings.phone.tr()} ${i + 2}',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
                               ),
                             ),
                           ),
@@ -907,7 +907,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                 labelText: '${AppStrings.website.tr()} / URL ${i + 1}',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.black)),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
                               ),
                             ),
                           ),
@@ -964,7 +964,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   border: Border.all(color: Colors.black12),
                                   color: Colors.grey.shade200,
                                 ),
@@ -1010,7 +1010,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   border: Border.all(color: Colors.black12),
                                   color: Colors.grey.shade200,
                                 ),
@@ -1050,7 +1050,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                     style: FilledButton.styleFrom(
                       backgroundColor: Color(AppColors.secondaryButton),
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
                     ),
                     child: _isSubmitting
                         ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))

@@ -8,6 +8,7 @@ import 'package:app_test/core/widgets/all_text_field.dart';
 import '../../../../../authentication/shared/widgets/phone_number_field.dart';
 import '../../../../controllers/points_controller/points_controller.dart';
 import 'widgets/bottom_sheet_external_success.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RayaAddDataBottomsheet extends StatelessWidget {
   var id;
@@ -50,7 +51,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
               onTap: () {},
               child: Container(
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(35.0)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
                   gradient: LinearGradient(
                     colors: [Color(0xffFDFDFD), Color(0xffF4F7FF)],
                     begin: Alignment.topRight,
@@ -69,7 +70,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                           height: 5,
                           width: 63,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
                             color: const Color(0xffB9C0C9),
                           ),
                         ),
@@ -117,7 +118,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                                 width: 225,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
+                                    borderRadius: BorderRadius.circular(AppRadius.pill),
                                     color: const Color(0xff0D3B6F)),
                                 child: Text(
                                   AppStrings.send.tr().toUpperCase(),

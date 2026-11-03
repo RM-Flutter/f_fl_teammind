@@ -26,6 +26,7 @@ import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_p
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/utils/gradient_bg_image.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class NotificationScreen extends StatefulWidget {
   final bool viewArrow;
@@ -188,7 +189,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(AppSizes.s15),
+                                  borderRadius: BorderRadius.circular(AppRadius.md),
                                 ),
                                 height: 100,
                               ),
@@ -231,7 +232,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               foregroundColor: Colors.white,
                               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(AppRadius.xl),
                               ),
                             ),
                             child: Text(

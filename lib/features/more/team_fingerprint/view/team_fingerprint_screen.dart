@@ -18,8 +18,7 @@ import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class TeamFingerprintScreen extends StatefulWidget {
   final String? empId;
@@ -124,7 +123,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
           vertical: AppSizes.s12, horizontal: AppSizes.s10),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.s8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(color: Colors.grey.withOpacity(0.1))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -13,6 +13,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/features/complaints/data/models/get_one_request_model.dart';
 import 'package:app_test/features/complaints/shared/widgets/success_send_complain.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ComplaintsController extends ChangeNotifier {
  bool isGetRequestLoading = false;
@@ -519,13 +520,12 @@ class ComplaintsController extends ChangeNotifier {
   }
  }
 
-
  Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
    showModalBottomSheet<void>(
      shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-       topLeft: Radius.circular(20.0),
-       topRight: Radius.circular(20.0),
+       topLeft: Radius.circular(AppRadius.lg),
+       topRight: Radius.circular(AppRadius.lg),
       ),
      ),
      backgroundColor: Colors.white,

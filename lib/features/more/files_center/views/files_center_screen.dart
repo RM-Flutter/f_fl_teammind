@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FilesCenterScreen extends StatefulWidget {
   const FilesCenterScreen({super.key});
@@ -99,7 +100,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
             return Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
               ),
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -108,7 +109,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                   Container(
                     width: 40, height: 4,
                     margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(AppRadius.xs)),
                   ),
                   Text(AppStrings.filter.tr(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 20),
@@ -124,7 +125,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
@@ -152,7 +153,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
@@ -178,7 +179,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(AppColors.buttons),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                       ),
                       onPressed: () {
                         viewModel.selectedStatus = tempSelectedStatus;
@@ -322,7 +323,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
     
     return InkWell(
       onTap: isDownloading ? null : () => _downloadFile(file),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       child: Stack(
         children: [
           Container(
@@ -330,7 +331,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: Colors.grey[300]!),
               boxShadow: [
                 BoxShadow(
@@ -348,10 +349,10 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                   height: 80,
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                     child: isImage && imageUrl != null && imageUrl.isNotEmpty
                         ? Image.network(
                             imageUrl,
@@ -395,7 +396,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                                 : file.status == 'private' 
                                   ? Colors.red.withValues(alpha: 0.1) 
                                   : Colors.green.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(AppRadius.xs),
                           ),
                           child: Text(
                             file.status!.tr().toUpperCase(),
@@ -465,7 +466,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.8),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Center(
                   child: Column(
@@ -561,7 +562,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                   ),
                   const SizedBox(width: 8),
                   InkWell(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     onTap: _showFilterBottomSheet,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -574,7 +575,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                     ),
                   ),
                   InkWell(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     onTap: () {
                       _searchController.clear();
                       viewModel.clearFilters();

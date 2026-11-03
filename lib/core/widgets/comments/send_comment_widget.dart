@@ -13,6 +13,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SendCommentWidget extends StatefulWidget {
   final String id;
@@ -232,7 +233,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                   border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
                 ),
                 child: Row(
@@ -374,7 +375,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                             slug: widget.slug.toString());
                       }
                     },
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(AppRadius.xl),
                     child: Center(
                       child: (value.isAddCommentLoading == false)
                           ? const Icon(Icons.send_rounded, color: Colors.white, size: 22) // Paper plane icon

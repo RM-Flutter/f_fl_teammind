@@ -11,6 +11,7 @@ import 'package:app_test/core/widgets/searchable_dropdown_sheet.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/filter_controller.dart';
 import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SharedListFilterWidget extends StatefulWidget {
   final bool showEmployee;
@@ -144,7 +145,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
               ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
                     color: Color(AppColors.background),
                   ),
                   width: double.infinity,
@@ -160,7 +161,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                             height: 5,
                             decoration: BoxDecoration(
                                 color: Color(AppColors.disableButton),
-                                borderRadius: BorderRadius.circular(100)),
+                                borderRadius: BorderRadius.circular(AppRadius.pill)),
                           ),
                         ),
                         SizedBox(height: 10),
@@ -190,7 +191,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   hintText: AppStrings.department.tr(),
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   height: 65,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                   fieldSuffixIcon: InkWell(
@@ -220,7 +221,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   hintText: AppStrings.employeeName.tr(),
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   height: 65,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                   fieldSuffixIcon: InkWell(
@@ -250,7 +251,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   hintText: AppStrings.status.tr(),
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   height: 65,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                   fieldSuffixIcon: InkWell(
@@ -294,15 +295,15 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                             onPressed: () => _selectDateRange(context),
                                           ),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(AppRadius.sm),
                                       borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(AppRadius.sm),
                                       borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(AppRadius.sm),
                                       borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                     ),
                                   ),
@@ -324,7 +325,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                         color: Color(AppColors.secondaryButton),
-                                        borderRadius: BorderRadius.circular(50),
+                                        borderRadius: BorderRadius.circular(AppRadius.pill),
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 40),
                                       child: Text(
@@ -351,7 +352,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                         color: Color(AppColors.background),
-                                        borderRadius: BorderRadius.circular(50),
+                                        borderRadius: BorderRadius.circular(AppRadius.pill),
                                         border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 20),

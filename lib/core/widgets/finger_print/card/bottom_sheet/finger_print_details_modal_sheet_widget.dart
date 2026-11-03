@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FingerprintDetailsModalSheet extends StatelessWidget {
   final FingerPrintModel fingerprint;
@@ -40,7 +41,7 @@ class FingerprintDetailsModalSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSizes.s12),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               color: Color(AppColors.buttons),
             ),
             child: Center(
@@ -183,7 +184,7 @@ class _FingerprintDatetimeCardWidgetState
       margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.05),
-        borderRadius: BorderRadius.circular(AppSizes.s10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

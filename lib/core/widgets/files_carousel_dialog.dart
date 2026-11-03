@@ -3,6 +3,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// Shows [urls] in a dialog with a horizontally scrollable carousel (current file centered and
 /// enlarged). Each file has its own download button that calls [onDownload].
@@ -22,7 +23,7 @@ void showFilesCarouselDialog({
     builder: (ctx) => Dialog(
       backgroundColor: Colors.white,
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
       child: StatefulBuilder(
         builder: (ctx, setDialogState) => Padding(
           padding: const EdgeInsets.fromLTRB(0, 8, 0, 20),
@@ -74,7 +75,7 @@ void showFilesCarouselDialog({
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade50,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppRadius.lg),
                             border: Border.all(
                               color: isCurrent
                                   ? mainColor
@@ -95,7 +96,7 @@ void showFilesCarouselDialog({
                             children: [
                               Expanded(
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppRadius.md),
                                   child: isImage
                                       ? Image.network(
                                           url,
@@ -142,7 +143,7 @@ void showFilesCarouselDialog({
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12)),
+                                            BorderRadius.circular(AppRadius.md)),
                                   ),
                                   onPressed: () =>
                                       onDownload(url, fileName),
@@ -178,7 +179,7 @@ void showFilesCarouselDialog({
                         color: i == current
                             ? mainColor
                             : Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                       ),
                     ),
                   ),

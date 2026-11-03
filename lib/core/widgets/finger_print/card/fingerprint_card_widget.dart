@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import 'bottom_sheet/finger_print_details_modal_sheet_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FingerprintCard extends StatelessWidget {
   final FingerPrintModel fingerprint;
@@ -56,7 +57,7 @@ class FingerprintCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppSizes.s8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSizes.s12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           color: Colors.white,
             boxShadow: [
               BoxShadow(
@@ -77,7 +78,7 @@ class FingerprintCard extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSizes.s4),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons),
-                  borderRadius: BorderRadius.circular(AppSizes.s8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

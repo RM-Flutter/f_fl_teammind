@@ -5,6 +5,7 @@ import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_strings.dart';
 import '../services/localization_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// دروب داون مع سيرش — يفتح bottom sheet فيه حقل بحث وقائمة تدعم الاختيار المتعدد (Checkboxes).
 class MultiSearchableDropdownSheet extends StatefulWidget {
@@ -89,13 +90,13 @@ class _MultiSearchableDropdownSheetState extends State<MultiSearchableDropdownSh
 
     return InkWell(
       onTap: () => _showSelectionSheet(context),
-      borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
+      borderRadius: widget.borderRadius ?? BorderRadius.circular(AppRadius.sm),
       child: Container(
         padding: widget.contentPadding ??
             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: theme.inputDecorationTheme.fillColor ?? Colors.transparent,
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(AppRadius.sm),
           border: Border.all(
             color: widget.borderSide?.color ?? Colors.grey.shade400,
             width: widget.borderSide?.width ?? 1.0,
@@ -201,7 +202,7 @@ class _MultiSelectionSheetContentState
       builder: (_, controller) {
         return Material(
           color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -212,7 +213,7 @@ class _MultiSelectionSheetContentState
                 height: 5,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
               ),
               const SizedBox(height: 16),
@@ -226,15 +227,15 @@ class _MultiSelectionSheetContentState
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
                       borderSide: BorderSide(color: Colors.grey.shade300),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
                       borderSide: BorderSide(color: Colors.grey.shade300),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
                       borderSide: BorderSide(
                         color: Color(AppColors.buttons),
                         width: 1.5,
@@ -315,7 +316,7 @@ class _MultiSelectionSheetContentState
                       backgroundColor: Color(AppColors.buttons),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                     ),
                     onPressed: () => widget.onConfirm(_selected),

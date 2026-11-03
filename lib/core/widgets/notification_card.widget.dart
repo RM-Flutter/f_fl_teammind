@@ -15,6 +15,7 @@ import '../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'cached_network_image_widget.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class NotificationCard extends StatefulWidget {
   final NotificationModel notification;
@@ -51,13 +52,13 @@ class _NotificationCardState extends State<NotificationCard> {
         margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.s15),
+          borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         child: Row(
           children: [
             widget.notification.mainThumbnail!.isNotEmpty
                 ?ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
                   child: CachedNetworkImage(
                               height: AppSizes.s75,
                               width: AppSizes.s75,
@@ -79,7 +80,7 @@ class _NotificationCardState extends State<NotificationCard> {
                     decoration: BoxDecoration(
                       color: Color(AppColors.secondaryButton),
                       borderRadius: const BorderRadius.all(
-                        Radius.circular(AppSizes.s15),
+                        Radius.circular(AppRadius.md),
                       ),
                     ),
                     child: SvgPicture.asset("assets/images/svg/image_holder.svg"),

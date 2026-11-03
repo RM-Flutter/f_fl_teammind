@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class NotificationDetailsLoadingScreen extends StatelessWidget {
   const NotificationDetailsLoadingScreen({super.key});
@@ -77,14 +78,14 @@ class NotificationDetailsLoadingScreen extends StatelessWidget {
                       decoration: ShapeDecoration(
                         color: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppRadius.lg),
                         ),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(63),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
                             child: Container(
                               width: 63,
                               height: 63,

@@ -5,6 +5,7 @@ import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_strings.dart';
 import '../services/localization_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// دروب داون مع سيرش — يفتح bottom sheet فيه حقل بحث وقائمة.
 class SearchableDropdownSheet extends StatefulWidget {
@@ -68,7 +69,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
       builder: (ctx) {
         return DraggableScrollableSheet(
@@ -96,7 +97,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                       height: 4,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                       ),
                     ),
                     Padding(
@@ -109,7 +110,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                           hintText: '${AppStrings.search.tr()}...',
                           prefixIcon: const Icon(Icons.search),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(AppSizes.s15),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -160,7 +161,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
   @override
   Widget build(BuildContext context) {
     final border = OutlineInputBorder(
-      borderRadius: widget.borderRadius ?? BorderRadius.circular(AppSizes.s10),
+      borderRadius: widget.borderRadius ?? BorderRadius.circular(AppRadius.sm),
       borderSide: widget.borderSide ??
           BorderSide(color: Color(AppColors.border), width: 1.0),
     );

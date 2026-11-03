@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../../core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ServiceCard extends StatelessWidget {
   final String title;
@@ -29,7 +30,7 @@ class ServiceCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: backgroundColor ?? Color(AppColors.secondaryButton),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),

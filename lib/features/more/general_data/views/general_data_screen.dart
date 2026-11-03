@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class GeneralDataScreen extends StatelessWidget {
   GeneralDataScreen({super.key});
@@ -58,7 +59,7 @@ class GeneralDataScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       if(value.dataimage != null) ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                         child: CachedNetworkImage(
                           width: 1.sw,
                           height: 0.225.sh,

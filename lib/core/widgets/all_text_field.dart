@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 Widget defaultTextFormField({
   TextEditingController? controller,
@@ -30,7 +31,7 @@ Widget defaultTextFormField({
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.s8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         side: BorderSide(
           color: borderColor ?? const Color(0xffE3E5E5),
           width: 1.0,
@@ -96,7 +97,7 @@ Widget defaultDropdownField(
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.s10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         side: BorderSide(
           color: borderColor ?? const Color(0xffE3E5E5),
           width: 1.0,
@@ -159,7 +160,7 @@ Widget defaultTextFormFieldPoints( {
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.s8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         side: BorderSide(
           color: borderColor ?? const Color(0xffE3E5E5),
           width: 1.0,
@@ -209,5 +210,4 @@ Widget defaultTextFormFieldPoints( {
     ),
   );
 }
-
 

@@ -5,6 +5,7 @@ import 'package:app_test/features/reports/views/widgets/report_compare_tabs.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class LeaveRequestsReportView extends StatefulWidget {
   final LeaveRequestsReportModel data;
@@ -72,7 +73,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Text(
                   '${activeData.requests.length} ${'requests'.tr()}',
@@ -146,7 +147,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
@@ -203,7 +204,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -362,7 +363,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -408,7 +409,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   border: Border.all(color: statusColor.withOpacity(0.3)),
                 ),
                 child: Text(
@@ -431,7 +432,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: Colors.blueGrey.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FingerprintCardOffline extends StatelessWidget {
   final List? fingerprint;
@@ -41,7 +42,7 @@ class FingerprintCardOffline extends StatelessWidget {
         return Container(
           padding: EdgeInsets.all(AppSizes.s8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSizes.s10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
@@ -63,7 +64,7 @@ class FingerprintCardOffline extends StatelessWidget {
                       vertical: AppSizes.s6, horizontal: AppSizes.s4),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons),
-                    borderRadius: BorderRadius.circular(AppSizes.s8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,

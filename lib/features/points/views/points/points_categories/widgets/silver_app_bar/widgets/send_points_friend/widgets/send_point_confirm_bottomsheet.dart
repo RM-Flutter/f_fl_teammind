@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SendPointConfirmBottomsheet extends StatelessWidget {
   var user;
@@ -55,7 +56,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                   child: Container(
                     decoration: const BoxDecoration(
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(35.0)),
+                      BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
                       gradient: LinearGradient(
                         colors: [Color(0xffFDFDFD), Color(0xffF4F7FF)],
                         begin: Alignment.topRight,
@@ -150,7 +151,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(50),
+                                            BorderRadius.circular(AppRadius.pill),
                                             color: const Color(0xff0D3B6F)),
                                         child: Text(
                                           AppStrings.sendPoints
@@ -180,7 +181,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(50),
+                                            BorderRadius.circular(AppRadius.pill),
                                             color: const Color(0xffA60B0B)),
                                         child: Text(
                                           AppStrings.cancel

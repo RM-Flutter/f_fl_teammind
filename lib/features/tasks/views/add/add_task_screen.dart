@@ -14,6 +14,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/widgets/text_form_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -111,7 +112,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   context: context,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(16)),
+                                        top: Radius.circular(AppRadius.lg)),
                                   ),
                                   builder: (context) {
                                     return StatefulBuilder(
@@ -193,7 +194,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(AppSizes.s10),
+                                        BorderRadius.circular(AppRadius.sm),
                                     side: BorderSide(
                                       color: Color(AppColors.border),
                                       width: 1.0,

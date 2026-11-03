@@ -19,6 +19,7 @@ import '../controllers/expense_claim_list_controller.dart';
 import '../shared/models/expense_claim_model.dart';
 import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ExpenseClaimListScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -324,7 +325,7 @@ class _ScopeSelectorRow extends StatelessWidget {
                     color: isSelected
                         ? Color(AppColors.buttons)
                         : Color(AppColors.cardBackground),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                     border: Border.all(
                       color: isSelected
                           ? Color(AppColors.buttons)

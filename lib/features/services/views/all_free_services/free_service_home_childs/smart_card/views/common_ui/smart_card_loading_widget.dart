@@ -1,7 +1,7 @@
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class SmartCardLoadingWidget extends StatelessWidget {
   const SmartCardLoadingWidget({super.key});
@@ -61,7 +61,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: const Column(
         children: [
@@ -88,7 +88,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey[300]!),
         boxShadow: [
           BoxShadow(

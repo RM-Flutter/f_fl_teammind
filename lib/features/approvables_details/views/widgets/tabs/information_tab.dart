@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class InformationTab extends StatelessWidget {
   final String? createdAt;
@@ -41,7 +42,7 @@ class InformationTab extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -113,7 +114,7 @@ class InformationTab extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
                 child: Row(
@@ -232,7 +233,7 @@ class InformationTab extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: actionColor.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: actionColor.withOpacity(0.2)),
         ),
         child: Row(
@@ -266,7 +267,7 @@ class InformationTab extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: actionColor.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: actionColor.withOpacity(0.2)),
         ),
         child: Row(
@@ -296,7 +297,7 @@ class InformationTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))

@@ -3,6 +3,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FingerprintLoadingScreenWidget extends StatelessWidget {
   const FingerprintLoadingScreenWidget({super.key});
@@ -17,7 +18,7 @@ class FingerprintLoadingScreenWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSizes.s8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.s10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(

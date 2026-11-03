@@ -5,6 +5,7 @@ import 'package:app_test/features/commissions/data/models/commission_model.dart'
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CommissionDetailsModal extends StatelessWidget {
   final CommissionModel commission;
@@ -26,7 +27,7 @@ class CommissionDetailsModal extends StatelessWidget {
             padding: const EdgeInsets.all(AppSizes.s10),
             decoration: BoxDecoration(
               color: Color(AppColors.buttons),
-              borderRadius: BorderRadius.circular(AppSizes.s8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: Center(
               child: Text(

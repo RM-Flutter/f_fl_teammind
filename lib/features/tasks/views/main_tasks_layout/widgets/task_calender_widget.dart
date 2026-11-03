@@ -7,6 +7,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
 import '../../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../controllers/tasks_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class HorizontalCalendar extends StatefulWidget {
   @override
@@ -43,7 +44,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                 width: 50,
                 margin: EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   color: viewModel.selectedIndex == null ? Color(AppColors.buttons) : Colors.white,
                   border: viewModel.selectedIndex == null ? null : Border.all(color: Colors.grey.shade300),
                 ),
@@ -94,7 +95,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                             decoration: BoxDecoration(
                               color: index == viewModel.selectedIndex ? Colors.blue : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
                             child: Column(
                               children: [

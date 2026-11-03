@@ -6,6 +6,7 @@ import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../data/models/tracking_session.model.dart';
 import 'manual_point_tile.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingSessionCard extends StatefulWidget {
   final TrackingSessionModel session;
@@ -40,7 +41,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
       decoration: ShapeDecoration(
         color: Color(AppColors.cardBackground), // 0xFFF1F6FF
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           side: BorderSide(
             color: session.isActive
                 ? const Color(0xff2D6A4F).withOpacity(0.4)
@@ -62,7 +63,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
           // Header
           InkWell(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.sm)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
@@ -104,7 +105,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: session.status.color.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(AppRadius.xs),
                               ),
                               child: Text(
                                 session.status.getLabel(isArabic: isAr),
@@ -200,7 +201,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                       foregroundColor: Color(AppColors.buttons),
                       side: BorderSide(color: Color(AppColors.buttons)),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
@@ -239,7 +240,7 @@ class _SummaryMiniChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: Color(AppColors.border)),
       ),
       child: Row(

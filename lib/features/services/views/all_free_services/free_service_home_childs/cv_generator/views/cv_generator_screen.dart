@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CVGeneratorScreen extends StatefulWidget {
   const CVGeneratorScreen({super.key});
@@ -92,7 +93,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                       foregroundColor: Color(AppColors.secondaryButton),
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     child: Text(
@@ -115,7 +116,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
             child: Container(
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
-                borderRadius: BorderRadius.circular(35)
+                borderRadius: BorderRadius.circular(AppRadius.xl)
               ),
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -148,7 +149,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(AppRadius.xl),
                         ),
                       ),
                       child: Text(

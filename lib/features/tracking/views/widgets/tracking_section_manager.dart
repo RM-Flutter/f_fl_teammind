@@ -10,6 +10,7 @@ import 'cancel_tracking_modal.dart';
 import 'tracking_map_view_dialog.dart';
 import 'tracking_session_card.dart';
 import 'tracking_status_badge.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingSectionManager extends StatefulWidget {
   final dynamic request;
@@ -77,7 +78,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
           decoration: ShapeDecoration(
             color: Color(AppColors.cardBackground), // 0xFFF1F6FF
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               side: BorderSide(color: Color(AppColors.border)),
             ),
           ),
@@ -161,7 +162,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(AppColors.buttons),
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
                     elevation: 0,
                   ),
                   onPressed: _sessions.isEmpty
@@ -235,7 +236,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: Color(AppColors.cardBackground),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: Text(
                     isAr ? 'لا توجد جلسات تتبع مسجلة لهذا الطلب' : 'No tracking legs recorded for this request',
@@ -286,7 +287,7 @@ class _ManagerKpiTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: Color(AppColors.border)),
       ),
       child: Column(

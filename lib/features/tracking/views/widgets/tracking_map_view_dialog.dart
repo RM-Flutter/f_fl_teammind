@@ -6,6 +6,7 @@ import '../../../../core/utils/app_styles.dart';
 import '../../data/dummy/tracking_dummy_data.dart';
 import '../../data/models/tracking_point.model.dart';
 import '../../data/models/tracking_session.model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingMapViewDialog extends StatefulWidget {
   final String title;
@@ -81,9 +82,9 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: SizedBox(
           width: 550,
           height: 600,
@@ -210,7 +211,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.92),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                           boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
                         ),
                         child: Row(
@@ -238,7 +239,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                             boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 8)],
                           ),
                           child: Row(

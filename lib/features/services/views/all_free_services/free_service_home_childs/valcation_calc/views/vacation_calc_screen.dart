@@ -5,6 +5,7 @@ import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class VacationCalcScreen extends StatefulWidget {
   const VacationCalcScreen({super.key});
@@ -203,7 +204,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -236,7 +237,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 0),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: TextField(
                 controller: _daysController,
@@ -263,7 +264,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(AppRadius.xl),
                   ),
                 ),
                 child: Text(
@@ -332,7 +333,7 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

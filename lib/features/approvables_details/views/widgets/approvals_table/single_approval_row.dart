@@ -9,6 +9,7 @@ import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/files_carousel_dialog.dart';
 import '../../../data/models/approvable_details_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SingleApprovalRow extends StatelessWidget {
   final RequiredApprovalModel item;
@@ -153,7 +154,7 @@ class SingleApprovalRow extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
                 color: statusColor.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 border: Border.all(color: statusColor.withOpacity(0.3)),
               ),
               child: Text(
@@ -211,7 +212,7 @@ class SingleApprovalRow extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               border: Border.all(color: Colors.grey.shade200),
             ),
             child: Text(
@@ -228,9 +229,9 @@ class SingleApprovalRow extends StatelessWidget {
           const SizedBox(height: 8),
           Material(
             color: Colors.blue.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             child: InkWell(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               onTap: () => showFilesCarouselDialog(
                 context: context,
                 urls: _attachmentUrls,

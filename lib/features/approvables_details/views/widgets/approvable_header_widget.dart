@@ -7,6 +7,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import '../../data/models/approvable_details_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ApprovableHeaderWidget extends StatelessWidget {
   final ApprovableDetailsModel details;
@@ -53,7 +54,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -112,7 +113,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                   border: Border.all(color: statusColor.withOpacity(0.4)),
                 ),
                 child: Text(

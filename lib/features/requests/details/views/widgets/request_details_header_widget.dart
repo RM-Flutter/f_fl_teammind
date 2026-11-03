@@ -31,6 +31,7 @@ import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/settings_service.dart';
 
 import '../../../../../core/constants/app_constants.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestDetailsHeaderWidget extends StatefulWidget {
   final double? height;
@@ -59,7 +60,6 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
   Future<bool> requestStoragePermission() async {
     return true;
   }
-
 
   /// Get download directory. Uses app-specific directory so no storage permission needed.
   Future<dynamic> _getDownloadDirectory() async {
@@ -276,8 +276,8 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           decoration: BoxDecoration(
             color: Color(AppColors.secondaryButton),
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(28),
-              bottomRight: Radius.circular(28),
+              bottomLeft: Radius.circular(AppRadius.xl),
+              bottomRight: Radius.circular(AppRadius.xl),
             ),
             image: const DecorationImage(
               image: AssetImage("assets/images/request-app-bar.png"),
@@ -392,7 +392,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                       height: 85,
                                       decoration: BoxDecoration(
                                         color: mainColor.withOpacity(.3),
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(AppRadius.sm),
                                       ),
                                       child: Center(
                                         child: RequestsServices.getRequestsStatusIcon(
@@ -717,7 +717,7 @@ class _DownloadProgressDialog extends StatelessWidget {
       canPop: false,
       child: AlertDialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         title: Row(
           children: [
             SizedBox(
@@ -757,7 +757,7 @@ class _DownloadProgressDialog extends StatelessWidget {
                   backgroundColor: Colors.grey.shade200,
                   valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                   minHeight: 8,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -815,7 +815,7 @@ class InfoTileWidget extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 38),
         decoration: BoxDecoration(
             color: isHighLight == true ? _imgColor : effectiveBackground,
-            borderRadius: BorderRadius.circular(10)),
+            borderRadius: BorderRadius.circular(AppRadius.sm)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,

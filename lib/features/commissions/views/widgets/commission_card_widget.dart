@@ -6,6 +6,7 @@ import 'package:app_test/features/commissions/data/models/commission_model.dart'
 import 'package:app_test/features/commissions/views/widgets/commission_details_modal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CommissionCardWidget extends StatelessWidget {
   final CommissionModel commission;
@@ -32,7 +33,7 @@ class CommissionCardWidget extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          borderRadius: BorderRadius.circular(AppSizes.s10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           onTap: () => ModalSheetHelper.showModalSheet(
             context: context,
             viewProfile: false,
@@ -47,7 +48,7 @@ class CommissionCardWidget extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(AppSizes.s10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -157,7 +158,7 @@ class CommissionCardWidget extends StatelessWidget {
                           horizontal: AppSizes.s8, vertical: AppSizes.s4),
                       decoration: BoxDecoration(
                         color: statusColor.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(AppSizes.s20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                       child: Text(
                         commission.statusLabel ?? commission.status ?? '',

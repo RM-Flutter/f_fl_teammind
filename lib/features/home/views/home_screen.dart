@@ -37,6 +37,7 @@ import '../../tasks/views/main_tasks_layout/widgets/task_list_tile_widget.dart';
 import '../../tracking/views/widgets/tracking_home_preview_banner.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -380,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: _isEditMode ? Colors.red.withValues(alpha: 0.1) : Color(AppColors.secondaryButton).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Row(
                     children: [
@@ -438,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Material(
                   elevation: 8,
                   shadowColor: Color(AppColors.shadow).withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(AppSizes.s12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   child: child,
                 );
               },
@@ -734,7 +735,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: BoxDecoration(
                 // color: Color(AppColors.cardBackground),
                 color: Color(AppColors.secondaryButton), // Dark Blue from Figma
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

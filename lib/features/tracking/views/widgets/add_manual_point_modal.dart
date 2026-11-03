@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddManualPointModal extends StatefulWidget {
   final Function(String label) onSubmit;
@@ -67,7 +68,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -80,7 +81,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
               height: 4,
               decoration: BoxDecoration(
                 color: Color(AppColors.divider),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
             ),
           ),
@@ -167,15 +168,15 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
               fillColor: Color(AppColors.cardBackground),
               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 borderSide: BorderSide(color: Color(AppColors.border)),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 borderSide: BorderSide(color: Color(AppColors.border)),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 borderSide: BorderSide(color: Color(AppColors.buttons)),
               ),
             ),
@@ -188,7 +189,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
                     side: BorderSide(color: Color(AppColors.border)),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
@@ -205,7 +206,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(AppColors.buttons),
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
                     elevation: 0,
                   ),
                   onPressed: () => _submit(isAr),

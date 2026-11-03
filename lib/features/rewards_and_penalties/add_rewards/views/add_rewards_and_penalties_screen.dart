@@ -21,6 +21,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/widgets/text_form_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddRewardAndPenaltyScreen extends StatefulWidget {
   const AddRewardAndPenaltyScreen({super.key});
@@ -130,7 +131,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             //Date Field
                             CustomDropdown.search(
                                 selectedValue: viewModel.selectedType,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 borderSide: Theme.of(context)
                                     .inputDecorationTheme
                                     .enabledBorder

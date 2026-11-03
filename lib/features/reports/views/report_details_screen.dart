@@ -15,6 +15,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ReportDetailsScreen extends StatefulWidget {
   final ReportCatalogModel report;
@@ -85,7 +86,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       builder: (ctx) {
         return Material(
           color: Color(AppColors.background),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
           clipBehavior: Clip.antiAlias,
           child: FiltersBottomSheet(
             filtersConfig: widget.report.filtersConfig,

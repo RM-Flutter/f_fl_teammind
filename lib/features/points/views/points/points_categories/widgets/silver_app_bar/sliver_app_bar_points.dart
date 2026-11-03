@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
 
 import '../../../../../controllers/points_controller/points_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SliverAppBarPoints extends StatelessWidget {
   bool arrow = true;
@@ -176,13 +177,13 @@ Widget defaultFillImageAppbar({
     height: containerHeight ?? 212,
     decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(30),
-            bottomLeft: Radius.circular(30))),
+            bottomRight: Radius.circular(AppRadius.xl),
+            bottomLeft: Radius.circular(AppRadius.xl))),
     width: double.infinity,
     child: ClipRRect(
         borderRadius: const BorderRadius.only(
-            bottomRight: Radius.circular(30),
-            bottomLeft: Radius.circular(30)),
+            bottomRight: Radius.circular(AppRadius.xl),
+            bottomLeft: Radius.circular(AppRadius.xl)),
         child: Image.asset(
           "assets/images/png/points_back.png",
           fit: BoxFit.cover,

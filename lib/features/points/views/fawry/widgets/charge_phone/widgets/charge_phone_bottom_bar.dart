@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ChargePhoneBottomBar extends StatelessWidget {
   var serviceId;
@@ -18,7 +19,7 @@ class ChargePhoneBottomBar extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: const Color(0xffFFFFFF),
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(AppRadius.xl),
             boxShadow: [
               BoxShadow(
                   color: const Color(0xff000000).withOpacity(0.1),

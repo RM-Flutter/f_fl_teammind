@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ActiveFiltersRowWidget extends StatelessWidget {
   final String? empName;
@@ -55,7 +56,7 @@ class ActiveFiltersRowWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: Color(AppColors.secondaryButton).withOpacity(0.3)),
       ),
       child: Row(

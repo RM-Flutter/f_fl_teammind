@@ -13,6 +13,7 @@ import '../../../../core/widgets/template_page.widget.dart';
 import '../controllers/overtime_requests_controller.dart';
 import '../../../../core/widgets/searchable_dropdown_sheet.dart';
 import 'package:app_test/features/requests/main_request_layout/controller/filter_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddOvertimeRequestScreen extends StatefulWidget {
   final bool isForEmployee;
@@ -131,7 +132,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                       hintText: AppStrings.employeeName.tr(),
                       hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14),
                       height: 24,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       borderSide: BorderSide(color: Colors.transparent, width: 0.0),
                       contentPadding: EdgeInsets.zero,
                       onChanged: (value) {
@@ -196,7 +197,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
@@ -313,7 +314,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -344,7 +345,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           foregroundColor: Colors.white,
           elevation: 4,
           shadowColor: Color(AppColors.buttons).withOpacity(0.3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
         ),
         child: provider.isActionLoading
             ? const CircularProgressIndicator(color: Colors.white)

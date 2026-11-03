@@ -16,6 +16,7 @@ import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FreeServicesHeaderWidget extends StatelessWidget {
   final bool isExpanded;
@@ -56,8 +57,8 @@ class FreeServicesHeaderWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: isExpanded
             ? const BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl),
               )
             : null,
       ),
@@ -67,8 +68,8 @@ class FreeServicesHeaderWidget extends StatelessWidget {
           ClipRRect(
             borderRadius: isExpanded
                 ? const BorderRadius.only(
-                    bottomLeft: Radius.circular(AppSizes.s32),
-                    bottomRight: Radius.circular(AppSizes.s32),
+                    bottomLeft: Radius.circular(AppRadius.xl),
+                    bottomRight: Radius.circular(AppRadius.xl),
                   )
                 : BorderRadius.zero,
             child: Image.asset(
@@ -235,7 +236,7 @@ class FreeServicesHeaderWidget extends StatelessWidget {
                                   backgroundColor: Colors.white.withValues(alpha: 0.2),
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(AppRadius.lg),
                                   ),
                                 ),
                               ),

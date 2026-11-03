@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../core/widgets/text_form_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ManagementResponseModal extends StatefulWidget {
   final String requestId;
@@ -35,7 +36,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
                   color: const Color(AppColors.buttons),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Text(
                   "HASSAN RAMY ASKS YOU TO CANCEL THIS REQUEST",
@@ -63,7 +64,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F3F3),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -115,15 +116,15 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   fillColor: const Color(0xFFF3F3F3),
                   contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     borderSide: BorderSide.none,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     borderSide: BorderSide.none,
                   ),
                 ),

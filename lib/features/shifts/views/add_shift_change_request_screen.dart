@@ -12,6 +12,7 @@ import '../../../core/utils/app_styles.dart';
 import '../../../core/widgets/template_page.widget.dart';
 import '../controllers/shift_change_controller.dart';
 import '../models/shift_change_request_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddShiftChangeRequestScreen extends StatefulWidget {
   const AddShiftChangeRequestScreen({super.key});
@@ -337,7 +338,7 @@ class _AddShiftChangeRequestScreenState
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                     border: Border.all(color: Colors.grey.shade200),
                     boxShadow: [
                       BoxShadow(
@@ -386,7 +387,7 @@ class _AddShiftChangeRequestScreenState
                       elevation: 4,
                       shadowColor: Color(AppColors.buttons).withOpacity(0.3),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                     ),
                     child: provider.isActionLoading
@@ -457,7 +458,7 @@ class _AddShiftChangeRequestScreenState
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: Text(
@@ -532,7 +533,7 @@ class _AddShiftChangeRequestScreenState
                 color: isSelected
                     ? Color(AppColors.buttons).withOpacity(0.1)
                     : Colors.white,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 border: Border.all(
                   color: isSelected
                       ? Color(AppColors.buttons)
@@ -628,7 +629,7 @@ class _AddShiftChangeRequestScreenState
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.06),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Color(AppColors.buttons).withOpacity(0.25)),
       ),
       child: Column(
@@ -663,7 +664,7 @@ class _AddShiftChangeRequestScreenState
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFFFFEBEE),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.red.shade300),
       ),
       child: Row(

@@ -11,6 +11,7 @@ import 'add_manual_point_modal.dart';
 import 'tracking_map_view_dialog.dart';
 import 'tracking_session_card.dart';
 import 'tracking_status_badge.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingSectionEmployee extends StatefulWidget {
   final dynamic request;
@@ -206,7 +207,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
           decoration: ShapeDecoration(
             color: Color(AppColors.cardBackground), // 0xFFF1F6FF
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               side: BorderSide(color: Color(AppColors.border)),
             ),
           ),
@@ -253,12 +254,12 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
               if (_unuploadedCount > 0) ...[
                 InkWell(
                   onTap: _syncUnuploaded,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: Color(AppColors.warningYellow).withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       border: Border.all(color: Color(AppColors.warningYellow).withOpacity(0.4)),
                     ),
                     child: Row(
@@ -301,7 +302,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff2D6A4F), // Green
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
                           elevation: 0,
                         ),
                         onPressed: widget.isDateMatched ? _startTracking : null,
@@ -323,7 +324,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(AppColors.buttons),
                           padding: const EdgeInsets.symmetric(vertical: 11),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
                           elevation: 0,
                         ),
                         onPressed: _addManualPoint,
@@ -343,7 +344,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(AppColors.failureRed),
                           padding: const EdgeInsets.symmetric(vertical: 11),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
                           elevation: 0,
                         ),
                         onPressed: _stopTracking,
@@ -382,7 +383,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                 decoration: BoxDecoration(
                   color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Text(
                   '${_sessions.length}',
@@ -421,7 +422,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: Color(AppColors.cardBackground),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
                   child: Text(
                     isAr

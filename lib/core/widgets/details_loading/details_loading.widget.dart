@@ -1,6 +1,7 @@
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DetailsLoadingWidget extends StatelessWidget {
   const DetailsLoadingWidget({super.key});
@@ -14,7 +15,7 @@ class DetailsLoadingWidget extends StatelessWidget {
           gapH12,
           Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.s30),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
               ),
               clipBehavior: Clip.antiAlias,
               height: AppSizes.s64,
@@ -26,7 +27,7 @@ class DetailsLoadingWidget extends StatelessWidget {
                   height: AppSizes.s40,
                   margin: const EdgeInsets.only(bottom: AppSizes.s12),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppSizes.s8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       border: Border.all(color: Colors.grey.withOpacity(0.1))),
                   child: const ShimmerAnimatedLoading()))
         ],

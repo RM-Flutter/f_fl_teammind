@@ -15,6 +15,7 @@ import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/comments/comments_widget.dart';
 import '../../../../core/widgets/comments/logic/controller.dart';
 import '../models/daily_report_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DailyReportDetailsScreen extends StatefulWidget {
   final DailyReportModel report;
@@ -134,8 +135,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          bottomLeft: Radius.circular(AppRadius.xl),
+          bottomRight: Radius.circular(AppRadius.xl),
         ),
         boxShadow: [
           BoxShadow(
@@ -205,7 +206,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(AppRadius.xl),
                     border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
                   ),
                   child: Row(
@@ -374,7 +375,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: Colors.grey.shade100, width: 1.5),
         boxShadow: [
           BoxShadow(
@@ -385,7 +386,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -406,7 +407,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: bgColor,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
                             ),
                             child: Icon(icon, size: 18, color: iconColor),
                           ),
@@ -450,7 +451,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -470,7 +471,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
                   child: Icon(Icons.attach_file_rounded, size: 22, color: Color(AppColors.buttons)),
                 ),
@@ -595,13 +596,13 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                               tag: 'image_${attachment.id}',
                               child: Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(AppRadius.lg),
                                   boxShadow: [
                                     BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
                                   ],
                                 ),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(AppRadius.lg),
                                   child: CachedNetworkImage(
                                     imageUrl: thumbUrl,
                                     fit: BoxFit.cover,
@@ -661,7 +662,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: const Color(0xFFF9FAFB),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppRadius.lg),
                           border: Border.all(color: Colors.grey.shade200, width: 1.5),
                         ),
                         child: Column(

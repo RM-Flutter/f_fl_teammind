@@ -11,6 +11,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CommentsWidget extends StatefulWidget {
   final List<dynamic>? comments;
@@ -106,7 +107,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         side: BorderSide(
                           color: Colors.grey.withOpacity(0.1),
                           width: 1,
@@ -134,7 +135,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                             ),
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
                             child: kIsWeb ? Image.network(comments[index]['user']['avatar'] ?? "", width: 50, height: 50, fit: BoxFit.cover, errorBuilder: (c,e,s) => const Icon(Icons.image_not_supported_outlined, size: 24, color: Colors.grey)) : CachedNetworkImage(
                               width: 50,
                               height: 50,
@@ -184,13 +185,13 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                     height: 100,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(AppRadius.sm),
                                       border: Border.all(
                                           color: Color(AppColors.buttons).withOpacity(0.2),
                                           width: 1),
                                     ),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(AppRadius.sm),
                                       child: GestureDetector(
                                         onTap: () {
                                           Navigator.push(
@@ -281,7 +282,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     width: MediaQuery.sizeOf(context).width * 0.3,
                     decoration: BoxDecoration(
                         color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: BorderRadius.circular(AppRadius.pill),
                         border:
                         Border.all(color: Color(AppColors.secondaryButton))),
                     padding: const EdgeInsets.symmetric(horizontal: 40),

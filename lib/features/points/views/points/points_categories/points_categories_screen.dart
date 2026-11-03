@@ -21,6 +21,7 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 import '../../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../../../controllers/points_controller/points_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PointsCategoriesScreen extends StatefulWidget {
   final bool viewArrow;
@@ -171,7 +172,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                                       height: 100, // Adjust height based on your UI
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8), // Adjust as needed
+                                        borderRadius: BorderRadius.circular(AppRadius.sm), // Adjust as needed
                                       ),
                                     ),
                                   ):
@@ -233,7 +234,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             color: Colors.white,
             boxShadow: const [
               BoxShadow(
@@ -246,7 +247,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
           child: Column(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(AppRadius.sm), topRight: Radius.circular(AppRadius.sm)),
                 child:  CachedNetworkImage(
                   height: 135,
                   fit: BoxFit.contain,

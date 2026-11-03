@@ -23,7 +23,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/services/universal_file.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class NotificationProviderModel extends ChangeNotifier {
   bool isLoading = false;
@@ -550,13 +550,12 @@ class NotificationProviderModel extends ChangeNotifier {
     }
   }
 
-
   Future<void> getImage(context,{image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(AppRadius.lg),
+              topRight: Radius.circular(AppRadius.lg),
             ),
           ),
           backgroundColor: Colors.white,

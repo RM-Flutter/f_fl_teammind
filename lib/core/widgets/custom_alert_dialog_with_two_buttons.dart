@@ -6,6 +6,7 @@ import '../routing/app_router.dart';
 
 import '../constants/app_sizes.dart';
 import 'custom_elevated_button.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 Future<void> customAlertDialogWithTwoButtons(
   BuildContext context, {
@@ -33,7 +34,7 @@ Future<void> customAlertDialogWithTwoButtons(
     barrierColor: Theme.of(dialogContext).dialogTheme.barrierColor,
     builder: (BuildContext builderContext) {
       return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: Padding(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
   const PayrollsAndPenaltiesRewardsLoadingScreensWidget({super.key});
@@ -18,7 +19,7 @@ class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(
                   vertical: AppSizes.s14, horizontal: AppSizes.s16),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSizes.s10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(

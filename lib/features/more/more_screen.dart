@@ -28,6 +28,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/helpers/package_helper.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -127,8 +128,8 @@ class _MoreScreenState extends State<MoreScreen> {
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(AppRadius.xl),
+                    topRight: Radius.circular(AppRadius.xl),
                   ),
                 ),
               ),
@@ -721,7 +722,7 @@ class _MoreScreenState extends State<MoreScreen> {
             child: Column(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(124),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
                   child: ProfileAvatarMenuWidget(
                     employeeProfileId: gCache?['employee_profile_id'],
                     child: kIsWeb

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import '../../controllers/fawry_controller/fawry_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FawryProviderScreen extends StatefulWidget {
   @override
@@ -77,7 +78,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
                             height: 100, // Adjust height based on your UI
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(8), // Adjust as needed
+                              borderRadius: BorderRadius.circular(AppRadius.sm), // Adjust as needed
                             ),
                           ),
                         ):
@@ -115,7 +116,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.15),
@@ -142,7 +143,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
             Padding(
               padding: EdgeInsets.only(bottom: 20),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 child: CachedNetworkImage(
                   height: 80,
                   fit: BoxFit.contain,

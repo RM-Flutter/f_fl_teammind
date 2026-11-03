@@ -13,6 +13,7 @@ import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 import '../../../../../../../core/services/validation_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PayBillScreen extends StatefulWidget {
   var title;
@@ -120,7 +121,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                 height: 100, // Adjust height based on your UI
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8), // Adjust as needed
+                                  borderRadius: BorderRadius.circular(AppRadius.sm), // Adjust as needed
                                 ),
                               ),
                             )
@@ -128,7 +129,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                               alignment: Alignment.center,
                               padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(AppRadius.xl),
                                 color: const Color(0xffFFFFFF),
                                 boxShadow: [
                                   BoxShadow(
@@ -188,7 +189,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(vertical: 25,horizontal: 15),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
+                            borderRadius: BorderRadius.circular(AppRadius.xl),
                             color: Color(0xffFFFFFF),
                             boxShadow: [
                               BoxShadow(
@@ -276,7 +277,6 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                 ).toStringAsFixed(0)} ج.م",
                               )
 
-
                             ],
                           ),
                         ),
@@ -290,7 +290,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color:const Color(0xffFFFFFF),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                   boxShadow:  [
                     BoxShadow(
                         color:const Color(0xff000000).withOpacity(0.1),

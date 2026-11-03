@@ -13,6 +13,7 @@ import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/utils/styles.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DefaultDetails extends StatelessWidget {
   String? id;
@@ -63,7 +64,7 @@ class DefaultDetails extends StatelessWidget {
                         ),
                         gapH16,
                         if(value.getOneBlogModel!.item!.mainThumbnail != null && value.getOneBlogModel!.item!.mainThumbnail!.isNotEmpty ) ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(AppRadius.xl),
                           child: CachedNetworkImage(
                             width: 1.sw,
                             height: 0.225.sh,

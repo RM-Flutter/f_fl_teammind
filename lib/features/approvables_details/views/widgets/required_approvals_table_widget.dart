@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import '../../data/models/approvable_details_model.dart';
 import 'approvals_table/approval_level_card.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequiredApprovalsTableWidget extends StatelessWidget {
   final List<RequiredApprovalModel> requiredApprovals;
@@ -37,7 +38,7 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),

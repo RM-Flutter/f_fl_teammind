@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/routing/app_router.dart';
 import '../../../../../core/widgets/bookmark_widgets/bookmark_button.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestDetailsAppbarWidget extends StatelessWidget {
   GetOneComplainsRequestModel? getOneRequestModel;
@@ -35,8 +36,8 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
         ),
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(AppSizes.s28),
-          bottomRight: Radius.circular(AppSizes.s28),
+          bottomLeft: Radius.circular(AppRadius.xl),
+          bottomRight: Radius.circular(AppRadius.xl),
         ),
       ),
       child: Center(
@@ -268,7 +269,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../constants/app_design.dart';
 import '../constants/app_sizes.dart';
 
 class CustomElevatedButton extends StatefulWidget {
@@ -9,7 +10,9 @@ class CustomElevatedButton extends StatefulWidget {
   final Widget? titleWidget;
   final double? width;
   final double? height;
+  @Deprecated('All buttons use AppButtonSize.fontSize; this value is ignored.')
   final double? titleSize;
+  @Deprecated('All buttons are pill shaped (AppRadius.pill); this value is ignored.')
   final double? radius;
   final Color? backgroundColor;
   final Color? outlineColor;
@@ -116,8 +119,8 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
           builder: (context, child) {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              width: _isLoading ? AppSizes.s75 : targetWidth,
-              height: widget.height ?? AppSizes.s50,
+              width: _isLoading ? AppButtonSize.height * 1.5 : targetWidth,
+              height: widget.height ?? AppButtonSize.height,
           child: ElevatedButton(
             style: widget.buttonStyle ??
                 ElevatedButton.styleFrom(
@@ -128,15 +131,13 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
                       ? Color(AppColors.buttons) // 👈 Text بلون الـ primary
                       : Colors.white,
                   disabledForegroundColor: Colors.white,
-                  elevation: widget.isOutlined == true ? 0 : 2,
+                  elevation: 0,
+                  padding: AppButtonSize.padding,
                   side: widget.isOutlined == true
-                      ? BorderSide(color: widget.outlineColor ??Color(AppColors.buttons), width: 2)
+                      ? BorderSide(color: widget.outlineColor ?? Color(AppColors.buttons), width: 1.5)
                       : null,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      _isLoading ? AppSizes.s26 : widget.radius ?? AppSizes.s28,
-                    ),
-                  ),
+                  // Same shape for every button in the app
+                  shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
                 ),
             onPressed: widget.isFuture == true
                 ? _isLoading
@@ -155,10 +156,13 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
                     fit: BoxFit.scaleDown,
                     child: Text(
                       widget.title,
-                      style: widget.titleSize == null ?
-                      widget.titleColor != null ? Theme.of(context).textTheme.headlineSmall!.copyWith(color:widget.titleColor):
-                      Theme.of(context).textTheme.headlineSmall!
-                          : Theme.of(context).textTheme.headlineSmall?.copyWith(fontSize: widget.titleSize, color: widget.titleColor ),
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            fontSize: AppButtonSize.fontSize,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.4,
+                            color: widget.titleColor ??
+                                (widget.isOutlined == true ? Color(AppColors.buttons) : null),
+                          ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

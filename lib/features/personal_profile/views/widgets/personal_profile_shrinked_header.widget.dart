@@ -10,6 +10,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import '../../controllers/personal_profile_controller.dart';
 import 'personal_profile_header.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
   const PersonalProfileShrinkedHeaderWidget({super.key});
@@ -35,7 +36,7 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                   Container(
                       decoration: BoxDecoration(
                         color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppSizes.s15),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       child: Center(
                         child: IconButton(
@@ -59,7 +60,7 @@ class PersonalProfileShrinkedHeaderWidget extends StatelessWidget {
                   Container(
                       decoration: BoxDecoration(
                         color: const Color(0xFFA3A3A3).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppSizes.s15),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       child: Center(
                         child: IconButton(

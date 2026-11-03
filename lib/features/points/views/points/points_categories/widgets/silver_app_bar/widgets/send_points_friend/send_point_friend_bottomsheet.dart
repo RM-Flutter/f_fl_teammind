@@ -8,6 +8,7 @@ import 'package:app_test/features/points/views/points/points_categories/widgets/
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SendPointFriendBottomSheet extends StatelessWidget {
    SendPointFriendBottomSheet({super.key});
@@ -41,7 +42,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
               onTap: () {}, // Prevent taps inside from closing the bottom sheet
               child: Container(
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(35.0)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
                   gradient: LinearGradient(
                     colors: [Color(0xffFDFDFD), Color(0xffF4F7FF)],
                     begin: Alignment.topRight,
@@ -58,7 +59,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                         height: 5,
                         width: 63,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
+                          borderRadius: BorderRadius.circular(AppRadius.pill),
                           color: const Color(0xffB9C0C9),
                         ),
                       ),
@@ -103,7 +104,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                               width: 225,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
+                                  borderRadius: BorderRadius.circular(AppRadius.pill),
                                   color: const Color(0xff0D3B6F)),
                               child: Text(
                                 AppStrings.sendPoints.tr().toUpperCase(),

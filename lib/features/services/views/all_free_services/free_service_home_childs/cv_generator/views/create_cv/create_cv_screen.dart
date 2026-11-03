@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateCVScreen extends StatefulWidget {
   const CreateCVScreen({super.key});
@@ -140,7 +141,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
                         foregroundColor: Colors.white,
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(AppRadius.xl),
                         ),
                       ),
                       child: viewModel.isSubmitting
@@ -175,7 +176,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
-        borderRadius: BorderRadius.circular(AppSizes.s30),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
       ),
       height: AppSizes.s55,
       alignment: Alignment.centerLeft,

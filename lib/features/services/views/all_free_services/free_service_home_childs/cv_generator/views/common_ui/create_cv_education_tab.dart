@@ -5,6 +5,7 @@ import '../../../../../../../../core/constants/app_colors.dart';
 import '../../../../../../../../core/constants/app_strings.dart';
 import '../../../../../../../../core/utils/animated_custom_dropdown/custom_dropdown.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateCVEducationTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -100,7 +101,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 labelText: AppStrings.institutionName.tr(),
                 hintText: AppStrings.enterInstitutionName.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -123,7 +124,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 labelText: AppStrings.certificateName.tr(),
                 hintText: AppStrings.enterCertificateName.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -145,7 +146,7 @@ class CreateCVEducationTab extends StatelessWidget {
               selectedValue: selectedCountry,
               nameKey: 'title',
               hintText: AppStrings.selectCountry.tr(),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
@@ -169,7 +170,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 selectedValue: selectedState,
                 nameKey: 'title',
                 hintText: AppStrings.selectStateProvince.tr(),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 borderSide: const BorderSide(color: Colors.black),
                 onChanged: (value) {
                   if (value.isNotEmpty && value['id'] != null) {
@@ -214,7 +215,7 @@ class CreateCVEducationTab extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -259,7 +260,7 @@ class CreateCVEducationTab extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

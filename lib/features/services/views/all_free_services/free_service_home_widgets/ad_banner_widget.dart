@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AdBannerWidget extends StatelessWidget {
   final String? title;
@@ -32,7 +33,7 @@ class AdBannerWidget extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           boxShadow: [
             BoxShadow(
               color: Color(AppColors.secondaryButton).withValues(alpha: 0.3),

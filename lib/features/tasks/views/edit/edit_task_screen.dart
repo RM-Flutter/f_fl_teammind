@@ -14,6 +14,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/widgets/text_form_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class EditTaskScreen extends StatefulWidget {
   var id;
@@ -49,7 +50,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               showModalBottomSheet(
                                 context: context,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
                                 ),
                                 builder: (context) {
                                   return StatefulBuilder(
@@ -170,7 +170,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                               decoration: ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.s10),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                   side: BorderSide(
                                     color :Color(AppColors.border),
                                     width: 1.0,

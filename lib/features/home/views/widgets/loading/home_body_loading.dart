@@ -2,6 +2,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class HomeLoadingPage extends StatelessWidget {
   const HomeLoadingPage({super.key});
@@ -36,7 +37,7 @@ class HomeLoadingPage extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: AppSizes.s16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(AppSizes.s10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,

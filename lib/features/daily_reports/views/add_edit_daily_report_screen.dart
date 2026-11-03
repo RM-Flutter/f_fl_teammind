@@ -14,6 +14,7 @@ import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
 import '../controllers/daily_reports_controller.dart';
 import '../models/daily_report_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AddEditDailyReportScreen extends StatefulWidget {
   final DailyReportModel? report;
@@ -102,7 +103,6 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     bool isEditing = widget.report != null;
@@ -165,7 +165,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(AppRadius.md),
                                     border: Border.all(color: Colors.grey.shade200),
                                   ),
                                   child: Row(
@@ -204,13 +204,13 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                           ],
                           InkWell(
                             onTap: _pickFiles,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                             child: Container(
                               width: double.infinity,
                               padding: EdgeInsets.symmetric(vertical: 16),
                               decoration: BoxDecoration(
                                 color: Color(AppColors.buttons).withOpacity(0.05),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 border: Border.all(color: Color(AppColors.buttons).withOpacity(0.2), style: BorderStyle.solid),
                               ),
                               child: Column(
@@ -256,7 +256,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -277,7 +277,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: iconColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: Icon(icon, size: 20, color: iconColor),
                 ),
@@ -344,7 +344,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
       width: double.infinity,
       height: 55,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.buttons).withOpacity(0.3),
@@ -359,7 +359,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
           backgroundColor: Color(AppColors.buttons),
           foregroundColor: Colors.white,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         ),
         child: provider.isActionLoading
             ? const SizedBox(

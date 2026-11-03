@@ -25,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -225,7 +226,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 40, vertical: 12),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius: BorderRadius.circular(AppRadius.xl),
                                         ),
                                       ),
                                       child: Text(

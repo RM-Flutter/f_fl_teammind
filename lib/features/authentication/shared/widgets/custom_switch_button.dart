@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CustomSwitchButton extends StatefulWidget {
   final bool value;
@@ -95,7 +96,7 @@ class CustomSwitchButtonState extends State<CustomSwitchButton>
             width: widget.width,
             height: widget.height,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24.0),
+              borderRadius: BorderRadius.circular(AppRadius.xl),
               color: ColorTween(
                 begin: effectiveInactiveColor,
                 end: effectiveActiveColor,

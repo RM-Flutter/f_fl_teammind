@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../../core/constants/app_colors.dart';
 import '../../../../../../../../core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateCVContactTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -94,7 +95,7 @@ class CreateCVContactTab extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

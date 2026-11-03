@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 enum AssistantAvatarMode { idle, listening, speaking }
 
@@ -214,8 +215,8 @@ class _AvatarPainter extends CustomPainter {
     canvas.rotate(0.162 + wiggle);
     final body = RRect.fromRectAndCorners(
       const Rect.fromLTRB(-17, -138, 17, 88),
-      topLeft: const Radius.circular(9),
-      topRight: const Radius.circular(9),
+      topLeft: const Radius.circular(AppRadius.sm),
+      topRight: const Radius.circular(AppRadius.sm),
     );
     canvas.drawRRect(body, _white);
     final tip = Path()
@@ -299,8 +300,8 @@ class _AvatarPainter extends CustomPainter {
     final s = _stroke(navy, 21);
     const left = Rect.fromLTRB(132, 244, 244, 326);
     const right = Rect.fromLTRB(284, 244, 400, 326);
-    canvas.drawRRect(RRect.fromRectAndRadius(left, const Radius.circular(18)), s);
-    canvas.drawRRect(RRect.fromRectAndRadius(right, const Radius.circular(18)), s);
+    canvas.drawRRect(RRect.fromRectAndRadius(left, const Radius.circular(AppRadius.lg)), s);
+    canvas.drawRRect(RRect.fromRectAndRadius(right, const Radius.circular(AppRadius.lg)), s);
     canvas.drawLine(const Offset(244, 268), const Offset(284, 268), s); // الجسر
     canvas.drawLine(const Offset(132, 266), const Offset(108, 264), s); // الذراعان
     canvas.drawLine(const Offset(400, 266), const Offset(424, 264), s);

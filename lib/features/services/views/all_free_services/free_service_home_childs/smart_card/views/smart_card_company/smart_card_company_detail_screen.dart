@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SmartCardCompanyDetailScreen extends StatefulWidget {
   final Map<String, dynamic> company;
@@ -67,7 +68,7 @@ class _SmartCardCompanyDetailScreenState
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -138,7 +139,7 @@ class _SmartCardCompanyDetailScreenState
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -218,7 +219,7 @@ class _SmartCardCompanyDetailScreenState
             decoration: BoxDecoration(
               color: Color(AppColors.modalBackground),
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(24)),
+                  const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
             ),
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
             child: Column(
@@ -239,7 +240,7 @@ class _SmartCardCompanyDetailScreenState
                     filled: true,
                     fillColor: Color(AppColors.cardBackground),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       borderSide: const BorderSide(color: Colors.black),
                     ),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -294,7 +295,7 @@ class _SmartCardCompanyDetailScreenState
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -576,21 +577,20 @@ class _SmartCardCompanyDetailScreenState
     );
   }
 
-
   Widget _buildEmployeeCard(Map<String, dynamic> emp,
       {VoidCallback? onTap}) {
     final name =
         emp['name']?.toString() ?? emp['id']?.toString() ?? '';
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: Colors.grey[300]!),
           boxShadow: [
             BoxShadow(

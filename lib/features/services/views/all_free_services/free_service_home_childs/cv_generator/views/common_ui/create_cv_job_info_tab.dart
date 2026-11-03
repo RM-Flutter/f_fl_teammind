@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/alert_service/custom_alert.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CreateCVJobInfoTab extends StatelessWidget {
   final CreateCVViewModel viewModel;
@@ -190,7 +191,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -227,7 +228,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             hintText: AppStrings.selectJob.tr(),
             hintStyle: TextStyle(color: Colors.grey.shade600),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -337,7 +338,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       border: Border.all(color: Colors.black12),
                       color: Colors.grey.shade200,
                     ),
@@ -395,7 +396,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       border: Border.all(color: Colors.black12),
                       color: Colors.grey.shade200,
                     ),
@@ -557,7 +558,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 labelText: AppStrings.companyName.tr(),
                 hintText: AppStrings.companyName.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -580,7 +581,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 labelText: AppStrings.jobTitle.tr(),
                 hintText: AppStrings.enterJobTitle.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -602,7 +603,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               selectedValue: selectedCountry,
               nameKey: 'title',
               hintText: AppStrings.selectCountry.tr(),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
@@ -627,7 +628,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 selectedValue: selectedState,
                 nameKey: 'title',
                 hintText: AppStrings.selectStateProvince.tr(),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 borderSide: const BorderSide(color: Colors.black),
                 onChanged: (value) {
                   if (value.isNotEmpty && value['id'] != null) {
@@ -672,7 +673,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -717,7 +718,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -807,7 +808,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 labelText: AppStrings.projectName.tr(),
                 hintText: AppStrings.enterProjectName.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -828,7 +829,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 labelText: AppStrings.projectDescription.tr(),
                 hintText: AppStrings.enterProjectDescription.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -850,7 +851,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 labelText: AppStrings.projectLink.tr(),
                 hintText: AppStrings.enterProjectLink.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
@@ -946,7 +947,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               selectedValue: selectedLanguage,
               nameKey: 'name',
               hintText: AppStrings.selectLanguage.tr(),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
@@ -964,7 +965,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               selectedValue: selectedLevel,
               nameKey: 'title',
               hintText: AppStrings.selectLevel.tr(),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
@@ -1051,7 +1052,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       height: 32,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                       child: Row(
                         children: [
@@ -1069,7 +1070,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                               decoration: BoxDecoration(
                                 color: !skillLevel.isTextMode ? Color(AppColors.secondaryButton) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(AppRadius.lg),
                               ),
                               child: Text(
                                 AppStrings.menuList.tr(),
@@ -1103,7 +1104,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                               decoration: BoxDecoration(
                                 color: skillLevel.isTextMode ? Color(AppColors.secondaryButton) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(AppRadius.lg),
                               ),
                               child: Text(
                                 AppStrings.textInputMode.tr(),
@@ -1136,7 +1137,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                   labelText: AppStrings.selectSkill.tr(),
                   hintText: AppStrings.enterSkillHint.tr(),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     borderSide: const BorderSide(color: Colors.black),
                   ),
                 ),
@@ -1167,7 +1168,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 selectedValue: selectedSkill,
                 nameKey: 'title',
                 hintText: AppStrings.selectSkill.tr(),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 borderSide: const BorderSide(color: Colors.black),
                 onChanged: (value) {
                   if (value.isNotEmpty && value['id'] != null) {
@@ -1187,7 +1188,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               selectedValue: selectedLevel,
               nameKey: 'title',
               hintText: AppStrings.selectLevel.tr(),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {

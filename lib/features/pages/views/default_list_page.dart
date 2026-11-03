@@ -17,6 +17,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DefaultListPage extends StatefulWidget {
   var type;
@@ -123,7 +124,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
                                   height: 100, // Adjust height based on your UI
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8), // Adjust as needed
+                                    borderRadius: BorderRadius.circular(AppRadius.sm), // Adjust as needed
                                   ),
                                 ),
                               ):
@@ -184,7 +185,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
         padding: EdgeInsets.symmetric(vertical: 0),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
@@ -198,7 +199,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
             children: [
               Expanded(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(AppRadius.sm), topRight: Radius.circular(AppRadius.sm)),
                   child:  CachedNetworkImage(
                     fit: BoxFit.cover,
                     width: double.infinity,

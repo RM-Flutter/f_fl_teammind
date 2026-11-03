@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 Widget defaultTapBarItem({
   required List<String>? items,
@@ -53,7 +54,7 @@ Widget defaultTapBarItem({
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color:  Color(AppColors.secondaryButton),
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(AppRadius.pill),
         ),
         child: SizedBox(
           child: ListView.builder(
@@ -87,7 +88,7 @@ Widget defaultTapBarItem({
                     : itemWidth,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
                   color: (selectIndex == index || selectName == items[index])
                       ?  Color(AppColors.buttons)
                       : Colors.transparent,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ActionErrorBanner extends StatelessWidget {
   final String errorMessage;
@@ -13,7 +14,7 @@ class ActionErrorBanner extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.red.shade50,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(color: Colors.red.shade200),
       ),
       child: Row(

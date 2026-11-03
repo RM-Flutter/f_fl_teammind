@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CompanyStructureNode extends StatelessWidget {
  final CompanyTreeNodeModel data;
@@ -27,7 +28,7 @@ class CompanyStructureNode extends StatelessWidget {
     clipBehavior: Clip.antiAliasWithSaveLayer,
     decoration: BoxDecoration(
      color: isRootNode ? Colors.white : Colors.blue,
-     borderRadius: BorderRadius.circular(AppSizes.s15),
+     borderRadius: BorderRadius.circular(AppRadius.md),
      border: Border.all(color: Colors.black, width: 0.9),
     ),
     alignment: Alignment.center,
@@ -38,7 +39,7 @@ class CompanyStructureNode extends StatelessWidget {
       CircleAvatar(
        radius: 35.0,
        child: ClipRRect(
-        borderRadius: BorderRadius.circular(35),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
         child: CachedNetworkImage(
          imageUrl: data.avatar,
          fit: BoxFit.fill,

@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CustomRequestDetailsButton extends StatelessWidget {
   final String title;
@@ -38,7 +39,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
           disabledForegroundColor: Colors.transparent,
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(AppRadius.xl),
           ),
         ),
         onPressed: onPressed,

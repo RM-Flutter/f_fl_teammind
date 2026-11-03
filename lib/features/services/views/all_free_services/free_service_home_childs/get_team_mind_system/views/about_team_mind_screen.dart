@@ -44,6 +44,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/model/team_page_model.dart';
 import 'widgets/youtube_video_player/youtube_video_player_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AboutTeamMindScreen extends StatefulWidget {
   const AboutTeamMindScreen({super.key});
@@ -218,16 +219,16 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
             decoration: BoxDecoration(
               color: Color(AppColors.secondaryButton),
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(28),
-                bottomRight: Radius.circular(28),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl),
               ),
             ),
             child: Stack(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(28),
-                    bottomRight: Radius.circular(28),
+                    bottomLeft: Radius.circular(AppRadius.xl),
+                    bottomRight: Radius.circular(AppRadius.xl),
                   ),
                   child: Image.asset(
                     "assets/images/request-app-bar.png",
@@ -241,8 +242,8 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                     decoration: BoxDecoration(
                       color: Color(AppColors.secondaryButton).withValues(alpha: 0.9),
                       borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(28),
-                        bottomRight: Radius.circular(28),
+                        bottomLeft: Radius.circular(AppRadius.xl),
+                        bottomRight: Radius.circular(AppRadius.xl),
                       ),
                     ),
                   ),
@@ -341,7 +342,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                               );
                             },
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               child: CachedNetworkImage(
                                 imageUrl: url,
                                 width: 120,
@@ -375,7 +376,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                         );
                       },
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         child: SizedBox(
                           height: 200,
                           width: double.infinity,
@@ -447,7 +448,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(AppRadius.xl),
                               ),
                             ),
                             child: Text(
@@ -465,7 +466,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(AppRadius.xl),
                               ),
                             ),
                             child: Text(

@@ -30,6 +30,7 @@ import '../data/saved_accounts_service.dart';
 import 'package:intl_phone_field/countries.dart' as phone_countries;
 import 'package:app_test/features/personal_profile/data/repo/personal_profile_repo.dart';
 import '../../shared/widgets/verification_tile_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 enum AuthStatus {
   active,
@@ -460,7 +461,7 @@ class AuthenticationController extends ChangeNotifier {
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               backgroundColor: Color(AppColors.background),
               insetPadding: const EdgeInsets.all(AppSizes.s16),
@@ -694,7 +695,7 @@ class AuthenticationController extends ChangeNotifier {
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
               backgroundColor: Color(AppColors.background),
               insetPadding: const EdgeInsets.all(AppSizes.s16),
@@ -1085,7 +1086,7 @@ class AuthenticationController extends ChangeNotifier {
             builder: (context, setState) {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 title: Text(
                   locale.tr(AppStrings.updatePassword).toUpperCase(),

@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class GeneralSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
@@ -317,7 +318,7 @@ class WeekendDisplayWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -350,7 +351,7 @@ class WeekendDisplayWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -393,7 +394,7 @@ class WeekendDisplayWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Color(AppColors.cardBackground),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(color: Color(AppColors.buttons).withOpacity(0.3)),
                   ),
                   child: Text(day.tr().toUpperCase(), style: AppStyles.blackContent(context).copyWith(fontSize: 11)),
@@ -420,7 +421,7 @@ class WeekendDisplayWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.orange.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(color: Colors.orange.withOpacity(0.3)),
                   ),
                   child: Row(
@@ -454,7 +455,7 @@ class WeekendDisplayWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.purple.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(color: Colors.purple.withOpacity(0.2)),
                   ),
                   child: Row(
@@ -521,7 +522,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -586,7 +587,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
                       color: Color(AppColors.cardBackground),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       border: Border.all(
                         color: Color(AppColors.buttons).withOpacity(0.25),
                       ),
@@ -613,7 +614,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                                     horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Colors.orange.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                 ),
                                 child: Text(
                                   "x${shift.financialModifier}",
@@ -630,7 +631,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                                     horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Color(AppColors.buttons).withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(AppRadius.sm),
                                 ),
                                 child: Text(
                                   shift.status!.tr().toUpperCase(),

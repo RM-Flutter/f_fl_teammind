@@ -5,6 +5,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// Wraps the user's avatar. With an employee profile, a tap opens a small menu (personal profile or
 /// employee profile) and another tap, or a tap outside, closes it. Without one there is nothing to
@@ -52,7 +53,7 @@ class ProfileAvatarMenuWidget extends StatelessWidget {
         minimumSize: const WidgetStatePropertyAll(Size(210, 0)),
         padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 6)),
         shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg))),
       ),
       menuChildren: [
         _item(context,
@@ -89,7 +90,7 @@ class ProfileAvatarMenuWidget extends StatelessWidget {
         height: 32,
         decoration: BoxDecoration(
           color: Color(AppColors.buttons).withOpacity(0.10),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         child: Icon(icon, size: 18, color: Color(AppColors.buttons)),
       ),

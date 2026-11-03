@@ -5,6 +5,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/approvables_details/data/models/approvable_details_model.dart';
 import 'package:app_test/features/approvables_details/data/services/approvables_details_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// Shows a bottom sheet with the list of overlapping vacations
 /// for a given approvable request id.
@@ -73,7 +74,7 @@ class _OverlappingVacationsSheetState
       builder: (_, controller) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           children: [
@@ -85,7 +86,7 @@ class _OverlappingVacationsSheetState
                 height: 4,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
               ),
             ),
@@ -100,7 +101,7 @@ class _OverlappingVacationsSheetState
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Color(AppColors.warningYellow).withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: Icon(
                       Icons.people_alt_rounded,
@@ -189,7 +190,7 @@ class _VacationCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
@@ -208,8 +209,8 @@ class _VacationCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: _statusColor,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  bottomLeft: Radius.circular(14),
+                  topLeft: Radius.circular(AppRadius.md),
+                  bottomLeft: Radius.circular(AppRadius.md),
                 ),
               ),
             ),
@@ -226,7 +227,7 @@ class _VacationCard extends StatelessWidget {
                       children: [
                         // Avatar
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(AppRadius.lg),
                           child: item.employeeAvatar?.isNotEmpty == true
                               ? CachedNetworkImage(
                                   imageUrl: item.employeeAvatar!,
@@ -265,7 +266,7 @@ class _VacationCard extends StatelessWidget {
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: _statusColor.withOpacity(0.10),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppRadius.lg),
                           ),
                           child: Text(
                             (item.status ?? '').tr().toUpperCase(),
@@ -401,7 +402,7 @@ class _AvatarPlaceholder extends StatelessWidget {
       height: 36,
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.15),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
       child: Center(
         child: Text(

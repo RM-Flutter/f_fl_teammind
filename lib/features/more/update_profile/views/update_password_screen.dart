@@ -10,6 +10,7 @@ import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
 import 'package:app_test/features/personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
   const UpdatePasswordScreen({super.key});
@@ -106,7 +107,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       color: Color(AppColors.buttons),
-                                      borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(AppRadius.pill),
                                     ),
                                     padding: EdgeInsets.symmetric(horizontal: 40),
                                     child: Row(

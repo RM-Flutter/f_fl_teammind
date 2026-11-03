@@ -5,6 +5,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:app_test/core/constants/app_design.dart';
 
 /// اتجاه النص من حروفه، لا من لغة الواجهة: رد إنجليزي داخل واجهة عربية يُكتب
 /// من اليسار فلا تنتقل علامات الترقيم لبداية السطر.
@@ -24,10 +25,10 @@ class AssistantOpenButton extends StatelessWidget {
       style: FilledButton.styleFrom(
         backgroundColor: const Color(AppColors.brandNavy),
         foregroundColor: Colors.white,
-        minimumSize: const Size(0, 36),
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
+        minimumSize: const Size(0, AppButtonSize.compactHeight),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.s12)),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
         textStyle: AppStyles.whiteContent(context).copyWith(fontSize: 13, fontWeight: FontWeight.w600),
       ),
       icon: const Icon(Icons.arrow_outward_rounded, size: 16),
@@ -56,7 +57,7 @@ class AssistantSuggestionChip extends StatelessWidget {
       avatar: const Icon(Icons.help_outline_rounded, size: 16, color: Color(AppColors.brandBlue)),
       backgroundColor: Colors.white,
       side: BorderSide(color: const Color(AppColors.brandBlue).withValues(alpha: 0.35)),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.s20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ProfileTile extends StatelessWidget {
   final String title;
@@ -37,7 +38,7 @@ class ProfileTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -145,7 +146,7 @@ class ProfileTileEva extends StatelessWidget {
             vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -175,7 +176,7 @@ class ProfileTileEva extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
       backgroundColor: Colors.white,
       builder: (context) {
@@ -195,7 +196,7 @@ class ProfileTileEva extends StatelessWidget {
                  height: 40,
                  decoration: BoxDecoration(
                    color: Color(AppColors.buttons),
-                   borderRadius: BorderRadius.circular(10)
+                   borderRadius: BorderRadius.circular(AppRadius.sm)
                  ),
                  child: Text(
                    DateFormat('MMMM yyyy', LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(createAt)).toString(),
@@ -265,7 +266,7 @@ class ProfileTileNotTap extends StatelessWidget {
           vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -331,7 +332,7 @@ class ProfileTileEvaReq extends StatelessWidget {
             vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -404,7 +405,7 @@ class ProfileTilePay extends StatelessWidget {
             vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),

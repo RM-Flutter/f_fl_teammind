@@ -10,6 +10,7 @@ import 'package:app_test/core/models/operation_result.model.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 abstract class ModalSheetHelper {
   static Future<OperationResult<Map<String, dynamic>>?> showModalSheet(
@@ -27,7 +28,7 @@ abstract class ModalSheetHelper {
         maxWidth: kIsWeb ? 550 : double.infinity,
       ),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.s26)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
       ),
       builder: (BuildContext context) => AnimatedContainer(
         duration: const Duration(milliseconds: 150),
@@ -48,7 +49,7 @@ abstract class ModalSheetHelper {
                   width: AppSizes.s80,
                   decoration: BoxDecoration(
                       color: Color(AppColors.disableButton),
-                      borderRadius: BorderRadius.circular(AppSizes.s4)),
+                      borderRadius: BorderRadius.circular(AppRadius.xs)),
                 ), gapH24,
                 // Modal Sheet title
                 Row(

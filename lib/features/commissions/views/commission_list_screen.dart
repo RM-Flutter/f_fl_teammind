@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CommissionListScreen extends StatefulWidget {
   const CommissionListScreen({super.key});
@@ -234,7 +235,7 @@ class _ActiveFiltersBar extends StatelessWidget {
                     ),
                   // Compact Clear All pill
                   InkWell(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                     onTap: () => controller.clearFilters(context),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -243,7 +244,7 @@ class _ActiveFiltersBar extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.red.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                         border: Border.all(
                           color: Colors.red.withOpacity(0.25),
                         ),
@@ -298,7 +299,7 @@ class _FilterChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
         color: primaryColor.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(
           color: primaryColor.withOpacity(0.25),
         ),
@@ -319,7 +320,7 @@ class _FilterChip extends StatelessWidget {
           const SizedBox(width: 6),
           InkWell(
             onTap: onRemove,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             child: Icon(
               Icons.close_rounded,
               size: 15,
@@ -376,15 +377,15 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
       fillColor: Color(AppColors.inputFill),
       suffixIcon: suffixIcon,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: Color(AppColors.inputBorder)),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: Color(AppColors.inputBorder)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         borderSide: BorderSide(color: Color(AppColors.inputFocusedBorder)),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -396,7 +397,7 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
       ),
       padding: EdgeInsets.fromLTRB(
           24, 16, 24, MediaQuery.of(context).viewInsets.bottom + 24),
@@ -412,7 +413,7 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
                 height: 5,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
               ),
             ),
@@ -442,7 +443,7 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
               isExpanded: true,
               decoration: _fieldDecoration(),
               dropdownColor: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               items: [
                 DropdownMenuItem<String?>(
                   value: null,
@@ -507,7 +508,7 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
                         backgroundColor: Color(AppColors.buttons),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
                       ),
                       onPressed: () => Navigator.pop(context, {
@@ -533,7 +534,7 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
                       foregroundColor: Color(AppColors.secondaryButton),
                       side: BorderSide(color: Color(AppColors.secondaryButton)),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
@@ -587,7 +588,7 @@ class _DatePickerField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           onTap: () async {
             final picked = await showDatePicker(
               context: context,

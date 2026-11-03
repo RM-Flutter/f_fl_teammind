@@ -18,6 +18,7 @@ import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_p
 import 'package:app_test/core/widgets/loading_page.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import '../controller/employees_list_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class EmployeesListScreen extends StatefulWidget {
   const EmployeesListScreen({super.key});
@@ -64,15 +65,15 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                               filled: true,
                               fillColor: Color(AppColors.scaffoldBackGround),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 borderSide: BorderSide.none,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 borderSide: BorderSide.none,
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 borderSide: BorderSide.none,
                               ),
                               suffixIcon: viewModel.searchController.text.isNotEmpty 
@@ -139,7 +140,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                     backgroundColor: Colors.transparent,
                                                     child: Center(
                                                       child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(50),
+                                                        borderRadius: BorderRadius.circular(AppRadius.pill),
                                                         child: CachedNetworkImage(
                                                             imageUrl: employee.avatar!,
                                                             fit: BoxFit.cover,

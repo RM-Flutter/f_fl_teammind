@@ -22,6 +22,7 @@ import '../../salary_advance_requests/shared/models/salary_advance_request_model
 import 'widgets/salary_advance_list_item_widget.dart';
 import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SalaryAdvanceListScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -333,7 +334,7 @@ class _ScopeSelectorRow extends StatelessWidget {
                     color: isSelected
                         ? Color(AppColors.buttons)
                         : Color(AppColors.cardBackground),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                     border: Border.all(
                       color: isSelected
                           ? Color(AppColors.buttons)

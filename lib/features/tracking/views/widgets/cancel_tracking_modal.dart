@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CancelTrackingModal extends StatefulWidget {
   final Function(String scope) onConfirm;
@@ -28,7 +29,7 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
 
     return AlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
       title: Row(
         children: [
           Container(
@@ -120,7 +121,7 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
             backgroundColor: _selectedScope == 'all_sessions'
                 ? Color(AppColors.failureRed)
                 : Color(AppColors.buttons),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
             elevation: 0,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           ),

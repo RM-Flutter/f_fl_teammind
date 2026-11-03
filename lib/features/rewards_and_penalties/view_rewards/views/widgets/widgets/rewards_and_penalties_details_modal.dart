@@ -25,6 +25,7 @@ import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/rewards_and_penalties_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RewardsAndPenaltiesDetailsModal extends StatefulWidget {
   final dynamic rewardAndPenalty;
@@ -245,7 +246,7 @@ class _RewardsAndPenaltiesDetailsModalState
             width: double.infinity,
             padding: EdgeInsets.all(AppSizes.s10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               color: Color(AppColors.buttons),
             ),
             child: Center(
@@ -305,7 +306,7 @@ class _RewardsAndPenaltiesDetailsModalState
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       border: Border.all(color: Colors.grey.shade300),
                     ),
                     child: Row(
@@ -313,7 +314,7 @@ class _RewardsAndPenaltiesDetailsModalState
                         if (file.thumbnail != null &&
                             file.thumbnail!.isNotEmpty)
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(AppRadius.xs),
                             child: Image.network(
                               file.thumbnail!,
                               width: 40,
@@ -383,7 +384,7 @@ class _RewardsAndPenaltiesDetailsModalState
                       foregroundColor: Colors.white,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.s28),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     onPressed: () async {
@@ -421,7 +422,7 @@ class _RewardsAndPenaltiesDetailsModalState
                       foregroundColor: Colors.white,
                       elevation: 2,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.s28),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     onPressed: () async {

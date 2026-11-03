@@ -14,6 +14,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/app_colors.dart';
 import 'custom_alert.dart';
 import '../app_error_reporter.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 enum DialogAnimationTypes { none, feedIn, open, opacity }
 
@@ -232,7 +233,7 @@ abstract class AlertsService {
           key: formKey,
           child: Card(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0)),
+                borderRadius: BorderRadius.circular(AppRadius.xl)),
             color: Color(AppColors.background),
             child: SizedBox(
               width: PlatformIs.mobile ? AppSizes.s320 : AppSizes.s600,
@@ -328,7 +329,7 @@ abstract class AlertsService {
                         height: AppSizes.s60,
                         child: MaterialButton(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50.0)),
+                              borderRadius: BorderRadius.circular(AppRadius.pill)),
                           color: Color(AppColors.background),
                           onPressed: () {
                             Navigator.of(dialogContext).pop(false);
@@ -401,7 +402,7 @@ abstract class AlertsService {
       barrierDismissible: false,
       builder: (ctx) => Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.xl),
         ),
         elevation: 12,
         backgroundColor: Colors.white,
@@ -459,7 +460,7 @@ abstract class AlertsService {
                           side: BorderSide(color: Colors.grey.shade200, width: 1.5),
                           foregroundColor: const Color(0xFF374151), // Dark grey text
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           elevation: 0,
@@ -483,7 +484,7 @@ abstract class AlertsService {
                           elevation: 0,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),

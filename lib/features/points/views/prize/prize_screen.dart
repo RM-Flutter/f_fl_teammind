@@ -18,6 +18,7 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../../controllers/points_controller/points_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;
@@ -159,7 +160,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                     padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(AppSizes.s15),
+                                      borderRadius: BorderRadius.circular(AppRadius.md),
                                     ),
                                     height: 100,
                                   ),
@@ -217,7 +218,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                         horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                     decoration: BoxDecoration(
                                       color:  Color(AppColors.textC5),
-                                      borderRadius: BorderRadius.circular(AppSizes.s15),
+                                      borderRadius: BorderRadius.circular(AppRadius.md),
                                       boxShadow: const [
                                         BoxShadow(
                                             color: Color.fromRGBO(0, 0, 0, 0.05),
@@ -229,7 +230,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                                     child: Column(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(15),
+                                          borderRadius: BorderRadius.circular(AppRadius.md),
                                           child: CachedNetworkImage(
                                               imageUrl: (points.prizes[index]['image'].isNotEmpty)?
                                               points.prizes[index]['image'][0]['file'] : "",

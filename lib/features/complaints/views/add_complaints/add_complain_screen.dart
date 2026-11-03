@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class NewComplainScreen extends StatefulWidget {
   final String? initialSubject;
@@ -203,7 +204,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 11),
                   decoration: BoxDecoration(
                     color: isSelected ? Color(AppColors.buttons) : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
                       color: isSelected ? Color(AppColors.buttons) : const Color(0xffE3E5E5),
                       width: 1.5,
@@ -274,7 +275,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 11),
                   decoration: BoxDecoration(
                     color: isSelected ? Color(AppColors.buttons) : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
                       color: isSelected ? Color(AppColors.buttons) : const Color(0xffE3E5E5),
                       width: 1.5,
@@ -323,7 +324,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           border: Border.all(color: const Color(0xffE3E5E5)),
         ),
         child: const Center(
@@ -438,7 +439,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
         decoration: ShapeDecoration(
           color: Color(AppColors.background),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             side: BorderSide(
               color: Color(AppColors.border),
               width: 1.0,
@@ -515,7 +516,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
       width: 70,
       height: 70,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
         border: Border.all(
           color: const Color(AppColors.darkBlue),
           width: 1.5,

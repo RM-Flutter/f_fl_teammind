@@ -14,6 +14,7 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
 import '../../features/authentication/shared/widgets/phone_number_field.dart';
+import 'package:app_test/core/constants/app_design.dart';
 void copyToClipboard(BuildContext context, {text}) {
   Clipboard.setData(ClipboardData(text: text));
   AppToast.showToast(
@@ -110,7 +111,7 @@ Future<void> defaultActionBottomSheet2({
                   child: Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(35.0)),
+                          top: Radius.circular(AppRadius.xl)),
                       gradient: LinearGradient(
                         colors: [Color(0xffFDFDFD), Color(0xffF4F7FF)],
                         begin: Alignment.topRight,
@@ -134,7 +135,7 @@ Future<void> defaultActionBottomSheet2({
                             height: 5,
                             width: 63,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(AppRadius.pill),
                               color: const Color(0xffB9C0C9),
                             ),
                           ),
@@ -215,8 +216,7 @@ Future<void> defaultActionBottomSheet2({
                                   color: AppThemeService.colorPalette
                                       .tertiaryColorBackground.color,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(AppRadius.sm),
                                     side: const BorderSide(
                                       color: Color(0xffE3E5E5),
                                       width: 1.0,
@@ -273,8 +273,7 @@ Future<void> defaultActionBottomSheet2({
                                         height: 49,
                                         decoration: BoxDecoration(
                                           color: const Color(0xffE6007E),
-                                          borderRadius: BorderRadius.circular(
-                                              8),
+                                          borderRadius: BorderRadius.circular(AppRadius.sm),
                                         ),
                                       ),
                                     ),
@@ -313,7 +312,7 @@ Future<void> defaultActionBottomSheet2({
                                   width: 225,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(AppRadius.pill),
                                       color: const Color(0xff0D3B6F)),
                                   child: (buttonWidget != null)
                                       ? buttonWidget
@@ -425,12 +424,12 @@ defaultActionBottomSheet(
     showModalBottomSheet(
       context: context!,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
       ),
       builder: (BuildContext context) {
         return Container(
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(35.0)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
               color: Color(0xffFFFFFF)),
           width: double.infinity,
           height: (bottomSheetHeight != null)
@@ -449,7 +448,7 @@ defaultActionBottomSheet(
                   height: 5,
                   width: 63,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
                       color: const Color(0xffB9C0C9)),
                 ),
               ),
@@ -524,7 +523,7 @@ defaultActionBottomSheet(
                               height: 49,
                               decoration: BoxDecoration(
                                 color: const Color(0xFFE93F81),
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(AppRadius.sm),
                               ),
                             ),
                           ),
@@ -550,7 +549,7 @@ defaultActionBottomSheet(
                         decoration: ShapeDecoration(
                           color: AppThemeService.colorPalette.tertiaryColorBackground.color,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSizes.s10),
+                            borderRadius: BorderRadius.circular(AppRadius.sm),
                             side: const BorderSide(
                               color: Color(0xffE3E5E5),
                               width: 1.0,
@@ -585,7 +584,7 @@ defaultActionBottomSheet(
                           width: 225,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(AppRadius.pill),
                               color: Color(AppColors.buttons)),
                           child: (buttonWidget != null)
                               ? buttonWidget
@@ -694,7 +693,7 @@ Future<void> defaultActionBottomSheetPoints({
                   child: Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(35.0)),
+                          top: Radius.circular(AppRadius.xl)),
                       gradient: LinearGradient(
                         colors: [Color(0xffFDFDFD), Color(0xffF4F7FF)],
                         begin: Alignment.topRight,
@@ -717,7 +716,7 @@ Future<void> defaultActionBottomSheetPoints({
                             height: 5,
                             width: 63,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(AppRadius.pill),
                               color: const Color(0xffB9C0C9),
                             ),
                           ),
@@ -798,8 +797,7 @@ Future<void> defaultActionBottomSheetPoints({
                                   color: AppThemeService.colorPalette
                                       .tertiaryColorBackground.color,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        AppSizes.s10),
+                                    borderRadius: BorderRadius.circular(AppRadius.sm),
                                     side: const BorderSide(
                                       color: Color(0xffE3E5E5),
                                       width: 1.0,
@@ -856,8 +854,7 @@ Future<void> defaultActionBottomSheetPoints({
                                         height: 49,
                                         decoration: BoxDecoration(
                                           color: const Color(0xffE6007E),
-                                          borderRadius: BorderRadius.circular(
-                                              8),
+                                          borderRadius: BorderRadius.circular(AppRadius.sm),
                                         ),
                                       ),
                                     ),
@@ -896,7 +893,7 @@ Future<void> defaultActionBottomSheetPoints({
                                   width: 225,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(AppRadius.pill),
                                       color: const Color(0xff0D3B6F)),
                                   child: (buttonWidget != null)
                                       ? buttonWidget

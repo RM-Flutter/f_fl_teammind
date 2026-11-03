@@ -37,6 +37,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'widgets/loading_appbar_loading_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestsScreen extends StatefulWidget {
   final GetRequestsTypes? requestsType;
@@ -195,7 +196,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               vertical: screenHeight * 0.1,
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(35),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                             ),
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
@@ -222,8 +223,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         shape: const RoundedRectangleBorder(
                           borderRadius:
                           BorderRadius.vertical(
-                              top: Radius.circular(
-                                  35)),
+                              top: Radius.circular(AppRadius.xl)),
                         ),
                         builder: (BuildContext context) {
                           return SearchFilterWidget(

@@ -8,6 +8,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class HistoryDropDownWidget extends StatelessWidget {
   var notes;
@@ -33,7 +34,7 @@ class HistoryDropDownWidget extends StatelessWidget {
         bottom: MediaQuery.of(context).viewInsets.bottom, // Push above keyboard
       ),
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(35.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         gradient: LinearGradient(
           colors: [Color(0xffFDFDFD), Color(0xffF4F7FF)],
           begin: Alignment.topRight,
@@ -52,7 +53,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                 height: 5,
                 width: 63,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
                   color: const Color(0xffB9C0C9),
                 ),
               ),
@@ -73,7 +74,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                     decoration: ShapeDecoration(
                       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSizes.s10),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                         side: const BorderSide(
                           color: Color(0xffE3E5E5),
                           width: 1.0,
@@ -101,7 +102,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                             width: 50,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(AppRadius.sm),
                                 color: const Color(0xffE8E8E8)
                             ),
                             child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),

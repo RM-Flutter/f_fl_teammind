@@ -23,6 +23,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import '../../../../../core/widgets/text_form_widget.dart';
 import 'dart:ui' as ui;
+import 'package:app_test/core/constants/app_design.dart';
 
 class SearchFilterWidget extends StatefulWidget {
   BuildContext? contexts;
@@ -206,8 +207,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: isWeb
-                                    ? BorderRadius.circular(35)
-                                    : const BorderRadius.vertical(top: Radius.circular(35)),
+                                    ? BorderRadius.circular(AppRadius.xl)
+                                    : const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
                                 color: Color(AppColors.background)
                             ),
                             width: double.infinity,
@@ -232,7 +233,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                         height: 5,
                                         decoration: BoxDecoration(
                                             color: Color(AppColors.disableButton),
-                                            borderRadius: BorderRadius.circular(100)
+                                            borderRadius: BorderRadius.circular(AppRadius.pill)
                                         ),
                                       ) ,
                                     ),
@@ -265,7 +266,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           hintText: AppStrings.requestType.tr(),
                                           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                           height: 65,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(AppRadius.sm),
                                           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                           fieldSuffixIcon: InkWell(
@@ -338,7 +339,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             hintText: AppStrings.department.tr(),
                                             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                             height: 65,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(AppRadius.sm),
                                             borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                             onChanged: (value){
@@ -371,7 +372,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             hintText: AppStrings.employeeName.tr(),
                                             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                             height: 65,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(AppRadius.sm),
                                             borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                             onChanged: (value){
@@ -391,7 +392,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           hintText: AppStrings.requestTime.tr(),
                                           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                           height: 65,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(AppRadius.sm),
                                           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                           onChanged: (value) =>
@@ -491,7 +492,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.secondaryButton),
-                                                  borderRadius: BorderRadius.circular(50),
+                                                  borderRadius: BorderRadius.circular(AppRadius.pill),
                                                 ),
                                                 padding: const EdgeInsets.symmetric(horizontal: 40),
                                                 child: Text(
@@ -519,7 +520,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.background),
-                                                  borderRadius: BorderRadius.circular(50),
+                                                  borderRadius: BorderRadius.circular(AppRadius.pill),
                                                   border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
                                                 ),
                                                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -565,7 +566,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       padding:const EdgeInsets.symmetric(horizontal: 10,),
       decoration: BoxDecoration(
         color:Color(AppColors.background),
-        borderRadius: BorderRadius.circular(3),
+        borderRadius: BorderRadius.circular(AppRadius.xs),
         border: Border.all(color: Colors.grey.withOpacity(0.3)),
       ),
       child: TextFormField(

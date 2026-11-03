@@ -17,6 +17,7 @@ import 'manager_take_action/action_type_toggle.dart';
 import 'manager_take_action/action_reply_field.dart';
 import 'manager_take_action/action_file_picker.dart';
 import 'manager_take_action/action_error_banner.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ManagerTakeActionModal extends StatefulWidget {
   final ApprovableDetailsModel details;
@@ -133,8 +134,8 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
+              topLeft: Radius.circular(AppRadius.xl),
+              topRight: Radius.circular(AppRadius.xl),
             ),
           ),
           child: SingleChildScrollView(
@@ -215,7 +216,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                     buttonStyle: ElevatedButton.styleFrom(
                       backgroundColor: Color(AppColors.buttons),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     onPressed: () async => await _submitAction(context),

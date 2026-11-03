@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/repos/rewards_and_penalties.service.dart';
 import '../../controllers/rewards_and_penalties_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RewardAndPenaltyCardWidget extends StatelessWidget {
   var rewardAndPenalty;
@@ -53,7 +54,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 vertical: AppSizes.s14, horizontal: AppSizes.s16),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSizes.s10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               color: Colors.white,
               boxShadow: [
                 BoxShadow(

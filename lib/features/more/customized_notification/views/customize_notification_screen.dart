@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
 class CustomizeNotificationScreen extends StatefulWidget {
   const CustomizeNotificationScreen({super.key});
 
@@ -33,7 +34,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
           const SizedBox.shrink() :
           Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
             child: Padding(
               padding: EdgeInsets.all(20.0),
@@ -76,7 +77,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: const Color(0xff0D3B6F),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(AppRadius.pill),
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: Row(

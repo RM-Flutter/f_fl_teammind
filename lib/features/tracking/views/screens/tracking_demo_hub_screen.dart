@@ -13,6 +13,7 @@ import '../widgets/tracking_section_employee.dart';
 import '../widgets/tracking_section_manager.dart';
 import '../widgets/tracking_status_badge.dart';
 import 'live_group_map_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class TrackingDemoHubScreen extends StatefulWidget {
   const TrackingDemoHubScreen({super.key});
@@ -54,8 +55,8 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                 fit: BoxFit.fill,
               ),
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(28),
-                bottomRight: Radius.circular(28),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl),
               ),
             ),
             child: SafeArea(
@@ -112,7 +113,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
                     ),
                     child: TabBar(
                       controller: _tabController,
@@ -121,7 +122,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                       labelPadding: EdgeInsets.zero,
                       indicator: BoxDecoration(
                         color: Color(AppColors.buttons),
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                       labelColor: Colors.white,
                       unselectedLabelColor: Colors.white70,
@@ -221,7 +222,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(AppColors.buttons),
                           minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                         ),
                         onPressed: () {
                           Navigator.of(context).push(
@@ -254,7 +255,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(color: Color(AppColors.border)),
                         ),
                         child: Wrap(
@@ -284,7 +285,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                           border: Border.all(color: Color(AppColors.border)),
                         ),
                         child: TrackingFilterChips(
@@ -310,7 +311,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                             child: OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                                 side: BorderSide(color: Color(AppColors.buttons)),
                               ),
                               onPressed: () {
@@ -339,7 +340,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                             child: OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                                 side: BorderSide(color: Color(AppColors.failureRed)),
                               ),
                               onPressed: () {
@@ -371,7 +372,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                       OutlinedButton.icon(
                         style: OutlinedButton.styleFrom(
                           minimumSize: const Size.fromHeight(44),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                           side: BorderSide(color: Color(AppColors.secondaryButton)),
                         ),
                         onPressed: () {
@@ -425,7 +426,7 @@ class _DemoInfoBanner extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Color(AppColors.buttons).withOpacity(0.3)),
       ),
       child: Row(
@@ -463,7 +464,7 @@ class _DemoInfoBanner extends StatelessWidget {
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               backgroundColor: Color(AppColors.buttons),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
             ),
             child: Text(
               actionLabel,

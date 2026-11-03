@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 enum SuspendedErrorType {
   instanceSuspended,
@@ -124,7 +125,7 @@ class SuspendedScreen extends StatelessWidget {
                           horizontal: AppSizes.s16,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.s12),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
                         textStyle: AppStyles.bodyTextContent(context).copyWith(
                           fontWeight: FontWeight.w600,

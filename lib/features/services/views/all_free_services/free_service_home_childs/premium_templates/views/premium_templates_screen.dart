@@ -24,6 +24,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../core/constants/app_sizes.dart';
 import 'widgets/premium_templates_loading_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PremiumTemplatesScreen extends StatefulWidget {
   const PremiumTemplatesScreen({super.key});
@@ -39,7 +40,6 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
   // Track download progress for each file (fileId -> progress 0.0 to 1.0)
   final Map<int, double> _downloadProgress = {};
   final Map<int, String> _downloadingFileNames = {};
-
 
   @override
   void initState() {
@@ -100,7 +100,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
             return Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
               ),
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -113,7 +113,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(AppRadius.xs),
                     ),
                   ),
                   
@@ -135,7 +135,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                         border: Border.all(color: Colors.grey[300]!),
                       ),
                       child: DropdownButtonHideUnderline(
@@ -173,7 +173,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                       foregroundColor: Colors.white,
                       minimumSize: const Size(150, 45),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
                     ),
                     child: Text(AppStrings.filter.tr(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),),
@@ -410,7 +410,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
     
     return InkWell(
       onTap: isDownloading ? null : () => _downloadFile(file),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       child: Stack(
         children: [
           Container(
@@ -418,7 +418,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: Colors.grey[300]!),
               boxShadow: [
                 BoxShadow(
@@ -436,10 +436,10 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                   height: 80,
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                     child: isImage && imageUrl != null && imageUrl.isNotEmpty
                         ? CachedNetworkImage(
                             imageUrl: imageUrl,
@@ -529,7 +529,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Center(
                   child: Column(

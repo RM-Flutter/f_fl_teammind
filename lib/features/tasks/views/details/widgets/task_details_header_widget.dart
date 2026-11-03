@@ -11,7 +11,7 @@ import '../../../../../core/constants/app_strings.dart';
 import '../../../../../core/routing/app_router.dart';
 import '../../../../../core/services/layout_service.dart';
 import '../../../../../core/widgets/app_bar_with_bookmark.widget.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class TaskDetailsHeaderWidget extends StatelessWidget {
   var taskName;
@@ -48,15 +48,15 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32)),
+            bottomLeft: Radius.circular(AppRadius.xl),
+            bottomRight: Radius.circular(AppRadius.xl)),
       ),
       child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32)),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl)),
             child: Image.asset(
               "assets/images/request-app-bar.png",
               fit: BoxFit.fill,

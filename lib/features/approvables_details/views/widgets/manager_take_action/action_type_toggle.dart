@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ActionTypeToggle extends StatelessWidget {
   final String selectedAction;
@@ -39,7 +40,7 @@ class ActionTypeToggle extends StatelessWidget {
                     color: selectedAction == 'approve'
                         ?  Color(AppColors.successGreen)
                         : const Color(0xFFF3F3F3),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
                       color: selectedAction == 'approve'
                           ?  Color(AppColors.successGreen)
@@ -82,7 +83,7 @@ class ActionTypeToggle extends StatelessWidget {
                     color: selectedAction == 'refuse'
                         ?  Color(AppColors.failureRed)
                         : const Color(0xFFF3F3F3),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(
                       color: selectedAction == 'refuse'
                           ?  Color(AppColors.failureRed)

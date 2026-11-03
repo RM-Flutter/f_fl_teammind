@@ -16,6 +16,7 @@ import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import '../controllers/update_salary_advance_controller.dart';
 import '../shared/models/salary_advance_request_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class UpdateSalaryAdvanceScreen extends StatefulWidget {
   final SalaryAdvanceRequestModel existingRequest;
@@ -75,7 +76,7 @@ class _UpdateSalaryAdvanceScreenState
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Color(AppColors.buttons),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
                             child: Icon(Icons.edit_note_rounded,
                                 color: Colors.white, size: 22),
@@ -145,7 +146,7 @@ class _UpdateSalaryAdvanceScreenState
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Color(AppColors.buttons),
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Color(AppColors.buttons)
@@ -163,7 +164,7 @@ class _UpdateSalaryAdvanceScreenState
                                       EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(14)),
+                                          BorderRadius.circular(AppRadius.md)),
                                 ),
                                 onPressed: () async {
                                   final success =
@@ -219,25 +220,25 @@ class _UpdateSalaryAdvanceScreenState
         filled: true,
         fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide:
               BorderSide(color: Color(AppColors.buttons), width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide:
               BorderSide(color: Color(AppColors.failureRed), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           borderSide:
               BorderSide(color: Color(AppColors.failureRed), width: 2.0),
         ),

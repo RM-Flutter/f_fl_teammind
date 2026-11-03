@@ -57,6 +57,7 @@ import '../../routing/app_router.dart';
 import '../../services/fingerprint_service.dart';
 import 'widgets/qrcode_Scanner_view_widget.dart';
 import 'widgets/liveness_challenge_camera_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class _FaceAnalysisResult {
   const _FaceAnalysisResult({
@@ -174,7 +175,7 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           decoration: BoxDecoration(
             color: Color(AppColors.buttons),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
           child: DefaultTextStyle(
             style: const TextStyle(
@@ -874,7 +875,7 @@ abstract class MainFabServices {
         context: dialogContext,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         builder: (sheetContext) {
           debugPrint("📋 Building instruction sheet UI");
@@ -1298,7 +1299,7 @@ abstract class MainFabServices {
       barrierDismissible: false,
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
         titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         actionsPadding: const EdgeInsets.all(16),
@@ -1365,7 +1366,7 @@ abstract class MainFabServices {
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(45),
               backgroundColor: Color(AppColors.secondaryButton),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
             onPressed: () => Navigator.of(dialogContext).pop(),

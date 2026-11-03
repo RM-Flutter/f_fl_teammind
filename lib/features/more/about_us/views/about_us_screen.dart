@@ -14,6 +14,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../../core/widgets/custom_elevated_button.widget.dart';
 import '../../contact_us/controllers/contact_us_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
@@ -46,8 +47,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(AppSizes.s40),
-                          bottomRight: Radius.circular(AppSizes.s40),
+                          bottomLeft: Radius.circular(AppRadius.xl),
+                          bottomRight: Radius.circular(AppRadius.xl),
                         ),
                         child: Container(
                           color: Color(AppColors.secondaryButton),

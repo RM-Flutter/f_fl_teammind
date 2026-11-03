@@ -18,6 +18,7 @@ import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
 
 import '../../../../../../core/services/validation_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ChargePhoneScreen extends StatefulWidget {
   var service;
@@ -172,7 +173,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 15),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
@@ -255,8 +256,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                   decoration: BoxDecoration(
                                                       color: Colors.transparent,
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          13),
+                                                      BorderRadius.circular(AppRadius.md),
                                                       border: Border.all(
                                                           color: selectIndex ==
                                                               index
@@ -266,8 +266,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                               .transparent)),
                                                   child: ClipRRect(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        14),
+                                                    BorderRadius.circular(AppRadius.md),
                                                     child: CachedNetworkImage(
                                                       height: 80,
                                                       width: 90,
@@ -379,7 +378,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 25, horizontal: 15),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
                               boxShadow: [
                                 BoxShadow(
@@ -605,7 +604,6 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
           },
         );
 
-
       case 'D':
         return TextFormField(
           readOnly: true,
@@ -655,6 +653,5 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
         );
     }
   }
-
 
 }

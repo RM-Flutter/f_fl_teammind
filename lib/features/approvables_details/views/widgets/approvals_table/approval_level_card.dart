@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import '../../../data/models/approvable_details_model.dart';
 import 'single_approval_row.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ApprovalLevelCard extends StatelessWidget {
   final int levelNum;
@@ -21,7 +22,7 @@ class ApprovalLevelCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
@@ -33,8 +34,8 @@ class ApprovalLevelCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(AppColors.buttons).withOpacity(0.08),
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(11),
-                topRight: Radius.circular(11),
+                topLeft: Radius.circular(AppRadius.md),
+                topRight: Radius.circular(AppRadius.md),
               ),
             ),
             child: Row(
@@ -44,7 +45,7 @@ class ApprovalLevelCard extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: Text(
                     '${'level'.tr()} $levelNum',

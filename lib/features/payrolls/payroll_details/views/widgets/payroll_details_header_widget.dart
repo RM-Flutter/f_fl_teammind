@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/repos/payroll_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PayrollDetailsHeaderWidget extends StatelessWidget {
   final PayrollModel? payroll;
@@ -31,8 +32,8 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
             opacity: 0.4),
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28),
-            bottomRight: Radius.circular(AppSizes.s28)),
+            bottomLeft: Radius.circular(AppRadius.xl),
+            bottomRight: Radius.circular(AppRadius.xl)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +126,7 @@ class PayrollHeaderTileWidget extends StatelessWidget {
       width: !kIsWeb ? 0.6.sw : 0.4.sw,
       decoration: BoxDecoration(
           color: const Color(AppColors.navyBlue),
-          borderRadius: BorderRadius.circular(AppSizes.s6)),
+          borderRadius: BorderRadius.circular(AppRadius.sm)),
       padding: EdgeInsets.symmetric(
           horizontal: AppSizes.s6, vertical: AppSizes.s12),
       child: Row(

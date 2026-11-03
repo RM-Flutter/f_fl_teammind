@@ -16,6 +16,7 @@ import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
 import '../models/overtime_request_model.dart';
 import '../../requests/calender/controller/requests_calendar_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 String _formatDuration(int? totalMinutes, bool isArabic) {
   if (totalMinutes == null || totalMinutes == 0) {
@@ -114,7 +115,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                   color: Color(AppColors.buttons),
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
               ),
             ],
@@ -176,7 +177,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Color(AppColors.buttons).withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(4),
+                                      borderRadius: BorderRadius.circular(AppRadius.xs),
                                     ),
                                     alignment: Alignment.center,
                                     child: Text(
@@ -214,7 +215,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                                   decoration: BoxDecoration(
                                     color: bgColor,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(AppRadius.xs),
                                   ),
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -264,7 +265,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
     }
 
     return ListTile(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
       tileColor: bgColor.withOpacity(0.1),
       leading: Icon(Icons.access_time_rounded, color: bgColor),
       title: Text(
@@ -285,8 +286,6 @@ class OvertimeCalendarScreen extends StatelessWidget {
       },
     );
   }
-
-
 
   void _navigateToDetails(BuildContext context, OvertimeRequestModel ot) {
     context.pushNamed(

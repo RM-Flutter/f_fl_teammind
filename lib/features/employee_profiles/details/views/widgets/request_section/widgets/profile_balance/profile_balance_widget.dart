@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'widgets/views/requests_by_balance_empid_modal.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ProfileBalanceWidget extends StatelessWidget {
   final double? paddingBetweenVocations;
@@ -164,7 +165,7 @@ class BalanceCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
           color:  Color(AppColors.secondaryButton),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

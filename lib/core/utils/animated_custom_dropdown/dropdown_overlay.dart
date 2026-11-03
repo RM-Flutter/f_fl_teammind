@@ -120,7 +120,7 @@ class _DropdownOverlayState extends State<_DropdownOverlay> {
     final onListDataSearch = widget.searchType == SearchType.onListData;
 
     // border radius
-    final borderRadius = BorderRadius.circular(12);
+    final borderRadius = BorderRadius.circular(AppRadius.md);
 
     // overlay icon
     final overlayIcon = Icon(
@@ -223,7 +223,7 @@ class _DropdownOverlayState extends State<_DropdownOverlay> {
                                   true,
                                 ),
                                 thickness: WidgetStateProperty.all(5),
-                                radius: const Radius.circular(4),
+                                radius: const Radius.circular(AppRadius.xs),
                                 thumbColor: WidgetStateProperty.all(
                                   Colors.grey[300],
                                 ),
@@ -404,21 +404,21 @@ class _SearchFieldState extends State<_SearchField> {
                 const Icon(Icons.close, color: Colors.grey, size: AppSizes.s20),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             borderSide: BorderSide(
               color: Colors.grey.withOpacity(.25),
               width: 1,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             borderSide: BorderSide(
               color: Colors.grey.withOpacity(.25),
               width: 1,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.s8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             borderSide: BorderSide(
               color: Colors.grey.withOpacity(.25),
               width: 1,

@@ -11,7 +11,7 @@ import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/more/notifications/data/models/get_one_notification_model.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class NotificationDetailsAppbarWidget extends StatelessWidget {
   NotificationSingleModel? notificationSingleModel;
@@ -24,16 +24,16 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s32),
-            bottomRight: Radius.circular(AppSizes.s32)),
+            bottomLeft: Radius.circular(AppRadius.xl),
+            bottomRight: Radius.circular(AppRadius.xl)),
       ),
       child: Stack(
         children: [
           // Background image using the Home screen asset
           ClipRRect(
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(AppSizes.s32),
-                bottomRight: Radius.circular(AppSizes.s32)),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl)),
             child: Image.asset(
               "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
@@ -46,8 +46,8 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton).withValues(alpha: 0.9),
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppSizes.s32),
-                    bottomRight: Radius.circular(AppSizes.s32)),
+                    bottomLeft: Radius.circular(AppRadius.xl),
+                    bottomRight: Radius.circular(AppRadius.xl)),
               ),
             ),
           ),

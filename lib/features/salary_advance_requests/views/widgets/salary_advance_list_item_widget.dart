@@ -12,6 +12,7 @@ import '../../../../core/services/requests_services.dart';
 import '../../../../core/widgets/glassmorphism_card.widget.dart';
 import '../../shared/models/salary_advance_request_model.dart';
 import '../update_salary_advance_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SalaryAdvanceListItemWidget extends StatefulWidget {
   final SalaryAdvanceRequestModel request;
@@ -141,7 +142,7 @@ class _SalaryAdvanceListItemWidgetState
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFFEBEE),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(AppRadius.sm),
                             border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
                           ),
                           child: Row(
@@ -312,7 +313,7 @@ class _SalaryAdvanceListItemWidgetState
                                         horizontal: 12, vertical: 8),
                                     decoration: BoxDecoration(
                                       color: statusColor.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(AppRadius.md),
                                       border: Border.all(
                                           color: statusColor.withOpacity(0.2)),
                                     ),
@@ -367,7 +368,7 @@ class _SalaryAdvanceListItemWidgetState
                                         decoration: BoxDecoration(
                                           color: Color(AppColors.buttons),
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(AppRadius.sm),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Color(AppColors.buttons)

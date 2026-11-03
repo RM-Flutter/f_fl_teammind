@@ -15,6 +15,7 @@ import 'package:app_test/features/expense_claim_requests/shared/models/expense_c
 import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
 import 'package:app_test/core/widgets/quick_action_sheet.dart';
 import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ApprovableCardWidget extends StatelessWidget {
   final dynamic request; // RequestModel, OvertimeRequestModel, SalaryAdvanceRequestModel
@@ -343,7 +344,7 @@ class ApprovableCardWidget extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Color(AppColors.cardBackground),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
         shadows: [
           BoxShadow(
@@ -528,7 +529,7 @@ class _ActionBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: color.withOpacity(0.3), width: 0.8),
       ),
       child: Row(
@@ -567,7 +568,7 @@ class _EvaluationStatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: color.withOpacity(0.35), width: 0.8),
       ),
       child: Row(

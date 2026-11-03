@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../../../core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CVInfoItem extends StatelessWidget {
   final String label;
@@ -24,7 +25,7 @@ class CVInfoItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(

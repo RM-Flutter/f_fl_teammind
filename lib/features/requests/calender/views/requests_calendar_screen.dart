@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// يستخرج النص حسب اللغة: إن كان القيمة Map فيها en/ar يُرجع القيمة المناسبة للغة الحالية فقط.
 String _titleByLang(dynamic value, String lang) {
@@ -172,7 +173,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                     color: Color(AppColors.buttons),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                 ),
               ],
@@ -229,7 +230,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                                     if (appt is Map && appt['_isHoliday'] == true) {
                                                       final title = _titleByLang(appt['typeName'], currentLang);
                                                       return ListTile(
-                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                                                         tileColor: const Color(AppColors.green),
                                                         title: Text(title.isEmpty ? 'Holiday' : title, style: AppStyles.whiteContent(context).copyWith(fontWeight: FontWeight.bold)),
                                                       );
@@ -244,7 +245,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                                     final displayTitle = (canSeeTeamRequests && empName.isNotEmpty) ? '$empName - $typeName' : typeName;
                                                     
                                                     return ListTile(
-                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                                                       tileColor: backgroundColor,
                                                       title: Text(displayTitle, style: AppStyles.content(context).copyWith(color: explicitTextColor, fontWeight: FontWeight.bold)),
                                                       onTap: () {
@@ -280,7 +281,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                           color: Color(AppColors.secondaryButton),
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius: BorderRadius.circular(AppRadius.xs),
                                         ),
                                         child: Text(
                                           '+${details.appointments.length} ${AppStrings.more.tr()}',
@@ -316,7 +317,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 4, vertical: 1),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
+                                      borderRadius: BorderRadius.circular(AppRadius.xs),
                                       color: const Color(AppColors.green),
                                     ),
                                     child: Text(
@@ -381,7 +382,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 4, vertical: 1),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
+                                      borderRadius: BorderRadius.circular(AppRadius.xs),
                                       color: backgroundColor,
                                     ),
                                     child: Text(
@@ -408,7 +409,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                             margin: EdgeInsets.all(16),
                             elevation: 4,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
+                                borderRadius: BorderRadius.circular(AppRadius.lg)),
                             child: Padding(
                               padding: EdgeInsets.all(16),
                               child: Column(

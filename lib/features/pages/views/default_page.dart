@@ -24,6 +24,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/services/general_listener.dart';
 import '../../more/blog/views/blog_list_view_item.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class DefaultPage extends StatefulWidget {
   var type;
@@ -166,7 +167,7 @@ class _DefaultPageState extends State<DefaultPage> {
                               padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(AppSizes.s15),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                               ),
                               height: 100,
                             ),

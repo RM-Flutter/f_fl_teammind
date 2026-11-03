@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controller/request_terms_controller.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestTermsScreen extends StatefulWidget {
   const RequestTermsScreen({super.key});
@@ -103,7 +104,7 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
       padding: EdgeInsets.all(AppSizes.s20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.s12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         boxShadow: [
           BoxShadow(
             color: Color(AppColors.disableButton).withValues(alpha: 0.3),

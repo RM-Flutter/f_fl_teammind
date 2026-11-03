@@ -10,7 +10,7 @@ import 'package:app_test/features/tracking/views/widgets/tracking_section_employ
 import 'package:app_test/features/tracking/views/widgets/tracking_section_manager.dart';
 import '../../../../../core/constants/app_strings.dart';
 import '../../../../../core/services/localization_service.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class CustomTabbarViewRequestDetails extends StatelessWidget {
   final request;
@@ -43,7 +43,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
               ),
               height: 52,
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
@@ -53,7 +53,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
                   color: Color(AppColors.buttons),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
                 labelColor: Colors.white,
                 labelStyle: mainTextStyle,
@@ -171,7 +171,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                             padding:  EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -196,7 +196,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -219,7 +219,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(AppRadius.xl),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

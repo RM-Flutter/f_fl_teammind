@@ -6,6 +6,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/more/team_today_status/data/models/team_today_status_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// A single member card displayed in the team today status list.
 class TeamMemberStatusCard extends StatelessWidget {
@@ -59,7 +60,7 @@ class TeamMemberStatusCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.s12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.withOpacity(0.12)),
         boxShadow: [
           BoxShadow(
@@ -163,7 +164,7 @@ class TeamMemberStatusCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Row(

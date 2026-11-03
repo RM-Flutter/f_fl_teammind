@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SuccessfullAddRequestSheet extends StatelessWidget {
   var title;
@@ -32,8 +33,8 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: isWeb
-              ? BorderRadius.circular(30)
-              : BorderRadius.vertical(top: Radius.circular(30)),
+              ? BorderRadius.circular(AppRadius.xl)
+              : BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           children: [

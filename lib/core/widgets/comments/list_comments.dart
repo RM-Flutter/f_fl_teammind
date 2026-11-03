@@ -21,6 +21,7 @@ import '../../constants/app_strings.dart';
 import '../../utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../full_image_screen.dart';
 import 'comments_audio_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ListCommentsScreen extends StatefulWidget {
   var id;
@@ -140,7 +141,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                   padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(AppSizes.s15),
+                                    borderRadius: BorderRadius.circular(AppRadius.md),
                                   ),
                                   height: 100,
                                 ),
@@ -153,7 +154,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(AppRadius.lg),
                                   ),
                                   shadows: const [
                                     BoxShadow(
@@ -168,7 +169,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     ClipRRect(
-                                      borderRadius: BorderRadius.circular(63),
+                                      borderRadius: BorderRadius.circular(AppRadius.pill),
                                       child:  CachedNetworkImage(
                                         width: 63,
                                         height: 63,

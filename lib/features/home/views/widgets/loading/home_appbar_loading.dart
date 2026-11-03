@@ -2,6 +2,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class HomeAppbarLoading extends StatelessWidget {
   const HomeAppbarLoading({super.key});
@@ -11,8 +12,8 @@ class HomeAppbarLoading extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppSizes.s28),
-            bottomRight: Radius.circular(AppSizes.s28)),
+            bottomLeft: Radius.circular(AppRadius.xl),
+            bottomRight: Radius.circular(AppRadius.xl)),
       ),
       padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top,

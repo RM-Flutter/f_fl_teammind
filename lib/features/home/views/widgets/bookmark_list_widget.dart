@@ -8,6 +8,7 @@ import 'package:app_test/core/services/bookmark_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class BookmarkListWidget extends StatefulWidget {
   const BookmarkListWidget({super.key});
@@ -180,7 +181,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
         padding: const EdgeInsets.all(AppSizes.s12),
         decoration: BoxDecoration(
           color: Color(AppColors.secondaryButton),
-          borderRadius: BorderRadius.circular(AppSizes.s12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:permission_handler/permission_handler.dart' as permission_handler;
+import 'package:app_test/core/constants/app_design.dart';
 
 enum LivenessChallenge {
   blinkRightEye,
@@ -1067,7 +1068,7 @@ class _LivenessChallengeCameraScreenState
                               : Colors.white,
                           width: 3,
                         ),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                       margin: const EdgeInsets.all(40),
                     ),
@@ -1085,7 +1086,7 @@ class _LivenessChallengeCameraScreenState
                         color: _timeRemaining <= 3
                             ? Colors.red.withOpacity(0.9)
                             : Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                       child: Text(
                         '$_timeRemaining',
@@ -1109,7 +1110,7 @@ class _LivenessChallengeCameraScreenState
                       margin: const EdgeInsets.symmetric(horizontal: 24),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                       child: Column(
                         children: [

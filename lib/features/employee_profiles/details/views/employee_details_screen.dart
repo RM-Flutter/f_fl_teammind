@@ -29,6 +29,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../controller/employee_details_controller.dart';
 import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class EmployeeDetailsScreen extends StatefulWidget {
   var id;
@@ -74,7 +75,6 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       items.add(ProfileTabModel(title: 'salary_advance_requests'.tr(), index: 7));
       items.add(ProfileTabModel(title: 'rewards_and_penalties'.tr(), index: 8));
     }
-
 
     if (PackageHelper.hasPackage('emp-payroll')) {
       items.add(ProfileTabModel(title: AppStrings.expenseClaims.tr(), index: 10));
@@ -184,7 +184,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                   margin: EdgeInsets.symmetric(horizontal: 4),
                                   decoration: BoxDecoration(
                                     color:  Color(AppColors.secondaryButton),
-                                    borderRadius: BorderRadius.circular(AppSizes.s32),
+                                    borderRadius: BorderRadius.circular(AppRadius.xl),
                                   ),
                                   height: 60,
                                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),

@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class FawryController extends ChangeNotifier {
   bool isGetFawryCategoryLoading = false;
@@ -262,7 +262,7 @@ class FawryController extends ChangeNotifier {
               decoration: ShapeDecoration(
                 color: AppThemeService.colorPalette.tertiaryColorBackground.color,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppSizes.s10),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
                   side: const BorderSide(
                     color: Color(0xffE3E5E5),
                     width: 1.0,
@@ -290,7 +290,7 @@ class FawryController extends ChangeNotifier {
                       width: 50,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                           color: const Color(0xffE8E8E8)
                       ),
                       child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),

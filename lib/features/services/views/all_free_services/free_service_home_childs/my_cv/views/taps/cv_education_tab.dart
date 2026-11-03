@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../../../core/constants/app_colors.dart';
 import 'widgets/cv_info_item_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class CVEducationTab extends StatelessWidget {
   final CVDataModel? cvData;
@@ -40,7 +41,7 @@ class CVEducationTab extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Row(
         children: [

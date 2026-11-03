@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class VoiceMessageWidget extends StatefulWidget {
   final String audioUrl;
@@ -68,7 +69,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
       child: Row(
         children: [

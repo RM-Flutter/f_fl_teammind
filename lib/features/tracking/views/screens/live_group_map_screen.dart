@@ -8,6 +8,7 @@ import '../../data/models/tracking_point.model.dart';
 import '../../data/models/tracking_status.enum.dart';
 import '../widgets/manual_point_tile.dart';
 import '../widgets/tracking_status_badge.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 enum MapTimeFilter {
   live,
@@ -109,8 +110,8 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                 fit: BoxFit.fill,
               ),
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(28),
-                bottomRight: Radius.circular(28),
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl),
               ),
             ),
             child: SafeArea(
@@ -164,7 +165,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                     ),
                     child: Row(
                       children: [
@@ -207,12 +208,12 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                     padding: const EdgeInsets.only(left: 8),
                     child: InkWell(
                       onTap: () => setState(() => _selectedEmployee = emp),
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
                           color: isSelected ? empColor.withOpacity(0.12) : Color(AppColors.cardBackground),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(AppRadius.pill),
                           border: Border.all(
                             color: isSelected ? empColor : Color(AppColors.border),
                             width: isSelected ? 1.8 : 1.0,
@@ -288,7 +289,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.92),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
                     ),
                     child: Row(
@@ -345,7 +346,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: Color(AppColors.buttons).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(AppRadius.xs),
                       ),
                       child: Text(
                         '$_currentPage',
@@ -392,7 +393,7 @@ class _FilterTabItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 7),
           decoration: BoxDecoration(
             color: isActive ? Color(AppColors.buttons) : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           alignment: Alignment.center,
           child: Text(
@@ -444,7 +445,7 @@ class _EmployeeDetailsCardState extends State<_EmployeeDetailsCard> {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppRadius.md),
           side: BorderSide(color: widget.color.withOpacity(0.5), width: 1.5),
         ),
         shadows: [

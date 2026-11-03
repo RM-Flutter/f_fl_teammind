@@ -20,6 +20,7 @@ import '../../../../core/widgets/shared_list_filter_widget.dart'
 import '../../../../core/widgets/active_filters_row_widget.dart';
 import '../../requests/shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'overtime_calendar_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class OvertimeRequestsScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -381,7 +382,7 @@ class _ScopeSelectorRow extends StatelessWidget {
                     color: isSelected
                         ? Color(AppColors.buttons)
                         : Color(AppColors.cardBackground),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                     border: Border.all(
                       color: isSelected
                           ? Color(AppColors.buttons)

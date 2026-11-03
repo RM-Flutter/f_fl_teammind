@@ -1,5 +1,6 @@
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PremiumTemplatesLoadingWidget extends StatelessWidget {
   const PremiumTemplatesLoadingWidget({super.key});
@@ -17,7 +18,7 @@ class PremiumTemplatesLoadingWidget extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.md),
                 border: Border.all(color: Colors.grey[300]!),
                 boxShadow: [
                   BoxShadow(

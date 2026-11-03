@@ -14,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AssetsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
@@ -182,7 +183,7 @@ class _AssetCardState extends State<_AssetCard> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -204,7 +205,7 @@ class _AssetCardState extends State<_AssetCard> {
                 height: 48,
                 decoration: BoxDecoration(
                   color: accent.withOpacity(0.10),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Icon(Icons.devices_other_rounded,
                     color: accent, size: 24),
@@ -228,7 +229,7 @@ class _AssetCardState extends State<_AssetCard> {
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.10),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -270,7 +271,7 @@ class _AssetCardState extends State<_AssetCard> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 color: accent.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Row(
                 children: [
@@ -399,7 +400,7 @@ class _Badge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: badgeBg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: badgeColor.withOpacity(0.25)),
       ),
       child: Row(
@@ -451,13 +452,13 @@ class _AttachmentTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.withOpacity(0.12)),
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             child: (file.thumbnail != null && file.thumbnail!.isNotEmpty)
                 ? Image.network(
                     file.thumbnail!,
@@ -529,7 +530,7 @@ class _CustomDataCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         border: Border.all(color: Colors.grey.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(

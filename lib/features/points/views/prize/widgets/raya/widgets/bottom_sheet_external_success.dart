@@ -10,6 +10,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PointsSuccessSheet{
   static void showConfirmationSheet(BuildContext context, {onTap}) {
@@ -17,7 +18,7 @@ class PointsSuccessSheet{
       context: context,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
       builder: (BuildContext context) {
         return Padding(
@@ -48,7 +49,7 @@ class PointsSuccessSheet{
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             border: Border.all(color: const Color(0xff0D3B6F)),
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
                           ),
                           padding:const EdgeInsets.symmetric(horizontal: 40),
                           child: Text(
@@ -68,7 +69,7 @@ class PointsSuccessSheet{
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: const Color(0xff0D3B6F),
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(AppRadius.pill),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: Text(
@@ -122,7 +123,7 @@ class PointsSuccessSheet{
           decoration: ShapeDecoration(
             color: AppThemeService.colorPalette.tertiaryColorBackground.color,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppSizes.s10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               side: const BorderSide(
                 color: Color(0xffE3E5E5),
                 width: 1.0,
@@ -150,7 +151,7 @@ class PointsSuccessSheet{
                   width: 50,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
                       color: const Color(0xffE8E8E8)
                   ),
                   child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400),),

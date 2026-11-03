@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SliderHomeMenu extends StatelessWidget {
   var title;
@@ -23,7 +24,7 @@ class SliderHomeMenu extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
                 color: Color(AppColors.textC5),
-                borderRadius: BorderRadius.circular(15)),
+                borderRadius: BorderRadius.circular(AppRadius.md)),
             padding: const EdgeInsetsDirectional.only(
               bottom: 30,
               start: 2,
@@ -57,7 +58,7 @@ class SliderHomeMenu extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: const Color(0xFFE93F81),
-                borderRadius: BorderRadius.circular(15)),
+                borderRadius: BorderRadius.circular(AppRadius.md)),
             child: SvgPicture.asset(src ??"assets/images/svg/ref_link.svg")
         ),
       ],
@@ -98,7 +99,7 @@ class SliderHomeMenu2 extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: Color(AppColors.textC5),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
             child: Column(
@@ -136,7 +137,7 @@ class SliderHomeMenu2 extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Color(AppColors.secondaryButton),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(AppRadius.md),
           ),
           child: SvgPicture.asset(src),
         ),

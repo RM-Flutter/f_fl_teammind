@@ -16,6 +16,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/views/common_ui/build_action_card.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/data/repos/repo/smart_card_repo.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class SmartCardProfileDetailScreen extends StatefulWidget {
   final Map<String, dynamic> employee;
@@ -129,7 +130,6 @@ class _SmartCardProfileDetailScreenState
       _employee['email']?.toString() ??
       '';
 
-
   void _showCopyProfileLinkSheet() {
     final url = _profileUrl;
     if (url.isEmpty) {
@@ -143,7 +143,7 @@ class _SmartCardProfileDetailScreenState
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -214,7 +214,7 @@ class _SmartCardProfileDetailScreenState
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -478,6 +478,5 @@ class _SmartCardProfileDetailScreenState
       ),
     );
   }
-
 
 }

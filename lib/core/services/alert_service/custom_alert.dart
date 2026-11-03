@@ -6,6 +6,7 @@ import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 
 import '../../constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class AlertType {
   /// message is `required` parameter
@@ -125,7 +126,7 @@ class CustomAlert extends StatelessWidget {
             width: size.width,
             decoration: BoxDecoration(
               color: color ?? contentType.color,
-              borderRadius: BorderRadius.circular(AppSizes.s20),
+              borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
           ),
 
@@ -135,7 +136,7 @@ class CustomAlert extends StatelessWidget {
             left: 0,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(AppRadius.lg),
               ),
               child: SvgPicture.asset(
                 AppImages.alertsBubbles,

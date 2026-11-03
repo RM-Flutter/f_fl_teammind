@@ -20,6 +20,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/features/more/customized_notification/views/customize_notification_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FreeServiceMoreScreen extends StatefulWidget {
   const FreeServiceMoreScreen({super.key});
@@ -90,8 +91,8 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                       ),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40),
+                          topLeft: Radius.circular(AppRadius.xl),
+                          topRight: Radius.circular(AppRadius.xl),
                         ),
                       ),
                     ),
@@ -258,7 +259,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                   child: Column(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(124),
+                        borderRadius: BorderRadius.circular(AppRadius.pill),
                         child: GestureDetector(
                           onTap:(){
                             context.pushNamed(AppRoutes.personalProfile.name,

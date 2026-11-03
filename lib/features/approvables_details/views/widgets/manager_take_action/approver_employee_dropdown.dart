@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import '../../../data/models/approvable_details_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ApproverEmployeeDropdown extends StatelessWidget {
   final String? selectedEmployeeId;
@@ -46,7 +47,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.amber.shade50,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               border: Border.all(color: Colors.amber.shade300),
             ),
             child: Text(
@@ -62,7 +63,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14),
             decoration: BoxDecoration(
               color: const Color(0xFFF3F3F3),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(

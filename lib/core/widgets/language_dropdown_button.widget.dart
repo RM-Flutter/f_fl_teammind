@@ -8,6 +8,7 @@ import '../constants/user_consts.dart';
 import '../models/settings/general_settings.model.dart';
 import '../services/backend_services/api_service/dio_api_service/shared.dart';
 import '../services/localization_service.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class LanguageDropdownButton extends StatelessWidget {
   const LanguageDropdownButton({super.key});
@@ -81,7 +82,7 @@ class LanguageDropdownButton extends StatelessWidget {
           ],
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.s12),
+          borderRadius: BorderRadius.circular(AppRadius.md),
         ),
       ),
       // child: SizedBox(

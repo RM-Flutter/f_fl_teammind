@@ -20,6 +20,7 @@ import 'package:app_test/core/utils/tab_bar_widget.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/data/models/smart_card_profile_models.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/data/repos/repo/smart_card_repo.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class UpdateEmployeeInfoScreen extends StatefulWidget {
   final Map<String, dynamic> employee;
@@ -637,7 +638,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                         foregroundColor: Colors.white,
                         minimumSize: const Size(200, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(AppRadius.xl),
                         ),
                       ),
                       child: vm.isSubmitting
@@ -673,7 +674,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
       margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
-        borderRadius: BorderRadius.circular(AppSizes.s30),
+        borderRadius: BorderRadius.circular(AppRadius.xl),
       ),
       height: AppSizes.s55,
       alignment: Alignment.centerLeft,
@@ -722,7 +723,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                       decoration: InputDecoration(
                         labelText: '${AppStrings.phone.tr()} ${i + 2}',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                           borderSide: const BorderSide(color: Colors.black),
                         ),
                       ),
@@ -832,7 +833,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                           decoration: InputDecoration(
                             labelText: 'URL ${i + 1}',
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
                               borderSide: const BorderSide(color: Colors.black),
                             ),
                           ),
@@ -923,7 +924,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding:

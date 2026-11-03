@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../prize/widgets/raya/widgets/bottom_sheet_external_success.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class ReferralSection extends StatelessWidget {
   ReferralSection({super.key,});
@@ -36,7 +37,7 @@ class ReferralSection extends StatelessWidget {
             decoration: ShapeDecoration(
               color: AppThemeService.colorPalette.tertiaryColorBackground.color,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.s10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 side: const BorderSide(
                   color: Color(0xffE3E5E5),
                   width: 1.0,
@@ -64,7 +65,7 @@ class ReferralSection extends StatelessWidget {
                     width: 50,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                         color: Colors.transparent
                     ),
                     child: Text(AppStrings.copy.tr(), style: const TextStyle(color: Color(AppColors.oc1), fontSize: 12, fontWeight: FontWeight.w600),),

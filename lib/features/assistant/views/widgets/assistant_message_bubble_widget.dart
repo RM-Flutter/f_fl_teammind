@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../data/models/assistant_message_model.dart';
 import '../../data/models/help_entry_model.dart';
 import 'assistant_actions_widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 /// فقاعة رسالة: سؤال المستخدم أو رد المساعد (مع زر Open وأقرب المواضيع).
 class AssistantMessageBubbleWidget extends StatelessWidget {
@@ -35,7 +36,7 @@ class AssistantMessageBubbleWidget extends StatelessWidget {
             color: isUser
                 ? Color(AppColors.secondaryButton)
                 : Color(AppColors.chipBackground),
-            borderRadius: BorderRadius.circular(AppSizes.s16),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

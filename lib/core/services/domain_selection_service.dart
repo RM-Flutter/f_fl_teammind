@@ -224,7 +224,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/app_config_service.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
-
+import 'package:app_test/core/constants/app_design.dart';
 
 class DomainSelectionService {
   static const String _domainCacheKey = "custom_domain";
@@ -487,7 +487,7 @@ class DomainSelectionService {
                         constraints: const BoxConstraints(maxHeight: 200),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey[300]!),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
                         ),
                         child: ListView.builder(
                           shrinkWrap: true,
