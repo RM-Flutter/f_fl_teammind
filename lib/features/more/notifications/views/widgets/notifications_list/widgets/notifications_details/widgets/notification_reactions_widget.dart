@@ -83,7 +83,9 @@ class _NotificationReactionsWidgetState
                 ],
                 border: Border.all(color: Colors.grey.shade200),
               ),
-              child: Row(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: _emojiMap.keys.map((emotionKey) {
                   final bool isSelected = userReaction == emotionKey;
@@ -114,6 +116,7 @@ class _NotificationReactionsWidgetState
                     ),
                   );
                 }).toList(),
+                ),
               ),
             ),
             if (controller.isEmotionLoading) ...[

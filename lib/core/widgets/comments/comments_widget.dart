@@ -79,9 +79,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
   @override
   Widget build(BuildContext context) {
     final comments = widget.comments ?? [];
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.5,
-      child: Column(
+    return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (comments.isNotEmpty)
             SizedBox(
@@ -254,7 +253,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
           if (comments.isEmpty)
             Container(
               alignment: Alignment.center,
-              height: MediaQuery.sizeOf(context).height * 0.3,
+              height: MediaQuery.sizeOf(context).height * 0.15,
               child: Center(
                 child: Text(
                   AppStrings.noCommentsFound.tr().toUpperCase(),
@@ -302,7 +301,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                 ),
               ),
             ),
-          const Spacer(),
+          const SizedBox(height: 12),
           if (widget.enable == "enable") SendCommentWidget(widget.id, widget.slug),
           if (widget.enable != "enable")
             Text(
@@ -311,8 +310,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                   color: Colors.red, fontSize: 16, fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
+          SizedBox(height: 24 + MediaQuery.paddingOf(context).bottom),
         ],
-      ),
     );
   }
 }
