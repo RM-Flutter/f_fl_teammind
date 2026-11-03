@@ -148,6 +148,7 @@ class EmployeeDetailsHeader extends StatelessWidget {
                       ),
                       Text(
                         employee?.jobTitle?.toUpperCase() ?? '',
+                        textAlign: TextAlign.center,
                         style: AppStyles.whiteHeading(context).copyWith(
                             fontSize: 14,
                             letterSpacing: 1.2,

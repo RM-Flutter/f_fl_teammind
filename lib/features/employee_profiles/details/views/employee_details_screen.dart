@@ -150,17 +150,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                 );
               }
 
-              bool hasFullAccess = ((viewModel.employee?.id != null && viewModel.currentUserSettings?.empId != null) &&
-                      (viewModel.employee?.id == viewModel.currentUserSettings?.empId)) ||
-                  (viewModel.currentUserSettings?.isManagerIn != null &&
-                      (viewModel.currentUserSettings?.isManagerIn?.isNotEmpty ?? false) &&
-                      (viewModel.currentUserSettings!.isManagerIn!.contains(viewModel.employee?.departmentId) == true)) ||
-                  (viewModel.currentUserSettings?.isHr != null && (viewModel.currentUserSettings?.isHr == true)) ||
-                  (viewModel.currentUserSettings?.topManagement != null &&
-                      (viewModel.currentUserSettings?.topManagement == true)) ||
-                  (viewModel.currentUserSettings?.isTeamleaderIn != null &&
-                      (viewModel.currentUserSettings?.isTeamleaderIn?.isNotEmpty ?? false) &&
-                      (viewModel.currentUserSettings!.isTeamleaderIn!.contains(viewModel.employee!.departmentId) == true));
+              // Decided by the backend (self, HR, top management, department manager incl. sub-departments, team leader)
+              final bool hasFullAccess = viewModel.employee?.canSeeAllData ?? false;
 
               final page = Column(
                 children: [
