@@ -420,6 +420,57 @@ class DomainSelectionService {
   }
 
   /// Show dialog for domain input with QR scan and saved domains list
+  /// Two equal-width dialog buttons side by side.
+  static Widget _dialogActions({required Widget secondary, required Widget primary}) {
+    return Row(
+      children: [
+        Expanded(child: secondary),
+        const SizedBox(width: 12),
+        Expanded(child: primary),
+      ],
+    );
+  }
+
+  /// Pill dialog button: filled with the primary color, or outlined in [color].
+  static Widget _dialogButton({
+    required String label,
+    required VoidCallback onPressed,
+    bool filled = false,
+    Color? color,
+  }) {
+    final accent = color ?? Color(AppColors.buttons);
+    final shape = RoundedRectangleBorder(borderRadius: AppRadius.button);
+    final text = Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+    );
+    return SizedBox(
+      height: 46,
+      child: filled
+          ? ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: accent,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: shape,
+              ),
+              child: text,
+            )
+          : OutlinedButton(
+              onPressed: onPressed,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: accent,
+                side: BorderSide(color: accent, width: 1.5),
+                shape: shape,
+              ),
+              child: text,
+            ),
+    );
+  }
+
   static Future<String?> _showDomainInputDialog(BuildContext context) {
     final controller = TextEditingController();
     final savedDomains = getSavedDomains();
@@ -526,36 +577,35 @@ class DomainSelectionService {
                 ),
               ),
             ),
+            actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(null),
-                child: Text(
-                  AppStrings.cancel.tr(),
-                  style: const TextStyle(color: Colors.red),
+              _dialogActions(
+                secondary: _dialogButton(
+                  label: AppStrings.cancel.tr(),
+                  color: Colors.red,
+                  onPressed: () => Navigator.of(ctx).pop(null),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  final domain = controller.text.trim();
-                  if (domain.isNotEmpty) {
-                    if (domain.contains('@') || domain.contains(' ')) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            AppStrings.error.tr() + ": Invalid domain format",
+                primary: _dialogButton(
+                  label: AppStrings.confirm.tr(),
+                  filled: true,
+                  onPressed: () {
+                    final domain = controller.text.trim();
+                    if (domain.isNotEmpty) {
+                      if (domain.contains('@') || domain.contains(' ')) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              AppStrings.error.tr() + ": Invalid domain format",
+                            ),
+                            backgroundColor: Colors.red,
                           ),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                      return;
+                        );
+                        return;
+                      }
+                      print("🌐 Domain entered: $domain");
+                      Navigator.of(ctx).pop(domain);
                     }
-                    print("🌐 Domain entered: $domain");
-                    Navigator.of(ctx).pop(domain);
-                  }
-                },
-                child: Text(
-                  AppStrings.confirm.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  },
                 ),
               ),
             ],
@@ -616,32 +666,22 @@ class DomainSelectionService {
         content: Text(
           AppStrings.domainNotFound.tr(),
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  // User wants to use default domain
-                  Navigator.of(ctx).pop(false);
-                },
-                child: Text(
-                  AppStrings.useDefault.tr(),
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // User wants to try again
-                  Navigator.of(ctx).pop(true);
-                },
-                child: Text(
-                  AppStrings.tryAgain.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                ),
-              ),
-            ],
-          )
+          _dialogActions(
+            secondary: _dialogButton(
+              label: AppStrings.useDefault.tr(),
+              color: Colors.grey.shade700,
+              // User wants to use default domain
+              onPressed: () => Navigator.of(ctx).pop(false),
+            ),
+            primary: _dialogButton(
+              label: AppStrings.tryAgain.tr(),
+              filled: true,
+              // User wants to try again
+              onPressed: () => Navigator.of(ctx).pop(true),
+            ),
+          ),
         ],
       ),
     ).then((value) => value ?? false);

@@ -340,6 +340,12 @@ abstract class AppStrings {
   static const otherRequests = "otherRequests";
   static const requestedToIgnore = "requestedToIgnore";
   static const typeYourMessage = "typeYourMessage";
+  static const myWork = "myWork";
+  static const myPay = "myPay";
+  static const company = "company";
+  static const helpAndPolicies = "helpAndPolicies";
+  static const slideToCancel = "slideToCancel";
+  static const holdToRecord = "holdToRecord";
   static const startTime = "startTime";
   static const endTime = "endTime";
   static const all = "all";

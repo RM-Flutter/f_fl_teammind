@@ -418,9 +418,26 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
 
                                 // Build list of all available detail items (no empty/dummy widgets)
                                 final List<Widget> items = [];
+                                // Long tile (e.g. shift swap) shown on its own full-width row so the text is not cut off.
+                                Widget? fullWidthTile;
+                                bool isShiftChange = false;
+                                try {
+                                  isShiftChange = (request as dynamic).approvableType == 'shift_change_requests';
+                                } catch (_) {}
+
+                                void openEmployee(dynamic id) {
+                                  context.pushNamed(
+                                    'employeeDetails',
+                                    pathParameters: {
+                                      'id': id.toString(),
+                                      'lang': context.locale.languageCode,
+                                    },
+                                  );
+                                }
 
                                 // Employee info
-                                if (request.employeeName != null &&
+                                if (!isShiftChange &&
+                                    request.employeeName != null &&
                                     request.employeeName.toString() != 'null' &&
                                     request.employeeName.toString().trim().isNotEmpty) {
                                   items.add(
@@ -470,44 +487,65 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                   );
                                 }
 
-                                // Shift Change Request specific two-party info tiles
+                                // Shift Change Request: requester and receiver tiles side by side,
+                                // each shift under its owner, with a swap icon between the two sides.
                                 try {
-                                  if ((request as dynamic).approvableType == 'shift_change_requests') {
-                                    final recEmpName = (request as dynamic).receiverEmployee?.name?.toString() ?? '';
+                                  if (isShiftChange) {
+                                    final reqEmpId = request.employeeId;
                                     final recEmpId = (request as dynamic).receiverEmployeeId;
+                                    final hasReqId = reqEmpId != null &&
+                                        reqEmpId.toString() != 'null' &&
+                                        reqEmpId.toString() != '0' &&
+                                        reqEmpId.toString().trim().isNotEmpty;
+                                    final reqName = request.employeeName?.toString() ?? '';
+                                    final recName = (request as dynamic).receiverEmployee?.name?.toString() ?? '';
                                     final reqShift = (request as dynamic).requesterShiftName?.toString() ?? '';
                                     final recShift = (request as dynamic).receiverShiftName?.toString() ?? '';
 
-                                    if (recEmpName.isNotEmpty) {
-                                      items.add(
-                                        InfoTileWidget(
-                                          onTap: recEmpId != null
-                                              ? () {
-                                                  context.pushNamed(
-                                                    'employeeDetails',
-                                                    pathParameters: {
-                                                      'id': recEmpId.toString(),
-                                                      'lang': context.locale.languageCode,
-                                                    },
-                                                  );
-                                                }
-                                              : null,
-                                          imgPath: Icons.swap_horiz_rounded,
-                                          title: recEmpName,
-                                          isHighLight: true,
+                                    Widget pairRow(Widget start, Widget end, IconData icon) => Row(
+                                          children: [
+                                            Expanded(child: start),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                                              child: Icon(icon, size: 18, color: Color(AppColors.background)),
+                                            ),
+                                            Expanded(child: end),
+                                          ],
+                                        );
+
+                                    fullWidthTile = Column(
+                                      children: [
+                                        pairRow(
+                                          InfoTileWidget(
+                                            onTap: hasReqId ? () => openEmployee(reqEmpId) : null,
+                                            imgPath: Icons.person_2_outlined,
+                                            title: reqName,
+                                            isHighLight: true,
+                                          ),
+                                          InfoTileWidget(
+                                            onTap: recEmpId != null ? () => openEmployee(recEmpId) : null,
+                                            imgPath: Icons.person_2_outlined,
+                                            title: recName,
+                                            isHighLight: true,
+                                          ),
+                                          Icons.swap_horiz_rounded,
                                         ),
-                                      );
-                                    }
-                                    if (reqShift.isNotEmpty) {
-                                      items.add(
-                                        InfoTileWidget(
-                                          imgPath: Icons.schedule_rounded,
-                                          title: ((request as dynamic).receiverShiftAssignmentId != null && recShift.isNotEmpty)
-                                              ? '$reqShift ↔ $recShift'
-                                              : reqShift,
-                                        ),
-                                      );
-                                    }
+                                        if (reqShift.isNotEmpty || recShift.isNotEmpty) ...[
+                                          const SizedBox(height: spacing),
+                                          pairRow(
+                                            InfoTileWidget(
+                                              imgPath: Icons.schedule_rounded,
+                                              title: reqShift.isEmpty ? '-' : reqShift,
+                                            ),
+                                            InfoTileWidget(
+                                              imgPath: Icons.schedule_rounded,
+                                              title: recShift.isEmpty ? '-' : recShift,
+                                            ),
+                                            Icons.swap_horiz_rounded,
+                                          ),
+                                        ],
+                                      ],
+                                    );
                                   }
                                 } catch (_) {}
 
@@ -615,6 +653,10 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     ),
 
                                     // Dynamic distributed rows
+                                    if (fullWidthTile != null) ...[
+                                      const SizedBox(height: spacing),
+                                      fullWidthTile,
+                                    ],
                                     for (int r = 0; r < rows.length; r++) ...[
                                       const SizedBox(height: spacing),
                                       Row(

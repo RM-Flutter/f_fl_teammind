@@ -145,7 +145,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                 if (controller.isIncomingView) ...[
                   _ScopeSelectorRow(
                     currentScope: controller.incomingScope,
-                    showAllCompany: controller.isHrOrTopManagement,
+                    showAllCompany: true,
                     onSelected: (scope) => controller.setIncomingScope(scope, context),
                   ),
                   SizedBox(height: 10),

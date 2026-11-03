@@ -79,20 +79,22 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
           return TemplatePage(
             pageContext: context,
             title: 'expense_claim_requests'.tr(),
+            // Create new expense claim button
+            floatingActionButton: FloatingActionButton(
+              heroTag: 'expense_claim_new',
+              backgroundColor: Color(AppColors.buttons),
+              onPressed: () async {
+                final created = await context.pushNamed(
+                  AppRoutes.expenseClaimCreate.name,
+                  pathParameters: {'lang': context.locale.languageCode},
+                );
+                if (created == true) {
+                  controller.initializeScreen(context);
+                }
+              },
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
             actions: [
-              // Create new expense claim button
-              IconButton(
-                icon: const Icon(Icons.add_rounded),
-                onPressed: () async {
-                  final created = await context.pushNamed(
-                    AppRoutes.expenseClaimCreate.name,
-                    pathParameters: {'lang': context.locale.languageCode},
-                  );
-                  if (created == true) {
-                    controller.initializeScreen(context);
-                  }
-                },
-              ),
               // Filter button
               IconButton(
                 icon: const Icon(Icons.filter_list_rounded),
@@ -135,7 +137,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
                 if (controller.isIncomingView) ...[
                   _ScopeSelectorRow(
                     currentScope: controller.incomingScope,
-                    showAllCompany: controller.isHrOrTopManagement,
+                    showAllCompany: true,
                     onSelected: (scope) =>
                         controller.setIncomingScope(scope, context),
                   ),
@@ -224,6 +226,8 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
             child: ListView.builder(
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
+              // Room so the floating add button doesn't cover the last card
+              padding: const EdgeInsets.only(bottom: 80),
               itemCount: requests.length +
                   (isIncoming
                       ? (controller.incomingIsLoadingMore ? 1 : 0)

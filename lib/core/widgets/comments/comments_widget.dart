@@ -310,7 +310,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                   color: Colors.red, fontSize: 16, fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
-          SizedBox(height: 24 + MediaQuery.paddingOf(context).bottom),
+          SizedBox(height: 72 + MediaQuery.paddingOf(context).bottom),
         ],
     );
   }

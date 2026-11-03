@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/date_service.dart';
@@ -33,6 +34,7 @@ class ReasonTab extends StatelessWidget {
     final defaultNoReasonText =
         isArabic ? "لا يوجد سبب مذكور" : "There is no reason";
 
+    final String notes = details?.notes?.trim() ?? '';
     final bool isShiftChange = details?.isShiftChangeRequest == true;
     final bool hasProblem = details?.hasProblem == true ||
         details?.isValid == false ||
@@ -68,8 +70,46 @@ class ReasonTab extends StatelessWidget {
                 style: AppStyles.darkContent(context).copyWith(fontSize: 14),
               ),
             ),
+            if (notes.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              _buildNotesCard(context, notes),
+            ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildNotesCard(BuildContext context, String notes) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.note_outlined, size: 18, color: Color(AppColors.buttons)),
+              const SizedBox(width: 8),
+              Text(
+                'notes'.tr(),
+                style: AppStyles.darkContent(context).copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            notes,
+            style: AppStyles.darkContent(context).copyWith(fontSize: 14),
+          ),
+        ],
       ),
     );
   }

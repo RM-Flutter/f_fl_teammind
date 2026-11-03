@@ -90,13 +90,6 @@ class _MoreScreenState extends State<MoreScreen> {
     }
     final bool isShiftsEmployee =
         us2Cache?['worktime']?['working_hours_type']?.toString() == 'shifts';
-    final bool isManagementUser = gCache != null &&
-        ((gCache['is_teamleader_in'] is List &&
-                (gCache['is_teamleader_in'] as List).isNotEmpty) ||
-            (gCache['is_manager_in'] is List &&
-                (gCache['is_manager_in'] as List).isNotEmpty) ||
-            gCache['is_hr'] == true ||
-            gCache['top_management'] == true);
 
     return Consumer<HomeController>(
       builder: (context, value, child) {
@@ -143,22 +136,6 @@ class _MoreScreenState extends State<MoreScreen> {
                       padding: EdgeInsets.zero,
                       child: ListView(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(
-                                  AppStrings.functionality.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
                           DefaultListTile(
                             title: AppStrings.teamMindAssistant.tr(),
                             icon: Icons.smart_toy_outlined,
@@ -168,32 +145,22 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode
                                 }),
                           ),
-                          // Removed redundant block
-                          if (PackageHelper.hasPackage('emp-payroll'))
-                            DefaultListTile(
-                              title: AppStrings.payroll.tr(),
-                              src: AppIcons.payroll,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.payrollsList.name,
-                                  extra: {
-                                    'employeeName': null,
-                                    'employeeId': null
-                                  },
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Container(
+                              alignment:
+                                  LocalizationService.isArabic(context: context)
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                              child: Text(AppStrings.myWork.tr().toUpperCase(),
+                                  style: AppStyles.primaryContent(context)
+                                      .copyWith(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600)),
                             ),
-                          // Removed redundant block
-                          if (PackageHelper.hasPackage('emp-payroll'))
-                            DefaultListTile(
-                              title: AppStrings.salaryAdvanceRequests.tr(),
-                              src: AppIcons.payroll,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.salaryAdvanceList.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
+                          ),
+                          SizedBox(height: 15),
                           DefaultListTile(
                             title: AppStrings.tasks.tr(),
                             src: AppIcons.tasks,
@@ -203,6 +170,31 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode
                                 }),
                           ),
+                          // Every shift employee can open it: the backend makes it view-only
+                          // (own department) for employees and editable for managers / HR
+                          if (isShiftsEmployee)
+                            DefaultListTile(
+                              title: AppStrings.shiftsSchedule.tr(),
+                              icon: Icons.calendar_month_rounded,
+                              onTap: () async {
+                                await context.pushNamed(
+                                  AppRoutes.shiftsScheduler.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                          if (PackageHelper.hasPackage('emp-reports'))
+                            DefaultListTile(
+                              title: AppStrings.dailyReports.tr(),
+                              icon: Icons.edit_document,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.dailyReportsListScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
                           if (PackageHelper.hasPackage('emp-evaluation'))
                             DefaultListTile(
                               title: AppStrings.evaluationRequests.tr(),
@@ -223,6 +215,44 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Container(
+                              alignment:
+                                  LocalizationService.isArabic(context: context)
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                              child: Text(AppStrings.myRequests.tr().toUpperCase(),
+                                  style: AppStyles.primaryContent(context)
+                                      .copyWith(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          if (PackageHelper.hasPackage('fingerprint-sys'))
+                            DefaultListTile(
+                              title: AppStrings.overtimeRequests.tr(),
+                              icon: Icons.access_time,
+                              // Reusing an existing icon
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.overtimeRequestsScreen.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
+                          // Removed redundant block
+                          if (PackageHelper.hasPackage('emp-payroll'))
+                            DefaultListTile(
+                              title: AppStrings.salaryAdvanceRequests.tr(),
+                              src: AppIcons.payroll,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.salaryAdvanceList.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
                           if (PackageHelper.hasPackage('emp-payroll'))
                             DefaultListTile(
                               title: AppStrings.expenseClaims.tr(),
@@ -230,6 +260,47 @@ class _MoreScreenState extends State<MoreScreen> {
                               // Assuming payroll icon is fine, or we can use another one
                               onTap: () async => await context.pushNamed(
                                   AppRoutes.expenseClaimList.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
+                          if (isShiftsEmployee)
+                            DefaultListTile(
+                              title: AppStrings.shiftChangeRequests.tr(),
+                              icon: Icons.swap_horiz_rounded,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.shiftChangeRequests.name,
+                                  pathParameters: {
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Container(
+                              alignment:
+                                  LocalizationService.isArabic(context: context)
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                              child: Text(AppStrings.myPay.tr().toUpperCase(),
+                                  style: AppStyles.primaryContent(context)
+                                      .copyWith(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          // Removed redundant block
+                          if (PackageHelper.hasPackage('emp-payroll'))
+                            DefaultListTile(
+                              title: AppStrings.payroll.tr(),
+                              src: AppIcons.payroll,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.payrollsList.name,
+                                  extra: {
+                                    'employeeName': null,
+                                    'employeeId': null
+                                  },
                                   pathParameters: {
                                     'lang': context.locale.languageCode
                                   }),
@@ -259,37 +330,6 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode,
                                 },
                               ),
-                            ),
-                          if (PackageHelper.hasPackage('fingerprint-sys'))
-                            DefaultListTile(
-                              title: AppStrings.overtimeRequests.tr(),
-                              icon: Icons.access_time,
-                              // Reusing an existing icon
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.overtimeRequestsScreen.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
-                          if (PackageHelper.hasPackage('emp-reports'))
-                            DefaultListTile(
-                              title: AppStrings.dailyReports.tr(),
-                              icon: Icons.edit_document,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.dailyReportsListScreen.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
-                            ),
-                          if (isShiftsEmployee)
-                            DefaultListTile(
-                              title: AppStrings.shiftChangeRequests.tr(),
-                              icon: Icons.swap_horiz_rounded,
-                              onTap: () async => await context.pushNamed(
-                                  AppRoutes.shiftChangeRequests.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode
-                                  }),
                             ),
                           if (gCache['is_teamleader_in'].isNotEmpty ||
                               gCache['is_manager_in'].isNotEmpty ||
@@ -373,6 +413,21 @@ class _MoreScreenState extends State<MoreScreen> {
                               gCache['is_manager_in'].isNotEmpty ||
                               gCache['is_hr'] == true ||
                               gCache['top_management'] == true)
+                            DefaultListTile(
+                              title: AppStrings.teamTodayStatus.tr(),
+                              icon: Icons.groups_rounded,
+                              onTap: () async {
+                                await context.pushNamed(
+                                    AppRoutes.teamTodayStatus.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
+                          if (gCache['is_teamleader_in'].isNotEmpty ||
+                              gCache['is_manager_in'].isNotEmpty ||
+                              gCache['is_hr'] == true ||
+                              gCache['top_management'] == true)
                             if (PackageHelper.hasPackage('fingerprint-sys'))
                               DefaultListTile(
                                 title: AppStrings.teamFingerprint.tr(),
@@ -385,34 +440,6 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
-                          if (gCache['is_teamleader_in'].isNotEmpty ||
-                              gCache['is_manager_in'].isNotEmpty ||
-                              gCache['is_hr'] == true ||
-                              gCache['top_management'] == true)
-                            DefaultListTile(
-                              title: AppStrings.teamTodayStatus.tr(),
-                              icon: Icons.groups_rounded,
-                              onTap: () async {
-                                await context.pushNamed(
-                                    AppRoutes.teamTodayStatus.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
-                          if (isShiftsEmployee && isManagementUser)
-                            DefaultListTile(
-                              title: AppStrings.shiftsSchedule.tr(),
-                              icon: Icons.calendar_month_rounded,
-                              onTap: () async {
-                                await context.pushNamed(
-                                  AppRoutes.shiftsScheduler.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode,
-                                  },
-                                );
-                              },
-                            ),
                           SizedBox(height: 15),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 24),
@@ -421,7 +448,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   LocalizationService.isArabic(context: context)
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
-                              child: Text(AppStrings.more.tr().toUpperCase(),
+                              child: Text(AppStrings.company.tr().toUpperCase(),
                                   style: AppStyles.primaryContent(context)
                                       .copyWith(
                                           fontSize: 13,
@@ -429,27 +456,6 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                           ),
                           SizedBox(height: 15),
-                          if (PackageHelper.hasPackage('emp-requests'))
-                            DefaultListTile(
-                              title: AppStrings.ticketSystem.tr(),
-                              src: "assets/images/svg/mts.svg",
-                              onTap: () {
-                                context.pushNamed(AppRoutes.complainScreen.name,
-                                    pathParameters: {
-                                      'lang': context.locale.languageCode
-                                    });
-                              },
-                            ),
-                          // DefaultListTile(
-                          //   title: AppStrings.points.tr(),
-                          //   src: "assets/images/svg/mts.svg",
-                          //   onTap: () {
-                          //     context.pushNamed(AppRoutes.painterPointsViewScreen.name,
-                          //         pathParameters: {
-                          //           'lang': context.locale.languageCode
-                          //         });
-                          //   },
-                          // ),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.employeesDirectory.tr(),
@@ -504,6 +510,33 @@ class _MoreScreenState extends State<MoreScreen> {
                                 }
                               },
                             ),
+                          if (PackageHelper.hasPackage('emp-requests'))
+                            DefaultListTile(
+                              title: 'files_center'.tr(),
+                              src: "assets/images/svg/faqqs.svg",
+                              icon: Icons.folder,
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.filesCenter.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
+                          if (PackageHelper.hasPackage('emp-reports'))
+                            DefaultListTile(
+                              title: 'reports'.tr(),
+                              icon: Icons.analytics_outlined,
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.reportsCatalog.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
                           DefaultListTile(
                             title: AppStrings.articlesNew.tr(),
                             src: "assets/images/svg/man.svg",
@@ -552,33 +585,43 @@ class _MoreScreenState extends State<MoreScreen> {
                             },
                           ),
 
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Container(
+                              alignment:
+                                  LocalizationService.isArabic(context: context)
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                              child: Text(AppStrings.helpAndPolicies.tr().toUpperCase(),
+                                  style: AppStyles.primaryContent(context)
+                                      .copyWith(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                          SizedBox(height: 15),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
-                              title: 'files_center'.tr(),
-                              src: "assets/images/svg/faqqs.svg",
-                              icon: Icons.folder,
+                              title: AppStrings.ticketSystem.tr(),
+                              src: "assets/images/svg/mts.svg",
                               onTap: () {
-                                context.pushNamed(
-                                  AppRoutes.filesCenter.name,
-                                  pathParameters: {
-                                    "lang": context.locale.languageCode,
-                                  },
-                                );
+                                context.pushNamed(AppRoutes.complainScreen.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
                               },
                             ),
-                          if (PackageHelper.hasPackage('emp-reports'))
-                            DefaultListTile(
-                              title: 'reports'.tr(),
-                              icon: Icons.analytics_outlined,
-                              onTap: () {
-                                context.pushNamed(
-                                  AppRoutes.reportsCatalog.name,
-                                  pathParameters: {
-                                    "lang": context.locale.languageCode,
-                                  },
-                                );
-                              },
-                            ),
+                          // DefaultListTile(
+                          //   title: AppStrings.points.tr(),
+                          //   src: "assets/images/svg/mts.svg",
+                          //   onTap: () {
+                          //     context.pushNamed(AppRoutes.painterPointsViewScreen.name,
+                          //         pathParameters: {
+                          //           'lang': context.locale.languageCode
+                          //         });
+                          //   },
+                          // ),
                           DefaultListTile(
                             title: AppStrings.faqs.tr(),
                             src: "assets/images/svg/faqqs.svg",
@@ -623,8 +666,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   LocalizationService.isArabic(context: context)
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
-                              child: Text(
-                                  AppStrings.myAccount.tr().toUpperCase(),
+                              child: Text(AppStrings.myAccount.tr().toUpperCase(),
                                   style: AppStyles.primaryContent(context)
                                       .copyWith(
                                           fontSize: 13,
@@ -632,6 +674,30 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                           ),
                           SizedBox(height: 15),
+                          DefaultListTile(
+                            title: AppStrings.personalInfo.tr(),
+                            src: "assets/images/svg/mpi.svg",
+                            onTap: () {
+                              context.pushNamed(
+                                AppRoutes.personalProfile.name,
+                                pathParameters: {
+                                  "lang": context.locale.languageCode,
+                                },
+                              );
+                            },
+                          ),
+                          DefaultListTile(
+                            title: AppStrings.updatePassword.tr(),
+                            src: "assets/images/svg/mup.svg",
+                            onTap: () {
+                              context.pushNamed(
+                                AppRoutes.updatePassword.name,
+                                pathParameters: {
+                                  "lang": context.locale.languageCode,
+                                },
+                              );
+                            },
+                          ),
                           DefaultListTile(
                             title: AppStrings.customizeNotifications.tr(),
                             src: "assets/images/svg/mcn.svg",
@@ -655,30 +721,6 @@ class _MoreScreenState extends State<MoreScreen> {
                             },
                           ),
                           DefaultListTile(
-                            title: AppStrings.updatePassword.tr(),
-                            src: "assets/images/svg/mup.svg",
-                            onTap: () {
-                              context.pushNamed(
-                                AppRoutes.updatePassword.name,
-                                pathParameters: {
-                                  "lang": context.locale.languageCode,
-                                },
-                              );
-                            },
-                          ),
-                          DefaultListTile(
-                            title: AppStrings.personalInfo.tr(),
-                            src: "assets/images/svg/mpi.svg",
-                            onTap: () {
-                              context.pushNamed(
-                                AppRoutes.personalProfile.name,
-                                pathParameters: {
-                                  "lang": context.locale.languageCode,
-                                },
-                              );
-                            },
-                          ),
-                          DefaultListTile(
                             title: AppStrings.userDevices.tr(),
                             src: "assets/images/svg/mpi.svg",
                             onTap: () {
@@ -690,6 +732,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               );
                             },
                           ),
+                          SizedBox(height: 15),
                           DefaultListTile(
                             title: AppStrings.logout.tr(),
                             src: "assets/images/svg/mlo.svg",

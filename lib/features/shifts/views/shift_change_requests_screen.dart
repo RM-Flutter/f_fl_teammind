@@ -193,7 +193,7 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
               if (provider.isForDepartment) ...[
                 _ScopeSelectorRow(
                   currentScope: provider.incomingScope,
-                  showAllCompany: provider.isHrOrTopManagement,
+                  showAllCompany: true,
                   onSelected: (scope) =>
                       provider.setIncomingScope(scope, context),
                 ),
