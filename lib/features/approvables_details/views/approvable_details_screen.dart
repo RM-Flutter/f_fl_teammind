@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
 import 'package:app_test/features/requests/details/views/widgets/request_details_header_widget.dart';
 import '../cubit/approvable_details_cubit.dart';
@@ -74,7 +74,6 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = LocalizationService.isArabic(context: context);
 
     UserSettingsModel? userSettings;
     final jsonString = CacheHelper.getString("US1");
@@ -165,7 +164,7 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
                           backgroundColor: Color(AppColors.buttons),
                         ),
                         child:
-                            Text(isArabic ? 'إعادة المحاولة' : 'Retry'),
+                            Text('retry'.tr()),
                       ),
                     ],
                   ),

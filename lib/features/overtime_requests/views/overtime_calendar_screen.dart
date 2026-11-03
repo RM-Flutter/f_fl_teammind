@@ -20,13 +20,13 @@ import 'package:app_test/core/constants/app_design.dart';
 
 String _formatDuration(int? totalMinutes, bool isArabic) {
   if (totalMinutes == null || totalMinutes == 0) {
-    return isArabic ? "0 دقيقة" : "0 min";
+    return '0_min'.tr();
   }
   final hours = totalMinutes ~/ 60;
   final mins = totalMinutes % 60;
-  if (hours == 0) return "$mins ${isArabic ? 'دقيقة' : 'min'}";
-  if (mins == 0) return "$hours ${isArabic ? 'ساعة' : 'hr'}";
-  return isArabic ? "$hours س و $mins د" : "$hours hr $mins min";
+  if (hours == 0) return "$mins ${'min'.tr()}";
+  if (mins == 0) return "$hours ${'hr'.tr()}";
+  return 'hr_min_2'.tr(namedArgs: {'hours': '$hours', 'mins': '$mins'});
 }
 
 class OvertimeCalendarScreen extends StatelessWidget {
@@ -76,7 +76,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                 );
               },
               backgroundColor: Color(AppColors.buttons),
-              tooltip: isArabic ? 'إضافة وقت إضافي' : 'Add Overtime',
+              tooltip: 'add_overtime'.tr(),
               child: Center(
                 child: Image.asset(
                   AppImages.addFloatingActionButtonIcon,

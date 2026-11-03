@@ -119,13 +119,10 @@ class _AddShiftChangeRequestScreenState
   }
 
   Future<void> _submit(ShiftChangeController provider) async {
-    final isArabic = LocalizationService.isArabic(context: context);
     if (_selectedMyAssignment == null || _selectedMyAssignment!.id == null) {
       AlertsService.error(
         context: context,
-        message: isArabic
-            ? 'يرجى اختيار الشيفت الخاص بك الذي تريد تبديله'
-            : 'Please select your shift assignment to swap',
+        message: 'please_select_your_shift_assignment_to_swap'.tr(),
         title: 'error'.tr(),
       );
       return;
@@ -134,9 +131,7 @@ class _AddShiftChangeRequestScreenState
     if (_selectedColleague == null || _selectedColleague!.employeeId == null) {
       AlertsService.error(
         context: context,
-        message: isArabic
-            ? 'يرجى اختيار الزميل من نفس الإدارة'
-            : 'Please select a colleague from your department',
+        message: 'please_select_a_colleague_from_your_department'.tr(),
         title: 'error'.tr(),
       );
       return;
@@ -146,9 +141,7 @@ class _AddShiftChangeRequestScreenState
         _selectedColleagueAssignment!.id == null) {
       AlertsService.error(
         context: context,
-        message: isArabic
-            ? 'يرجى اختيار شيفت الزميل للتبديل معه'
-            : 'Please select the colleague shift to swap with',
+        message: 'please_select_the_colleague_shift_to_swap'.tr(),
         title: 'error'.tr(),
       );
       return;
@@ -192,7 +185,7 @@ class _AddShiftChangeRequestScreenState
       routeName: AppRoutes.addShiftChangeRequest.name,
       actions: [
         IconButton(
-          tooltip: isArabic ? 'تغيير الفترة الزمنية' : 'Change Date Range',
+          tooltip: 'change_date_range'.tr(),
           icon: Icon(
             Icons.date_range_rounded,
             color: Color(AppColors.secondaryButton),
@@ -236,17 +229,12 @@ class _AddShiftChangeRequestScreenState
                 _buildSectionHeader(
                   context: context,
                   stepNumber: '1',
-                  title: isArabic
-                      ? 'اختر الشيفت الخاص بك'
-                      : 'Select Your Shift Assignment',
+                  title: 'select_your_shift_assignment'.tr(),
                   icon: Icons.event_available_rounded,
                 ),
                 const SizedBox(height: 10),
                 if (myAssignments.isEmpty)
-                  _buildEmptyNotice(
-                    isArabic
-                        ? 'لا توجد شيفتات متاحة لك في هذه الفترة للتبديل'
-                        : 'No selectable shift assignments found for you in this date range.',
+                  _buildEmptyNotice('no_selectable_shift_assignments_found_for_you'.tr(),
                   )
                 else
                   _buildAssignmentsHorizontalList(
@@ -267,17 +255,12 @@ class _AddShiftChangeRequestScreenState
                 _buildSectionHeader(
                   context: context,
                   stepNumber: '2',
-                  title: isArabic
-                      ? 'اختر الزميل (من نفس الإدارة)'
-                      : 'Select Colleague (Same Department)',
+                  title: 'select_colleague_same_department'.tr(),
                   icon: Icons.people_alt_outlined,
                 ),
                 const SizedBox(height: 10),
                 if (colleagues.isEmpty)
-                  _buildEmptyNotice(
-                    isArabic
-                        ? 'لا يوجد زملاء متاحون في جدول الإدارة حالياً'
-                        : 'No colleagues found in your department schedule.',
+                  _buildEmptyNotice('no_colleagues_found_in_your_department_schedule'.tr(),
                   )
                 else
                   _buildColleaguesSelector(
@@ -292,23 +275,15 @@ class _AddShiftChangeRequestScreenState
                 _buildSectionHeader(
                   context: context,
                   stepNumber: '3',
-                  title: isArabic
-                      ? 'اختر شيفت الزميل للتبديل معه'
-                      : 'Colleague Shift to Swap',
+                  title: 'colleague_shift_to_swap'.tr(),
                   icon: Icons.swap_horiz_rounded,
                 ),
                 const SizedBox(height: 10),
                 if (_selectedColleague == null)
-                  _buildEmptyNotice(
-                    isArabic
-                        ? 'اختر الزميل أولاً لعرض شيفتاته المتاحة للتبديل'
-                        : 'Select a colleague first to view their available shifts.',
+                  _buildEmptyNotice('select_a_colleague_first_to_view_their'.tr(),
                   )
                 else if (colleagueCalendarAssignments.isEmpty)
-                  _buildEmptyNotice(
-                    isArabic
-                        ? 'لا توجد شيفتات متاحة لهذا الزميل في هذه الفترة'
-                        : 'This colleague has no available shifts in this period.',
+                  _buildEmptyNotice('this_colleague_has_no_available_shifts_in'.tr(),
                   )
                 else
                   _buildAssignmentsHorizontalList(
@@ -353,9 +328,7 @@ class _AddShiftChangeRequestScreenState
                     maxLines: 3,
                     maxLength: 1000,
                     decoration: InputDecoration(
-                      hintText: isArabic
-                          ? 'اكتب سبب طلب تبديل الشيفت...'
-                          : 'Enter reason for shift change request...',
+                      hintText: 'enter_reason_for_shift_change_request'.tr(),
                       hintStyle: TextStyle(
                         color: Colors.grey.shade400,
                         fontSize: 13.5,
@@ -635,8 +608,7 @@ class _AddShiftChangeRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            isArabic ? 'ملخص طلب التبديل:' : 'Swap Summary:',
+          Text('swap_summary'.tr(),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 12.5,
@@ -645,12 +617,12 @@ class _AddShiftChangeRequestScreenState
           ),
           const SizedBox(height: 6),
           Text(
-            '• ${isArabic ? 'شيفتك' : 'Your Shift'}: ${_selectedMyAssignment?.shiftName ?? ''} ($myDate)',
+            '• ${'your_shift'.tr()}: ${_selectedMyAssignment?.shiftName ?? ''} ($myDate)',
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
           Text(
-            '• ${isArabic ? 'مقابل شيفت الزميل' : 'With'} (${_selectedColleague?.name ?? ''}): ${_selectedColleagueAssignment != null ? '${_selectedColleagueAssignment!.shiftName ?? ''} ($colDate)' : (isArabic ? 'لم يتم الاختيار بعد' : 'Not selected yet')}',
+            '• ${'with'.tr()} (${_selectedColleague?.name ?? ''}): ${_selectedColleagueAssignment != null ? '${_selectedColleagueAssignment!.shiftName ?? ''} ($colDate)' : ('not_selected_yet'.tr())}',
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
         ],

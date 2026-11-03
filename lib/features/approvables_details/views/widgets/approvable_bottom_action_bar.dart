@@ -8,7 +8,6 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/requests/shared/ui/widgets/custom_request_details_button.widget.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
@@ -39,7 +38,6 @@ class ApprovableBottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = LocalizationService.isArabic(context: context);
 
     final bool isApplicant = details.employeeId == null ||
         userSettings?.empId == null ||
@@ -209,8 +207,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
       if (details.canTakeActionAsSomeoneElse == true) {
         addButton(
           CustomRequestDetailsButton(
-            title:
-                isArabic ? 'اتخاذ إجراء نيابة عن موظف' : 'Act as Someone Else',
+            title: 'act_as_someone_else_2'.tr(),
             color: Color(AppColors.buttons),
             onPressed: () async {
               await showModalBottomSheet(
@@ -236,7 +233,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         final bool isExactlyThreeTotal = rawButtons.length == 2;
         addButton(
           CustomRequestDetailsButton(
-            title: isArabic ? 'تعديل الطلب' : 'Edit Request',
+            title: 'edit_request'.tr(),
             color: isExactlyThreeTotal 
                 ? Color(AppColors.secondaryButton) 
                 : Color(AppColors.buttons),

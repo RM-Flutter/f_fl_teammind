@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -23,8 +24,7 @@ class ActionFilePicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isArabic ? 'مرفق (اختياري)' : 'Attachment File (Optional)',
+        Text('attachment_file_optional'.tr(),
           style: AppStyles.darkContent(context).copyWith(
             fontSize: 12,
             fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class ActionFilePicker extends StatelessWidget {
                   child: Text(
                     selectedFile != null
                         ? selectedFile!.name
-                        : (isArabic ? 'اضغط لإرفاق ملف' : 'Tap to attach file'),
+                        : ('tap_to_attach_file'.tr()),
                     style: AppStyles.darkContent(context).copyWith(
                       fontSize: 12,
                       color: Color(AppColors.secondaryButton),

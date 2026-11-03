@@ -299,15 +299,14 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                     if (headerTitle.isEmpty) {
                       try {
                         final appType = (request as dynamic).approvableType?.toString();
-                        final isAr = LocalizationService.isArabic(context: context);
                         if (appType == 'shift_change_requests') {
-                          headerTitle = isAr ? 'طلب تبديل شيفت' : 'Shift Change Request';
+                          headerTitle = 'shift_change_request'.tr();
                         } else if (appType == 'overtime' || appType == 'overtime_requests') {
                           headerTitle = AppStrings.overtimeRequests.tr();
                         } else if (appType == 'salary_advance' || appType == 'salary_advance_requests') {
-                          headerTitle = isAr ? 'طلب سلفة' : 'Salary Advance Request';
+                          headerTitle = 'salary_advance_request'.tr();
                         } else if (appType == 'employee_expense_claims') {
-                          headerTitle = isAr ? 'مطالبة مصروفات' : 'Expense Claim';
+                          headerTitle = 'expense_claim_2'.tr();
                         }
                       } catch (_) {}
                     }

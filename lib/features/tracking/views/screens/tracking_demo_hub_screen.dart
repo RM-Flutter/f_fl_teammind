@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../data/dummy/tracking_dummy_data.dart';
 import '../../data/models/tracking_status.enum.dart';
@@ -40,7 +40,6 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
 
     return Scaffold(
       backgroundColor: Color(AppColors.scaffoldBackGround),
@@ -75,17 +74,13 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                isAr ? 'معاينة تصميم نظام التتبع 📍' : 'Tracking System Design Preview 📍',
+                              Text('tracking_system_design_preview'.tr(),
                                 style: AppStyles.whiteHeading(context).copyWith(
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                isAr
-                                    ? 'شاشات الموظف، المدير، والخريطة المجمعة (Dummy Data)'
-                                    : 'Employee, Manager & Group Map screens (Dummy Data)',
+                              Text('employee_manager_group_map_screens_dummy_data'.tr(),
                                 style: AppStyles.whiteContent(context).copyWith(
                                   fontSize: 11,
                                   color: Colors.white70,
@@ -95,7 +90,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                           ),
                         ),
                         IconButton(
-                          tooltip: isAr ? 'الخريطة المجمعة' : 'Group Live Map',
+                          tooltip: 'group_live_map'.tr(),
                           icon: const Icon(Icons.map_outlined, color: Colors.white, size: 22),
                           onPressed: () {
                             Navigator.of(context).push(
@@ -129,9 +124,9 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                       labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5),
                       indicatorSize: TabBarIndicatorSize.tab,
                       tabs: [
-                        Tab(text: isAr ? 'واجهة الموظف 📱' : 'Employee View 📱'),
-                        Tab(text: isAr ? 'واجهة المدير 📊' : 'Manager View 📊'),
-                        Tab(text: isAr ? 'عناصر التصميم 🎨' : 'Design System 🎨'),
+                        Tab(text: 'employee_view'.tr()),
+                        Tab(text: 'manager_view'.tr()),
+                        Tab(text: 'design_system'.tr()),
                       ],
                     ),
                   ),
@@ -152,14 +147,12 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                   child: Column(
                     children: [
                       _DemoInfoBanner(
-                        title: isAr ? 'وضع الموظف (Employee Mode)' : 'Employee Mode',
-                        subtitle: isAr
-                            ? 'يمكن للموظف بدء وإيقاف جلسات متعددة (Legs)، تسجيل نقاط وصول يدوية، والمزامنة.'
-                            : 'Employee can start & stop multiple legs, record manual milestone arrivals, and sync points.',
-                        actionLabel: isAr ? 'فتح الخريطة الكاملة' : 'Open Full Map',
+                        title: 'employee_mode'.tr(),
+                        subtitle: 'employee_can_start_stop_multiple_legs_record'.tr(),
+                        actionLabel: 'open_full_map'.tr(),
                         onAction: () => TrackingMapViewDialog.show(
                           context,
-                          title: isAr ? 'خريطة مسار المهمة' : 'Task Route Map',
+                          title: 'task_route_map'.tr(),
                           titleEn: 'Task Route Map',
                           sessions: [
                             TrackingDummyData.session1,
@@ -182,11 +175,9 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                   child: Column(
                     children: [
                       _DemoInfoBanner(
-                        title: isAr ? 'وضع المدير / HR (Manager Mode)' : 'Manager / HR Mode',
-                        subtitle: isAr
-                            ? 'يعرض ساعات النشاط الفعلية، عدد الجلسات، المسار، وزر الإلغاء الإداري.'
-                            : 'Displays actual active hours, leg count, route map, and admin cancellation controls.',
-                        actionLabel: isAr ? 'الخريطة الجماعية' : 'Group Live Map',
+                        title: 'manager_hr_mode'.tr(),
+                        subtitle: 'displays_actual_active_hours_leg_count_route'.tr(),
+                        actionLabel: 'group_live_map_2'.tr(),
                         onAction: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => const LiveGroupMapScreen()),
@@ -209,8 +200,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Direct Screen Navigators
-                      Text(
-                        isAr ? 'الشاشات الكاملة:' : 'Full Screens:',
+                      Text('full_screens'.tr(),
                         style: AppStyles.heading(context).copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -230,20 +220,14 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                           );
                         },
                         icon: const Icon(Icons.map, color: Colors.white),
-                        label: Text(
-                          isAr
-                              ? 'فتح شاشة الخريطة الجماعية المباشرة (Live Group Map)'
-                              : 'Open Field Team Live Group Map',
+                        label: Text('open_field_team_live_group_map'.tr(),
                           style: AppStyles.whiteContent(context).copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 20),
 
                       // Status Badges Gallery
-                      Text(
-                        isAr
-                            ? 'معرض شارات حالات التتبع (Tracking Status Badges):'
-                            : 'Tracking Status Badges Gallery:',
+                      Text('tracking_status_badges_gallery'.tr(),
                         style: AppStyles.heading(context).copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -270,10 +254,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                       const SizedBox(height: 20),
 
                       // Filter Chips Demo
-                      Text(
-                        isAr
-                            ? 'فلتر قائمة الطلبات (Filter Chips):'
-                            : 'Request Filter Chips:',
+                      Text('request_filter_chips'.tr(),
                         style: AppStyles.heading(context).copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -296,8 +277,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                       const SizedBox(height: 20),
 
                       // Modals & Dialogs Triggers
-                      Text(
-                        isAr ? 'النوافذ والمودالز (Modals):' : 'Modals & Dialogs:',
+                      Text('modals_dialogs'.tr(),
                         style: AppStyles.heading(context).copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -320,8 +300,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                                   onSubmit: (lbl) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                          isAr ? 'تم تسجيل النقطة: $lbl' : 'Point recorded: $lbl',
+                                        content: Text('point_recorded'.tr(namedArgs: {'lbl': '$lbl'}),
                                         ),
                                       ),
                                     );
@@ -329,8 +308,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                                 );
                               },
                               icon: const Icon(Icons.add_location_alt_outlined, size: 18),
-                              label: Text(
-                                isAr ? 'مودال نقطة يدوية' : 'Manual Point Modal',
+                              label: Text('manual_point_modal'.tr(),
                                 style: const TextStyle(fontSize: 11.5),
                               ),
                             ),
@@ -349,10 +327,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                                   onConfirm: (scope) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                          isAr
-                                              ? 'تم تأكيد الإلغاء: $scope'
-                                              : 'Cancellation confirmed: $scope',
+                                        content: Text('cancellation_confirmed'.tr(namedArgs: {'scope': '$scope'}),
                                         ),
                                       ),
                                     );
@@ -360,8 +335,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                                 );
                               },
                               icon: Icon(Icons.cancel_outlined, size: 18, color: Color(AppColors.failureRed)),
-                              label: Text(
-                                isAr ? 'مودال إلغاء التتبع' : 'Cancel Modal',
+                              label: Text('cancel_modal'.tr(),
                                 style: TextStyle(fontSize: 11.5, color: Color(AppColors.failureRed)),
                               ),
                             ),
@@ -378,7 +352,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                         onPressed: () {
                           TrackingMapViewDialog.show(
                             context,
-                            title: isAr ? 'خريطة مسار المهمة الميدانية' : 'Field Mission Route Map',
+                            title: 'field_mission_route_map'.tr(),
                             titleEn: 'Field Mission Route Map',
                             sessions: [
                               TrackingDummyData.session1,
@@ -387,10 +361,7 @@ class _TrackingDemoHubScreenState extends State<TrackingDemoHubScreen> with Sing
                           );
                         },
                         icon: const Icon(Icons.route_outlined, size: 18),
-                        label: Text(
-                          isAr
-                              ? 'عرض نافذة مسار الطلب الواحد على الخريطة'
-                              : 'Open Single Request Route Map Dialog',
+                        label: Text('open_single_request_route_map_dialog'.tr(),
                           style: const TextStyle(fontSize: 12),
                         ),
                       ),

@@ -186,7 +186,7 @@ class SingleApprovalRow extends StatelessWidget {
           Row(
             children: [
               Text(
-                '${isArabic ? 'تم التنفيذ بواسطة' : 'Acted By'}: ',
+                '${'acted_by'.tr()}: ',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -216,7 +216,7 @@ class SingleApprovalRow extends StatelessWidget {
               border: Border.all(color: Colors.grey.shade200),
             ),
             child: Text(
-              '${isArabic ? 'الرد' : 'Reply'}: ${item.replay!.trim()}',
+              '${'reply'.tr()}: ${item.replay!.trim()}',
               style: const TextStyle(
                 fontSize: 12,
                 color: Colors.black87,
@@ -250,10 +250,8 @@ class SingleApprovalRow extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         _attachmentUrls.length == 1
-                            ? (isArabic ? 'عرض المرفق' : 'View Attachment')
-                            : (isArabic
-                                ? 'عرض المرفقات (${_attachmentUrls.length})'
-                                : 'View Attachments (${_attachmentUrls.length})'),
+                            ? ('view_attachment'.tr())
+                            : ('view_attachments'.tr(namedArgs: {'length': '${_attachmentUrls.length}'})),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.blue,

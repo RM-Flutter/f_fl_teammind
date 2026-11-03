@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_strings.dart';
-import '../services/localization_service.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
 /// دروب داون مع سيرش — يفتح bottom sheet فيه حقل بحث وقائمة تدعم الاختيار المتعدد (Checkboxes).
@@ -49,11 +48,10 @@ class _MultiSearchableDropdownSheetState extends State<MultiSearchableDropdownSh
 
   String _displayText() {
     if (_isEmpty(widget.selectedValues)) return '';
-    final isAr = LocalizationService.isArabic(context: context);
     if (widget.selectedValues.length == 1) {
       return widget.selectedValues.first[widget.nameKey]?.toString() ?? '';
     }
-    return '${widget.selectedValues.length} ${isAr ? "عنصر تم اختياره" : "items selected"}';
+    return '${widget.selectedValues.length} ${'items_selected'.tr()}';
   }
 
   void _showSelectionSheet(BuildContext context) {
@@ -193,7 +191,6 @@ class _MultiSelectionSheetContentState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isAr = LocalizationService.isArabic(context: context);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.8,
@@ -320,8 +317,7 @@ class _MultiSelectionSheetContentState
                       ),
                     ),
                     onPressed: () => widget.onConfirm(_selected),
-                    child: Text(
-                      isAr ? "تأكيد الاختيار" : "Confirm Selection",
+                    child: Text('confirm_selection'.tr(),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

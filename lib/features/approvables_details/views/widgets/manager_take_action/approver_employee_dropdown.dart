@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -25,8 +26,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isArabic ? 'اختر الشخص المراد التوقيع عنه' : 'Select Approver Employee',
+        Text('select_approver_employee'.tr(),
           style: AppStyles.darkContent(context).copyWith(
             fontSize: 12,
             fontWeight: FontWeight.bold,
@@ -50,10 +50,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.sm),
               border: Border.all(color: Colors.amber.shade300),
             ),
-            child: Text(
-              isArabic
-                  ? 'لا يوجد مديرون متاحون حالياً لهذا المستوى'
-                  : 'No approvers available for this level',
+            child: Text('no_approvers_available_for_this_level'.tr(),
               style: const TextStyle(fontSize: 12, color: Colors.amber),
             ),
           )
@@ -72,8 +69,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
                 dropdownColor: Colors.white,
                 icon: Icon(Icons.arrow_drop_down,
                     color: Color(AppColors.buttons), size: 24),
-                hint: Text(
-                  isArabic ? 'اختر الموظف' : 'Select Employee',
+                hint: Text('selectEmployee'.tr(),
                   style: AppStyles.darkContent(context).copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

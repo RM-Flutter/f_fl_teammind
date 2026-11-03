@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'tracking_point.model.dart';
 import 'tracking_session.model.dart';
 
@@ -42,18 +43,18 @@ class EmployeeTrackingSummaryModel {
 
   String getLastUpdatedText({bool isArabic = true}) {
     if (lastUpdatedAgoSeconds == null) {
-      return isArabic ? "لا يوجد نشاط" : "No Activity";
+      return 'no_activity'.tr();
     }
     final sec = lastUpdatedAgoSeconds!;
     if (sec < 60) {
-      return isArabic ? "منذ ثوانٍ" : "Few seconds ago";
+      return 'few_seconds_ago'.tr();
     }
     final min = sec ~/ 60;
     if (min < 60) {
-      return isArabic ? "منذ $min دقيقة" : "$min mins ago";
+      return 'mins_ago'.tr(namedArgs: {'min': '$min'});
     }
     final hours = min ~/ 60;
-    return isArabic ? "منذ $hours ساعة" : "$hours hrs ago";
+    return 'hrs_ago'.tr(namedArgs: {'hours': '$hours'});
   }
 
   factory EmployeeTrackingSummaryModel.fromJson(Map<String, dynamic> json) {

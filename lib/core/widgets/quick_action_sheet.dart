@@ -144,14 +144,11 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
   }
 
   Future<void> _submitAction() async {
-    final isArabic = LocalizationService.isArabic(context: context);
     setState(() => _errorMessage = null);
 
     if (widget.isAsSomeoneElse &&
         (_selectedEmployeeId == null || _selectedEmployeeId!.isEmpty)) {
-      final msg = isArabic
-          ? 'برجاء اختيار الموظف المراد التنفيذ بدلاً منه'
-          : 'Please select an employee to act on behalf of';
+      final msg = 'please_select_an_employee_to_act_on'.tr();
       setState(() => _errorMessage = msg);
       AppToast.showToast(
         msg: msg,
@@ -197,14 +194,14 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
       ScaffoldMessenger.of(widget.parentContext).showSnackBar(
         SnackBar(
           content: Text(result.message ??
-              (isArabic ? 'تم الإجراء بنجاح' : 'Action taken successfully')),
+              ('action_taken_successfully'.tr())),
           backgroundColor: Color(AppColors.successGreen),
         ),
       );
       widget.onActionTaken?.call();
     } else {
       setState(() => _errorMessage =
-          result?.message ?? (isArabic ? 'حدث خطأ' : 'Something went wrong'));
+          result?.message ?? ('something_went_wrong'.tr()));
     }
   }
 
@@ -270,9 +267,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                   const SizedBox(width: 10),
                   Text(
                     widget.isAsSomeoneElse
-                        ? (isArabic
-                            ? 'إجراء نيابةً عن موظف'
-                            : 'Act as Someone Else')
+                        ? ('act_as_someone_else'.tr())
                         : 'take_action'.tr(),
                     style: AppStyles.darkContent(context).copyWith(
                       fontSize: 16,
@@ -318,7 +313,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                       });
                       _fetchDetails();
                     },
-                    child: Text(isArabic ? 'إعادة المحاولة' : 'Retry'),
+                    child: Text('retry'.tr()),
                   ),
                 ],
               ),
@@ -353,12 +348,8 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                               child: Text(
                                 (_details!.hasProblem == true ||
                                         _details!.isValid == false)
-                                    ? (isArabic
-                                        ? 'يتعذر اتخاذ إجراء بسبب تعارض في الجدول'
-                                        : 'Action blocked due to schedule conflict')
-                                    : (isArabic
-                                        ? 'لا يمكن اتخاذ إجراء على هذا الطلب حالياً'
-                                        : 'Cannot take action on this request currently'),
+                                    ? ('action_blocked_due_to_schedule_conflict'.tr())
+                                    : ('cannot_take_action_on_this_request_currently'.tr()),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13.5,
@@ -422,8 +413,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                         ),
                       ),
                       icon: const Icon(Icons.open_in_new_rounded, size: 18),
-                      label: Text(
-                        isArabic ? 'عرض تفاصيل الطلب' : 'View Request Details',
+                      label: Text('view_request_details'.tr(),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       onPressed: () {
@@ -490,9 +480,9 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                               ),
                             ),
                             onPressed: () async => await _submitAction(),
-                            title: isArabic ? 'إرسال الإجراء' : 'Submit Action',
+                            title: 'submit_action'.tr(),
                             titleWidget: Text(
-                              (isArabic ? 'إرسال الإجراء' : 'Submit Action')
+                              ('submit_action'.tr())
                                   .toUpperCase(),
                               style: AppStyles.whiteContent(context).copyWith(
                                 fontSize: 13,

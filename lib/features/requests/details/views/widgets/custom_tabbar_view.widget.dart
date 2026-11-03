@@ -97,10 +97,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                   Tab(
                     child: Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        LocalizationService.isArabic(context: context)
-                            ? 'التتبع 📍'
-                            : 'TRACKING 📍',
+                      child: Text('tracking'.tr(),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

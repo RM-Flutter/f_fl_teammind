@@ -129,26 +129,17 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
 
   String _getCalendarButtonTitle(
       BuildContext context, OvertimeRequestsProvider provider) {
-    final bool isArabic = context.locale.languageCode == 'ar';
     if (!provider.isForDepartment) {
-      return isArabic
-          ? "تقويم طلباتي"
-          : "My Requests Calendar";
+      return 'my_requests_calendar'.tr();
     }
     switch (provider.incomingScope) {
       case 'other_departments':
-        return isArabic
-            ? "تقويم الإدارات الأخرى"
-            : "Other Departments Calendar";
+        return 'other_departments_calendar'.tr();
       case 'all_company':
-        return isArabic
-            ? "تقويم طلبات الشركة"
-            : "All Company Calendar";
+        return 'all_company_calendar'.tr();
       case 'team':
       default:
-        return isArabic
-            ? "تقويم طلبات الفريق"
-            : "Team Requests Calendar";
+        return 'team_requests_calendar'.tr();
     }
   }
 
@@ -346,20 +337,19 @@ class _ScopeSelectorRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = context.locale.languageCode == 'ar';
     final scopes = [
       {
         'value': 'team',
-        'label': isArabic ? 'طلبات الفريق' : 'Team Requests',
+        'label':'teamRequests'.tr(),
       },
       {
         'value': 'other_departments',
-        'label': isArabic ? 'طلبات الإدارات الأخرى' : 'Other Departments',
+        'label': 'other_departments'.tr(),
       },
       if (showAllCompany)
         {
           'value': 'all_company',
-          'label': isArabic ? 'طلبات كل الشركة' : 'All Company',
+          'label': 'all_company'.tr(),
         },
     ];
     return Padding(

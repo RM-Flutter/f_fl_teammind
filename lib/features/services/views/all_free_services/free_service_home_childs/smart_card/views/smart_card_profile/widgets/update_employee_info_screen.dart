@@ -70,9 +70,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
       backgroundColor: Colors.transparent,
       content: CustomAlert(
         title: AppStrings.failed.tr(),
-        message: context.locale.languageCode == 'ar' 
-            ? 'عفواً، تعديل هذه البيانات يتطلب حساب بريميوم' 
-            : 'Sorry, updating this data requires a Premium account',
+        message: 'sorry_updating_this_data_requires_a_premium'.tr(),
         contentType: AlertType.failure,
       ),
     );
@@ -804,8 +802,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 16),
-          Text(
-            context.locale.languageCode == 'ar' ? 'روابط أخرى (بريميوم)' : 'Other Links (Premium)',
+          Text('other_links_premium'.tr(),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -876,8 +873,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                 });
               },
               icon: const Icon(Icons.add),
-              label: Text(
-                context.locale.languageCode == 'ar' ? 'إضافة رابط' : 'Add Link',
+              label: Text('add_link'.tr(),
                 style: const TextStyle(fontSize: 16),
               ),
               style: OutlinedButton.styleFrom(

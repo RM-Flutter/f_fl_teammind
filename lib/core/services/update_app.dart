@@ -9,7 +9,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/services/localization_service.dart';
 
 class UpdateApp{
   static checkForForceUpdate(BuildContext context) async {
@@ -38,8 +37,7 @@ class UpdateApp{
                 child: AlertDialog(
                   backgroundColor: const Color(0xffFFFFFF),
                   title: Center(
-                    child: Text(
-                      LocalizationService.isArabic(context: context) ? "يوجد تحديث متاح للتطبيق": "Available Update",
+                    child: Text('available_update_2'.tr(),
                       style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: Color(AppColors.buttons)),
                       textAlign: TextAlign.center,
                     ),

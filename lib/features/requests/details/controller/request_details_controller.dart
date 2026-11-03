@@ -21,7 +21,6 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import '../../../../core/models/requests_model.dart' show RequestModel;
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
@@ -105,7 +104,6 @@ class RequestDetailsViewModel extends ChangeNotifier {
 
         Widget? contentWidget;
         String title = '';
-        final isArabic = LocalizationService.isArabic(context: context);
 
         if (type == 'shift_change_requests') {
           final reqs = listData
@@ -116,7 +114,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
             if (context.mounted) {
               AlertsService.info(
                 context: context,
-                message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests',
+                message: 'no_previous_requests'.tr(),
                 title: AppStrings.information.tr(),
               );
             }
@@ -132,10 +130,10 @@ class RequestDetailsViewModel extends ChangeNotifier {
         } else if (type.contains('overtime')) {
           final reqs = listData.map((e) => OvertimeRequestModel.fromJson(e)).toList();
           if (reqs.isEmpty) {
-            AlertsService.info(context: context, message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests', title: AppStrings.information.tr());
+            AlertsService.info(context: context, message: 'no_previous_requests'.tr(), title: AppStrings.information.tr());
             return;
           }
-          title = isArabic ? 'إحصائيات العمل الإضافي' : 'Overtime Statistics';
+          title = 'overtime_statistics'.tr();
           contentWidget = OvertimeRequestsSectionWidget(
             employee: null,
             requests: reqs,
@@ -145,10 +143,10 @@ class RequestDetailsViewModel extends ChangeNotifier {
         } else if (type.contains('salary_advance')) {
           final reqs = listData.map((e) => SalaryAdvanceRequestModel.fromJson(e)).toList();
           if (reqs.isEmpty) {
-            AlertsService.info(context: context, message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests', title: AppStrings.information.tr());
+            AlertsService.info(context: context, message: 'no_previous_requests'.tr(), title: AppStrings.information.tr());
             return;
           }
-          title = isArabic ? 'إحصائيات السلف' : 'Salary Advance Statistics';
+          title = 'salary_advance_statistics'.tr();
           contentWidget = SalaryAdvanceSectionWidget(
             employee: null,
             requests: reqs,
@@ -158,10 +156,10 @@ class RequestDetailsViewModel extends ChangeNotifier {
         } else if (type == 'employee_expense_claims') {
           final reqs = listData.map((e) => ExpenseClaimModel.fromApprovableJson(e)).toList();
           if (reqs.isEmpty) {
-            AlertsService.info(context: context, message: isArabic ? 'لا توجد طلبات سابقة' : 'No previous requests', title: AppStrings.information.tr());
+            AlertsService.info(context: context, message: 'no_previous_requests'.tr(), title: AppStrings.information.tr());
             return;
           }
-          title = isArabic ? 'إحصائيات مطالبات المصروفات' : 'Expense Claims Statistics';
+          title = 'expense_claims_statistics'.tr();
           contentWidget = Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Column(

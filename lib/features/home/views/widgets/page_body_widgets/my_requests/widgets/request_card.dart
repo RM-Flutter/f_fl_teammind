@@ -124,10 +124,7 @@ class RequestCard extends StatelessWidget {
                             color: Color(0xFFD32F2F),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            LocalizationService.isArabic(context: context)
-                                ? "مطلوب اتخاذ إجراء"
-                                : "Take Action",
+                          Text('take_action'.tr(),
                             style: const TextStyle(
                               color: Color(0xFFD32F2F),
                               fontSize: 11,

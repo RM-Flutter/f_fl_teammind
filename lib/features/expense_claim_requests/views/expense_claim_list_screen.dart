@@ -292,20 +292,19 @@ class _ScopeSelectorRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = context.locale.languageCode == 'ar';
     final scopes = [
       {
         'value': 'team',
-        'label': isArabic ? 'طلبات الفريق' : 'Team Requests',
+        'label':'teamRequests'.tr(),
       },
       {
         'value': 'other_departments',
-        'label': isArabic ? 'طلبات الإدارات الأخرى' : 'Other Departments',
+        'label': 'other_departments'.tr(),
       },
       if (showAllCompany)
         {
           'value': 'all_company',
-          'label': isArabic ? 'طلبات كل الشركة' : 'All Company',
+          'label': 'all_company'.tr(),
         },
     ];
 

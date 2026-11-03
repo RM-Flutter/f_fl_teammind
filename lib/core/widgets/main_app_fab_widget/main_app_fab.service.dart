@@ -148,8 +148,6 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isArabic =
-    context.locale.languageCode.toLowerCase().startsWith('ar');
 
     // لو مفيش لا liveness ولا profile verification ومفتاح face_challenge بس هو اللي شغال
     // نعرض نفس الـ dialog بدون نص "Verifying video"
@@ -164,9 +162,7 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
 
     final String? message = faceChallengeOnly
         ? null
-        : (isArabic
-        ? 'جارٍ التحقق ...'
-        : 'Verifying ...');
+        : ('verifying'.tr());
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -1175,7 +1171,7 @@ abstract class MainFabServices {
   static Future<void> _showLivenessReport(BuildContext context, List<LivenessChallengeReport> reports,) async {
     final isArabic = context.locale.languageCode.toLowerCase().startsWith('ar');
     final buffer = StringBuffer();
-    buffer.writeln(isArabic ? 'تقرير التحقق من الحياة:' : 'Liveness Verification Report:');
+    buffer.writeln('liveness_verification_report'.tr());
     buffer.writeln('');
 
     for (int i = 0; i < reports.length; i++) {
@@ -1183,13 +1179,13 @@ abstract class MainFabServices {
       final challengeName = isArabic ? report.challengeNameAr : report.challengeName;
       final duration = report.duration.inSeconds;
       final status = report.success
-          ? (isArabic ? 'نجح' : 'Success')
-          : (isArabic ? 'فشل' : 'Failed');
-      final retry = report.wasRetried ? (isArabic ? ' (تمت إعادة المحاولة)' : ' (Retried)') : '';
+          ? ('success_2'.tr())
+          : ('failed_2'.tr());
+      final retry = report.wasRetried ? ('retried'.tr()) : '';
 
       buffer.writeln('${i + 1}. $challengeName: $status (${duration}s)$retry');
       if (report.failureReason != null) {
-        buffer.writeln('   ${isArabic ? 'السبب:' : 'Reason:'} ${report.failureReason}');
+        buffer.writeln('   ${'reason_2'.tr()} ${report.failureReason}');
       }
     }
 
@@ -1198,27 +1194,23 @@ abstract class MainFabServices {
           (sum, report) => sum + report.duration,
     );
     buffer.writeln('');
-    buffer.writeln(isArabic
-        ? 'الوقت الإجمالي: ${totalTime.inSeconds} ثانية'
-        : 'Total Time: ${totalTime.inSeconds} seconds');
+    buffer.writeln('total_time_seconds'.tr(namedArgs: {'in_seconds': '${totalTime.inSeconds}'}));
 
     final successfulChallenges = reports.where((r) => r.success).length;
-    buffer.writeln(isArabic
-        ? 'التحديات الناجحة: $successfulChallenges من ${reports.length}'
-        : 'Successful Challenges: $successfulChallenges of ${reports.length}');
+    buffer.writeln('successful_challenges_of'.tr(namedArgs: {'successful_challenges': '$successfulChallenges', 'length': '${reports.length}'}));
 
     await showDialog(
       context: context,
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
-        title: Text(isArabic ? 'تقرير التحقق' : 'Verification Report', style: TextStyle(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.w700),),
+        title: Text('verification_report'.tr(), style: TextStyle(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.w700),),
         content: SingleChildScrollView(
           child: Text(buffer.toString(), style: TextStyle(color: Color(AppColors.black), fontWeight: FontWeight.w500),),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(isArabic ? 'موافق' : 'OK'),
+            child: Text('ok'.tr()),
           ),
         ],
       ),
@@ -1230,25 +1222,20 @@ abstract class MainFabServices {
     _CapturedFaceData? capturedFace,
     String? fingerprintType,
   }) async {
-    final isArabic = context.locale.languageCode.toLowerCase().startsWith('ar');
 
     final List<Map<String, dynamic>> steps = [];
 
     // 1. أمان الجهاز
     steps.add({
-      'title': isArabic ? 'أمان الجهاز والنظام' : 'Device & System Security',
-      'detail': isArabic
-          ? 'وضع المطور سليم - كسر الحماية (Root) غير موجود'
-          : 'Developer mode safe - No root/jailbreak detected',
+      'title': 'device_system_security'.tr(),
+      'detail': 'developer_mode_safe_no_root_jailbreak_detected'.tr(),
       'icon': Icons.security,
     });
 
     // 2. فحص الموقع
     steps.add({
-      'title': isArabic ? 'الموقع الجغرافي (GPS)' : 'Location Verification',
-      'detail': isArabic
-          ? 'الموقع سليم - لم يتم اكتشاف تزييف موقع (Fake GPS)'
-          : 'Location verified - No fake GPS detected',
+      'title': 'location_verification'.tr(),
+      'detail': 'location_verified_no_fake_gps_detected'.tr(),
       'icon': Icons.location_on,
     });
 
@@ -1260,26 +1247,22 @@ abstract class MainFabServices {
         final successful =
             capturedFace.livenessReports!.where((r) => r.success).length;
         steps.add({
-          'title': isArabic ? 'فحص حيوية الوجه (Liveness)' : 'Face Liveness Check',
-          'detail': isArabic
-              ? 'تم اجتياز $successful من $totalChallenges تحديات بنجاح'
-              : '$successful of $totalChallenges challenges passed successfully',
+          'title': 'face_liveness_check'.tr(),
+          'detail': 'of_challenges_passed_successfully'.tr(namedArgs: {'successful': '$successful', 'total_challenges': '$totalChallenges'}),
           'icon': Icons.face_retouching_natural,
         });
       } else {
         steps.add({
-          'title': isArabic ? 'التقاط صورة الوجه' : 'Face Capture',
-          'detail': isArabic ? 'تم التقاط الصورة بنجاح' : 'Face photo captured successfully',
+          'title': 'face_capture'.tr(),
+          'detail': 'face_photo_captured_successfully'.tr(),
           'icon': Icons.camera_alt,
         });
       }
 
       if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
         steps.add({
-          'title': isArabic ? 'مطابقة الهوية' : 'Identity Verification',
-          'detail': isArabic
-              ? 'تمت مطابقة الوجه مع صورة الموظف'
-              : 'Face matched with employee profile',
+          'title': 'identity_verification'.tr(),
+          'detail': 'face_matched_with_employee_profile'.tr(),
           'icon': Icons.verified_user,
         });
       }
@@ -1287,10 +1270,8 @@ abstract class MainFabServices {
 
     // 4. تسجيل البصمة
     steps.add({
-      'title': isArabic ? 'توثيق البصمة' : 'Fingerprint Registration',
-      'detail': isArabic
-          ? 'تم تسجيل البصمة وحفظها بنجاح ${fingerprintType != null ? "($fingerprintType)" : ""}'
-          : 'Fingerprint verified & recorded ${fingerprintType != null ? "($fingerprintType)" : ""}',
+      'title': 'fingerprint_registration'.tr(),
+      'detail': 'fingerprint_verified_recorded'.tr(namedArgs: {'fingerprint_type_null': '${fingerprintType != null ? "($fingerprintType)" : ""}'}),
       'icon': Icons.fingerprint,
     });
 
@@ -1315,8 +1296,7 @@ abstract class MainFabServices {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                isArabic ? 'تقرير خطوات الفحص' : 'Scan Steps Report',
+              child: Text('scan_steps_report'.tr(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -1370,8 +1350,7 @@ abstract class MainFabServices {
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(
-              isArabic ? 'موافق' : 'OK',
+            child: Text('ok'.tr(),
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -1651,11 +1630,8 @@ abstract class MainFabServices {
           context: context,
           useRootNavigator: true,
           builder: (dialogContext) => AlertDialog(
-            title: Text(isArabic ? 'فشل التحدي' : 'Challenge Failed', style: TextStyle(color: Color(AppColors.secondaryButton)),),
-            content: Text(
-                isArabic
-                    ? 'فشل التحدي: $challengeName\n\nهل تريد المحاولة مرة أخرى؟'
-                    : 'Challenge failed: $challengeName\n\nWould you like to try again?'
+            title: Text('challenge_failed'.tr(), style: TextStyle(color: Color(AppColors.secondaryButton)),),
+            content: Text('challenge_failed_would_you_like_to_try'.tr(namedArgs: {'challenge_name': '$challengeName'})
                 , style: TextStyle(color: Color(AppColors.black))
             ),
             actions: [
@@ -1664,13 +1640,13 @@ abstract class MainFabServices {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(false),
-                      child: Text(isArabic ? 'إلغاء' : 'Cancel', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.secondaryButton))),
+                      child: Text('assistantEnrollCancel'.tr(), style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.secondaryButton))),
                     ),
                   ),
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(true),
-                      child: Text(isArabic ? 'إعادة المحاولة' : 'Retry', style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.secondaryButton))),
+                      child: Text('retry'.tr(), style: Theme.of(context).textTheme.headlineSmall!.copyWith(color:Color(AppColors.secondaryButton))),
                     ),
                   ),
                 ],

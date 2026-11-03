@@ -5,7 +5,6 @@ import 'package:provider/provider.dart' as provider_pkg;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/overtime_requests/controllers/overtime_requests_controller.dart';
@@ -22,7 +21,6 @@ class OvertimeUpdateDialog {
   }) {
     final controller =
         TextEditingController(text: currentOvertime?.toString() ?? '');
-    final isArabic = LocalizationService.isArabic(context: context);
 
     showModalBottomSheet(
       context: context,
@@ -66,8 +64,7 @@ class OvertimeUpdateDialog {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        isArabic ? 'تعديل ساعات الأوفرتايم' : 'Edit Overtime Duration',
+                      Text('edit_overtime_duration'.tr(),
                         style: AppStyles.darkContent(context).copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -97,10 +94,7 @@ class OvertimeUpdateDialog {
                         children: [
                           const Icon(Icons.access_time, size: 18, color: Colors.blueGrey),
                           const SizedBox(width: 8),
-                          Text(
-                            isArabic
-                                ? 'المدة الحالية: $currentOvertime دقيقة'
-                                : 'Current duration: $currentOvertime mins',
+                          Text('current_duration_mins'.tr(namedArgs: {'current_overtime': '$currentOvertime'}),
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -114,8 +108,7 @@ class OvertimeUpdateDialog {
                   ],
 
                   // Label
-                  Text(
-                    isArabic ? 'المدة الجديدة (بالدقائق)' : 'New Duration (in minutes)',
+                  Text('new_duration_in_minutes'.tr(),
                     style: AppStyles.darkContent(context).copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -136,8 +129,8 @@ class OvertimeUpdateDialog {
                       color: Colors.black87,
                     ),
                     decoration: InputDecoration(
-                      hintText: isArabic ? 'أدخل المدة الجديدة' : 'Enter new duration',
-                      suffixText: isArabic ? 'دقيقة' : 'mins',
+                      hintText: 'enter_new_duration'.tr(),
+                      suffixText: 'mins'.tr(),
                       suffixStyle: TextStyle(
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w600,
@@ -158,7 +151,7 @@ class OvertimeUpdateDialog {
 
                   // Submit Button
                   CustomElevatedButton(
-                    title: isArabic ? 'حفظ التعديل' : 'Save Changes',
+                    title: 'save_changes_2'.tr(),
                     backgroundColor: Color(AppColors.buttons),
                     onPressed: isLoading
                         ? () async {}
@@ -190,12 +183,8 @@ class OvertimeUpdateDialog {
                             final displayMsg = (serverMsg != null && serverMsg.isNotEmpty)
                                 ? serverMsg
                                 : (res.success
-                                    ? (isArabic
-                                        ? 'تم تحديث الأوفرتايم بنجاح'
-                                        : 'Overtime request duration updated successfully')
-                                    : (isArabic
-                                        ? 'حدث خطأ أثناء التحديث'
-                                        : 'Failed to update overtime duration'));
+                                    ? ('overtime_request_duration_updated_successfully'.tr())
+                                    : ('failed_to_update_overtime_duration'.tr()));
 
                             // 4. Update UI details if success
                             if (res.success) {
@@ -220,13 +209,13 @@ class OvertimeUpdateDialog {
                                 AlertsService.success(
                                   context: context,
                                   message: displayMsg,
-                                  title: isArabic ? 'نجاح' : 'Success',
+                                  title: 'success_3'.tr(),
                                 );
                               } else {
                                 AlertsService.error(
                                   context: context,
                                   message: displayMsg,
-                                  title: isArabic ? 'خطأ' : 'Error',
+                                  title: 'error_2'.tr(),
                                 );
                               }
                             }

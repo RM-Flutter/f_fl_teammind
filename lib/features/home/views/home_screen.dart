@@ -393,8 +393,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 4),
                       Text(
                         _isEditMode 
-                          ? (LocalizationService.isArabic(context: context) ? 'إنهاء التخصيص' : 'Done')
-                          : (LocalizationService.isArabic(context: context) ? 'تخصيص' : 'Customize'),
+                          ? ('done'.tr())
+                          : ('customize'.tr()),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,

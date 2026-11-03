@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../data/dummy/tracking_dummy_data.dart';
 import '../../data/models/tracking_point.model.dart';
@@ -43,7 +43,6 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
   }
 
   void _startTracking() {
-    final bool isAr = LocalizationService.isArabic(context: context);
     setState(() {
       _status = RequestTrackingStatus.active;
       final newSession = TrackingSessionModel(
@@ -70,10 +69,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          isAr
-              ? 'تم بدء جلسة تتبع جديدة بنجاح 🚀'
-              : 'New tracking session started successfully 🚀',
+        content: Text('new_tracking_session_started_successfully'.tr(),
         ),
         backgroundColor: const Color(0xff2D6A4F),
       ),
@@ -81,7 +77,6 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
   }
 
   void _stopTracking() {
-    final bool isAr = LocalizationService.isArabic(context: context);
     setState(() {
       _status = RequestTrackingStatus.completed;
       if (_sessions.isNotEmpty) {
@@ -117,10 +112,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          isAr
-              ? 'تم إنهاء جلسة التتبع وحفظ المسار بنجاح 🏁'
-              : 'Tracking session ended & route saved 🏁',
+        content: Text('tracking_session_ended_route_saved'.tr(),
         ),
         backgroundColor: const Color(0xFF3389EE),
       ),
@@ -128,7 +120,6 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
   }
 
   void _addManualPoint() {
-    final bool isAr = LocalizationService.isArabic(context: context);
     AddManualPointModal.show(
       context,
       onSubmit: (label) {
@@ -167,8 +158,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              isAr ? 'تم تسجيل: "$label" بنجاح 📍' : 'Recorded: "$label" successfully 📍',
+            content: Text('recorded_successfully'.tr(namedArgs: {'label': '$label'}),
             ),
             backgroundColor: Color(AppColors.buttons),
           ),
@@ -178,14 +168,10 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
   }
 
   void _syncUnuploaded() {
-    final bool isAr = LocalizationService.isArabic(context: context);
     setState(() => _unuploadedCount = 0);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          isAr
-              ? 'تمت مزامنة ورفع جميع النقاط بنجاح ☁️'
-              : 'All points synced & uploaded successfully ☁️',
+        content: Text('all_points_synced_uploaded_successfully'.tr(),
         ),
         backgroundColor: const Color(0xff2D6A4F),
       ),
@@ -194,7 +180,6 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
     final bool isSessionActive = _status == RequestTrackingStatus.active;
 
     return Column(
@@ -229,18 +214,14 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          isAr ? 'تتبع الموقع للمهمة' : 'Request Location Tracking',
+                        Text('request_location_tracking'.tr(),
                           style: AppStyles.heading(context).copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Color(AppColors.titleText),
                           ),
                         ),
-                        Text(
-                          isAr
-                              ? 'تتبع المسار الفعلي وتسجيل المحطات الرئيسية'
-                              : 'Track actual route & record key milestones',
+                        Text('track_actual_route_record_key_milestones'.tr(),
                           style: AppStyles.subtitleContent(context).copyWith(fontSize: 11),
                         ),
                       ],
@@ -267,10 +248,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         Icon(Icons.sync_problem_rounded, size: 16, color: Color(AppColors.warningYellow)),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(
-                            isAr
-                                ? 'توجد $_unuploadedCount نقاط غير مرسلة (انقطاع اتصال)'
-                                : '$_unuploadedCount unsent points (connection lost)',
+                          child: Text('unsent_points_connection_lost'.tr(namedArgs: {'unuploaded_count': '$_unuploadedCount'}),
                             style: AppStyles.content(context).copyWith(
                               fontSize: 11.5,
                               color: const Color(0xffAE702B),
@@ -278,8 +256,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                             ),
                           ),
                         ),
-                        Text(
-                          isAr ? 'مزامنة الآن ⟳' : 'Sync Now ⟳',
+                        Text('sync_now'.tr(),
                           style: AppStyles.content(context).copyWith(
                             fontSize: 11,
                             color: Color(AppColors.buttons),
@@ -309,8 +286,8 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 20),
                         label: Text(
                           widget.isDateMatched
-                              ? (isAr ? 'بدء جلسة تتبع جديدة' : 'Start New Tracking Leg')
-                              : (isAr ? 'التتبع متاح بتوقيت الطلب فقط' : 'Tracking only on request date'),
+                              ? ('start_new_tracking_leg'.tr())
+                              : ('tracking_only_on_request_date'.tr()),
                           style: AppStyles.whiteContent(context).copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 12.5,
@@ -329,8 +306,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         ),
                         onPressed: _addManualPoint,
                         icon: const Icon(Icons.add_location_alt_outlined, color: Colors.white, size: 18),
-                        label: Text(
-                          isAr ? 'نقطة يدوية 📍' : 'Manual Point 📍',
+                        label: Text('manual_point_2'.tr(),
                           style: AppStyles.whiteContent(context).copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -349,8 +325,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                         ),
                         onPressed: _stopTracking,
                         icon: const Icon(Icons.stop_rounded, color: Colors.white, size: 18),
-                        label: Text(
-                          isAr ? 'إيقاف الجلسة ⏹' : 'Stop Leg ⏹',
+                        label: Text('stop_leg'.tr(),
                           style: AppStyles.whiteContent(context).copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -370,8 +345,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
-              Text(
-                isAr ? 'جلسات المسار (Legs)' : 'Route Sessions (Legs)',
+              Text('route_sessions_legs'.tr(),
                 style: AppStyles.heading(context).copyWith(
                   fontSize: 13.5,
                   fontWeight: FontWeight.bold,
@@ -399,13 +373,12 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                 TextButton.icon(
                   onPressed: () => TrackingMapViewDialog.show(
                     context,
-                    title: isAr ? 'خريطة المسار الكامل للطلب' : 'Full Request Route Map',
+                    title: 'full_request_route_map'.tr(),
                     titleEn: 'Full Request Route Map',
                     sessions: _sessions,
                   ),
                   icon: const Icon(Icons.map_outlined, size: 16),
-                  label: Text(
-                    isAr ? 'الخريطة الكاملة' : 'Full Map',
+                  label: Text('full_map'.tr(),
                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -424,10 +397,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                     color: Color(AppColors.cardBackground),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
-                  child: Text(
-                    isAr
-                        ? 'لم يتم بدء أي جلسة تتبع بعد على هذا الطلب'
-                        : 'No tracking sessions recorded yet for this request',
+                  child: Text('no_tracking_sessions_recorded_yet_for_this'.tr(),
                     style: AppStyles.hintContent(context).copyWith(fontSize: 12),
                   ),
                 )
@@ -442,7 +412,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                       sessionIndex: index,
                       onOpenMap: () => TrackingMapViewDialog.show(
                         context,
-                        title: isAr ? 'مسار جلسة #${index + 1}' : 'Route for Session #${index + 1}',
+                        title: 'route_for_session'.tr(namedArgs: {'index_1': '${index + 1}'}),
                         titleEn: 'Route for Session #${index + 1}',
                         sessions: [s],
                         initialSessionId: s.id,

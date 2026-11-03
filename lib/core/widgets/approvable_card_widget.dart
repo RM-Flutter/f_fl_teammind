@@ -70,24 +70,22 @@ class ApprovableCardWidget extends StatelessWidget {
         final mins = totalMins % 60;
         String durationStr = '';
         if (hours == 0) {
-          durationStr = '$mins ${isArabic ? 'دقيقة' : 'min'}';
+          durationStr = '$mins ${'min'.tr()}';
         } else if (mins == 0) {
-          durationStr = '$hours ${isArabic ? 'ساعة' : 'hr'}';
+          durationStr = '$hours ${'hr'.tr()}';
         } else {
-          durationStr = isArabic
-              ? '$hours ساعة و $mins دقيقة'
-              : '$hours hr $mins min';
+          durationStr = 'hr_min'.tr(namedArgs: {'hours': '$hours', 'mins': '$mins'});
         }
 
         if (totalMins > 0) {
           title = durationStr;
           subtitle = formattedDate.isNotEmpty
-              ? (isArabic ? 'التاريخ: $formattedDate' : 'Date: $formattedDate')
+              ? ('date_2'.tr(namedArgs: {'formatted_date': '$formattedDate'}))
               : '';
         } else {
           title = formattedDate.isNotEmpty
               ? formattedDate
-              : (isArabic ? 'وقت إضافي' : 'Overtime');
+              : ('overtime_2'.tr());
           subtitle = '';
         }
       } else if (request is SalaryAdvanceRequestModel) {
@@ -101,15 +99,15 @@ class ApprovableCardWidget extends StatelessWidget {
 
         String amount = sa.total?.toString() ?? '0';
         String months = sa.howLongToPay?.toString() ?? '1';
-        title = '$amount ${isArabic ? 'ج.م' : 'EGP'}';
+        title = '$amount ${'egp_2'.tr()}';
         String durationText = isArabic
             ? '$months شهر'
             : '$months ${months == '1' ? 'month' : 'months'}';
-        String details = '${isArabic ? 'مدة السداد' : 'Duration'}: $durationText';
+        String details = '${'duration_2'.tr()}: $durationText';
         if (sa.from != null && sa.from!.isNotEmpty) {
           final formattedFrom =
               DateService.formatDate(isArabic ? 'ar' : 'en', context, sa.from) ?? sa.from!;
-          details += ' • ${isArabic ? 'من' : 'From'}: $formattedFrom';
+          details += ' • ${'from'.tr()}: $formattedFrom';
         }
         subtitle = details;
       } else if (request is ExpenseClaimModel) {
@@ -125,10 +123,10 @@ class ApprovableCardWidget extends StatelessWidget {
         final amount = ec.moneyValue ?? '0';
         title = ec.reason?.isNotEmpty == true
             ? ec.reason!
-            : '$amount ${isArabic ? 'ج.م' : 'EGP'}';
+            : '$amount ${'egp_2'.tr()}';
 
         // Subtitle = amount + category
-        String sub = '$amount ${isArabic ? 'ج.م' : 'EGP'}';
+        String sub = '$amount ${'egp_2'.tr()}';
         if (ec.categoryName != null && ec.categoryName!.isNotEmpty) {
           sub += ' • ${ec.categoryName}';
         } else if (ec.category != null && ec.category!.isNotEmpty) {
@@ -159,8 +157,8 @@ class ApprovableCardWidget extends StatelessWidget {
           title = '$reqShift ↔ $recShift';
         } else {
           title = reqShift.isNotEmpty
-              ? '$reqShift (${isArabic ? 'تحويل شيفت' : 'Shift Transfer'})'
-              : (isArabic ? 'طلب تبديل شيفت' : 'Shift Change Request');
+              ? '$reqShift (${'shift_transfer'.tr()})'
+              : ('shift_change_request'.tr());
         }
 
         final String fromDate = sc.dateFrom != null && sc.dateFrom!.isNotEmpty
@@ -281,8 +279,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 child: const Icon(Icons.gavel_rounded, color: Color(0xFFB71C1C), size: 24),
               ),
               const SizedBox(height: 6),
-              Text(
-                isArabic ? 'إجراء' : 'Action',
+              Text('action'.tr(),
                 style: const TextStyle(
                   color: Color(0xFFB71C1C),
                   fontSize: 11,
@@ -325,8 +322,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 child: const Icon(Icons.manage_accounts_rounded, color: Color(0xFFE65100), size: 24),
               ),
               const SizedBox(height: 6),
-              Text(
-                isArabic ? 'نيابةً عن' : 'As Someone',
+              Text('as_someone'.tr(),
                 style: const TextStyle(
                   color: Color(0xFFE65100),
                   fontSize: 11,
@@ -371,7 +367,7 @@ class ApprovableCardWidget extends StatelessWidget {
                           _ActionBadge(
                             icon: Icons.gavel_rounded,
                             color: const Color(0xFFD32F2F),
-                            label: isArabic ? 'مطلوب إجراء' : 'Action Required',
+                            label: 'action_required'.tr(),
                           ),
                           const SizedBox(width: 6),
                         ],
@@ -379,7 +375,7 @@ class ApprovableCardWidget extends StatelessWidget {
                           _ActionBadge(
                             icon: Icons.manage_accounts_rounded,
                             color: const Color(0xFFE65100),
-                            label: isArabic ? 'نيابةً عن موظف' : 'Act as Someone',
+                            label: 'act_as_someone'.tr(),
                           ),
                       ],
                     ),

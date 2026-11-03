@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -227,11 +228,11 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                             defaultDropdownField(
                               hasShadows: false,
                               value: viewModel.targetType,
-                              title: LocalizationService.isArabic(context: context) ? "نوع الاستهداف" : "Target Type",
+                              title: 'target_type'.tr(),
                               items: [
-                                DropdownMenuItem(value: 'employees', child: Text(LocalizationService.isArabic(context: context) ? "موظفين محددين" : "Specific Employees", style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w500))),
-                                DropdownMenuItem(value: 'departments', child: Text(LocalizationService.isArabic(context: context) ? "أقسام محددة" : "Specific Departments", style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400))),
-                                DropdownMenuItem(value: 'all', child: Text(LocalizationService.isArabic(context: context) ? "الكل" : "All", style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400))),
+                                DropdownMenuItem(value: 'employees', child: Text('specific_employees'.tr(), style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w500))),
+                                DropdownMenuItem(value: 'departments', child: Text('specific_departments'.tr(), style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400))),
+                                DropdownMenuItem(value: 'all', child: Text('all'.tr(), style: AppStyles.darkContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w400))),
                               ],
                               onChanged: (val) {
                                 if (val != null) {
@@ -262,7 +263,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                 selectedValues: viewModel.selectedDepartments,
                                 items: viewModel.departments,
                                 nameKey: 'title', // assuming departments use 'title'
-                                hintText: LocalizationService.isArabic(context: context) ? "اختر الأقسام" : "Select Departments",
+                                hintText: 'select_departments'.tr(),
                                 onChanged: (newSelection) {
                                   viewModel.selectedDepartments = newSelection;
                                   setState(() {});
@@ -277,7 +278,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                                 selectedValues: viewModel.exceptedEmployees,
                                 items: viewModel.employees,
                                 nameKey: 'name',
-                                hintText: LocalizationService.isArabic(context: context) ? "استثناء موظفين (اختياري)" : "Except Employees (Optional)",
+                                hintText: 'except_employees_optional'.tr(),
                                 onChanged: (newSelection) {
                                   viewModel.exceptedEmployees = newSelection;
                                   setState(() {});

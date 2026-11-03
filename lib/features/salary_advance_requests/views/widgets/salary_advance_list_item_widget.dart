@@ -7,7 +7,6 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
-import '../../../../core/services/localization_service.dart';
 import '../../../../core/services/requests_services.dart';
 import '../../../../core/widgets/glassmorphism_card.widget.dart';
 import '../../shared/models/salary_advance_request_model.dart';
@@ -154,10 +153,7 @@ class _SalaryAdvanceListItemWidgetState
                                 color: Color(0xFFD32F2F),
                               ),
                               const SizedBox(width: 4),
-                              Text(
-                                LocalizationService.isArabic(context: context)
-                                    ? "مطلوب اتخاذ إجراء"
-                                    : "Take Action",
+                              Text('take_action'.tr(),
                                 style: const TextStyle(
                                   color: Color(0xFFD32F2F),
                                   fontSize: 11,

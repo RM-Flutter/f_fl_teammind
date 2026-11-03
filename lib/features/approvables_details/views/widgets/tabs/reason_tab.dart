@@ -31,8 +31,7 @@ class ReasonTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isArabic = LocalizationService.isArabic(context: context);
-    final defaultNoReasonText =
-        isArabic ? "لا يوجد سبب مذكور" : "There is no reason";
+    final defaultNoReasonText = 'there_is_no_reason'.tr();
 
     final String notes = details?.notes?.trim() ?? '';
     final bool isShiftChange = details?.isShiftChangeRequest == true;
@@ -138,9 +137,7 @@ class ReasonTab extends StatelessWidget {
     final String headerMsg = primaryMsg.isNotEmpty
         ? primaryMsg
         : (problemItems.isEmpty
-            ? (isArabic
-                ? 'يوجد تعارض في جدول الشيفتات يمنع الموافقة على هذا الطلب'
-                : 'There is a shift schedule conflict preventing approval of this request')
+            ? ('there_is_a_shift_schedule_conflict_preventing'.tr())
             : '');
 
     return Container(
@@ -159,8 +156,7 @@ class ReasonTab extends StatelessWidget {
                   color: Colors.red.shade700, size: 22),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(
-                  isArabic ? 'تنبيه تعارض الشيفتات' : 'Shift Conflict Warning',
+                child: Text('shift_conflict_warning'.tr(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -253,7 +249,7 @@ class ReasonTab extends StatelessWidget {
           // Party 1: Requester
           _buildPartyRow(
             context: context,
-            label: isArabic ? 'مقدم الطلب (المتنازل)' : 'Requester (Giving up)',
+            label: 'requester_giving_up'.tr(),
             employeeName: reqName,
             shiftName: reqShift,
             dateText: reqDate,
@@ -264,11 +260,11 @@ class ReasonTab extends StatelessWidget {
           // Party 2: Receiver
           _buildPartyRow(
             context: context,
-            label: isArabic ? 'الزميل المستلم (البديل)' : 'Colleague (Receiver)',
+            label: 'colleague_receiver'.tr(),
             employeeName: recName,
             shiftName: isTwoWay
                 ? recShift
-                : (isArabic ? 'استلام بدون شيفت مقابل' : 'Receiving only (no swap shift)'),
+                : ('receiving_only_no_swap_shift'.tr()),
             dateText: isTwoWay ? recDate : '',
             icon: Icons.person_pin_circle_outlined,
             color: const Color(0xFF2E7D32),

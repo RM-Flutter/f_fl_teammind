@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -109,10 +110,7 @@ class ManualPointTile extends StatelessWidget {
                         color: Color(AppColors.hintText),
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        isAr
-                            ? 'دقة: ${point.accuracy.toStringAsFixed(0)}م (${point.latitude.toStringAsFixed(4)}, ${point.longitude.toStringAsFixed(4)})'
-                            : 'Acc: ${point.accuracy.toStringAsFixed(0)}m (${point.latitude.toStringAsFixed(4)}, ${point.longitude.toStringAsFixed(4)})',
+                      Text('acc_m'.tr(namedArgs: {'to_string_as_fixed': '${point.accuracy.toStringAsFixed(0)}', 'to_string_as_fixed2': '${point.latitude.toStringAsFixed(4)}', 'to_string_as_fixed3': '${point.longitude.toStringAsFixed(4)}'}),
                         style: AppStyles.hintContent(context).copyWith(
                           fontSize: 10,
                         ),

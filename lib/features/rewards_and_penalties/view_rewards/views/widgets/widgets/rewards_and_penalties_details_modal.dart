@@ -399,9 +399,7 @@ class _RewardsAndPenaltiesDetailsModalState
                       ),
                     ),
                     onPressed: () async {
-                      final subject = LocalizationService.isArabic(context: context)
-                          ? 'تظلم بخصوص جزاء'
-                          : 'Complaint regarding penalty';
+                      final subject = 'complaint_regarding_penalty'.tr();
 
                       final details = LocalizationService.isArabic(context: context)
                           ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'

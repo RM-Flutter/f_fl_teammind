@@ -71,9 +71,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
 
     if (isAsSomeoneElse) {
       if (_selectedEmployeeId == null || _selectedEmployeeId!.isEmpty) {
-        final msg = LocalizationService.isArabic(context: context)
-            ? 'برجاء اختيار الموظف المراد التنفيذ بدلاً منه'
-            : 'Please select an employee to act on behalf of';
+        final msg = 'please_select_an_employee_to_act_on'.tr();
         setState(() {
           _errorMessage = msg;
         });
@@ -149,9 +147,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                   children: [
                     Text(
                       isAsSomeoneElse
-                          ? (isArabic
-                              ? 'اتخاذ إجراء نيابة عن موظف'
-                              : 'Take Action as Someone Else')
+                          ? ('take_action_as_someone_else'.tr())
                           : 'take_action'.tr(),
                       style: AppStyles.darkContent(context).copyWith(
                         fontSize: 16,
@@ -220,9 +216,9 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                       ),
                     ),
                     onPressed: () async => await _submitAction(context),
-                    title: isArabic ? 'إرسال الإجراء' : 'Submit Action',
+                    title: 'submit_action'.tr(),
                     titleWidget: Text(
-                      (isArabic ? 'إرسال الإجراء' : 'Submit Action')
+                      ('submit_action'.tr())
                           .toUpperCase(),
                       style: AppStyles.whiteContent(context).copyWith(
                         fontSize: 13,

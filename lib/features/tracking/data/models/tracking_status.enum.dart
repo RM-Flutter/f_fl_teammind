@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 
@@ -12,17 +13,17 @@ enum RequestTrackingStatus {
   String getLabel({bool isArabic = true}) {
     switch (this) {
       case RequestTrackingStatus.notRequired:
-        return isArabic ? "بدون تتبع" : "No Tracking";
+        return 'no_tracking'.tr();
       case RequestTrackingStatus.optionalNotStarted:
-        return isArabic ? "تتبع اختياري / لم يبدأ" : "Optional / Not Started";
+        return 'optional_not_started'.tr();
       case RequestTrackingStatus.requiredNotStarted:
-        return isArabic ? "تتبع مطلوب / لم يبدأ" : "Required / Not Started";
+        return 'required_not_started'.tr();
       case RequestTrackingStatus.active:
-        return isArabic ? "جارٍ التتبع الآن" : "Tracking Active";
+        return 'tracking_active'.tr();
       case RequestTrackingStatus.completed:
-        return isArabic ? "اكتمل التتبع" : "Tracking Completed";
+        return 'tracking_completed'.tr();
       case RequestTrackingStatus.requiredMissing:
-        return isArabic ? "تتبع مفقود (مطلوب)" : "Tracking Missing";
+        return 'tracking_missing'.tr();
     }
   }
 
@@ -104,13 +105,13 @@ enum TrackingSessionStatus {
   String getLabel({bool isArabic = true}) {
     switch (this) {
       case TrackingSessionStatus.active:
-        return isArabic ? "نشطة" : "Active";
+        return 'active_2'.tr();
       case TrackingSessionStatus.completed:
-        return isArabic ? "مكتملة" : "Completed";
+        return 'completed_2'.tr();
       case TrackingSessionStatus.interrupted:
-        return isArabic ? "انقطاع تلقائي" : "Interrupted";
+        return 'interrupted'.tr();
       case TrackingSessionStatus.cancelled:
-        return isArabic ? "ملغاة" : "Cancelled";
+        return 'cancelled_2'.tr();
     }
   }
 

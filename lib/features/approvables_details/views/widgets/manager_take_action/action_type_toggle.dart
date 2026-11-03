@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -20,8 +21,7 @@ class ActionTypeToggle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isArabic ? 'نوع الإجراء' : 'Action Type',
+        Text('action_type'.tr(),
           style: AppStyles.darkContent(context).copyWith(
             fontSize: 12,
             fontWeight: FontWeight.bold,
@@ -58,8 +58,7 @@ class ActionTypeToggle extends StatelessWidget {
                         size: 18,
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        isArabic ? 'موافقة' : 'Approve',
+                      Text('approve'.tr(),
                         style: AppStyles.whiteContent(context).copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -101,8 +100,7 @@ class ActionTypeToggle extends StatelessWidget {
                         size: 18,
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        isArabic ? 'رفض' : 'Refuse',
+                      Text('refuse'.tr(),
                         style: AppStyles.whiteContent(context).copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

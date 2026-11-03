@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../screens/live_group_map_screen.dart';
 import '../screens/tracking_demo_hub_screen.dart';
@@ -11,7 +11,6 @@ class TrackingHomePreviewBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -62,8 +61,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                         children: [
                           const Icon(Icons.location_on, size: 12, color: Colors.amberAccent),
                           const SizedBox(width: 4),
-                          Text(
-                            isAr ? 'ميزة جديدة (معاينة التصميم)' : 'New Feature (Design Preview)',
+                          Text('new_feature_design_preview'.tr(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10.5,
@@ -85,8 +83,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                         children: [
                           const Icon(Icons.circle, size: 7, color: Colors.lightGreenAccent),
                           const SizedBox(width: 4),
-                          Text(
-                            isAr ? 'Live Data 10 موظفين' : 'Live Data 10 Staff',
+                          Text('live_data_10_staff'.tr(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -101,18 +98,14 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // Title & Description
-                Text(
-                  isAr ? 'نظام تتبع الموظفين المرتبط بالطلبات 📍' : 'Request-Linked Employee Tracking 📍',
+                Text('request_linked_employee_tracking'.tr(),
                   style: AppStyles.whiteHeading(context).copyWith(
                     fontSize: 15.5,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 3),
-                Text(
-                  isAr
-                      ? 'تتبع المسار الفعلي، تسجيل المحطات الرئيسية، وساعات النشاط الميداني.'
-                      : 'Real-time route tracking, milestone logging, and field active hours.',
+                Text('real_time_route_tracking_milestone_logging_and'.tr(),
                   style: AppStyles.whiteContent(context).copyWith(
                     fontSize: 11,
                     color: Colors.white70,
@@ -126,7 +119,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                     Expanded(
                       child: _BannerQuickButton(
                         icon: Icons.map_rounded,
-                        label: isAr ? 'الخريطة المجمعة' : 'Group Map',
+                        label: 'group_map'.tr(),
                         color: Color(AppColors.buttons), // 0xFF3389EE
                         onTap: () {
                           Navigator.of(context).push(
@@ -139,7 +132,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                     Expanded(
                       child: _BannerQuickButton(
                         icon: Icons.person_pin_circle_outlined,
-                        label: isAr ? 'شاشة الموظف' : 'Staff View',
+                        label: 'staff_view'.tr(),
                         color: Colors.white.withOpacity(0.18),
                         onTap: () {
                           Navigator.of(context).push(
@@ -152,7 +145,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                     Expanded(
                       child: _BannerQuickButton(
                         icon: Icons.admin_panel_settings_outlined,
-                        label: isAr ? 'شاشة المدير' : 'Manager View',
+                        label: 'manager_view_2'.tr(),
                         color: Colors.white.withOpacity(0.18),
                         onTap: () {
                           Navigator.of(context).push(

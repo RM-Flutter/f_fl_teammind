@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -34,7 +35,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
     final startTimeStr = DateFormat('hh:mm a', isAr ? 'ar' : 'en').format(session.startedAt);
     final endTimeStr = session.endedAt != null
         ? DateFormat('hh:mm a', isAr ? 'ar' : 'en').format(session.endedAt!)
-        : (isAr ? 'جارية الآن' : 'Ongoing');
+        : ('ongoing'.tr());
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSizes.s12),
@@ -90,10 +91,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              isAr
-                                  ? 'جلسة المسار #${widget.sessionIndex + 1}'
-                                  : 'Route Leg #${widget.sessionIndex + 1}',
+                            Text('route_leg'.tr(namedArgs: {'session_index_1': '${widget.sessionIndex + 1}'}),
                               style: AppStyles.content(context).copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
@@ -151,16 +149,12 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                 children: [
                   _SummaryMiniChip(
                     icon: Icons.pin_drop_outlined,
-                    label: isAr
-                        ? '${session.pointsCount} نقطة مسجلة'
-                        : '${session.pointsCount} points recorded',
+                    label: 'points_recorded'.tr(namedArgs: {'points_count': '${session.pointsCount}'}),
                   ),
                   const SizedBox(width: 8),
                   _SummaryMiniChip(
                     icon: Icons.flag_outlined,
-                    label: isAr
-                        ? '${session.manualPoints.length} نقطة رئيسية'
-                        : '${session.manualPoints.length} milestones',
+                    label: 'milestones'.tr(namedArgs: {'length': '${session.manualPoints.length}'}),
                   ),
                 ],
               ),
@@ -172,10 +166,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
               child: session.manualPoints.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Text(
-                        isAr
-                            ? 'لا توجد نقاط مسجلة بعد في هذه الجلسة'
-                            : 'No points recorded yet for this leg',
+                      child: Text('no_points_recorded_yet_for_this_leg'.tr(),
                         style: AppStyles.hintContent(context).copyWith(fontSize: 11),
                       ),
                     )
@@ -207,10 +198,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                     ),
                     onPressed: widget.onOpenMap,
                     icon: const Icon(Icons.map_outlined, size: 16),
-                    label: Text(
-                      isAr
-                          ? 'عرض مسار هذه الجلسة على الخريطة'
-                          : 'View Leg Route on Map',
+                    label: Text('view_leg_route_on_map'.tr(),
                       style: AppStyles.content(context).copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/localization_service.dart';
@@ -49,7 +50,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
 
   void _submit(bool isAr) {
     final text = _controller.text.trim();
-    final defaultLabel = isAr ? 'نقطة مسجلة يدويًا' : 'Manual Point';
+    final defaultLabel = 'manual_point'.tr();
     widget.onSubmit(text.isEmpty ? defaultLabel : text);
     Navigator.of(context).pop();
   }
@@ -102,8 +103,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      isAr ? 'تسجيل نقطة رئيسية يدويًا' : 'Record Milestone Manually',
+                    Text('record_milestone_manually'.tr(),
                       style: AppStyles.heading(context).copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -111,10 +111,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      isAr
-                          ? 'تُسجل فورًا وتُرسل لإشعار الإدارة بمحطة وصولك'
-                          : 'Recorded instantly and notifies management of your arrival',
+                    Text('recorded_instantly_and_notifies_management_of_your'.tr(),
                       style: AppStyles.subtitleContent(context).copyWith(fontSize: 11),
                     ),
                   ],
@@ -124,8 +121,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
           ),
           const SizedBox(height: 16),
           // Quick suggestions
-          Text(
-            isAr ? 'مقترحات سريعة:' : 'Quick Suggestions:',
+          Text('quick_suggestions'.tr(),
             style: AppStyles.content(context).copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -160,9 +156,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
           TextField(
             controller: _controller,
             decoration: InputDecoration(
-              hintText: isAr
-                  ? 'اكتب وصف النقطة أو المحطة (اختياري)...'
-                  : 'Enter stop description or note (optional)...',
+              hintText: 'enter_stop_description_or_note_optional'.tr(),
               hintStyle: AppStyles.hintContent(context).copyWith(fontSize: 12),
               filled: true,
               fillColor: Color(AppColors.cardBackground),
@@ -193,8 +187,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                     side: BorderSide(color: Color(AppColors.border)),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    isAr ? 'إلغاء' : 'Cancel',
+                  child: Text('assistantEnrollCancel'.tr(),
                     style: AppStyles.content(context).copyWith(color: const Color(0xff606060)),
                   ),
                 ),
@@ -211,8 +204,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                   ),
                   onPressed: () => _submit(isAr),
                   icon: const Icon(Icons.check_circle_outline, size: 18, color: Colors.white),
-                  label: Text(
-                    isAr ? 'تسجيل النقطة الآن 📍' : 'Record Milestone 📍',
+                  label: Text('record_milestone'.tr(),
                     style: AppStyles.whiteContent(context).copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,

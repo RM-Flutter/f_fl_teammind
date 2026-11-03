@@ -67,8 +67,7 @@ class RequestsCalendarScreen extends StatelessWidget {
           final String holidayName = _titleByLang(h['name'], lang).isEmpty
               ? 'Holiday'
               : _titleByLang(h['name'], lang);
-          final String officialHolidayLabel =
-              lang == 'ar' ? 'إجازة رسمية' : 'Official Holiday';
+          final String officialHolidayLabel = 'official_holiday'.tr();
           combined.add({
             'from': from,
             'to': to,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/localization_service.dart';
@@ -18,11 +19,11 @@ enum MapTimeFilter {
   String getLabel({bool isArabic = true}) {
     switch (this) {
       case MapTimeFilter.live:
-        return isArabic ? 'الآن (مباشر) 🟢' : 'Live (Now) 🟢';
+        return 'live_now'.tr();
       case MapTimeFilter.today:
-        return isArabic ? 'اليوم 📅' : 'Today 📅';
+        return 'today'.tr();
       case MapTimeFilter.customDate:
-        return isArabic ? 'تاريخ محدد 🗓️' : 'Custom Date 🗓️';
+        return 'custom_date'.tr();
     }
   }
 }
@@ -53,14 +54,12 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
   }
 
   void _onRefresh() {
-    final bool isAr = LocalizationService.isArabic(context: context);
     setState(() {
       _employees = List.from(TrackingDummyData.dummyEmployees);
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          isAr ? 'تم تحديث مواقع الموظفين لحظيًا 🔄' : 'Employee locations updated live 🔄',
+        content: Text('employee_locations_updated_live'.tr(),
         ),
         backgroundColor: const Color(0xFF3389EE),
         duration: const Duration(seconds: 1),
@@ -131,17 +130,13 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                isAr ? 'خريطة التتبع الميداني المجمّعة' : 'Field Team Live Tracking Map',
+                              Text('field_team_live_tracking_map'.tr(),
                                 style: AppStyles.whiteHeading(context).copyWith(
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                isAr
-                                    ? '$activeCount موظف نشط حاليًا • 10 معروضين'
-                                    : '$activeCount active staff • 10 shown',
+                              Text('active_staff_10_shown'.tr(namedArgs: {'active_count': '$activeCount'}),
                                 style: AppStyles.whiteContent(context).copyWith(
                                   fontSize: 11,
                                   color: Colors.white70,
@@ -151,7 +146,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                           ),
                         ),
                         IconButton(
-                          tooltip: isAr ? 'تحديث المواقع' : 'Refresh locations',
+                          tooltip: 'refresh_locations'.tr(),
                           icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 22),
                           onPressed: _onRefresh,
                         ),
@@ -297,10 +292,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                       children: [
                         const Icon(Icons.palette_outlined, size: 14, color: Colors.black54),
                         const SizedBox(width: 6),
-                        Text(
-                          isAr
-                              ? 'ألوان ديناميكية (${_employees.length} موظفين)'
-                              : 'Dynamic Palette (${_employees.length} staff)',
+                        Text('dynamic_palette_staff'.tr(namedArgs: {'length': '${_employees.length}'}),
                           style: AppStyles.content(context).copyWith(fontSize: 10.5, color: Colors.black87),
                         ),
                       ],
@@ -329,10 +321,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  isAr
-                      ? 'الصفحة $_currentPage من 2 (إجمالي 18 موظف)'
-                      : 'Page $_currentPage of 2 (18 employees total)',
+                Text('page_of_2_18_employees_total'.tr(namedArgs: {'current_page': '$_currentPage'}),
                   style: AppStyles.subtitleContent(context).copyWith(fontSize: 11.5),
                 ),
                 Row(
@@ -466,7 +455,7 @@ class _EmployeeDetailsCardState extends State<_EmployeeDetailsCard> {
                 radius: 18,
                 backgroundColor: widget.color,
                 child: Text(
-                  empName.isNotEmpty ? empName[0] : (isAr ? 'م' : 'E'),
+                  empName.isNotEmpty ? empName[0] : ('e'.tr()),
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ),
@@ -506,8 +495,8 @@ class _EmployeeDetailsCardState extends State<_EmployeeDetailsCard> {
               if (keyPoints.isNotEmpty)
                 IconButton(
                   tooltip: _showTimeline
-                      ? (isAr ? 'إخفاء النقاط' : 'Hide points')
-                      : (isAr ? 'عرض المحطات' : 'Show milestones'),
+                      ? ('hide_points'.tr())
+                      : ('show_milestones'.tr()),
                   icon: Icon(_showTimeline ? Icons.keyboard_arrow_down : Icons.timeline, color: widget.color),
                   onPressed: () => setState(() => _showTimeline = !_showTimeline),
                 ),
@@ -538,10 +527,7 @@ class _EmployeeDetailsCardState extends State<_EmployeeDetailsCard> {
               ],
             )
           else
-            Text(
-              isAr
-                  ? 'لا توجد جلسة تتبع نشطة مسجلة حاليًا لهذا الموظف'
-                  : 'No active tracking session recorded currently for this staff',
+            Text('no_active_tracking_session_recorded_currently_for'.tr(),
               style: AppStyles.hintContent(context).copyWith(fontSize: 11.5),
             ),
 

@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
@@ -25,7 +25,6 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
 
     return AlertDialog(
       backgroundColor: Colors.white,
@@ -42,8 +41,7 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              isAr ? 'إلغاء جلسات التتبع' : 'Cancel Tracking Sessions',
+            child: Text('cancel_tracking_sessions'.tr(),
               style: AppStyles.heading(context).copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -57,23 +55,16 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            isAr
-                ? 'يرجى تحديد نطاق إلغاء التتبع الإداري لهذا الطلب:'
-                : 'Select admin cancellation scope for this request:',
+          Text('select_admin_cancellation_scope_for_this_request'.tr(),
             style: AppStyles.content(context).copyWith(fontSize: 12, color: const Color(0xff606060)),
           ),
           const SizedBox(height: 12),
           RadioListTile<String>(
             contentPadding: EdgeInsets.zero,
-            title: Text(
-              isAr ? 'إلغاء الجلسة النشطة الحالية فقط' : 'Cancel current active leg only',
+            title: Text('cancel_current_active_leg_only'.tr(),
               style: AppStyles.content(context).copyWith(fontSize: 12, fontWeight: FontWeight.w600),
             ),
-            subtitle: Text(
-              isAr
-                  ? 'الاحتفاظ بسجل الجلسات السابقة المكتملة'
-                  : 'Keep history of previous completed legs',
+            subtitle: Text('keep_history_of_previous_completed_legs'.tr(),
               style: AppStyles.hintContent(context).copyWith(fontSize: 10),
             ),
             value: 'current_session',
@@ -85,18 +76,14 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
           ),
           RadioListTile<String>(
             contentPadding: EdgeInsets.zero,
-            title: Text(
-              isAr ? 'إلغاء كل التتبع للطلب (كل الجلسات)' : 'Cancel all tracking for request (all legs)',
+            title: Text('cancel_all_tracking_for_request_all_legs'.tr(),
               style: AppStyles.content(context).copyWith(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Color(AppColors.failureRed),
               ),
             ),
-            subtitle: Text(
-              isAr
-                  ? 'تحويل حالة التتبع بالكامل إلى ملغي وإخلاء المسؤولية'
-                  : 'Mark overall tracking as cancelled and void requirement',
+            subtitle: Text('mark_overall_tracking_as_cancelled_and_void'.tr(),
               style: AppStyles.hintContent(context).copyWith(fontSize: 10),
             ),
             value: 'all_sessions',
@@ -111,8 +98,7 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            isAr ? 'تراجع' : 'Back',
+          child: Text('back'.tr(),
             style: AppStyles.content(context).copyWith(color: const Color(0xff606060)),
           ),
         ),
@@ -129,8 +115,7 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
             widget.onConfirm(_selectedScope);
             Navigator.of(context).pop();
           },
-          child: Text(
-            isAr ? 'تأكيد الإلغاء' : 'Confirm Cancel',
+          child: Text('confirm_cancel'.tr(),
             style: AppStyles.whiteContent(context).copyWith(fontWeight: FontWeight.bold),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -18,8 +19,7 @@ class ActionReplyField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isArabic ? 'ملاحظات / الرد (اختياري)' : 'Reply / Notes (Optional)',
+        Text('reply_notes_optional'.tr(),
           style: AppStyles.darkContent(context).copyWith(
             fontSize: 12,
             fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class ActionReplyField extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
           decoration: InputDecoration(
-            hintText: isArabic ? 'أدخل ملاحظاتك هنا...' : 'Enter your notes here...',
+            hintText: 'enter_your_notes_here'.tr(),
             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
             filled: true,
             fillColor: const Color(0xFFF3F3F3),

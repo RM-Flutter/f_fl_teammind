@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/expense_claim_requests/shared/repos/expense_claim_repo.dart';
@@ -22,7 +21,6 @@ class ExpenseClaimUpdateAmountDialog {
   }) {
     final currentAmount = details.moneyValue?.toString() ?? '';
     final controller = TextEditingController(text: currentAmount);
-    final isArabic = LocalizationService.isArabic(context: context);
 
     showModalBottomSheet(
       context: context,
@@ -66,8 +64,7 @@ class ExpenseClaimUpdateAmountDialog {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        isArabic ? 'تعديل قيمة المطالبة' : 'Edit Expense Claim Amount',
+                      Text('edit_expense_claim_amount'.tr(),
                         style: AppStyles.darkContent(context).copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -86,8 +83,7 @@ class ExpenseClaimUpdateAmountDialog {
                   const SizedBox(height: 12),
 
                   // Label
-                  Text(
-                    isArabic ? 'القيمة' : 'Total Amount',
+                  Text('total_amount_2'.tr(),
                     style: AppStyles.darkContent(context).copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -108,10 +104,10 @@ class ExpenseClaimUpdateAmountDialog {
                       color: Colors.black87,
                     ),
                     decoration: InputDecoration(
-                      hintText: isArabic ? 'أدخل القيمة' : 'Enter amount',
+                      hintText: 'enter_amount'.tr(),
                       prefixIcon: Icon(Icons.monetization_on_outlined,
                           color: Color(AppColors.buttons)),
-                      suffixText: isArabic ? 'ج.م' : 'EGP',
+                      suffixText: 'egp_2'.tr(),
                       suffixStyle: TextStyle(
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w600,
@@ -132,7 +128,7 @@ class ExpenseClaimUpdateAmountDialog {
 
                   // Submit Button
                   CustomElevatedButton(
-                    title: isArabic ? 'حفظ التعديل' : 'Save Changes',
+                    title: 'save_changes_2'.tr(),
                     backgroundColor: Color(AppColors.buttons),
                     onPressed: isLoading
                         ? () async {}
@@ -167,12 +163,8 @@ class ExpenseClaimUpdateAmountDialog {
                             final displayMsg = (serverMsg != null && serverMsg.isNotEmpty)
                                 ? serverMsg
                                 : (res.success
-                                    ? (isArabic
-                                        ? 'تم تعديل قيمة المطالبة بنجاح'
-                                        : 'Expense claim amount updated successfully')
-                                    : (isArabic
-                                        ? 'حدث خطأ أثناء التحديث'
-                                        : 'Failed to update expense claim amount'));
+                                    ? ('expense_claim_amount_updated_successfully'.tr())
+                                    : ('failed_to_update_expense_claim_amount'.tr()));
 
                             // 4. Update UI details if success
                             if (res.success) {
@@ -197,13 +189,13 @@ class ExpenseClaimUpdateAmountDialog {
                                 AlertsService.success(
                                   context: context,
                                   message: displayMsg,
-                                  title: isArabic ? 'نجاح' : 'Success',
+                                  title: 'success_3'.tr(),
                                 );
                               } else {
                                 AlertsService.error(
                                   context: context,
                                   message: displayMsg,
-                                  title: isArabic ? 'خطأ' : 'Error',
+                                  title: 'error_2'.tr(),
                                 );
                               }
                             }

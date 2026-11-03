@@ -59,7 +59,7 @@ class ApprovalLevelCard extends StatelessWidget {
                 if (items.length > 1) ...[
                   const SizedBox(width: 8),
                   Text(
-                    '(${items.length} ${isArabic ? 'موافقات في هذا المستوى' : 'approvers'})',
+                    '(${items.length} ${'approvers'.tr()})',
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade600,

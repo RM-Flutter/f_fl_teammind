@@ -68,7 +68,6 @@ class InformationTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = LocalizationService.isArabic(context: context);
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -100,8 +99,7 @@ class InformationTab extends StatelessWidget {
           ],
           if (seenBy != null && seenBy!.isNotEmpty) ...[
             const SizedBox(height: 24),
-            Text(
-              isArabic ? 'شوهد بواسطة' : 'Seen By',
+            Text('seen_by'.tr(),
               style: AppStyles.darkContent(context).copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,

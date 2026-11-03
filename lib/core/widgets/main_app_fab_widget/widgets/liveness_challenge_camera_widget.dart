@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -852,24 +853,23 @@ class _LivenessChallengeCameraScreenState
   }
 
   String _getChallengeInstruction() {
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     switch (_currentChallenge) {
       case LivenessChallenge.blinkRightEye:
-        return isArabic ? 'قم بغمزة العين اليمنى' : 'Blink your right eye';
+        return 'blink_your_right_eye'.tr();
       case LivenessChallenge.blinkLeftEye:
-        return isArabic ? 'قم بغمزة العين اليسرى' : 'Blink your left eye';
+        return 'blink_your_left_eye'.tr();
       case LivenessChallenge.closeBothEyes:
-        return isArabic ? 'أغلق عينيك' : 'Close both eyes';
+        return 'close_both_eyes'.tr();
       case LivenessChallenge.tiltHeadRight:
-        return isArabic ? 'أمِل رأسك لليمين' : 'Tilt your head to the right';
+        return 'tilt_your_head_to_the_right'.tr();
       case LivenessChallenge.tiltHeadLeft:
-        return isArabic ? 'أمِل رأسك لليسار' : 'Tilt your head to the left';
+        return 'tilt_your_head_to_the_left'.tr();
       case LivenessChallenge.smile:
-        return isArabic ? 'ابتسم' : 'Smile';
+        return 'smile'.tr();
       case LivenessChallenge.turnHeadRight:
-        return isArabic ? 'لف رأسك لليمين' : 'Turn your head to the right';
+        return 'turn_your_head_to_the_right'.tr();
       case LivenessChallenge.turnHeadLeft:
-        return isArabic ? 'لف رأسك لليسار' : 'Turn your head to the left';
+        return 'turn_your_head_to_the_left'.tr();
       }
   }
 
@@ -997,7 +997,6 @@ class _LivenessChallengeCameraScreenState
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return PopScope(
       canPop: _challengeCompleted,
@@ -1048,8 +1047,7 @@ class _LivenessChallengeCameraScreenState
               }
             },
           ),
-          title: Text(
-            isArabic ? 'تحقق من الحياة' : 'Liveness Verification',
+          title: Text('liveness_verification'.tr(),
             style: const TextStyle(color: Colors.white),
           ),
         ),

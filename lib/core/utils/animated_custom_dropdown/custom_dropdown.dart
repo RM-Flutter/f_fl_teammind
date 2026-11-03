@@ -208,8 +208,8 @@ class CustomDropdownState extends State<CustomDropdown> {
             if (widget.isLoading) {
               AlertsService.info(
                 context: context, 
-                message: context.locale.languageCode == 'ar' ? "برجاء الانتظار، جاري التحميل..." : "Please wait, loading...",
-                title: context.locale.languageCode == 'ar' ? "تنبيه" : "Info",
+                message: 'please_wait_loading'.tr(),
+                title: 'info'.tr(),
               );
               return;
             }

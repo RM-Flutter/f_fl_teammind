@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -118,10 +119,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            isAr
-                                ? '${widget.sessions.length} جلسات • ${_allPoints.length} نقطة مسجلة'
-                                : '${widget.sessions.length} legs • ${_allPoints.length} points recorded',
+                          Text('legs_points_recorded'.tr(namedArgs: {'length': '${widget.sessions.length}', 'length2': '${_allPoints.length}'}),
                             style: AppStyles.whiteContent(context).copyWith(fontSize: 11, color: Colors.white70),
                           ),
                         ],
@@ -145,7 +143,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                     child: Row(
                       children: [
                         ChoiceChip(
-                          label: Text(isAr ? 'كل المسارات (مجمعة)' : 'All Legs (Merged)'),
+                          label: Text('all_legs_merged'.tr()),
                           selected: _selectedSessionId == null,
                           selectedColor: Color(AppColors.buttons),
                           labelStyle: TextStyle(
@@ -162,10 +160,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: ChoiceChip(
-                              label: Text(
-                                isAr
-                                    ? 'جلسة #${idx + 1} (${s.getDurationFormatted(isArabic: isAr)})'
-                                    : 'Leg #${idx + 1} (${s.getDurationFormatted(isArabic: isAr)})',
+                              label: Text('leg'.tr(namedArgs: {'idx_1': '${idx + 1}', 'get_duration_formatted': '${s.getDurationFormatted(isArabic: isAr)}'}),
                               ),
                               selected: isSel,
                               selectedColor: Color(AppColors.buttons),
@@ -218,10 +213,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                           children: [
                             const Icon(Icons.touch_app_outlined, size: 14, color: Colors.black54),
                             const SizedBox(width: 4),
-                            Text(
-                              isAr
-                                  ? 'اسحب وحرّك للتكبير والتحكم في المسار'
-                                  : 'Pinch & drag to zoom and pan route',
+                            Text('pinch_drag_to_zoom_and_pan_route'.tr(),
                               style: AppStyles.content(context).copyWith(fontSize: 10, color: Colors.black87),
                             ),
                           ],
@@ -265,17 +257,14 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Text(
-                                      isAr
-                                          ? '${_selectedPoint!.latitude.toStringAsFixed(5)}, ${_selectedPoint!.longitude.toStringAsFixed(5)} • دقة: ${_selectedPoint!.accuracy}م'
-                                          : '${_selectedPoint!.latitude.toStringAsFixed(5)}, ${_selectedPoint!.longitude.toStringAsFixed(5)} • Acc: ${_selectedPoint!.accuracy}m',
+                                    Text('acc_m_2'.tr(namedArgs: {'to_string_as_fixed': '${_selectedPoint!.latitude.toStringAsFixed(5)}', 'to_string_as_fixed2': '${_selectedPoint!.longitude.toStringAsFixed(5)}', 'accuracy': '${_selectedPoint!.accuracy}'}),
                                       style: AppStyles.hintContent(context).copyWith(fontSize: 11),
                                     ),
                                   ],
                                 ),
                               ),
                               IconButton(
-                                tooltip: isAr ? 'فتح في Google Maps' : 'Open in Google Maps',
+                                tooltip: 'open_in_google_maps'.tr(),
                                 icon: const Icon(Icons.open_in_new, size: 18),
                                 color: Color(AppColors.buttons),
                                 onPressed: () => _openInExternalMaps(
@@ -308,15 +297,15 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                   children: [
                     _LegendItem(
                       color: const Color(0xff2D6A4F),
-                      label: isAr ? 'نقطة الانطلاق' : 'Start Point',
+                      label: 'start_point'.tr(),
                     ),
                     _LegendItem(
                       color: Color(AppColors.buttons),
-                      label: isAr ? 'نقطة رئيسية 📍' : 'Milestone 📍',
+                      label: 'milestone'.tr(),
                     ),
                     _LegendItem(
                       color: const Color(0xffc72c41),
-                      label: isAr ? 'نقطة التوقف' : 'End Point',
+                      label: 'end_point'.tr(),
                     ),
                   ],
                 ),
@@ -390,7 +379,7 @@ class _RouteMapPainter extends CustomPainter {
     if (allPoints.isEmpty) {
       final textPainter = TextPainter(
         text: TextSpan(
-          text: isArabic ? 'لا توجد إحداثيات مسجلة لعرضها' : 'No coordinates recorded to display',
+          text: 'no_coordinates_recorded_to_display'.tr(),
           style: const TextStyle(color: Colors.grey, fontSize: 13),
         ),
         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -465,9 +454,9 @@ class _RouteMapPainter extends CustomPainter {
         final pt = toCanvas(p.latitude, p.longitude);
 
         if (p.isStartPoint) {
-          _drawPin(canvas, pt, const Color(0xff2D6A4F), isArabic ? 'البداية' : 'Start');
+          _drawPin(canvas, pt, const Color(0xff2D6A4F),'start'.tr());
         } else if (p.isEndPoint) {
-          _drawPin(canvas, pt, const Color(0xffc72c41), isArabic ? 'النهاية' : 'End');
+          _drawPin(canvas, pt, const Color(0xffc72c41),'end'.tr());
         } else if (p.isManual) {
           _drawPin(canvas, pt, const Color(0xFF3389EE), p.getDisplayLabel(isArabic: isArabic));
         } else {

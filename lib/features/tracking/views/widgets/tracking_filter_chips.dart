@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/localization_service.dart';
@@ -11,11 +12,11 @@ enum TrackingFilterOption {
   String getLabel({bool isArabic = true}) {
     switch (this) {
       case TrackingFilterOption.all:
-        return isArabic ? "الكل" : "All";
+        return 'all'.tr();
       case TrackingFilterOption.hasTracking:
-        return isArabic ? "فيه تتبع 📍" : "With Tracking 📍";
+        return 'with_tracking'.tr();
       case TrackingFilterOption.noTracking:
-        return isArabic ? "مطلوب / بدون تتبع ⚠️" : "Missing / Required ⚠️";
+        return 'missing_required'.tr();
     }
   }
 }

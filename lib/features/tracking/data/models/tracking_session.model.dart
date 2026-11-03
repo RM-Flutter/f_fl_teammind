@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'tracking_point.model.dart';
 import 'tracking_status.enum.dart';
 
@@ -44,14 +45,14 @@ class TrackingSessionModel {
         ? durationMinutes
         : DateTime.now().difference(startedAt).inMinutes;
     if (minutes < 60) {
-      return isArabic ? '$minutes دقيقة' : '$minutes mins';
+      return 'mins_2'.tr(namedArgs: {'minutes': '$minutes'});
     }
     final hours = minutes ~/ 60;
     final remainingMinutes = minutes % 60;
     if (remainingMinutes == 0) {
-      return isArabic ? '$hours ساعة' : '$hours hrs';
+      return 'hrs'.tr(namedArgs: {'hours': '$hours'});
     }
-    return isArabic ? '$hours س $remainingMinutes د' : '${hours}h ${remainingMinutes}m';
+    return 'h_m'.tr(namedArgs: {'hours': '$hours', 'remaining_minutes': '$remainingMinutes'});
   }
 
   factory TrackingSessionModel.fromJson(Map<String, dynamic> json) {

@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/services/localization_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../data/dummy/tracking_dummy_data.dart';
 import '../../data/models/tracking_session.model.dart';
@@ -38,7 +38,6 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
   double _hoursWithinWork = 3.5;
 
   void _onCancelTracking(String scope) {
-    final bool isAr = LocalizationService.isArabic(context: context);
     setState(() {
       if (scope == 'current_session') {
         _sessions.removeWhere((s) => s.isActive);
@@ -56,8 +55,8 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
       SnackBar(
         content: Text(
           scope == 'current_session'
-              ? (isAr ? 'تم إلغاء الجلسة الحالية بنجاح ⚠️' : 'Current leg cancelled successfully ⚠️')
-              : (isAr ? 'تم إلغاء كل بيانات التتبع للطلب 🚫' : 'All tracking data voided for request 🚫'),
+              ? ('current_leg_cancelled_successfully'.tr())
+              : ('all_tracking_data_voided_for_request'.tr()),
         ),
         backgroundColor: Color(AppColors.failureRed),
       ),
@@ -66,7 +65,6 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,18 +98,14 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          isAr ? 'مؤشرات الامتثال والتتبع' : 'Compliance & Tracking Metrics',
+                        Text('compliance_tracking_metrics'.tr(),
                           style: AppStyles.heading(context).copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: Color(AppColors.titleText),
                           ),
                         ),
-                        Text(
-                          isAr
-                              ? 'تحليل ساعات النشاط الفعلي وفترات الحركة'
-                              : 'Actual active hours & movement analysis',
+                        Text('actual_active_hours_movement_analysis'.tr(),
                           style: AppStyles.subtitleContent(context).copyWith(fontSize: 11),
                         ),
                       ],
@@ -128,8 +122,8 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                   Expanded(
                     child: _ManagerKpiTile(
                       icon: Icons.timer_outlined,
-                      label: isAr ? 'ساعات النشاط' : 'Active Hours',
-                      value: isAr ? '$_activeHours س' : '${_activeHours}h',
+                      label: 'active_hours'.tr(),
+                      value: 'h'.tr(namedArgs: {'active_hours': '$_activeHours'}),
                       color: Color(AppColors.buttons),
                     ),
                   ),
@@ -137,8 +131,8 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                   Expanded(
                     child: _ManagerKpiTile(
                       icon: Icons.repeat_rounded,
-                      label: isAr ? 'مرات البدء (Legs)' : 'Legs Count',
-                      value: isAr ? '$_startStopCount مرات' : '$_startStopCount legs',
+                      label: 'legs_count'.tr(),
+                      value: 'legs'.tr(namedArgs: {'start_stop_count': '$_startStopCount'}),
                       color: const Color(0xff2D6A4F),
                     ),
                   ),
@@ -146,8 +140,8 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                   Expanded(
                     child: _ManagerKpiTile(
                       icon: Icons.access_time_filled_outlined,
-                      label: isAr ? 'داخل وقت الدوام' : 'In Work Hours',
-                      value: isAr ? '$_hoursWithinWork س' : '${_hoursWithinWork}h',
+                      label: 'in_work_hours'.tr(),
+                      value: 'h_2'.tr(namedArgs: {'hours_within_work': '$_hoursWithinWork'}),
                       color: const Color(0xffAE702B),
                     ),
                   ),
@@ -169,13 +163,12 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                       ? null
                       : () => TrackingMapViewDialog.show(
                             context,
-                            title: isAr ? 'خريطة المسار الكامل للمهمة' : 'Full Request Route Map',
+                            title: 'full_request_route_map_2'.tr(),
                             titleEn: 'Full Request Route Map',
                             sessions: _sessions,
                           ),
                   icon: const Icon(Icons.map_outlined, color: Colors.white, size: 20),
-                  label: Text(
-                    isAr ? 'عرض المسار الكامل على الخريطة 🗺️' : 'View Full Route on Map 🗺️',
+                  label: Text('view_full_route_on_map'.tr(),
                     style: AppStyles.whiteContent(context).copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
@@ -199,8 +192,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                       onConfirm: _onCancelTracking,
                     ),
                     icon: const Icon(Icons.cancel_outlined, size: 16),
-                    label: Text(
-                      isAr ? 'إلغاء التتبع إداريًا (Admin)' : 'Cancel Tracking as Admin',
+                    label: Text('cancel_tracking_as_admin'.tr(),
                       style: AppStyles.content(context).copyWith(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -217,8 +209,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
         // Session list header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            isAr ? 'سجل الجلسات والمحطات المسجلة للموظف' : 'Recorded Legs & Milestone History',
+          child: Text('recorded_legs_milestone_history'.tr(),
             style: AppStyles.heading(context).copyWith(
               fontSize: 13.5,
               fontWeight: FontWeight.bold,
@@ -238,8 +229,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                     color: Color(AppColors.cardBackground),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
-                  child: Text(
-                    isAr ? 'لا توجد جلسات تتبع مسجلة لهذا الطلب' : 'No tracking legs recorded for this request',
+                  child: Text('no_tracking_legs_recorded_for_this_request'.tr(),
                     style: AppStyles.hintContent(context).copyWith(fontSize: 12),
                   ),
                 )
@@ -254,7 +244,7 @@ class _TrackingSectionManagerState extends State<TrackingSectionManager> {
                       sessionIndex: index,
                       onOpenMap: () => TrackingMapViewDialog.show(
                         context,
-                        title: isAr ? 'مسار جلسة #${index + 1}' : 'Route for Session #${index + 1}',
+                        title: 'route_for_session'.tr(namedArgs: {'index_1': '${index + 1}'}),
                         titleEn: 'Route for Session #${index + 1}',
                         sessions: [s],
                         initialSessionId: s.id,
