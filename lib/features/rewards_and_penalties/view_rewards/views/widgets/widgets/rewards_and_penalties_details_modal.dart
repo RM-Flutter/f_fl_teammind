@@ -242,18 +242,29 @@ class _RewardsAndPenaltiesDetailsModalState
       children: [
         gapH16,
         if (rewardAndPenalty.profile?.name != null)
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(AppSizes.s10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              color: Color(AppColors.buttons),
-            ),
-            child: Center(
-              child: Text(
-                rewardAndPenalty.profile!.name!,
-                style: AppStyles.whiteContent(context).copyWith(
-                    fontWeight: FontWeight.w500, fontSize: AppSizes.s12),
+          InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            // Open the employee's profile
+            onTap: rewardAndPenalty.profile?.id == null
+                ? null
+                : () => context.pushNamed(AppRoutes.employeeDetails.name,
+                    pathParameters: {
+                      'id': rewardAndPenalty.profile!.id.toString(),
+                      'lang': context.locale.languageCode,
+                    }),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(AppSizes.s10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+                color: Color(AppColors.buttons),
+              ),
+              child: Center(
+                child: Text(
+                  rewardAndPenalty.profile!.name!,
+                  style: AppStyles.whiteContent(context).copyWith(
+                      fontWeight: FontWeight.w500, fontSize: AppSizes.s12),
+                ),
               ),
             ),
           ),

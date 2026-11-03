@@ -155,8 +155,14 @@ class CustomDropdownState extends State<CustomDropdown> {
   @override
   Widget build(BuildContext context) {
     if (_initSelected != widgetSelectedValue) {
-      textEditingController.text = widgetSelectedValue ?? '';
-      _initSelected = widgetSelectedValue;
+      // Changing the controller text notifies the TextFormField, which marks its Form dirty. That
+      // is not allowed while building, so apply it right after this frame.
+      final newValue = widgetSelectedValue;
+      _initSelected = newValue;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _initSelected != newValue) return;
+        textEditingController.text = newValue ?? '';
+      });
     }
 
     /// hint text

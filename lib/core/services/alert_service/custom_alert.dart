@@ -112,11 +112,31 @@ class CustomAlert extends StatelessWidget {
       horizontalPadding = size.width * 0.3;
     }
 
+    // The alert grows with its message instead of clipping long ones (the default height only fits
+    // about two lines). Fixed parts: top gap, title row, gap under the title and bottom gap.
+    final messageStyle = TextStyle(
+      fontSize: messageFontSize ?? size.height * 0.016,
+      color: Color(AppColors.background),
+    );
+    final messageWidth = (size.width -
+            horizontalPadding * 2 -
+            leftSpace -
+            size.width * 0.03 -
+            AppSizes.s6 * 2)
+        .clamp(1.0, double.infinity);
+    final messagePainter = TextPainter(
+      text: TextSpan(text: message, style: messageStyle),
+      textDirection: Directionality.of(context),
+    )..layout(maxWidth: messageWidth);
+    final fixedHeight = size.height * (0.02 + 0.035 + 0.005 + 0.015);
+    final alertHeight = (fixedHeight + messagePainter.height)
+        .clamp(size.height * 0.125, size.height * 0.4);
+
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: horizontalPadding,
       ),
-      height: size.height * 0.125,
+      height: alertHeight,
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
@@ -237,10 +257,7 @@ class CustomAlert extends StatelessWidget {
                   Expanded(
                     child: Text(
                       message,
-                      style: TextStyle(
-                        fontSize: messageFontSize ?? size.height * 0.016,
-                        color: Color(AppColors.background),
-                      ),
+                      style: messageStyle,
                     ),
                   ),
                   SizedBox(

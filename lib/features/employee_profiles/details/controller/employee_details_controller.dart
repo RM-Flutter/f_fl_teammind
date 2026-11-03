@@ -123,7 +123,8 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
           context: context, employeeId: employeeId);
       if (result.success && result.data != null) {
         employee = EmployeeProfileModel.fromJson(result.data?['employee']);
-        await getTeamEvaluation(context, employeeId);
+        // Evaluations only feed one tab, so don't hold the profile back while they load
+        getTeamEvaluation(context, employeeId).whenComplete(notifyListeners);
       }
     } catch (err, t) {
       debugPrint(
