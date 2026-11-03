@@ -3,6 +3,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/string_convert.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
+import 'package:app_test/features/rewards_and_penalties/add_rewards/views/widgets/skipped_employees_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -245,15 +246,27 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
           context: context,
           url: "/rm_payroll/v1/payroll/penalities-and-rewards",
           data: requestMainData
-      ).then((v){
+      ).then((v) async {
         if (v.data['status'] == true) {
-          AlertsService.success(
-              context: context,
-              title: AppStrings.success.tr(),
-              message: v.data['message'] ?? 'New Request Created Successfully');
+          // created_count / skipped come at the top level of the response, next to status
+          final data = v.data is Map ? v.data as Map : const {};
+          final skipped = data['skipped'] is List
+              ? (data['skipped'] as List).whereType<Map>().map((e) => Map<String, dynamic>.from(e)).toList()
+              : <Map<String, dynamic>>[];
           isLoadingPost = false;
           _resetValues();
           notifyListeners();
+          if (skipped.isNotEmpty) {
+            // Some employees didn't get the record: show who and why before leaving the screen
+            await SkippedEmployeesDialog.show(context,
+                createdCount: int.tryParse(data['created_count']?.toString() ?? '') ?? 0, skipped: skipped);
+            if (!context.mounted) return;
+          } else {
+            AlertsService.success(
+                context: context,
+                title: AppStrings.success.tr(),
+                message: v.data['message'] ?? 'New Request Created Successfully');
+          }
           Navigator.pop(context, true); // To refresh list or close
         } else {
           AlertsService.error(

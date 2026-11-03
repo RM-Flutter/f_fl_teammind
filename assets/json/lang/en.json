@@ -1468,5 +1468,8 @@
   "onCallContract": "On-Call Contract",
   "probationaryContract": "Probationary Contract",
   "remoteHybridContract": "Remote / Hybrid Contract",
-  "employeeProfile": "Employee Profile"
+  "employeeProfile": "Employee Profile",
+  "skipped_employees_title": "Some employees were skipped",
+  "skipped_employees_message": "Added for {} employee(s). These {} employee(s) were skipped:",
+  "got_it": "Got it"
 }

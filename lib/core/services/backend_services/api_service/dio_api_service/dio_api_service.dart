@@ -219,20 +219,7 @@ class DioApiService implements BackEndServicesInterface {
 
       case 401:
         respond = 'Unauthorized';
-        print("Unauthorized is ${respond}");
-        // _toast.toastMethod(LocaleKeys.respond_401.tr());
-        final appConfigService = Provider.of<AppConfigService>(safeContext, listen: false);
-        appConfigService.logout(safeContext, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v){
-          if (safeContext.mounted) {
-            safeContext.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': safeContext.locale.languageCode});
-          }
-        }).catchError((e) {
-          if (safeContext.mounted) {
-            safeContext.goNamed(AppRoutes.splash.name,
-                pathParameters: {'lang': safeContext.locale.languageCode});
-          }
-        });
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: respond);
 
 
@@ -399,25 +386,7 @@ class DioApiService implements BackEndServicesInterface {
       }
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioException catch block)");
-        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
-        if (safeCtx != null && safeCtx.mounted) {
-          final appConfigService =
-          Provider.of<AppConfigService>(safeCtx, listen: false);
-          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
-          try {
-            appConfigService.clearToken(notify: true);
-            appConfigService.setIsLogin(false, notify: true);
-          } catch (e) {
-            debugPrint('Error clearing auth state on 401 (get): $e');
-          }
-          if (safeCtx.mounted) {
-            safeCtx.goNamed(
-              AppRoutes.login.name,
-              pathParameters: {'lang': safeCtx.locale.languageCode},
-            );
-          }
-        }
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
@@ -478,25 +447,7 @@ class DioApiService implements BackEndServicesInterface {
       print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioException catch block)");
-        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
-        if (safeCtx != null && safeCtx.mounted) {
-          final appConfigService =
-          Provider.of<AppConfigService>(safeCtx, listen: false);
-          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
-          try {
-            appConfigService.clearToken(notify: true);
-            appConfigService.setIsLogin(false, notify: true);
-          } catch (e) {
-            debugPrint('Error clearing auth state on 401 (post): $e');
-          }
-          if (safeCtx.mounted) {
-            safeCtx.goNamed(
-              AppRoutes.login.name,
-              pathParameters: {'lang': safeCtx.locale.languageCode},
-            );
-          }
-        }
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
@@ -629,25 +580,7 @@ class DioApiService implements BackEndServicesInterface {
       print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioException catch block)");
-        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
-        if (safeCtx != null && safeCtx.mounted) {
-          final appConfigService =
-          Provider.of<AppConfigService>(safeCtx, listen: false);
-          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
-          try {
-            appConfigService.clearToken(notify: true);
-            appConfigService.setIsLogin(false, notify: true);
-          } catch (e) {
-            debugPrint('Error clearing auth state on 401 (postFormData): $e');
-          }
-          if (safeCtx.mounted) {
-            safeCtx.goNamed(
-              AppRoutes.login.name,
-              pathParameters: {'lang': safeCtx.locale.languageCode},
-            );
-          }
-        }
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
@@ -777,25 +710,7 @@ class DioApiService implements BackEndServicesInterface {
       print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioException catch block)");
-        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
-        if (safeCtx != null && safeCtx.mounted) {
-          final appConfigService =
-          Provider.of<AppConfigService>(safeCtx, listen: false);
-          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
-          try {
-            appConfigService.clearToken(notify: true);
-            appConfigService.setIsLogin(false, notify: true);
-          } catch (e) {
-            debugPrint('Error clearing auth state on 401 (put): $e');
-          }
-          if (safeCtx.mounted) {
-            safeCtx.goNamed(
-              AppRoutes.login.name,
-              pathParameters: {'lang': safeCtx.locale.languageCode},
-            );
-          }
-        }
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
@@ -838,25 +753,7 @@ class DioApiService implements BackEndServicesInterface {
       print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioException catch block)");
-        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
-        if (safeCtx != null && safeCtx.mounted) {
-          final appConfigService =
-          Provider.of<AppConfigService>(safeCtx, listen: false);
-          // فقط صفّي حالة الدخول محلياً ووجّه لصفحة اللوجين
-          try {
-            appConfigService.clearToken(notify: true);
-            appConfigService.setIsLogin(false, notify: true);
-          } catch (e) {
-            debugPrint('Error clearing auth state on 401 (delete): $e');
-          }
-          if (safeCtx.mounted) {
-            safeCtx.goNamed(
-              AppRoutes.login.name,
-              pathParameters: {'lang': safeCtx.locale.languageCode},
-            );
-          }
-        }
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 
@@ -924,23 +821,7 @@ class DioApiService implements BackEndServicesInterface {
       print("Caught DioException with status code: $statusCode");
 
       if (statusCode == 401) {
-        print("Unauthorized (caught in DioException catch block)");
-        final safeCtx = context.mounted ? context : rootNavigatorKey.currentContext;
-        if (safeCtx != null && safeCtx.mounted) {
-          final appConfigService =
-          Provider.of<AppConfigService>(safeCtx, listen: false);
-          appConfigService.logout(safeCtx, viewAlert: false, skipServerLogout: true, skipNavigation: true).then((v) {
-            if (safeCtx.mounted) {
-              safeCtx.goNamed(AppRoutes.splash.name,
-                  pathParameters: {'lang': safeCtx.locale.languageCode});
-            }
-          }).catchError((e) {
-            if (safeCtx.mounted) {
-              safeCtx.goNamed(AppRoutes.splash.name,
-                  pathParameters: {'lang': safeCtx.locale.languageCode});
-            }
-          });
-        }
+        // Logout + redirect to login is done once in the DioHelper interceptor
         return OperationResult<T>(success: false, message: 'Unauthorized');
       }
 

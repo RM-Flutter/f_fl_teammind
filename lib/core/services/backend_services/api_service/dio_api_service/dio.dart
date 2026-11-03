@@ -98,9 +98,15 @@ class DioHelper{
               }
             }
           }
+          if (response.statusCode == 401) {
+            _handleUnauthorized(response.requestOptions);
+          }
           return handler.next(response);
         },
         onError: (DioException error, handler) {
+          if (error.response?.statusCode == 401) {
+            _handleUnauthorized(error.requestOptions);
+          }
           print("error.response?.statusCode ==z ${error.response?.statusCode}");
 
           // Handle CORS errors on web
@@ -118,14 +124,44 @@ class DioHelper{
             }
           }
 
-          // Note: 401 handling is done in dio_api.service.dart where context is available
-          // Don't handle 401 here as context is not accessible in this interceptor
           return handler.next(error);
         },
       ),
     );
     // إعادة محاولة مرة واحدة مع اتصال جديد عند timeout/قطع الاتصال (حل مشكلة عدم رد الـ API حتى إعادة فتح الواي فاي)
     _addConnectionResetRetryInterceptor();
+  }
+
+  /// True while a 401 logout + redirect is running, so parallel 401 responses redirect only once
+  static bool _handlingUnauthorized = false;
+
+  /// Any authenticated request answered with 401 (expired / revoked token): log out locally and go to the login page.
+  /// Requests sent without a token (login itself, wrong password) and the logout call are left to their caller.
+  static void _handleUnauthorized(RequestOptions options) {
+    // Logged-out requests still send "Bearer null" / "Bearer ", so look at the token itself
+    final token = (options.headers['Authorization']?.toString() ?? '').replaceFirst('Bearer', '').trim();
+    if (token.isEmpty || token == 'null' || options.path.contains('log_out') || _handlingUnauthorized) return;
+
+    final ctx = rootNavigatorKey.currentContext;
+    if (ctx == null || !ctx.mounted) return;
+
+    _handlingUnauthorized = true;
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await Provider.of<AppConfigService>(ctx, listen: false)
+            .logout(ctx, viewAlert: false, skipServerLogout: true, skipNavigation: true);
+      } catch (e) {
+        debugPrint('Error clearing auth state on 401: $e');
+      }
+      try {
+        if (ctx.mounted) {
+          ctx.goNamed(AppRoutes.login.name, pathParameters: {'lang': ctx.locale.languageCode});
+        }
+      } catch (e) {
+        debugPrint('Error navigating to login on 401: $e');
+      }
+      _handlingUnauthorized = false;
+    });
   }
 
   /// عند timeout أو خطأ اتصال: إغلاق الـ adapter واستبداله بواحد جديد ثم إعادة المحاولة مرة واحدة.

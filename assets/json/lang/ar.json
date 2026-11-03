@@ -1466,5 +1466,8 @@
   "onCallContract": "عقد عند الطلب",
   "probationaryContract": "عقد تجريبي",
   "remoteHybridContract": "عقد عن بعد / هجين",
-  "employeeProfile": "ملف الموظف"
+  "employeeProfile": "ملف الموظف",
+  "skipped_employees_title": "تم تخطي بعض الموظفين",
+  "skipped_employees_message": "تمت الإضافة لـ {} موظف. تم تخطي هؤلاء الموظفين ({}):",
+  "got_it": "حسناً"
 }
