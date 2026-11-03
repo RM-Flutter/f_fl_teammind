@@ -49,15 +49,17 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 
             if (payroll?.currency != null)
               PayrollDetailsBodyTileWidget(
-                  title: AppStrings.currency.tr(), subtitle: payroll?.currency ?? ''),
+                  title: AppStrings.currency.tr(), subtitle: payroll?.currency ?? '', showCurrency: false),
 
             if (payroll?.basicSalary != null)
               PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                   title: AppStrings.basicSalary.tr(),
                   subtitle: double.parse(payroll!.basicSalary.toString()).toStringAsFixed(2)),
 
             if (payroll?.salaryAdvance != null)
               PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                   title: AppStrings.salaryAdvance.tr(),
                   subtitle:double.parse(payroll!.salaryAdvance.toString()).toStringAsFixed(2),
                   subtitleColor: Colors.red),
@@ -65,6 +67,7 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
             if (payroll?.payrollDeductions?.isNotEmpty ?? false)
               ...payroll!.payrollDeductions!.map(
                 (deduction) => PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                     title: LocalizationService.isArabic(context: context)? deduction.title!.ar :
                     deduction.title!.en,
                     subtitle: double.parse(deduction.value.toString()).toStringAsFixed(2) ?? '',
@@ -75,6 +78,7 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
             if (payroll?.payrollSpecialBonus?.isNotEmpty ?? false)
               ...payroll!.payrollSpecialBonus!.map(
                 (bonuse) => PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                     title: LocalizationService.isArabic(context: context) ?
                     bonuse.title!.ar : bonuse.title!.en,
                     subtitle: double.parse(bonuse.value.toString()).toStringAsFixed(2) ?? '',
@@ -83,6 +87,7 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 
             if (payroll?.payrollTotalDeductions != null)
               PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                   title: AppStrings.totalSpecialAndBonuses.tr(),
                   subtitle:
                       double.parse(payroll!.payrollTotalSpecialBonus.toString()).toStringAsFixed(2) ?? '',
@@ -90,12 +95,14 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 
             if (payroll?.payrollTotalDeductions != null)
               PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                   title: AppStrings.totalDeductions.tr(),
                   subtitle: double.parse(payroll!.payrollTotalDeductions.toString()).toStringAsFixed(2) ?? '',
                   subtitleColor: Colors.red),
 
             if (payroll?.netPayable != null)
               PayrollDetailsBodyTileWidget(
+                  currency: payroll?.currency,
                   title: AppStrings.totalSalary.tr(),
                   subtitle: double.parse(payroll!.netPayable.toString()).toStringAsFixed(2) ?? ''),
           ],
@@ -109,8 +116,11 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final Color? subtitleColor;
+  /// Currency the payroll was generated in; falls back to EGP when missing
+  final String? currency;
+  final bool showCurrency;
   const PayrollDetailsBodyTileWidget(
-      {super.key, required this.title, required this.subtitle, this.subtitleColor});
+      {super.key, required this.title, required this.subtitle, this.subtitleColor, this.currency, this.showCurrency = true});
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +150,7 @@ class PayrollDetailsBodyTileWidget extends StatelessWidget {
               ),
               gapW16,
               AutoSizeText(
-                subtitle! + '' " " "${AppStrings.EGP.tr()}",
+                showCurrency ? "${subtitle!} ${currency ?? AppStrings.EGP.tr()}" : subtitle!,
                 style: AppStyles.blackContent(context).copyWith(
                   fontWeight: FontWeight.w400,
                   fontSize: AppSizes.s12,

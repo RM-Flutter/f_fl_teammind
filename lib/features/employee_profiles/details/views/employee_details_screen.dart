@@ -53,7 +53,10 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     List<ProfileTabModel> items = [];
     items.add(ProfileTabModel(title: AppStrings.contact.tr(), index: 0));
     items.add(ProfileTabModel(title: AppStrings.general.tr(), index: 1));
-    items.add(ProfileTabModel(title: AppStrings.accounts.tr(), index: 2));
+    // Salary and payrolls: decided by the backend from the payroll_view_permissions setting
+    if (viewModel.employee?.canSeePayroll ?? false) {
+      items.add(ProfileTabModel(title: AppStrings.accounts.tr(), index: 2));
+    }
 
     if (PackageHelper.hasPackage('emp-requests')) {
       items.add(ProfileTabModel(title: AppStrings.requests.tr(), index: 3));

@@ -46,6 +46,8 @@ class EmployeeProfileModel {
   final EmpTodayAttendance? todayAttendance;
   final List<EmpWeekShift>? thisWeekShifts;
   final bool? canSeeAllData;
+  final bool? canSeePayroll;
+  final String? currency;
 
   EmployeeProfileModel({
     this.id,
@@ -87,6 +89,8 @@ class EmployeeProfileModel {
     this.todayAttendance,
     this.thisWeekShifts,
     this.canSeeAllData,
+    this.canSeePayroll,
+    this.currency,
   })  : totalDeductions = _calculateTotalAmount(
             basicSalary, payrollDeductions?.map((d) => d.value).toList()),
         additions = _calculateTotalAmount(
@@ -235,6 +239,8 @@ class EmployeeProfileModel {
                       .map((item) => EmpWeekShift.fromJson(item)))
               : null,
       canSeeAllData: json['can_see_all_data'] == true || json['can_see_all_data'] == 1,
+      canSeePayroll: json['can_see_payroll'] == true || json['can_see_payroll'] == 1,
+      currency: json['currency']?.toString(),
     );
   }
 
