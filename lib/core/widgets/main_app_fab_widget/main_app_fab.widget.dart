@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../constants/user_consts.dart';
 import '../../models/settings/user_settings.model.dart';
 import '../../platform/platform_is.dart';
+import '../../platform/web_fingerprint_capabilities.dart';
 import '../../services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../utils/custom_expandable_fab/action_button.widget.dart';
 import '../../utils/custom_expandable_fab/expandable_fab.dart';
@@ -81,16 +82,25 @@ class MainAppFabWidget extends StatelessWidget {
     }
 
     if (kIsWeb || PlatformIs.web) {
-      // On web, only allow methods that work in a browser: QR scan (camera) and location.
-      // WiFi / Bluetooth / NFC can't be read from a browser.
-      avFingerprints.removeWhere((method) =>
-          method != 'fp_scan' &&
-          method != 'fp_navigate' &&
-          method != 'custom_fp_navigate');
-      if (avFingerprints.isEmpty && isTypeAllowed('fp_navigate')) {
-        avFingerprints = ['fp_navigate'];
-      }
+      // Browser rules (GPS everywhere, QR on smartphones with a camera only; when a face image is needed,
+      // only smartphones with a camera get any method and they take a photo) — see WebFingerprintCapabilities.
+      final bool phone = WebFingerprintCapabilities.isPhone(context);
+      return FutureBuilder<bool>(
+        future: WebFingerprintCapabilities.hasCamera(),
+        builder: (context, snapshot) => _buildFabs(
+          context,
+          WebFingerprintCapabilities.filterMethods(
+            avFingerprints,
+            phone: phone,
+            camera: snapshot.data == true,
+          ),
+        ),
+      );
     }
+    return _buildFabs(context, avFingerprints);
+  }
+
+  Widget _buildFabs(BuildContext context, List<String> avFingerprints) {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [

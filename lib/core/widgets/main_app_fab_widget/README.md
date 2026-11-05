@@ -15,7 +15,7 @@ The fingerprint (punch in/out) button in the middle of the bottom bar, plus ever
 1. **Entry**: `getFingerprintActionMethodDependsOnFingerprintMethod(context, fingerprintMethod)`.
 2. **Refresh the security levels** from the cached settings (`AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks`).
 3. **Device security gate** (`_ensureDeviceSecurityForFingerprint`): developer mode and root/jailbreak checks block the punch when their level is mandatory.
-4. **Dispatch by method**. The web always uses GPS.
+4. **Dispatch by method**. On the web (`core/platform/web_fingerprint_capabilities.dart`) QR is shown only on smartphone browsers with a camera, and GPS on every device. When a face image is needed, a smartphone with a camera gets both methods and takes a plain photo that is uploaded with the punch; any other device gets no method at all. WiFi, Bluetooth and NFC are never shown on the web.
    - `fp_scan` → `addFingerprintUsingQrCode`: scan the office QR code to get a secret key
    - `fp_navigate` / `custom_fp_navigate` → `addFingerprintUsingGPS`: current location, sent to the server for geofence validation
    - `fp_wifi` → `addFingerprintUsingWiFi`: scan the connected or nearby SSID/BSSID

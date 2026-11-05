@@ -59,6 +59,7 @@ import '../../models/settings/general_settings.model.dart';
 import '../../routing/app_router.dart';
 import '../../services/fingerprint_service.dart';
 import 'widgets/qrcode_Scanner_view_widget.dart';
+import '../../platform/web_fingerprint_capabilities.dart';
 import 'widgets/liveness_challenge_camera_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
@@ -2042,6 +2043,56 @@ abstract class MainFabServices {
   /// Failed optional face checks (liveness fallback / profile verification) from the captured face.
   /// Passed as failedSecurityChecks so they reach the backend suspicion_flags
   /// even when fingerprint_send_note_report_to_api is off.
+  /// Web only: takes the plain face photo when the backend asks for one (no challenges in the browser).
+  /// Only smartphone browsers with a camera can take it.
+  /// Returns the files to upload ([] when no photo is needed / optional photo skipped),
+  /// or null when the fingerprint must stop because the mandatory photo wasn't taken.
+  static Future<List<FilePickerResult>?> _captureWebFingerprintPhoto(BuildContext context) async {
+    if (!WebFingerprintCapabilities.imageEnabled) return const [];
+    final bool canTakePhoto = WebFingerprintCapabilities.isPhone(context) &&
+        await WebFingerprintCapabilities.hasCamera();
+    if (canTakePhoto) {
+      final FilePickerResult? photo = await WebFingerprintCapabilities.takePhoto();
+      if (photo != null) return [photo];
+    }
+    if (WebFingerprintCapabilities.imageMandatory) {
+      final warningContext = rootNavigatorKey.currentContext ?? context;
+      if (warningContext.mounted) {
+        _showWarning(
+          warningContext,
+          en: 'A photo of your face is required to add this fingerprint.',
+          ar: 'صورة وجهك مطلوبة لإضافة هذه البصمة.',
+        );
+      }
+      return null;
+    }
+    return const [];
+  }
+
+  /// Web only: face checks the browser can't run are reported to the backend as failed,
+  /// and the face image only when the photo wasn't taken.
+  static Map<String, dynamic>? _webFailedChecks({required bool photoTaken}) {
+    final now = DateTime.now().toIso8601String();
+    final notRunOnWeb = {
+      'status': 'failed',
+      'message': 'Not run on web (browser)',
+      'detected_at': now,
+    };
+    final failed = <String, dynamic>{
+      if (AppConstants.fingerprintLivenessChallengesEnabled)
+        'fingerprint_liveness_challenges_enabled': notRunOnWeb,
+      if (AppConstants.fingerprintFaceProfileVerificationEnabled)
+        'fingerprint_face_profile_verification_enabled': notRunOnWeb,
+      if (AppConstants.fingerprintUploadFaceImageToBackend && !photoTaken)
+        'fingerprint_upload_face_image_to_backend': {
+          'status': 'failed',
+          'message': 'Face photo was not taken on web',
+          'detected_at': now,
+        },
+    };
+    return failed.isEmpty ? null : failed;
+  }
+
   static Map<String, dynamic>? _faceFailedChecks(_CapturedFaceData? capturedFace) {
     // Face step was on but nothing captured (camera permission denied / cancelled) => flag each enabled face key
     if (capturedFace == null && AppConstants.showFaceVerifyForFingerprint) {
@@ -2824,30 +2875,53 @@ abstract class MainFabServices {
   static double? lat;
   static double? long;
 
-  static Future<void> getCurrentLocation(context) async {
+  /// Why the last [getCurrentLocation] call failed (null when it succeeded).
+  static _LocationFailure? _lastLocationFailure;
+
+  /// Reads the current position into the "lat" / "long" cache.
+  /// Returns false when it couldn't (reason in [_lastLocationFailure]).
+  static Future<bool> getCurrentLocation(context) async {
     bool serviceEnabled;
     LocationPermission permission;
+    _lastLocationFailure = null;
 
-    // تأكد إن خدمة الموقع مفعلة
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      print('❌ خدمة الموقع غير مفعلة');
-      return;
+    // Web: the browser refuses the location on plain http without showing the prompt
+    if ((kIsWeb || PlatformIs.web) && !WebFingerprintCapabilities.isSecurePage) {
+      print('❌ [Web] Location needs https — page is not a secure context');
+      _lastLocationFailure = _LocationFailure.insecurePage;
+      return false;
     }
 
-    // تحقق من الصلاحيات
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        print('❌ صلاحيات الموقع مرفوضة');
-        return;
+    try {
+      // تأكد إن خدمة الموقع مفعلة
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        print('❌ خدمة الموقع غير مفعلة');
+        _lastLocationFailure = _LocationFailure.serviceDisabled;
+        return false;
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      print('❌ الصلاحيات مرفوضة دائمًا');
-      return;
+      // تحقق من الصلاحيات (on web requestPermission shows the browser prompt)
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print('❌ صلاحيات الموقع مرفوضة');
+          _lastLocationFailure = _LocationFailure.denied;
+          return false;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        print('❌ الصلاحيات مرفوضة دائمًا');
+        _lastLocationFailure = _LocationFailure.deniedForever;
+        return false;
+      }
+    } catch (e) {
+      // Web: geolocator throws when the user blocks the prompt
+      print('❌ Location permission check failed: $e');
+      _lastLocationFailure = _LocationFailure.denied;
+      return false;
     }
 
     try {
@@ -2862,8 +2936,39 @@ abstract class MainFabServices {
       print('📍 Latitude: $lat, Longitude: $long');
       CacheHelper.setString(key: "lat", value: lat.toString());
       CacheHelper.setString(key: "long", value: long.toString());
+      return true;
     } catch (e) {
       print('❌ حصل خطأ أثناء تحديد الموقع: $e');
+      _lastLocationFailure = _LocationFailure.unavailable;
+      return false;
+    }
+  }
+
+  /// Web only: tells the user why the location couldn't be read (the punch is stopped).
+  static void _showWebLocationError(BuildContext context, _LocationFailure? failure) {
+    switch (failure) {
+      case _LocationFailure.insecurePage:
+        _showWarning(context,
+            en: 'The browser only allows location on a secure (https) page. Open the app using its https link and try again.',
+            ar: 'المتصفح لا يسمح بتحديد الموقع إلا على رابط آمن (https). افتح التطبيق من رابط https وحاول مرة أخرى.');
+        break;
+      case _LocationFailure.serviceDisabled:
+        _showWarning(context,
+            en: 'Location is turned off on this device. Turn it on and try again.',
+            ar: 'خدمة الموقع مغلقة على هذا الجهاز. فعّلها وحاول مرة أخرى.');
+        break;
+      case _LocationFailure.denied:
+      case _LocationFailure.deniedForever:
+        _showWarning(context,
+            en: 'Location permission is blocked for this site. Allow location from the browser\'s site settings (the icon next to the address), then try again.',
+            ar: 'صلاحية الموقع محظورة لهذا الموقع. اسمح بالموقع من إعدادات الموقع في المتصفح (الأيقونة بجانب العنوان) ثم حاول مرة أخرى.');
+        break;
+      case _LocationFailure.unavailable:
+      case null:
+        _showWarning(context,
+            en: 'Couldn\'t get your current location. Check that location is on and try again.',
+            ar: 'تعذر تحديد موقعك الحالي. تأكد من تفعيل الموقع وحاول مرة أخرى.');
+        break;
     }
   }
   // Add Fingerprint Using GPS
@@ -2916,14 +3021,20 @@ abstract class MainFabServices {
         }
       }
       debugPrint("📍 Getting current location...");
-      await getCurrentLocation(safeContext);
-      debugPrint("📍 Location obtained");
+      final bool locationOk = await getCurrentLocation(safeContext);
+      debugPrint(locationOk ? "📍 Location obtained" : "❌ Location not obtained: $_lastLocationFailure");
       // إخفاء اللودينج
       if (loadingOverlay != null) {
         try {
           loadingOverlay!.remove();
         } catch (_) {}
         loadingOverlay = null;
+      }
+      // Web: never send a GPS punch without a real location (it would go out as 0,0 / a stale one)
+      if (!locationOk && (kIsWeb || PlatformIs.web)) {
+        final warningContext = rootNavigatorKey.currentContext ?? safeContext;
+        if (warningContext.mounted) _showWebLocationError(warningContext, _lastLocationFailure);
+        return;
       }
       final bool uploadFaceImage = AppConstants.fingerprintUploadFaceImageToBackend;
       _CapturedFaceData? capturedFace;
@@ -2934,14 +3045,20 @@ abstract class MainFabServices {
           : AppConstants.showFaceVerifyForFingerprint;
 
       Map<String, dynamic>? webSkipNote;
-      if ((kIsWeb || PlatformIs.web) && AppConstants.showFaceVerifyForFingerprint) {
-        debugPrint("ℹ️ [Web] Face verification skipped — not supported on web platform");
-        webSkipNote = {
-          'face_verification_skipped': {
-            'reason': 'Web platform does not support camera/FaceNet',
-            'skipped_at': DateTime.now().toIso8601String(),
-          }
-        };
+      List<FilePickerResult>? webPhotoFiles;
+      if (kIsWeb || PlatformIs.web) {
+        // Web: no liveness / profile challenges; only the plain photo when the backend asks for it.
+        webPhotoFiles = await _captureWebFingerprintPhoto(safeContext);
+        if (webPhotoFiles == null) return; // mandatory photo not taken
+        if (AppConstants.showFaceVerifyForFingerprint) {
+          webSkipNote = {
+            'face_verification_skipped': {
+              'reason': 'Web: face challenges are not run in the browser',
+              'photo_taken': webPhotoFiles.isNotEmpty,
+              'skipped_at': DateTime.now().toIso8601String(),
+            }
+          };
+        }
       }
           
       if (showFaceVerify) {
@@ -2967,10 +3084,10 @@ abstract class MainFabServices {
           return;
         }
       }
-      final List<FilePickerResult> uploadFaceFiles =
-      uploadFaceImage && capturedFace != null
-          ? capturedFace.asFilePickerResults
-          : <FilePickerResult>[];
+      final List<FilePickerResult> uploadFaceFiles = webPhotoFiles ??
+          (uploadFaceImage && capturedFace != null
+              ? capturedFace.asFilePickerResults
+              : <FilePickerResult>[]);
       var result;
       await customAlertDialogWithTwoButtons(
           context,
@@ -2996,7 +3113,9 @@ abstract class MainFabServices {
                   noteReport: (AppConstants.fingerprintSendNoteReportToApi || webSkipNote != null)
                       ? effectiveNoteReport
                       : null,
-                  failedSecurityChecks: _faceFailedChecks(capturedFace));
+                  failedSecurityChecks: webPhotoFiles != null
+                      ? _webFailedChecks(photoTaken: webPhotoFiles.isNotEmpty)
+                      : _faceFailedChecks(capturedFace));
 
               print("GPS DONE TWO");
 
@@ -3102,6 +3221,13 @@ abstract class MainFabServices {
         }
       }
 
+      // Web: no face challenges; only the plain photo when the backend asks for it.
+      List<FilePickerResult>? webPhotoFiles;
+      if (kIsWeb || PlatformIs.web) {
+        webPhotoFiles = await _captureWebFingerprintPhoto(safeContext);
+        if (webPhotoFiles == null) return; // mandatory photo not taken
+      }
+
       final qrContext = rootNavigatorKey.currentContext ?? context;
       final String? scanedQrCode =
       await _scanQrcodeToGetSecretKeyString(context: qrContext);
@@ -3114,10 +3240,10 @@ abstract class MainFabServices {
       // Save the exact time when QR scan succeeded
       qrScanSuccessTime = DateTime.now();
 
-      final List<FilePickerResult> uploadFaceFiles =
-      uploadFaceImage && capturedFace != null
-          ? capturedFace.asFilePickerResults
-          : <FilePickerResult>[];
+      final List<FilePickerResult> uploadFaceFiles = webPhotoFiles ??
+          (uploadFaceImage && capturedFace != null
+              ? capturedFace.asFilePickerResults
+              : <FilePickerResult>[]);
 
       // if (uploadFaceImage &&
       //     (empPhoto == null || empPhoto.files.first.bytes == null)) {
@@ -3146,7 +3272,9 @@ abstract class MainFabServices {
                   fingerDay: qrScanSuccessTime,
                   files: uploadFaceFiles,
                   noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null,
-                  failedSecurityChecks: _faceFailedChecks(capturedFace));
+                  failedSecurityChecks: webPhotoFiles != null
+                      ? _webFailedChecks(photoTaken: webPhotoFiles.isNotEmpty)
+                      : _faceFailedChecks(capturedFace));
 
               print("result status --> ${result?.data != null && result.data is Map ? result.data['status'] : result?.success}");
               if (result != null && result.success) {
@@ -3266,3 +3394,6 @@ class _BtDevice {
   /// classic Bluetooth major device class (phone, audio, computer...)
   final int? majorClass;
 }
+
+/// Why [MainFabServices.getCurrentLocation] couldn't read the position.
+enum _LocationFailure { insecurePage, serviceDisabled, denied, deniedForever, unavailable }
