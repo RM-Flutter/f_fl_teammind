@@ -192,6 +192,7 @@ abstract class RequestsServices {
           scope: scope,
           requestTypeId: requestTypeId,
           employeesIds: empIds != null ? [empIds.toString()] : null,
+          departmentIds: (depId != null && depId.toString().isNotEmpty) ? [depId.toString()] : null,
           status: status?.toString(),
           dateFrom: from,
           dateTo: to,

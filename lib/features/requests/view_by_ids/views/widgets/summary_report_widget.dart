@@ -12,7 +12,8 @@ import 'package:app_test/core/constants/app_design.dart';
 
 class SummaryReportsModal extends StatelessWidget {
   final List<SummaryReportModel> summaryReports;
-  const SummaryReportsModal({super.key, required this.summaryReports});
+  final String? type;
+  const SummaryReportsModal({super.key, required this.summaryReports, this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class SummaryReportsModal extends StatelessWidget {
                       ],
                     ),
                     trailing:
-                    Text('${report.duration} ${AppStrings.days.tr()}',  style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13),),
+                    Text('${report.duration} ${(type == 'hours' ? AppStrings.hours : AppStrings.days).tr()}',  style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 13),),
                   ),
                 ),
               );

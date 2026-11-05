@@ -328,7 +328,13 @@ class _RequestsScreenState extends State<RequestsScreen> {
               ),
               child: Container(
                 alignment: Alignment.topCenter,
-                height: 1.sh,
+                // TemplatePage puts the body in a ListView (unbounded height), so size it to the
+                // visible area under the app bar; the list below then fills what the filter tags leave.
+                height: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom -
+                    kToolbarHeight -
+                    (widget.requestsType == GetRequestsTypes.mine ? 170 : 0),
                 child: Column(
                   children: [
                     // Active Filters Widget at the top - only show if there are active filters
@@ -395,10 +401,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               },
                               child: Container(
                                 alignment: Alignment.topCenter,
-                                height: 0.9.sh,
                                 child: ListView(
                                   controller: _scrollController,
-                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.only(bottom: 140), // keep last card clear of the FABs
                                   children: [
                                     /// calendar button
                                     if (widget.requestsType == GetRequestsTypes.myTeam ||

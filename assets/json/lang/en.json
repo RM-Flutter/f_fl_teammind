@@ -1779,5 +1779,8 @@
   "bluetooth_no_devices_found": "No Bluetooth devices were found nearby.",
   "bluetooth_scan_again": "Scan again",
   "bluetooth_same_name": "same name as another device",
-  "bluetooth_device_by": "Device by"
+  "bluetooth_device_by": "Device by",
+  "level": "Level",
+  "teamleader": "Team Leader",
+  "both": "Manager & Team Leader"
 }

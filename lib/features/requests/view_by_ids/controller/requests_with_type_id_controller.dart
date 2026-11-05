@@ -14,6 +14,7 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
   bool isLoading = true;
   List<RequestModel>? requestsById;
   List<SummaryReportModel>? summaryReports;
+  String? summaryType; // "hours" | "days" from the summary_report API
   var rulesMessage;
   Future<void> initializeRequestScreenByTypeIdgetRequestsByTypeId(
       {required BuildContext context,
@@ -34,7 +35,7 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
     await ModalSheetHelper.showModalSheet(
         context: context,viewProfile: false,
         height: 0.5.sh,
-        modalContent: SummaryReportsModal(summaryReports: summaryReports!),
+        modalContent: SummaryReportsModal(summaryReports: summaryReports!, type: summaryType),
         title: AppStrings.summaryReports.tr());
   }
 
@@ -53,6 +54,7 @@ class RequestsWithTypeIdViewModel extends ChangeNotifier {
         if (v.data['status'] == true&& v.data != null) {
           final data = v.data as Map<String, dynamic>;
           final summaryReportsData = data['summary'] as List<dynamic>;
+          summaryType = data['type']?.toString();
           summaryReports = summaryReportsData
               .map((item) => SummaryReportModel.fromJson(item as Map<String, dynamic>))
               .toList();

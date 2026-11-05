@@ -1777,5 +1777,8 @@
   "bluetooth_no_devices_found": "لم يتم العثور على أجهزة بلوتوث قريبة.",
   "bluetooth_scan_again": "إعادة البحث",
   "bluetooth_same_name": "نفس اسم جهاز آخر",
-  "bluetooth_device_by": "جهاز من"
+  "bluetooth_device_by": "جهاز من",
+  "level": "المستوى",
+  "teamleader": "قائد الفريق",
+  "both": "المدير وقائد الفريق"
 }
