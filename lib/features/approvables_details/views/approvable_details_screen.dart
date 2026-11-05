@@ -17,6 +17,7 @@ import '../data/models/approvable_details_model.dart';
 import 'widgets/custom_tabbar_view_approvable_details.dart';
 import 'widgets/approvable_bottom_action_bar.dart';
 import 'widgets/manager_take_action_modal.dart';
+import 'widgets/pending_cancel_banner.dart';
 
 /// Controls which bottom sheet to auto-open when arriving from a swipe action.
 enum AutoOpenAction { none, takeAction, takeActionAsSomeoneElse }
@@ -187,6 +188,14 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
                   height: kIsWeb ? 320 : 340,
                   request: details,
                 ),
+                if (PendingCancelBanner.shouldShow(details))
+                  PendingCancelBanner(
+                    details: details,
+                    isApplicant: details.employeeId == null ||
+                        userSettings?.empId == null ||
+                        details.employeeId.toString() ==
+                            userSettings?.empId.toString(),
+                  ),
                 Expanded(
                   child: Center(
                     child: ConstrainedBox(
