@@ -222,6 +222,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/app_config_service.dart';
+import 'package:app_test/core/constants/user_consts.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -247,6 +248,7 @@ class DomainSelectionService {
     if (domain == null || domain.isEmpty) {
       // User cancelled or entered empty domain, use default
       await CacheHelper.setBool(_domainSelectedKey, true);
+      await _clearServerScopedCacheIfDomainChanged(null);
       await CacheHelper.deleteData(key: _domainCacheKey);
       if (context.mounted) DioHelper.initail(context);
       return true;
@@ -272,6 +274,7 @@ class DomainSelectionService {
       } else {
         // User wants to use default domain
         await CacheHelper.setBool(_domainSelectedKey, true);
+        await _clearServerScopedCacheIfDomainChanged(null);
         await CacheHelper.deleteData(key: _domainCacheKey);
         if (context.mounted) DioHelper.initail(context);
         return true;
@@ -373,8 +376,20 @@ class DomainSelectionService {
     return 'https://webapp.$cleanedDomain';
   }
 
+  /// Clears cached settings that belong to the previous server when the
+  /// selected domain changes, so the next start_app fetches fresh data.
+  static Future<void> _clearServerScopedCacheIfDomainChanged(String? newDomain) async {
+    final String previous = (CacheHelper.getString(_domainCacheKey) ?? '').toString().trim();
+    final String next = (newDomain ?? '').trim();
+    if (previous == next) return;
+    await CacheHelper.deleteData(key: "USG");
+    await CacheHelper.deleteData(key: "gDate");
+    UserSettingConst.generalSettingsModel = null;
+  }
+
   /// Save domain to cache and add to domains list
   static Future<void> _saveDomain(String domain) async {
+    await _clearServerScopedCacheIfDomainChanged(domain);
     // Save current domain
     await CacheHelper.setString(key: _domainCacheKey, value: domain);
 
@@ -694,6 +709,7 @@ class DomainSelectionService {
   /// Reset domain selection (for testing or if user wants to change domain)
   static Future<void> resetDomainSelection() async {
     await CacheHelper.deleteData(key: _domainSelectedKey);
+    await _clearServerScopedCacheIfDomainChanged(null);
     await CacheHelper.deleteData(key: _domainCacheKey);
     // Note: We don't delete _domainsListCacheKey here to keep the list
   }
@@ -701,6 +717,7 @@ class DomainSelectionService {
   /// Clear domain selection on logout (but keep domains list)
   static Future<void> clearDomainSelectionOnLogout() async {
     await CacheHelper.deleteData(key: _domainSelectedKey);
+    await _clearServerScopedCacheIfDomainChanged(null);
     await CacheHelper.deleteData(key: _domainCacheKey);
     // Keep _domainsListCacheKey so saved domains remain available
   }

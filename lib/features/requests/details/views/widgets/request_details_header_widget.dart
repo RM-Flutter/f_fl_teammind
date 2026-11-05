@@ -294,7 +294,15 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                 children: [
                   Builder(builder: (context) {
                     String headerTitle = AppSettingsService.getRequestTitleFromGenenralSettings(
-                            context: context, requestId: request.typeId.toString()) ??
+                            context: context,
+                            requestId: request.typeId.toString(),
+                            fallbackTitle: (() {
+                              try {
+                                return (request as dynamic).typeName?.toString();
+                              } catch (_) {
+                                return null;
+                              }
+                            })()) ??
                         '';
                     if (headerTitle.isEmpty) {
                       try {

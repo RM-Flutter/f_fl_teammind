@@ -212,9 +212,14 @@ class ApprovableCardWidget extends StatelessWidget {
           employeeName = '$employeeName - $depName';
         }
 
+        String? typeNameFallback;
+        try {
+          typeNameFallback = dyn.typeName?.toString();
+        } catch (_) {}
         title = AppSettingsService.getRequestTitleFromGenenralSettings(
                 context: context,
-                requestId: dyn.typeId != null ? dyn.typeId?.toString() : '') ??
+                requestId: dyn.typeId != null ? dyn.typeId?.toString() : '',
+                fallbackTitle: typeNameFallback) ??
             '';
 
         final String fromDate = dyn.from != null
