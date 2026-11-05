@@ -7,6 +7,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import '../shared/models/expense_claim_model.dart';
 import '../shared/repos/expense_claim_repo.dart';
 import '../../../core/services/requests_services.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class ExpenseClaimListController extends ChangeNotifier {
   List<ExpenseClaimModel>? personalRequests;
@@ -72,7 +73,7 @@ class ExpenseClaimListController extends ChangeNotifier {
       userSettings?.isHr == true || userSettings?.topManagement == true;
 
   bool isIncomingView = false;
-  String incomingScope = 'team';
+  String incomingScope = RequestScopeHelper.defaultIncomingScope;
 
   void setIncomingScope(String scope, BuildContext context) {
     incomingScope = scope;
@@ -86,7 +87,7 @@ class ExpenseClaimListController extends ChangeNotifier {
   void toggleIncomingView(bool value, BuildContext context) {
     isIncomingView = value;
     if (value) {
-      incomingScope = 'team';
+      incomingScope = RequestScopeHelper.defaultIncomingScope;
       incomingRequests = null;
       incomingHasMore = true;
       incomingCurrentPage = 1;
@@ -112,9 +113,7 @@ class ExpenseClaimListController extends ChangeNotifier {
   Future<void> initializeScreen(BuildContext context) async {
     _loadUserSettings();
     await getPersonalRequests(context: context);
-    if (isManagerOrHr) {
-      await getIncomingRequests(context: context);
-    }
+    await getIncomingRequests(context: context);
   }
 
   void _loadUserSettings() {

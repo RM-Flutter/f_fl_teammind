@@ -21,6 +21,7 @@ import '../../../../core/widgets/active_filters_row_widget.dart';
 import '../../requests/shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'overtime_calendar_screen.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class OvertimeRequestsScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -57,7 +58,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       } else {
         provider.isForDepartment = false;
       }
-      provider.incomingScope = 'team';
+      provider.incomingScope = RequestScopeHelper.defaultIncomingScope;
       provider.fetchRequests(context);
     });
 
@@ -145,16 +146,6 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isManager = gCache != null &&
-        ((gCache!['is_manager_in'] != null &&
-                gCache!['is_manager_in'] is List &&
-                gCache!['is_manager_in'].isNotEmpty) ||
-            (gCache!['is_teamleader_in'] != null &&
-                gCache!['is_teamleader_in'] is List &&
-                gCache!['is_teamleader_in'].isNotEmpty) ||
-            (gCache!['top_management'] == true) ||
-            (gCache!['is_hr'] == true));
-
     return TemplatePage(
       pageContext: context,
       title: AppStrings.overtimeRequests.tr(),
@@ -219,7 +210,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
 
           return Column(
             children: [
-              if (isManager) ...[
+              // every employee can open "Other" (other departments / all company); "Team" is managers only
+              ...[
                 SizedBox(height: 10),
                 SwitchRowNotification(
                   value: provider.isForDepartment,
@@ -235,6 +227,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 _ScopeSelectorRow(
                   currentScope: provider.incomingScope,
                   showAllCompany: true,
+                  showTeam: RequestScopeHelper.canSeeTeam,
                   onSelected: (scope) =>
                       provider.setIncomingScope(scope, context),
                 ),
@@ -327,17 +320,20 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
 class _ScopeSelectorRow extends StatelessWidget {
   final String currentScope;
   final bool showAllCompany;
+  final bool showTeam;
   final ValueChanged<String> onSelected;
 
   const _ScopeSelectorRow({
     required this.currentScope,
     required this.showAllCompany,
+    this.showTeam = true,
     required this.onSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     final scopes = [
+      if (showTeam)
       {
         'value': 'team',
         'label':'teamRequests'.tr(),

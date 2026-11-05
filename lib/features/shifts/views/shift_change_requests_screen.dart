@@ -16,6 +16,7 @@ import '../../../core/widgets/template_page.widget.dart';
 import '../../more/notifications/views/widgets/switch_row_notification.dart';
 import '../controllers/shift_change_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class ShiftChangeRequestsScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -35,17 +36,6 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
 
   bool get _isShiftsEmployee =>
       us2Cache?['worktime']?['working_hours_type']?.toString() == 'shifts';
-
-  bool get _isManager =>
-      gCache != null &&
-      ((gCache!['is_manager_in'] != null &&
-              gCache!['is_manager_in'] is List &&
-              gCache!['is_manager_in'].isNotEmpty) ||
-          (gCache!['is_teamleader_in'] != null &&
-              gCache!['is_teamleader_in'] is List &&
-              gCache!['is_teamleader_in'].isNotEmpty) ||
-          (gCache!['top_management'] == true) ||
-          (gCache!['is_hr'] == true));
 
   @override
   void initState() {
@@ -69,12 +59,13 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
         provider.isForDepartment = true;
         provider.incomingFilters['empId'] = widget.extra!['empId'];
         provider.incomingFilters['empName'] = widget.extra!['empName'];
-      } else if (!_isShiftsEmployee && _isManager) {
+      } else if (!_isShiftsEmployee) {
+        // not on shifts: no own shift requests, so open the incoming list (other departments / all company for employees)
         provider.isForDepartment = true;
       } else {
         provider.isForDepartment = false;
       }
-      provider.incomingScope = 'team';
+      provider.incomingScope = RequestScopeHelper.defaultIncomingScope;
       provider.fetchRequests(context);
     });
 
@@ -105,7 +96,6 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isManager = _isManager;
     final bool isShiftsEmployee = _isShiftsEmployee;
 
     return Consumer<ShiftChangeController>(
@@ -176,7 +166,7 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
 
               return Column(
                 children: [
-                  if (isManager && isShiftsEmployee) ...[
+                  if (isShiftsEmployee) ...[
                     const SizedBox(height: 10),
                     SwitchRowNotification(
                       value: provider.isForDepartment,
@@ -194,6 +184,7 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
                 _ScopeSelectorRow(
                   currentScope: provider.incomingScope,
                   showAllCompany: true,
+                  showTeam: RequestScopeHelper.canSeeTeam,
                   onSelected: (scope) =>
                       provider.setIncomingScope(scope, context),
                 ),
@@ -276,17 +267,20 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
 class _ScopeSelectorRow extends StatelessWidget {
   final String currentScope;
   final bool showAllCompany;
+  final bool showTeam;
   final ValueChanged<String> onSelected;
 
   const _ScopeSelectorRow({
     required this.currentScope,
     required this.showAllCompany,
+    this.showTeam = true,
     required this.onSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     final scopes = [
+      if (showTeam)
       {
         'value': 'team',
         'label':'teamRequests'.tr(),

@@ -6,6 +6,7 @@ import '../../../core/services/alert_service/alerts_service.dart';
 import '../../../core/services/requests_services.dart';
 import '../models/shift_change_request_model.dart';
 import '../services/shift_change_requests_service.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class ShiftChangeController extends ChangeNotifier {
   List<ShiftChangeRequestModel> myRequests = [];
@@ -26,7 +27,7 @@ class ShiftChangeController extends ChangeNotifier {
   int incomingTotal = 0;
 
   /// 'team' | 'other_departments' | 'all_company'
-  String incomingScope = 'team';
+  String incomingScope = RequestScopeHelper.defaultIncomingScope;
 
   // Scheduler Calendar & Assignments state for Add Shift Change Request
   bool isCalendarLoading = false;
@@ -109,7 +110,7 @@ class ShiftChangeController extends ChangeNotifier {
     isForDepartment = value;
     if (value) {
       incomingCurrentPage = 1;
-      incomingScope = 'team';
+      incomingScope = RequestScopeHelper.defaultIncomingScope;
       teamRequests.clear();
       incomingHasMore = true;
     } else {

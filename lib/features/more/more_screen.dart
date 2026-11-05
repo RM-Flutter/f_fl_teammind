@@ -29,6 +29,7 @@ import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/helpers/package_helper.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -342,15 +343,10 @@ class _MoreScreenState extends State<MoreScreen> {
                                 },
                               ),
                             ),
-                          if (gCache['is_teamleader_in'].isNotEmpty ||
-                              gCache['is_manager_in'].isNotEmpty ||
-                              gCache['is_hr'] == true ||
-                              gCache['top_management'] == true)
+                          // "Management" section: other departments / all company are open to every employee
+                          if (RequestScopeHelper.canSeeTeam || PackageHelper.hasPackage('emp-requests'))
                             SizedBox(height: 15),
-                          if (gCache['is_teamleader_in'].isNotEmpty ||
-                              gCache['is_manager_in'].isNotEmpty ||
-                              gCache['is_hr'] == true ||
-                              gCache['top_management'] == true)
+                          if (RequestScopeHelper.canSeeTeam || PackageHelper.hasPackage('emp-requests'))
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 24),
                               child: Container(
@@ -384,11 +380,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
-                          if (gCache['is_teamleader_in'].isNotEmpty ||
-                              gCache['is_manager_in'].isNotEmpty ||
-                              gCache['is_hr'] == true ||
-                              gCache['top_management'] == true)
-                            if (PackageHelper.hasPackage('emp-requests'))
+                          if (PackageHelper.hasPackage('emp-requests'))
                               DefaultListTile(
                                 title: AppStrings.otherDepartmentsRequests.tr(),
                                 src: AppIcons.otherDepartments,
@@ -402,11 +394,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
-                          if (gCache['is_teamleader_in'].isNotEmpty ||
-                              gCache['is_manager_in'].isNotEmpty ||
-                              gCache['is_hr'] == true ||
-                              gCache['top_management'] == true)
-                            if (PackageHelper.hasPackage('emp-requests'))
+                          if (PackageHelper.hasPackage('emp-requests'))
                               DefaultListTile(
                                 title: 'all_company_requests'.tr(),
                                 icon: Icons.business, // Fallback icon

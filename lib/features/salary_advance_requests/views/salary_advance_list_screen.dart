@@ -23,6 +23,7 @@ import 'widgets/salary_advance_list_item_widget.dart';
 import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class SalaryAdvanceListScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -130,7 +131,8 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                 ),
             body: Column(
               children: [
-                if (controller.isManagerOrHr) ...[
+                // every employee can open "Other" (other departments / all company); "Team" is managers only
+                ...[
                   SizedBox(height: 10),
                   SwitchRowNotification(
                     value: controller.isIncomingView,
@@ -146,6 +148,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                   _ScopeSelectorRow(
                     currentScope: controller.incomingScope,
                     showAllCompany: true,
+                    showTeam: RequestScopeHelper.canSeeTeam,
                     onSelected: (scope) => controller.setIncomingScope(scope, context),
                   ),
                   SizedBox(height: 10),
@@ -289,17 +292,20 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
 class _ScopeSelectorRow extends StatelessWidget {
   final String currentScope;
   final bool showAllCompany;
+  final bool showTeam;
   final ValueChanged<String> onSelected;
 
   const _ScopeSelectorRow({
     required this.currentScope,
     required this.showAllCompany,
+    this.showTeam = true,
     required this.onSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     final scopes = [
+      if (showTeam)
       {
         'value': 'team',
         'label':'teamRequests'.tr(),

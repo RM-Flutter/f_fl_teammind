@@ -9,6 +9,7 @@ import '../models/overtime_request_model.dart';
 import '../services/overtime_requests_service.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class OvertimeRequestsProvider extends ChangeNotifier {
   List<OvertimeRequestModel> myRequests = [];
@@ -29,7 +30,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
   int incomingTotal = 0;
 
   /// 'team' | 'other_departments' | 'all_company'
-  String incomingScope = 'team';
+  String incomingScope = RequestScopeHelper.defaultIncomingScope;
 
   bool get isHrOrTopManagement {
     if (UserSettingConst.userSettings == null) return false;
@@ -243,7 +244,7 @@ class OvertimeRequestsProvider extends ChangeNotifier {
     // Reset pagination and clear lists on switch
     if (value) {
       incomingCurrentPage = 1;
-      incomingScope = 'team'; // reset scope to default on every switch
+      incomingScope = RequestScopeHelper.defaultIncomingScope; // reset scope to default on every switch
       teamRequests.clear();
       incomingHasMore = true;
     } else {

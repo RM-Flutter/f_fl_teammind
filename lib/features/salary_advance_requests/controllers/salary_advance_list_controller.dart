@@ -8,6 +8,7 @@ import 'package:app_test/features/salary_advance_requests/shared/models/salary_a
 import 'package:app_test/features/salary_advance_requests/shared/repos/salary_advance_repo.dart';
 
 import '../../../core/services/requests_services.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class SalaryAdvanceListController extends ChangeNotifier {
   List<SalaryAdvanceRequestModel>? personalRequests;
@@ -71,7 +72,7 @@ class SalaryAdvanceListController extends ChangeNotifier {
   bool isIncomingView = false;
 
   /// 'team' | 'other_departments' | 'all_company'
-  String incomingScope = 'team';
+  String incomingScope = RequestScopeHelper.defaultIncomingScope;
 
   bool get isHrOrTopManagement =>
       userSettings?.isHr == true || userSettings?.topManagement == true;
@@ -89,7 +90,7 @@ class SalaryAdvanceListController extends ChangeNotifier {
     isIncomingView = value;
     if (value) {
       // Reset scope and data on every switch to incoming
-      incomingScope = 'team';
+      incomingScope = RequestScopeHelper.defaultIncomingScope;
       incomingRequests = null;
       incomingHasMore = true;
       incomingCurrentPage = 1;
@@ -118,10 +119,8 @@ class SalaryAdvanceListController extends ChangeNotifier {
     // Load personal requests
     await getPersonalRequests(context: context);
 
-    // Load incoming requests if manager/HR
-    if (isManagerOrHr) {
-      await getIncomingRequests(context: context);
-    }
+    // Load incoming requests (every employee can see other departments / all company)
+    await getIncomingRequests(context: context);
   }
 
   void _loadUserSettings() {
