@@ -14,6 +14,7 @@ import 'package:app_test/features/salary_advance_requests/shared/models/salary_a
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/salary_advance_requests/views/update_salary_advance_screen.dart';
 import 'package:app_test/features/requests/details/controller/request_details_controller.dart';
+import '../../../../core/services/localization_service.dart';
 import '../../cubit/approvable_details_cubit.dart';
 import '../../data/models/approvable_details_model.dart';
 import 'manager_take_action_modal.dart';
@@ -55,6 +56,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = LocalizationService.isArabic(context: context);
 
     final bool isApplicant = details.employeeId == null ||
         userSettings?.empId == null ||
@@ -76,7 +78,9 @@ class ApprovableBottomActionBar extends StatelessWidget {
     }
 
     // Manager Action: Approve Cancellation (shown whenever can_approve_cancel == true and request not canceled)
-    if (details.canApproveCancel == true && statusLower != 'canceled' && statusLower != 'cancelled') {
+    if (details.canApproveCancel == true &&
+        statusLower != 'canceled' &&
+        statusLower != 'cancelled') {
       addButton(
         CustomRequestDetailsButton(
           title: AppStrings.approveCancel.tr(),
@@ -103,7 +107,10 @@ class ApprovableBottomActionBar extends StatelessWidget {
       // RULE 1: If status is approved, canceled, or refused (Completed)
 
       // Employee Action: Request Cancellation for approved vacation before start date
-      if (isApplicant && statusLower == 'approved' && isDateFuture && details.waitingCancel != true) {
+      if (isApplicant &&
+          statusLower == 'approved' &&
+          isDateFuture &&
+          details.waitingCancel != true) {
         addButton(
           CustomRequestDetailsButton(
             title: AppStrings.requestCancelVacation.tr(),
@@ -158,7 +165,9 @@ class ApprovableBottomActionBar extends StatelessWidget {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
                   context,
                   details.employeeId.toString(),
-                  type: details.isShiftChangeRequest ? 'shift_change_requests' : type,
+                  type: details.isShiftChangeRequest
+                      ? 'shift_change_requests'
+                      : type,
                   empName: details.employeeName?.toString() ?? '',
                 );
               } else {
@@ -210,7 +219,9 @@ class ApprovableBottomActionBar extends StatelessWidget {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
                   context,
                   details.employeeId.toString(),
-                  type: details.isShiftChangeRequest ? 'shift_change_requests' : type,
+                  type: details.isShiftChangeRequest
+                      ? 'shift_change_requests'
+                      : type,
                   empName: details.employeeName?.toString() ?? '',
                 );
               } else {
@@ -228,10 +239,14 @@ class ApprovableBottomActionBar extends StatelessWidget {
       // B2. Manager Action: Overlapping Vacations (only for vacation/employee_request types)
       final bool isVacationType = type.contains('employee_request') ||
           type.contains('vacation') ||
-          (details.approvableType?.toLowerCase().contains('employeerequest') == true) ||
+          (details.approvableType?.toLowerCase().contains('employeerequest') ==
+              true) ||
           (details.approvableType?.toLowerCase().contains('vacation') == true);
 
-      if (!isApplicant && isVacationType && details.id != null && details.hasOverlapping == true) {
+      if (!isApplicant &&
+          isVacationType &&
+          details.id != null &&
+          details.hasOverlapping == true) {
         addButton(
           CustomRequestDetailsButton(
             title: 'overlapping_vacations'.tr(),
@@ -301,8 +316,8 @@ class ApprovableBottomActionBar extends StatelessWidget {
         addButton(
           CustomRequestDetailsButton(
             title: 'edit_request'.tr(),
-            color: isExactlyThreeTotal 
-                ? Color(AppColors.secondaryButton) 
+            color: isExactlyThreeTotal
+                ? Color(AppColors.secondaryButton)
                 : Color(AppColors.buttons),
             onPressed: () async {
               if (type == 'salary_advance') {
