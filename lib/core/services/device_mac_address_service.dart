@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../constants/app_constants.dart';
 
 abstract class DeviceMacAddressService {
@@ -146,16 +149,43 @@ abstract class DeviceMacAddressService {
     }
   }
 
+  /// Ids of nearby Bluetooth devices from a short scan (empty when Bluetooth is off or not permitted).
+  /// Android 12+ needs BLUETOOTH_SCAN at runtime; iOS shows its Bluetooth prompt on the first scan.
+  static Future<List<String>> _scanNearbyBluetoothIds() async {
+    try {
+      if (Platform.isAndroid && !await Permission.bluetoothScan.request().isGranted) return [];
+      final state = await FlutterBluePlus.adapterState
+          .where((s) => s != BluetoothAdapterState.unknown)
+          .first
+          .timeout(const Duration(seconds: 2));
+      if (state != BluetoothAdapterState.on) return [];
+
+      final ids = <String>{};
+      final subscription = FlutterBluePlus.onScanResults.listen(
+          (results) => ids.addAll(results.map((r) => r.device.remoteId.toString())));
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
+      await FlutterBluePlus.isScanning.where((scanning) => !scanning).first;
+      await subscription.cancel();
+      return ids.toList();
+    } catch (e) {
+      debugPrint('⚠️ Bluetooth double check scan failed: $e');
+      return [];
+    }
+  }
+
   /// Get double check data for QR code fingerprint
   /// Returns a map with 'double_check_type' and 'double_check_data' or null if neither WiFi nor Bluetooth is available
   static Future<Map<String, String>?> getDoubleCheckData() async {
     try {
-      // Check WiFi first (priority)
-      final bool wifiConnected = await isWifiConnected();
-      if (wifiConnected) {
-        final String? wifiMac = await getWifiLocalMacAddress();
-        if (wifiMac != null && wifiMac.isNotEmpty) {
-          final date = DateFormat('dd-MM-yyyy', "en").format(DateTime.now());
+      // Check WiFi first (priority). Router BSSID is compared with the branch device_uid (same value fp_wifi sends).
+      // Reading the BSSID needs location permission on Android & iOS (+ wifi-info entitlement on iOS); null when not on WiFi.
+      if (!kIsWeb) {
+        if (await Geolocator.checkPermission() == LocationPermission.denied) {
+          await Geolocator.requestPermission();
+        }
+        final String? wifiMac = await NetworkInfo().getWifiBSSID();
+        if (wifiMac != null && wifiMac.isNotEmpty && wifiMac != '02:00:00:00:00:00') {
+          final date = DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(DateTime.now());
           final dataToEncode = '${wifiMac}_$date';
           final encodedData = base64Encode(utf8.encode(dataToEncode));
 
@@ -172,21 +202,15 @@ abstract class DeviceMacAddressService {
         }
       }
 
-      // If WiFi is not available, check Bluetooth
-      final bool bluetoothEnabled = await isBluetoothEnabled();
-      if (bluetoothEnabled) {
-        final String? bluetoothMac = await getBluetoothLocalMacAddress();
-        if (bluetoothMac != null && bluetoothMac.isNotEmpty) {
-          final date = DateFormat('dd-MM-yyyy', "en").format(DateTime.now());
-          final dataToEncode = '${bluetoothMac}_$date';
-          final encodedData = base64Encode(utf8.encode(dataToEncode));
-
-          debugPrint('✅ Double Check - Bluetooth:');
-          debugPrint('   Type: fp_bluetooth');
-          debugPrint('   MAC Address: $bluetoothMac');
-          debugPrint('   Date: $date');
-          debugPrint('   Encoded Data: $encodedData');
-
+      // If WiFi is not available, check Bluetooth: short BLE scan for nearby devices.
+      // Their ids are the same remoteId value fp_bluetooth sends; the backend accepts the double check
+      // when one of them is the branch beacon (bluetooth_info).
+      if (!kIsWeb) {
+        final nearbyIds = await _scanNearbyBluetoothIds();
+        if (nearbyIds.isNotEmpty) {
+          final date = DateFormat('yyyy-MM-dd HH:mm:ss', "en").format(DateTime.now());
+          final encodedData = base64Encode(utf8.encode('${nearbyIds.join(',')}_$date'));
+          debugPrint('✅ Double Check - Bluetooth: ${nearbyIds.length} nearby devices');
           return {
             'double_check_type': 'fp_bluetooth',
             'double_check_data': encodedData,

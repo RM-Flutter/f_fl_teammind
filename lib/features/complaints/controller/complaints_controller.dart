@@ -215,7 +215,7 @@ class ComplaintsController extends ChangeNotifier {
    }
   } catch (error) {
    errorAddCommentMessage = error is DioException
-     ? error.response?.data['message'] ?? 'Something went wrong'
+     ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
      : error.toString();
 
    AppToast.showToast(
@@ -275,7 +275,7 @@ class ComplaintsController extends ChangeNotifier {
    notifyListeners();
   } catch (error) {
    getRequestErrorMessage = error is DioError
-     ? error.response?.data['message'] ?? 'Something went wrong'
+     ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
      : error.toString();
    AppToast.showToast(
      msg: getRequestErrorMessage!,
@@ -334,7 +334,7 @@ class ComplaintsController extends ChangeNotifier {
    notifyListeners();
   } catch (error) {
    getRequestErrorMessage = error is DioError
-     ? error.response?.data['message'] ?? 'Something went wrong'
+     ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
      : error.toString();
    AppToast.showToast(
      msg: getRequestErrorMessage!,
@@ -378,7 +378,7 @@ class ComplaintsController extends ChangeNotifier {
    notifyListeners();
   } catch (error) {
    getRequestErrorMessage = error is DioError
-     ? error.response?.data['message'] ?? 'Something went wrong'
+     ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
      : error.toString();
    AppToast.showToast(
      msg: getRequestErrorMessage!,
@@ -455,7 +455,7 @@ class ComplaintsController extends ChangeNotifier {
    }
   } catch (error) {
    errorAddRequestMessage = error is DioException
-     ? error.response?.data['message'] ?? 'Something went wrong'
+     ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
      : error.toString();
    AppToast.showToast(
      msg: errorAddRequestMessage!,

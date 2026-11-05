@@ -142,7 +142,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     }).catchError((error) {
       if (error is DioError) {
         errorMessage =
-            error.response?.data['message'] ?? 'Something went wrong';
+            error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -192,7 +192,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     }).catchError((error) {
       if (error is DioError) {
         errorMessage =
-            error.response?.data['message'] ?? 'Something went wrong';
+            error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }

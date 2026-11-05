@@ -133,11 +133,10 @@ class GeneralSettingsModel extends AppSettingsModel {
       managerAbleToApproveExpenseClaims: ModelHelpersService.getBoolValue(json['manager_able_to_approve_expense_claims']),
       hasEmployeeProfile: ModelHelpersService.getBoolValue(json['has_employee_profile']) ?? true,
       license: json['license'] != null ? LicenseModel.fromJson(json['license']) : null,
-      fingerprintSecurityChecks: json['fingerprint_security_checks'] != null
-          ? FingerprintSecurityChecksModel.fromJson(json['fingerprint_security_checks'] as Map<String, dynamic>?)
-          : (json['fingerprintChecks'] is List
-              ? FingerprintSecurityChecksModel.fromLegacyArray(json['fingerprintChecks'] as List<dynamic>)
-              : null),
+      fingerprintSecurityChecks: json['fingerprint_security_checks'] is Map
+          ? FingerprintSecurityChecksModel.fromJson(
+              Map<String, dynamic>.from(json['fingerprint_security_checks'] as Map))
+          : null,
     );
   }
 

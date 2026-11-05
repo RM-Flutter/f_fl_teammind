@@ -11,20 +11,12 @@ enum FingerprintCheckLevel {
   static FingerprintCheckLevel fromValue(dynamic value) {
     if (value == null) return FingerprintCheckLevel.disabled;
     if (value is FingerprintCheckLevel) return value;
-    final str = value.toString().toLowerCase().trim();
-    switch (str) {
+    // Only the backend values are accepted: disabled / mandatory / optional. Anything else => disabled.
+    switch (value.toString().toLowerCase().trim()) {
       case 'mandatory':
-      case 'required':
         return FingerprintCheckLevel.mandatory;
       case 'optional':
         return FingerprintCheckLevel.optional;
-      case 'disabled':
-      case 'disable':
-      case 'none':
-        return FingerprintCheckLevel.disabled;
-      case 'true':
-      case '1':
-        return FingerprintCheckLevel.mandatory;
       default:
         return FingerprintCheckLevel.disabled;
     }
@@ -51,11 +43,11 @@ class FingerprintSecurityChecksModel {
   final FingerprintCheckLevel fingerprintVerifyGpsNetworkComparison;
   final FingerprintCheckLevel fingerprintVerifyGpsTimestampOffline;
   final FingerprintCheckLevel fingerprintLivenessChallengesEnabled;
-  final FingerprintCheckLevel fingerprintFaceChallengeEnabled;
   final FingerprintCheckLevel fingerprintFaceProfileVerificationEnabled;
   final FingerprintCheckLevel fingerprintUploadFaceImageToBackend;
   final FingerprintCheckLevel fingerprintSendNoteReportToApi;
   final FingerprintCheckLevel fpScanSteps;
+  final FingerprintCheckLevel branchesDoubleCheck;
 
   const FingerprintSecurityChecksModel({
     this.blockFingerprintOnDeveloperMode = FingerprintCheckLevel.disabled,
@@ -66,11 +58,11 @@ class FingerprintSecurityChecksModel {
     this.fingerprintVerifyGpsNetworkComparison = FingerprintCheckLevel.disabled,
     this.fingerprintVerifyGpsTimestampOffline = FingerprintCheckLevel.disabled,
     this.fingerprintLivenessChallengesEnabled = FingerprintCheckLevel.disabled,
-    this.fingerprintFaceChallengeEnabled = FingerprintCheckLevel.disabled,
     this.fingerprintFaceProfileVerificationEnabled = FingerprintCheckLevel.disabled,
     this.fingerprintUploadFaceImageToBackend = FingerprintCheckLevel.disabled,
     this.fingerprintSendNoteReportToApi = FingerprintCheckLevel.disabled,
     this.fpScanSteps = FingerprintCheckLevel.disabled,
+    this.branchesDoubleCheck = FingerprintCheckLevel.disabled,
   });
 
   factory FingerprintSecurityChecksModel.fromJson(Map<String, dynamic>? json) {
@@ -102,9 +94,6 @@ class FingerprintSecurityChecksModel {
       fingerprintLivenessChallengesEnabled: FingerprintCheckLevel.fromValue(
         json['fingerprint_liveness_challenges_enabled'],
       ),
-      fingerprintFaceChallengeEnabled: FingerprintCheckLevel.fromValue(
-        json['fingerprint_face_challenge_enabled'],
-      ),
       fingerprintFaceProfileVerificationEnabled: FingerprintCheckLevel.fromValue(
         json['fingerprint_face_profile_verification_enabled'],
       ),
@@ -117,52 +106,7 @@ class FingerprintSecurityChecksModel {
       fpScanSteps: FingerprintCheckLevel.fromValue(
         json['fp_scan_steps'],
       ),
-    );
-  }
-
-  /// تحويل قائمة قديمة من أسماء المفاتيح (fingerprintChecks array) إلى موديل
-  factory FingerprintSecurityChecksModel.fromLegacyArray(List<dynamic> list) {
-    bool contains(String key) => list.any((e) => e?.toString() == key);
-    return FingerprintSecurityChecksModel(
-      blockFingerprintOnDeveloperMode: contains('block_fingerprint_on_developer_mode')
-          ? FingerprintCheckLevel.mandatory
-          : FingerprintCheckLevel.disabled,
-      fingerprintBlockOnRootOrJailbreak: contains('fingerprint_block_on_root_or_jailbreak')
-          ? FingerprintCheckLevel.mandatory
-          : FingerprintCheckLevel.disabled,
-      fingerprintBlockOnFakeGps: contains('fingerprint_block_on_fake_gps')
-          ? FingerprintCheckLevel.mandatory
-          : FingerprintCheckLevel.disabled,
-      fingerprintBlockOnVpn: contains('fingerprint_block_on_vpn')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintVerifyTimeDrift: contains('fingerprint_verify_time_drift')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintVerifyGpsNetworkComparison: contains('fingerprint_verify_gps_network_comparison')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintVerifyGpsTimestampOffline: contains('fingerprint_verify_gps_timestamp_offline')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintLivenessChallengesEnabled: contains('fingerprint_liveness_challenges_enabled')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintFaceChallengeEnabled: contains('fingerprint_face_challenge_enabled')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintFaceProfileVerificationEnabled: contains('fingerprint_face_profile_verification_enabled')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintUploadFaceImageToBackend: contains('fingerprint_upload_face_image_to_backend')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fingerprintSendNoteReportToApi: contains('fingerprint_send_note_report_to_api')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
-      fpScanSteps: contains('fp_scan_steps')
-          ? FingerprintCheckLevel.optional
-          : FingerprintCheckLevel.disabled,
+      branchesDoubleCheck: FingerprintCheckLevel.fromValue(json['branchesDoubleCheck']),
     );
   }
 
@@ -176,11 +120,11 @@ class FingerprintSecurityChecksModel {
       'fingerprint_verify_gps_network_comparison': fingerprintVerifyGpsNetworkComparison.toValue(),
       'fingerprint_verify_gps_timestamp_offline': fingerprintVerifyGpsTimestampOffline.toValue(),
       'fingerprint_liveness_challenges_enabled': fingerprintLivenessChallengesEnabled.toValue(),
-      'fingerprint_face_challenge_enabled': fingerprintFaceChallengeEnabled.toValue(),
       'fingerprint_face_profile_verification_enabled': fingerprintFaceProfileVerificationEnabled.toValue(),
       'fingerprint_upload_face_image_to_backend': fingerprintUploadFaceImageToBackend.toValue(),
       'fingerprint_send_note_report_to_api': fingerprintSendNoteReportToApi.toValue(),
       'fp_scan_steps': fpScanSteps.toValue(),
+      'branchesDoubleCheck': branchesDoubleCheck.toValue(),
     };
   }
 }

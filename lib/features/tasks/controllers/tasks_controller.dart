@@ -160,7 +160,7 @@ class TasksController extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -204,7 +204,7 @@ class TasksController extends ChangeNotifier {
       notifyListeners();
     } catch (error, stackTrace) {
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error, stackTrace: stackTrace);
       }
@@ -231,7 +231,7 @@ class TasksController extends ChangeNotifier {
       print("TASK ERROR IN --> ${error.toString()}");
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -283,7 +283,7 @@ class TasksController extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -334,7 +334,7 @@ class TasksController extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -389,7 +389,7 @@ class TasksController extends ChangeNotifier {
       isUpdateLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -427,7 +427,7 @@ class TasksController extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }

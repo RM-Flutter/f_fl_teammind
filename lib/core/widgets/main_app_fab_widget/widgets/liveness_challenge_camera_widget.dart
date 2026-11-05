@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:permission_handler/permission_handler.dart' as permission_handler;
 import 'package:app_test/core/constants/app_design.dart';
+import 'face_frame_overlay.dart';
 
 enum LivenessChallenge {
   blinkRightEye,
@@ -841,12 +842,13 @@ class _LivenessChallengeCameraScreenState
   }
 
   String _getLocalizedMessage(String en) {
-    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     switch (en) {
       case 'No face detected':
-        return isArabic ? 'لم يتم اكتشاف وجه' : en;
+        return 'face_status_no_face'.tr();
+      case 'Detecting...':
+        return 'face_status_detecting'.tr();
       case 'Challenge completed!':
-        return isArabic ? 'تم إكمال التحدي!' : en;
+        return 'face_status_completed'.tr();
       default:
         return en;
     }
@@ -938,7 +940,7 @@ class _LivenessChallengeCameraScreenState
   }
 
   Widget _buildChallengeAnimation() {
-    const double fontSize = 56;
+    const double fontSize = 40;
 
     Widget rotating(String emoji, {required double from, required double to}) {
       return AnimatedBuilder(
@@ -1057,23 +1059,20 @@ class _LivenessChallengeCameraScreenState
                   Positioned.fill(
                     child: CameraPreview(_controller!),
                   ),
+                  // face frame: the challenge (what to do) above it, why it is asked below it
                   Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: _challengeCompleted
-                              ? Colors.green
-                              : Colors.white,
-                          width: 3,
-                        ),
-                        borderRadius: BorderRadius.circular(AppRadius.lg),
-                      ),
-                      margin: const EdgeInsets.all(40),
+                    child: FaceFrameOverlay(
+                      instruction: _getChallengeInstruction(),
+                      hint: _buildChallengeAnimation(),
+                      status: _statusMessage,
+                      reason: 'face_frame_reason_liveness'.tr(),
+                      tip: 'face_frame_tip'.tr(),
+                      frameColor: _challengeCompleted ? Colors.green : Colors.white,
                     ),
                   ),
                   // Time remaining indicator
                   Positioned(
-                    top: 50,
+                    top: 12,
                     right: 20,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -1093,49 +1092,6 @@ class _LivenessChallengeCameraScreenState
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 100,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            _getChallengeInstruction(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 10),
-                          // Animated hint icon for current challenge
-                          _buildChallengeAnimation(),
-                          if (_statusMessage != null) ...[
-                            const SizedBox(height: 8),
-                            Text(
-                              _statusMessage!,
-                              style: const TextStyle(
-                                color: Colors.yellow,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ],
                       ),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
@@ -39,7 +40,7 @@ class EvaluationController extends ChangeNotifier {
       }
     }
     else {
-      errorMessage = result.message ?? 'Something went wrong';
+      errorMessage = result.message ?? 'something_went_wrong'.tr();
     }
     isLoading = false;
     notifyListeners();
@@ -60,7 +61,7 @@ class EvaluationController extends ChangeNotifier {
         debugPrint('false');
       }
     } else {
-      errorMessage = result.message ?? 'Something went wrong';
+      errorMessage = result.message ?? 'something_went_wrong'.tr();
     }
     isLoading = false;
     notifyListeners();

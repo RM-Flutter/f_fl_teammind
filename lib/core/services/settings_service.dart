@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -109,7 +110,7 @@ abstract class AppSettingsService {
       }
     }).catchError((error){
       if (error is DioError) {
-        print(error.response?.data['message'] ?? 'Something went wrong');
+        print(error.response?.data['message'] ?? 'something_went_wrong'.tr());
       }
     });
   }

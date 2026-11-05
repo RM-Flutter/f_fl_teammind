@@ -10,12 +10,11 @@ abstract class AppConstants {
   static  List? fingerPrints = [];
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // مفاتيح أمان البصمة (13) — تدعم 3 مستويات: mandatory / optional / disabled
-  // الأولوية لـ fingerprint_security_checks (object).
-  // الـ fallback هو fingerprintChecks (array القديم) إن لم يوجد الـ object.
+  // مفاتيح أمان البصمة (12) — تدعم 3 مستويات: mandatory / optional / disabled
+  // المصدر الوحيد هو fingerprint_security_checks (object) من الباك اند.
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// أسماء المفاتيح الـ 13 (بنفس أسماء الباك اند).
+  /// أسماء المفاتيح الـ 12 (بنفس أسماء الباك اند).
   static const List<String> fingerprintSecurityKeyNames = [
     'block_fingerprint_on_developer_mode',
     'fingerprint_block_on_root_or_jailbreak',
@@ -25,7 +24,6 @@ abstract class AppConstants {
     'fingerprint_verify_gps_network_comparison',
     'fingerprint_verify_gps_timestamp_offline',
     'fingerprint_liveness_challenges_enabled',
-    'fingerprint_face_challenge_enabled',
     'fingerprint_face_profile_verification_enabled',
     'fingerprint_upload_face_image_to_backend',
     'fingerprint_send_note_report_to_api',
@@ -41,11 +39,11 @@ abstract class AppConstants {
   static FingerprintCheckLevel fingerprintVerifyGpsNetworkComparisonLevel = FingerprintCheckLevel.disabled;
   static FingerprintCheckLevel fingerprintVerifyGpsTimestampOfflineLevel = FingerprintCheckLevel.disabled;
   static FingerprintCheckLevel fingerprintLivenessChallengesEnabledLevel = FingerprintCheckLevel.optional;
-  static FingerprintCheckLevel fingerprintFaceChallengeEnabledLevel = FingerprintCheckLevel.disabled;
   static FingerprintCheckLevel fingerprintFaceProfileVerificationEnabledLevel = FingerprintCheckLevel.optional;
   static FingerprintCheckLevel fingerprintUploadFaceImageToBackendLevel = FingerprintCheckLevel.optional;
   static FingerprintCheckLevel fingerprintSendNoteReportToApiLevel = FingerprintCheckLevel.optional;
   static FingerprintCheckLevel fpScanStepsLevel = FingerprintCheckLevel.optional;
+  static FingerprintCheckLevel branchesDoubleCheckLevel = FingerprintCheckLevel.disabled;
 
   /// Getters متوافقة مع الكود السابق (ترجع true إذا كان المفتاح مفعلاً: mandatory أو optional)
   static bool get blockFingerprintOnDeveloperMode => blockFingerprintOnDeveloperModeLevel.isEnabled;
@@ -56,7 +54,6 @@ abstract class AppConstants {
   static bool get fingerprintVerifyGpsNetworkComparison => fingerprintVerifyGpsNetworkComparisonLevel.isEnabled;
   static bool get fingerprintVerifyGpsTimestampOffline => fingerprintVerifyGpsTimestampOfflineLevel.isEnabled;
   static bool get fingerprintLivenessChallengesEnabled => fingerprintLivenessChallengesEnabledLevel.isEnabled;
-  static bool get fingerprintFaceChallengeEnabled => fingerprintFaceChallengeEnabledLevel.isEnabled;
   static bool get fingerprintFaceProfileVerificationEnabled => fingerprintFaceProfileVerificationEnabledLevel.isEnabled;
   static bool get fingerprintUploadFaceImageToBackend => fingerprintUploadFaceImageToBackendLevel.isEnabled;
   static bool get fingerprintSendNoteReportToApi => fingerprintSendNoteReportToApiLevel.isEnabled;
@@ -72,18 +69,17 @@ abstract class AppConstants {
     fingerprintVerifyGpsNetworkComparisonLevel = checks.fingerprintVerifyGpsNetworkComparison;
     fingerprintVerifyGpsTimestampOfflineLevel = checks.fingerprintVerifyGpsTimestampOffline;
     fingerprintLivenessChallengesEnabledLevel = checks.fingerprintLivenessChallengesEnabled;
-    fingerprintFaceChallengeEnabledLevel = checks.fingerprintFaceChallengeEnabled;
     fingerprintFaceProfileVerificationEnabledLevel = checks.fingerprintFaceProfileVerificationEnabled;
     fingerprintUploadFaceImageToBackendLevel = checks.fingerprintUploadFaceImageToBackend;
     fingerprintSendNoteReportToApiLevel = checks.fingerprintSendNoteReportToApi;
     fpScanStepsLevel = checks.fpScanSteps;
+    branchesDoubleCheckLevel = checks.branchesDoubleCheck;
 
     debugPrint("🛡️ [FingerprintSecurity] Updated checks: ${checks.toJson()}");
     debugPrint("📸 [FingerprintSecurity] showFaceVerifyForFingerprint = $showFaceVerifyForFingerprint");
     debugPrint("   - uploadFaceImage: $fingerprintUploadFaceImageToBackend");
     debugPrint("   - profileVerification: $fingerprintFaceProfileVerificationEnabled");
     debugPrint("   - livenessChallenges: $fingerprintLivenessChallengesEnabled");
-    debugPrint("   - faceChallenge: $fingerprintFaceChallengeEnabled");
     debugPrint("   - sendNoteReport: $fingerprintSendNoteReportToApi");
   }
 
@@ -137,7 +133,7 @@ abstract class AppConstants {
 
   /// تحديث مفاتيح أمان البصمة من الكاش:
   /// 1) يفحص أولاً الكاش المخصص "FINGERPRINT_SECURITY_CHECKS" (أولوية مطلقة)
-  /// 2) ثم كاش "USG" (object ثم fallback للـ legacy array فقط إذا لم يوجد كاش مخصص)
+  /// 2) ثم كاش "USG" (fingerprint_security_checks object)
   /// 3) ثم كاش "US1"
   static void updateFingerprintSecurityFromUsgFingerprintChecks() {
     // 1. فحص الكاش المخصص المباشر
@@ -163,13 +159,6 @@ abstract class AppConstants {
         final gCache = json.decode(jsonString);
         if (gCache != null) {
           if (tryUpdateSecurityChecks(gCache)) return;
-          if (gCache is Map && gCache['fingerprintChecks'] is List) {
-            final checks = FingerprintSecurityChecksModel.fromLegacyArray(
-              gCache['fingerprintChecks'] as List<dynamic>,
-            );
-            updateFingerprintSecurityFromChecksObject(checks);
-            return;
-          }
         }
       } catch (_) {}
     }
@@ -185,13 +174,17 @@ abstract class AppConstants {
   }
 
   /// الكاميرا تفتح لو أي key من الـ keys دي موجود — كل key مستقل تماماً.
-  /// - fingerprintFaceChallengeEnabled    : تصوير وجه أساسي
   /// - fingerprintUploadFaceImageToBackend: محتاج صورة يرفعها للباك إند
   /// - fingerprintLivenessChallengesEnabled: محتاج كاميرا للتحديات الحية
   /// - fingerprintFaceProfileVerificationEnabled: محتاج صورة يقارنها بالبروفايل
   /// - fingerprintSendNoteReportToApi    : يجمع تقرير الوجه والـ GPS ويرسله في الـ note
+  /// Face capture is required (camera permission must be granted) when any face key is mandatory.
+  static bool get faceCaptureMandatory =>
+      fingerprintLivenessChallengesEnabledLevel.isMandatory ||
+      fingerprintFaceProfileVerificationEnabledLevel.isMandatory ||
+      fingerprintUploadFaceImageToBackendLevel.isMandatory;
+
   static bool get showFaceVerifyForFingerprint =>
-      fingerprintFaceChallengeEnabled ||
       fingerprintUploadFaceImageToBackend ||
       fingerprintLivenessChallengesEnabled ||
       fingerprintFaceProfileVerificationEnabled ||

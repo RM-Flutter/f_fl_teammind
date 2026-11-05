@@ -46,7 +46,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -82,7 +82,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       isDeleteLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -109,7 +109,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -204,7 +204,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       notifyListeners();
 
       if (error is DioError) {
-        errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage2 = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else if (_isFcmServiceUnavailable(error)) {
         errorMessage2 = "خدمة الإشعارات غير متاحة حالياً. تأكد من الاتصال بالإنترنت وخدمات Google.";
       } else {
@@ -253,7 +253,7 @@ class DeviceControllerProvider extends ChangeNotifier {
       isLoading2 = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage2 = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage2 = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage2 = error.toString();
       }

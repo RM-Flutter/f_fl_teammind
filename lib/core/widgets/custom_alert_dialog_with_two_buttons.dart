@@ -27,6 +27,19 @@ Future<void> customAlertDialogWithTwoButtons(
     return;
   }
   
+  bool busy = false;
+
+  // Close exactly this dialog. A plain pop() removes whatever route is on top, e.g. a loading
+  // dialog opened by the action, which left this confirmation stuck in the middle of the screen.
+  void closeDialog(ModalRoute<dynamic>? route) {
+    if (route == null || !route.isActive) return;
+    if (route.isCurrent) {
+      route.navigator?.pop();
+    } else {
+      route.navigator?.removeRoute(route);
+    }
+  }
+
   return showDialog<void>(
     context: dialogContext,
     useRootNavigator: true, // Use root navigator to ensure it works in offline screen
@@ -75,9 +88,8 @@ Future<void> customAlertDialogWithTwoButtons(
                         titleSize: AppSizes.s12,
                         title: actionLeftText,
                         onPressed: () async {
-                          if (builderContext.mounted) {
-                            Navigator.of(builderContext, rootNavigator: true).pop();
-                          }
+                          if (busy) return;
+                          closeDialog(ModalRoute.of(builderContext));
                         },
                       ),
                     ),
@@ -88,9 +100,14 @@ Future<void> customAlertDialogWithTwoButtons(
                         titleSize: AppSizes.s12,
                         title: actionRightText,
                         onPressed: () async {
-                          await onRightActionPressed();
-                          if (builderContext.mounted) {
-                            Navigator.of(builderContext, rootNavigator: true).pop();
+                          if (busy) return; // ignore double taps while the action runs
+                          busy = true;
+                          // Captured before the await: the action may push routes (loading, results) on top.
+                          final route = ModalRoute.of(builderContext);
+                          try {
+                            await onRightActionPressed();
+                          } finally {
+                            closeDialog(route);
                           }
                         },
                       ),

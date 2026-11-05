@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/features/more/team_today_status/data/models/team_today_status_model.dart';
@@ -58,14 +59,14 @@ class TeamTodayStatusController extends ChangeNotifier {
         );
       } else {
         errorMessage =
-            response.data['message']?.toString() ?? 'Something went wrong';
+            response.data['message']?.toString() ?? 'something_went_wrong'.tr();
       }
     } catch (e) {
       if (e is DioException) {
         final resData = e.response?.data;
         errorMessage = (resData is Map && resData['message'] != null)
             ? resData['message'].toString()
-            : 'Something went wrong';
+            : 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(e);
       }

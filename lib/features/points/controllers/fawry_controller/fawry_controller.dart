@@ -161,7 +161,7 @@ class FawryController extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       getNotificationErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetFawryCategoryLoading = false;
@@ -219,7 +219,7 @@ class FawryController extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       getNotificationErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetFawryCategoryLoading = false;
@@ -331,7 +331,7 @@ class FawryController extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       getNotificationErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isPostPayLoading = false;

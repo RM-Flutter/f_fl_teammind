@@ -529,7 +529,7 @@ class AddNewRequestController extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -1217,7 +1217,7 @@ class AddNewRequestController extends ChangeNotifier {
       }
     } catch (error) {
       errorAddRequestMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
       AppToast.showToast(
         msg: errorAddRequestMessage!,

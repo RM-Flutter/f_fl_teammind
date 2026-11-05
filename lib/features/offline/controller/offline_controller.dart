@@ -23,6 +23,23 @@ class OfflineController with ChangeNotifier {
 
   List<String> get usersFingerprints => _usersFingerprints;
 
+  bool _disposed = false;
+  bool get isDisposed => _disposed;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  // The offline screen can close (connection restored) while an async action
+  // such as a fingerprint flow is still running — never notify after dispose.
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    super.notifyListeners();
+  }
+
   void initialize({required BuildContext ctx}) async {
     final appConfigServiceProvider =
     Provider.of<AppConfigService>(ctx, listen: false);
@@ -59,26 +76,16 @@ class OfflineController with ChangeNotifier {
 
     try {
       userSettingsModel = UserSettingsModel.fromJson(gCache);
-      final fingerprints = userSettingsModel.avFingerprint;
+      // Visibility is driven only by allowed_fingerprint_types (type => true/false, resolved by the backend).
       final allowedTypes = userSettingsModel.allowedFingerprintTypes;
 
       bool isTypeAllowed(String key) {
-        if (allowedTypes != null && allowedTypes.isNotEmpty) {
-          final raw = allowedTypes[key] ??
-              (key == 'custom_fp_navigate' ? allowedTypes['fp_navigate'] : null);
-          if (raw is bool) return raw;
-          if (raw != null) {
-            final s = raw.toString().toLowerCase().trim();
-            return s == 'true' || s == '1' || s == 'active_all' || s == 'active_some';
-          }
-          return false;
-        }
-        if (fingerprints != null && fingerprints.isNotEmpty) {
-          final raw = fingerprints[key];
-          final s = raw?.toString().toLowerCase().trim();
-          return s == 'active_all' || s == 'active_some' || s == 'true';
-        }
-        return false;
+        if (allowedTypes == null || allowedTypes.isEmpty) return false;
+        final raw = allowedTypes[key] ??
+            (key == 'custom_fp_navigate' ? allowedTypes['fp_navigate'] : null);
+        if (raw is bool) return raw;
+        final s = raw?.toString().toLowerCase().trim();
+        return s == 'true' || s == '1';
       }
 
       const orderedKeys = <String>[
@@ -100,6 +107,8 @@ class OfflineController with ChangeNotifier {
       debugPrint("❌ Error initializing fingerprints: $e");
     }
 
+    if (_disposed) return;
+    notifyListeners();
     // Load saved fingerprints from preferences
     await loadFingerprintsFromPreferences();
 

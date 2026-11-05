@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/features/more/blog/data/remote_data/blog_repo.dart';
@@ -46,7 +47,7 @@ class BlogProviderModel extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       getBlogErrorMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetBlogLoading = false;
@@ -81,7 +82,7 @@ class BlogProviderModel extends ChangeNotifier {
       isGetBlogSuccess = true;
     } catch (error) {
       getBlogErrorMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetBlogLoading = false;

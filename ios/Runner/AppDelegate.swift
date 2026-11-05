@@ -20,6 +20,31 @@ import UIKit
                     UIApplication.shared.windows.first?.addSubview(privacyView)
                 }
                 result(nil)
+            } else if (call.method == "isDeveloperModeEnabled") {
+                // iOS has no public API for Developer Mode; a debugger attached to the app is the closest signal
+                var info = kinfo_proc()
+                var size = MemoryLayout<kinfo_proc>.stride
+                var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()]
+                let ok = sysctl(&mib, UInt32(mib.count), &info, &size, nil, 0) == 0
+                result(ok && (info.kp_proc.p_flag & P_TRACED) != 0)
+            } else if (call.method == "isDeviceRooted") {
+                #if targetEnvironment(simulator)
+                result(false)
+                #else
+                let jailbreakPaths = [
+                    "/Applications/Cydia.app", "/Applications/Sileo.app", "/var/jb",
+                    "/Library/MobileSubstrate/MobileSubstrate.dylib", "/bin/bash",
+                    "/usr/sbin/sshd", "/etc/apt", "/private/var/lib/apt/", "/usr/bin/ssh"
+                ]
+                var isJailbroken = jailbreakPaths.contains { FileManager.default.fileExists(atPath: $0) }
+                // A sandboxed app must not be able to write outside its container
+                let probe = "/private/jailbreak_probe.txt"
+                if (try? "x".write(toFile: probe, atomically: true, encoding: .utf8)) != nil {
+                    isJailbroken = true
+                    try? FileManager.default.removeItem(atPath: probe)
+                }
+                result(isJailbroken)
+                #endif
             } else {
                 result(FlutterMethodNotImplemented)
             }

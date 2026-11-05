@@ -4,7 +4,7 @@ The fingerprint (punch in/out) button in the middle of the bottom bar, plus ever
 
 | File | Role |
 |---|---|
-| `main_app_fab.widget.dart` | `MainAppFabWidget`. It reads `US1` (`UserSettingsModel`) to find the **fingerprint methods allowed** for this user (`allowedFingerprintTypes` or `avFingerprint`; the values `true`, `active_all` and `active_some` count as allowed). It shows a single action, or a chooser when several methods are allowed. |
+| `main_app_fab.widget.dart` | `MainAppFabWidget`. It reads `US1` (`UserSettingsModel`) to find the **fingerprint methods allowed** for this user (only `allowedFingerprintTypes`, the backend type => true/false map). It shows a single action, or a chooser when several methods are allowed. |
 | `main_app_fab.service.dart` | `MainAppFabService`: the punch flow (below) |
 | `widgets/liveness_challenge_camera_widget.dart` | Camera screen that asks for random liveness challenges (blink an eye, close both eyes, tilt or turn the head, smile) and checks them with ML Kit face detection |
 | `widgets/qrcode_Scanner_view_widget.dart` | QR scanner for `fp_scan` |

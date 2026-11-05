@@ -139,7 +139,7 @@ class NotificationProviderModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioException) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -163,7 +163,7 @@ class NotificationProviderModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioException) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -208,7 +208,7 @@ class NotificationProviderModel extends ChangeNotifier {
       isGetNotificationSuccess = true;
     } catch (error) {
       getNotificationErrorMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetNotificationLoading = false;
@@ -232,7 +232,7 @@ class NotificationProviderModel extends ChangeNotifier {
       }
     } catch (error) {
       getNotificationErrorMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetNotificationLoading = false;
@@ -438,7 +438,7 @@ class NotificationProviderModel extends ChangeNotifier {
       }
     }catch (error) {
       errorAddNotificationMessage = error is DioException
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
       AppToast.showToast(
           msg:errorAddNotificationMessage!,

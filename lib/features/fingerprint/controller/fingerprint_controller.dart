@@ -196,54 +196,31 @@ class FingerprintViewModel extends ChangeNotifier {
         // 3) أي شكل آخر قابل للتحويل لنص واحد
 
         final dynamic errors = response.data['errors'];
-        List<int> validIndexes = [];
         final List<String> errorMessages = [];
 
-        if (errors is Map) {
-          // نستخرج الإندكسات من الـ keys ونجمّع رسائل الأخطاء من الـ values
+        if (errors is Map && errors.isNotEmpty) {
+          // errors keyed by the index of the sent fingerprint: the server saved every other fingerprint.
+          // Keep only the refused ones in the queue, each with its error shown under its card.
+          final List sent = List.from(fingerprints);
+          final List<Map<String, dynamic>> refused = [];
           errors.forEach((key, value) {
-            final index =
-            int.tryParse(key.toString().replaceAll('.', ''));
-            if (index != null) {
-              validIndexes.add(index);
-            }
-
-            if (value is List) {
-              errorMessages.addAll(
-                  value.map((e) => e.toString()));
-            } else if (value != null) {
-              errorMessages.add(value.toString());
-            }
+            final index = int.tryParse(key.toString().replaceAll('.', ''));
+            if (index == null || index < 0 || index >= sent.length) return;
+            final item = Map<String, dynamic>.from(sent[index] as Map);
+            item['upload_error'] = value is List ? value.join(', ') : '$value';
+            refused.add(item);
           });
-        } else if (errors is List) {
-          // صيغة قائمة رسائل فقط
-          errorMessages
-              .addAll(errors.map((e) => e.toString()));
-        } else if (errors != null) {
-          // أي قيمة أخرى قابلة للتحويل لنص
-          errorMessages.add(errors.toString());
-        }
 
-        // لو عندنا إندكسات صحيحة، نحدّث قائمة البصمات المحفوظة
-        if (validIndexes.isNotEmpty &&
-            AppConstants.fingerPrints != null) {
-          List<Map<String, dynamic>> filteredList = [];
-          for (int i = 0;
-          i < AppConstants.fingerPrints!.length;
-          i++) {
-            if (validIndexes.contains(i)) {
-              filteredList.add(AppConstants.fingerPrints![i]);
-            }
+          if (refused.isNotEmpty) {
+            final SharedPreferences prefs = await SharedPreferences.getInstance();
+            AppConstants.fingerPrints = refused;
+            await prefs.setString('fingerPrints', jsonEncode(refused));
+            notifyListeners();
           }
-          final SharedPreferences prefs =
-          await SharedPreferences.getInstance();
-          await prefs.setString(
-              'fingerPrints', jsonEncode(filteredList));
-          AppConstants.fingerPrints = filteredList;
-          print("object --> ${AppConstants.fingerPrints}");
-          print("object --> ${filteredList}");
-          notifyListeners();
-          print(filteredList);
+        } else if (errors is List) {
+          errorMessages.addAll(errors.map((e) => e.toString()));
+        } else if (errors != null) {
+          errorMessages.add(errors.toString());
         }
 
         // نجهّز رسالة الخطأ للمستخدم (رسالة الـ API + كل رسائل errors)
@@ -265,7 +242,7 @@ class FingerprintViewModel extends ChangeNotifier {
       String errorMessage;
 
       if (error is DioException) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -312,11 +289,27 @@ class FingerprintViewModel extends ChangeNotifier {
         }
       }
 
-      // Add security_report if provided
-      if (fingerprint['security_report'] != null) {
-        final secReport = fingerprint['security_report'];
-        final secValue = secReport is String ? secReport : jsonEncode(secReport);
-        formData.fields.add(MapEntry('fingerprints[$i][security_report]', secValue));
+      // Phone clock at upload time (UTC epoch ms) so the backend can measure time drift
+      formData.fields.add(MapEntry('fingerprints[$i][device_time]', '${DateTime.now().millisecondsSinceEpoch}'));
+      // suspicion_flags (backend key) as array fields: fingerprints[i][suspicion_flags][key][field]
+      var flags = fingerprint['suspicion_flags'];
+      if (flags is String) {
+        try {
+          flags = jsonDecode(flags);
+        } catch (_) {
+          flags = null;
+        }
+      }
+      if (flags is Map) {
+        flags.forEach((key, value) {
+          if (value is Map) {
+            value.forEach((field, fieldValue) {
+              if (fieldValue == null) return;
+              formData.fields.add(MapEntry(
+                  'fingerprints[$i][suspicion_flags][$key][$field]', fieldValue.toString()));
+            });
+          }
+        });
       }
 
       // Files — ضغط الصور قبل الإرسال (أونلاين وأوفلاين) لتقليل المساحة
@@ -360,8 +353,8 @@ class FingerprintViewModel extends ChangeNotifier {
         'finger_day': fingerprint['finger_day'],
       };
 
-      if (fingerprint['security_report'] != null) {
-        entry['security_report'] = fingerprint['security_report'];
+      if (fingerprint['suspicion_flags'] != null) {
+        entry['suspicion_flags'] = fingerprint['suspicion_flags'];
       }
 
       if (fingerprint['files'] != null && fingerprint['files'].isNotEmpty) {

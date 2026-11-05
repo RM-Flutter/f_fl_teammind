@@ -103,7 +103,7 @@ class PointsController extends ChangeNotifier {
       isLoading = true;
     } catch (error) {
       getPrizeErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
       AppToast.showToast(
           msg: error.toString(),
@@ -181,7 +181,7 @@ class PointsController extends ChangeNotifier {
       notifyListeners();
     } catch (error) {
       getPrizeErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
       AppToast.showToast(
           msg: error.toString(),
@@ -243,7 +243,7 @@ class PointsController extends ChangeNotifier {
       notifyListeners();
     }).catchError((error){
       if (error is DioError) {
-        postPrizeErrorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        postPrizeErrorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         postPrizeErrorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -290,7 +290,7 @@ class PointsController extends ChangeNotifier {
       notifyListeners();
     }).catchError((error){
       if (error is DioError) {
-        postPrizeErrorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        postPrizeErrorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         postPrizeErrorMessage = AppErrorReporter.safeMessage(error);
       }

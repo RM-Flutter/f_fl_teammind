@@ -37,26 +37,16 @@ class MainAppFabWidget extends StatelessWidget {
     }
 
     userSettingsModel = gCache != null ? UserSettingsModel.fromJson(gCache) : null;
-    final userSettingsFingerprints = userSettingsModel?.avFingerprint;
+    // Visibility is driven only by allowed_fingerprint_types (type => true/false, resolved by the backend).
     final allowedTypes = userSettingsModel?.allowedFingerprintTypes;
 
     bool isTypeAllowed(String key) {
-      if (allowedTypes != null && allowedTypes.isNotEmpty) {
-        final raw = allowedTypes[key] ??
-            (key == 'custom_fp_navigate' ? allowedTypes['fp_navigate'] : null);
-        if (raw is bool) return raw;
-        if (raw != null) {
-          final s = raw.toString().toLowerCase().trim();
-          return s == 'true' || s == '1' || s == 'active_all' || s == 'active_some';
-        }
-        return false;
-      }
-      if (userSettingsFingerprints != null && userSettingsFingerprints.isNotEmpty) {
-        final raw = userSettingsFingerprints[key];
-        final s = raw?.toString().toLowerCase().trim();
-        return s == 'active_all' || s == 'active_some' || s == 'true';
-      }
-      return false;
+      if (allowedTypes == null || allowedTypes.isEmpty) return false;
+      final raw = allowedTypes[key] ??
+          (key == 'custom_fp_navigate' ? allowedTypes['fp_navigate'] : null);
+      if (raw is bool) return raw;
+      final s = raw?.toString().toLowerCase().trim();
+      return s == 'true' || s == '1';
     }
 
     // Standard bottom-to-top priority order ( excluding fp_machine )
@@ -79,8 +69,8 @@ class MainAppFabWidget extends StatelessWidget {
     }
 
     // Include any additional keys from map if not already checked
-    if (userSettingsFingerprints != null) {
-      for (final entry in userSettingsFingerprints.entries) {
+    if (allowedTypes != null) {
+      for (final entry in allowedTypes.entries) {
         final k = entry.key;
         if (k == 'fp_machine' || avFingerprints.contains(k)) continue;
         if (k == 'custom_fp_navigate' && avFingerprints.contains('fp_navigate')) continue;

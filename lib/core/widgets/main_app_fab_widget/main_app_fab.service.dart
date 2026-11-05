@@ -1,6 +1,9 @@
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'dart:async';
+import 'package:app_test/core/widgets/main_app_fab_widget/widgets/face_capture_screen.dart';
+import 'package:app_test/core/widgets/fingerprint_rejection_dialog.dart';
+import 'package:app_test/core/services/fingerprint_security_runner.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -149,18 +152,14 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // لو مفيش لا liveness ولا profile verification ومفتاح face_challenge بس هو اللي شغال
-    // نعرض نفس الـ dialog بدون نص "Verifying video"
+    // لو مفيش لا liveness ولا profile verification (صورة فقط) نعرض نفس الـ dialog بدون نص "Verifying"
     final bool livenessEnabled =
         AppConstants.fingerprintLivenessChallengesEnabled;
     final bool profileVerifyEnabled =
         AppConstants.fingerprintFaceProfileVerificationEnabled;
-    final bool faceChallengeOnly =
-        AppConstants.fingerprintFaceChallengeEnabled &&
-            !livenessEnabled &&
-            !profileVerifyEnabled;
+    final bool captureOnly = !livenessEnabled && !profileVerifyEnabled;
 
-    final String? message = faceChallengeOnly
+    final String? message = captureOnly
         ? null
         : ('verifying'.tr());
 
@@ -537,7 +536,15 @@ abstract class MainFabServices {
         );
       }
 
-      if (faces.length > 1) {
+      // Several faces (a poster, someone in the background, a false detection): use the largest one, the
+      // person holding the phone. Only refuse when another face is almost as big (two people in front of the camera).
+      faces.sort((a, b) => (b.boundingBox.width * b.boundingBox.height)
+          .compareTo(a.boundingBox.width * a.boundingBox.height));
+      final double largestArea = faces.first.boundingBox.width * faces.first.boundingBox.height;
+      final double secondArea = faces.length > 1
+          ? faces[1].boundingBox.width * faces[1].boundingBox.height
+          : 0;
+      if (faces.length > 1 && secondArea >= largestArea * 0.6) {
         return const _FaceAnalysisResult(
           hasFace: false,
           embedding: null,
@@ -723,6 +730,8 @@ abstract class MainFabServices {
     // Request the permission
     final wasNotDetermined = status.isDenied; // "not determined" on iOS
     status = await permission.request();
+    // Denied before (iOS asks only once / Android "don't ask again") => send the user to app settings
+    if (status.isPermanentlyDenied) await permission_handler.openAppSettings();
 
     // On iOS, after the user grants the camera permission for the very first
     // time, the system needs a brief moment to register the grant with
@@ -1224,46 +1233,84 @@ abstract class MainFabServices {
   }) async {
 
     final List<Map<String, dynamic>> steps = [];
+    // Real results: failed optional device/GPS checks of this punch + failed face checks.
+    // (A failed mandatory check blocks the punch, so it never reaches this report.)
+    final Map<String, dynamic> deviceFailed = FingerprintSecurityRunner.lastFailedOptionals;
+    final faceFailedRaw = capturedFace?.noteReport?['security_checks_failed'];
+    final Map faceFailed = faceFailedRaw is Map ? faceFailedRaw : const {};
+    bool anyFailed(Iterable<String> keys) => keys.any(deviceFailed.containsKey);
 
     // 1. أمان الجهاز
+    final bool deviceOk = !anyFailed(const [
+      'block_fingerprint_on_developer_mode',
+      'fingerprint_block_on_root_or_jailbreak',
+      'fingerprint_block_on_vpn',
+      'fingerprint_verify_time_drift',
+    ]);
     steps.add({
       'title': 'device_system_security'.tr(),
-      'detail': 'developer_mode_safe_no_root_jailbreak_detected'.tr(),
+      'detail': deviceOk
+          ? 'developer_mode_safe_no_root_jailbreak_detected'.tr()
+          : 'scan_step_device_failed'.tr(),
       'icon': Icons.security,
+      'passed': deviceOk,
     });
 
     // 2. فحص الموقع
+    final bool locationOk = !anyFailed(const [
+      'fingerprint_block_on_fake_gps',
+      'fingerprint_verify_gps_network_comparison',
+      'fingerprint_verify_gps_timestamp_offline',
+    ]);
     steps.add({
       'title': 'location_verification'.tr(),
-      'detail': 'location_verified_no_fake_gps_detected'.tr(),
+      'detail': locationOk
+          ? 'location_verified_no_fake_gps_detected'.tr()
+          : 'scan_step_location_failed'.tr(),
       'icon': Icons.location_on,
+      'passed': locationOk,
     });
 
     // 3. فحص الوجه (إذا تم)
     if (capturedFace != null) {
+      final bool livenessOk = !faceFailed.containsKey('fingerprint_liveness_challenges_enabled');
       if (capturedFace.livenessReports != null &&
           capturedFace.livenessReports!.isNotEmpty) {
         final totalChallenges = capturedFace.livenessReports!.length;
         final successful =
             capturedFace.livenessReports!.where((r) => r.success).length;
+        final bool ok = livenessOk && successful == totalChallenges;
         steps.add({
           'title': 'face_liveness_check'.tr(),
           'detail': 'of_challenges_passed_successfully'.tr(namedArgs: {'successful': '$successful', 'total_challenges': '$totalChallenges'}),
           'icon': Icons.face_retouching_natural,
+          'passed': ok,
+        });
+      } else if (!livenessOk) {
+        steps.add({
+          'title': 'face_liveness_check'.tr(),
+          'detail': 'scan_step_liveness_failed'.tr(),
+          'icon': Icons.face_retouching_natural,
+          'passed': false,
         });
       } else {
         steps.add({
           'title': 'face_capture'.tr(),
           'detail': 'face_photo_captured_successfully'.tr(),
           'icon': Icons.camera_alt,
+          'passed': true,
         });
       }
 
       if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+        final bool identityOk = !faceFailed.containsKey('fingerprint_face_profile_verification_enabled');
         steps.add({
           'title': 'identity_verification'.tr(),
-          'detail': 'face_matched_with_employee_profile'.tr(),
+          'detail': identityOk
+              ? 'face_matched_with_employee_profile'.tr()
+              : 'scan_step_identity_failed'.tr(),
           'icon': Icons.verified_user,
+          'passed': identityOk,
         });
       }
     }
@@ -1273,6 +1320,7 @@ abstract class MainFabServices {
       'title': 'fingerprint_registration'.tr(),
       'detail': 'fingerprint_verified_recorded'.tr(namedArgs: {'fingerprint_type_null': '${fingerprintType != null ? "($fingerprintType)" : ""}'}),
       'icon': Icons.fingerprint,
+      'passed': true,
     });
 
     await showDialog(
@@ -1334,7 +1382,9 @@ abstract class MainFabServices {
                         ],
                       ),
                     ),
-                    const Icon(Icons.check, color: Colors.green, size: 18),
+                    step['passed'] == false
+                        ? const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 18)
+                        : const Icon(Icons.check, color: Colors.green, size: 18),
                   ],
                 ),
               );
@@ -1392,7 +1442,7 @@ abstract class MainFabServices {
     }
 
     // البوب أب "Start verification" تظهر فقط لو fingerprint_liveness_challenges_enabled مفعّل
-    // لو fingerprint_face_challenge_enabled أو fingerprint_face_profile_verification_enabled لوحدهم من غير liveness → لا تظهر
+    // لو fingerprint_face_profile_verification_enabled لوحده من غير liveness → لا تظهر
     final bool requiresAdvancedVerification =
         AppConstants.fingerprintLivenessChallengesEnabled;
 
@@ -1431,7 +1481,7 @@ abstract class MainFabServices {
       }
     } else {
       debugPrint(
-          "📸 Skipping instruction sheet (fingerprint_liveness_challenges_enabled is off; face challenge/profile verification alone do not show it).");
+          "📸 Skipping instruction sheet (fingerprint_liveness_challenges_enabled is off; profile verification alone does not show it).");
     }
 
     // Ensure camera permission before opening camera screen
@@ -1456,16 +1506,15 @@ abstract class MainFabServices {
     File? capturedImageFile;
     bool challengeCompleted = false;
     bool isRetry = false;
+    // Set when liveness is optional and we fell back to a plain selfie (sent to backend as a failed check).
+    Map<String, dynamic>? livenessCheckFailed;
 
     List<LivenessChallengeReport>? allReportsFromScreen;
 
     if (!AppConstants.fingerprintLivenessChallengesEnabled) {
       // التقاط صورة واحدة بدون تحديات (لا يظهر للعميل أي تحدي حي)
-      final picker = ImagePicker();
-      final XFile? photo = await picker.pickImage(
-        source: ImageSource.camera,
-        preferredCameraDevice: CameraDevice.front,
-      );
+      // in-app camera with the face frame and its reason (system camera if it cannot start)
+      final XFile? photo = await FaceCaptureScreen.capture(rootNavigatorKey.currentContext ?? safeContext);
       if (photo == null) return null;
       try {
         capturedImageFile = File(photo.path);
@@ -1506,15 +1555,17 @@ abstract class MainFabServices {
         if (AppConstants.fingerprintLivenessChallengesEnabledLevel == FingerprintCheckLevel.optional) {
           debugPrint('📸 Liveness challenge error, falling back to standard front camera...');
           try {
-            final picker = ImagePicker();
-            final XFile? photo = await picker.pickImage(
-              source: ImageSource.camera,
-              preferredCameraDevice: CameraDevice.front,
-            );
+            // in-app camera with the face frame and its reason (system camera if it cannot start)
+            final XFile? photo = await FaceCaptureScreen.capture(rootNavigatorKey.currentContext ?? safeContext);
             if (photo != null) {
               capturedImageFile = File(photo.path);
               capturedImageBytes = await capturedImageFile!.readAsBytes();
               challengeCompleted = true;
+              livenessCheckFailed = {
+                'status': 'failed',
+                'message': 'Liveness challenge could not run, plain selfie used',
+                'detected_at': DateTime.now().toIso8601String(),
+              };
               break;
             }
           } catch (pickerErr) {
@@ -1540,15 +1591,17 @@ abstract class MainFabServices {
              AppConstants.fingerprintUploadFaceImageToBackend)) {
           debugPrint('📸 Liveness returned null, falling back to standard front camera...');
           try {
-            final picker = ImagePicker();
-            final XFile? photo = await picker.pickImage(
-              source: ImageSource.camera,
-              preferredCameraDevice: CameraDevice.front,
-            );
+            // in-app camera with the face frame and its reason (system camera if it cannot start)
+            final XFile? photo = await FaceCaptureScreen.capture(rootNavigatorKey.currentContext ?? safeContext);
             if (photo != null) {
               capturedImageFile = File(photo.path);
               capturedImageBytes = await capturedImageFile!.readAsBytes();
               challengeCompleted = true;
+              livenessCheckFailed = {
+                'status': 'failed',
+                'message': 'Liveness challenge was not completed, plain selfie used',
+                'detected_at': DateTime.now().toIso8601String(),
+              };
               break;
             }
           } catch (pickerErr) {
@@ -1727,9 +1780,15 @@ abstract class MainFabServices {
             await _deleteFileIfExists(capturedImageFile!);
             return null;
           } else {
+            // the real reason; comparing an empty embedding would always report "similarity 0.000"
             faceProfileCheckFailed = {
               'status': 'failed',
-              'message': 'Face not detected in captured image',
+              'message': switch (analysis?.error) {
+                'multiple_faces' => 'More than one face was found in the selfie',
+                'processing_error' || 'invalid_image' || 'invalid_bounds' =>
+                  'The selfie could not be processed on the phone',
+                _ => 'No face was found in the selfie',
+              },
               'detected_at': DateTime.now().toIso8601String(),
             };
           }
@@ -1738,7 +1797,9 @@ abstract class MainFabServices {
       } else {
         embedding = analysis.embedding!;
       }
-      if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
+      if (faceProfileCheckFailed != null) {
+        similarity = null; // no usable face in the selfie: nothing to compare
+      } else if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
         similarity = await _calculateSimilarityWithProfile(safeContext, embedding);
       } else {
         similarity = 1.0;
@@ -1748,7 +1809,9 @@ abstract class MainFabServices {
     }
 
     if (AppConstants.fingerprintFaceProfileVerificationEnabled) {
-      if (similarity == null) {
+      if (faceProfileCheckFailed != null) {
+        // optional check already failed on the selfie itself; keep that reason
+      } else if (similarity == null) {
         debugPrint('Similarity calculation returned null');
         if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
             FingerprintCheckLevel.mandatory) {
@@ -1763,7 +1826,7 @@ abstract class MainFabServices {
         } else {
           faceProfileCheckFailed = {
             'status': 'failed',
-            'message': 'Face verification similarity calculation returned null',
+            'message': 'The profile photo could not be used for comparison (no profile photo, it could not be downloaded, or it has no clear front face)',
             'detected_at': DateTime.now().toIso8601String(),
           };
         }
@@ -1821,11 +1884,14 @@ abstract class MainFabServices {
 
     // Create noteReport from reports
     final noteReport = _createNoteReport(reports);
-    if (faceProfileCheckFailed != null) {
+    if (faceProfileCheckFailed != null || livenessCheckFailed != null) {
       final existingFailed = (noteReport['security_checks_failed'] as Map<String, dynamic>?) ?? {};
       noteReport['security_checks_failed'] = {
         ...existingFailed,
-        'fingerprint_face_profile_verification_enabled': faceProfileCheckFailed,
+        if (faceProfileCheckFailed != null)
+          'fingerprint_face_profile_verification_enabled': faceProfileCheckFailed,
+        if (livenessCheckFailed != null)
+          'fingerprint_liveness_challenges_enabled': livenessCheckFailed,
       };
     }
 
@@ -1968,6 +2034,27 @@ abstract class MainFabServices {
     };
   }
   // Save the list of fingerprints to shared preferences
+  /// Failed optional face checks (liveness fallback / profile verification) from the captured face.
+  /// Passed as failedSecurityChecks so they reach the backend suspicion_flags
+  /// even when fingerprint_send_note_report_to_api is off.
+  static Map<String, dynamic>? _faceFailedChecks(_CapturedFaceData? capturedFace) {
+    // Face step was on but nothing captured (camera permission denied / cancelled) => flag each enabled face key
+    if (capturedFace == null && AppConstants.showFaceVerifyForFingerprint) {
+      final notCaptured = {
+        'status': 'failed',
+        'message': 'Face was not captured (camera permission denied or cancelled)',
+        'detected_at': DateTime.now().toIso8601String(),
+      };
+      return {
+        if (AppConstants.fingerprintLivenessChallengesEnabled) 'fingerprint_liveness_challenges_enabled': notCaptured,
+        if (AppConstants.fingerprintFaceProfileVerificationEnabled) 'fingerprint_face_profile_verification_enabled': notCaptured,
+        if (AppConstants.fingerprintUploadFaceImageToBackend) 'fingerprint_upload_face_image_to_backend': notCaptured,
+      };
+    }
+    final failed = capturedFace?.noteReport?['security_checks_failed'];
+    return failed is Map ? Map<String, dynamic>.from(failed) : null;
+  }
+
   static Future<void> _saveFingerprintsToPreferences() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -2002,8 +2089,7 @@ abstract class MainFabServices {
           capturedFace = await captureEmployeeFaceAndVerify(safeContext);
         } catch (e) {
           debugPrint('⚠️ Face capture failed in NFC: $e');
-          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-              FingerprintCheckLevel.mandatory) {
+          if (AppConstants.faceCaptureMandatory) {
             if (safeContext.mounted) {
               AlertsService.error(
                 context: safeContext,
@@ -2016,8 +2102,7 @@ abstract class MainFabServices {
           capturedFace = null;
         }
         if (capturedFace == null &&
-            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-                FingerprintCheckLevel.mandatory) {
+            AppConstants.faceCaptureMandatory) {
           return;
         }
       }
@@ -2065,7 +2150,8 @@ abstract class MainFabServices {
                 context: context,
                 data: nfcData,
                 files: faceFiles,
-                                noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
+                                noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null,
+                                failedSecurityChecks: _faceFailedChecks(capturedFace));
 
             // Handle the server response
             if (result.success) {
@@ -2079,6 +2165,7 @@ abstract class MainFabServices {
                   title: AppStrings.success.tr());
               return;
             } else {
+              if (await showFingerprintRejection(result)) return;
               AlertsService.error(
                   context: context,
                   message: result.message ?? AppStrings.noInternetConnection.tr(),
@@ -2086,10 +2173,6 @@ abstract class MainFabServices {
               return;
             }
           } catch (e) {
-            // Close loading indicator on error
-            if (context.mounted) {
-              Navigator.of(context, rootNavigator: true).pop();
-            }
             AlertsService.error(
               context: context,
               message: AppErrorReporter.safeMessage(e),
@@ -2133,8 +2216,7 @@ abstract class MainFabServices {
           capturedFace = await captureEmployeeFaceAndVerify(safeContext);
         } catch (e) {
           debugPrint('⚠️ Face capture failed in Bluetooth: $e');
-          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-              FingerprintCheckLevel.mandatory) {
+          if (AppConstants.faceCaptureMandatory) {
             if (safeContext.mounted) {
               AlertsService.error(
                 context: safeContext,
@@ -2147,8 +2229,7 @@ abstract class MainFabServices {
           capturedFace = null;
         }
         if (capturedFace == null &&
-            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-                FingerprintCheckLevel.mandatory) {
+            AppConstants.faceCaptureMandatory) {
           return;
         }
       }
@@ -2176,9 +2257,30 @@ abstract class MainFabServices {
         var connectStatus = await Permission.bluetoothConnect.status;
         var locationStatus = await Permission.locationWhenInUse.status;
 
-        if (!scanStatus.isGranted) await Permission.bluetoothScan.request();
-        if (!connectStatus.isGranted) await Permission.bluetoothConnect.request();
-        if (!locationStatus.isGranted) await Permission.locationWhenInUse.request();
+        if (!scanStatus.isGranted) scanStatus = await Permission.bluetoothScan.request();
+        if (!connectStatus.isGranted) connectStatus = await Permission.bluetoothConnect.request();
+        if (!locationStatus.isGranted) locationStatus = await Permission.locationWhenInUse.request();
+
+        // without these the scan silently returns nothing (Android 12+: Nearby devices; Android 11 and older: location)
+        if (!scanStatus.isGranted || !connectStatus.isGranted || !locationStatus.isGranted) {
+          AlertsService.error(
+            context: context,
+            message: 'bluetooth_permission_required'.tr(),
+            title: AppStrings.cannotProceed.tr(),
+          );
+          if (scanStatus.isPermanentlyDenied || connectStatus.isPermanentlyDenied || locationStatus.isPermanentlyDenied) {
+            await openAppSettings();
+          }
+          return;
+        }
+        // Android 11 and older return no Bluetooth results while the location service is off
+        if (!await Geolocator.isLocationServiceEnabled()) {
+          AlertsService.warning(
+            context: context,
+            message: 'bluetooth_location_service_off'.tr(),
+            title: AppStrings.warning.tr(),
+          );
+        }
       }
       // Check Bluetooth adapter state
       BluetoothAdapterState adapterState = await FlutterBluePlus.adapterState.first;
@@ -2213,67 +2315,237 @@ abstract class MainFabServices {
         }
       }
 
-      // ✅ Start scanning for Bluetooth devices
-      FlutterBluePlus.startScan(timeout: const Duration(seconds: 25));
+      // ✅ Two scans feed one list:
+      //  - BLE (all platforms): beacons and devices that advertise a name / maker
+      //  - classic discovery (Android only, iOS does not allow it): the devices the phone's Bluetooth settings list
+      final devices = ValueNotifier<Map<String, _BtDevice>>({});
+      final bleScanning = ValueNotifier<bool>(true);
+      final classicScanning = ValueNotifier<bool>(Platform.isAndroid);
+
+      void addDevice(_BtDevice d) {
+        final current = devices.value[d.id];
+        // the same device can come from both scans: keep the named entry and the stronger signal
+        final merged = current == null
+            ? d
+            : _BtDevice(
+                id: d.id,
+                name: current.name.isNotEmpty && !current.isGeneric ? current.name : d.name,
+                isGeneric: current.isGeneric && d.isGeneric,
+                rssi: (d.rssi ?? -999) > (current.rssi ?? -999) ? d.rssi : current.rssi,
+                isBeacon: current.isBeacon || d.isBeacon,
+                majorClass: d.majorClass ?? current.majorClass,
+              );
+        devices.value = {...devices.value, d.id: merged};
+      }
+
+      String getDeviceName(ScanResult r) {
+        try {
+          if (r.advertisementData.advName.isNotEmpty) return r.advertisementData.advName;
+        } catch (_) {}
+        try {
+          if (r.device.platformName.isNotEmpty) return r.device.platformName;
+        } catch (_) {}
+        return '';
+      }
+
+      // Most devices advertise no name: recognise beacons (what branches use) and the maker from the advertisement
+      bool isBeacon(ScanResult r) {
+        final apple = r.advertisementData.manufacturerData[0x004C];
+        final iBeacon = apple != null && apple.length >= 2 && apple[0] == 0x02 && apple[1] == 0x15;
+        final eddystone = r.advertisementData.serviceUuids.any((u) => u.str.toLowerCase().contains('feaa'));
+        return iBeacon || eddystone;
+      }
+
+      String describeDevice(ScanResult r) {
+        final name = getDeviceName(r);
+        if (name.isNotEmpty) return name;
+        final apple = r.advertisementData.manufacturerData[0x004C];
+        if (apple != null && apple.length >= 2 && apple[0] == 0x02 && apple[1] == 0x15) return 'iBeacon';
+        if (r.advertisementData.serviceUuids.any((u) => u.str.toLowerCase().contains('feaa'))) return 'Eddystone beacon';
+        const makers = {
+          0x004C: 'Apple', 0x0075: 'Samsung', 0x0006: 'Microsoft', 0x00E0: 'Google', 0x038F: 'Xiaomi',
+          0x027D: 'Huawei', 0x0157: 'Huami', 0x0059: 'Nordic', 0x000D: 'Texas Instruments', 0x0171: 'Amazon',
+          0x0087: 'Garmin', 0x00D2: 'Dialog', 0x0499: 'Ruuvi', 0x015D: 'Estimote', 0x0118: 'Radius Networks',
+        };
+        for (final id in r.advertisementData.manufacturerData.keys) {
+          final maker = makers[id];
+          if (maker != null) return '${'bluetooth_device_by'.tr()} $maker';
+        }
+        return '';
+      }
+
+
+      StreamSubscription<List<ScanResult>>? bleSub;
+      StreamSubscription<bool>? bleStateSub;
+      StreamSubscription? classicSub;
+
+      Future<void> startScans() async {
+        bleScanning.value = true;
+        bleSub ??= FlutterBluePlus.scanResults.listen((results) {
+          for (final r in results) {
+            final label = describeDevice(r);
+            if (label.isEmpty) continue; // unnamed and unidentified (phones, watches, earbuds broadcasting BLE)
+            addDevice(_BtDevice(
+              id: r.device.remoteId.toString().toUpperCase(),
+              name: label,
+              isGeneric: getDeviceName(r).isEmpty, // "Device by Apple", "iBeacon"
+              rssi: r.rssi,
+              isBeacon: isBeacon(r),
+            ));
+          }
+        });
+        bleStateSub ??= FlutterBluePlus.isScanning.listen((v) => bleScanning.value = v);
+        try {
+          await FlutterBluePlus.startScan(timeout: const Duration(seconds: 25));
+        } catch (e) {
+          debugPrint('⚠️ Bluetooth scan failed: $e');
+          bleScanning.value = false;
+        }
+
+        if (Platform.isAndroid) {
+          classicScanning.value = true;
+          await classicSub?.cancel();
+          classicSub = const EventChannel('com.rightminddev.rmemp/bt_classic').receiveBroadcastStream().listen((event) {
+            if (event is! Map) return;
+            if (event['finished'] == true) {
+              classicScanning.value = false;
+              return;
+            }
+            final name = (event['name'] ?? '').toString().trim();
+            final address = (event['address'] ?? '').toString().toUpperCase();
+            if (name.isEmpty || address.isEmpty) return;
+            addDevice(_BtDevice(
+              id: address,
+              name: name,
+              rssi: event['rssi'] is int ? event['rssi'] as int : null,
+              majorClass: event['majorClass'] is int && event['majorClass'] != -1 ? event['majorClass'] as int : null,
+            ));
+          }, onError: (e) {
+            debugPrint('⚠️ Classic Bluetooth discovery failed: $e');
+            classicScanning.value = false;
+          });
+        }
+      }
+
+      unawaited(startScans());
+
+      IconData iconFor(_BtDevice d) {
+        if (d.isBeacon) return Icons.cell_tower;
+        switch (d.majorClass) {
+          case 0x0400: return Icons.headphones; // audio / video
+          case 0x0200: return Icons.smartphone; // phone
+          case 0x0100: return Icons.computer; // computer
+          case 0x0700: return Icons.watch; // wearable
+          case 0x0500: return Icons.keyboard; // peripheral
+        }
+        return Icons.bluetooth;
+      }
 
       // Show scanned devices
-
-      final selectedDevice = await showModalBottomSheet<ScanResult>(
+      final selectedDevice = await showModalBottomSheet<_BtDevice>(
         context: context,
+        isScrollControlled: true,
         builder: (context) {
-          return StreamBuilder<List<ScanResult>>(
-            stream: FlutterBluePlus.scanResults,
-            builder: (context, snapshot) {
-              final uniqueResults = <String, ScanResult>{};
-              final results = snapshot.data ?? [];
-              
-              String getDeviceName(ScanResult r) {
-                try {
-                  if (r.advertisementData.advName.isNotEmpty) return r.advertisementData.advName;
-                } catch (_) {}
-                try {
-                  // Fallback for older versions of flutter_blue_plus
-                  if ((r.advertisementData as dynamic).localName.isNotEmpty) return (r.advertisementData as dynamic).localName;
-                } catch (_) {}
-                try {
-                  if (r.device.platformName.isNotEmpty) return r.device.platformName;
-                } catch (_) {}
-                return r.device.name;
-              }
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.info_outline, size: 18, color: Colors.grey),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text('bluetooth_scan_hint'.tr(),
+                            style: TextStyle(color: Colors.grey.shade700, fontSize: 12.5)),
+                      ),
+                    ],
+                  ),
+                ),
+                AnimatedBuilder(
+                  animation: Listenable.merge([bleScanning, classicScanning]),
+                  builder: (context, _) => bleScanning.value || classicScanning.value
+                      ? const LinearProgressIndicator(minHeight: 2)
+                      : const SizedBox(height: 2),
+                ),
+                Expanded(
+                  child: AnimatedBuilder(
+                    animation: Listenable.merge([devices, bleScanning, classicScanning]),
+                    builder: (context, _) {
+                      final scanning = bleScanning.value || classicScanning.value;
+                      int rank(_BtDevice d) => d.isBeacon ? 2 : (d.isGeneric ? 0 : 1);
+                      final list = devices.value.values.toList()
+                        ..sort((a, b) {
+                          final byRank = rank(b) - rank(a);
+                          return byRank != 0 ? byRank : (b.rssi ?? -999).compareTo(a.rssi ?? -999);
+                        });
 
-              for (var r in results) {
-                final name = getDeviceName(r);
-                if (name.isNotEmpty) {
-                  uniqueResults[r.device.remoteId.toString()] = r;
-                }
-              }
-              final uniqueList = uniqueResults.values.toList();
-
-              if (uniqueList.isEmpty) {
-                return  Center(child: Text('${AppStrings.scanningForDevices.tr()}'));
-              }
-              return ListView.builder(
-                itemCount: uniqueList.length,
-                itemBuilder: (context, index) {
-                  final result = uniqueList[index];
-                  final name = getDeviceName(result);
-                  return ListTile(
-                    title: Text(
-                      name.isEmpty ? AppStrings.unknownDevice.tr() : name,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    subtitle: Text(result.device.remoteId.toString(), style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                    onTap: ()async{
-                      await FlutterBluePlus.stopScan();
-                      Navigator.pop(context, result);
+                      if (list.isEmpty) {
+                        if (scanning) return Center(child: Text(AppStrings.scanningForDevices.tr()));
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.bluetooth_disabled, size: 40, color: Colors.grey),
+                                const SizedBox(height: 8),
+                                Text('bluetooth_no_devices_found'.tr(), textAlign: TextAlign.center),
+                                const SizedBox(height: 12),
+                                OutlinedButton.icon(
+                                  onPressed: startScans,
+                                  icon: const Icon(Icons.refresh),
+                                  label: Text('bluetooth_scan_again'.tr()),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          final device = list[index];
+                          final rssi = device.rssi;
+                          final sameName = list.where((d) => d.name == device.name).length > 1;
+                          return ListTile(
+                            leading: Icon(
+                              iconFor(device),
+                              color: device.isBeacon
+                                  ? Colors.green
+                                  : ((rssi ?? -999) >= -80 ? Colors.blue : Colors.grey),
+                            ),
+                            title: Text(device.name, style: const TextStyle(color: Colors.black)),
+                            // the device ID is what the branch registers, so it is always shown
+                            subtitle: Text(
+                              [
+                                if (rssi != null)
+                                  '${'wifi_signal'.tr()}: ${rssi >= -60 ? 'wifi_signal_strong'.tr() : (rssi >= -80 ? 'wifi_signal_medium'.tr() : 'wifi_signal_weak'.tr())}',
+                                if (sameName) 'bluetooth_same_name'.tr(),
+                                device.id,
+                              ].join(' • '),
+                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            onTap: () => Navigator.pop(context, device),
+                          );
+                        },
+                      );
                     },
-                  );
-                },
-              );
-            },
+                  ),
+                ),
+              ],
+            ),
           );
         },
       );
+      // stop both scans whether a device was chosen or the sheet was closed
+      try {
+        await FlutterBluePlus.stopScan();
+      } catch (_) {}
+      await bleSub?.cancel();
+      await bleStateSub?.cancel();
+      await classicSub?.cancel(); // cancelling the stream stops the classic discovery
 
       if (selectedDevice == null) return;
       var result;
@@ -2290,9 +2562,10 @@ abstract class MainFabServices {
             try {
               result = await FingerprintService.addBluetoothFingerprint(
                 context: context,
-                data: selectedDevice.device.remoteId.toString(),
+                data: selectedDevice.id,
                 files: uploadFaceFiles,
                                 noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null,
+                failedSecurityChecks: _faceFailedChecks(capturedFace),
               );
 
               // ✅ Show result
@@ -2307,6 +2580,7 @@ abstract class MainFabServices {
                   title: AppStrings.success.tr(),
                 );
               } else {
+                if (await showFingerprintRejection(result)) return;
                 AlertsService.error(
                   context: context,
                   message: result?.message ?? AppStrings.noInternetConnection.tr(),
@@ -2354,8 +2628,7 @@ abstract class MainFabServices {
           capturedFace = await captureEmployeeFaceAndVerify(safeContext);
         } catch (e) {
           debugPrint('⚠️ Face capture failed in WiFi: $e');
-          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-              FingerprintCheckLevel.mandatory) {
+          if (AppConstants.faceCaptureMandatory) {
             if (safeContext.mounted) {
               AlertsService.error(
                 context: safeContext,
@@ -2368,8 +2641,7 @@ abstract class MainFabServices {
           capturedFace = null;
         }
         if (capturedFace == null &&
-            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-                FingerprintCheckLevel.mandatory) {
+            AppConstants.faceCaptureMandatory) {
           return;
         }
       }
@@ -2389,8 +2661,16 @@ abstract class MainFabServices {
         }
         final scanned = await WiFiScan.instance.getScannedResults();
         for (var net in scanned) {
-          if (net.ssid != null && net.ssid.isNotEmpty) {
-            availableNetworks.add({'ssid': net.ssid, 'bssid': net.bssid});
+          if (net.ssid.isNotEmpty) {
+            final bssid = net.bssid.toLowerCase();
+            // the same access point can be reported more than once in a scan
+            if (availableNetworks.any((n) => n['bssid'] == bssid)) continue;
+            availableNetworks.add({
+              'ssid': net.ssid,
+              'bssid': bssid,
+              'band': net.frequency >= 5925 ? '6 GHz' : (net.frequency >= 4900 ? '5 GHz' : '2.4 GHz'),
+              'level': '${net.level}',
+            });
           }
         }
       } catch (e) {
@@ -2405,11 +2685,22 @@ abstract class MainFabServices {
         
         if (wifiBSSID != null && wifiBSSID.isNotEmpty && wifiBSSID != "02:00:00:00:00:00") {
           final formattedName = (wifiName != null && wifiName.isNotEmpty) ? wifiName.replaceAll('"', '') : 'Connected Network';
-          final exists = availableNetworks.any((net) => net['bssid'] == wifiBSSID);
-          if (!exists) {
-            availableNetworks.insert(0, {'ssid': formattedName, 'bssid': wifiBSSID});
+          // BSSIDs compared case-insensitively: the scan and the connection info can differ in letter case,
+          // which used to list the connected network twice
+          final connectedBssid = wifiBSSID.toLowerCase();
+          final index = availableNetworks.indexWhere((net) => net['bssid'] == connectedBssid);
+          if (index == -1) {
+            availableNetworks.insert(0, {'ssid': formattedName, 'bssid': connectedBssid, 'connected': '1'});
+          } else {
+            availableNetworks[index]['connected'] = '1';
           }
         }
+        // connected network first, then the strongest signal
+        availableNetworks.sort((a, b) {
+          final byConnected = (b['connected'] == '1' ? 1 : 0) - (a['connected'] == '1' ? 1 : 0);
+          if (byConnected != 0) return byConnected;
+          return (int.tryParse(b['level'] ?? '') ?? -200).compareTo(int.tryParse(a['level'] ?? '') ?? -200);
+        });
       } catch (e) {
         debugPrint('⚠️ Error getting connected WiFi: $e');
       }
@@ -2432,8 +2723,22 @@ abstract class MainFabServices {
             itemCount: availableNetworks.length,
             itemBuilder: (context, index) {
               final network = availableNetworks[index];
+              // same name on several access points (2.4 / 5 GHz bands, extenders): show what tells them apart
+              final sameName = availableNetworks.where((n) => n['ssid'] == network['ssid']).length > 1;
+              final level = int.tryParse(network['level'] ?? '');
+              final details = [
+                if (network['connected'] == '1') 'wifi_connected'.tr(),
+                if (network['band'] != null) network['band']!,
+                if (level != null) '${'wifi_signal'.tr()}: ${level >= -60 ? 'wifi_signal_strong'.tr() : (level >= -75 ? 'wifi_signal_medium'.tr() : 'wifi_signal_weak'.tr())}',
+                if (sameName) network['bssid']!.toUpperCase(),
+              ];
               return ListTile(
+                leading: Icon(
+                  level == null || level >= -60 ? Icons.wifi : (level >= -75 ? Icons.wifi_2_bar : Icons.wifi_1_bar),
+                  color: network['connected'] == '1' ? Colors.green : null,
+                ),
                 title: Text(network['ssid'] ?? AppStrings.unknownDevice.tr()),
+                subtitle: details.isEmpty ? null : Text(details.join(' • ')),
                 onTap: () => Navigator.pop(context, network),
               );
             },
@@ -2462,7 +2767,8 @@ abstract class MainFabServices {
                   context: context,
                   data: selectedNetwork['bssid'].toString(),
                   files:  uploadFaceFiles,
-                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
+                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null,
+                                  failedSecurityChecks: _faceFailedChecks(capturedFace));
 
               // Handle the server response
               if (result != null && result.success) {
@@ -2478,6 +2784,7 @@ abstract class MainFabServices {
                 return;
               }
               else {
+                if (await showFingerprintRejection(result)) return;
                 AlertsService.error(
                   context: context,
                   message: result?.message ?? (result?.data != null && result?.data is Map ? result.data['message'] : null) ?? AppStrings.noInternetConnection.tr(),
@@ -2638,8 +2945,7 @@ abstract class MainFabServices {
           capturedFace = await captureEmployeeFaceAndVerify(safeContext);
         } catch (e) {
           debugPrint('⚠️ Face capture failed in GPS: $e');
-          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-              FingerprintCheckLevel.mandatory) {
+          if (AppConstants.faceCaptureMandatory) {
             if (safeContext.mounted) {
               AlertsService.error(
                 context: safeContext,
@@ -2652,8 +2958,7 @@ abstract class MainFabServices {
           capturedFace = null;
         }
         if (capturedFace == null &&
-            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-                FingerprintCheckLevel.mandatory) {
+            AppConstants.faceCaptureMandatory) {
           return;
         }
       }
@@ -2685,7 +2990,8 @@ abstract class MainFabServices {
                   files: uploadFaceFiles,
                   noteReport: (AppConstants.fingerprintSendNoteReportToApi || webSkipNote != null)
                       ? effectiveNoteReport
-                      : null);
+                      : null,
+                  failedSecurityChecks: _faceFailedChecks(capturedFace));
 
               print("GPS DONE TWO");
 
@@ -2702,6 +3008,7 @@ abstract class MainFabServices {
                 return;
               }
               else {
+                if (await showFingerprintRejection(result)) return;
                 AlertsService.error(
                     context: context,
                     message: result?.message ?? (result?.data != null && result?.data is Map && result.data['message'] != null ? result.data['message'] : null) ?? AppStrings.noInternetConnection.tr(),
@@ -2769,8 +3076,7 @@ abstract class MainFabServices {
           capturedFace = await captureEmployeeFaceAndVerify(faceContext);
         } catch (e) {
           debugPrint('⚠️ Face capture failed in QR: $e');
-          if (AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-              FingerprintCheckLevel.mandatory) {
+          if (AppConstants.faceCaptureMandatory) {
             if (faceContext.mounted) {
               AlertsService.error(
                 context: faceContext,
@@ -2783,8 +3089,7 @@ abstract class MainFabServices {
           capturedFace = null;
         }
         if (capturedFace == null &&
-            AppConstants.fingerprintFaceProfileVerificationEnabledLevel ==
-                FingerprintCheckLevel.mandatory) {
+            AppConstants.faceCaptureMandatory) {
           return;
         }
       }
@@ -2822,47 +3127,18 @@ abstract class MainFabServices {
           actionRightText: AppStrings.yes.tr(),
           actionLeftText: AppStrings.no.tr(),
           onLeftActionPressed: (){
-            Navigator.pop(context);
+            // customAlertDialogWithTwoButtons handles popping the dialog automatically.
           },
           onRightActionPressed: ()async{
-            // Show loading indicator immediately using post frame callback
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              try {
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    useRootNavigator: true,
-                    builder: (context) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                }
-              } catch (e) {
-                debugPrint('Error showing loading dialog: $e');
-              }
-            });
-
+            // The "Yes" button shows its own spinner while this runs (like the GPS / WiFi / Bluetooth flows).
             try {
               result = await FingerprintService.addQRCodeFingerprint(
                   context: context,
                   data: scanedQrCode,
                   fingerDay: qrScanSuccessTime,
                   files: uploadFaceFiles,
-                                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null);
-
-              // Close loading indicator
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                try {
-                  if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
-                } catch (e) {
-                  debugPrint('Error closing loading dialog: $e');
-                }
-              });
+                  noteReport: AppConstants.fingerprintSendNoteReportToApi ? (capturedFace?.noteReport ?? {}) : null,
+                  failedSecurityChecks: _faceFailedChecks(capturedFace));
 
               print("result status --> ${result?.data != null && result.data is Map ? result.data['status'] : result?.success}");
               if (result != null && result.success) {
@@ -2877,6 +3153,7 @@ abstract class MainFabServices {
                 return;
               }
               else {
+                if (await showFingerprintRejection(result)) return;
                 AlertsService.error(
                     context: context,
                     message: result?.message ?? (result?.data != null && result?.data is Map && result.data['message'] != null ? result.data['message'] : null) ?? AppStrings.noInternetConnection.tr(),
@@ -2884,16 +3161,6 @@ abstract class MainFabServices {
                 return;
               }
             } catch (e) {
-              // Close loading indicator on error
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                try {
-                  if (context.mounted && Navigator.of(context, rootNavigator: true).canPop()) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
-                } catch (e) {
-                  debugPrint('Error closing loading dialog: $e');
-                }
-              });
               AlertsService.error(
                 context: context,
                 message: AppErrorReporter.safeMessage(e),
@@ -2965,4 +3232,28 @@ abstract class MainFabServices {
       }
     }
   }
+}
+
+/// A device in the Bluetooth fingerprint list (from the BLE scan or the Android classic discovery)
+class _BtDevice {
+  const _BtDevice({
+    required this.id,
+    required this.name,
+    this.isGeneric = false,
+    this.rssi,
+    this.isBeacon = false,
+    this.majorClass,
+  });
+
+  /// MAC address (or iOS identifier) the branch registers
+  final String id;
+  final String name;
+
+  /// name built from the advertisement ("iBeacon", "Device by Apple"), not broadcast by the device
+  final bool isGeneric;
+  final int? rssi;
+  final bool isBeacon;
+
+  /// classic Bluetooth major device class (phone, audio, computer...)
+  final int? majorClass;
 }

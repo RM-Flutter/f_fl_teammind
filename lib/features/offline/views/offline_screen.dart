@@ -66,20 +66,19 @@ class _OfflineScreenState extends State<OfflineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) {
-          final viewModel = OfflineController()..initialize(ctx: context);
-          // Reload fingerprints after provider is created
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              viewModel.loadFingerprintsFromPreferences();
-            }
-          });
-          return viewModel;
-        }),
-      ],
-      child: _OfflineScreenContent(),
+    // Block the system back button: popping this route would reveal the app
+    // underneath while still offline (and leave the overlay state out of sync).
+    // The screen closes by itself when the connection comes back.
+    return PopScope(
+      canPop: false,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => OfflineController()..initialize(ctx: context),
+          ),
+        ],
+        child: _OfflineScreenContent(),
+      ),
     );
   }
 }
@@ -109,7 +108,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
         builder: (context, viewModel, connectionService, _) {
           // Listen to connection changes and close overlay automatically when connection is restored
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (connectionService.isConnected && mounted) {
+            if (connectionService.isConnected && mounted && OfflineOverlayService.isShowing) {
               OfflineOverlayService.hideOfflineOverlay();
             }
           });
@@ -271,7 +270,9 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                         context: navContext,
                                         fingerprintMethod: 'fp_scan',
                                       );
-                                      await viewModel.loadFingerprintsFromPreferences();
+                                      if (!viewModel.isDisposed) {
+                                        await viewModel.loadFingerprintsFromPreferences();
+                                      }
                                     };
                                     hero = 'QR';
                                     break;
@@ -285,7 +286,9 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                         context: navContext,
                                         fingerprintMethod: 'fp_wifi',
                                       );
-                                      await viewModel.loadFingerprintsFromPreferences();
+                                      if (!viewModel.isDisposed) {
+                                        await viewModel.loadFingerprintsFromPreferences();
+                                      }
                                     };
                                     break;
                                   case 'fp_navigate':
@@ -298,7 +301,9 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                         context: navContext,
                                         fingerprintMethod: fingerprintType,
                                       );
-                                      await viewModel.loadFingerprintsFromPreferences();
+                                      if (!viewModel.isDisposed) {
+                                        await viewModel.loadFingerprintsFromPreferences();
+                                      }
                                     };
                                     hero = 'gps';
                                     break;
@@ -311,7 +316,9 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                         context: navContext,
                                         fingerprintMethod: 'fp_bluetooth',
                                       );
-                                      await viewModel.loadFingerprintsFromPreferences();
+                                      if (!viewModel.isDisposed) {
+                                        await viewModel.loadFingerprintsFromPreferences();
+                                      }
                                     };
                                     hero = 'bluetooth';
                                     break;

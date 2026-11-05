@@ -92,7 +92,7 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }
@@ -281,7 +281,7 @@ class AddRewardAndPenaltyViewModel extends ChangeNotifier {
         notifyListeners();
         AlertsService.error(
             context: context,
-            message: error is DioError ? (error.response?.data['message'] ?? 'Something went wrong') : error.toString(),
+            message: error is DioError ? (error.response?.data['message'] ?? 'something_went_wrong'.tr()) : error.toString(),
             title: AppStrings.error.tr());
       });
     } catch (e) {

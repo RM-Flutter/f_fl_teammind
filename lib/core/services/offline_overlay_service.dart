@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:app_test/features/offline/views/offline_screen.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
@@ -77,8 +78,21 @@ class OfflineOverlayService {
       return;
     }
 
-    // Wait a bit to ensure navigator is ready
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    // If the navigator is ready and we're not mid-frame, push right away.
+    // Otherwise push after the next frame — and force that frame, because an
+    // idle app would never draw one until the user taps the screen.
+    final phase = SchedulerBinding.instance.schedulerPhase;
+    final canPushNow = rootNavigatorKey.currentState != null &&
+        (phase == SchedulerPhase.idle || phase == SchedulerPhase.postFrameCallbacks);
+    if (canPushNow) {
+      _pushOfflineRoute();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _pushOfflineRoute());
+      SchedulerBinding.instance.scheduleFrame();
+    }
+  }
+
+  static void _pushOfflineRoute() {
       if (_isShowing) return; // Double check after delay
 
       try {
@@ -92,7 +106,16 @@ class OfflineOverlayService {
         );
 
         if (rootNavigatorKey.currentState != null) {
-          rootNavigatorKey.currentState!.push(_offlineRoute!);
+          final route = _offlineRoute!;
+          rootNavigatorKey.currentState!.push(route);
+          // If the route is removed by anything other than hideOfflineOverlay,
+          // reset the state so the overlay can be shown again later.
+          route.popped.whenComplete(() {
+            if (identical(_offlineRoute, route) && !_isTemporarilyHidden) {
+              _offlineRoute = null;
+              _isShowing = false;
+            }
+          });
           debugPrint('Offline route shown successfully');
         } else {
           debugPrint('⚠️ Cannot show offline route: navigator not available');
@@ -104,6 +127,5 @@ class OfflineOverlayService {
         _isShowing = false;
         _offlineRoute = null;
       }
-    });
   }
 }

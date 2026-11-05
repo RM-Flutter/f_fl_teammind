@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:dio/dio.dart';
@@ -56,7 +57,7 @@ class LangControllerProvider extends ChangeNotifier {
     } catch (error) {
       isLoading = false;
       if (error is DioError) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }

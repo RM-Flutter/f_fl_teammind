@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'offline_overlay_service.dart';
@@ -20,7 +21,17 @@ class ConnectionService extends ChangeNotifier {
   final Connectivity _connectivity = Connectivity();
 
   // مدة الانتظار قبل تغيير حالة الاتصال (عشان ما تظهرش الشاشة على كل انقطاع مؤقت)
-  static const Duration _changeDelay = Duration(seconds: 5);
+  // Short debounces so the offline screen shows / hides quickly
+  static const Duration _offlineDelay = Duration(seconds: 2);
+  static const Duration _onlineDelay = Duration(seconds: 1);
+
+  /// Runs [cb] after the next frame AND forces that frame to be scheduled.
+  /// Without scheduleFrame() an idle app never renders a new frame, so the
+  /// callback (and the offline overlay) would wait until the user taps.
+  static void _afterFrame(VoidCallback cb) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => cb());
+    SchedulerBinding.instance.scheduleFrame();
+  }
 
   // Callback to resume initialization when connection is restored
   VoidCallback? onConnectionRestored;
@@ -37,9 +48,7 @@ class ConnectionService extends ChangeNotifier {
 
     // لو أوفلاين عند البداية → اعرض شاشة الأوفلاين فوراً
     if (!_isConnected) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        OfflineOverlayService.showOfflineOverlay();
-      });
+      _afterFrame(OfflineOverlayService.showOfflineOverlay);
     }
 
     // استمع لتغييرات الشبكة (WiFi/Mobile/Ethernet/etc) — مع delay
@@ -48,7 +57,7 @@ class ConnectionService extends ChangeNotifier {
     });
 
     // فحص دوري كل 5 ثواني — مع delay
-    _periodicCheckTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+    _periodicCheckTimer = Timer.periodic(const Duration(seconds: 3), (_) {
       _checkConnectionStatus(debounce: true);
     });
   }
@@ -57,7 +66,7 @@ class ConnectionService extends ChangeNotifier {
   static Future<bool> _hasRealInternet() async {
     try {
       final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 4));
+          .timeout(const Duration(seconds: 3));
       return result.isNotEmpty && result.first.rawAddress.isNotEmpty;
     } on SocketException catch (_) {
       return false;
@@ -118,13 +127,9 @@ class ConnectionService extends ChangeNotifier {
       notifyListeners();
 
       if (!_isConnected) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          OfflineOverlayService.showOfflineOverlay();
-        });
+        _afterFrame(OfflineOverlayService.showOfflineOverlay);
       } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await _handleConnectionRestored();
-        });
+        _afterFrame(_handleConnectionRestored);
       }
       debugPrint('Connection changed immediately: ${_isConnected ? "Online" : "Offline"}');
       return;
@@ -137,14 +142,12 @@ class ConnectionService extends ChangeNotifier {
       _onlineDebounceTimer = null;
       if (_offlineDebounceTimer != null) return; // already counting
 
-      debugPrint('📶 Connection seems lost — waiting ${_changeDelay.inSeconds}s before showing offline screen...');
-      _offlineDebounceTimer = Timer(_changeDelay, () {
+      debugPrint('📶 Connection seems lost — waiting ${_offlineDelay.inSeconds}s before showing offline screen...');
+      _offlineDebounceTimer = Timer(_offlineDelay, () {
         _offlineDebounceTimer = null;
         _isConnected = false;
         notifyListeners();
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          OfflineOverlayService.showOfflineOverlay();
-        });
+        _afterFrame(OfflineOverlayService.showOfflineOverlay);
         debugPrint('🔴 Offline confirmed after delay');
       });
     } else {
@@ -153,14 +156,12 @@ class ConnectionService extends ChangeNotifier {
       _offlineDebounceTimer = null;
       if (_onlineDebounceTimer != null) return; // already counting
 
-      debugPrint('📶 Connection seems restored — waiting ${_changeDelay.inSeconds}s before hiding offline screen...');
-      _onlineDebounceTimer = Timer(_changeDelay, () {
+      debugPrint('📶 Connection seems restored — waiting ${_onlineDelay.inSeconds}s before hiding offline screen...');
+      _onlineDebounceTimer = Timer(_onlineDelay, () {
         _onlineDebounceTimer = null;
         _isConnected = true;
         notifyListeners();
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await _handleConnectionRestored();
-        });
+        _afterFrame(_handleConnectionRestored);
         debugPrint('🟢 Online confirmed after delay');
       });
     }

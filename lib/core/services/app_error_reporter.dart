@@ -20,13 +20,7 @@ abstract class AppErrorReporter {
   static DateTime? _lastAlertShownAt;
 
   /// Text shown to the user instead of any technical error.
-  static String get friendlyMessage {
-    try {
-      return AppStrings.unexpectedErrorContactTeam.tr();
-    } catch (_) {
-      return 'Something went wrong. Please contact the RightMind team.';
-    }
-  }
+  static String get friendlyMessage => AppStrings.unexpectedErrorContactTeam.tr();
 
   static final List<RegExp> _technicalPatterns = [
     RegExp(r'exception', caseSensitive: false),

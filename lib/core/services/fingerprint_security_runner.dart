@@ -13,6 +13,8 @@ class FingerprintSecurityResult {
   final bool canProceed;
   final String? mandatoryFailedKey;
   final String? mandatoryFailedMessage;
+  /// Every failed mandatory check (key => reason shown to the employee)
+  final Map<String, String> mandatoryFailures;
   final Map<String, dynamic> failedOptionals;
   final Map<String, dynamic>? fakeGpsCheck;
   final Map<String, dynamic>? gpsVerification;
@@ -21,6 +23,7 @@ class FingerprintSecurityResult {
     required this.canProceed,
     this.mandatoryFailedKey,
     this.mandatoryFailedMessage,
+    this.mandatoryFailures = const {},
     this.failedOptionals = const {},
     this.fakeGpsCheck,
     this.gpsVerification,
@@ -29,12 +32,14 @@ class FingerprintSecurityResult {
   factory FingerprintSecurityResult.blocked({
     required String mandatoryFailedKey,
     required String mandatoryFailedMessage,
+    Map<String, String>? mandatoryFailures,
     Map<String, dynamic>? fakeGpsCheck,
   }) {
     return FingerprintSecurityResult(
       canProceed: false,
       mandatoryFailedKey: mandatoryFailedKey,
       mandatoryFailedMessage: mandatoryFailedMessage,
+      mandatoryFailures: mandatoryFailures ?? {mandatoryFailedKey: mandatoryFailedMessage},
       failedOptionals: const {},
       fakeGpsCheck: fakeGpsCheck,
     );
@@ -78,6 +83,22 @@ abstract class FingerprintSecurityRunner {
       return value ?? false;
     } catch (e) {
       debugPrint('Error checking root/jailbreak: $e');
+      return false;
+    }
+  }
+
+  /// Location service on + permission granted (requests it when not determined). Android & iOS.
+  static Future<bool> _ensureLocationPermission() async {
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) return false;
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      return permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always;
+    } catch (e) {
+      debugPrint('Error checking location permission: $e');
       return false;
     }
   }
@@ -173,6 +194,9 @@ abstract class FingerprintSecurityRunner {
     }
   }
 
+  /// Failed optional checks of the last run, for the scan steps report shown after the punch.
+  static Map<String, dynamic> lastFailedOptionals = {};
+
   /// تشغيل كافة فحوصات الأمان حسب مستوى كل مفتاح (mandatory / optional / disabled)
   /// - إذا فشل فحص mandatory: يتم إيقاف العملية وإرجاع canProceed = false
   /// - إذا فشل فحص optional: يتم تسجيله داخل failedOptionals والاستمرار
@@ -185,6 +209,17 @@ abstract class FingerprintSecurityRunner {
     final failedOptionals = <String, dynamic>{
       if (initialFailedOptionals != null) ...initialFailedOptionals,
     };
+    lastFailedOptionals = failedOptionals; // same map: filled as the checks run (read by the scan steps report)
+    // failed mandatory checks are collected (not returned at the first one) so the employee sees every reason
+    final mandatoryFailures = <String, String>{};
+    FingerprintSecurityResult finish(FingerprintSecurityResult allowed) => mandatoryFailures.isEmpty
+        ? allowed
+        : FingerprintSecurityResult.blocked(
+            mandatoryFailedKey: mandatoryFailures.keys.first,
+            mandatoryFailedMessage: mandatoryFailures.values.first,
+            mandatoryFailures: mandatoryFailures,
+            fakeGpsCheck: allowed.fakeGpsCheck,
+          );
 
     final nowIso = DateTime.now().toIso8601String();
 
@@ -196,10 +231,7 @@ abstract class FingerprintSecurityRunner {
       final isDev = await isDeveloperModeEnabled();
       if (isDev) {
         if (devLevel == FingerprintCheckLevel.mandatory) {
-          return FingerprintSecurityResult.blocked(
-            mandatoryFailedKey: 'block_fingerprint_on_developer_mode',
-            mandatoryFailedMessage: AppStrings.developerModeDetected.tr(),
-          );
+          mandatoryFailures['block_fingerprint_on_developer_mode'] = AppStrings.developerModeDetected.tr();
         } else {
           failedOptionals['block_fingerprint_on_developer_mode'] = {
             'status': 'failed',
@@ -218,10 +250,7 @@ abstract class FingerprintSecurityRunner {
       final isRooted = await isDeviceRootedOrJailbroken();
       if (isRooted) {
         if (rootLevel == FingerprintCheckLevel.mandatory) {
-          return FingerprintSecurityResult.blocked(
-            mandatoryFailedKey: 'fingerprint_block_on_root_or_jailbreak',
-            mandatoryFailedMessage: AppStrings.rootedDeviceDetected.tr(),
-          );
+          mandatoryFailures['fingerprint_block_on_root_or_jailbreak'] = AppStrings.rootedDeviceDetected.tr();
         } else {
           failedOptionals['fingerprint_block_on_root_or_jailbreak'] = {
             'status': 'failed',
@@ -240,10 +269,7 @@ abstract class FingerprintSecurityRunner {
       final vpnCheck = await VpnDetectionService.checkVpn();
       if (vpnCheck['isVpnActive'] == true) {
         if (vpnLevel == FingerprintCheckLevel.mandatory) {
-          return FingerprintSecurityResult.blocked(
-            mandatoryFailedKey: 'fingerprint_block_on_vpn',
-            mandatoryFailedMessage: AppStrings.vpnDetected.tr(),
-          );
+          mandatoryFailures['fingerprint_block_on_vpn'] = AppStrings.vpnDetected.tr();
         } else {
           failedOptionals['fingerprint_block_on_vpn'] = {
             'status': 'failed',
@@ -263,10 +289,7 @@ abstract class FingerprintSecurityRunner {
       final driftCheck = await TimeDriftService.checkTimeDrift();
       if (driftCheck['isDrifted'] == true) {
         if (timeDriftLevel == FingerprintCheckLevel.mandatory) {
-          return FingerprintSecurityResult.blocked(
-            mandatoryFailedKey: 'fingerprint_verify_time_drift',
-            mandatoryFailedMessage: AppStrings.timeDriftDetected.tr(),
-          );
+          mandatoryFailures['fingerprint_verify_time_drift'] = AppStrings.timeDriftDetected.tr();
         } else {
           failedOptionals['fingerprint_verify_time_drift'] = {
             'status': 'failed',
@@ -278,6 +301,30 @@ abstract class FingerprintSecurityRunner {
           };
         }
       }
+    }
+
+    // ═════════════════════════════════════════════════════════════════════════
+    // Location permission gate: only for enabled location-based checks.
+    // Denied permission / disabled location service => mandatory blocks, optional is flagged.
+    // ═════════════════════════════════════════════════════════════════════════
+    final locationChecks = <String, FingerprintCheckLevel>{
+      'fingerprint_block_on_fake_gps': AppConstants.fingerprintBlockOnFakeGpsLevel,
+      'fingerprint_verify_gps_network_comparison': AppConstants.fingerprintVerifyGpsNetworkComparisonLevel,
+      if (isOffline) 'fingerprint_verify_gps_timestamp_offline': AppConstants.fingerprintVerifyGpsTimestampOfflineLevel,
+    }..removeWhere((_, level) => level.isDisabled);
+    if (locationChecks.isNotEmpty && !await _ensureLocationPermission()) {
+      for (final check in locationChecks.entries) {
+        if (check.value.isMandatory) {
+          mandatoryFailures[check.key] = AppStrings.locationPermissionRequired.tr();
+          continue;
+        }
+        failedOptionals[check.key] = {
+          'status': 'failed',
+          'message': 'Location permission denied or location service disabled',
+          'detected_at': nowIso,
+        };
+      }
+      return finish(FingerprintSecurityResult.allowed(failedOptionals: failedOptionals));
     }
 
     // ═════════════════════════════════════════════════════════════════════════
@@ -359,11 +406,7 @@ abstract class FingerprintSecurityRunner {
           } else {
             errorMessage = AppStrings.suspiciousGPSData.tr();
           }
-          return FingerprintSecurityResult.blocked(
-            mandatoryFailedKey: 'fingerprint_block_on_fake_gps',
-            mandatoryFailedMessage: errorMessage,
-            fakeGpsCheck: fakeGPSCheck,
-          );
+          mandatoryFailures['fingerprint_block_on_fake_gps'] = errorMessage;
         } else if (fakeGpsLevel == FingerprintCheckLevel.optional) {
           failedOptionals['fingerprint_block_on_fake_gps'] = {
             'status': 'failed',
@@ -380,12 +423,7 @@ abstract class FingerprintSecurityRunner {
             fakeGPSCheck?['networkLocationComparison'] as Map<String, dynamic>?;
         if (netComp != null && netComp['needsReview'] == true) {
           if (networkComparisonLevel == FingerprintCheckLevel.mandatory) {
-            return FingerprintSecurityResult.blocked(
-              mandatoryFailedKey: 'fingerprint_verify_gps_network_comparison',
-              mandatoryFailedMessage:
-                  netComp['message'] ?? 'GPS and Network locations mismatch',
-              fakeGpsCheck: fakeGPSCheck,
-            );
+            mandatoryFailures['fingerprint_verify_gps_network_comparison'] = netComp['message'] ?? 'GPS and Network locations mismatch';
           } else if (networkComparisonLevel == FingerprintCheckLevel.optional) {
             failedOptionals['fingerprint_verify_gps_network_comparison'] = {
               'status': 'failed',
@@ -405,12 +443,7 @@ abstract class FingerprintSecurityRunner {
       if (gpsVerification != null &&
           gpsVerification['gpsTimeVerificationSuspicious'] == true) {
         if (offlineTimestampLevel == FingerprintCheckLevel.mandatory) {
-          return FingerprintSecurityResult.blocked(
-            mandatoryFailedKey: 'fingerprint_verify_gps_timestamp_offline',
-            mandatoryFailedMessage:
-                gpsVerification['verificationMessage'] ?? 'Offline GPS timestamp mismatch',
-            fakeGpsCheck: fakeGPSCheck,
-          );
+          mandatoryFailures['fingerprint_verify_gps_timestamp_offline'] = gpsVerification['verificationMessage'] ?? 'Offline GPS timestamp mismatch';
         } else if (offlineTimestampLevel == FingerprintCheckLevel.optional) {
           failedOptionals['fingerprint_verify_gps_timestamp_offline'] = {
             'status': 'failed',
@@ -423,10 +456,10 @@ abstract class FingerprintSecurityRunner {
       }
     }
 
-    return FingerprintSecurityResult.allowed(
+    return finish(FingerprintSecurityResult.allowed(
       failedOptionals: failedOptionals,
       fakeGpsCheck: fakeGPSCheck,
       gpsVerification: gpsVerification,
-    );
+    ));
   }
 }

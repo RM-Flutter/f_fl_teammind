@@ -199,7 +199,7 @@ class CommentProvider extends ChangeNotifier{
       }
     } catch (error) {
       errorAddCommentMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
 
       AppToast.showToast(
@@ -266,7 +266,7 @@ class CommentProvider extends ChangeNotifier{
       notifyListeners();
     } catch (error) {
       getRequestCommentErrorMessage = error is DioError
-          ? error.response?.data['message'] ?? 'Something went wrong'
+          ? error.response?.data['message'] ?? 'something_went_wrong'.tr()
           : error.toString();
     } finally {
       isGetCommentLoading = false;

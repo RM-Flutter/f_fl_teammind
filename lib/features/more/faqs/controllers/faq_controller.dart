@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +18,7 @@ class FaqModelProvider extends ChangeNotifier{
       notifyListeners();
     }).catchError((error){
       if (error is DioException) {
-        errorMessage = error.response?.data['message'] ?? 'Something went wrong';
+        errorMessage = error.response?.data['message'] ?? 'something_went_wrong'.tr();
       } else {
         errorMessage = AppErrorReporter.safeMessage(error);
       }

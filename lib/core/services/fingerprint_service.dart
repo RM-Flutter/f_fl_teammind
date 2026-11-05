@@ -187,6 +187,51 @@ abstract class FingerprintService {
     }
   }
 
+
+  /// Builds the `suspicion_flags` payload the backend scores
+  /// (SuspicionScoringService / FingerprintSecurityService::validateRequiredSecurityFlags).
+  /// Keys are the security check keys; each value has `status: failed` so the backend treats it as detected.
+  /// Includes failed optional device/GPS checks and failed optional face checks from the note report.
+  static Map<String, Map<String, String>> _buildSuspicionFlags(
+      Map<String, dynamic> failedOptionals,
+      Map<String, dynamic>? noteReport,
+  ) {
+    final all = <String, dynamic>{
+      ...failedOptionals,
+      if (noteReport?['security_checks_failed'] is Map)
+        ...Map<String, dynamic>.from(noteReport!['security_checks_failed'] as Map),
+    };
+    final flags = <String, Map<String, String>>{};
+    all.forEach((key, value) {
+      final message = value is Map ? value['message']?.toString() : value?.toString();
+      flags[key] = {
+        'status': 'failed',
+        'detected': '1',
+        if (message != null && message.isNotEmpty) 'message': message,
+        if (value is Map && value['detected_at'] != null)
+          'detected_at': value['detected_at'].toString(),
+      };
+    });
+    return flags;
+  }
+
+  /// Adds the flags as multipart array fields (suspicion_flags[key][field]) so Laravel receives an array.
+  static void _applySuspicionFlags(
+      Map<String, String> form, Map<String, Map<String, String>> flags) {
+    flags.forEach((key, fields) {
+      fields.forEach((field, value) {
+        form['suspicion_flags[$key][$field]'] = value;
+      });
+    });
+  }
+
+  /// Offline payload: keeps the flags as a nested map so the multi upload sends them as an array.
+  static Map<String, dynamic> _withSuspicionFlags(
+      Map<String, dynamic> payload, Map<String, Map<String, String>> flags) {
+    if (flags.isEmpty) return payload;
+    return {...payload, 'suspicion_flags': flags};
+  }
+
   /// دمج noteReport مع معلومات GPS verification و fake GPS check وفحوصات الأمان الاختيارية الفاشلة
   static Map<String, dynamic> _mergeNoteReportWithGPSVerification(
       Map<String, dynamic>? existingNoteReport,
@@ -401,7 +446,11 @@ abstract class FingerprintService {
     required List<Map<String, dynamic>> fingerprints,
   }) async {
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
-    final requestBody = {'fingerprints': fingerprints};
+    // Phone clock at upload time (UTC epoch ms) so the backend can measure time drift
+    final deviceTime = '${DateTime.now().millisecondsSinceEpoch}';
+    final requestBody = {
+      'fingerprints': fingerprints.map((f) => {...f, 'device_time': deviceTime}).toList(),
+    };
     return await DioApiService().post<Map<String, dynamic>>(
       url,
       requestBody,
@@ -431,16 +480,11 @@ abstract class FingerprintService {
     if (!securityResult.canProceed) {
       final errorMessage =
           securityResult.mandatoryFailedMessage ?? AppStrings.failed.tr();
-      if (context.mounted) {
-        AlertsService.error(
-          context: context,
-          message: errorMessage,
-          title: AppStrings.securityCheckFailed.tr(),
-        );
-      }
+      // the caller shows every failed mandatory check as a list (showFingerprintRejection)
       return OperationResult<Map<String, dynamic>>(
         success: false,
         message: errorMessage,
+        errors: securityResult.mandatoryFailures.values.toList(),
       );
     }
 
@@ -454,22 +498,14 @@ abstract class FingerprintService {
       'finger_day': date,
     };
 
-    // Get double check data (WiFi or Bluetooth MAC address)
-    final doubleCheckData = await DeviceMacAddressService.getDoubleCheckData();
-    if (doubleCheckData != null) {
-      formData['double_check_type'] = doubleCheckData['double_check_type']!;
-      formData['double_check_data'] = doubleCheckData['double_check_data']!;
-      debugPrint('✅ Added double check data to QR fingerprint:');
-      debugPrint('   double_check_type: ${doubleCheckData['double_check_type']}');
-      debugPrint('   double_check_data: ${doubleCheckData['double_check_data']}');
-    } else {
-      debugPrint(
-          '⚠️ No double check data available (WiFi and Bluetooth not available)');
-    }
-
-    // إرسال تقرير الفحوصات الأمنية كحقل مستقل
-    if (securityResult.failedOptionals.isNotEmpty) {
-      formData['security_report'] = jsonEncode(securityResult.failedOptionals);
+    // Backend reads suspicion_flags (array keyed by the security check key).
+    final suspicionFlags = _buildSuspicionFlags(
+        securityResult.failedOptionals, noteReport);
+    if (isOnline) _applySuspicionFlags(formData, suspicionFlags);
+    // Phone clock (UTC epoch ms) so the backend can measure time drift
+    if (isOnline) formData['device_time'] = '${DateTime.now().millisecondsSinceEpoch}';
+    if (AppConstants.branchesDoubleCheckLevel.isEnabled) {
+      formData.addAll(await DeviceMacAddressService.getDoubleCheckData() ?? {});
     }
 
     // دمج noteReport مع الفحوصات الأمنية والـ GPS
@@ -498,9 +534,11 @@ abstract class FingerprintService {
       );
     } else {
       // OFFLINE CASE: SAVE FINGERPRINT TO LOCAL DB
-      return await DBHiveService.saveFingerprint(formData).then((_) async {
+      return await DBHiveService.saveFingerprint(
+          _withSuspicionFlags(formData, suspicionFlags)).then((_) async {
         // Also save to SharedPreferences for display (مع حفظ الصورة)
-        await _saveFingerprintToSharedPreferences(formData, files: files);
+        await _saveFingerprintToSharedPreferences(
+            _withSuspicionFlags(formData, suspicionFlags), files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -533,16 +571,11 @@ abstract class FingerprintService {
     if (!securityResult.canProceed) {
       final errorMessage =
           securityResult.mandatoryFailedMessage ?? AppStrings.failed.tr();
-      if (context.mounted) {
-        AlertsService.error(
-          context: context,
-          message: errorMessage,
-          title: AppStrings.securityCheckFailed.tr(),
-        );
-      }
+      // the caller shows every failed mandatory check as a list (showFingerprintRejection)
       return OperationResult<Map<String, dynamic>>(
         success: false,
         message: errorMessage,
+        errors: securityResult.mandatoryFailures.values.toList(),
       );
     }
 
@@ -555,9 +588,14 @@ abstract class FingerprintService {
       'finger_day': date,
     };
 
-    if (securityResult.failedOptionals.isNotEmpty) {
-      requestBody['security_report'] =
-          jsonEncode(securityResult.failedOptionals);
+    // Backend reads suspicion_flags (array keyed by the security check key).
+    final suspicionFlags = _buildSuspicionFlags(
+        securityResult.failedOptionals, noteReport);
+    if (isOnline) _applySuspicionFlags(requestBody, suspicionFlags);
+    // Phone clock (UTC epoch ms) so the backend can measure time drift
+    if (isOnline) requestBody['device_time'] = '${DateTime.now().millisecondsSinceEpoch}';
+    if (AppConstants.branchesDoubleCheckLevel.isEnabled) {
+      requestBody.addAll(await DeviceMacAddressService.getDoubleCheckData() ?? {});
     }
 
     final mergedNoteReport = _mergeNoteReportWithGPSVerification(
@@ -580,8 +618,10 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      return await DBHiveService.saveFingerprint(requestBody).then((_) async {
-        await _saveFingerprintToSharedPreferences(requestBody, files: files);
+      return await DBHiveService.saveFingerprint(
+          _withSuspicionFlags(requestBody, suspicionFlags)).then((_) async {
+        await _saveFingerprintToSharedPreferences(
+            _withSuspicionFlags(requestBody, suspicionFlags), files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -615,16 +655,11 @@ abstract class FingerprintService {
     if (!securityResult.canProceed) {
       final errorMessage =
           securityResult.mandatoryFailedMessage ?? AppStrings.failed.tr();
-      if (context.mounted) {
-        AlertsService.error(
-          context: context,
-          message: errorMessage,
-          title: AppStrings.securityCheckFailed.tr(),
-        );
-      }
+      // the caller shows every failed mandatory check as a list (showFingerprintRejection)
       return OperationResult<Map<String, dynamic>>(
         success: false,
         message: errorMessage,
+        errors: securityResult.mandatoryFailures.values.toList(),
       );
     }
 
@@ -637,9 +672,14 @@ abstract class FingerprintService {
       'finger_day': date,
     };
 
-    if (securityResult.failedOptionals.isNotEmpty) {
-      formData['security_report'] =
-          jsonEncode(securityResult.failedOptionals);
+    // Backend reads suspicion_flags (array keyed by the security check key).
+    final suspicionFlags = _buildSuspicionFlags(
+        securityResult.failedOptionals, noteReport);
+    if (isOnline) _applySuspicionFlags(formData, suspicionFlags);
+    // Phone clock (UTC epoch ms) so the backend can measure time drift
+    if (isOnline) formData['device_time'] = '${DateTime.now().millisecondsSinceEpoch}';
+    if (AppConstants.branchesDoubleCheckLevel.isEnabled) {
+      formData.addAll(await DeviceMacAddressService.getDoubleCheckData() ?? {});
     }
 
     final mergedNoteReport = _mergeNoteReportWithGPSVerification(
@@ -664,8 +704,10 @@ abstract class FingerprintService {
         allData: true,
       );
     } else {
-      return await DBHiveService.saveFingerprint(formData).then((_) async {
-        await _saveFingerprintToSharedPreferences(formData, files: files);
+      return await DBHiveService.saveFingerprint(
+          _withSuspicionFlags(formData, suspicionFlags)).then((_) async {
+        await _saveFingerprintToSharedPreferences(
+            _withSuspicionFlags(formData, suspicionFlags), files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -693,14 +735,11 @@ abstract class FingerprintService {
     if (!securityResult.canProceed) {
       final errorMessage =
           securityResult.mandatoryFailedMessage ?? AppStrings.failed.tr();
-      if (context.mounted) {
-        AlertsService.error(
-            context: context,
-            message: errorMessage,
-            title: AppStrings.securityCheckFailed.tr());
-      }
+      // the caller shows every failed mandatory check as a list (showFingerprintRejection)
       return OperationResult<Map<String, dynamic>>(
-          success: false, message: errorMessage);
+          success: false,
+          message: errorMessage,
+          errors: securityResult.mandatoryFailures.values.toList());
     }
 
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
@@ -713,9 +752,14 @@ abstract class FingerprintService {
       'finger_day': date,
     };
 
-    if (securityResult.failedOptionals.isNotEmpty) {
-      requestBody['security_report'] =
-          jsonEncode(securityResult.failedOptionals);
+    // Backend reads suspicion_flags (array keyed by the security check key).
+    final suspicionFlags = _buildSuspicionFlags(
+        securityResult.failedOptionals, noteReport);
+    if (isOnline) _applySuspicionFlags(requestBody, suspicionFlags);
+    // Phone clock (UTC epoch ms) so the backend can measure time drift
+    if (isOnline) requestBody['device_time'] = '${DateTime.now().millisecondsSinceEpoch}';
+    if (AppConstants.branchesDoubleCheckLevel.isEnabled) {
+      requestBody.addAll(await DeviceMacAddressService.getDoubleCheckData() ?? {});
     }
 
     final mergedNoteReport = _mergeNoteReportWithGPSVerification(
@@ -738,8 +782,10 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      return await DBHiveService.saveFingerprint(requestBody).then((_) async {
-        await _saveFingerprintToSharedPreferences(requestBody, files: files);
+      return await DBHiveService.saveFingerprint(
+          _withSuspicionFlags(requestBody, suspicionFlags)).then((_) async {
+        await _saveFingerprintToSharedPreferences(
+            _withSuspicionFlags(requestBody, suspicionFlags), files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -767,14 +813,11 @@ abstract class FingerprintService {
     if (!securityResult.canProceed) {
       final errorMessage =
           securityResult.mandatoryFailedMessage ?? AppStrings.failed.tr();
-      if (context.mounted) {
-        AlertsService.error(
-            context: context,
-            message: errorMessage,
-            title: AppStrings.securityCheckFailed.tr());
-      }
+      // the caller shows every failed mandatory check as a list (showFingerprintRejection)
       return OperationResult<Map<String, dynamic>>(
-          success: false, message: errorMessage);
+          success: false,
+          message: errorMessage,
+          errors: securityResult.mandatoryFailures.values.toList());
     }
 
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
@@ -787,9 +830,14 @@ abstract class FingerprintService {
       'finger_day': date,
     };
 
-    if (securityResult.failedOptionals.isNotEmpty) {
-      requestBody['security_report'] =
-          jsonEncode(securityResult.failedOptionals);
+    // Backend reads suspicion_flags (array keyed by the security check key).
+    final suspicionFlags = _buildSuspicionFlags(
+        securityResult.failedOptionals, noteReport);
+    if (isOnline) _applySuspicionFlags(requestBody, suspicionFlags);
+    // Phone clock (UTC epoch ms) so the backend can measure time drift
+    if (isOnline) requestBody['device_time'] = '${DateTime.now().millisecondsSinceEpoch}';
+    if (AppConstants.branchesDoubleCheckLevel.isEnabled) {
+      requestBody.addAll(await DeviceMacAddressService.getDoubleCheckData() ?? {});
     }
 
     final mergedNoteReport = _mergeNoteReportWithGPSVerification(
@@ -812,8 +860,10 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      return await DBHiveService.saveFingerprint(requestBody).then((_) async {
-        await _saveFingerprintToSharedPreferences(requestBody, files: files);
+      return await DBHiveService.saveFingerprint(
+          _withSuspicionFlags(requestBody, suspicionFlags)).then((_) async {
+        await _saveFingerprintToSharedPreferences(
+            _withSuspicionFlags(requestBody, suspicionFlags), files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
@@ -841,14 +891,11 @@ abstract class FingerprintService {
     if (!securityResult.canProceed) {
       final errorMessage =
           securityResult.mandatoryFailedMessage ?? AppStrings.failed.tr();
-      if (context.mounted) {
-        AlertsService.error(
-            context: context,
-            message: errorMessage,
-            title: AppStrings.securityCheckFailed.tr());
-      }
+      // the caller shows every failed mandatory check as a list (showFingerprintRejection)
       return OperationResult<Map<String, dynamic>>(
-          success: false, message: errorMessage);
+          success: false,
+          message: errorMessage,
+          errors: securityResult.mandatoryFailures.values.toList());
     }
 
     final url = EndpointServices.getApiEndpoint(EndpointsNames.fingerprint).url;
@@ -860,9 +907,14 @@ abstract class FingerprintService {
       'finger_day': date,
     };
 
-    if (securityResult.failedOptionals.isNotEmpty) {
-      requestBody['security_report'] =
-          jsonEncode(securityResult.failedOptionals);
+    // Backend reads suspicion_flags (array keyed by the security check key).
+    final suspicionFlags = _buildSuspicionFlags(
+        securityResult.failedOptionals, noteReport);
+    if (isOnline) _applySuspicionFlags(requestBody, suspicionFlags);
+    // Phone clock (UTC epoch ms) so the backend can measure time drift
+    if (isOnline) requestBody['device_time'] = '${DateTime.now().millisecondsSinceEpoch}';
+    if (AppConstants.branchesDoubleCheckLevel.isEnabled) {
+      requestBody.addAll(await DeviceMacAddressService.getDoubleCheckData() ?? {});
     }
 
     final mergedNoteReport = _mergeNoteReportWithGPSVerification(
@@ -885,8 +937,10 @@ abstract class FingerprintService {
           url, requestBody,
           context: context, dataKey: 'data', allData: true, files: files);
     } else {
-      return await DBHiveService.saveFingerprint(requestBody).then((_) async {
-        await _saveFingerprintToSharedPreferences(requestBody, files: files);
+      return await DBHiveService.saveFingerprint(
+          _withSuspicionFlags(requestBody, suspicionFlags)).then((_) async {
+        await _saveFingerprintToSharedPreferences(
+            _withSuspicionFlags(requestBody, suspicionFlags), files: files);
         return OperationResult<Map<String, dynamic>>(
             success: true,
             message: 'Fingerprint Saved successfully in Locale Storage');
