@@ -1785,5 +1785,11 @@
   "bluetooth_device_by": "Device by",
   "level": "Level",
   "teamleader": "Team Leader",
-  "both": "Manager & Team Leader"
+  "both": "Manager & Team Leader",
+  "requestType": "Request Type",
+  "requestCancelVacation": "Request Vacation Cancellation",
+  "approveCancel": "Approve Cancellation",
+  "cancellationPending": "Cancellation Pending",
+  "confirmCancelVacation": "Are you sure you want to request cancellation for this approved vacation?",
+  "confirmApproveCancel": "Are you sure you want to approve canceling this approved vacation? The status will change to canceled."
 }

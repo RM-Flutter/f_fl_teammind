@@ -15,6 +15,7 @@ class RequestModel {
   var rulesMessage;
   var status;
   bool? waitingCancel;
+  bool? canApproveCancel;
   bool? takeAction;
   bool? canTakeActionAsSomeoneElse;
   var level;
@@ -44,6 +45,7 @@ class RequestModel {
     required this.typeId,
     required this.typeName,
     required this.waitingCancel,
+    this.canApproveCancel,
     required this.durationType,
     required this.duration,
     required this.moneyValue,
@@ -64,7 +66,12 @@ class RequestModel {
     return RequestModel(
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
-      waitingCancel: json['waiting_cancel'] ?? false,
+      waitingCancel: json['waiting_cancel'] == true ||
+          json['waiting_cancel'] == 1 ||
+          json['waiting_cancel'] == '1',
+      canApproveCancel: json['can_approve_cancel'] == true ||
+          json['can_approve_cancel'] == 1 ||
+          json['can_approve_cancel'] == '1',
       hasOverlapping: json['has_overlapping'] as bool?,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,
@@ -110,7 +117,12 @@ class RequestModel {
       id: json['id'] ?? 0,
       // rules_message not returned yet in new API — backend will re-add it
       rulesMessage: "",
-      waitingCancel: json['waiting_cancel'] ?? false,
+      waitingCancel: json['waiting_cancel'] == true ||
+          json['waiting_cancel'] == 1 ||
+          json['waiting_cancel'] == '1',
+      canApproveCancel: json['can_approve_cancel'] == true ||
+          json['can_approve_cancel'] == 1 ||
+          json['can_approve_cancel'] == '1',
       hasOverlapping: json['has_overlapping'] as bool?,
       notes: json['notes'] ?? "",
       // No files/managerReply/seenBy in list endpoint — kept empty for list cards

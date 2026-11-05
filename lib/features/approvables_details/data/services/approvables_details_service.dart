@@ -103,6 +103,37 @@ class ApprovablesDetailsService {
     }
   }
 
+  /// Manager Approve Cancel
+  /// POST: /api/approval-system/v1/:type/manager/approvables/:id/approve-cancel
+  static Future<OperationResult<bool>> approveCancel({
+    required BuildContext context,
+    required String type,
+    required String id,
+  }) async {
+    try {
+      final response = await DioHelper.postData(
+        url: "/approval-system/v1/$type/manager/approvables/$id/approve-cancel",
+        context: context,
+        data: {},
+      );
+
+      if (response.data != null && response.data['status'] == true) {
+        return OperationResult(
+          success: true,
+          data: true,
+          message: response.data['message']?.toString() ?? 'Cancel approved successfully',
+        );
+      }
+      return OperationResult(
+        success: false,
+        message: response.data?['message']?.toString() ?? 'Failed to approve cancel',
+      );
+    } catch (e) {
+      debugPrint("Error in approveCancel: $e");
+      return OperationResult(success: false, message: e.toString());
+    }
+  }
+
   /// Get active level approvers (when can_take_action_as_someone_else == true)
   /// GET: /api/approval-system/v1/:type/manager/approvables/:id/current-level-approvers
   static Future<OperationResult<List<CurrentLevelApproverModel>>> getCurrentLevelApprovers({

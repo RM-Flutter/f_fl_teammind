@@ -299,6 +299,9 @@ abstract class AppSettingsService {
         CacheHelper.setString(key: "gDate", value: result.data!['general_settings']['data']['last_update_date']);
         GeneralSettingsModel? generalSettingsModel;
         generalSettingsModel = GeneralSettingsModel.fromJson(result.data!['general_settings']['data']);
+        // Keep the in-memory copy in sync with the freshly saved USG,
+        // otherwise stale settings (e.g. from a previous domain) stay in memory.
+        UserSettingConst.generalSettingsModel = generalSettingsModel;
         prefs = await SharedPreferences.getInstance();
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
@@ -459,6 +462,13 @@ abstract class AppSettingsService {
         prefs = await SharedPreferences.getInstance();
         final jsonString = json.encode(result.data!['general_settings']['data']); // Convert JSON to String
         await prefs.setString("USG", jsonString);
+        try {
+          UserSettingConst.generalSettingsModel =
+              GeneralSettingsModel.fromJson(result.data!['general_settings']['data']);
+        } catch (e) {
+          debugPrint("Error parsing general settings: $e");
+          UserSettingConst.generalSettingsModel = null;
+        }
         DynamicAppConfigService.clearCache();
         AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
       }
@@ -563,7 +573,20 @@ abstract class AppSettingsService {
     return null;
   }
 
+  /// Returns the localized request-type title from the cached general settings.
+  /// If the lookup fails or yields an empty title, [fallbackTitle]
+  /// (usually the API `type_name`) is returned when it is not empty.
   static String? getRequestTitleFromGenenralSettings(
+      {String? requestId, required BuildContext context, String? fallbackTitle}) {
+    final String? title =
+        _lookupRequestTitle(requestId: requestId, context: context);
+    if (title != null && title.trim().isNotEmpty) return title;
+    final String? fb = fallbackTitle?.trim();
+    if (fb != null && fb.isNotEmpty && fb != 'null') return fb;
+    return title;
+  }
+
+  static String? _lookupRequestTitle(
       {String? requestId, required BuildContext context}) {
     if (UserSettingConst.generalSettingsModel == null) {
       String? jsonString = CacheHelper.getString("USG");

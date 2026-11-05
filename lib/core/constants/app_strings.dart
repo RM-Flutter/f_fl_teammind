@@ -1215,4 +1215,11 @@ abstract class AppStrings {
   static const download = "download";
   static const somethingWentWrong = "somethingWentWrong";
   static const unexpectedErrorContactTeam = "unexpectedErrorContactTeam";
+
+  // Vacation Cancellation
+  static const requestCancelVacation = "requestCancelVacation";
+  static const approveCancel = "approveCancel";
+  static const cancellationPending = "cancellationPending";
+  static const confirmCancelVacation = "confirmCancelVacation";
+  static const confirmApproveCancel = "confirmApproveCancel";
 }

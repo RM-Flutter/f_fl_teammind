@@ -105,6 +105,27 @@ class ApprovableDetailsCubit extends Cubit<ApprovableDetailsState> {
     }
   }
 
+  Future<void> approveCancel({required BuildContext context}) async {
+    if (currentType == null || currentId == null) return;
+    emit(ApprovableActionSubmitting());
+
+    final result = await ApprovablesDetailsService.approveCancel(
+      context: context,
+      type: currentType!,
+      id: currentId!,
+    );
+
+    if (result.success) {
+      emit(ApprovableActionSuccess(result.message ?? 'Cancel approved successfully'));
+      fetchDetails(context: context, type: currentType!, id: currentId!);
+    } else {
+      emit(ApprovableActionError(result.message ?? 'Failed to approve cancel'));
+      if (detailsModel != null) {
+        emit(ApprovableDetailsLoaded(details: detailsModel!));
+      }
+    }
+  }
+
   Future<void> submitTakeAction({
     required BuildContext context,
     required String approvableId,

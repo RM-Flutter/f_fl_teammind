@@ -16,6 +16,7 @@ class MyTeamRequestModel {
   var status;
   var level;
   bool? waitingCancel;
+  bool? canApproveCancel;
   bool? takeAction;
   bool? canTakeActionAsSomeoneElse;
   List<ManagerReply>? managerReply;
@@ -48,6 +49,7 @@ class MyTeamRequestModel {
     required this.from,
     required this.to,
     required this.waitingCancel,
+    this.canApproveCancel,
     required this.status,
     required this.level,
     this.takeAction,
@@ -62,7 +64,12 @@ class MyTeamRequestModel {
     return MyTeamRequestModel(
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
-      waitingCancel: json['waiting_cancel'] ?? false,
+      waitingCancel: json['waiting_cancel'] == true ||
+          json['waiting_cancel'] == 1 ||
+          json['waiting_cancel'] == '1',
+      canApproveCancel: json['can_approve_cancel'] == true ||
+          json['can_approve_cancel'] == 1 ||
+          json['can_approve_cancel'] == '1',
       hasOverlapping: json['has_overlapping'] as bool?,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,

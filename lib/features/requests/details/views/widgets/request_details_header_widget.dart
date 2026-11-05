@@ -296,7 +296,15 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                 children: [
                   Builder(builder: (context) {
                     String headerTitle = AppSettingsService.getRequestTitleFromGenenralSettings(
-                            context: context, requestId: request.typeId.toString()) ??
+                            context: context,
+                            requestId: request.typeId.toString(),
+                            fallbackTitle: (() {
+                              try {
+                                return (request as dynamic).typeName?.toString();
+                              } catch (_) {
+                                return null;
+                              }
+                            })()) ??
                         '';
                     if (headerTitle.isEmpty) {
                       try {
@@ -574,9 +582,11 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                 }
 
                                 // Requested to ignore (cancel request) button
-                                if ((request.status == "waiting_seen" ||
-                                        request.status == "waiting") &&
-                                    request.waitingCancel == true) {
+                                final reqStatus = (request.status ?? '').toString().toLowerCase().trim();
+                                if (request.waitingCancel == true &&
+                                    reqStatus != 'canceled' &&
+                                    reqStatus != 'cancelled' &&
+                                    reqStatus != 'refused') {
                                   items.add(
                                     InfoTileWidget(
                                       onTap: () async {

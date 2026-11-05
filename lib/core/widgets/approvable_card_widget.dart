@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:app_test/features/cv_hub/models/cv_hub_models.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/features/approvables_details/data/services/approvables_details_service.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
@@ -17,8 +20,11 @@ import 'package:app_test/core/widgets/quick_action_sheet.dart';
 import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
+import 'app_action_confirmation_dialog.dart';
+
 class ApprovableCardWidget extends StatelessWidget {
-  final dynamic request; // RequestModel, OvertimeRequestModel, SalaryAdvanceRequestModel
+  final dynamic
+      request; // RequestModel, OvertimeRequestModel, SalaryAdvanceRequestModel
   final bool isForDepartment;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
@@ -41,6 +47,8 @@ class ApprovableCardWidget extends StatelessWidget {
   _ApprovableInfo _resolveInfo(bool isArabic, BuildContext context) {
     bool takeAction = false;
     bool takeActionAsSomeoneElse = false;
+    bool waitingCancel = false;
+    bool canApproveCancel = false;
     String? status;
     String title = '';
     String subtitle = '';
@@ -62,7 +70,9 @@ class ApprovableCardWidget extends StatelessWidget {
             ? ot.date!.substring(0, 10)
             : (ot.date ?? '');
         final formattedDate = (ot.date != null && ot.date!.isNotEmpty)
-            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, ot.date) ?? dateStr)
+            ? (DateService.formatDate(
+                    isArabic ? 'ar' : 'en', context, ot.date) ??
+                dateStr)
             : dateStr;
 
         int totalMins = ot.overtime ?? 0;
@@ -74,7 +84,8 @@ class ApprovableCardWidget extends StatelessWidget {
         } else if (mins == 0) {
           durationStr = '$hours ${'hr'.tr()}';
         } else {
-          durationStr = 'hr_min'.tr(namedArgs: {'hours': '$hours', 'mins': '$mins'});
+          durationStr =
+              'hr_min'.tr(namedArgs: {'hours': '$hours', 'mins': '$mins'});
         }
 
         if (totalMins > 0) {
@@ -83,9 +94,8 @@ class ApprovableCardWidget extends StatelessWidget {
               ? ('date_2'.tr(namedArgs: {'formatted_date': '$formattedDate'}))
               : '';
         } else {
-          title = formattedDate.isNotEmpty
-              ? formattedDate
-              : ('overtime_2'.tr());
+          title =
+              formattedDate.isNotEmpty ? formattedDate : ('overtime_2'.tr());
           subtitle = '';
         }
       } else if (request is SalaryAdvanceRequestModel) {
@@ -105,8 +115,9 @@ class ApprovableCardWidget extends StatelessWidget {
             : '$months ${months == '1' ? 'month' : 'months'}';
         String details = '${'duration_2'.tr()}: $durationText';
         if (sa.from != null && sa.from!.isNotEmpty) {
-          final formattedFrom =
-              DateService.formatDate(isArabic ? 'ar' : 'en', context, sa.from) ?? sa.from!;
+          final formattedFrom = DateService.formatDate(
+                  isArabic ? 'ar' : 'en', context, sa.from) ??
+              sa.from!;
           details += ' • ${'from'.tr()}: $formattedFrom';
         }
         subtitle = details;
@@ -133,9 +144,9 @@ class ApprovableCardWidget extends StatelessWidget {
           sub += ' • ${ec.category}';
         }
         if (ec.dateFrom != null && ec.dateFrom!.isNotEmpty) {
-          final formattedDate =
-              DateService.formatDate(isArabic ? 'ar' : 'en', context, ec.dateFrom) ??
-                  ec.dateFrom!;
+          final formattedDate = DateService.formatDate(
+                  isArabic ? 'ar' : 'en', context, ec.dateFrom) ??
+              ec.dateFrom!;
           sub += ' • $formattedDate';
         }
         subtitle = sub;
@@ -162,11 +173,13 @@ class ApprovableCardWidget extends StatelessWidget {
         }
 
         final String fromDate = sc.dateFrom != null && sc.dateFrom!.isNotEmpty
-            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, sc.dateFrom) ??
+            ? (DateService.formatDate(
+                    isArabic ? 'ar' : 'en', context, sc.dateFrom) ??
                 sc.dateFrom!.split(' ').first)
             : '';
         final String toDate = sc.dateTo != null && sc.dateTo!.isNotEmpty
-            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, sc.dateTo) ??
+            ? (DateService.formatDate(
+                    isArabic ? 'ar' : 'en', context, sc.dateTo) ??
                 sc.dateTo!.split(' ').first)
             : '';
 
@@ -180,11 +193,13 @@ class ApprovableCardWidget extends StatelessWidget {
         takeAction = false;
         takeActionAsSomeoneElse = false;
         status = interview.status;
-        employeeName = interview.candidate?.fullName ?? 'Unknown Candidate'.tr();
+        employeeName =
+            interview.candidate?.fullName ?? 'Unknown Candidate'.tr();
         id = interview.id.toString();
         approvableType = 'interview';
-        
-        title = '${interview.candidate?.job?.title ?? ''} • ${interview.interviewType ?? ''}';
+
+        title =
+            '${interview.candidate?.job?.title ?? ''} • ${interview.interviewType ?? ''}';
         subtitle = interview.scheduledAt ?? '';
       } else {
         final dyn = request as dynamic;
@@ -199,39 +214,75 @@ class ApprovableCardWidget extends StatelessWidget {
           employeeName = '$employeeName - $depName';
         }
 
+        String? typeNameFallback;
+        try {
+          typeNameFallback = dyn.typeName?.toString();
+        } catch (_) {}
         title = AppSettingsService.getRequestTitleFromGenenralSettings(
                 context: context,
-                requestId: dyn.typeId != null ? dyn.typeId?.toString() : '') ??
+                requestId: dyn.typeId != null ? dyn.typeId?.toString() : '',
+                fallbackTitle: typeNameFallback) ??
             '';
 
         final String fromDate = dyn.from != null
-            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, dyn.from) ?? '')
+            ? (DateService.formatDate(
+                    isArabic ? 'ar' : 'en', context, dyn.from) ??
+                '')
             : '';
         final String toDate = dyn.to != null
-            ? (DateService.formatDate(isArabic ? 'ar' : 'en', context, dyn.to) ?? '')
+            ? (DateService.formatDate(
+                    isArabic ? 'ar' : 'en', context, dyn.to) ??
+                '')
             : '';
 
         if (dyn.duration == 0) {
           subtitle = fromDate;
         } else if (fromDate == toDate || toDate.isEmpty) {
-          subtitle = '$fromDate (${dyn.duration} ${dyn.durationType?.toString().tr()})';
+          subtitle =
+              '$fromDate (${dyn.duration} ${dyn.durationType?.toString().tr()})';
         } else {
-          subtitle = '$fromDate : $toDate (${dyn.duration} ${dyn.durationType?.toString().tr()})';
+          subtitle =
+              '$fromDate : $toDate (${dyn.duration} ${dyn.durationType?.toString().tr()})';
         }
+
+        try {
+          waitingCancel = dyn.waitingCancel == true ||
+              dyn.waitingCancel == 1 ||
+              dyn.waitingCancel == '1';
+        } catch (_) {}
+        try {
+          canApproveCancel = dyn.canApproveCancel == true ||
+              dyn.canApproveCancel == 1 ||
+              dyn.canApproveCancel == '1';
+        } catch (_) {}
       }
     } catch (_) {}
 
     if (status != null) {
       final s = status.toLowerCase().trim();
-      if (s == 'approved' || s == 'accepted' || s == 'refused' || s == 'canceled' || s == 'cancelled' || s == 'rejected') {
+      if (s == 'approved' ||
+          s == 'accepted' ||
+          s == 'refused' ||
+          s == 'canceled' ||
+          s == 'cancelled' ||
+          s == 'rejected') {
         takeAction = false;
         takeActionAsSomeoneElse = false;
+      }
+      if (s == 'canceled' ||
+          s == 'cancelled' ||
+          s == 'refused' ||
+          s == 'rejected') {
+        waitingCancel = false;
+        canApproveCancel = false;
       }
     }
 
     return _ApprovableInfo(
       takeAction: takeAction,
       takeActionAsSomeoneElse: takeActionAsSomeoneElse,
+      waitingCancel: waitingCancel,
+      canApproveCancel: canApproveCancel,
       status: status,
       title: title,
       subtitle: subtitle,
@@ -276,10 +327,12 @@ class ApprovableCardWidget extends StatelessWidget {
                   color: const Color(0xFFB71C1C).withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.gavel_rounded, color: Color(0xFFB71C1C), size: 24),
+                child: const Icon(Icons.gavel_rounded,
+                    color: Color(0xFFB71C1C), size: 24),
               ),
               const SizedBox(height: 6),
-              Text('action'.tr(),
+              Text(
+                'action'.tr(),
                 style: const TextStyle(
                   color: Color(0xFFB71C1C),
                   fontSize: 11,
@@ -319,15 +372,87 @@ class ApprovableCardWidget extends StatelessWidget {
                   color: const Color(0xFFE65100).withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.manage_accounts_rounded, color: Color(0xFFE65100), size: 24),
+                child: const Icon(Icons.manage_accounts_rounded,
+                    color: Color(0xFFE65100), size: 24),
               ),
               const SizedBox(height: 6),
-              Text('as_someone'.tr(),
+              Text(
+                'as_someone'.tr(),
                 style: const TextStyle(
                   color: Color(0xFFE65100),
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (info.canApproveCancel) {
+      slideActions.add(
+        CustomSlidableAction(
+          onPressed: (_) async {
+            if (info.id.isNotEmpty) {
+              final confirmed = await showAppActionConfirmationDialog(
+                context: context,
+                title: AppStrings.approveCancel.tr(),
+                message: AppStrings.confirmApproveCancel.tr(),
+                confirmText: isArabic ? 'موافقة على الإلغاء' : 'Approve',
+                confirmColor: Color(AppColors.secondaryButton),
+                icon: Icons.assignment_return_rounded,
+                iconColor: Color(AppColors.secondaryButton),
+              );
+              if (confirmed == true && context.mounted) {
+                final res = await ApprovablesDetailsService.approveCancel(
+                  context: context,
+                  type: info.approvableType,
+                  id: info.id,
+                );
+                if (res.success) {
+                  Fluttertoast.showToast(
+                      msg: res.message ??
+                          (isArabic
+                              ? 'تمت الموافقة على الإلغاء بنجاح'
+                              : 'Cancellation approved successfully'));
+                  onActionTaken?.call();
+                } else {
+                  Fluttertoast.showToast(
+                      msg: res.message ??
+                          (isArabic
+                              ? 'فشل في الموافقة على الإلغاء'
+                              : 'Failed to approve cancel'),
+                      backgroundColor: Colors.red);
+                }
+              }
+            }
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: const Color(0xFFC62828),
+          padding: EdgeInsets.zero,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC62828).withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.cancel_outlined,
+                    color: Color(0xFFC62828), size: 24),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                isArabic ? 'موافقة إلغاء' : 'Approve Cancel',
+                style: const TextStyle(
+                  color: Color(0xFFC62828),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -360,22 +485,41 @@ class ApprovableCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (info.takeAction || info.takeActionAsSomeoneElse) ...[
-                    Row(
+                  if (info.takeAction ||
+                      info.takeActionAsSomeoneElse ||
+                      info.canApproveCancel ||
+                      info.waitingCancel) ...[
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
                       children: [
-                        if (info.takeAction) ...[
+                        if (info.takeAction)
                           _ActionBadge(
                             icon: Icons.gavel_rounded,
                             color: const Color(0xFFD32F2F),
                             label: 'action_required'.tr(),
                           ),
-                          const SizedBox(width: 6),
-                        ],
                         if (info.takeActionAsSomeoneElse)
                           _ActionBadge(
                             icon: Icons.manage_accounts_rounded,
                             color: const Color(0xFFE65100),
                             label: 'act_as_someone'.tr(),
+                          ),
+                        if (info.canApproveCancel)
+                          _ActionBadge(
+                            icon: Icons.cancel_outlined,
+                            color: const Color(0xFFC62828),
+                            label: isArabic
+                                ? 'مطلوب موافقة إلغاء'
+                                : 'Cancel Approval Required',
+                          ),
+                        if (info.waitingCancel)
+                          _ActionBadge(
+                            icon: Icons.hourglass_top_rounded,
+                            color: const Color(0xFFE65100),
+                            label: isArabic
+                                ? 'طلب إلغاء معلق'
+                                : 'Cancellation Pending',
                           ),
                       ],
                     ),
@@ -440,8 +584,7 @@ class ApprovableCardWidget extends StatelessWidget {
                           onTap: () {
                             showOverlappingVacationsSheet(
                               context: context,
-                              approvableId:
-                                  (request as dynamic).id.toString(),
+                              approvableId: (request as dynamic).id.toString(),
                             );
                           },
                           child: Container(
@@ -556,9 +699,8 @@ class _EvaluationStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = isEvaluated
-        ? Color(AppColors.successGreen)
-        : const Color(0xFFE65100);
+    final Color color =
+        isEvaluated ? Color(AppColors.successGreen) : const Color(0xFFE65100);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -596,6 +738,8 @@ class _EvaluationStatusBadge extends StatelessWidget {
 class _ApprovableInfo {
   final bool takeAction;
   final bool takeActionAsSomeoneElse;
+  final bool waitingCancel;
+  final bool canApproveCancel;
   final String? status;
   final String title;
   final String subtitle;
@@ -606,6 +750,8 @@ class _ApprovableInfo {
   const _ApprovableInfo({
     required this.takeAction,
     required this.takeActionAsSomeoneElse,
+    this.waitingCancel = false,
+    this.canApproveCancel = false,
     required this.status,
     required this.title,
     required this.subtitle,

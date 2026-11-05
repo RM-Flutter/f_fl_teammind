@@ -139,7 +139,8 @@ class RequestCard extends StatelessWidget {
                   AutoSizeText(
                     AppSettingsService.getRequestTitleFromGenenralSettings(
                         context: context,
-                        requestId: request.typeId != null ? request.typeId?.toString() : "") ??
+                        requestId: request.typeId != null ? request.typeId?.toString() : "",
+                        fallbackTitle: request.typeName?.toString()) ??
                         '',
                     style: AppStyles.titleTextContent(context).copyWith(
                       fontWeight: FontWeight.bold,
