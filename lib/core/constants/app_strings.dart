@@ -1222,4 +1222,29 @@ abstract class AppStrings {
   static const cancellationPending = "cancellationPending";
   static const confirmCancelVacation = "confirmCancelVacation";
   static const confirmApproveCancel = "confirmApproveCancel";
+
+  // AI connect (rm/ai MCP server)
+  static const aiConnectTitle = "aiConnectTitle";
+  static const aiConnectIntro = "aiConnectIntro";
+  static const aiConnectNotEnabled = "aiConnectNotEnabled";
+  static const aiConnectLinkLabel = "aiConnectLinkLabel";
+  static const aiConnectCopy = "aiConnectCopy";
+  static const aiConnectCopied = "aiConnectCopied";
+  static const aiConnectHowTo = "aiConnectHowTo";
+  static const aiConnectStep1 = "aiConnectStep1";
+  static const aiConnectStep2 = "aiConnectStep2";
+  static const aiConnectStep3 = "aiConnectStep3";
+  static const aiConnectStep4 = "aiConnectStep4";
+  static const aiConnectPrivacy = "aiConnectPrivacy";
+  static const aiConnectedApps = "aiConnectedApps";
+  static const aiNoConnections = "aiNoConnections";
+  static const aiAccessReadOnly = "aiAccessReadOnly";
+  static const aiAccessReadAct = "aiAccessReadAct";
+  static const aiConnectedOn = "aiConnectedOn";
+  static const aiLastUsed = "aiLastUsed";
+  static const aiNeverUsed = "aiNeverUsed";
+  static const aiDisconnect = "aiDisconnect";
+  static const aiDisconnectTitle = "aiDisconnectTitle";
+  static const aiDisconnectConfirm = "aiDisconnectConfirm";
+  static const aiDisconnected = "aiDisconnected";
 }

@@ -50,6 +50,8 @@ import 'package:app_test/features/more/team_today_status/views/team_today_status
 import '../../features/more/update_profile/views/update_password_screen.dart';
 import '../../features/assistant/views/assistant_screen.dart';
 import '../../features/more/user_device/views/user_devices_screen.dart';
+import '../../features/more/ai_connect/views/ai_connect_screen.dart';
+import '../../features/more/ai_connect/views/ai_connected_apps_screen.dart';
 import '../../features/offline/views/offline_screen.dart';
 import '../../features/pages/views/default_details.dart';
 import '../../features/pages/views/default_list_page.dart';
@@ -141,6 +143,8 @@ enum AppRoutes {
   webViewMainDataScreen,
   webViewScreen,
   userDevices,
+  aiConnect,
+  aiConnectedApps,
   mediaCenterYoutubeScreenView,
   offlineScreen,
   complainDetails,
@@ -2580,6 +2584,18 @@ GoRouter goRouter(BuildContext context) {
         parentNavigatorKey: rootNavigatorKey,
         name: AppRoutes.userDevices.name,
         builder: (context, state) => const UserDeviceScreen(),
+      ),
+      GoRoute(
+        path: '/:lang/ai-connect-screen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.aiConnect.name,
+        builder: (context, state) => const AiConnectScreen(),
+      ),
+      GoRoute(
+        path: '/:lang/ai-connected-apps-screen',
+        parentNavigatorKey: rootNavigatorKey,
+        name: AppRoutes.aiConnectedApps.name,
+        builder: (context, state) => const AiConnectedAppsScreen(),
       ),
       GoRoute(
         path: '/:lang/blog_details/:title/:type/:id',

@@ -731,6 +731,19 @@ class _MoreScreenState extends State<MoreScreen> {
                               );
                             },
                           ),
+                          if (PackageHelper.hasPackage('ai'))
+                            DefaultListTile(
+                              title: AppStrings.aiConnectTitle.tr(),
+                              icon: Icons.hub_outlined,
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutes.aiConnect.name,
+                                  pathParameters: {
+                                    "lang": context.locale.languageCode,
+                                  },
+                                );
+                              },
+                            ),
                           SizedBox(height: 15),
                           DefaultListTile(
                             title: AppStrings.logout.tr(),

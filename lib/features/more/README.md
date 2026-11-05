@@ -13,6 +13,7 @@ The "More" tab (`more_screen.dart`) and the smaller screens it opens. `MoreScree
 | `files_center/` | Company documents: `emp_requests/v1/files-center/types` and `/files` with type and status filters, search and paging (`FilesCenterViewModel`) |
 | `language_settings/` | EN/AR switch. It calls `context.setLocale`, updates the cached `lang`, and tells the server through `rm_users/v1/device_sys`. |
 | `user_device/` | `DeviceControllerProvider`: my logged-in devices (`rm_users/v1/devices/get`), stop a device (`/devices/stop`), and the notification permission and status (`device_sys`) |
+| `ai_connect/` | "Connect ChatGPT / Claude" (`AiConnectScreen`): shows the company's MCP connector link (`/rm_mcp/v1/connect-info`) with copy and the 4 steps. "Connected apps" (`AiConnectedAppsScreen`): the assistants linked to this account (`/rm_mcp/v1/connections`), each with a confirmed disconnect (`DELETE /rm_mcp/v1/connections/{id}`). Uses a screen-level `AiConnectController`. Backend: `rm/ai` package, see `packages/rm/ai/MCP.md`. The tile shows when `PackageHelper.hasPackage('ai')`. |
 | `customized_notification/` | Notification preference switches (through `DeviceControllerProvider`) |
 | `request_terms/` | Rules text per request type, from the general settings |
 | `team_fingerprint/` | Manager: pick an employee (`/emp_requests/v1/employees`) and view their punches (`fingerprintView`) |
