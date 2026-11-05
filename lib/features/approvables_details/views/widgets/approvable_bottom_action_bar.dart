@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/widgets/app_action_confirmation_dialog.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/features/requests/shared/ui/widgets/custom_request_details_button.widget.dart';
@@ -36,6 +37,22 @@ class ApprovableBottomActionBar extends StatelessWidget {
     required this.cubit,
   });
 
+  bool _isDateInFuture(String? dateStr) {
+    if (dateStr == null || dateStr.trim().isEmpty) return false;
+    try {
+      final parsed = DateTime.parse(dateStr.trim());
+      final now = DateTime.now();
+      if (dateStr.contains(':')) {
+        return parsed.isAfter(now);
+      }
+      final todayMidnight = DateTime(now.year, now.month, now.day);
+      final parsedMidnight = DateTime(parsed.year, parsed.month, parsed.day);
+      return parsedMidnight.isAfter(todayMidnight);
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -50,14 +67,64 @@ class ApprovableBottomActionBar extends StatelessWidget {
         statusLower == 'refused' ||
         statusLower == 'rejected';
 
+    final bool isDateFuture = _isDateInFuture(details.dateFrom);
+
     final List<Widget> rawButtons = [];
 
     void addButton(Widget btn) {
       rawButtons.add(btn);
     }
 
+    // Manager Action: Approve Cancellation (shown whenever can_approve_cancel == true and request not canceled)
+    if (details.canApproveCancel == true && statusLower != 'canceled' && statusLower != 'cancelled') {
+      addButton(
+        CustomRequestDetailsButton(
+          title: AppStrings.approveCancel.tr(),
+          color: Color(AppColors.buttons),
+          onPressed: () async {
+            final confirmed = await showAppActionConfirmationDialog(
+              context: context,
+              title: AppStrings.approveCancel.tr(),
+              message: AppStrings.confirmApproveCancel.tr(),
+              confirmText: isArabic ? 'موافقة على الإلغاء' : 'Approve',
+              confirmColor: Color(AppColors.secondaryButton),
+              icon: Icons.assignment_return_rounded,
+              iconColor: Color(AppColors.secondaryButton),
+            );
+            if (confirmed == true && context.mounted) {
+              await cubit.approveCancel(context: context);
+            }
+          },
+        ),
+      );
+    }
+
     if (isCompleted) {
       // RULE 1: If status is approved, canceled, or refused (Completed)
+
+      // Employee Action: Request Cancellation for approved vacation before start date
+      if (isApplicant && statusLower == 'approved' && isDateFuture && details.waitingCancel != true) {
+        addButton(
+          CustomRequestDetailsButton(
+            title: AppStrings.requestCancelVacation.tr(),
+            color: Color(AppColors.buttons),
+            onPressed: () async {
+              final confirmed = await showAppActionConfirmationDialog(
+                context: context,
+                title: AppStrings.requestCancelVacation.tr(),
+                message: AppStrings.confirmCancelVacation.tr(),
+                confirmText: isArabic ? 'تأكيد الطلب' : 'Confirm',
+                confirmColor: Color(AppColors.buttons),
+                icon: Icons.event_busy_rounded,
+                iconColor: Color(AppColors.buttons),
+              );
+              if (confirmed == true && context.mounted) {
+                await cubit.askIgnore(context: context);
+              }
+            },
+          ),
+        );
+      }
       // Only Complaint (for Employee) and Statistics (for Manager) can show.
 
       if (isApplicant) {

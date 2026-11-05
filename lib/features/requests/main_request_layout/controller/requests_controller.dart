@@ -20,7 +20,7 @@ class RequestsViewModel extends ChangeNotifier {
 
   Future<void> initializeRequestsScreen(
       {required BuildContext context,
-        required GetRequestsTypes requestsType, empIds, from, status, to, requestTypeId, depId,
+        required GetRequestsTypes requestsType, empIds, from, status, to, requestTypeId, depId, waitingCancel,
         bool loadMore = false}) async {
     await _getAllUserRequests(
       context: context,
@@ -32,6 +32,7 @@ class RequestsViewModel extends ChangeNotifier {
       empIds: empIds,
       depId: depId,
       status: status,
+      waitingCancel: waitingCancel,
     );
     updateLoadingStatus(laodingValue: false);
   }
@@ -50,6 +51,7 @@ class RequestsViewModel extends ChangeNotifier {
     to,
     depId,
     status,
+    waitingCancel,
     bool loadMore = false,
   }) async {
     debugPrint("🟡 isLoading: $isLoading, isLoadingMore: $isLoadingMore, loadMore: $loadMore");
@@ -142,6 +144,14 @@ class RequestsViewModel extends ChangeNotifier {
       final List<String>? depIdsList =
           (depId != null && depId.toString().isNotEmpty) ? [depId.toString()] : null;
 
+      final bool isWaitingCancel = (waitingCancel == 1 ||
+          waitingCancel == '1' ||
+          waitingCancel == true ||
+          status == 'waiting_cancel');
+      final effectiveStatus = (status == 'waiting_cancel')
+          ? null
+          : (status != null && status.toString().isNotEmpty ? status.toString() : null);
+
       final result = await RequestsServices.getManagerApprovables(
         context: context,
         type: 'employee_requests',
@@ -149,7 +159,8 @@ class RequestsViewModel extends ChangeNotifier {
         requestTypeId: (requestTypeId != null && requestTypeId.toString().isNotEmpty) ? requestTypeId.toString() : null,
         employeesIds: empIdsList,
         departmentIds: depIdsList,
-        status: (status != null && status.toString().isNotEmpty) ? status.toString() : null,
+        status: effectiveStatus,
+        waitingCancel: isWaitingCancel ? 1 : null,
         dateFrom: (from != null && from.toString().isNotEmpty) ? from.toString() : null,
         dateTo: (to != null && to.toString().isNotEmpty) ? to.toString() : null,
         page: currentPage,

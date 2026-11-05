@@ -299,7 +299,9 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             value: viewModels.selectStatus,
                                             title: viewModels.selectStatus ?? AppStrings.status.tr(),
                                             hasShadows: false,
-                                            items: viewModels.status!.map((e) => DropdownMenuItem(
+                                            items: viewModels.status!
+                                                .where((e) => widget.requestsType != GetRequestsTypes.mine || e != 'waiting_cancel')
+                                                .map((e) => DropdownMenuItem(
                                               value: e.toString(),
                                               child: Text(
                                                 e.toString().tr().toString(),
@@ -316,6 +318,76 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               );
                                             }
                                         ),
+                                        if ((gCache != null &&
+                                            ((gCache['is_teamleader_in'] is List && gCache['is_teamleader_in'].isNotEmpty) ||
+                                                (gCache['is_manager_in'] is List && gCache['is_manager_in'].isNotEmpty))) &&
+                                            widget.requestsType != GetRequestsTypes.mine) ...[
+                                          const SizedBox(height: 12),
+                                          InkWell(
+                                            borderRadius: BorderRadius.circular(10),
+                                            onTap: () {
+                                              setState(() {
+                                                if (viewModels.selectStatus == 'waiting_cancel') {
+                                                  viewModels.selectStatus = null;
+                                                } else {
+                                                  viewModels.selectStatus = 'waiting_cancel';
+                                                }
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                              decoration: BoxDecoration(
+                                                color: viewModels.selectStatus == 'waiting_cancel'
+                                                    ? Color(AppColors.buttons).withOpacity(0.08)
+                                                    : Colors.grey.shade50,
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: viewModels.selectStatus == 'waiting_cancel'
+                                                      ? Color(AppColors.buttons)
+                                                      : Colors.grey.shade300,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.hourglass_top_rounded,
+                                                    size: 20,
+                                                    color: viewModels.selectStatus == 'waiting_cancel'
+                                                        ? Color(AppColors.buttons)
+                                                        : Colors.grey.shade600,
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: Text(
+                                                      LocalizationService.isArabic(context: context)
+                                                          ? 'عرض طلبات الإلغاء المعلقة فقط'
+                                                          : 'Pending Cancellations Only',
+                                                      style: TextStyle(
+                                                        fontSize: 12.5,
+                                                        fontWeight: viewModels.selectStatus == 'waiting_cancel'
+                                                            ? FontWeight.bold
+                                                            : FontWeight.w500,
+                                                        color: viewModels.selectStatus == 'waiting_cancel'
+                                                            ? Color(AppColors.secondaryButton)
+                                                            : Colors.black87,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Switch.adaptive(
+                                                    value: viewModels.selectStatus == 'waiting_cancel',
+                                                    activeColor: Color(AppColors.buttons),
+                                                    onChanged: (val) {
+                                                      setState(() {
+                                                        viewModels.selectStatus = val ? 'waiting_cancel' : null;
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                         if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)   const SizedBox(height: 15),
                                         if((gCache['is_teamleader_in'].isNotEmpty || gCache['is_manager_in'].isNotEmpty)&& widget.requestsType != GetRequestsTypes.mine)
                                           SearchableDropdownSheet(

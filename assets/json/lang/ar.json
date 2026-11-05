@@ -1780,5 +1780,11 @@
   "bluetooth_device_by": "جهاز من",
   "level": "المستوى",
   "teamleader": "قائد الفريق",
-  "both": "المدير وقائد الفريق"
+  "both": "المدير وقائد الفريق",
+  "requestType": "نوع الطلب",
+  "requestCancelVacation": "طلب إلغاء الإجازة",
+  "approveCancel": "الموافقة على الإلغاء",
+  "cancellationPending": "طلب إلغاء معلق",
+  "confirmCancelVacation": "هل أنت متأكد من إرسال طلب لإلغاء هذه الإجازة المعتمدة؟",
+  "confirmApproveCancel": "هل أنت متأكد من الموافقة على إلغاء هذه الإجازة؟ سيتم تحويل حالة الطلب إلى ملغي."
 }

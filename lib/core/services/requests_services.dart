@@ -308,6 +308,7 @@ abstract class RequestsServices {
     List<String>? employeesIds,
     List<String>? departmentIds,
     String? status,
+    dynamic waitingCancel,
     String? dateFrom,
     String? dateTo,
     int page = 1,
@@ -320,6 +321,10 @@ abstract class RequestsServices {
       'page': page,
       'per_page': perPage,
     };
+    if (waitingCancel != null &&
+        (waitingCancel == 1 || waitingCancel == '1' || waitingCancel == true)) {
+      queryParams['waiting_cancel'] = 1;
+    }
     if (requestTypeId != null && requestTypeId.isNotEmpty) {
       queryParams['request_type_id'] = requestTypeId;
     }

@@ -151,8 +151,7 @@ void main() async {
               create: (context) => NotificationProviderModel()),
           ChangeNotifierProvider(
               create: (context) => OvertimeRequestsProvider()),
-          ChangeNotifierProvider(
-              create: (context) => ShiftChangeController()),
+          ChangeNotifierProvider(create: (context) => ShiftChangeController()),
           ChangeNotifierProvider(create: (context) => DailyReportsProvider()),
           ChangeNotifierProvider(create: (_) => CvHubInterviewsController()),
           ChangeNotifierProvider(create: (_) => AssistantController()),

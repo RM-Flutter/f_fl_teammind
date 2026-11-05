@@ -21,6 +21,7 @@ class AllCompanyRequestModel {
   var createdAt;
   var seenAt;
   bool? waitingCancel;
+  bool? canApproveCancel;
   bool? takeAction;
   bool? canTakeActionAsSomeoneElse;
   var statusUpdate;
@@ -54,6 +55,7 @@ class AllCompanyRequestModel {
     this.managerReply,
     this.files,
     this.waitingCancel,
+    this.canApproveCancel,
     this.seenBy,
     this.hasOverlapping,
   });
@@ -63,7 +65,12 @@ class AllCompanyRequestModel {
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
       notes: json['notes'] ?? "",
-      waitingCancel: json['waiting_cancel'] ?? false,
+      waitingCancel: json['waiting_cancel'] == true ||
+          json['waiting_cancel'] == 1 ||
+          json['waiting_cancel'] == '1',
+      canApproveCancel: json['can_approve_cancel'] == true ||
+          json['can_approve_cancel'] == 1 ||
+          json['can_approve_cancel'] == '1',
       hasOverlapping: json['has_overlapping'] as bool?,
       takeAction: json['can_take_action'] as bool?,
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ?? json['take_action_as_someone_else']) as bool?,

@@ -144,7 +144,7 @@ class AddNewRequestController extends ChangeNotifier {
     }
   }
   List status = [
-    "waiting", "waiting_seen", "approved", "refused", "canceled"
+    "waiting", "waiting_seen", "waiting_cancel", "approved", "refused", "canceled"
   ];
   Future<void> getImage( context, {image1, image2, list, bool one = true, list2}) =>
       showModalBottomSheet<void>(

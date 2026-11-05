@@ -572,9 +572,11 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                 }
 
                                 // Requested to ignore (cancel request) button
-                                if ((request.status == "waiting_seen" ||
-                                        request.status == "waiting") &&
-                                    request.waitingCancel == true) {
+                                final reqStatus = (request.status ?? '').toString().toLowerCase().trim();
+                                if (request.waitingCancel == true &&
+                                    reqStatus != 'canceled' &&
+                                    reqStatus != 'cancelled' &&
+                                    reqStatus != 'refused') {
                                   items.add(
                                     InfoTileWidget(
                                       onTap: () async {
