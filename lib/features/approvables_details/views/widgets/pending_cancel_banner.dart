@@ -54,12 +54,67 @@ class PendingCancelBanner extends StatelessWidget {
     const Color accent = Color(0xFFE65100);
     final Color iconColor = canApprove ? const Color(0xFFC62828) : accent;
 
+    // Web: compact one-line banner, aligned with the tab bar below it, so it takes
+    // less height from the tabs on short screens. Mobile keeps the two-line layout.
+    const bool compact = kIsWeb;
+
+    final Widget icon = Container(
+      padding: EdgeInsets.all(compact ? 5 : 8),
+      decoration: BoxDecoration(
+        color: iconColor.withOpacity(0.15),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        canApprove
+            ? Icons.assignment_return_rounded
+            : Icons.hourglass_top_rounded,
+        color: iconColor,
+        size: compact ? 16 : 20,
+      ),
+    );
+
+    final TextStyle titleStyle = TextStyle(
+      color: iconColor,
+      fontSize: compact ? 13 : 14,
+      fontWeight: FontWeight.bold,
+    );
+    final TextStyle subtitleStyle = TextStyle(
+      color: Colors.black.withOpacity(0.7),
+      fontSize: 12,
+      height: 1.35,
+    );
+
+    final Widget text = compact
+        ? Text.rich(
+            TextSpan(children: [
+              TextSpan(text: title, style: titleStyle),
+              TextSpan(text: '  ·  ', style: subtitleStyle),
+              TextSpan(text: subtitle, style: subtitleStyle),
+            ]),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title, style: titleStyle),
+              const SizedBox(height: 2),
+              Text(subtitle, style: subtitleStyle),
+            ],
+          );
+
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: kIsWeb ? 1100 : 1.sw),
         child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          // Web: same side inset as the tab bar (8) so the edges line up
+          margin: compact
+              ? const EdgeInsets.fromLTRB(8, 10, 8, 0)
+              : const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          padding: compact
+              ? const EdgeInsets.symmetric(horizontal: 12, vertical: 7)
+              : const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: AlignmentDirectional.centerStart,
@@ -69,52 +124,15 @@ class PendingCancelBanner extends StatelessWidget {
                 iconColor.withOpacity(0.04),
               ],
             ),
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(compact ? 12 : 14),
             border: Border.all(color: iconColor.withOpacity(0.35)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  canApprove
-                      ? Icons.assignment_return_rounded
-                      : Icons.hourglass_top_rounded,
-                  color: iconColor,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: iconColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                        fontSize: 12,
-                        height: 1.35,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              icon,
+              SizedBox(width: compact ? 10 : 12),
+              Expanded(child: text),
             ],
           ),
         ),
