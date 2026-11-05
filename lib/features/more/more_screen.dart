@@ -231,6 +231,17 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
                           ),
                           SizedBox(height: 15),
+                          if (PackageHelper.hasPackage('emp-requests'))
+                            DefaultListTile(
+                              title: AppStrings.myRequests.tr(),
+                              icon: Icons.assignment_outlined,
+                              onTap: () async => await context.pushNamed(
+                                  AppRoutes.requests2.name,
+                                  pathParameters: {
+                                    'type': GetRequestsTypes.mine.name,
+                                    'lang': context.locale.languageCode
+                                  }),
+                            ),
                           if (PackageHelper.hasPackage('fingerprint-sys'))
                             DefaultListTile(
                               title: AppStrings.overtimeRequests.tr(),
