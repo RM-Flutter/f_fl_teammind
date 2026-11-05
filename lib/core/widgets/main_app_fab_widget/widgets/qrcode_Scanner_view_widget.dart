@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -30,6 +31,36 @@ class QRScannerViewState extends State<QRScannerView> with SingleTickerProviderS
     super.dispose();
   }
 
+  /// Clear message when the camera can't be opened (e.g. a PC without a webcam,
+  /// or camera access blocked in the browser).
+  Widget _buildCameraError(BuildContext context, MobileScannerException error) {
+    final String messageKey = switch (error.errorCode) {
+      MobileScannerErrorCode.permissionDenied => 'qr_scan_camera_denied',
+      MobileScannerErrorCode.unsupported => 'qr_scan_no_camera',
+      _ => 'qr_scan_camera_error',
+    };
+    return ColoredBox(
+      color: Colors.black,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.no_photography_outlined, color: Colors.white, size: 48),
+              const SizedBox(height: 16),
+              Text(
+                messageKey.tr(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _onBarcodeDetected(BarcodeCapture capture) {
     if (_hasPopped) return;
     final List<Barcode> barcodes = capture.barcodes;
@@ -54,7 +85,8 @@ class QRScannerViewState extends State<QRScannerView> with SingleTickerProviderS
         foregroundColor: Colors.white,
         title: Text('qr_scan_title'.tr(), style: const TextStyle(color: Colors.white)),
         actions: [
-          IconButton(
+          // Browsers don't support the flashlight
+          if (!kIsWeb) IconButton(
             icon: Icon(_torchOn ? Icons.flash_on : Icons.flash_off),
             tooltip: 'qr_scan_torch'.tr(),
             onPressed: () {
@@ -76,7 +108,11 @@ class QRScannerViewState extends State<QRScannerView> with SingleTickerProviderS
           children: [
             // the whole preview is scanned; the frame only shows where to aim
             Positioned.fill(
-              child: MobileScanner(controller: controller, onDetect: _onBarcodeDetected),
+              child: MobileScanner(
+                controller: controller,
+                onDetect: _onBarcodeDetected,
+                errorBuilder: _buildCameraError,
+              ),
             ),
             Positioned.fill(
               child: IgnorePointer(

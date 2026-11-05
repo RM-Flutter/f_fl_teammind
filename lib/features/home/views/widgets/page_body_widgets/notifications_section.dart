@@ -33,9 +33,8 @@ class NotificationsSection extends StatelessWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-            maxWidth: kIsWeb ? 1100 : double.infinity
-        ),
+        // Width on web is set by the home screen (same as the other sections)
+        constraints: const BoxConstraints(maxWidth: double.infinity),
         child: Container(
           alignment: Alignment.topCenter,
           padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s20),

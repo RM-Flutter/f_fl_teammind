@@ -81,9 +81,12 @@ class MainAppFabWidget extends StatelessWidget {
     }
 
     if (kIsWeb || PlatformIs.web) {
-      // On web, only allow location-based fingerprint methods
-      avFingerprints.removeWhere(
-          (method) => method != 'fp_navigate' && method != 'custom_fp_navigate');
+      // On web, only allow methods that work in a browser: QR scan (camera) and location.
+      // WiFi / Bluetooth / NFC can't be read from a browser.
+      avFingerprints.removeWhere((method) =>
+          method != 'fp_scan' &&
+          method != 'fp_navigate' &&
+          method != 'custom_fp_navigate');
       if (avFingerprints.isEmpty && isTypeAllowed('fp_navigate')) {
         avFingerprints = ['fp_navigate'];
       }

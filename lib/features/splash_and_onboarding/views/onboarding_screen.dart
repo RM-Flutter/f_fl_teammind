@@ -33,7 +33,8 @@ class OnBoardingScreen extends StatelessWidget {
         backgroundColor: _kOnboardingNavy,
         body: Consumer<OnboardingController>(
           builder: (context, viewModel, child) {
-            final items = viewModel.getAllOnboardingData(context: context) ?? [];
+            final items =
+                viewModel.getAllOnboardingData(context: context) ?? [];
             return Stack(
               fit: StackFit.expand,
               children: [
@@ -94,7 +95,8 @@ class _OnboardingImage extends StatelessWidget {
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        placeholder: (context, url) => const ColoredBox(color: _kOnboardingNavy),
+        placeholder: (context, url) =>
+            const ColoredBox(color: _kOnboardingNavy),
         errorWidget: (context, url, error) => Image.asset(
           AppImages.onboardingFallback1,
           fit: BoxFit.cover,
@@ -152,7 +154,8 @@ class _OnboardingFooter extends StatelessWidget {
   String _localized(BuildContext context, dynamic map) {
     if (map is! Map) return '';
     String? read(String key) => map[key]?.toString().trim();
-    final primary = LocalizationService.isArabic(context: context) ? 'ar' : 'en';
+    final primary =
+        LocalizationService.isArabic(context: context) ? 'ar' : 'en';
     final secondary = primary == 'ar' ? 'en' : 'ar';
     final first = read(primary);
     if (first != null && first.isNotEmpty) return first;
@@ -161,101 +164,107 @@ class _OnboardingFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = viewModel.currentIndex.clamp(0, items.isEmpty ? 0 : items.length - 1);
+    final index =
+        viewModel.currentIndex.clamp(0, items.isEmpty ? 0 : items.length - 1);
     final data = items.isEmpty ? null : items[index] as Map;
     final title = _localized(context, data?['title']);
     final info = _localized(context, data?['info']);
 
+    // Full width: text pinned to the start edge, controls to the end edge.
     return Align(
       alignment: Alignment.bottomCenter,
       child: SafeArea(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: kIsWeb ? 600 : double.infinity),
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              kIsWeb ? 24 : 24.w,
-              0,
-              kIsWeb ? 24 : 24.w,
-              kIsWeb ? 24 : 20.h,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    layoutBuilder: (current, previous) => Stack(
-                      alignment: AlignmentDirectional.bottomStart,
-                      children: [...previous, if (current != null) current],
-                    ),
-                    child: Column(
-                      key: ValueKey<int>(index),
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (title.isNotEmpty)
-                          Text(
-                            title.toUpperCase(),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppStyles.heading(context).copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: kIsWeb ? 30 : 28.sp,
-                              height: 1.15,
+        child: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(
+            kIsWeb ? 48 : 24.w,
+            0,
+            kIsWeb ? 48 : 24.w,
+            kIsWeb ? 32 : 20.h,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.bottomStart,
+                  // Keep lines readable on wide web screens.
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxWidth: kIsWeb ? 560 : double.infinity),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      layoutBuilder: (current, previous) => Stack(
+                        alignment: AlignmentDirectional.bottomStart,
+                        children: [...previous, if (current != null) current],
+                      ),
+                      child: Column(
+                        key: ValueKey<int>(index),
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (title.isNotEmpty)
+                            Text(
+                              title.toUpperCase(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.heading(context).copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: kIsWeb ? 30 : 28.sp,
+                                height: 1.15,
+                              ),
                             ),
-                          ),
-                        if (title.isNotEmpty && info.isNotEmpty)
-                          SizedBox(height: kIsWeb ? 10 : 8.h),
-                        if (info.isNotEmpty)
-                          Text(
-                            info,
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppStyles.greyContent(context).copyWith(
-                              color: Colors.white.withOpacity(0.9),
-                              fontSize: kIsWeb ? 15 : 13.sp,
-                              height: 1.4,
+                          if (title.isNotEmpty && info.isNotEmpty)
+                            SizedBox(height: kIsWeb ? 10 : 8.h),
+                          if (info.isNotEmpty)
+                            Text(
+                              info,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.greyContent(context).copyWith(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: kIsWeb ? 15 : 13.sp,
+                                height: 1.4,
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(width: kIsWeb ? 16 : 16.w),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _NextButton(
-                      progress:
-                          items.isEmpty ? 0 : (index + 1) / items.length,
-                      onTap: () => viewModel.goNext(context),
+              ),
+              SizedBox(width: kIsWeb ? 16 : 16.w),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _NextButton(
+                    progress: items.isEmpty ? 0 : (index + 1) / items.length,
+                    onTap: () => viewModel.goNext(context),
+                  ),
+                  SizedBox(height: kIsWeb ? 14 : 14.h),
+                  _PageDots(count: items.length, current: index),
+                  SizedBox(height: kIsWeb ? 6 : 6.h),
+                  TextButton(
+                    onPressed: () => viewModel.skip(context),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(48, 32),
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    SizedBox(height: kIsWeb ? 14 : 14.h),
-                    _PageDots(count: items.length, current: index),
-                    SizedBox(height: kIsWeb ? 6 : 6.h),
-                    TextButton(
-                      onPressed: () => viewModel.skip(context),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(48, 32),
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        AppStrings.skip.tr().toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: kIsWeb ? 12 : 11.sp,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
-                        ),
+                    child: Text(
+                      AppStrings.skip.tr().toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: kIsWeb ? 12 : 11.sp,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.5,
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

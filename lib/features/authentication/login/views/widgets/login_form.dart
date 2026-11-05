@@ -15,6 +15,7 @@ import '../../../shared/widgets/phone_number_field.dart';
 import '../../../shared/widgets/switch_row_widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/platform/platform_is.dart';
 
 class LoginForm extends StatefulWidget {
   final AuthenticationController viewModel;
@@ -31,12 +32,20 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     // Figma sizes (scaled) on phones; web and tablets keep the fixed sizes.
     final compact = LayoutService.isPhoneLayout(context);
-    final switchFieldGap =
-        compact ? AppSizes.loginSwitchFieldGap.h : AppSizes.s20.h;
-    final fieldGap = compact ? AppSizes.loginFieldGap.h : AppSizes.s12.h;
-    final afterForgotGap =
-        compact ? AppSizes.loginAfterForgotGap.h : AppSizes.s16.h;
-    final forgotFontSize = compact ? AppSizes.loginForgotFontSize.sp : 13.sp;
+    // Web uses plain pixels: ScreenUtil scales against a 375px phone design,
+    // so .sp/.h blow up on wide browser windows.
+    final isWeb = kIsWeb || PlatformIs.web;
+    final switchFieldGap = compact
+        ? AppSizes.loginSwitchFieldGap.h
+        : (isWeb ? AppSizes.s20 : AppSizes.s20.h);
+    final fieldGap = compact
+        ? AppSizes.loginFieldGap.h
+        : (isWeb ? AppSizes.s12 : AppSizes.s12.h);
+    final afterForgotGap = compact
+        ? AppSizes.loginAfterForgotGap.h
+        : (isWeb ? AppSizes.s16 : AppSizes.s16.h);
+    final forgotFontSize =
+        compact ? AppSizes.loginForgotFontSize.sp : (isWeb ? 14.0 : 13.sp);
     return Column(
       children: [
         // TOGGLE BUTTON TO TOGGLE BETWEEN (PHONE || EMAIL)

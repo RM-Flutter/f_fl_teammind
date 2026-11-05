@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/fcm_token.service.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,8 @@ class NotificationService {
   Future<void> _safeRetrieveFcmToken() async {
 
     try {
-      String? token = await _messaging.getToken();
+      String? token =
+          await _messaging.getToken(vapidKey: FcmTokenService.vapidKey);
       debugPrint("🔑 FCM Token: $token");
     } catch (e) {
       debugPrint("⚠️ Failed to get FCM token: $e");
@@ -129,6 +131,9 @@ class NotificationService {
   }
 
   void _showNotification(RemoteMessage message) async {
+    // No local notifications on web: the in-app banner (TimeoutMessage, via
+    // PushNotificationService) covers the foreground there.
+    if (kIsWeb) return;
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     // Get title and body (should already be validated by _shouldShowNotification)

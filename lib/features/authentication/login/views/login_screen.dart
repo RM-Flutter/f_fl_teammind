@@ -133,10 +133,12 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     final logoTitleGap = compact
         ? AppSizes.loginLogoTitleGap.h
         : (isWeb ? AppSizes.s32 : AppSizes.s32.h);
-    final titleFormGap =
-        compact ? AppSizes.loginTitleFormGap.h : AppSizes.s32.h;
-    final belowButtonGap =
-        compact ? AppSizes.loginBelowButtonGap.h : AppSizes.s16.h;
+    final titleFormGap = compact
+        ? AppSizes.loginTitleFormGap.h
+        : (isWeb ? AppSizes.s32 : AppSizes.s32.h);
+    final belowButtonGap = compact
+        ? AppSizes.loginBelowButtonGap.h
+        : (isWeb ? AppSizes.s16 : AppSizes.s16.h);
     final smallButtonWidth = compact ? AppSizes.buttonSmallWidth.w : null;
     final smallButtonHeight = compact ? AppSizes.buttonSmallHeight.h : null;
     // Never lower than the domain pill needs, so they cannot overlap.

@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/fcm_token.service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
@@ -187,6 +188,11 @@ abstract class AppSettingsService {
     var s2Cache;
     var gCache;
     // FCM token: use cache only. Send in start_app when token changed أو بعد اختيار الدومين عشان يروح للدومين اللي اختاره.
+    // Wait for this launch's token first (max 5s): it can change between
+    // launches, and reading the cache too early sends the previous one.
+    if (settingType == SettingsType.startupSettings) {
+      await FcmTokenService.waitForFirstAttempt();
+    }
     String? fcm_token = CacheHelper.getString("fcm_token");
     final String? lastSentFcmToken = CacheHelper.getString("last_sent_fcm_token");
 

@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:async';
 import 'dart:io';
+import 'package:universal_html/html.dart' as html;
 import 'package:file_picker/file_picker.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart'
     as webview_android;
@@ -26,6 +28,59 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
   late WebViewController _controller;
   int _loadingPercentage = 0;
   bool _isInit = false;
+  StreamSubscription<html.MessageEvent>? _webMessageSub;
+
+  @override
+  void dispose() {
+    _webMessageSub?.cancel();
+    super.dispose();
+  }
+
+  /// Handles actions sent by the webview page (close / go_home / request_list).
+  /// Returns true if the action was recognised.
+  bool _handleAction(String? action) {
+    if (!mounted || action == null) return false;
+    if (action == 'close') {
+      if (context.canPop()) {
+        context.pop(true);
+      } else {
+        Provider.of<HomeController>(context, listen: false)
+          ..initializeHomeScreen(context, null)
+          ..getHome(context);
+        context.goNamed(AppRoutes.home.name,
+            pathParameters: {'lang': context.locale.languageCode});
+      }
+      return true;
+    } else if (action == 'go_home') {
+      Provider.of<HomeController>(context, listen: false)
+        ..initializeHomeScreen(context, null)
+        ..getHome(context);
+      context.goNamed(AppRoutes.home.name,
+          pathParameters: {'lang': context.locale.languageCode});
+      return true;
+    } else if (action == 'request_list') {
+      // Push replacement to ensure it completely reloads the request list
+      context.pushReplacementNamed(AppRoutes.requests.name, pathParameters: {
+        'lang': context.locale.languageCode,
+        'type': 'mine'
+      });
+      return true;
+    }
+    return false;
+  }
+
+  /// Flutter web renders the page in an <iframe>, whose navigation can't be
+  /// intercepted, so the page posts its actions to this window instead.
+  void _listenToWebMessages() {
+    final allowedOrigin = Uri.parse(AppConstants.base).origin;
+    _webMessageSub = html.window.onMessage.listen((event) {
+      if (event.origin != allowedOrigin) return;
+      final data = event.data;
+      if (data is Map && data['source'] == 'rm-emp-request-webview') {
+        _handleAction(data['action']?.toString());
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -92,40 +147,15 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
               final Uri uri = Uri.parse(request.url);
 
               // Handle custom actions
-              final action = uri.queryParameters['action'];
-              if (action != null) {
-                if (action == 'close') {
-                  if (context.canPop()) {
-                    context.pop(true);
-                  } else {
-                    Provider.of<HomeController>(context, listen: false)
-                      ..initializeHomeScreen(context, null)
-                      ..getHome(context);
-                    context.goNamed(AppRoutes.home.name,
-                        pathParameters: {'lang': context.locale.languageCode});
-                  }
-                  return NavigationDecision.prevent;
-                } else if (action == 'go_home') {
-                  Provider.of<HomeController>(context, listen: false)
-                    ..initializeHomeScreen(context, null)
-                    ..getHome(context);
-                  context.goNamed(AppRoutes.home.name,
-                      pathParameters: {'lang': context.locale.languageCode});
-                  return NavigationDecision.prevent;
-                } else if (action == 'request_list') {
-                  // Push replacement to ensure it completely reloads the request list
-                  context.pushReplacementNamed(AppRoutes.requests.name,
-                      pathParameters: {
-                        'lang': context.locale.languageCode,
-                        'type': 'mine'
-                      });
-                  return NavigationDecision.prevent;
-                }
+              if (_handleAction(uri.queryParameters['action'])) {
+                return NavigationDecision.prevent;
               }
               return NavigationDecision.navigate;
             },
           ),
         );
+      } else {
+        _listenToWebMessages();
       }
 
       debugPrint(

@@ -374,8 +374,13 @@ abstract class MainFabServices {
     if (!allowed) return;
 
     if (kIsWeb || PlatformIs.web) {
-      debugPrint("✅ Opening GPS fingerprint for WEB");
-      await addFingerprintUsingGPS(context: safeContext);
+      if (fingerprintMethod.toLowerCase().trim() == 'fp_scan') {
+        debugPrint("✅ Opening QR Code fingerprint for WEB");
+        await addFingerprintUsingQrCode(context: safeContext);
+      } else {
+        debugPrint("✅ Opening GPS fingerprint for WEB");
+        await addFingerprintUsingGPS(context: safeContext);
+      }
       return;
     }
 
@@ -3068,7 +3073,10 @@ abstract class MainFabServices {
       final bool isOnline = await ConnectionsService.isOnline();
       // في كل أنواع البصمات الأخرى الكاميرا تفتح لو مفتاح الكاميرا مفعّل حتى في وضع الأوفلاين.
       // هنا كانت مربوطة بوجود إنترنت، فتم فصلها عن isOnline عشان QR يتصرف نفس التصرف.
-      final bool showFaceVerify = AppConstants.showFaceVerifyForFingerprint;
+      // Face verification is not supported on web (same as the GPS flow).
+      final bool showFaceVerify = (kIsWeb || PlatformIs.web)
+          ? false
+          : AppConstants.showFaceVerifyForFingerprint;
       if (showFaceVerify) {
         debugPrint("📱 Starting face verification for QR Code fingerprint...");
         final faceContext = rootNavigatorKey.currentContext ?? context;
@@ -3187,9 +3195,10 @@ abstract class MainFabServices {
   static Future<String?> _scanQrcodeToGetSecretKeyString(
       {required BuildContext context}) async {
     try {
-      // Request camera permission
-      var cameraStatus = await permission_handler.Permission.camera.request();
-      if (!cameraStatus.isGranted) {
+      // Request camera permission (on web the browser asks when the scanner opens the camera)
+      final bool cameraGranted = (kIsWeb || PlatformIs.web) ||
+          (await permission_handler.Permission.camera.request()).isGranted;
+      if (!cameraGranted) {
         // Use rootNavigatorKey.currentContext if context is not mounted
         final alertContext = rootNavigatorKey.currentContext ?? context;
         if (alertContext.mounted) {

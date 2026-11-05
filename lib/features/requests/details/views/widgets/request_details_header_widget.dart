@@ -270,7 +270,9 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     return Stack(
       children: [
         Container(
-          height: (widget.height! + 30) ,
+          // On web the info chips fit in fewer rows, so a fixed height leaves a large
+          // empty area that steals space from the tabs below. Size to content there.
+          height: kIsWeb ? null : (widget.height! + 30),
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -675,7 +677,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         ],
                       ),
                     ),
-                  SizedBox(height: 12),
+                  SizedBox(height: kIsWeb ? 24 : 12),
                 ],
               ),
             ),

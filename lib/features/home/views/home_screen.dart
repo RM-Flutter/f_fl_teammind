@@ -25,6 +25,7 @@ import 'package:app_test/features/home/views/widgets/page_header_widgets/home_ap
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -428,7 +429,11 @@ class _HomeScreenState extends State<HomeScreen> {
               _isDragging = false;
               _autoScrollTimer?.cancel();
             },
-            child: ReorderableListView(
+            child: Center(
+              child: ConstrainedBox(
+              // Web: keep some space at the sides on wide screens (sections share this width)
+              constraints: BoxConstraints(maxWidth: kIsWeb ? 1400 : double.infinity),
+              child: ReorderableListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               onReorder: _onReorder,
@@ -447,6 +452,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 final widgetType = _availableWidgets[index];
                 return _buildReorderableWidgetItem(widgetType, viewModel, index);
               }),
+            ),
+            ),
             ),
           ),
       ],

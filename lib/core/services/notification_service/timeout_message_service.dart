@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:app_test/main.dart';
 import 'package:app_test/core/platform/platform_is.dart';
+import 'package:app_test/core/routing/app_router.dart' show rootNavigatorKey;
 
 import '../../constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -59,8 +60,15 @@ class TimeoutMessage {
             left: left,
             onCLick: onClick));
     if (PlatformIs.web) {
-      // goRouter.routerDelegate.navigatorKey.currentState?.overlay
-      //     ?.insert(_activeOverlay!);
+      // Web: the router's navigator owns the overlay (main.dart's navigatorKey
+      // is not attached to it). Skip if it is not mounted yet, so hide()
+      // never removes an entry that was never inserted.
+      final overlay = rootNavigatorKey.currentState?.overlay;
+      if (overlay == null) {
+        _activeOverlay = null;
+        return;
+      }
+      overlay.insert(_activeOverlay!);
     } else {
       navigatorKey?.currentState?.overlay?.insert(_activeOverlay!);
     }

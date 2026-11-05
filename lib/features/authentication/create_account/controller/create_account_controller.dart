@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/fcm_token.service.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
@@ -116,7 +117,7 @@ class CreateAccountController extends ChangeNotifier {
         password: password,
         email: email,
         departmentId: departmentId,
-        deviceInformation: appConfigServiceProvider.deviceInformation.toMap());
+        deviceInformation: FcmTokenService.withToken(appConfigServiceProvider.deviceInformation.toMap()));
     if (result.success) {
       emailError = null;
       nameError = null;

@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/fcm_token.service.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/foundation.dart';
@@ -276,7 +277,7 @@ class AuthenticationController extends ChangeNotifier {
           context: context,
           username: isPhoneLogin ? completePhoneNumber :emailController.text,
           password: passwordController.text,
-          deviceInformation: appConfigServiceProvider.deviceInformation.toMap());
+          deviceInformation: FcmTokenService.withToken(appConfigServiceProvider.deviceInformation.toMap()));
 
       if (result.success &&
           result.data != null &&
@@ -366,7 +367,7 @@ class AuthenticationController extends ChangeNotifier {
           username: isPhoneLogin ? completePhoneNumber :  email.text,
           password:  password,
           deviceInformation:
-          appConfigServiceProvider.deviceInformation.toMap());
+          FcmTokenService.withToken(appConfigServiceProvider.deviceInformation.toMap()));
 
       print("response login /////");
 

@@ -74,23 +74,13 @@ void main() async {
   AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
   await LocalNotificationService.init();
 
+  // Every platform (web included) uses the rm-emp project, the one the
+  // backend sends pushes from. web/firebase-messaging-sw.js must match it.
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyBe4BoD2wwFmzy136pdOD8NU4XazECs6gg",
-        authDomain: "rm-csapp.firebaseapp.com",
-        projectId: "rm-csapp",
-        storageBucket: "rm-csapp.appspot.com",
-        messagingSenderId: "567522084254",
-        appId: "1:567522084254:web:726243823f43f1a78b428f",
-        measurementId: "G-E9C7RGQQ4S",
-      ),
-    );
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
-  } else {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
   }
 
   // Needs Firebase to be initialized first; not awaited so it never blocks startup.

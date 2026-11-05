@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -216,6 +217,7 @@ abstract class PushNotificationService {
               title: title,
               logoWithWihteText: AppImages.logoWithWihteText,
               message: body,
+              width: kIsWeb ? 360 : 200,
               onClick: () => handleOnNotificationClicked(
                   payload: payload,
                   callbackWhenHandelOnNotificationCliked:

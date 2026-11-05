@@ -111,6 +111,8 @@ abstract class SavedAccountsService {
     return _write(accounts);
   }
 
+  /// Returns what is really stored: on failure that is the previous list,
+  /// so the UI never shows a save/remove that did not persist.
   static Future<List<SavedAccount>> _write(List<SavedAccount> accounts) async {
     try {
       if (accounts.isEmpty) {
@@ -119,9 +121,10 @@ abstract class SavedAccountsService {
         await _storage.write(
             key: _key, value: SavedAccount.encodeList(accounts));
       }
+      return accounts;
     } catch (e) {
       debugPrint('⚠️ SavedAccountsService write failed: $e');
+      return load();
     }
-    return accounts;
   }
 }

@@ -26,6 +26,18 @@
       "flutterMode": "release"
     },
     {
+      "name": "Team Mind (debug) - Web (Chrome)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "args": [
+        "--web-port", "5000",
+        "--web-browser-flag=--user-data-dir=${workspaceFolder}/.dart_tool/chrome-debug-profile"
+      ]
+    },
+    {
       "name": "Team Mind (debug) - any device",
       "type": "dart",
       "request": "launch",

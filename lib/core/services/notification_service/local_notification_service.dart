@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -42,8 +43,8 @@ class LocalNotificationService {
     required String body,
     required DateTime scheduledDate,
   }) async {
-    // Only schedule if the date is in the future
-    if (scheduledDate.isBefore(DateTime.now())) {
+    // No local notifications on web; only schedule future dates.
+    if (kIsWeb || scheduledDate.isBefore(DateTime.now())) {
       return;
     }
 //
@@ -72,6 +73,9 @@ class LocalNotificationService {
 
 //
   static Future<void> cancelAllNotifications() async {
+    // flutter_local_notifications has no web implementation: cancelAll()
+    // throws LateInitializationError there.
+    if (kIsWeb) return;
     await _notificationsPlugin.cancelAll();
   }
 }
